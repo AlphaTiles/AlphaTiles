@@ -1,2 +1,1 @@
-# AlphaTiles
-AlphaTiles
+Literacy games for minority language communities (for Android) This program is an Android app generator. It requires a set of language build files (word list, audio, images, etc.). The design goal is that this program should be able to generate these games for any language that prepares the build files. As we work with new language build files, adaptations will be made to make the app generator program flexible enough to handle new language-specific challenges. Various overview videos can be found on our YouTube channel:https://www.youtube.com/channel/UClqgnUihG3ZPEEphgUkX3Dw.

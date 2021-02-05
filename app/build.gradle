@@ -1,0 +1,110 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.0"
+
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+        applicationId "org.alphatilesapps.alphatiles"
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 34
+        versionName "0.4.6"
+        // API 14 = Ice Cream (4.0)
+        // API 16 = Jelly Bean (4.1.x) - required for Firebase
+        // API 21 = Lollipop (5.0) - required for correct display of special characters in TextViews without Grandroid, etc.
+        // As of July 20th, 2020, SIL Reading App Builder supported 4.0 (Ice Cream Sandwich) and above; this is API
+        // https://software.sil.org/readingappbuilder/support/faq/
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "language"
+    productFlavors {
+        // Assigns this product flavor to the "version" flavor dimension.
+        // If you are using only one dimension, this property is optional,
+        // and the plugin automatically assigns all the module's flavors to
+        // that dimension.
+        kvlKayaw {
+            dimension "language"
+            applicationIdSuffix ".blue.kvlKayaw"
+            resValue "string", "app_name", "Thè̄lǒ Ghegē Kayaw Cèphlô̄"
+        }
+        lwlEasternLawa {
+            dimension "language"
+            applicationIdSuffix ".blue.lwlEasternLawa"
+            resValue "string", "app_name", "เกม"
+        }
+        mbzAmoltepec {
+            dimension "language"
+            applicationIdSuffix ".blue.mbzAmoltepec"
+            resValue "string", "app_name", "Na sɨkɨo"
+        }
+        pbsCentralPame {
+            dimension "language"
+            applicationIdSuffix ".blue.pbsCentralPame"
+            resValue "string", "app_name", "Ma imjien"
+        }
+        pduKayan {
+            dimension "language"
+            applicationIdSuffix ".blue.pduKayan"
+            resValue "string", "app_name", "Taklantapya Lilai Kayǎn"
+        }
+        rifRifian {
+            dimension "language"
+            applicationIdSuffix ".blue.rifRifian"
+            resValue "string", "app_name", "Iwaren s taqervact"
+        }
+        rmyGaborH {
+            dimension "language"
+            applicationIdSuffix ".blue.rmyGaborH"
+            resValue "string", "app_name", "Té drábáráh!"
+        }
+        rmyGaborR {
+            dimension "language"
+            applicationIdSuffix ".blue.rmyGaborR"
+            resValue "string", "app_name", "Te drabarah!"
+        }
+        skrSaraiki {
+            dimension "language"
+            applicationIdSuffix ".blue.skrSaraiki"
+            resValue "string", "app_name", "سرائیکی"
+        }
+        tpxTeocuitlapa {
+            dimension "language"
+            applicationIdSuffix ".blue.tpxTeocuitlapa"
+            resValue "string", "app_name", 'Mu′tsíin (me′phaa Xma′íín)'
+        }
+        zawMitla {
+            dimension "language"
+            applicationIdSuffix ".blue.zawMitla"
+            resValue "string", "app_name", 'didxsaj'
+        }
+        zpfQuiatoni {
+            dimension "language"
+            applicationIdSuffix ".blue.zpfQuiatoni"
+            resValue "string", "app_name", 'Giäl gi′t diidx zah'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation platform('com.google.firebase:firebase-bom:25.12.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+}

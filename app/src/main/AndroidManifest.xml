@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.alphatilesapps.alphatiles">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:largeHeap="false"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name="org.alphatilesapps.alphatiles.Splash"
+            android:theme="@style/AppTheme.Launcher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Start"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.StartUpdateAvatars"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Earth"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.About"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Brazil"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.China"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Colombia"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Ecuador"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Georgia"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Mexico"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Myanmar"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Peru"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Resources"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Romania"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.Thailand"></activity>
+        <activity android:name="org.alphatilesapps.alphatiles.UnitedStates"></activity>
+    </application>
+
+</manifest>
