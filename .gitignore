@@ -16,6 +16,10 @@
 # we ignore most of the src/main folder.
 /app/src
 
+# Auto-generated files generally shouldn't be included, as they can
+# be automatically regenerated
+/app/build
+
 # Explicitly includes the three main source folders
 !app/src/main
 !app/src/androidTest
