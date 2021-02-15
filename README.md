@@ -1,4 +1,4 @@
-![Alpha Tiles](/app/src/main/ic_launcher-playstore.png?raw=true){:height="200px" width="200px"}
+![Alpha Tiles](/app/src/main/res/drawable/zz_splash.png?raw=true)
 
 This program is an Android app generator used to build literacy games for minority language communities (for Android). Various overview videos can be found on our YouTube channel: https://www.youtube.com/channel/UClqgnUihG3ZPEEphgUkX3Dw.
 
