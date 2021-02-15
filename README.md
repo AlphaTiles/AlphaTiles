@@ -8,9 +8,7 @@ Alpha Tiles requires a set of build files (word list, audio, images, etc.) targe
 
 In order to build a literacy game for your language using the Alpha Tiles engine, you'll need to copy its resources into the correct location - a language-specific directory at the same level as /app/src/main.
 
-<object type="application/pdf" src="/productFlavorsInAlphaTiles.pdf">
-  <p>A visual guide to this is available as [productFlavorsInAlphaTiles.pdf](productFlavorsInAlphaTiles.pdf). </p>
-</object>
+A visual reference for this is available as [productFlavorsInAlphaTiles.pdf](productFlavorsInAlphaTiles.pdf).
 
 As Alpha Tiles uses [Firebase](https://firebase.google.com/), a valid `google-services.json` file must also be provided.  You may wish to use Firebase's "Get started" tutorial in order to generate one for yourself unless you are part of the Alpha Tiles development team.
 
