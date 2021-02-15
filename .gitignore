@@ -3,10 +3,7 @@
 /local.properties
 /.idea/caches
 /.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+/.idea/**/*.xml
 .DS_Store
 /build
 /captures
@@ -14,3 +11,12 @@
 .cxx
 *.apk
 *.aab
+
+# Since language-specific build assets go into the main source folder,
+# we ignore most of the src/main folder.
+/app/src
+
+# Explicitly includes the three main source folders
+!app/src/main
+!app/src/androidTest
+!app/test
