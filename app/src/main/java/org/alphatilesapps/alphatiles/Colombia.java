@@ -10,7 +10,9 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -18,415 +20,470 @@ import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.keyList;
 
-public class Colombia extends GameActivity {
-
-    String initialLetter = "";
-    ArrayList<String> tempKeys; // KP
-    int keysInUse;
-
-    private static final int[] KEYS = {
-            R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
-            R.id.key11, R.id.key12, R.id.key13, R.id.key14, R.id.key15, R.id.key16, R.id.key17, R.id.key18, R.id.key19, R.id.key20,
-            R.id.key21, R.id.key22, R.id.key23, R.id.key24, R.id.key25, R.id.key26, R.id.key27, R.id.key28, R.id.key29, R.id.key30,
-            R.id.key31, R.id.key32, R.id.key33, R.id.key34, R.id.key35
-    };
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
-
-    private static final Logger LOGGER = Logger.getLogger(Colombia.class.getName());
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        context = this;
-        setContentView(R.layout.colombia);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
-
-        points = getIntent().getIntExtra("points", 0); // KP
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
-
-        setTitle(Start.localAppName + ": " + gameNumber);
-
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+public class Colombia extends GameActivity
+{
+
+	String initialLetter = "";
+	ArrayList<String> tempKeys; // KRP
+
+	protected static final int[] TILE_BUTTONS = {
+			R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
+			R.id.key11, R.id.key12, R.id.key13, R.id.key14, R.id.key15, R.id.key16, R.id.key17, R.id.key18, R.id.key19, R.id.key20,
+			R.id.key21, R.id.key22, R.id.key23, R.id.key24, R.id.key25, R.id.key26, R.id.key27, R.id.key28, R.id.key29, R.id.key30,
+			R.id.key31, R.id.key32, R.id.key33, R.id.key34, R.id.key35
+	};
+
+	protected int[] getTileButtons() {return TILE_BUTTONS;}
+
+	protected int[] getWordImages() {return null;}
+
+	private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#4CAF50", "#E91E63"};
+
+	private static final Logger LOGGER = Logger.getLogger(Colombia.class.getName());
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		context = this;
+		setContentView(R.layout.colombia);
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+
+		points = getIntent().getIntExtra("points", 0); // KRP
+		playerNumber = getIntent().getIntExtra("playerNumber", -1); // KRP
+		challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KRP
+
+		setTitle(Start.localAppName + ": " + gameNumber);
+
+		TextView pointsEarned = findViewById(R.id.pointsTextView);
+		pointsEarned.setText(String.valueOf(points));
+
+		LOGGER.info("Remember: oC2");
+
+		SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+		String playerString = Util.returnPlayerStringToAppend(playerNumber);
+		String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+		trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
 
-        LOGGER.info("Remember: oC2");
-
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
+		updateTrackers();
 
-        updateTrackers();
+		LOGGER.info("Remember: oC3");
 
-        LOGGER.info("Remember: oC3");
+		setTextSizes();
 
-        setTextSizes();
+		LOGGER.info("Remember: oC4");
 
-        LOGGER.info("Remember: oC4");
+		playAgain();
 
-        playAgain();
+	}
 
-    }
+	@Override
+	public void onBackPressed()
+	{
+		// no action
+	}
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
+	public void setTextSizes()
+	{
 
-    public void setTextSizes() {
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		int heightOfDisplay = displayMetrics.heightPixels;
+		int pixelHeight = 0;
+		double scaling = 0.45;
+		int bottomToTopId;
+		int topToTopId;
+		float percentBottomToTop;
+		float percentTopToTop;
+		float percentHeight;
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        int pixelHeight = 0;
-        double scaling = 0.45;
-        int bottomToTopId;
-        int topToTopId;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        for (int k = 0; k < KEYS.length; k++) {
-
-            TextView key = findViewById(KEYS[k]);
-            if (k == 0) {
-                ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) key.getLayoutParams();
-                bottomToTopId = lp1.bottomToTop;
-                topToTopId = lp1.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-            }
-            key.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        }
-
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-        ConstraintLayout.LayoutParams lp2 = (ConstraintLayout.LayoutParams) wordToBuild.getLayoutParams();
-        int bottomToTopId2 = lp2.bottomToTop;
-        int topToTopId2 = lp2.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId2).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId2).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-        wordToBuild.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        ImageView pointsEarnedImage = (ImageView) findViewById(R.id.pointsImage);
-        ConstraintLayout.LayoutParams lp3 = (ConstraintLayout.LayoutParams) pointsEarnedImage.getLayoutParams();
-        int bottomToTopId3 = lp3.bottomToTop;
-        int topToTopId3 = lp3.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.7 * scaling * percentHeight * heightOfDisplay);
-        pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-    }
-    
-    public void repeatGame(View View) {
-
-        if (!repeatLocked) {
-            playAgain();
-        }
-
-    }
-    public void playAgain() {
-
-        repeatLocked = true;
-
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-
-        wordToBuild.setText("");
-        wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
-        wordToBuild.setTextColor(Color.parseColor("#000000")); // black
-
-        LOGGER.info("Remember: pA1");
-
-        chooseWord();
-
-        LOGGER.info("Remember: pA2");
-        ImageView deleteArrow = (ImageView) findViewById(R.id.deleteImage);
-        deleteArrow.setClickable(true);
-
-        LOGGER.info("Remember: pA3");
-        loadKeyboard();
-
-    }
-
-    private void chooseWord() {
-
-        Random rand = new Random();
-        int randomNum = rand.nextInt(Start.wordList.size()); // KP
-
-        wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-        wordInLOP = Start.wordList.get(randomNum).localWord; // KP
-
-        ImageView image = (ImageView) findViewById(R.id.wordImage);
-        int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
-        image.setImageResource(resID);
-
-        parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP); // KP
-        initialLetter = parsedWordArrayFinal.get(0); // KP
-
-    }
-    public void loadKeyboard() {
-
-        switch (challengeLevel) {
-            case 1:
-                // Build an array of only the required tiles
-                // Will it list <a> twice if <a> is needed twice? Yes, that's what it does
-                // The limited set keyboard is built with GAME TILES not with KEYS
-                keysInUse = tilesInArray(parsedWordArrayFinal);
-                tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KP
-                Collections.shuffle(tempKeys); // KP
-                for (int k = 0; k < keysInUse; k++) {
-                    TextView key = findViewById(KEYS[k]);
-                    key.setText(tempKeys.get(k));
-                }
-                break;
-            case 2:
-                // Build an array of the required tiles plus a corresponding tile from the distractor trio for each tile
-                // So, for a five tile word, there will be 10 tiles
-                // The limited-set keyboard is built with GAME TILES not with KEYS
-                int firstHalf = tilesInArray(parsedWordArrayFinal); // KP
-                keysInUse = 2 * firstHalf; // KP
-                tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KP
-                int a = 0;
-                for (int i = firstHalf; i < keysInUse; i++) {
-                    tempKeys.add( Start.tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(a))); // KP
-                    a++;
-                }
-                Collections.shuffle(tempKeys); // KP
-                for (int k = 0; k < keysInUse; k++) {
-                    TextView key = findViewById(KEYS[k]);
-                    key.setText(tempKeys.get(k));
-                }
-                break;
-            case 3:
-                // There are 35 key buttons available (KEYS.length), but the language may need a smaller amount (Start.keysArraySize)
-                // Starting with k = 1 to skip the header row
-                keysInUse = Start.keyList.size(); // KP
-                for (int k = 0; k < keysInUse; k++) {
-                    TextView key = findViewById(KEYS[k]);
-                    key.setText(keyList.get(k).baseKey); // KP
-                    String tileColorStr = COLORS[Integer.parseInt(Start.keyList.get(k).keyColor)];
-                    int tileColor = Color.parseColor(tileColorStr);
-                    key.setBackgroundColor(tileColor);
-                }
-                break;
-            default:
-        }
-
-        for (int k = 0; k < KEYS.length; k++) {
-
-            TextView key = findViewById(KEYS[k]);
-            if (k < keysInUse) {
-                key.setVisibility(View.VISIBLE);
-                key.setClickable(true);
-            } else {
-                key.setVisibility(View.INVISIBLE);
-                key.setClickable(false);
-            }
-
-        }
-    }
-
-    private void respondToKeySelection(int justClickedIndex) {
-
-        String tileToAdd = "";
-
-        switch (challengeLevel) {
-            case 2:
-                tileToAdd = tempKeys.get(justClickedIndex); // KP
-                break;
-            case 3:
-                tileToAdd = Start.keyList.get(justClickedIndex).baseKey;
-                break;
-            default:
-                tileToAdd = tempKeys.get(justClickedIndex); // KP (case 1)
-        }
-
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-        String currentWord = wordToBuild.getText() + tileToAdd;     // RR
-        wordToBuild.setText(currentWord);                           // RR
-
-        evaluateStatus();
-
-    }
-    private void evaluateStatus() {
-
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-
-        if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
-            // Word spelled correctly!
-            wordToBuild.setBackgroundColor(Color.parseColor("#4CAF50"));      // theme green
-            wordToBuild.setTextColor(Color.parseColor("#FFFFFF")); // white
+		for (int k = 0; k < TILE_BUTTONS.length; k++)
+		{
 
-            for (int i : KEYS) {                    // RR
-                TextView key = findViewById(i);     // RR
-                key.setClickable(false);
-            }
-
-            ImageView deleteArrow = (ImageView) findViewById(R.id.deleteImage);
-            deleteArrow.setClickable(false);
-
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points+=4;
-            pointsEarned.setText(String.valueOf(points));
-
-            trackerCount++;
-            updateTrackers();
-
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
-            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-            editor.apply();
-
-            playCorrectSoundThenActiveWordClip();
-
-            repeatLocked = false;
-
-        } else {
-
-            // Word is partial and, for the moment, assumed to be incorrect
-            wordToBuild.setBackgroundColor(Color.parseColor("#A9A9A9")); // gray for wrong
-            wordToBuild.setTextColor(Color.parseColor("#000000")); // black
-
-            if (wordInLOP.length() > wordToBuild.getText().length()) {
-
-                if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP).substring(0, wordToBuild.getText().length()))) {
-                    // Word, so far, spelled correctly, but a less than complete match
-                    wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
-                    wordToBuild.setTextColor(Color.parseColor("#000000")); // black
-                }
-
-            }
-        }
-    }
-
-    public void deleteLastKeyedLetter (View view) {
-
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-
-        String typedLettersSoFar = wordToBuild.getText().toString();
-        String nowWithOneLessChar = "";
-
-        if (typedLettersSoFar.length() > 0) {       // RR
-            nowWithOneLessChar = typedLettersSoFar.substring(0, typedLettersSoFar.length() - 1);
-        }
-
-        wordToBuild.setText(nowWithOneLessChar);
-        evaluateStatus();
-
-    }
-
-    public void onBtnClick(View view) {
-
-        int justClickedKey = Integer.parseInt((String)view.getTag());
-        respondToKeySelection(justClickedKey - 1);	// KP // to turn 1 based tag into 0 based index
-
-    }
-
-    private void setAllTilesUnclickable() {
-
-        for (int k = 0; k < KEYS.length; k++) {
-
-            if (k < keysInUse) {
-                TextView key = findViewById(KEYS[k]);
-                key.setClickable(false);
-            }
-
-        }
-
-    }
-
-    private void setAllTilesClickable() {
-
-        for (int k = 0; k < KEYS.length; k++) {
-
-            if (k < keysInUse) {
-                TextView key = findViewById(KEYS[k]);
-                key.setClickable(true);
-            }
-
-        }
-
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-        wordImage.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        wordImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
-    }
-
-    public void clickPicHearAudio (View view) {
-
-        playActiveWordClip();
-
-    }
-
-    public void playActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mediaPlayerIsPlaying = false;
-                if (repeatLocked) {
-                    setAllTilesClickable();
-                }
-                setOptionsRowClickable();
-                mp1.release();
-                mp1 = null;
-            }
-        });
-    }
-
-    public void playCorrectSoundThenActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveWordClip();
-            }
-        });
-    }
-
+			TextView key = findViewById(TILE_BUTTONS[k]);
+			if (k == 0)
+			{
+				ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams)key.getLayoutParams();
+				bottomToTopId = lp1.bottomToTop;
+				topToTopId = lp1.topToTop;
+				percentBottomToTop = ((ConstraintLayout.LayoutParams)findViewById(bottomToTopId).getLayoutParams()).guidePercent;
+				percentTopToTop = ((ConstraintLayout.LayoutParams)findViewById(topToTopId).getLayoutParams()).guidePercent;
+				percentHeight = percentBottomToTop - percentTopToTop;
+				pixelHeight = (int)(scaling * percentHeight * heightOfDisplay);
+			}
+			key.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+
+		}
+
+		TextView wordToBuild = (TextView)findViewById(R.id.activeWordTextView);
+		ConstraintLayout.LayoutParams lp2 = (ConstraintLayout.LayoutParams)wordToBuild.getLayoutParams();
+		int bottomToTopId2 = lp2.bottomToTop;
+		int topToTopId2 = lp2.topToTop;
+		percentBottomToTop = ((ConstraintLayout.LayoutParams)findViewById(bottomToTopId2).getLayoutParams()).guidePercent;
+		percentTopToTop = ((ConstraintLayout.LayoutParams)findViewById(topToTopId2).getLayoutParams()).guidePercent;
+		percentHeight = percentBottomToTop - percentTopToTop;
+		pixelHeight = (int)(scaling * percentHeight * heightOfDisplay);
+		wordToBuild.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+
+		// Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
+		TextView pointsEarned = findViewById(R.id.pointsTextView);
+		ImageView pointsEarnedImage = (ImageView)findViewById(R.id.pointsImage);
+		ConstraintLayout.LayoutParams lp3 = (ConstraintLayout.LayoutParams)pointsEarnedImage.getLayoutParams();
+		int bottomToTopId3 = lp3.bottomToTop;
+		int topToTopId3 = lp3.topToTop;
+		percentBottomToTop = ((ConstraintLayout.LayoutParams)findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
+		percentTopToTop = ((ConstraintLayout.LayoutParams)findViewById(topToTopId3).getLayoutParams()).guidePercent;
+		percentHeight = percentBottomToTop - percentTopToTop;
+		pixelHeight = (int)(0.7 * scaling * percentHeight * heightOfDisplay);
+		pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+
+	}
+
+	public void repeatGame(View View)
+	{
+
+		if (!repeatLocked)
+		{
+			playAgain();
+		}
+
+	}
+
+	public void playAgain()
+	{
+
+		repeatLocked = true;
+
+		TextView wordToBuild = (TextView)findViewById(R.id.activeWordTextView);
+
+		wordToBuild.setText("");
+		wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
+		wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+
+		LOGGER.info("Remember: pA1");
+
+		chooseWord();
+
+		LOGGER.info("Remember: pA2");
+		ImageView deleteArrow = (ImageView)findViewById(R.id.deleteImage);
+		deleteArrow.setClickable(true);
+
+		LOGGER.info("Remember: pA3");
+		loadKeyboard();
+
+	}
+
+	private void chooseWord()
+	{
+
+		Random rand = new Random();
+		int randomNum = rand.nextInt(Start.wordList.size()); // KRP
+
+		wordInLWC = Start.wordList.get(randomNum).nationalWord; // KRP
+		wordInLOP = Start.wordList.get(randomNum).localWord; // KRP
+
+		ImageView image = (ImageView)findViewById(R.id.wordImage);
+		int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+		image.setImageResource(resID);
+
+		parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP); // KRP
+		initialLetter = parsedWordArrayFinal.get(0); // KRP
+
+	}
+
+	public void loadKeyboard()
+	{
+
+		switch (challengeLevel)
+		{
+		case 1:
+			// Build an array of only the required tiles
+			// Will it list <a> twice if <a> is needed twice? Yes, that's what it does
+			// The limited set keyboard is built with GAME TILES not with KEYS
+			visibleTiles = tilesInArray(parsedWordArrayFinal);
+			tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KRP
+			Collections.shuffle(tempKeys); // KRP
+			for (int k = 0; k < visibleTiles; k++)
+			{
+				TextView key = findViewById(TILE_BUTTONS[k]);
+				key.setText(tempKeys.get(k));
+			}
+			break;
+		case 2:
+			// Build an array of the required tiles plus a corresponding tile from the distractor trio for each tile
+			// So, for a five tile word, there will be 10 tiles
+			// The limited-set keyboard is built with GAME TILES not with KEYS
+			int firstHalf = tilesInArray(parsedWordArrayFinal); // KRP
+			visibleTiles = 2 * firstHalf; // KRP
+			tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KRP
+			int a = 0;
+			for (int i = firstHalf; i < visibleTiles; i++)
+			{
+				tempKeys.add(Start.tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(a))); // KRP
+				a++;
+			}
+			Collections.shuffle(tempKeys); // KRP
+			for (int k = 0; k < visibleTiles; k++)
+			{
+				TextView key = findViewById(TILE_BUTTONS[k]);
+				key.setText(tempKeys.get(k));
+			}
+			break;
+		case 3:
+			// There are 35 key buttons available (KEYS.length), but the language may need a smaller amount (Start.keysArraySize)
+			// Starting with k = 1 to skip the header row
+			visibleTiles = Start.keyList.size(); // KRP
+			for (int k = 0; k < visibleTiles; k++)
+			{
+				TextView key = findViewById(TILE_BUTTONS[k]);
+				key.setText(keyList.get(k).baseKey); // KRP
+				String tileColorStr = COLORS[Integer.parseInt(Start.keyList.get(k).keyColor)];
+				int tileColor = Color.parseColor(tileColorStr);
+				key.setBackgroundColor(tileColor);
+			}
+			break;
+		default:
+		}
+
+		for (int k = 0; k < TILE_BUTTONS.length; k++)
+		{
+
+			TextView key = findViewById(TILE_BUTTONS[k]);
+			if (k < visibleTiles)
+			{
+				key.setVisibility(View.VISIBLE);
+				key.setClickable(true);
+			}
+			else
+			{
+				key.setVisibility(View.INVISIBLE);
+				key.setClickable(false);
+			}
+
+		}
+	}
+
+	private void respondToKeySelection(int justClickedIndex)
+	{
+
+		String tileToAdd = "";
+
+		switch (challengeLevel)
+		{
+		case 2:
+			tileToAdd = tempKeys.get(justClickedIndex); // KRP
+			break;
+		case 3:
+			tileToAdd = Start.keyList.get(justClickedIndex).baseKey;
+			break;
+		default:
+			tileToAdd = tempKeys.get(justClickedIndex); // KRP (case 1)
+		}
+
+		TextView wordToBuild = (TextView)findViewById(R.id.activeWordTextView);
+		String currentWord = wordToBuild.getText() + tileToAdd;     // RR
+		wordToBuild.setText(currentWord);                           // RR
+
+		evaluateStatus();
+
+	}
+
+	private void evaluateStatus()
+	{
+
+		TextView wordToBuild = (TextView)findViewById(R.id.activeWordTextView);
+
+		if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP)))
+		{
+			// Word spelled correctly!
+			wordToBuild.setBackgroundColor(Color.parseColor("#4CAF50"));      // theme green
+			wordToBuild.setTextColor(Color.parseColor("#FFFFFF")); // white
+
+			for (int i : TILE_BUTTONS)
+			{                    // RR
+				TextView key = findViewById(i);     // RR
+				key.setClickable(false);
+			}
+
+			ImageView deleteArrow = (ImageView)findViewById(R.id.deleteImage);
+			deleteArrow.setClickable(false);
+
+			TextView pointsEarned = findViewById(R.id.pointsTextView);
+			points += 4;
+			pointsEarned.setText(String.valueOf(points));
+
+			trackerCount++;
+			updateTrackers();
+
+			SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+			String playerString = Util.returnPlayerStringToAppend(playerNumber);
+			editor.putInt("storedPoints_player" + playerString, points);
+			editor.apply();
+			String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+			editor.putInt(uniqueGameLevelPlayerID, trackerCount);
+			editor.apply();
+
+			playCorrectSoundThenActiveWordClip(false);
+
+			repeatLocked = false;
+
+		}
+		else
+		{
+
+			// Word is partial and, for the moment, assumed to be incorrect
+			wordToBuild.setBackgroundColor(Color.parseColor("#A9A9A9")); // gray for wrong
+			wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+
+			if (wordInLOP.length() > wordToBuild.getText().length())
+			{
+
+				if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP).substring(0, wordToBuild.getText().length())))
+				{
+					// Word, so far, spelled correctly, but a less than complete match
+					wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
+					wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+				}
+
+			}
+		}
+	}
+
+	public void deleteLastKeyedLetter(View view)
+	{
+
+		TextView wordToBuild = (TextView)findViewById(R.id.activeWordTextView);
+
+		String typedLettersSoFar = wordToBuild.getText().toString();
+		String nowWithOneLessChar = "";
+
+		if (typedLettersSoFar.length() > 0)
+		{       // RR
+			nowWithOneLessChar = typedLettersSoFar.substring(0, typedLettersSoFar.length() - 1);
+		}
+
+		wordToBuild.setText(nowWithOneLessChar);
+		evaluateStatus();
+
+	}
+
+	public void onBtnClick(View view)
+	{
+
+		int justClickedKey = Integer.parseInt((String)view.getTag());
+		respondToKeySelection(justClickedKey - 1);    // KRP // to turn 1 based tag into 0 based index
+
+	}
+
+ /**
+	protected void setAllTilesUnclickable()
+	{
+		for (int k = 0; k < KEYS.length; k++)
+		{
+
+			if (k < keysInUse)
+			{
+				TextView key = findViewById(KEYS[k]);
+				key.setClickable(false);
+			}
+
+		}
+
+	}
+
+	protected void setAllTilesClickable()
+	{
+		for (int k = 0; k < KEYS.length; k++)
+		{
+
+			if (k < keysInUse)
+			{
+				TextView key = findViewById(KEYS[k]);
+				key.setClickable(true);
+			}
+
+		}
+
+	}
+
+	protected void setOptionsRowUnclickable()
+	{
+
+		ImageView repeatImage = findViewById(R.id.repeatImage);
+		ImageView wordImage = findViewById(R.id.wordImage);
+
+		repeatImage.setBackgroundResource(0);
+		repeatImage.setImageResource(R.drawable.zz_forward_inactive);
+
+		repeatImage.setClickable(false);
+		wordImage.setClickable(false);
+
+	}
+
+	protected void setOptionsRowClickable()
+	{
+
+		ImageView repeatImage = findViewById(R.id.repeatImage);
+		ImageView wordImage = findViewById(R.id.wordImage);
+		ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
+
+		repeatImage.setBackgroundResource(0);
+		repeatImage.setImageResource(R.drawable.zz_forward);
+
+		repeatImage.setClickable(true);
+		wordImage.setClickable(true);
+		gamesHomeImage.setClickable(true);
+
+	}
+
+	public void clickPicHearAudio(View view)
+	{
+
+		playActiveWordClip();
+
+	}
+
+	protected void playActiveWordClip()
+	{
+		setAllTilesUnclickable();
+		setOptionsRowUnclickable();
+		int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
+		MediaPlayer mp1 = MediaPlayer.create(this, resID);
+		mediaPlayerIsPlaying = true;
+		mp1.start();
+		mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+		{
+			@Override
+			public void onCompletion(MediaPlayer mp1)
+			{
+				mediaPlayerIsPlaying = false;
+				if (repeatLocked)
+				{
+					setAllTilesClickable();
+				}
+				setOptionsRowClickable();
+				mp1.release();
+				mp1 = null;
+			}
+		});
+	}
+
+	protected void playCorrectSoundThenActiveWordClip()
+	{
+		setAllTilesUnclickable();
+		setOptionsRowUnclickable();
+		MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
+		mediaPlayerIsPlaying = true;
+		mp2.start();
+		mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+		{
+			@Override
+			public void onCompletion(MediaPlayer mp2)
+			{
+				mp2.release();
+				playActiveWordClip();
+			}
+		});
+	}
+**/
 }
