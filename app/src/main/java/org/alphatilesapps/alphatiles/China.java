@@ -11,10 +11,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Logger;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 //Game of 15
 public class China extends GameActivity {
@@ -25,6 +26,8 @@ public class China extends GameActivity {
     ArrayList<String> allWords = new ArrayList<>();
     TextView blankTile;
     int moves;
+    int currentRow;
+    boolean[] rowsCorrect = new boolean[4];
 
 
     private static final int[] TILE_BUTTONS = {
@@ -136,7 +139,11 @@ public class China extends GameActivity {
                 moves = 5;
         }
 
+        currentRow = 3;
         repeatLocked = true;
+        for (int i = 0; i < 4; i++){
+            rowsCorrect[i] = false;
+        }
         choseWords();
         setUpTiles();
         //wip
@@ -231,6 +238,11 @@ public class China extends GameActivity {
                 moves--;
             }
         }
+
+        if(isSolved()){
+            LOGGER.info("Puzzle already solved, try again");
+            setUpTiles();
+        }
     }
 
     private void swapTiles(TextView tile1, TextView tile2){
@@ -284,14 +296,7 @@ public class China extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-            for (int tileButton : TILE_BUTTONS) {
-                TextView gameTile = findViewById(tileButton);
-                if (gameTile != blankTile) {
-                    String wordColorStr = "#00FF00"; //green
-                    int wordColorNo = Color.parseColor(wordColorStr);
-                    gameTile.setBackgroundColor(wordColorNo);
-                }
-            }
+            playCorrectFinalSound();
             setOptionsRowClickable();
         }
         else {
@@ -307,15 +312,111 @@ public class China extends GameActivity {
 
     private boolean isSolved(){
         boolean solved = false;
+        TextView tile;
+        //first row
+        for (int i = 0; i < 4; i++){
+            tile = findViewById(TILE_BUTTONS[i]);
+            solved = (allWords.get(i) == tile.getText());
+
+            if (!solved) {
+                break;
+            }
+        }
+        if (solved && !rowsCorrect[0]){
+            rowsCorrect[0] = true;
+            for (int i = 0; i < 4; i++) {
+                tile = findViewById(TILE_BUTTONS[i]);
+                String wordColorStr = "#00FF00"; //green
+                int wordColorNo = Color.parseColor(wordColorStr);
+                tile.setBackgroundColor(wordColorNo);
+            }
+            wordInLWC = threeFourWordInLopLwc[0][0];
+            playCorrectSoundThenActiveWordClip();
+        }
+        //second row
+        solved = false;
+        for (int i = 4; i < 8; i++){
+            tile = findViewById(TILE_BUTTONS[i]);
+            solved = (allWords.get(i) == tile.getText());
+
+            if (!solved) {
+                break;
+            }
+        }
+        if (solved && !rowsCorrect[1]){
+            rowsCorrect[1] = true;
+            for (int i = 4; i < 8; i++) {
+                tile = findViewById(TILE_BUTTONS[i]);
+                String wordColorStr = "#00FF00"; //green
+                int wordColorNo = Color.parseColor(wordColorStr);
+                tile.setBackgroundColor(wordColorNo);
+            }
+            wordInLWC = threeFourWordInLopLwc[1][0];
+            playCorrectSoundThenActiveWordClip();
+        }
+        //third row
+        solved = false;
+        for (int i = 8; i < 12; i++){
+            tile = findViewById(TILE_BUTTONS[i]);
+            solved = (allWords.get(i) == tile.getText());
+
+            if (!solved) {
+                break;
+            }
+        }
+        if (solved && !rowsCorrect[2]){
+            rowsCorrect[2] = true;
+            for (int i = 8; i < 12; i++) {
+                tile = findViewById(TILE_BUTTONS[i]);
+                String wordColorStr = "#00FF00"; //green
+                int wordColorNo = Color.parseColor(wordColorStr);
+                tile.setBackgroundColor(wordColorNo);
+            }
+            wordInLWC = threeFourWordInLopLwc[2][0];
+            playCorrectSoundThenActiveWordClip();
+        }
+        //last row
+        solved = false;
         if (blankTile == findViewById(TILE_BUTTONS[15])){
-            TextView tile;
-            for (int i = 0; i < 15; i++){
+            for (int i = 12; i < 15; i++){
                 tile = findViewById(TILE_BUTTONS[i]);
                 solved = (allWords.get(i) == tile.getText());
 
                 if (!solved) {
                     break;
                 }
+            }
+            if (solved && !rowsCorrect[3]){
+                rowsCorrect[3] = true;
+                for (int i = 12; i < 15; i++) {
+                    tile = findViewById(TILE_BUTTONS[i]);
+                    String wordColorStr = "#00FF00"; //green
+                    int wordColorNo = Color.parseColor(wordColorStr);
+                    tile.setBackgroundColor(wordColorNo);
+                }
+                wordInLWC = oneThreeWordInLopLwc[0];
+                playCorrectSoundThenActiveWordClip();
+            }
+        }
+        else if (blankTile == findViewById(TILE_BUTTONS[12])){
+            for (int i = 13; i < 16; i++){
+                tile = findViewById(TILE_BUTTONS[i]);
+                solved = (allWords.get(i) == tile.getText());
+
+                if (!solved) {
+                    break;
+                }
+            }
+            if (solved && !rowsCorrect[3]){
+                rowsCorrect[3] = true;
+                for (int i = 13; i < 16; i++) {
+                    tile = findViewById(TILE_BUTTONS[i]);
+                    String wordColorStr = "#00FF00"; //green
+                    int wordColorNo = Color.parseColor(wordColorStr);
+                    tile.setBackgroundColor(wordColorNo);
+                }
+                wordInLWC = oneThreeWordInLopLwc[0];
+                playCorrectSoundThenActiveWordClip();
             }
         }
         return solved;
@@ -400,8 +501,30 @@ public class China extends GameActivity {
 
     }
 
-    public void clickPicHearAudio (View view) {
+    public void clickPic1HearAudio (View view) {
 
+        wordInLWC = threeFourWordInLopLwc[0][0];
+        playActiveWordClip();
+
+    }
+
+    public void clickPic2HearAudio (View view) {
+
+        wordInLWC = threeFourWordInLopLwc[1][0];
+        playActiveWordClip();
+
+    }
+
+    public void clickPic3HearAudio (View view) {
+
+        wordInLWC = threeFourWordInLopLwc[2][0];
+        playActiveWordClip();
+
+    }
+
+    public void clickPic4HearAudio (View view) {
+
+        wordInLWC = oneThreeWordInLopLwc[0];
         playActiveWordClip();
 
     }
@@ -409,8 +532,14 @@ public class China extends GameActivity {
     public void playActiveWordClip() {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
+        MediaPlayer mp1 = MediaPlayer.create(this, resID);
         mediaPlayerIsPlaying = true;
         mp1.start();
         mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -423,6 +552,38 @@ public class China extends GameActivity {
                 setOptionsRowClickable();
                 mp1.release();
 
+            }
+        });
+    }
+    public void playCorrectSoundThenActiveWordClip() {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
+        mediaPlayerIsPlaying = true;
+        mp2.start();
+        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp2) {
+                mp2.release();
+                playActiveWordClip();
+            }
+        });
+    }
+    public void playCorrectFinalSound() {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+        mediaPlayerIsPlaying = true;
+        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_correct_final);
+        mp3.start();
+        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp3) {
+                mediaPlayerIsPlaying = false;
+                if (repeatLocked) {
+                    setAllTilesClickable();
+                }
+                setOptionsRowClickable();
+                mp3.release();
             }
         });
     }
