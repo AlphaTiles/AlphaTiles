@@ -88,6 +88,9 @@ public class Romania extends GameActivity {
 
     private void setUpBasedOnGameTile(String activeTileString) {
 
+
+        LOGGER.info("Remember: activeTileString = " + activeTileString);
+
         skipThisWord = false;
 
         int myMagCount = 0;

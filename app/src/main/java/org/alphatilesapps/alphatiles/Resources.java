@@ -52,18 +52,10 @@ public class Resources extends AppCompatActivity {
 
         setContentView(R.layout.resources);
 
-//        ImageView avatar = findViewById(R.id.activePlayerImage);
-//        int resID = getResources().getIdentifier(String.valueOf(Start.AVATAR_IDS[Start.playerNumber - 1]), "drawable", getPackageName());
-//        avatar.setImageResource(resID);
+        setTitle(Start.localAppName);
 
         buildResourcesArray();
         loadResources();
-
-        String fileName = "okToDeleteMe2.txt";
-        String text = "burrito";
-
-//        writeFile(fileName, text);
-//        writeFile2(fileName, text);
 
     }
 
@@ -121,30 +113,13 @@ public class Resources extends AppCompatActivity {
 
                 String linkText = "<a href=\"" + httpText + "\">" + displayText + "</a>";
 
-//                String linkText = "<a href=\"example.jsp?channel=" + val + "&date=" + date + "\">" + val + "</a>";
-
-
-//                String linkText = "<a href='http://stackoverflow.com'>StackOverflow</a>";
-//                promotedText.setText(resourcesList[r + 1][2]);
-
                 promotedText.setText(Html.fromHtml(linkText));
                 promotedText.setMovementMethod(LinkMovementMethod.getInstance());
-
-
-                //                TextView link = findViewById(R.id.resourceText01);
-//                String linkText = "<a href='http://stackoverflow.com'>StackOverflow</a>";
-//                link.setText(Html.fromHtml(linkText));
-//                link.setMovementMethod(LinkMovementMethod.getInstance());
 
             } else {
                 promotedResource.setVisibility(View.INVISIBLE);
                 promotedText.setText("");
             }
-
-//            TextView link = findViewById(R.id.resourceText01);
-//            String linkText = "<a href='http://stackoverflow.com'>StackOverflow</a>";
-//            link.setText(Html.fromHtml(linkText));
-//            link.setMovementMethod(LinkMovementMethod.getInstance());
 
         }
     }
@@ -156,71 +131,6 @@ public class Resources extends AppCompatActivity {
         startActivity(intent);
         finish();
 
-    }
-
-    public void writeFile2(String fileName, String text) {
-        // https://developer.android.com/training/permissions/requesting
-        // Check if the write permission is already available
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                // Writer permission is already available, execute the write task
-                File textFile = new File(Environment.getExternalStorageDirectory(), fileName);
-                try {
-                    FileOutputStream fos = new FileOutputStream(textFile);
-                    fos.write(text.getBytes());
-                    fos.close();
-
-                    Toast.makeText(this, "File saved", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this, "This is required to export results to a .txt file", Toast.LENGTH_SHORT).show();
-                }
-
-                // Request write permission
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            }
-        }
-
-    }
-
-    public void writeFile(String fileName, String text) {
-        LOGGER.info("Remember: isExternalStorageWriteable() = " + isExternalStorageWriteable());
-        LOGGER.info("Remember: checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) = " + checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE));
-
-        if (isExternalStorageWriteable() && checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            File textFile = new File(Environment.getExternalStorageDirectory(), fileName);
-            try {
-                FileOutputStream fos = new FileOutputStream(textFile);
-                fos.write(text.getBytes());
-                fos.close();
-
-                Toast.makeText(this, "File saved", Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Toast.makeText(this, "Cannot write to external storage", Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    private boolean isExternalStorageWriteable() {
-        // https://www.youtube.com/watch?v=7CEcevGbIZU
-        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    public boolean checkPermission(String permission) {
-        int check = ContextCompat.checkSelfPermission(this, permission);
-        LOGGER.info("Remember: ContextCompat.checkSelfPermission(this, permission) = " + ContextCompat.checkSelfPermission(this, permission));
-        LOGGER.info("Remember: PackageManager.PERMISSION_GRANTED = " + PackageManager.PERMISSION_GRANTED);
-        return (check == PackageManager.PERMISSION_GRANTED);
     }
 
 }

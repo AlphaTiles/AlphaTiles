@@ -26,6 +26,8 @@ public class Mexico extends GameActivity {
         // # 2 [LOP word, e.g. Me'phaa]
         // # 3 [state: "TEXT" or "IMAGE"]
         // # 4 [state: "SELECTED" or "UNSELECTED" or "PAIRED"]
+        // # 5 duration in ms
+        // # 6 font adjustment for longer words
 
     ArrayList<String[]> wordListArray; // KP
 
@@ -37,6 +39,7 @@ public class Mexico extends GameActivity {
     int cardHitB = 0;
     int cardsLength;
     int pixelHeight = 0;
+    double lowestAdjustment = 0.7;
 
     Handler handler; // KP
 
@@ -208,7 +211,11 @@ public class Mexico extends GameActivity {
         while (scanner.hasNextLine()) {
             String thisLine = scanner.nextLine();
             String[] thisLineArray = thisLine.split("\t");
-            wordListArray.add(thisLineArray);
+            double activeAdjustment = Double.parseDouble(thisLineArray[4]);
+            if (activeAdjustment >= lowestAdjustment) {
+//                LOGGER.info("Remember: thisLineArray[4] = " + thisLineArray[4]);
+                wordListArray.add(thisLineArray);
+            }
         }
     }
 
@@ -225,7 +232,11 @@ public class Mexico extends GameActivity {
                     {
                             wordListArray.get(index)[0],
                             wordListArray.get(index)[1],
-                            i < cardsToSetUp ? "TEXT" : "IMAGE", "UNSELECTED",
+                            i < cardsToSetUp ? "TEXT" : "IMAGE",
+                            "UNSELECTED",
+                            wordListArray.get(index)[2],    // audio clip duration in seconds
+                            wordListArray.get(index)[4],    // font adjustment
+
 
                     };
             memoryCollection.add(content);
@@ -272,14 +283,13 @@ public class Mexico extends GameActivity {
 //        Both cards displayed a semi-transparent version of the image and both cards showed the text in bold green font
 //        If we could get this version to work, it would be preferable, but I (Aaron) had a problem with the images appearing
 //        initially in new games already semi-transparent and I wasn't able to fix it
+        // Can't remember if we tested if the problem went away once replaying the game involves finishing the activity and restarting
 
         if (appearance.equals("TEXT")) {
             card.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
-            int thisCardPixelHeight = pixelHeight;
-            while(card.getLineCount() > 1) {
-                thisCardPixelHeight = (int) (thisCardPixelHeight * 0.7);
-                card.setTextSize(TypedValue.COMPLEX_UNIT_PX, thisCardPixelHeight);
-            }
+            float fontAdjustment = Float.parseFloat(memoryCollection.get(t)[5]);
+            int thisCardPixelHeight = (int) (pixelHeight * fontAdjustment);
+            card.setTextSize(TypedValue.COMPLEX_UNIT_PX, thisCardPixelHeight);
             card.setBackgroundResource(0);
         } else {
             card.setBackgroundResource(resID);
@@ -371,10 +381,6 @@ public class Mexico extends GameActivity {
 
             final TextView cardA = findViewById(CARDS[cardHitA]); // RR
             final TextView cardB = findViewById(CARDS[cardHitB]); // RR
-//            int resID = getResources().getIdentifier(memoryCollection.get(cardHitB)[0] + "2", "drawable", getPackageName());
-
-//            cardA.setBackgroundResource(resID);
-//            cardB.setBackgroundResource(resID);
             cardA.setBackgroundResource(0);
             cardB.setBackgroundResource(0);
 
@@ -383,72 +389,15 @@ public class Mexico extends GameActivity {
 
             cardA.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitA)[1]));
             cardB.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitB)[1]));
+            float fontAdjustment = Float.parseFloat(memoryCollection.get(cardHitA)[5]);
+            int thisCardPixelHeight = (int) (pixelHeight * fontAdjustment);
+            cardA.setTextSize(TypedValue.COMPLEX_UNIT_PX, thisCardPixelHeight);
+            cardB.setTextSize(TypedValue.COMPLEX_UNIT_PX, thisCardPixelHeight);
 
             String tileColorStr = COLORS[cardHitA % 5];
             int tileColor = Color.parseColor(tileColorStr);
             cardA.setTextColor(tileColor); // theme color
             cardB.setTextColor(tileColor); // theme color
-
-//            cardA.setTextColor(Color.parseColor("#006400")); // dark green
-//            cardB.setTextColor(Color.parseColor("#006400")); // dark green
-
-//            cardA.setTypeface(cardA.getTypeface(), Typeface.BOLD);
-//            cardB.setTypeface(cardB.getTypeface(), Typeface.BOLD);
-
-            for (int i = 0; i < pixelHeight; i++) {
-                decreasePixelHeight(cardA);
-            }
-            for (int i = 0; i < pixelHeight; i++) {
-                decreasePixelHeight(cardB);
-            }
-
-//            The below code relates to an experiment to size down the text (because it increases upon applying bold-green)
-//            Ideally, the font size would reduce until the text displayed on one line
-//            int lineCount = returnLineCount(cardA);
-//            LOGGER.info("Remember: [outside while (lineCount > 1)]: lineCount = " + lineCount);
-//            while (lineCount > 1) {
-//                LOGGER.info("Remember: [inside while (lineCount > 1)]: lineCount = " + lineCount);
-//                int cardAPixelHeight = pixelHeight;
-//                cardAPixelHeight = cardAPixelHeight - 1;
-//                cardA.setTextSize(TypedValue.COMPLEX_UNIT_PX, cardAPixelHeight);
-//                lineCount = returnLineCount(cardA);
-//            }
-//
-//            lineCount = returnLineCount(cardB);
-//            LOGGER.info("Remember: [outside while (lineCount > 1)]: lineCount = " + lineCount);
-//            while (lineCount > 1) {
-//                LOGGER.info("Remember: [inside while (lineCount > 1)]: lineCount = " + lineCount);
-//                int cardBPixelHeight = pixelHeight;
-//                cardBPixelHeight = cardBPixelHeight - 1;
-//                cardB.setTextSize(TypedValue.COMPLEX_UNIT_PX, cardBPixelHeight);
-//                lineCount = returnLineCount(cardB);
-//            }
-
-//            int cardAPixelHeight = pixelHeight;
-//            LOGGER.info("Remember: [failing routine][outside while]: cardA.getLineCount() = " + cardA.getLineCount());
-//            while(cardA.getLineCount() > 1) {
-//                LOGGER.info("Remember: [failing routine][inside while]: cardA.getLineCount() = " + cardA.getLineCount());
-//                cardAPixelHeight = cardAPixelHeight - 1;
-//                cardA.setTextSize(TypedValue.COMPLEX_UNIT_PX, cardAPixelHeight);
-//                cardA.setText(memoryCollection[cardHitA][1]);
-//                cardA.requestLayout();
-//                cardA.invalidate();
-//                cardA.setText(memoryCollection[cardHitA][1]);
-//                cardA.requestLayout();
-//                cardA.invalidate();
-//            }
-//
-//            int cardBPixelHeight = pixelHeight;
-//            while(cardB.getLineCount() > 1) {
-//                cardBPixelHeight = cardBPixelHeight - 1;
-//                cardB.setTextSize(TypedValue.COMPLEX_UNIT_PX, cardBPixelHeight);
-//                cardB.setText(memoryCollection[cardHitB][1]);
-//                cardB.requestLayout();
-//                cardB.invalidate();
-//                cardB.setText(memoryCollection[cardHitB][1]);
-//                cardB.requestLayout();
-//                cardB.invalidate();
-//            }
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points++;
@@ -473,21 +422,6 @@ public class Mexico extends GameActivity {
             memoryCollection.get(cardHitB)[3] = "UNSELECTED"; // KP
         }
 
-    }
-
-    public static void decreasePixelHeight(final TextView card) {
-
-        card.post(new Runnable() {
-            @Override
-            public void run() {
-                int lineCount = card.getLineCount();
-                if (lineCount > 1) {
-                    int pixelHeightResized = (int) (card.getTextSize() * 0.7);
-                    card.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeightResized);
-                    LOGGER.info("Remember: [runnable]: pixelHeightResized =  " + pixelHeightResized );
-                }
-            }
-        });
     }
 
     public void onBtnClick(View view) {

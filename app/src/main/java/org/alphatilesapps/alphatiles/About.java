@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.BuildConfig;
+
 public class About extends AppCompatActivity {
 
     Context context;
@@ -19,6 +21,8 @@ public class About extends AppCompatActivity {
         context = this;
 
         setContentView(R.layout.about);
+
+        setTitle(Start.localAppName);
 
         TextView localName = findViewById(R.id.gameNameInLOP);
         localName.setText(Start.localAppName);
@@ -36,7 +40,7 @@ public class About extends AppCompatActivity {
         }
 
         TextView photoAudioCredits = findViewById(R.id.photoAudioCredits);
-        photoAudioCredits.setText(Start.langInfoList.find("Audio and photos credits"));
+        photoAudioCredits.setText(Start.langInfoList.find("Audio and image credits"));
 
         String verName = BuildConfig.VERSION_NAME;
         TextView verInfo = findViewById(R.id.appVersionInEnglish);
