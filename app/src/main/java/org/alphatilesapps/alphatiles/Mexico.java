@@ -43,10 +43,14 @@ public class Mexico extends GameActivity {
 
     Handler handler; // KP
 
-    private static final int[] CARDS = {
+    private static final int[] TILE_BUTTONS = {
             R.id.card01, R.id.card02, R.id.card03, R.id.card04, R.id.card05, R.id.card06, R.id.card07, R.id.card08, R.id.card09, R.id.card10,
             R.id.card11, R.id.card12, R.id.card13, R.id.card14, R.id.card15, R.id.card16, R.id.card17, R.id.card18, R.id.card19, R.id.card20
     };
+    
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+
+    protected int[] getWordImages() {return null;}
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -113,7 +117,7 @@ public class Mexico extends GameActivity {
 
         for (int c = 0; c < cardsLength; c++) {
 
-            TextView cards = findViewById(CARDS[c]);
+            TextView cards = findViewById(TILE_BUTTONS[c]);
             if (c == 0) {
                 ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) cards.getLayoutParams();
                 bottomToTopId = lp1.bottomToTop;
@@ -178,8 +182,8 @@ public class Mexico extends GameActivity {
 
     public void setCardTextToEmpty() {
 
-        for (int i = 0; i < CARDS.length; i++) {    // RR
-            TextView card = findViewById(CARDS[i]); // RR
+        for (int i = 0; i < TILE_BUTTONS.length; i++) {    // RR
+            TextView card = findViewById(TILE_BUTTONS[i]); // RR
 
 //            card.getBackground().setAlpha(255);
 
@@ -247,25 +251,25 @@ public class Mexico extends GameActivity {
 
     public void respondToCardSelection() {
 
-        setAllCardsToUnclickable();
+        setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
         int t = justClickedCard - 1; //  justClickedCard uses 1 to 12/16/20 (dep. on challengeLevel), t uses the array ID: between [0] and [11] / [15] / [19]
 
         if (memoryCollection.get(t)[3].equals("PAIRED")) {
-            setAllCardsToClickable();
+            setAllTilesClickable();
             setOptionsRowClickable();
             return;
         }
 
         if (activeSelections == 2) {
-            setAllCardsToClickable();
+            setAllTilesClickable();
             setOptionsRowClickable();
             return;
         }
 
         if (justClickedCard == priorClickedCard && activeSelections == 1) {
-            setAllCardsToClickable();
+            setAllTilesClickable();
             setOptionsRowClickable();
             return;
         }
@@ -273,7 +277,7 @@ public class Mexico extends GameActivity {
         activeSelections++;
         String[] currentItem = memoryCollection.get(t); // KP
         currentItem[3] = "SELECTED"; // KP
-        TextView card = findViewById(CARDS[t]);
+        TextView card = findViewById(TILE_BUTTONS[t]);
         int resID = getResources().getIdentifier(currentItem[0], "drawable", getPackageName()); // KP
         String wordInLOP = currentItem[1]; // KP
         String appearance = currentItem[2]; // KP
@@ -306,44 +310,8 @@ public class Mexico extends GameActivity {
             // https://codinginflow.com/tutorials/android/handler-postdelayed-runnable
         }
 
-        setAllCardsToClickable();
+        setAllTilesClickable();
         setOptionsRowClickable();
-
-    }
-
-    public void setAllCardsToUnclickable() {
-        for (int i = 0; i < cardsLength; i++) {
-            TextView card = findViewById(CARDS[i]);
-            card.setClickable(false);
-        }
-    }
-    public void setAllCardsToClickable() {
-        for (int i = 0; i < cardsLength; i++) {
-            TextView card = findViewById(CARDS[i]);
-            card.setClickable(true);
-        }
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
 
     }
 
@@ -357,7 +325,7 @@ public class Mexico extends GameActivity {
         cardHitB = 0;
         for (int i = 0; i < cardsLength; i++) {
 
-            // Scan through CARDS to find which two items are selected
+            // Scan through cards to find which two items are selected
             if (memoryCollection.get(i)[3].equals("SELECTED")) {
 
                 if (firstHit && !secondHit) {
@@ -379,8 +347,9 @@ public class Mexico extends GameActivity {
             memoryCollection.get(cardHitB)[3] = "PAIRED";
             pairsCompleted++;
 
-            final TextView cardA = findViewById(CARDS[cardHitA]); // RR
-            final TextView cardB = findViewById(CARDS[cardHitB]); // RR
+            final TextView cardA = findViewById(TILE_BUTTONS[cardHitA]); // RR
+            final TextView cardB = findViewById(TILE_BUTTONS[cardHitB]); // RR
+            
             cardA.setBackgroundResource(0);
             cardB.setBackgroundResource(0);
 
@@ -408,12 +377,12 @@ public class Mexico extends GameActivity {
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
 
-            playCorrectSoundThenActiveWordClip();
+            playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleTiles / 2));
 
         } else {
             // The two cards do NOT match
-            TextView cardA = findViewById(CARDS[cardHitA]); // RR
-            TextView cardB = findViewById(CARDS[cardHitB]); // RR
+            TextView cardA = findViewById(TILE_BUTTONS[cardHitA]); // RR
+            TextView cardB = findViewById(TILE_BUTTONS[cardHitB]); // RR
             cardA.setText("");
             cardB.setText("");
             cardA.setBackgroundResource(R.drawable.zz_alphatileslogo2);
@@ -439,70 +408,4 @@ public class Mexico extends GameActivity {
         }
     };
 
-    public void playActiveWordClip() {
-        setAllCardsToUnclickable();
-        setOptionsRowUnclickable();
-
-        final String className = getClass().getName();
-
-        int resID = getResources().getIdentifier(memoryCollection.get(cardHitA)[0], "raw", getPackageName());
-        MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                if (pairsCompleted == (cardsLength / 2)) {
-                    trackerCount++;
-                    updateTrackers();
-
-                    SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
-                    String playerString = Util.returnPlayerStringToAppend(playerNumber);
-                    String uniqueGameLevelPlayerID = className + challengeLevel + playerString;
-                    editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-                    editor.apply();
-
-                    playCorrectFinalSound();
-                } else {
-                    mediaPlayerIsPlaying = false;
-                    setAllCardsToClickable();
-                    setOptionsRowClickable();
-                }
-                mp1.release();
-            }
-        });
-
-    }
-
-    public void playCorrectSoundThenActiveWordClip() {
-        setAllCardsToUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveWordClip();
-            }
-        });
-    }
-
-    public void playCorrectFinalSound() {
-        setAllCardsToUnclickable();
-        setOptionsRowUnclickable();
-        mediaPlayerIsPlaying = true;
-        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_correct_final);
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllCardsToClickable();
-                setOptionsRowClickable();
-                mp3.release();
-            }
-        });
-    }
 }
