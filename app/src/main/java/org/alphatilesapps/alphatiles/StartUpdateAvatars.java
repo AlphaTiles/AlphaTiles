@@ -26,8 +26,10 @@ public class StartUpdateAvatars extends AppCompatActivity {
 
     Context context;
 
-    static int justClickedKey;
-    static int keysInUse;
+    int keysInUse;
+    int keyboardScreenNo; // for languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
+    int totalScreens; // the total number of screens required to show all keys
+    int partial; // the number of visible keys on final partial screen
 
     static int playerNumber = -1;
 
@@ -54,6 +56,8 @@ public class StartUpdateAvatars extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
+        setTitle(Start.localAppName);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
 
         ImageView avatar = findViewById(R.id.avatar);
@@ -79,6 +83,7 @@ public class StartUpdateAvatars extends AppCompatActivity {
         EditText name = findViewById(R.id.avatarName);
         name.setText(playerName);
 
+        keyboardScreenNo = 1;
         loadKeyboard();
 
         setTextSizes();
@@ -140,13 +145,33 @@ public class StartUpdateAvatars extends AppCompatActivity {
         // There are 35 key buttons available (KEYS.length), but the language may need a smaller amount (Start.keysArraySize)
         // Starting with k = 1 to skip the header row
         keysInUse = keyList.size();
+        partial = keysInUse % (KEYS.length - 2);
+        totalScreens = keysInUse / (KEYS.length - 2);
+        if (partial != 0) {
+            totalScreens++;
+        }
 
-        for (int k = 0; k < keysInUse; k++) {
+        int visibleKeys;
+        if (keysInUse > KEYS.length) {
+            visibleKeys = KEYS.length;
+        } else {
+            visibleKeys = keysInUse;
+        }
+
+        for (int k = 0; k < visibleKeys; k++) {
             TextView key = findViewById(KEYS[k]);
             key.setText(keyList.get(k).baseKey);
             String tileColorStr = COLORS[Integer.parseInt(keyList.get(k).keyColor)];
             int tileColor = Color.parseColor(tileColorStr);
             key.setBackgroundColor(tileColor);
+        }
+        if (keysInUse > KEYS.length) {
+            TextView key34 = findViewById(KEYS[KEYS.length - 2]);
+            key34.setBackgroundResource(R.drawable.zz_backward_green);
+            key34.setText("");
+            TextView key35 = findViewById(KEYS[KEYS.length - 1]);
+            key35.setBackgroundResource(R.drawable.zz_forward_green);
+            key35.setText("");
         }
 
         for (int k = 0; k < KEYS.length; k++) {
@@ -164,9 +189,9 @@ public class StartUpdateAvatars extends AppCompatActivity {
 
     }
 
-    private void respondToKeySelection() {
+    private void respondToKeySelection(int justClickedIndex) {
 
-        String tileToAdd = keyList.get(justClickedKey).baseKey;
+        String tileToAdd = keyList.get(justClickedIndex).baseKey;
 
         EditText avatarName = (EditText) findViewById(R.id.avatarName);
         String currentName = avatarName.getText() + tileToAdd;
@@ -200,8 +225,56 @@ public class StartUpdateAvatars extends AppCompatActivity {
     }
 
     public void onBtnClick(View view) {
-        justClickedKey = Integer.parseInt((String)view.getTag()) - 1;
-        respondToKeySelection();
+
+        int justClickedKey = Integer.parseInt((String)view.getTag());
+        // Next line says ... if a basic keyboard (which all fits on one screen) or (even when on a complex keyboard) if something other than the last two buttons (the two arrows) are tapped...
+        if (keysInUse <= KEYS.length || justClickedKey <= (KEYS.length - 2)) {
+            int keyIndex = (33 * (keyboardScreenNo - 1)) + justClickedKey - 1;
+            respondToKeySelection(keyIndex);
+        } else {
+            // This branch = when a backward or forward arrow is clicked on
+            if (justClickedKey == KEYS.length - 1) {
+                keyboardScreenNo--;
+                if (keyboardScreenNo < 1) {
+                    keyboardScreenNo = 1;
+                }
+            }
+            if (justClickedKey == KEYS.length) {
+                keyboardScreenNo++;
+                if (keyboardScreenNo > totalScreens) {
+                    keyboardScreenNo = totalScreens;
+                }
+            }
+            updateKeyboard();
+        }
+    }
+
+    private void updateKeyboard() {
+
+        // This routine will only be called from complex keyboards (more keys than will fit on the basic 35-key layout)
+
+        int keysLimit;
+        if(totalScreens == keyboardScreenNo) {
+            keysLimit = partial;
+            for (int k = keysLimit; k < (KEYS.length - 2); k++) {
+                TextView key = findViewById(KEYS[k]);
+                key.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            keysLimit = KEYS.length - 2;
+        }
+
+        for (int k = 0; k < keysLimit; k++) {
+            TextView key = findViewById(KEYS[k]);
+            int keyIndex = (33 * (keyboardScreenNo - 1)) + k;
+            key.setText(keyList.get(keyIndex).baseKey); // KP
+            key.setVisibility(View.VISIBLE);
+            // Added on May 15th, 2021, so that second and following screens use their own color coding
+            String tileColorStr = COLORS[Integer.parseInt(keyList.get(keyIndex).keyColor)];
+            int tileColor = Color.parseColor(tileColorStr);
+            key.setBackgroundColor(tileColor);
+        }
+
     }
 
     public void acceptName (View view) {

@@ -206,6 +206,10 @@
     <string name="gameTile9b">Game Tile 9B</string>
     <string name="resourcePromo">Other Resources In This Language</string>
     <string name="resourceText">A Resource In This Language</string>
+    <string name="choice01">Choice 1</string>
+    <string name="choice02">Choice 2</string>
+    <string name="choice03">Choice 3</string>
+    <string name="choice04">Choice 4</string>
 
     <!--Note from Robert: The %[number]$[letter] expressions are placeholders for variables
     The number indicates which variable to reference while the letter says what formant it should be (in this case, strings)-->

@@ -51,6 +51,8 @@ public class Earth extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
+        setTitle(Start.localAppName);
+
         SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         points = prefs.getInt("storedPoints_player" + playerString, 0);

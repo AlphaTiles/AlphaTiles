@@ -21,6 +21,7 @@ public class UnitedStates extends GameActivity {
     int upperTileLimit = 5;
     int neutralFontSize;
     int tileButtonCount;
+    String scriptLR;
     String[] selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
 
     private static final int[] TILE_BUTTONS = {
@@ -71,6 +72,8 @@ public class UnitedStates extends GameActivity {
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
         updateTrackers();
+
+        scriptLR = Start.langInfoList.find("Script direction (LR or RL)");
 
         playAgain();
 
@@ -187,8 +190,15 @@ public class UnitedStates extends GameActivity {
 
         for (int b = 0; b < tileButtonCount; b+=2 ) {
 
-            Button tileButtonA = (Button) findViewById(TILE_BUTTONS[b]);
-            Button tileButtonB = (Button) findViewById(TILE_BUTTONS[b + 1]);
+            int bLRRL;
+            if (scriptLR.equals("RL")) {
+                bLRRL = tileButtonCount - 2 - b;
+            } else {
+                bLRRL = b;
+            }
+
+            Button tileButtonA = (Button) findViewById(TILE_BUTTONS[bLRRL]);
+            Button tileButtonB = (Button) findViewById(TILE_BUTTONS[bLRRL + 1]);
 
             String tileColorStr = COLORS[(b % 5) / 2];
             int tileColor = Color.parseColor(tileColorStr);
@@ -251,12 +261,23 @@ public class UnitedStates extends GameActivity {
         LOGGER.info("Remember: 45");
 
         // KP
-        for (int j = 0; j < selections.length; j++) {
+        if(scriptLR.equals("RL")) {
+            for (int j = selections.length - 1; j >= 0; j--) {
 
-            if (!selections[j].equals("")) {
+                if (!selections[j].equals("")) {
 
-                displayedWord.append(selections[j]);
+                    displayedWord.append(selections[j]);
 
+                }
+            }
+        } else {
+            for (int j = 0; j < selections.length; j++) {
+
+                if (!selections[j].equals("")) {
+
+                    displayedWord.append(selections[j]);
+
+                }
             }
         }
 

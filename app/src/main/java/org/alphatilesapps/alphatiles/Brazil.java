@@ -19,9 +19,14 @@ import java.util.logging.Logger;
 
 // RR
 //Game idea: Find the vowel missing from the word
-//Challenge Level 1: Pick from correct tile and three random tiles
-//Challenge Level 2: Pick from correct tile and its distractor trio
-//Challenge Level 3: Pick from all vowel tiles (up to a max of 15)
+//Challenge Level 1: VOWELS: Pick from correct tile and three random tiles
+//Challenge Level 2: VOWELS: Pick from correct tile and its distractor trio
+//Challenge Level 3: VOWELS: Pick from all vowel tiles (up to a max of 15)
+
+// AH
+//Challenge Level 4: CONSONANTS: Pick from correct tile and three random tiles
+//Challenge Level 5: CONSONANTS: Pick from correct tile and its distractor trio
+//Challenge Level 6: CONSONANTS: Pick from all consonant tiles (up to a max of 15)
 
 public class Brazil extends GameActivity {
 
@@ -37,6 +42,8 @@ public class Brazil extends GameActivity {
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#4CAF50", "#E91E63"};
 
     static List<String> VOWELS = new ArrayList<>();
+    static List<String> CONSONANTS = new ArrayList<>();
+    static List<String> MULTIFUNCTIONS = new ArrayList<>();
 
     private static final Logger LOGGER = Logger.getLogger(Brazil.class.getName());
 
@@ -44,35 +51,78 @@ public class Brazil extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        if (challengeLevel == 3) {
+        if (challengeLevel == 3 || challengeLevel == 6) {
             setContentView(R.layout.brazil_cl3);
         } else {
             setContentView(R.layout.brazil_cl1);
         }
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
+//        LOGGER.info("Remember APR 21 21 # 1");
+
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
 
-        if (VOWELS.isEmpty()) {  //makes sure VOWELS is populated only once when the app is running
+        if (challengeLevel < 4) {
+
+            if (VOWELS.isEmpty()) {  //makes sure VOWELS is populated only once when the app is running
+                for (int d = 0; d < Start.tileList.size(); d++) {
+                    if (Start.tileList.get(d).tileType.equals("V")) {
+                        VOWELS.add(Start.tileList.get(d).baseTile);
+                    }
+                }
+            }
+
+            Collections.shuffle(VOWELS); // AH
+
+        } else {
+
+            if (CONSONANTS.isEmpty()) {  //makes sure CONSONANTS is populated only once when the app is running
+                for (int d = 0; d < Start.tileList.size(); d++) {
+                    if (Start.tileList.get(d).tileType.equals("C")) {
+                        CONSONANTS.add(Start.tileList.get(d).baseTile);
+                    }
+                }
+            }
+
+            Collections.shuffle(CONSONANTS);
+
+        }
+
+//        LOGGER.info("Remember APR 21 21 # 2");
+
+        if (MULTIFUNCTIONS.isEmpty()) {  //makes sure MULTIFUNCTIONS is populated only once when the app is running
             for (int d = 0; d < Start.tileList.size(); d++) {
-                if (Start.tileList.get(d).tileType.equals("V")) {
-                    VOWELS.add(Start.tileList.get(d).baseTile);
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").tileType = " + Start.tileList.get(d).tileType);
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").tileType2 = " + Start.tileList.get(d).tileTypeB);
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").tileType3 = " + Start.tileList.get(d).tileTypeC);
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").audioForTile = " + Start.tileList.get(d).audioForTile);
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").audioForTile2 = " + Start.tileList.get(d).audioForTileB);
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").audioForTile3 = " + Start.tileList.get(d).audioForTileC);
+                if (!Start.tileList.get(d).tileTypeB.equals("none")) {
+                    MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
                 }
             }
         }
 
-        Collections.shuffle(VOWELS); // AH
+//        LOGGER.info("Remember MULTIFUNCTIONS.size() = " + MULTIFUNCTIONS.size());
+//
+//        LOGGER.info("Remember APR 21 21 # 3");
+
+        Collections.shuffle(MULTIFUNCTIONS);
 
         setTitle(Start.localAppName + ": " + gameNumber);
         switch (challengeLevel) {
-            case 2:
-                visibleTiles = 4;
-                break;
             case 3:
                 visibleTiles = VOWELS.size();
+                if (visibleTiles > 15) {    // AH
+                    visibleTiles = 15;      // AH
+                }                           // AH
+                break;
+            case 6:
+                visibleTiles = CONSONANTS.size();
                 if (visibleTiles > 15) {    // AH
                     visibleTiles = 15;      // AH
                 }                           // AH
@@ -80,6 +130,8 @@ public class Brazil extends GameActivity {
             default:
                 visibleTiles = 4;
         }
+
+//        LOGGER.info("Remember APR 21 21 # 4");
 
         sortableTilesArray = (Start.TileList)Start.tileList.clone(); // KP
 
@@ -94,6 +146,8 @@ public class Brazil extends GameActivity {
         updateTrackers();
 
         setTextSizes();
+
+//        LOGGER.info("Remember APR 21 21 # 5");
 
         playAgain();
 
@@ -170,46 +224,136 @@ public class Brazil extends GameActivity {
 
         repeatLocked = true;
         Collections.shuffle(sortableTilesArray); // KP
+//        LOGGER.info("Remember APR 21 21 # 5.1");
         chooseWord();
+//        LOGGER.info("Remember APR 21 21 # 5.2");
+        removeTile();
+//        LOGGER.info("Remember APR 21 21 # 5.3");
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
+//        LOGGER.info("Remember APR 21 21 # 6");
         setUpTiles();
+//        LOGGER.info("Remember APR 21 21 # 7");
         playActiveWordClip();
+//        LOGGER.info("Remember APR 21 21 # 8");
         setAllTilesClickable();
         setOptionsRowClickable();
     }
 
     private void chooseWord() {
+
         Random rand = new Random();
         int randomNum = rand.nextInt(Start.wordList.size()); // KP
 
         wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
         wordInLOP = Start.wordList.get(randomNum).localWord; // KP
 
+        LOGGER.info("Remember wordInLOP = " + wordInLOP);
+
         ImageView image = findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
-        removeVowel();
+        parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP);
+
+        boolean proceed = false;
+        String nextTile;
+
+        switch (challengeLevel) {
+            case 4:
+            case 5:
+            case 6:
+                for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
+
+                    nextTile = parsedWordArrayFinal.get(i);
+                    // include if a simple consonant
+                    if(CONSONANTS.contains(nextTile) && !MULTIFUNCTIONS.contains(nextTile)) {
+                        proceed = true;
+                    }
+                    // include if a multi-function symbol that is a consonant in this instance
+                    if(MULTIFUNCTIONS.contains(nextTile)) {
+                        String instanceType = Start.tileList.getInstanceTypeForMixedTile(i, wordInLWC);
+                        if (instanceType.equals("C")) {
+                            proceed = true;
+                        }
+                    }
+
+                }
+                break;
+            default:
+                for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
+
+                    nextTile = parsedWordArrayFinal.get(i);
+                    // include if a simple vowel
+                    if(VOWELS.contains(nextTile) && !MULTIFUNCTIONS.contains(nextTile)) {
+                        proceed = true;
+                    }
+                    // include if a multi-function symbol that is a vowel in this instance
+                    if(MULTIFUNCTIONS.contains(nextTile)) {
+                        String instanceType = Start.tileList.getInstanceTypeForMixedTile(i, wordInLWC);
+                        if (instanceType.equals("V")) {
+                            proceed = true;
+                        }
+                    }
+
+                }
+        }
+
+        if (!proceed) { // some languages (e.g. skr) have words without vowels (as defined by game tiles), so we filter out those words
+            chooseWord();
+        }
+
     }
 
-    private void removeVowel() {
-        parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP);
+    private void removeTile() {
+
         int min = 0;
         int max = parsedWordArrayFinal.size() - 1;
         Random rand = new Random();
         int index = 0;
         correctTile = "";
 
-        while (!VOWELS.contains(correctTile)) {
-            index = rand.nextInt((max - min) + 1) + min;
+        boolean repeat = true;
+        String instanceType = null;
+        int counter = 0;
+
+//        LOGGER.info("Remember APR 21 21 # 5.2.1");
+
+        while (repeat && counter < 200) {
+            counter++;
+            index = rand.nextInt((max - min) + 1) + min; // 200 chances to randomly draw a functional letter (e.g. a "V" if looking for "V"
             correctTile = parsedWordArrayFinal.get(index);
-            if (VOWELS.indexOf(correctTile) > 14) {     // AH
-                correctTile = "";                       // AH
-                Collections.shuffle(VOWELS);            // AH
-            }                                           // AH
+            if (MULTIFUNCTIONS.contains(correctTile)) {
+                instanceType = Start.tileList.getInstanceTypeForMixedTile(index, wordInLWC);
+                LOGGER.info("Remember MIXED: wordInLOP / correctTile / instanceType = " + wordInLOP + " / " + correctTile + " / " + instanceType);
+            } else {
+                instanceType = Start.tileList.get(Start.tileList.returnPositionInAlphabet(correctTile)).tileType;
+                LOGGER.info("Remember NOT MIXED wordInLOP / correctTile / instanceType = " +  wordInLOP + " / " + correctTile + " / " + instanceType);
+            }
+
+            if (challengeLevel < 4) {
+
+                if (instanceType.equals("V")) {
+
+                    repeat = false;
+
+                }
+
+            }
+
+            if (challengeLevel > 3) {
+
+                if (instanceType.equals("C")) {
+
+                    repeat = false;
+
+                }
+
+            }
+
         }
 
+//        LOGGER.info("Remember APR 21 21 # 5.2.6");
         parsedWordArrayFinal.set(index, "_");
         TextView constructedWord = findViewById(R.id.activeWordTextView);
         StringBuilder word = new StringBuilder();
@@ -219,15 +363,27 @@ public class Brazil extends GameActivity {
             }
         }
         constructedWord.setText(word.toString());
+//        LOGGER.info("Remember APR 21 21 # 5.2.7");
+
     }
 
     private void setUpTiles() {
 
         boolean correctTileRepresented = false;
-        if (challengeLevel == 3) {
+        if (challengeLevel == 3 || challengeLevel == 6) {
             for (int t = 0; t < visibleTiles; t++) {
                 TextView gameTile = findViewById(TILE_BUTTONS[t]);
-                gameTile.setText(VOWELS.get(t));
+                if (challengeLevel == 3) {
+                    gameTile.setText(VOWELS.get(t));
+                    if (VOWELS.get(t).equals(correctTile)) {
+                        correctTileRepresented = true;
+                    }
+                } else {
+                    gameTile.setText(CONSONANTS.get(t));
+                    if (CONSONANTS.get(t).equals(correctTile)) {
+                        correctTileRepresented = true;
+                    }
+                }
 
                 String tileColorStr = COLORS[t % 5];
                 int tileColor = Color.parseColor(tileColorStr);
@@ -241,7 +397,7 @@ public class Brazil extends GameActivity {
                 TextView gameTile = findViewById(TILE_BUTTONS[i]);
                 gameTile.setVisibility(View.INVISIBLE);
             }
-        } else if (challengeLevel == 1) {
+        } else if (challengeLevel == 1 || challengeLevel == 4) {
 
             for (int t = 0; t < visibleTiles; t++) {
 
@@ -264,22 +420,9 @@ public class Brazil extends GameActivity {
 
             }
 
-            if (!correctTileRepresented) {
-
-                // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
-                LOGGER.info("Remember that inside loop for correctTileRepresented = false");
-
-                int min = 0;
-                int max = visibleTiles - 1;
-                Random rand = new Random();
-                int randomNum = rand.nextInt((max - min) + 1) + min;
-
-                TextView gameTile = findViewById(TILE_BUTTONS[randomNum]);
-                gameTile.setText(correctTile);
-
-            }
         } else {
-            // when Earth.challengeLevel == 2
+            // when Earth.challengeLevel == 2 || == 4
+            correctTileRepresented = true;
             int correspondingRow = 0;
             for (int d = 0; d < Start.tileList.size(); d++) {
                 if (Start.tileList.get(d).baseTile.equals(correctTile)) {
@@ -316,6 +459,23 @@ public class Brazil extends GameActivity {
                 }
             }
         }
+
+        if (!correctTileRepresented) {
+
+            // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
+            // This check is not necessary for challengeLevel 2 and 4, so at beginning of code above correctTileRepresented set to true
+//            LOGGER.info("Remember that inside loop for correctTileRepresented = false");
+
+            int min = 0;
+            int max = visibleTiles - 1;
+            Random rand = new Random();
+            int randomNum = rand.nextInt((max - min) + 1) + min;
+
+            TextView gameTile = findViewById(TILE_BUTTONS[randomNum]);
+            gameTile.setText(correctTile);
+
+        }
+
     }
 
     private void setAllTilesUnclickable() {

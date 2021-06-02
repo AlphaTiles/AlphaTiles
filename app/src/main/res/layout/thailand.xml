@@ -152,13 +152,13 @@
         app:srcCompat="@drawable/zz_incomplete" />
 
     <TextView
-        android:id="@+id/tileInFocus"
+        android:id="@+id/referenceItem"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F44336"
+        android:background="#E91E63"
         android:gravity="center"
-        android:onClick="onWordClick"
-        android:tag="1"
+        android:onClick="onRefClick"
+        android:tag="0"
         android:text="@string/gameTileInFocus"
         android:textColor="#FFFFFF"
         android:textSize="120sp"
@@ -168,57 +168,73 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
 
-    <ImageView
-        android:id="@+id/wordImage01"
+    <TextView
+        android:id="@+id/choice01"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="clickPicHearAudio"
+        android:background="#9C27B0"
+        android:gravity="center"
+        android:onClick="onChoiceClick"
+        android:tag="1"
+        android:text="@string/choice01"
+        android:textColor="#FFFFFF"
+        android:textSize="75sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        android:contentDescription="@string/activeWordPicture"
-        app:srcCompat="@drawable/zz_alphatileslogo" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
 
-    <ImageView
-        android:id="@+id/wordImage02"
+    <TextView
+        android:id="@+id/choice02"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="clickPicHearAudio"
+        android:background="#2196F3"
+        android:gravity="center"
+        android:onClick="onChoiceClick"
+        android:tag="2"
+        android:text="@string/choice02"
+        android:textColor="#FFFFFF"
+        android:textSize="75sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        android:contentDescription="@string/activeWordPicture"
-        app:srcCompat="@drawable/zz_alphatileslogo" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
 
-    <ImageView
-        android:id="@+id/wordImage03"
+    <TextView
+        android:id="@+id/choice03"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="clickPicHearAudio"
+        android:background="#F44336"
+        android:gravity="center"
+        android:onClick="onChoiceClick"
+        android:tag="3"
+        android:text="@string/choice03"
+        android:textColor="#FFFFFF"
+        android:textSize="75sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
-        android:contentDescription="@string/activeWordPicture"
-        app:srcCompat="@drawable/zz_alphatileslogo" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
 
-    <ImageView
-        android:id="@+id/wordImage04"
+    <TextView
+        android:id="@+id/choice04"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="clickPicHearAudio"
+        android:background="#4CAF50"
+        android:gravity="center"
+        android:onClick="onChoiceClick"
+        android:tag="4"
+        android:text="@string/choice04"
+        android:textColor="#FFFFFF"
+        android:textSize="75sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
-        android:contentDescription="@string/activeWordPicture"
-        app:srcCompat="@drawable/zz_alphatileslogo" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
 
     <ImageView
         android:id="@+id/pointsImage"
