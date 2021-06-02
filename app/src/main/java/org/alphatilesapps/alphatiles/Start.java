@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.media.SoundPool;
 
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
