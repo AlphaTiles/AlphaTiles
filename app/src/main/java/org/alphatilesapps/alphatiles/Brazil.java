@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static org.alphatilesapps.alphatiles.Start.*;
+
 // RR
 //Game idea: Find the vowel missing from the word
 //Challenge Level 1: VOWELS: Pick from correct tile and three random tiles
@@ -38,6 +40,10 @@ public class Brazil extends GameActivity {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15
     };
+    
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+    
+    protected int[] getWordImages() {return null;}
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#4CAF50", "#E91E63"};
 
@@ -478,44 +484,6 @@ public class Brazil extends GameActivity {
 
     }
 
-    private void setAllTilesUnclickable() {
-        for (int t = 0; t < visibleTiles; t++) {
-            TextView gameTile = findViewById(TILE_BUTTONS[t]);
-            gameTile.setClickable(false);
-        }
-    }
-
-    private void setAllTilesClickable() {
-        for (int t = 0; t < visibleTiles; t++) {
-            TextView gameTile = findViewById(TILE_BUTTONS[t]);
-            gameTile.setClickable(true);
-        }
-    }
-
-    private void setOptionsRowUnclickable() {
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-        wordImage.setClickable(false);
-    }
-
-    private void setOptionsRowClickable() {
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        wordImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
-    }
-
     private void respondToTileSelection(int justClickedTile) {
 
         if (mediaPlayerIsPlaying) {
@@ -587,62 +555,4 @@ public class Brazil extends GameActivity {
         respondToTileSelection(Integer.parseInt((String)view.getTag())); // KP
     }
 
-    public void clickPicHearAudio(View view) {
-
-        playActiveWordClip();
-
-    }
-
-    public void playActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mediaPlayerIsPlaying = false;
-                if (repeatLocked) {
-                    setAllTilesClickable();
-                }
-                setOptionsRowClickable();
-                mp1.release();
-
-            }
-        });
-    }
-
-    public void playCorrectSoundThenActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveWordClip();
-            }
-        });
-    }
-
-    public void playIncorrectSound() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
-        mediaPlayerIsPlaying = true;
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
-                setOptionsRowClickable();
-                mp3.release();
-            }
-        });
-    }
 }
