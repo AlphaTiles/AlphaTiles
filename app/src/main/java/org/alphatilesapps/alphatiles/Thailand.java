@@ -476,49 +476,6 @@ public class Thailand extends GameActivity {
         respondToSelection(Integer.parseInt((String)view.getTag())); // KP
     }
 
-    private void setAllTilesUnclickable() {
-
-        for (int choiceItem : TILE_BUTTONS) {
-            TextView nextItem = findViewById(choiceItem);
-            nextItem.setClickable(false);
-        }
-
-    }
-    private void setAllTilesClickable() {
-
-        for (int choiceItem : TILE_BUTTONS) {
-            TextView nextItem = findViewById(choiceItem);
-            nextItem.setClickable(true);
-        }
-
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        TextView referenceItem = findViewById(R.id.referenceItem);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-        referenceItem.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        TextView referenceItem = findViewById(R.id.referenceItem);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        referenceItem.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
-    }
-
     public void onRefClick (View view) {
 
         LOGGER.info("Remember: pre playActiveClip()");
@@ -586,23 +543,5 @@ public class Thailand extends GameActivity {
             }
         });
     }
-    public void playIncorrectSound() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
-        mediaPlayerIsPlaying = true;
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
-                setOptionsRowClickable();
-                mp3.release();
-            }
-        });
-    }
-
-
 
 }
