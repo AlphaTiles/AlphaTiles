@@ -311,41 +311,7 @@ public class Mexico extends GameActivity {
 
     }
 
-    public void setAllCardsToUnclickable() {
-        for (int i = 0; i < cardsLength; i++) {
-            TextView card = findViewById(CARDS[i]);
-            card.setClickable(false);
-        }
-    }
-    public void setAllCardsToClickable() {
-        for (int i = 0; i < cardsLength; i++) {
-            TextView card = findViewById(CARDS[i]);
-            card.setClickable(true);
-        }
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
-    }
+    
 
     public void respondToTwoActiveCards() {
 
@@ -438,71 +404,5 @@ public class Mexico extends GameActivity {
             respondToTwoActiveCards();
         }
     };
-
-    public void playActiveWordClip() {
-        setAllCardsToUnclickable();
-        setOptionsRowUnclickable();
-
-        final String className = getClass().getName();
-
-        int resID = getResources().getIdentifier(memoryCollection.get(cardHitA)[0], "raw", getPackageName());
-        MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                if (pairsCompleted == (cardsLength / 2)) {
-                    trackerCount++;
-                    updateTrackers();
-
-                    SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
-                    String playerString = Util.returnPlayerStringToAppend(playerNumber);
-                    String uniqueGameLevelPlayerID = className + challengeLevel + playerString;
-                    editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-                    editor.apply();
-
-                    playCorrectFinalSound();
-                } else {
-                    mediaPlayerIsPlaying = false;
-                    setAllCardsToClickable();
-                    setOptionsRowClickable();
-                }
-                mp1.release();
-            }
-        });
-
-    }
-
-    public void playCorrectSoundThenActiveWordClip() {
-        setAllCardsToUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveWordClip();
-            }
-        });
-    }
-
-    public void playCorrectFinalSound() {
-        setAllCardsToUnclickable();
-        setOptionsRowUnclickable();
-        mediaPlayerIsPlaying = true;
-        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_correct_final);
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllCardsToClickable();
-                setOptionsRowClickable();
-                mp3.release();
-            }
-        });
     }
 }
