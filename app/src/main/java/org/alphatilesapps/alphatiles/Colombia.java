@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import static org.alphatilesapps.alphatiles.Start.keyList;
+import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Colombia extends GameActivity {
 
@@ -27,12 +27,15 @@ public class Colombia extends GameActivity {
     int totalScreens; // the total number of screens required to show all keys
     int partial; // the number of visible keys on final partial screen
 
-    private static final int[] KEYS = {
+    private static final int[] TILE_BUTTONS = {
             R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
             R.id.key11, R.id.key12, R.id.key13, R.id.key14, R.id.key15, R.id.key16, R.id.key17, R.id.key18, R.id.key19, R.id.key20,
             R.id.key21, R.id.key22, R.id.key23, R.id.key24, R.id.key25, R.id.key26, R.id.key27, R.id.key28, R.id.key29, R.id.key30,
             R.id.key31, R.id.key32, R.id.key33, R.id.key34, R.id.key35
     };
+    
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+    protected int[] getWordImages() {return null;}
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -414,100 +417,6 @@ public class Colombia extends GameActivity {
             key.setBackgroundColor(tileColor);
         }
 
-    }
-
-    private void setAllTilesUnclickable() {
-
-        for (int k = 0; k < KEYS.length; k++) {
-
-            if (k < keysInUse) {
-                TextView key = findViewById(KEYS[k]);
-                key.setClickable(false);
-            }
-
-        }
-
-    }
-
-    private void setAllTilesClickable() {
-
-        for (int k = 0; k < KEYS.length; k++) {
-
-            if (k < keysInUse) {
-                TextView key = findViewById(KEYS[k]);
-                key.setClickable(true);
-            }
-
-        }
-
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-        wordImage.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        wordImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
-    }
-
-    public void clickPicHearAudio (View view) {
-
-        playActiveWordClip();
-
-    }
-
-    public void playActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mediaPlayerIsPlaying = false;
-                if (repeatLocked) {
-                    setAllTilesClickable();
-                }
-                setOptionsRowClickable();
-                mp1.release();
-                mp1 = null;
-            }
-        });
-    }
-
-    public void playCorrectSoundThenActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveWordClip();
-            }
-        });
     }
 
 }
