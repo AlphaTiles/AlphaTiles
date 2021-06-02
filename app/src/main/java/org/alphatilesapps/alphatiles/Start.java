@@ -48,6 +48,16 @@ public class Start extends AppCompatActivity
 
     public static ArrayList<Integer> avatarIdList;
     public static ArrayList<Drawable> avatarJpgList;
+    public static SoundPool gameSounds;	
+    public static int correctSoundID;	
+    public static int incorrectSoundID;	
+    public static int correctFinalSoundID;	
+    public static HashMap<String, Integer> speechIDs;	
+    public static int correctSoundDuration;	
+    public static int incorrectSoundDuration;	
+    public static int correctFinalSoundDuration;	
+    public static HashMap<String, Integer> speechDurations;	
+
 
     public static final int[] AVATAR_JPG_IDS = {
             R.drawable.zz_avataricon01, R.drawable.zz_avataricon02, R.drawable.zz_avataricon03, R.drawable.zz_avataricon04,
