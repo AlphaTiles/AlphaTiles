@@ -16,6 +16,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import static org.alphatilesapps.alphatiles.Start.wordList;
+
 public class Myanmar extends GameActivity {
 
     int clickCount = 0;
@@ -726,9 +728,17 @@ public class Myanmar extends GameActivity {
         respondToTileSelection(Integer.parseInt((String)view.getTag()));
     }
 
+    @Override
     public void clickPicHearAudio(View view)
     {
-        super.clickPicHearAudio(view);
+
+        int justClickedImage = Integer.parseInt((String)view.getTag());
+        TextView activeWord = findViewById(R.id.activeWordTextView);
+        activeWord.setText(wordList.stripInstructionCharacters(sevenWordsInLopLwc[justClickedImage][1]));
+
+        wordInLWC = sevenWordsInLopLwc[justClickedImage][0];
+        playActiveWordClip(wordsCompleted == completionGoal);
+
     }
 
     public void goBackToEarth(View view) {

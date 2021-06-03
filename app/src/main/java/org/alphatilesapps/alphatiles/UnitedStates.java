@@ -29,7 +29,7 @@ public class UnitedStates extends GameActivity {
             R.id.button06a, R.id.button06b, R.id.button07a, R.id.button07b, R.id.button08a, R.id.button08b, R.id.button09a, R.id.button09b
     };
 
-    protected int[] getTileButtons() {return null;}
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
 
     protected int[] getWordImages() {return null;}
 
@@ -348,6 +348,24 @@ public class UnitedStates extends GameActivity {
 
         buildWord((String)view.getTag(), selections[tileIndex]);
 
+    }
+
+    protected void setAllTilesUnclickable()
+    {
+        for (int t = 0; t < upperTileLimit; t++)
+        {
+            TextView gameTile = findViewById(getTileButtons()[t]);
+            gameTile.setClickable(false);
+        }
+    }
+    protected void setAllTilesClickable()
+    {
+
+        for (int t = 0; t < upperTileLimit; t++)
+        {
+            TextView gameTile = findViewById(getTileButtons()[t]);
+            gameTile.setClickable(true);
+        }
     }
 
     public void clickPicHearAudio(View view)

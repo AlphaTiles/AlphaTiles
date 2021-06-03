@@ -207,6 +207,64 @@ public class Georgia extends GameActivity {
 
     }
 
+    private void respondToTileSelection(int justClickedTile) {
+
+        if (mediaPlayerIsPlaying) {
+            return;
+        }
+
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+
+        int tileNo = justClickedTile - 1; //  justClickedTile uses 1 to 18, t uses the array ID (between [0] and [17]
+        TextView tile = findViewById(TILE_BUTTONS[tileNo]);
+        String selectedTile = tile.getText().toString();
+
+        if (initialTile.equals(selectedTile)) {
+            // Good job! You chose the right tile
+            repeatLocked = false;
+
+            TextView pointsEarned = findViewById(R.id.pointsTextView);
+            points++;
+            pointsEarned.setText(String.valueOf(points));
+
+            trackerCount++;
+            updateTrackers();
+
+            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            String playerString = Util.returnPlayerStringToAppend(playerNumber);
+            editor.putInt("storedPoints_player" + playerString, points);
+            editor.apply();
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
+            editor.apply();
+
+            for (int t = 0; t < TILE_BUTTONS.length; t++ ) {
+                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                if (t != (tileNo)) {
+                    String wordColorStr = "#A9A9A9"; // dark gray
+                    int wordColorNo = Color.parseColor(wordColorStr);
+                    gameTile.setBackgroundColor(wordColorNo);
+                    gameTile.setTextColor(Color.parseColor("#000000")); // black
+                }
+            }
+
+            playCorrectSoundThenActiveWordClip(false);
+
+        } else {
+
+            playIncorrectSound();
+
+        }
+
+    }
+
+
+    public void onBtnClick (View view) {
+        respondToTileSelection(Integer.parseInt((String)view.getTag())); // KP
+    }
+
+
     public void clickPicHearAudio(View view)
     {
         super.clickPicHearAudio(view);

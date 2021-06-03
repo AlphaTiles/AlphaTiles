@@ -378,7 +378,8 @@ public class Mexico extends GameActivity {
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
 
-            playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleTiles / 2));
+            wordInLWC = memoryCollection.get(cardHitA)[0];
+            playCorrectSoundThenActiveWordClip(pairsCompleted == (cardsLength / 2));
 
         } else {
             // The two cards do NOT match
