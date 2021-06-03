@@ -7,7 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
+import android.media.SoundPool;
 import android.os.Bundle;
 
 import android.util.DisplayMetrics;
@@ -48,7 +53,7 @@ public class Start extends AppCompatActivity
 
     public static ArrayList<Integer> avatarIdList;
     public static ArrayList<Drawable> avatarJpgList;
-    public static SoundPool gameSounds;	
+    public static SoundPool gameSounds;
     public static int correctSoundID;	
     public static int incorrectSoundID;	
     public static int correctFinalSoundID;	
@@ -147,6 +152,14 @@ public class Start extends AppCompatActivity
 
     }
 
+    private int getAssetDuration(int assetID)
+    {
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        AssetFileDescriptor afd = context.getResources().openRawResourceFd(assetID);
+        mmr.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+        return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+    }
+
     @Override
     public void onBackPressed() {
         // no action
@@ -192,6 +205,29 @@ public class Start extends AppCompatActivity
         buildWordsArray();
         LOGGER.info("Remember: completed buildWordsArray()");
 //        Util.logMemory();
+
+        // load music sounds
+        gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
+        incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
+        correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
+
+        correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
+//		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
+//		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
+
+        // load speech sounds
+        Resources res = context.getResources();
+        speechIDs = new HashMap();
+        speechDurations = new HashMap();
+        for (Word word : wordList)
+        {
+            int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
+            speechIDs.put(word.nationalWord, gameSounds.load(context, resId, 2));
+            speechDurations.put(word.nationalWord, word.duration + 100);
+//			speechDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
+        }
+
 
     }
     public void buildTilesArray() {
@@ -245,7 +281,7 @@ public class Start extends AppCompatActivity
                 wordList.adjustment = thisLineArray[4];
                 header = false;
             } else {
-                Word word = new Word(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4]);
+                Word word = new Word(thisLineArray[0], thisLineArray[1], Integer.parseInt(thisLineArray[2]), thisLineArray[3], thisLineArray[4]);
                 if (!word.hasNull()) {
                     wordList.add(word);
                 }
@@ -416,11 +452,11 @@ public class Start extends AppCompatActivity
     public class Word {
         public String nationalWord;
         public String localWord;
-        public String duration;
+        public int duration;
         public String mixedDefs;
         public String adjustment;
 
-        public Word(String nationalWord, String localWord, String duration, String mixedDefs, String adjustment) {
+        public Word(String nationalWord, String localWord, int duration, String mixedDefs, String adjustment) {
             this.nationalWord = nationalWord;
             this.localWord = localWord;
             this.duration = duration;
@@ -429,7 +465,7 @@ public class Start extends AppCompatActivity
         }
 
         public boolean hasNull() {
-            return nationalWord == null || localWord == null || duration == null || mixedDefs == null || adjustment == null;
+            return nationalWord == null || localWord == null || mixedDefs == null || adjustment == null;
         }
     }
 

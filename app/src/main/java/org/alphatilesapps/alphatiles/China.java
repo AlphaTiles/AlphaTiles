@@ -1,3 +1,4 @@
+/*
 package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
@@ -427,3 +428,4 @@ public class China extends GameActivity {
         });
     }
 }
+*/

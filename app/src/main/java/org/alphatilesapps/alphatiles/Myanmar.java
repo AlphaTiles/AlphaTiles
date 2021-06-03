@@ -29,13 +29,17 @@ public class Myanmar extends GameActivity {
     int wordsCompleted = 0;
     int completionGoal = 0;
 
-    private static final int[] TILES = {
+    private static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16, R.id.tile17, R.id.tile18, R.id.tile19, R.id.tile20,
             R.id.tile21, R.id.tile22, R.id.tile23, R.id.tile24, R.id.tile25, R.id.tile26, R.id.tile27, R.id.tile28, R.id.tile29, R.id.tile30,
             R.id.tile31, R.id.tile32, R.id.tile33, R.id.tile34, R.id.tile35, R.id.tile36, R.id.tile37, R.id.tile38, R.id.tile39, R.id.tile40,
             R.id.tile41, R.id.tile42, R.id.tile43, R.id.tile44, R.id.tile45, R.id.tile46, R.id.tile47, R.id.tile48, R.id.tile49
     };
+
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+
+    protected int[] getWordImages() {return null;}
 
     private static final int[] WORD_IMAGES = {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04, R.id.wordImage05, R.id.wordImage06, R.id.wordImage07
@@ -92,9 +96,9 @@ public class Myanmar extends GameActivity {
         float percentTopToTop;
         float percentHeight;
 
-        for (int t = 0; t < TILES.length; t++) {
+        for (int t = 0; t < TILE_BUTTONS.length; t++) {
 
-            TextView tile = findViewById(TILES[t]);
+            TextView tile = findViewById(TILE_BUTTONS[t]);
             if (t == 0) {
                 ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) tile.getLayoutParams();
                 bottomToTopId = lp1.bottomToTop;
@@ -190,7 +194,7 @@ public class Myanmar extends GameActivity {
 
     public void resetBoard() {
 
-        for (int i : TILES) {
+        for (int i : TILE_BUTTONS) {
             TextView tile = findViewById(i);
             tile.setText("");
             tile.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
@@ -368,7 +372,7 @@ public class Myanmar extends GameActivity {
                 for (int y = 0; y < 7; y++) {
 
                     tileNumber = y * 7 + x;
-                    TextView tile = findViewById(TILES[tileNumber]);
+                    TextView tile = findViewById(TILE_BUTTONS[tileNumber]);
                     tile.setText(tilesBoard[x][y]);
 
                 }
@@ -395,7 +399,7 @@ public class Myanmar extends GameActivity {
                     tilesBoard[x][y] = randomTile;
 
                     tileNumber = y * 7 + x;
-                    TextView tile = findViewById(TILES[tileNumber]);
+                    TextView tile = findViewById(TILE_BUTTONS[tileNumber]);
                     tile.setText(randomTile);
 
                 }
@@ -410,7 +414,7 @@ public class Myanmar extends GameActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
-        TextView tile = findViewById(TILES[justClickedTile - 1]);
+        TextView tile = findViewById(TILE_BUTTONS[justClickedTile - 1]);
 
         int textColor = tile.getCurrentTextColor();
 
@@ -453,11 +457,11 @@ public class Myanmar extends GameActivity {
 
             LOGGER.info("Remember: same tile selected twice in a row :(");
 
-            TextView tileA = findViewById(TILES[firstClickIndex]);
+            TextView tileA = findViewById(TILE_BUTTONS[firstClickIndex]);
             tileA.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tileA.setTextColor(Color.parseColor("#000000")); // black
 
-            TextView tileB = findViewById(TILES[secondClickIndex]);
+            TextView tileB = findViewById(TILE_BUTTONS[secondClickIndex]);
             tileB.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tileB.setTextColor(Color.parseColor("#000000")); // black
 
@@ -639,7 +643,7 @@ public class Myanmar extends GameActivity {
 
                 LOGGER.info("Remember: builtWord1 tile(X, Y) = (" + tileX + ", " + tileY + ")");
 
-                TextView tile = findViewById(TILES[tileY * 7 + tileX]);
+                TextView tile = findViewById(TILE_BUTTONS[tileY * 7 + tileX]);
 
                 String tileColorStr = COLORS[wordsCompleted % 5];
                 int tileColor = Color.parseColor(tileColorStr);
@@ -690,15 +694,15 @@ public class Myanmar extends GameActivity {
 
             }
 
-            playCorrectSoundThenActiveWordClip();
+            playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
 
         } else {
 
-            TextView tileA = findViewById(TILES[firstClickIndex]);
+            TextView tileA = findViewById(TILE_BUTTONS[firstClickIndex]);
             tileA.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tileA.setTextColor(Color.parseColor("#000000")); // black
 
-            TextView tileB = findViewById(TILES[secondClickIndex]);
+            TextView tileB = findViewById(TILE_BUTTONS[secondClickIndex]);
             tileB.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tileB.setTextColor(Color.parseColor("#000000")); // black
 
@@ -720,6 +724,15 @@ public class Myanmar extends GameActivity {
 
     public void onBtnClick(View view) {
         respondToTileSelection(Integer.parseInt((String)view.getTag()));
+    }
+
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
+    }
+
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }

@@ -32,6 +32,10 @@ public class Romania extends GameActivity {
 
     ArrayList<String> settingsList;
 
+    protected int[] getTileButtons() {return null;}
+
+    protected int[] getWordImages() {return null;}
+
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger( Romania.class.getName() );
@@ -399,6 +403,15 @@ public class Romania extends GameActivity {
         });
         mp.start();
 
+    }
+
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
+    }
+
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }

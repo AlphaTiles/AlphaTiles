@@ -42,6 +42,10 @@ public class Thailand extends GameActivity {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
     };
 
+    protected int[] getTileButtons() {return null;}
+
+    protected int[] getWordImages() {return null;}
+
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger( Thailand.class.getName() );
@@ -542,6 +546,15 @@ public class Thailand extends GameActivity {
                 playActiveClip();
             }
         });
+    }
+
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
+    }
+
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }

@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 
 import static android.view.View.VISIBLE;
 
+import static org.alphatilesapps.alphatiles.Start.*;
+
 public class Earth extends AppCompatActivity {
     Context context;
 
@@ -66,7 +68,7 @@ public class Earth extends AppCompatActivity {
 
         String defaultName;
         String playerName;
-        String localWordForName = Start.langInfoList.find("NAME in local language");
+        String localWordForName = langInfoList.find("NAME in local language");
         if (localWordForName.equals("custom")) {
             defaultName = Start.nameList.get(playerNumber - 1);
         } else {

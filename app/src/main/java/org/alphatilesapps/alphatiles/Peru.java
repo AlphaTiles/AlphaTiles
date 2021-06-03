@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -21,9 +20,13 @@ public class Peru extends GameActivity {
 
     String gameIDString;
 
-    private static final int[] WORD_CHOICES = {
+    private static final int[] TILE_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
     };
+
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+
+    protected int[] getWordImages() {return null;}
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -76,9 +79,9 @@ public class Peru extends GameActivity {
         float percentTopToTop;
         float percentHeight;
 
-        for (int w = 0; w < WORD_CHOICES.length; w++) {
+        for (int w = 0; w < TILE_BUTTONS.length; w++) {
 
-            TextView nextWord = findViewById(WORD_CHOICES[w]);
+            TextView nextWord = findViewById(TILE_BUTTONS[w]);
             if (w == 0) {
                 ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) nextWord.getLayoutParams();
                 bottomToTopId = lp1.bottomToTop;
@@ -125,8 +128,8 @@ public class Peru extends GameActivity {
         int tileLength = tilesInArray(parsedWordArrayFinal);
 
         // Set thematic colors for four word choice TextViews, also make clickable
-        for (int i = 0; i < WORD_CHOICES.length; i++) {
-            TextView nextWord = (TextView) findViewById(WORD_CHOICES[i]);
+        for (int i = 0; i < TILE_BUTTONS.length; i++) {
+            TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
             String wordColorStr = COLORS[i];
             int wordColorNo = Color.parseColor(wordColorStr);
             nextWord.setBackgroundColor(wordColorNo);
@@ -141,8 +144,8 @@ public class Peru extends GameActivity {
         int randomNum2 = rand.nextInt(4);    // need to choose which of four words will be spelled correctly (and other three will be modified to become incorrect
 
         int incorrectLapNo = 0;
-        for (int i = 0; i < WORD_CHOICES.length; i++) {
-            TextView nextWord = (TextView) findViewById(WORD_CHOICES[i]);
+        for (int i = 0; i < TILE_BUTTONS.length; i++) {
+            TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
             if (i == randomNum2) {
                 nextWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP)); // the correct answer (the unmodified version of the word)
             } else {
@@ -200,7 +203,7 @@ public class Peru extends GameActivity {
     private void respondToWordSelection(int justClickedWord) {
 
         int t = justClickedWord - 1; //  justClickedWord uses 1 to 4, t uses the array ID (between [0] and [3]
-        TextView chosenWord = findViewById(WORD_CHOICES[t]);
+        TextView chosenWord = findViewById(TILE_BUTTONS[t]);
         String chosenWordText = chosenWord.getText().toString();
 
         if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
@@ -222,8 +225,8 @@ public class Peru extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-            for (int w = 0; w < WORD_CHOICES.length; w++ ) {
-                TextView nextWord = findViewById(WORD_CHOICES[w]);
+            for (int w = 0; w < TILE_BUTTONS.length; w++ ) {
+                TextView nextWord = findViewById(TILE_BUTTONS[w]);
                 nextWord.setClickable(false);
                 if (w != t) {
                     String wordColorStr = "#A9A9A9"; // dark gray
@@ -233,7 +236,7 @@ public class Peru extends GameActivity {
                 }
             }
 
-            playCorrectSoundThenActiveWordClip();
+            playCorrectSoundThenActiveWordClip(false);
 
         } else {
             playIncorrectSound();
@@ -243,6 +246,15 @@ public class Peru extends GameActivity {
     public void onWordClick (View view) {
         int wordNo = Integer.parseInt((String)view.getTag());
         respondToWordSelection(wordNo);
+    }
+
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
+    }
+
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }

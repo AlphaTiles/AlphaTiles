@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -240,7 +241,7 @@ public class Brazil extends GameActivity {
 //        LOGGER.info("Remember APR 21 21 # 6");
         setUpTiles();
 //        LOGGER.info("Remember APR 21 21 # 7");
-        playActiveWordClip();
+        playActiveWordClip(false);
 //        LOGGER.info("Remember APR 21 21 # 8");
         setAllTilesClickable();
         setOptionsRowClickable();
@@ -541,7 +542,7 @@ public class Brazil extends GameActivity {
                 }
             }
 
-            playCorrectSoundThenActiveWordClip();
+            playCorrectSoundThenActiveWordClip(false);
 
         } else {
 
@@ -549,6 +550,15 @@ public class Brazil extends GameActivity {
 
         }
 
+    }
+
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
+    }
+
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
     public void onBtnClick (View view) {

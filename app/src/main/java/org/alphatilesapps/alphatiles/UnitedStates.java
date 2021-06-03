@@ -29,6 +29,10 @@ public class UnitedStates extends GameActivity {
             R.id.button06a, R.id.button06b, R.id.button07a, R.id.button07b, R.id.button08a, R.id.button08b, R.id.button09a, R.id.button09b
     };
 
+    protected int[] getTileButtons() {return null;}
+
+    protected int[] getWordImages() {return null;}
+
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger(UnitedStates.class.getName());
@@ -307,7 +311,7 @@ public class UnitedStates extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply(); // requires API 9 as per https://developer.android.com/reference/android/content/SharedPreferences.Editor
 
-            playCorrectSoundThenActiveWordClip();
+            playCorrectSoundThenActiveWordClip(false);
 
         } else {
             constructedWord.setTextColor(Color.BLACK);
@@ -344,6 +348,15 @@ public class UnitedStates extends GameActivity {
 
         buildWord((String)view.getTag(), selections[tileIndex]);
 
+    }
+
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
+    }
+
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }

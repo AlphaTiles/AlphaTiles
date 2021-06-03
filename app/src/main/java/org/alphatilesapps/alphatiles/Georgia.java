@@ -25,6 +25,10 @@ public class Georgia extends GameActivity {
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16, R.id.tile17, R.id.tile18
     };
 
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+
+    protected int[] getWordImages() {return null;}
+
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     @Override
@@ -137,7 +141,7 @@ public class Georgia extends GameActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
         setUpTiles();
-        playActiveWordClip();
+        playActiveWordClip(false);
         setAllTilesClickable();
         setOptionsRowClickable();
 
@@ -201,6 +205,15 @@ public class Georgia extends GameActivity {
 
         }
 
+    }
+
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
+    }
+
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }
