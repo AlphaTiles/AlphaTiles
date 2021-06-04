@@ -55,7 +55,7 @@ public class Earth extends AppCompatActivity {
 
         setTitle(Start.localAppName);
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         points = prefs.getInt("storedPoints_player" + playerString, 0);
 
@@ -63,7 +63,7 @@ public class Earth extends AppCompatActivity {
         pointsEarned.setText(String.valueOf(points));
 
         ImageView avatar = findViewById(R.id.activePlayerImage);
-        int resID = getResources().getIdentifier(String.valueOf(Start.AVATAR_JPG_IDS[playerNumber - 1]), "drawable", getPackageName());
+        int resID = getResources().getIdentifier(String.valueOf(Player.AVATAR_JPG_IDS[playerNumber - 1]), "drawable", getPackageName());
         avatar.setImageResource(resID);
 
         String defaultName;
@@ -126,7 +126,7 @@ public class Earth extends AppCompatActivity {
 
         // The size of the text will depend on whether a star or a square/circle is loaded
         String project = "org.alphatilesapps.alphatiles.";  // how to call this with code? It seemed to produce variable results
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
 
         for (int j = 0; j < earthCL.getChildCount(); j++) {
@@ -170,7 +170,7 @@ public class Earth extends AppCompatActivity {
 
         String project = "org.alphatilesapps.alphatiles.";  // how to call this with code? It seemed to produce variable results
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         int trackerCount;
 

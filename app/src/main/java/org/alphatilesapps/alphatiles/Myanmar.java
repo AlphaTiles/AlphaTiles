@@ -61,13 +61,14 @@ public class Myanmar extends GameActivity {
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
+        visibleTiles = TILE_BUTTONS.length;
 
         setTitle(Start.localAppName + ": " + gameNumber);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -670,7 +671,7 @@ public class Myanmar extends GameActivity {
 //            trackerCount++;
 //            updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();

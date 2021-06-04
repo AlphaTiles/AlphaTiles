@@ -20,7 +20,6 @@ public class UnitedStates extends GameActivity {
 
     int upperTileLimit = 5;
     int neutralFontSize;
-    int tileButtonCount;
     String scriptLR;
     String[] selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
 
@@ -70,7 +69,7 @@ public class UnitedStates extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -103,7 +102,7 @@ public class UnitedStates extends GameActivity {
         float percentTopToTop;
         float percentHeight;
 
-        for (int t = 0; t < tileButtonCount; t++) {
+        for (int t = 0; t < visibleTiles; t++) {
 
             LOGGER.info("Remember: t = " + t);
 
@@ -179,24 +178,24 @@ public class UnitedStates extends GameActivity {
         switch (challengeLevel)
         {
             case 2:
-                tileButtonCount = 14;   // RR
+                visibleTiles = 14;   // RR
                 break;
             case 3:
-                tileButtonCount = 18;   // RR
+                visibleTiles = 18;   // RR
                 break;
             default:
-                tileButtonCount = 10;   // RR
+                visibleTiles = 10;   // RR
         }
 
         int c = 0;      // iterate through the parsedWordArray2
         int randomNum2;
         int correspondingRow = 0;
 
-        for (int b = 0; b < tileButtonCount; b+=2 ) {
+        for (int b = 0; b < visibleTiles; b+=2 ) {
 
             int bLRRL;
             if (scriptLR.equals("RL")) {
-                bLRRL = tileButtonCount - 2 - b;
+                bLRRL = visibleTiles - 2 - b;
             } else {
                 bLRRL = b;
             }
@@ -303,7 +302,7 @@ public class UnitedStates extends GameActivity {
             trackerCount++;
             updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();

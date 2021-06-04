@@ -12,20 +12,18 @@
         android:largeHeap="false"
         android:theme="@style/AppTheme">
         <activity
-            android:name="org.alphatilesapps.alphatiles.Splash"
+            android:name="org.alphatilesapps.alphatiles.Start"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="org.alphatilesapps.alphatiles.Start"/>
         <activity android:name="org.alphatilesapps.alphatiles.Player"/>
         <activity android:name="org.alphatilesapps.alphatiles.StartUpdateAvatars"/>
         <activity android:name="org.alphatilesapps.alphatiles.Earth"/>
         <activity android:name="org.alphatilesapps.alphatiles.About"/>
         <activity android:name="org.alphatilesapps.alphatiles.Brazil"/>
-        <activity android:name="org.alphatilesapps.alphatiles.China"/>
         <activity android:name="org.alphatilesapps.alphatiles.Colombia"/>
         <activity android:name="org.alphatilesapps.alphatiles.Ecuador"/>
         <activity android:name="org.alphatilesapps.alphatiles.Georgia"/>

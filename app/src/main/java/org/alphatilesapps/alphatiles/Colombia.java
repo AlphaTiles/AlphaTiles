@@ -22,7 +22,6 @@ public class Colombia extends GameActivity {
 
     String initialLetter = "";
     ArrayList<String> tempKeys; // KP
-    int keysInUse;
     int keyboardScreenNo; // for languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
     int totalScreens; // the total number of screens required to show all keys
     int partial; // the number of visible keys on final partial screen
@@ -59,7 +58,7 @@ public class Colombia extends GameActivity {
 
         LOGGER.info("Remember: oC2");
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -182,16 +181,17 @@ public class Colombia extends GameActivity {
 
     }
     public void loadKeyboard() {
-
-        switch (challengeLevel) {
+        switch (challengeLevel)
+        {
             case 1:
                 // Build an array of only the required tiles
                 // Will it list <a> twice if <a> is needed twice? Yes, that's what it does
                 // The limited set keyboard is built with GAME TILES not with KEYS
-                keysInUse = tilesInArray(parsedWordArrayFinal);
-                tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KP
-                Collections.shuffle(tempKeys); // KP
-                for (int k = 0; k < keysInUse; k++) {
+                visibleTiles = tilesInArray(parsedWordArrayFinal);
+                tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KRP
+                Collections.shuffle(tempKeys); // KRP
+                for (int k = 0; k < visibleTiles; k++)
+                {
                     TextView key = findViewById(TILE_BUTTONS[k]);
                     key.setText(tempKeys.get(k));
                 }
@@ -200,77 +200,54 @@ public class Colombia extends GameActivity {
                 // Build an array of the required tiles plus a corresponding tile from the distractor trio for each tile
                 // So, for a five tile word, there will be 10 tiles
                 // The limited-set keyboard is built with GAME TILES not with KEYS
-                int firstHalf = tilesInArray(parsedWordArrayFinal); // KP
-                keysInUse = 2 * firstHalf; // KP
-                tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KP
+                int firstHalf = tilesInArray(parsedWordArrayFinal); // KRP
+                visibleTiles = 2 * firstHalf; // KRP
+                tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KRP
                 int a = 0;
-                for (int i = firstHalf; i < keysInUse; i++) {
-                    tempKeys.add( Start.tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(a))); // KP
+                for (int i = firstHalf; i < visibleTiles; i++)
+                {
+                    tempKeys.add(tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(a))); // KRP
                     a++;
                 }
-                Collections.shuffle(tempKeys); // KP
-                for (int k = 0; k < keysInUse; k++) {
+                Collections.shuffle(tempKeys); // KRP
+                for (int k = 0; k < visibleTiles; k++)
+                {
                     TextView key = findViewById(TILE_BUTTONS[k]);
                     key.setText(tempKeys.get(k));
                 }
                 break;
             case 3:
-                // There are 35 key buttons available (KEYS.length) per screen, but the language may need a smaller amount (Start.keysArraySize)
-                keysInUse = Start.keyList.size(); // KP
-                partial = keysInUse % (TILE_BUTTONS.length - 2);
-                totalScreens = keysInUse / (TILE_BUTTONS.length - 2);
-
-                LOGGER.info("Remember: partial = " + partial);
-                LOGGER.info("Remember: totalScreens = " + totalScreens);
-                if (partial != 0) {
-                    totalScreens++;
-                }
-
-                LOGGER.info("Remember: April 22 2021 A1");
-                int visibleKeys;
-                if (keysInUse > TILE_BUTTONS.length) {
-                    visibleKeys = TILE_BUTTONS.length;
-                } else {
-                    visibleKeys = keysInUse;
-                }
-                for (int k = 0; k < visibleKeys; k++) {
+                // There are 35 key buttons available (KEYS.length), but the language may need a smaller amount (Start.keysArraySize)
+                // Starting with k = 1 to skip the header row
+                visibleTiles = keyList.size(); // KRP
+                for (int k = 0; k < visibleTiles; k++)
+                {
                     TextView key = findViewById(TILE_BUTTONS[k]);
-                    key.setText(keyList.get(k).baseKey); // KP
-                    String tileColorStr = COLORS[Integer.parseInt(Start.keyList.get(k).keyColor)];
+                    key.setText(keyList.get(k).baseKey); // KRP
+                    String tileColorStr = COLORS[Integer.parseInt(keyList.get(k).keyColor)];
                     int tileColor = Color.parseColor(tileColorStr);
                     key.setBackgroundColor(tileColor);
                 }
-                LOGGER.info("Remember: April 22 2021 A2");
-                if (keysInUse > TILE_BUTTONS.length) {
-                    LOGGER.info("Remember: keysInUse = " + keysInUse);
-                    LOGGER.info("Remember: KEYS.length = " + TILE_BUTTONS.length);
-                    LOGGER.info("Remember: April 22 2021 A2");
-                    TextView key34 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 2]);
-                    key34.setBackgroundResource(R.drawable.zz_backward_green);
-                    key34.setText("");
-                    TextView key35 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 1]);
-                    key35.setBackgroundResource(R.drawable.zz_forward_green);
-                    key35.setText("");
-                }
-                LOGGER.info("Remember: April 22 2021 A3");
                 break;
             default:
         }
 
-        LOGGER.info("Remember: April 22 2021 A4");
-        for (int k = 0; k < TILE_BUTTONS.length; k++) {
+        for (int k = 0; k < TILE_BUTTONS.length; k++)
+        {
 
             TextView key = findViewById(TILE_BUTTONS[k]);
-            if (k < keysInUse) {
+            if (k < visibleTiles)
+            {
                 key.setVisibility(View.VISIBLE);
                 key.setClickable(true);
-            } else {
+            }
+            else
+            {
                 key.setVisibility(View.INVISIBLE);
                 key.setClickable(false);
             }
 
         }
-        LOGGER.info("Remember: April 22 2021 A5");
 
     }
 
@@ -320,7 +297,7 @@ public class Colombia extends GameActivity {
             trackerCount++;
             updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
@@ -370,7 +347,7 @@ public class Colombia extends GameActivity {
 
         int justClickedKey = Integer.parseInt((String) view.getTag());
         // Next line says ... if a basic keyboard (which all fits on one screen) or (even when on a complex keyboard) if something other than the last two buttons (the two arrows) are tapped...
-        if (keysInUse <= TILE_BUTTONS.length || justClickedKey <= (TILE_BUTTONS.length - 2)) {
+        if (visibleTiles <= TILE_BUTTONS.length || justClickedKey <= (TILE_BUTTONS.length - 2)) {
             int keyIndex = (33 * (keyboardScreenNo - 1)) + justClickedKey - 1;
             respondToKeySelection(keyIndex);
         } else {

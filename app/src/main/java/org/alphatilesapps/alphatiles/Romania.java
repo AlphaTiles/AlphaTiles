@@ -50,6 +50,7 @@ public class Romania extends GameActivity {
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
 
+
         setTitle(Start.localAppName + ": " + gameNumber);
 
         // This is for the magnifying glass button (should probably be renamed)
@@ -74,7 +75,7 @@ public class Romania extends GameActivity {
         pointsEarned.setText(String.valueOf(points));
 
         firstAlphabetTile = Start.tileList.get(0).baseTile; // KP
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String startingAlphabetTile = prefs.getString("lastActiveTileGame001_player" + playerString, firstAlphabetTile);
 
@@ -279,7 +280,7 @@ public class Romania extends GameActivity {
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
         wordTokenNoGroupThree = 0;
-        SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
         editor.apply();
@@ -294,7 +295,7 @@ public class Romania extends GameActivity {
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
         wordTokenNoGroupThree = 0;
-        SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
         editor.apply();

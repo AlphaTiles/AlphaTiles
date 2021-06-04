@@ -139,22 +139,22 @@ public abstract class GameActivity extends AppCompatActivity {
 	}	
 	protected void setAllTilesClickable()	
 	{	
-		/*for (int t = 0; t < visibleTiles; t++)
+		for (int t = 0; t < visibleTiles; t++)
 		{	
 			TextView gameTile = findViewById(getTileButtons()[t]);	
 			gameTile.setClickable(true);	
-		}	*/
+		}
 
 		/*for (int word : getTileButtons()) {
 			TextView nextWord = findViewById(word);
 			nextWord.setClickable(true);
 		}*/
 
-		for (int t = 0; t < getTileButtons().length; t++)
+		/*for (int t = 0; t < getTileButtons().length; t++)
 		{
 			TextView gameTile = findViewById(getTileButtons()[t]);
 			gameTile.setClickable(true);
-		}
+		}*/
 	}	
 	protected void setOptionsRowUnclickable()	
 	{	

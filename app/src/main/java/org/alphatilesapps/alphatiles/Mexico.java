@@ -37,7 +37,6 @@ public class Mexico extends GameActivity {
     int pairsCompleted = 0;
     int cardHitA = 0;
     int cardHitB = 0;
-    int cardsLength;
     int pixelHeight = 0;
     double lowestAdjustment = 0.7;
 
@@ -73,20 +72,20 @@ public class Mexico extends GameActivity {
 
         switch (challengeLevel) {
             case 2:
-                cardsLength = 16;                       // RR
+                visibleTiles = 16;                       // RR
                 break;
             case 3:
-                cardsLength = 20;                       // RR
+                visibleTiles = 20;                       // RR
                 break;
             default:
-                cardsLength = 12;                       // RR
+                visibleTiles = 12;                       // RR
 
         }
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -115,7 +114,7 @@ public class Mexico extends GameActivity {
         float percentTopToTop;
         float percentHeight;
 
-        for (int c = 0; c < cardsLength; c++) {
+        for (int c = 0; c < visibleTiles; c++) {
 
             TextView cards = findViewById(TILE_BUTTONS[c]);
             if (c == 0) {
@@ -187,7 +186,7 @@ public class Mexico extends GameActivity {
 
 //            card.getBackground().setAlpha(255);
 
-            if (i < cardsLength) {
+            if (i < visibleTiles) {
                 card.setText("");
                 card.setTextColor(BLACK); // KP
                 card.setBackgroundResource(R.drawable.zz_alphatileslogo2);
@@ -227,9 +226,9 @@ public class Mexico extends GameActivity {
 
         // KP, Oct 2020
 
-        int cardsToSetUp = cardsLength / 2 ;   // this is half the number of cards
+        int cardsToSetUp = visibleTiles / 2 ;   // this is half the number of cards
 
-        for (int i = 0; i < cardsLength; i++) {
+        for (int i = 0; i < visibleTiles; i++) {
 
             int index = i < cardsToSetUp ? i : i - cardsToSetUp;
             String[] content = new String[]
@@ -325,7 +324,7 @@ public class Mexico extends GameActivity {
         boolean secondHit = false;
         cardHitA = 0;
         cardHitB = 0;
-        for (int i = 0; i < cardsLength; i++) {
+        for (int i = 0; i < visibleTiles; i++) {
 
             // Scan through CARDS to find which two items are selected
             if (memoryCollection.get(i)[3].equals("SELECTED")) {
@@ -373,13 +372,13 @@ public class Mexico extends GameActivity {
             points++;
             pointsEarned.setText(String.valueOf(points));
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
 
             wordInLWC = memoryCollection.get(cardHitA)[0];
-            playCorrectSoundThenActiveWordClip(pairsCompleted == (cardsLength / 2));
+            playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleTiles / 2));
 
         } else {
             // The two cards do NOT match
