@@ -405,6 +405,62 @@ public class Romania extends GameActivity {
 
     }
 
+    @Override
+    protected void setAllTilesUnclickable()
+    {
+
+        TextView tileBox = findViewById(R.id.tileBoxTextView);
+        tileBox.setClickable(false);
+
+        ImageView word = findViewById(R.id.wordImage);
+        word.setClickable(false);
+
+        ImageView rightArrow = findViewById(R.id.rightArrowImage);
+        rightArrow.setClickable(false);
+        rightArrow.setBackgroundResource(0);
+        rightArrow.setImageResource(R.drawable.zz_forward_inactive);
+
+        ImageView leftArrow = findViewById(R.id.leftArrowImage);
+        leftArrow.setClickable(false);
+        leftArrow.setBackgroundResource(0);
+        leftArrow.setImageResource(R.drawable.zz_backward_inactive);
+
+        TextView magTile = findViewById(R.id.tileInMagnifyingGlass);
+        magTile.setClickable(false);
+
+        ImageView magGlass = findViewById(R.id.findMoreOfSameTile);
+        magGlass.setClickable(false);
+
+    }
+
+    @Override
+    protected void setAllTilesClickable()
+    {
+
+        TextView tileBox = findViewById(R.id.tileBoxTextView);
+        tileBox.setClickable(true);
+
+        ImageView word = findViewById(R.id.wordImage);
+        word.setClickable(true);
+
+        ImageView rightArrow = findViewById(R.id.rightArrowImage);
+        rightArrow.setClickable(true);
+        rightArrow.setBackgroundResource(0);
+        rightArrow.setImageResource(R.drawable.zz_forward);
+
+        ImageView leftArrow = findViewById(R.id.leftArrowImage);
+        leftArrow.setClickable(true);
+        leftArrow.setBackgroundResource(0);
+        leftArrow.setImageResource(R.drawable.zz_backward);
+
+        TextView magTile = findViewById(R.id.tileInMagnifyingGlass);
+        magTile.setClickable(true);
+
+        ImageView magGlass = findViewById(R.id.findMoreOfSameTile);
+        magGlass.setClickable(true);
+
+    }
+
     public void clickPicHearAudio(View view)
     {
         super.clickPicHearAudio(view);
