@@ -165,18 +165,35 @@ public class Peru extends GameActivity {
                     case 2:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
                         // REPLACEMENT IS ANY GAME TILE FROM THE WHOLE ARRAY
-                        int randomNum3 = rand.nextInt(tileLength - 1);       // KP // this represents which position in word string will be replaced
-                        int randomNum4 = rand.nextInt(Start.tileList.size());       // KP // this represents which game tile will overwrite some part of the correct word
 
-                        List<String> tempArray2 = new ArrayList<>(parsedWordArrayFinal);
-                        tempArray2.set(randomNum3, Start.tileList.get(randomNum4).baseTile); // KP
-                        StringBuilder builder2 = new StringBuilder("");
-                        for(String s : tempArray2) {
-                            builder2.append(s);
+                        boolean isDuplicateAnswerChoice = true; // LM // generate answer choices until there are no duplicates
+
+                        while(isDuplicateAnswerChoice) {
+                            int randomNum3 = rand.nextInt(tileLength - 1);       // KP // this represents which position in word string will be replaced
+                            int randomNum4 = rand.nextInt(Start.tileList.size());       // KP // this represents which game tile will overwrite some part of the correct wor
+
+                            List<String> tempArray2 = new ArrayList<>(parsedWordArrayFinal);
+
+                            tempArray2.set(randomNum3, Start.tileList.get(randomNum4).baseTile); // KP
+                            StringBuilder builder2 = new StringBuilder("");
+                            for (String s : tempArray2) {
+                                builder2.append(s);
+                            }
+                            String incorrectChoice2 = builder2.toString();
+                            nextWord.setText(incorrectChoice2);
+
+                            isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
+                            for(int answerChoice = 0; answerChoice < i; answerChoice++){
+                                if(incorrectChoice2.compareTo(((TextView)findViewById(WORD_CHOICES[answerChoice])).getText().toString()) == 0){
+                                    isDuplicateAnswerChoice = true;
+                                }
+                            }
+                            if(incorrectChoice2.compareTo(wordInLOP) == 0){
+                                isDuplicateAnswerChoice = true;
+                            }
                         }
-                        String incorrectChoice2 = builder2.toString();
-                        nextWord.setText(incorrectChoice2);
                         break;
+
                     case 3:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
                         // REPLACEMENT IS FROM DISTRACTOR TRIO
