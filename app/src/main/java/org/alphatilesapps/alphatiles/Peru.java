@@ -197,16 +197,27 @@ public class Peru extends GameActivity {
                     case 3:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
                         // REPLACEMENT IS FROM DISTRACTOR TRIO
-                        int randomNum5 = rand.nextInt(tileLength - 1);       // this represents which position in word string will be replaced
-                        List<String> tempArray3 = new ArrayList<>(parsedWordArrayFinal);
-                        tempArray3.set(randomNum5, Start.tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(randomNum5)));
-                        StringBuilder builder3 = new StringBuilder("");
-                        for(String s : tempArray3) {
-                            builder3.append(s);
+
+                        isDuplicateAnswerChoice = true; // LM // generate answer choices until there are no duplicates
+
+                        while(isDuplicateAnswerChoice) {
+                            int randomNum5 = rand.nextInt(tileLength - 1);       // this represents which position in word string will be replaced
+                            List<String> tempArray3 = new ArrayList<>(parsedWordArrayFinal);
+                            tempArray3.set(randomNum5, Start.tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(randomNum5)));
+                            StringBuilder builder3 = new StringBuilder("");
+                            for (String s : tempArray3) {
+                                builder3.append(s);
+                            }
+                            String incorrectChoice3 = builder3.toString();
+                            nextWord.setText(incorrectChoice3);
+
+                            isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
+                            for(int answerChoice = 0; answerChoice < i; answerChoice++){
+                                if(incorrectChoice3.compareTo(((TextView)findViewById(WORD_CHOICES[answerChoice])).getText().toString()) == 0){
+                                    isDuplicateAnswerChoice = true;
+                                }
+                            }
                         }
-                        String incorrectChoice3 = builder3.toString();
-                        nextWord.setText(incorrectChoice3);
-                        break;
                     default:
 
                 }
