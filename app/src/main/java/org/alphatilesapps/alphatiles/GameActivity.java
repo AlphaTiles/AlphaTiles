@@ -266,7 +266,7 @@ public abstract class GameActivity extends AppCompatActivity {
 		soundSequencer.postDelayed(new Runnable()	
 		{	
 			public void run()	
-			{	
+			{
 				setAllTilesClickable();	
 				setOptionsRowClickable();	
 				playActiveWordClip(playFinalSound);	
@@ -284,7 +284,7 @@ public abstract class GameActivity extends AppCompatActivity {
 		{	
 			@Override	
 			public void onCompletion(MediaPlayer mp2)	
-			{	
+			{
 				mp2.release();	
 				playActiveWordClip(playFinalSound);	
 			}	
@@ -301,7 +301,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	{	
 		setAllTilesUnclickable();	
 		setOptionsRowUnclickable();	
-		gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);	
+		gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
 		setAllTilesClickable();	
 		setOptionsRowClickable();	
 	}	
