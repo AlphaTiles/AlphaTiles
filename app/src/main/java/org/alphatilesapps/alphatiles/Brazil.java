@@ -421,7 +421,7 @@ public class Brazil extends GameActivity {
             }
 
         } else {
-            // when Earth.challengeLevel == 2 || == 4
+            // when Earth.challengeLevel == 2 || == 5
             correctTileRepresented = true;
             int correspondingRow = 0;
             for (int d = 0; d < Start.tileList.size(); d++) {
@@ -463,7 +463,7 @@ public class Brazil extends GameActivity {
         if (!correctTileRepresented) {
 
             // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
-            // This check is not necessary for challengeLevel 2 and 4, so at beginning of code above correctTileRepresented set to true
+            // This check is not necessary for challengeLevel 2 and 5, so at beginning of code above correctTileRepresented set to true
 //            LOGGER.info("Remember that inside loop for correctTileRepresented = false");
 
             int min = 0;
