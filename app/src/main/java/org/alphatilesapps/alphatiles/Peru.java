@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -143,6 +145,8 @@ public class Peru extends GameActivity {
         image.setImageResource(resID);
 
         int randomNum2 = rand.nextInt(4);    // need to choose which of four words will be spelled correctly (and other three will be modified to become incorrect
+        List<String> shuffledDistractorTiles = Arrays.asList(Start.tileList.get(Start.tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).altTiles);
+        Collections.shuffle(shuffledDistractorTiles);
 
         int incorrectLapNo = 0;
         for (int i = 0; i < TILE_BUTTONS.length; i++) {
@@ -158,7 +162,7 @@ public class Peru extends GameActivity {
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (THE FIRST TILE) REPLACED
                         // REPLACEMENT IS FROM DISTRACTOR TRIO
                         List<String> tempArray1 = new ArrayList<>(parsedWordArrayFinal);
-                        tempArray1.set(0, Start.tileList.get(Start.tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).altTiles[incorrectLapNo - 1]); // KP
+                        tempArray1.set(0, shuffledDistractorTiles.get(incorrectLapNo-1)); // KP // LM
                         StringBuilder builder1 = new StringBuilder("");
                         for(String s : tempArray1) {
                             builder1.append(s);
