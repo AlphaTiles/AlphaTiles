@@ -5,8 +5,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -15,14 +13,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Bundle;
 
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;   // KP
 import java.util.Random;   // KP
@@ -88,7 +79,7 @@ public class Start extends AppCompatActivity
         buildWordAndTileArrays();
         LOGGER.info("Remember: completed buildWordAndTileArrays()");
 
-        Intent intent = new Intent(this, Player.class);
+        Intent intent = new Intent(this, ChoosePlayer.class);
 
         startActivity(intent);
 

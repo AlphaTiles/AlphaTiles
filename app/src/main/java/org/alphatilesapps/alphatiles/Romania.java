@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -75,7 +74,7 @@ public class Romania extends GameActivity {
         pointsEarned.setText(String.valueOf(points));
 
         firstAlphabetTile = Start.tileList.get(0).baseTile; // KP
-        SharedPreferences prefs = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String startingAlphabetTile = prefs.getString("lastActiveTileGame001_player" + playerString, firstAlphabetTile);
 
@@ -205,7 +204,7 @@ public class Romania extends GameActivity {
                 magTile.setTextColor(tileColor);
             }
             if (groupCount > 0) {
-                playAudioForActiveWord();
+                playActiveWordClip(false);
             }
 
         } else {
@@ -280,7 +279,7 @@ public class Romania extends GameActivity {
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
         wordTokenNoGroupThree = 0;
-        SharedPreferences.Editor editor = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
         editor.apply();
@@ -295,7 +294,7 @@ public class Romania extends GameActivity {
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
         wordTokenNoGroupThree = 0;
-        SharedPreferences.Editor editor = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
         editor.apply();
@@ -374,35 +373,6 @@ public class Romania extends GameActivity {
         toggleOne.setImageResource(resID1);
         toggleTwo.setImageResource(resID2);
         toggleThree.setImageResource(resID3);
-
-    }
-
-    public void playAudioForActiveWord() {
-        mediaPlayerIsPlaying = true;
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        MediaPlayer mp = MediaPlayer.create(this, resID);
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
-                setOptionsRowClickable();
-                mp.release();
-            }
-        });
-        mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
-                setOptionsRowClickable();
-                mp.release();
-                return false;
-            }
-        });
-        mp.start();
 
     }
 

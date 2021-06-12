@@ -8,10 +8,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.BuildConfig;
-
-import static org.alphatilesapps.alphatiles.Start.*;
-
 public class About extends AppCompatActivity {
 
     Context context;

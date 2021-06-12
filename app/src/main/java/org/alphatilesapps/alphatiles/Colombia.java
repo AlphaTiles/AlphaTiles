@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -22,11 +21,12 @@ public class Colombia extends GameActivity {
 
     String initialLetter = "";
     ArrayList<String> tempKeys; // KP
+    int keysInUse; // number of keys in the language's total keyboard
     int keyboardScreenNo; // for languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
     int totalScreens; // the total number of screens required to show all keys
     int partial; // the number of visible keys on final partial screen
 
-    private static final int[] TILE_BUTTONS = {
+    protected static final int[] TILE_BUTTONS = {
             R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
             R.id.key11, R.id.key12, R.id.key13, R.id.key14, R.id.key15, R.id.key16, R.id.key17, R.id.key18, R.id.key19, R.id.key20,
             R.id.key21, R.id.key22, R.id.key23, R.id.key24, R.id.key25, R.id.key26, R.id.key27, R.id.key28, R.id.key29, R.id.key30,
@@ -58,7 +58,7 @@ public class Colombia extends GameActivity {
 
         LOGGER.info("Remember: oC2");
 
-        SharedPreferences prefs = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -219,7 +219,22 @@ public class Colombia extends GameActivity {
             case 3:
                 // There are 35 key buttons available (KEYS.length), but the language may need a smaller amount (Start.keysArraySize)
                 // Starting with k = 1 to skip the header row
-                visibleTiles = keyList.size(); // KRP
+                keysInUse = keyList.size(); // KP
+                partial = keysInUse % (TILE_BUTTONS.length - 2);
+                totalScreens = keysInUse / (TILE_BUTTONS.length - 2);
+
+                LOGGER.info("Remember: partial = " + partial);
+                LOGGER.info("Remember: totalScreens = " + totalScreens);
+                if (partial != 0) {
+                    totalScreens++;
+                }
+
+                LOGGER.info("Remember: April 22 2021 A1");
+                if (keysInUse > TILE_BUTTONS.length) {
+                    visibleTiles = TILE_BUTTONS.length;
+                } else {
+                    visibleTiles = keysInUse;
+                }
                 for (int k = 0; k < visibleTiles; k++)
                 {
                     TextView key = findViewById(TILE_BUTTONS[k]);
@@ -228,6 +243,21 @@ public class Colombia extends GameActivity {
                     int tileColor = Color.parseColor(tileColorStr);
                     key.setBackgroundColor(tileColor);
                 }
+                LOGGER.info("Remember: April 22 2021 A2");
+                if (keysInUse > TILE_BUTTONS.length) {
+                    LOGGER.info("Remember: keysInUse = " + keysInUse);
+                    LOGGER.info("Remember: KEYS.length = " + TILE_BUTTONS.length);
+                    LOGGER.info("Remember: April 22 2021 A2");
+                    TextView key34 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 2]);
+                    key34.setBackgroundResource(R.drawable.zz_backward_green);
+                    key34.setText("");
+                    LOGGER.info("key34's text: " + key34.getText());
+                    TextView key35 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 1]);
+                    key35.setBackgroundResource(R.drawable.zz_forward_green);
+                    key35.setText("");
+                    LOGGER.info("key35's text: " + key35.getText());
+                }
+                LOGGER.info("Remember: April 22 2021 A3");
                 break;
             default:
         }
@@ -297,7 +327,7 @@ public class Colombia extends GameActivity {
             trackerCount++;
             updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Player.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
@@ -345,9 +375,9 @@ public class Colombia extends GameActivity {
 
     public void onBtnClick(View view) {
 
-        int justClickedKey = Integer.parseInt((String) view.getTag());
+        int justClickedKey = Integer.parseInt((String)view.getTag());
         // Next line says ... if a basic keyboard (which all fits on one screen) or (even when on a complex keyboard) if something other than the last two buttons (the two arrows) are tapped...
-        if (visibleTiles <= TILE_BUTTONS.length || justClickedKey <= (TILE_BUTTONS.length - 2)) {
+        if (keysInUse <= TILE_BUTTONS.length || justClickedKey <= (TILE_BUTTONS.length - 2)) {
             int keyIndex = (33 * (keyboardScreenNo - 1)) + justClickedKey - 1;
             respondToKeySelection(keyIndex);
         } else {

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import androidx.appcompat.app.AppCompatActivity;
 
 import static org.alphatilesapps.alphatiles.Start.*;	
-import static org.alphatilesapps.alphatiles.Player.SHARED_PREFS;	
+import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 
 public abstract class GameActivity extends AppCompatActivity {

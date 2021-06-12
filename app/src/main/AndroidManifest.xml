@@ -19,8 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="org.alphatilesapps.alphatiles.Player"/>
-        <activity android:name="org.alphatilesapps.alphatiles.StartUpdateAvatars"/>
+        <activity android:name="org.alphatilesapps.alphatiles.ChoosePlayer"/>
+        <activity android:name="org.alphatilesapps.alphatiles.SetPlayerName"/>
         <activity android:name="org.alphatilesapps.alphatiles.Earth"/>
         <activity android:name="org.alphatilesapps.alphatiles.About"/>
         <activity android:name="org.alphatilesapps.alphatiles.Brazil"/>
