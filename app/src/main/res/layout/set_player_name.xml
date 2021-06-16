@@ -63,6 +63,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="deleteLastKeyedLetter"
+        android:rotationY="@integer/locale_mirror_flip"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="parent"

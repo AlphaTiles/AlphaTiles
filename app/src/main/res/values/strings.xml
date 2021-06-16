@@ -134,8 +134,8 @@
     <string name="wordChoice03">Word Choice 3</string>
     <string name="wordChoice04">Word Choice 4</string>
     <string name="gameTileInFocus">a</string>
-    <string name="goBackward">Go To Previous Letter</string>
-    <string name="goForward">Go To Next Letter</string>
+    <string name="goBackward">Go To Previous</string>
+    <string name="goForward">Go To Next</string>
     <string name="seeMoreOfSameGameTile">See More Words Starting With This Game Tile</string>
     <string name="countWordsBeginningWithThisGameTile">1</string>
     <string name="activeWordText">Word In Focus</string>

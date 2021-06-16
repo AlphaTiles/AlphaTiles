@@ -49,7 +49,7 @@ public class SetPlayerName extends AppCompatActivity {
         context = this;
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.start_update_avatars);
+        setContentView(R.layout.set_player_name);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
@@ -167,8 +167,10 @@ public class SetPlayerName extends AppCompatActivity {
         if (keysInUse > KEYS.length) {
             TextView key34 = findViewById(KEYS[KEYS.length - 2]);
             key34.setBackgroundResource(R.drawable.zz_backward_green);
+            key34.setRotationY(getResources().getInteger(R.integer.locale_mirror_flip));
             key34.setText("");
             TextView key35 = findViewById(KEYS[KEYS.length - 1]);
+            key35.setRotationY(getResources().getInteger(R.integer.locale_mirror_flip));
             key35.setBackgroundResource(R.drawable.zz_forward_green);
             key35.setText("");
         }
