@@ -1,10 +1,12 @@
 package org.alphatilesapps.alphatiles;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -20,6 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.keyList;
+import static org.alphatilesapps.alphatiles.Testing.forceRTL;
 
 public class SetPlayerName extends AppCompatActivity {
 
@@ -89,6 +92,10 @@ public class SetPlayerName extends AppCompatActivity {
 
         if (name.getText().length() > 0 ) {
             name.setSelection(name.getText().length());
+        }
+
+        if(forceRTL){
+            forceRTLIfSupported();
         }
 
     }
@@ -167,10 +174,10 @@ public class SetPlayerName extends AppCompatActivity {
         if (keysInUse > KEYS.length) {
             TextView key34 = findViewById(KEYS[KEYS.length - 2]);
             key34.setBackgroundResource(R.drawable.zz_backward_green);
-            key34.setRotationY(getResources().getInteger(R.integer.locale_mirror_flip));
+            key34.setRotationY(getResources().getInteger(R.integer.mirror_flip));
             key34.setText("");
             TextView key35 = findViewById(KEYS[KEYS.length - 1]);
-            key35.setRotationY(getResources().getInteger(R.integer.locale_mirror_flip));
+            key35.setRotationY(getResources().getInteger(R.integer.mirror_flip));
             key35.setBackgroundResource(R.drawable.zz_forward_green);
             key35.setText("");
         }
@@ -301,6 +308,14 @@ public class SetPlayerName extends AppCompatActivity {
         startActivity(intent);
         finish();
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceRTLIfSupported()
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
     }
 
 }

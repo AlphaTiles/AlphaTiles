@@ -1,6 +1,7 @@
 package org.alphatilesapps.alphatiles;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Scanner;
 import java.util.logging.Logger;
+
+import static org.alphatilesapps.alphatiles.Testing.forceRTL;
 
 public class Resources extends AppCompatActivity {
 
@@ -56,6 +59,10 @@ public class Resources extends AppCompatActivity {
 
         buildResourcesArray();
         loadResources();
+
+        if(forceRTL){
+            forceRTLIfSupported();
+        }
 
     }
 
@@ -131,6 +138,14 @@ public class Resources extends AppCompatActivity {
         startActivity(intent);
         finish();
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceRTLIfSupported()
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
     }
 
 }

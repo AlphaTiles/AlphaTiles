@@ -250,12 +250,12 @@ public class Colombia extends GameActivity {
                     LOGGER.info("Remember: April 22 2021 A2");
                     TextView key34 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 2]);
                     key34.setBackgroundResource(R.drawable.zz_backward_green);
-                    key34.setRotationY(getResources().getInteger(R.integer.locale_mirror_flip));
+                    key34.setRotationY(getResources().getInteger(R.integer.mirror_flip));
                     key34.setText("");
                     LOGGER.info("key34's text: " + key34.getText());
                     TextView key35 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 1]);
                     key35.setBackgroundResource(R.drawable.zz_forward_green);
-                    key35.setRotationY(getResources().getInteger(R.integer.locale_mirror_flip));
+                    key35.setRotationY(getResources().getInteger(R.integer.mirror_flip));
                     key35.setText("");
                     LOGGER.info("key35's text: " + key35.getText());
                 }

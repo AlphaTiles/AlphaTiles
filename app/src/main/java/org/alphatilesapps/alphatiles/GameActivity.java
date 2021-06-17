@@ -18,6 +18,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import static org.alphatilesapps.alphatiles.Start.*;	
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
+import static org.alphatilesapps.alphatiles.Testing.forceRTL;
+
+import android.annotation.TargetApi;
+import android.os.Build;
 
 public abstract class GameActivity extends AppCompatActivity {
 
@@ -62,6 +66,10 @@ public abstract class GameActivity extends AppCompatActivity {
 		gameNumber = getIntent().getIntExtra("gameNumber", 0);
 		
 		className = getClass().getName();
+
+		if(forceRTL){
+			forceRTLIfSupported();
+		}
 
 		super.onCreate(state);
 
@@ -381,7 +389,15 @@ public abstract class GameActivity extends AppCompatActivity {
 			}	
 			setOptionsRowClickable();	
 			mp.release();	
-		}	
+		}
+
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	private void forceRTLIfSupported()
+	{
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+		}
+	}
 }
