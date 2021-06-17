@@ -38,9 +38,13 @@ public class Thailand extends GameActivity {
     int pixelHeightRef;
     int pixelHeightChoices;
 
-    private static final int[] TILE_BUTTONS = {
+    protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
     };
+
+    protected int[] getTileButtons() {return null;}
+
+    protected int[] getWordImages() {return null;}
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -56,6 +60,7 @@ public class Thailand extends GameActivity {
         points = getIntent().getIntExtra("points", 0);
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
+        visibleTiles = TILE_BUTTONS.length;
 
         // So, if challengeLevel is 235, then...
             // challengeLevelThai = 2 (distractors not random)
@@ -74,7 +79,7 @@ public class Thailand extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -431,7 +436,7 @@ public class Thailand extends GameActivity {
             trackerCount++;
             updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
@@ -474,49 +479,6 @@ public class Thailand extends GameActivity {
 
     public void onChoiceClick (View view) {
         respondToSelection(Integer.parseInt((String)view.getTag())); // KP
-    }
-
-    private void setAllTilesUnclickable() {
-
-        for (int choiceItem : TILE_BUTTONS) {
-            TextView nextItem = findViewById(choiceItem);
-            nextItem.setClickable(false);
-        }
-
-    }
-    private void setAllTilesClickable() {
-
-        for (int choiceItem : TILE_BUTTONS) {
-            TextView nextItem = findViewById(choiceItem);
-            nextItem.setClickable(true);
-        }
-
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        TextView referenceItem = findViewById(R.id.referenceItem);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-        referenceItem.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        TextView referenceItem = findViewById(R.id.referenceItem);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        referenceItem.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
     }
 
     public void onRefClick (View view) {
@@ -586,23 +548,14 @@ public class Thailand extends GameActivity {
             }
         });
     }
-    public void playIncorrectSound() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
-        mediaPlayerIsPlaying = true;
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
-                setOptionsRowClickable();
-                mp3.release();
-            }
-        });
+
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
     }
 
-
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
+    }
 
 }

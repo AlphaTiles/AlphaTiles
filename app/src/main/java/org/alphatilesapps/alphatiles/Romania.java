@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -32,6 +31,10 @@ public class Romania extends GameActivity {
 
     ArrayList<String> settingsList;
 
+    protected int[] getTileButtons() {return null;}
+
+    protected int[] getWordImages() {return null;}
+
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger( Romania.class.getName() );
@@ -45,6 +48,7 @@ public class Romania extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
+
 
         setTitle(Start.localAppName + ": " + gameNumber);
 
@@ -70,7 +74,7 @@ public class Romania extends GameActivity {
         pointsEarned.setText(String.valueOf(points));
 
         firstAlphabetTile = Start.tileList.get(0).baseTile; // KP
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String startingAlphabetTile = prefs.getString("lastActiveTileGame001_player" + playerString, firstAlphabetTile);
 
@@ -200,7 +204,7 @@ public class Romania extends GameActivity {
                 magTile.setTextColor(tileColor);
             }
             if (groupCount > 0) {
-                playAudioForActiveWord();
+                playActiveWordClip(false);
             }
 
         } else {
@@ -275,7 +279,7 @@ public class Romania extends GameActivity {
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
         wordTokenNoGroupThree = 0;
-        SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
         editor.apply();
@@ -290,7 +294,7 @@ public class Romania extends GameActivity {
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
         wordTokenNoGroupThree = 0;
-        SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
         editor.apply();
@@ -372,7 +376,9 @@ public class Romania extends GameActivity {
 
     }
 
-    private void setAllTilesUnclickable() {
+    @Override
+    protected void setAllTilesUnclickable()
+    {
 
         TextView tileBox = findViewById(R.id.tileBoxTextView);
         tileBox.setClickable(false);
@@ -392,12 +398,15 @@ public class Romania extends GameActivity {
 
         TextView magTile = findViewById(R.id.tileInMagnifyingGlass);
         magTile.setClickable(false);
-        
+
         ImageView magGlass = findViewById(R.id.findMoreOfSameTile);
         magGlass.setClickable(false);
 
     }
-    private void setAllTilesClickable() {
+
+    @Override
+    protected void setAllTilesClickable()
+    {
 
         TextView tileBox = findViewById(R.id.tileBoxTextView);
         tileBox.setClickable(true);
@@ -422,54 +431,14 @@ public class Romania extends GameActivity {
         magGlass.setClickable(true);
 
     }
-    private void setOptionsRowUnclickable() {
 
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-
-        repeatImage.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-        repeatImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
     }
 
-    public void clickPicHearAudio (View view) {
-        playAudioForActiveWord();
-    }
-
-    public void playAudioForActiveWord() {
-        mediaPlayerIsPlaying = true;
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        MediaPlayer mp = MediaPlayer.create(this, resID);
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
-                setOptionsRowClickable();
-                mp.release();
-            }
-        });
-        mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
-                setOptionsRowClickable();
-                mp.release();
-                return false;
-            }
-        });
-        mp.start();
-
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }

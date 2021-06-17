@@ -5,19 +5,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
+import android.media.SoundPool;
 import android.os.Bundle;
 
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;   // KP
 import java.util.Random;   // KP
@@ -48,21 +44,15 @@ public class Start extends AppCompatActivity
 
     public static ArrayList<Integer> avatarIdList;
     public static ArrayList<Drawable> avatarJpgList;
-
-    public static final int[] AVATAR_JPG_IDS = {
-            R.drawable.zz_avataricon01, R.drawable.zz_avataricon02, R.drawable.zz_avataricon03, R.drawable.zz_avataricon04,
-            R.drawable.zz_avataricon05, R.drawable.zz_avataricon06, R.drawable.zz_avataricon07, R.drawable.zz_avataricon08,
-            R.drawable.zz_avataricon09, R.drawable.zz_avataricon10, R.drawable.zz_avataricon11, R.drawable.zz_avataricon12,
-    };
-
-    public static final int[] AVATAR_NAMES = {
-            R.id.playername01, R.id.playername02, R.id.playername03, R.id.playername04, R.id.playername05, R.id.playername06, R.id.playername07, R.id.playername08, R.id.playername09, R.id.playername10,
-            R.id.playername11, R.id.playername12
-    };
-
-    int playerNumber; // KP, drop "static"
-
-    public static final String SHARED_PREFS = "sharedPrefs";
+    public static SoundPool gameSounds;
+    public static int correctSoundID;
+    public static int incorrectSoundID;
+    public static int correctFinalSoundID;
+    public static HashMap<String, Integer> speechIDs;
+    public static int correctSoundDuration;
+    public static int incorrectSoundDuration;
+    public static int correctFinalSoundDuration;
+    public static HashMap<String, Integer> speechDurations;
 
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
@@ -71,31 +61,9 @@ public class Start extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
         context = this;
 
-        setTheme(R.style.AppTheme);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.start);
-
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
-
-        startCL = findViewById(R.id.startCL);
-
-        // populate arrays from what is actually in the layout
-        avatarIdList = new ArrayList();
-        avatarJpgList = new ArrayList();
-
-        for (int j = 0; j < startCL.getChildCount(); j++)
-        {
-            View child = startCL.getChildAt(j);
-            if (child instanceof ImageView && child.getTag() != null)
-            {
-                avatarIdList.add(child.getId());
-                avatarJpgList.add(((ImageView)child).getDrawable());
-            }
-        }
-
-        LOGGER.info("Remember: next step is to buildLangInfoArray()");
         buildLangInfoArray();
         LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
 
@@ -105,72 +73,26 @@ public class Start extends AppCompatActivity
         buildSettingsArray();
         LOGGER.info("Remember: completed buildSettingsArray()");
 
-        buildGamesArray();;
+        buildGamesArray();
         LOGGER.info("Remember: completed buildGamesArray()");
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        buildWordAndTileArrays();
+        LOGGER.info("Remember: completed buildWordAndTileArrays()");
 
-        int nameID;
-        String defaultName;
-        String playerName;
-        for (int n = 0; n < AVATAR_NAMES.length; n++) {
+        Intent intent = new Intent(this, ChoosePlayer.class);
 
-            String localWordForName = langInfoList.find("NAME in local language");
-            nameID = n + 1;
-            if (localWordForName.equals("custom")) {
-                defaultName = nameList.get(nameID - 1);
-            } else {
-                defaultName = localWordForName + " " + nameID;
-            }
+        startActivity(intent);
 
-            String playerString = Util.returnPlayerStringToAppend(nameID);
-            playerName = prefs.getString("storedName" + playerString, defaultName);
-
-            TextView name = findViewById(AVATAR_NAMES[n]);
-            name.setText(playerName);
-
-        }
-
-        setTextSizes();
-
-        setTitle(Start.localAppName);
+        finish();
 
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
-    public void setTextSizes() {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        int pixelHeight = 0;
-        double scaling = 0.35;
-        int bottomToTopId;
-        int topToTopId;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        for (int n = 0; n < AVATAR_NAMES.length; n++) {
-
-            TextView key = findViewById(AVATAR_NAMES[n]);
-            if (n== 0) {
-                ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) key.getLayoutParams();
-                bottomToTopId = lp1.bottomToTop;
-                topToTopId = lp1.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-            }
-            key.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        }
-
+    private int getAssetDuration(int assetID)
+    {
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        AssetFileDescriptor afd = context.getResources().openRawResourceFd(assetID);
+        mmr.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+        return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
 
     public void buildWordAndTileArrays()    {
@@ -182,6 +104,29 @@ public class Start extends AppCompatActivity
         buildWordsArray();
         LOGGER.info("Remember: completed buildWordsArray()");
 //        Util.logMemory();
+
+        // load music sounds
+        gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
+        incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
+        correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
+
+        correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
+//		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
+//		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
+
+        // load speech sounds
+        Resources res = context.getResources();
+        speechIDs = new HashMap();
+        speechDurations = new HashMap();
+        for (Word word : wordList)
+        {
+            int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
+            speechIDs.put(word.nationalWord, gameSounds.load(context, resId, 2));
+            speechDurations.put(word.nationalWord, word.duration + 100);
+//			speechDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
+        }
+
 
     }
     public void buildTilesArray() {
@@ -197,18 +142,18 @@ public class Start extends AppCompatActivity
             String thisLine = scanner.nextLine();
             String[] thisLineArray = thisLine.split("\t",11);
             if (header) {
-                    tileList.baseTitle = thisLineArray[0];
-                    tileList.alt1Title = thisLineArray[1];
-                    tileList.alt2Title = thisLineArray[2];
-                    tileList.alt3Title = thisLineArray[3];
-                    tileList.tileTypeTitle = thisLineArray[4];
-                    tileList.audioForTileTitle = thisLineArray[5];
-                    tileList.upperTileTitle = thisLineArray[6];
-                    tileList.tileTypeBTitle = thisLineArray[7];
-                    tileList.audioForTileBTitle = thisLineArray[8];
-                    tileList.tileTypeCTitle = thisLineArray[9];
-                    tileList.audioForTileCTitle = thisLineArray[10];
-                    header = false;
+                tileList.baseTitle = thisLineArray[0];
+                tileList.alt1Title = thisLineArray[1];
+                tileList.alt2Title = thisLineArray[2];
+                tileList.alt3Title = thisLineArray[3];
+                tileList.tileTypeTitle = thisLineArray[4];
+                tileList.audioForTileTitle = thisLineArray[5];
+                tileList.upperTileTitle = thisLineArray[6];
+                tileList.tileTypeBTitle = thisLineArray[7];
+                tileList.audioForTileBTitle = thisLineArray[8];
+                tileList.tileTypeCTitle = thisLineArray[9];
+                tileList.audioForTileCTitle = thisLineArray[10];
+                header = false;
             } else {
                 Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10]);
                 if (!tile.hasNull()) {
@@ -235,7 +180,7 @@ public class Start extends AppCompatActivity
                 wordList.adjustment = thisLineArray[4];
                 header = false;
             } else {
-                Word word = new Word(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4]);
+                Word word = new Word(thisLineArray[0], thisLineArray[1], Integer.parseInt(thisLineArray[2]), thisLineArray[3], thisLineArray[4]);
                 if (!word.hasNull()) {
                     wordList.add(word);
                 }
@@ -255,9 +200,9 @@ public class Start extends AppCompatActivity
             String thisLine = scanner.nextLine();
             String[] thisLineArray = thisLine.split("\t");
             if (header) {
-                    keyList.keysTitle = thisLineArray[0];
-                    keyList.colorTitle = thisLineArray[1];
-                    header = false;
+                keyList.keysTitle = thisLineArray[0];
+                keyList.colorTitle = thisLineArray[1];
+                header = false;
             } else {
                 Key key = new Key(thisLineArray[0], thisLineArray[1]);
                 if (!key.hasNull()) {
@@ -373,44 +318,14 @@ public class Start extends AppCompatActivity
 
     }
 
-    public void goToEarthFromAvatar(View view) {
-
-        playerNumber = Integer.parseInt((String)view.getTag());
-        buildWordAndTileArrays();
-        Intent intent = new Intent(context, Earth.class);
-        intent.putExtra("playerNumber", playerNumber);
-//        intent.putExtra("wordsArraySize", wordsArraySize);
-//        intent.putExtra("langInfoList", langInfoList);
-        intent.putExtra("settingsList", settingsList);
-        startActivity(intent);
-        finish();
-
-    }
-
-    public void goToNameAvatarFromAvatar(View view) {
-
-        LOGGER.info("Remember: just entered goToNameAvatarFromAvatar(View view) method");
-        playerNumber = Integer.parseInt((String)view.getTag());
-        buildWordAndTileArrays();
-
-        Intent intent = new Intent(context, StartUpdateAvatars.class);
-        intent.putExtra("playerNumber", playerNumber);
-//        intent.putExtra("wordsArraySize", wordsArraySize);
-//        intent.putExtra("langInfoList", langInfoList);
-        intent.putExtra("settingsList", settingsList);
-        startActivity(intent);
-        finish();
-
-    }
-
     public class Word {
         public String nationalWord;
         public String localWord;
-        public String duration;
+        public int duration;
         public String mixedDefs;
         public String adjustment;
 
-        public Word(String nationalWord, String localWord, String duration, String mixedDefs, String adjustment) {
+        public Word(String nationalWord, String localWord, int duration, String mixedDefs, String adjustment) {
             this.nationalWord = nationalWord;
             this.localWord = localWord;
             this.duration = duration;
@@ -419,7 +334,7 @@ public class Start extends AppCompatActivity
         }
 
         public boolean hasNull() {
-            return nationalWord == null || localWord == null || duration == null || mixedDefs == null || adjustment == null;
+            return nationalWord == null || localWord == null || mixedDefs == null || adjustment == null;
         }
     }
 
@@ -783,30 +698,30 @@ public class Start extends AppCompatActivity
                     }
                 }
 
-           }
+            }
 
-           if (challengeLevel == 3) {
-               // use hard words and if the supply runs out use moderate words and if the supply runs out use easy words
+            if (challengeLevel == 3) {
+                // use hard words and if the supply runs out use moderate words and if the supply runs out use easy words
 
-               for (int i = 0; i < 3; i++) {
-                   if (hardWords.size() > i) {
+                for (int i = 0; i < 3; i++) {
+                    if (hardWords.size() > i) {
 
-                       fourChoices.add(hardWords.get(i));
+                        fourChoices.add(hardWords.get(i));
 
-                   } else {
-                       if (moderateWords.size() > (i - hardWords.size())) {
+                    } else {
+                        if (moderateWords.size() > (i - hardWords.size())) {
 
-                           fourChoices.add(moderateWords.get(i - hardWords.size()));
+                            fourChoices.add(moderateWords.get(i - hardWords.size()));
 
-                       } else {
+                        } else {
 
-                           fourChoices.add(easyWords.get(i - hardWords.size() - moderateWords.size()));
+                            fourChoices.add(easyWords.get(i - hardWords.size() - moderateWords.size()));
 
-                       }
-                   }
-               }
+                        }
+                    }
+                }
 
-           }
+            }
 //            LOGGER.info("Remember fourChoices.get(0)[1] = " + fourChoices.get(0)[1]);
 //            LOGGER.info("Remember fourChoices.get(1)[1] = " + fourChoices.get(1)[1]);
 //            LOGGER.info("Remember fourChoices.get(2)[1] = " + fourChoices.get(2)[1]);
@@ -943,9 +858,9 @@ public class Start extends AppCompatActivity
                 }
             }
 
-		return nextTile;
+            return nextTile;
 
-    }
+        }
 
         public String returnPreviousAlphabetTile(String oldTile) {
 
@@ -1163,17 +1078,17 @@ public class Start extends AppCompatActivity
 
     public class LangInfoList extends HashMap<String, String> {
 
-    public String title;
+        public String title;
 
-    public String find(String keyContains) {
-        for (String k : keySet()) {
-            if (k.contains(keyContains)) {
-                return (get(k));
+        public String find(String keyContains) {
+            for (String k : keySet()) {
+                if (k.contains(keyContains)) {
+                    return (get(k));
+                }
             }
+            return "";
         }
-        return "";
     }
-}
 
     public class SettingsList extends HashMap<String, String> {
 

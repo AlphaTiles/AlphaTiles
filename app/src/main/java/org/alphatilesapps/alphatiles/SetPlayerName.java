@@ -17,12 +17,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.keyList;
 
-public class StartUpdateAvatars extends AppCompatActivity {
+public class SetPlayerName extends AppCompatActivity {
 
     Context context;
 
@@ -42,7 +41,7 @@ public class StartUpdateAvatars extends AppCompatActivity {
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
-    private static final Logger LOGGER = Logger.getLogger(StartUpdateAvatars.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SetPlayerName.class.getName());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,7 @@ public class StartUpdateAvatars extends AppCompatActivity {
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
 
         ImageView avatar = findViewById(R.id.avatar);
-        int resID = getResources().getIdentifier(String.valueOf(Start.AVATAR_JPG_IDS[playerNumber - 1]), "drawable", getPackageName());
+        int resID = getResources().getIdentifier(String.valueOf(ChoosePlayer.AVATAR_JPG_IDS[playerNumber - 1]), "drawable", getPackageName());
         avatar.setImageResource(resID);
 
         String defaultName;
@@ -76,7 +75,7 @@ public class StartUpdateAvatars extends AppCompatActivity {
             defaultName = localWordForName + " " + playerNumber;
         }
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         playerName = prefs.getString("storedName" + playerString, defaultName);
 
@@ -288,7 +287,7 @@ public class StartUpdateAvatars extends AppCompatActivity {
 
         LOGGER.info("Remember: playerName = " + playerName);
 
-        SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("storedName" + playerString, playerName);
         editor.apply();

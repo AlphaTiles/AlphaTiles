@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -15,6 +14,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Random;
 import java.util.logging.Logger;
+
+import static org.alphatilesapps.alphatiles.Start.wordList;
 
 public class Myanmar extends GameActivity {
 
@@ -29,13 +30,17 @@ public class Myanmar extends GameActivity {
     int wordsCompleted = 0;
     int completionGoal = 0;
 
-    private static final int[] TILES = {
+    protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16, R.id.tile17, R.id.tile18, R.id.tile19, R.id.tile20,
             R.id.tile21, R.id.tile22, R.id.tile23, R.id.tile24, R.id.tile25, R.id.tile26, R.id.tile27, R.id.tile28, R.id.tile29, R.id.tile30,
             R.id.tile31, R.id.tile32, R.id.tile33, R.id.tile34, R.id.tile35, R.id.tile36, R.id.tile37, R.id.tile38, R.id.tile39, R.id.tile40,
             R.id.tile41, R.id.tile42, R.id.tile43, R.id.tile44, R.id.tile45, R.id.tile46, R.id.tile47, R.id.tile48, R.id.tile49
     };
+
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+
+    protected int[] getWordImages() {return null;}
 
     private static final int[] WORD_IMAGES = {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04, R.id.wordImage05, R.id.wordImage06, R.id.wordImage07
@@ -55,13 +60,14 @@ public class Myanmar extends GameActivity {
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
+        visibleTiles = TILE_BUTTONS.length;
 
         setTitle(Start.localAppName + ": " + gameNumber);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -92,9 +98,9 @@ public class Myanmar extends GameActivity {
         float percentTopToTop;
         float percentHeight;
 
-        for (int t = 0; t < TILES.length; t++) {
+        for (int t = 0; t < TILE_BUTTONS.length; t++) {
 
-            TextView tile = findViewById(TILES[t]);
+            TextView tile = findViewById(TILE_BUTTONS[t]);
             if (t == 0) {
                 ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) tile.getLayoutParams();
                 bottomToTopId = lp1.bottomToTop;
@@ -190,7 +196,7 @@ public class Myanmar extends GameActivity {
 
     public void resetBoard() {
 
-        for (int i : TILES) {
+        for (int i : TILE_BUTTONS) {
             TextView tile = findViewById(i);
             tile.setText("");
             tile.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
@@ -368,7 +374,7 @@ public class Myanmar extends GameActivity {
                 for (int y = 0; y < 7; y++) {
 
                     tileNumber = y * 7 + x;
-                    TextView tile = findViewById(TILES[tileNumber]);
+                    TextView tile = findViewById(TILE_BUTTONS[tileNumber]);
                     tile.setText(tilesBoard[x][y]);
 
                 }
@@ -395,7 +401,7 @@ public class Myanmar extends GameActivity {
                     tilesBoard[x][y] = randomTile;
 
                     tileNumber = y * 7 + x;
-                    TextView tile = findViewById(TILES[tileNumber]);
+                    TextView tile = findViewById(TILE_BUTTONS[tileNumber]);
                     tile.setText(randomTile);
 
                 }
@@ -410,7 +416,7 @@ public class Myanmar extends GameActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
-        TextView tile = findViewById(TILES[justClickedTile - 1]);
+        TextView tile = findViewById(TILE_BUTTONS[justClickedTile - 1]);
 
         int textColor = tile.getCurrentTextColor();
 
@@ -453,11 +459,11 @@ public class Myanmar extends GameActivity {
 
             LOGGER.info("Remember: same tile selected twice in a row :(");
 
-            TextView tileA = findViewById(TILES[firstClickIndex]);
+            TextView tileA = findViewById(TILE_BUTTONS[firstClickIndex]);
             tileA.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tileA.setTextColor(Color.parseColor("#000000")); // black
 
-            TextView tileB = findViewById(TILES[secondClickIndex]);
+            TextView tileB = findViewById(TILE_BUTTONS[secondClickIndex]);
             tileB.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tileB.setTextColor(Color.parseColor("#000000")); // black
 
@@ -639,7 +645,7 @@ public class Myanmar extends GameActivity {
 
                 LOGGER.info("Remember: builtWord1 tile(X, Y) = (" + tileX + ", " + tileY + ")");
 
-                TextView tile = findViewById(TILES[tileY * 7 + tileX]);
+                TextView tile = findViewById(TILE_BUTTONS[tileY * 7 + tileX]);
 
                 String tileColorStr = COLORS[wordsCompleted % 5];
                 int tileColor = Color.parseColor(tileColorStr);
@@ -664,7 +670,7 @@ public class Myanmar extends GameActivity {
 //            trackerCount++;
 //            updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
@@ -690,15 +696,15 @@ public class Myanmar extends GameActivity {
 
             }
 
-            playCorrectSoundThenActiveWordClip();
+            playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
 
         } else {
 
-            TextView tileA = findViewById(TILES[firstClickIndex]);
+            TextView tileA = findViewById(TILE_BUTTONS[firstClickIndex]);
             tileA.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tileA.setTextColor(Color.parseColor("#000000")); // black
 
-            TextView tileB = findViewById(TILES[secondClickIndex]);
+            TextView tileB = findViewById(TILE_BUTTONS[secondClickIndex]);
             tileB.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tileB.setTextColor(Color.parseColor("#000000")); // black
 
@@ -722,148 +728,21 @@ public class Myanmar extends GameActivity {
         respondToTileSelection(Integer.parseInt((String)view.getTag()));
     }
 
-    private void setAllTilesUnclickable() {
-
-        for (int t = 0; t < TILES.length; t++) {
-
-            TextView tile = findViewById(TILES[t]);
-            if (t < tilesInUse) {
-                tile.setClickable(false);
-            }
-
-        }
-
-    }
-    private void setAllTilesClickable() {
-
-        for (int t = 0; t < TILES.length; t++) {
-
-            TextView tile = findViewById(TILES[t]);
-            if (t < tilesInUse) {
-                tile.setClickable(true);
-            }
-
-        }
-
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-
-        for (int i = 0; i < 7; i++) {
-
-            ImageView wordImage = findViewById(WORD_IMAGES[i]);
-            int resID = getResources().getIdentifier(sevenWordsInLopLwc[i][0], "drawable", getPackageName());
-            wordImage.setClickable(false);
-
-        }
-
-    }
-
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-
-        for (int i = 0; i < 7; i++) {
-
-            ImageView wordImage = findViewById(WORD_IMAGES[i]);
-            int resID = getResources().getIdentifier(sevenWordsInLopLwc[i][0], "drawable", getPackageName());
-            wordImage.setClickable(true);
-
-        }
-
-    }
-
-    public void clickPicHearAudio (View view) {
+    @Override
+    public void clickPicHearAudio(View view)
+    {
 
         int justClickedImage = Integer.parseInt((String)view.getTag());
         TextView activeWord = findViewById(R.id.activeWordTextView);
-        activeWord.setText(Start.wordList.stripInstructionCharacters(sevenWordsInLopLwc[justClickedImage][1]));
+        activeWord.setText(wordList.stripInstructionCharacters(sevenWordsInLopLwc[justClickedImage][1]));
 
         wordInLWC = sevenWordsInLopLwc[justClickedImage][0];
-        playActiveWordClip();
+        playActiveWordClip(wordsCompleted == completionGoal);
 
     }
 
-    public void playActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-
-        final String className = getClass().getName();
-
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                LOGGER.info("Remember: wordsCompleted = " + wordsCompleted);
-                LOGGER.info("Remember: completionGoal = " + completionGoal);
-                if (wordsCompleted == completionGoal) {
-                    trackerCount++;
-                    updateTrackers();
-
-                    repeatLocked = false;
-
-                    SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
-                    String playerString = Util.returnPlayerStringToAppend(playerNumber);
-                    String uniqueGameLevelPlayerID = className + challengeLevel + playerString;
-                    editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-                    editor.apply();
-
-                    playCorrectFinalSound();
-                } else {
-                    mediaPlayerIsPlaying = false;
-                    setAllTilesClickable();
-                    setOptionsRowClickable();
-                }
-                mp1.release();
-            }
-        });
-
-    }
-
-    public void playCorrectSoundThenActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveWordClip();
-            }
-        });
-    }
-
-    public void playCorrectFinalSound() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        mediaPlayerIsPlaying = true;
-        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_correct_final);
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
-                setOptionsRowClickable();
-                mp3.release();
-            }
-        });
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }

@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -37,9 +36,13 @@ public class Ecuador extends GameActivity {
     // # 3 [state: "TEXT" or "IMAGE"]
     // # 4 [state: "SELECTED" or "UNSELECTED" or "PAIRED"]
 
-    private static final int[] WORDS = {
+    protected static final int[] TILE_BUTTONS = {
             R.id.word01, R.id.word02, R.id.word03, R.id.word04, R.id.word05, R.id.word06, R.id.word07, R.id.word08
     };
+
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+
+    protected int[] getWordImages() {return null;}
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -57,12 +60,14 @@ public class Ecuador extends GameActivity {
 
         wordListArray = new ArrayList(); // KP
 
+        visibleTiles = TILE_BUTTONS.length;
+
         setTitle(Start.localAppName + ": " + gameNumber);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -152,7 +157,7 @@ public class Ecuador extends GameActivity {
         Random rand = new Random();
 
         int extraLoops = 0;
-        for (int currentBoxIndex = 0; currentBoxIndex < WORDS.length; currentBoxIndex++) {
+        for (int currentBoxIndex = 0; currentBoxIndex < TILE_BUTTONS.length; currentBoxIndex++) {
 
             int coordX1 = rand.nextInt((maxStartX - minStartX) + 1) + minStartX;
             int coordY1 = rand.nextInt((maxStartY - minStartY) + 1) + minStartY;
@@ -199,9 +204,9 @@ public class Ecuador extends GameActivity {
 //            LOGGER.info("Remember: currentBoxIndex =" + currentBoxIndex + " and extraLoops = " + extraLoops);
         }
 
-        for (int c = 0; c < WORDS.length; c++) {
+        for (int c = 0; c < TILE_BUTTONS.length; c++) {
 
-            final TextView wordTile = findViewById(WORDS[c]);
+            final TextView wordTile = findViewById(TILE_BUTTONS[c]);
 
             final int finalC = c;
             wordTile.post(new Runnable() {
@@ -235,9 +240,9 @@ public class Ecuador extends GameActivity {
         float percentTopToTop;
         float percentHeight;
 
-        for (int w = 0; w < WORDS.length; w++) {
+        for (int w = 0; w < TILE_BUTTONS.length; w++) {
 
-            TextView wordTile = findViewById(WORDS[w]);
+            TextView wordTile = findViewById(TILE_BUTTONS[w]);
             pixelHeight = (int) (0.5 * (boxCoordinates[w][3] - boxCoordinates[w][1]));
             wordTile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
 
@@ -263,9 +268,9 @@ public class Ecuador extends GameActivity {
 
     public void setTextBoxColors() {
 
-        for (int w = 0; w < WORDS.length; w++) {
+        for (int w = 0; w < TILE_BUTTONS.length; w++) {
 
-            TextView wordTile = findViewById(WORDS[w]);
+            TextView wordTile = findViewById(TILE_BUTTONS[w]);
             String tileColorStr = COLORS[w % 5];
             int tileColor = Color.parseColor(tileColorStr);
             wordTile.setBackgroundColor(tileColor);
@@ -298,7 +303,7 @@ public class Ecuador extends GameActivity {
     public void setWords() {
         Random rand = new Random();
         int min = 0;
-        int max = WORDS.length - 1;
+        int max = TILE_BUTTONS.length - 1;
         int rightWordIndex = rand.nextInt((max - min) + 1) + min;
         TextView rightWordTile = findViewById(R.id.activeWordTextView);
         wordInLOP = wordListArray.get(rightWordIndex)[1];
@@ -309,8 +314,8 @@ public class Ecuador extends GameActivity {
         int resID = getResources().getIdentifier(wordListArray.get(rightWordIndex)[0] + "2", "drawable", getPackageName());
         image.setImageResource(resID);
 
-        for (int w = 0; w < WORDS.length; w++ ) {
-            TextView wordTile = findViewById(WORDS[w]);
+        for (int w = 0; w < TILE_BUTTONS.length; w++ ) {
+            TextView wordTile = findViewById(TILE_BUTTONS[w]);
             wordTile.setText(Start.wordList.stripInstructionCharacters(wordListArray.get(w)[1]));
             if (w != rightWordIndex) {
 //                wordTile.setText(w + " " + wordListArray[w][1]);  // for testing purposes, make right answer clear on screen
@@ -367,7 +372,7 @@ public class Ecuador extends GameActivity {
     private void respondToWordSelection() {
 
         int t = justClickedWord - 1; //  justClickedWord uses 1 to 8, t uses the array ID (between [0] and [7]
-        TextView chosenWord = findViewById(WORDS[t]);
+        TextView chosenWord = findViewById(TILE_BUTTONS[t]);
         String chosenWordText = chosenWord.getText().toString();
 
         if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
@@ -381,7 +386,7 @@ public class Ecuador extends GameActivity {
             trackerCount++;
             updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
@@ -389,8 +394,8 @@ public class Ecuador extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-            for (int w = 0; w < WORDS.length; w++ ) {
-                TextView nextWord = findViewById(WORDS[w]);
+            for (int w = 0; w < TILE_BUTTONS.length; w++ ) {
+                TextView nextWord = findViewById(TILE_BUTTONS[w]);
                 nextWord.setClickable(false);
                 if (w != t) {
                     String wordColorStr = "#A9A9A9"; // dark gray
@@ -400,7 +405,7 @@ public class Ecuador extends GameActivity {
                 }
             }
 
-            playCorrectSoundThenActiveWordClip();
+            playCorrectSoundThenActiveWordClip(false);
 
         } else {
             playIncorrectSound();
@@ -412,102 +417,13 @@ public class Ecuador extends GameActivity {
         respondToWordSelection();
     }
 
-    private void setAllTilesUnclickable() {
-
-        for (int word : WORDS) {
-            TextView nextWord = findViewById(word);
-            nextWord.setClickable(false);
-        }
-
-    }
-    private void setAllTilesClickable() {
-
-        for (int word : WORDS) {
-            TextView nextWord = findViewById(word);
-            nextWord.setClickable(true);
-        }
-
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-        wordImage.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        wordImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
     }
 
-    public void clickPicHearAudio (View view) {
-
-        playActiveWordClip();
-
-    }
-    public void playActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mediaPlayerIsPlaying = false;
-                if (repeatLocked) {
-                    setAllTilesClickable();
-                }
-                setOptionsRowClickable();
-                mp1.release();
-            }
-        });
-    }
-    public void playCorrectSoundThenActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveWordClip();
-            }
-        });
-    }
-    public void playIncorrectSound() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
-        mediaPlayerIsPlaying = true;
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
-                setOptionsRowClickable();
-                mp3.release();
-            }
-        });
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }

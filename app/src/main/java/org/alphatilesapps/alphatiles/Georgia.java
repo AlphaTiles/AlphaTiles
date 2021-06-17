@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -20,10 +19,14 @@ public class Georgia extends GameActivity {
     String initialTile = "";
     int visibleTiles; // will be 6, 12 or 18 based on challengeLevel 1, 2 or 3
 
-    private static final int[] TILE_BUTTONS = {
+    protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16, R.id.tile17, R.id.tile18
     };
+
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+
+    protected int[] getWordImages() {return null;}
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -56,7 +59,7 @@ public class Georgia extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -137,7 +140,7 @@ public class Georgia extends GameActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
         setUpTiles();
-        playActiveWordClip();
+        playActiveWordClip(false);
         setAllTilesClickable();
         setOptionsRowClickable();
 
@@ -203,49 +206,6 @@ public class Georgia extends GameActivity {
 
     }
 
-    private void setAllTilesUnclickable() {
-
-        for (int t = 0; t < visibleTiles; t++ ) {
-            TextView gameTile = findViewById(TILE_BUTTONS[t]);
-            gameTile.setClickable(false);
-        }
-
-    }
-    private void setAllTilesClickable() {
-
-        for (int t = 0; t < visibleTiles; t++ ) {
-            TextView gameTile = findViewById(TILE_BUTTONS[t]);
-            gameTile.setClickable(true);
-        }
-
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-        wordImage.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        wordImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
-    }
-
     private void respondToTileSelection(int justClickedTile) {
 
         if (mediaPlayerIsPlaying) {
@@ -270,7 +230,7 @@ public class Georgia extends GameActivity {
             trackerCount++;
             updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
@@ -288,7 +248,7 @@ public class Georgia extends GameActivity {
                 }
             }
 
-            playCorrectSoundThenActiveWordClip();
+            playCorrectSoundThenActiveWordClip(false);
 
         } else {
 
@@ -298,65 +258,19 @@ public class Georgia extends GameActivity {
 
     }
 
+
     public void onBtnClick (View view) {
         respondToTileSelection(Integer.parseInt((String)view.getTag())); // KP
     }
 
-    public void clickPicHearAudio (View view) {
 
-        playActiveWordClip();
-
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
     }
 
-    public void playActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mediaPlayerIsPlaying = false;
-                if (repeatLocked) {
-                    setAllTilesClickable();
-                }
-                setOptionsRowClickable();
-                mp1.release();
-
-            }
-        });
-    }
-    public void playCorrectSoundThenActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveWordClip();
-            }
-        });
-    }
-    public void playIncorrectSound() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
-        mediaPlayerIsPlaying = true;
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
-                setOptionsRowClickable();
-                mp3.release();
-            }
-        });
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }

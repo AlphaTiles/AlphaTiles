@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -16,23 +15,26 @@ import java.util.Collections;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import static org.alphatilesapps.alphatiles.Start.keyList;
+import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Colombia extends GameActivity {
 
     String initialLetter = "";
     ArrayList<String> tempKeys; // KP
-    int keysInUse;
+    int keysInUse; // number of keys in the language's total keyboard
     int keyboardScreenNo; // for languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
     int totalScreens; // the total number of screens required to show all keys
     int partial; // the number of visible keys on final partial screen
 
-    private static final int[] KEYS = {
+    protected static final int[] TILE_BUTTONS = {
             R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
             R.id.key11, R.id.key12, R.id.key13, R.id.key14, R.id.key15, R.id.key16, R.id.key17, R.id.key18, R.id.key19, R.id.key20,
             R.id.key21, R.id.key22, R.id.key23, R.id.key24, R.id.key25, R.id.key26, R.id.key27, R.id.key28, R.id.key29, R.id.key30,
             R.id.key31, R.id.key32, R.id.key33, R.id.key34, R.id.key35
     };
+    
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+    protected int[] getWordImages() {return null;}
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -56,7 +58,7 @@ public class Colombia extends GameActivity {
 
         LOGGER.info("Remember: oC2");
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -92,9 +94,9 @@ public class Colombia extends GameActivity {
         float percentTopToTop;
         float percentHeight;
 
-        for (int k = 0; k < KEYS.length; k++) {
+        for (int k = 0; k < TILE_BUTTONS.length; k++) {
 
-            TextView key = findViewById(KEYS[k]);
+            TextView key = findViewById(TILE_BUTTONS[k]);
             if (k == 0) {
                 ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) key.getLayoutParams();
                 bottomToTopId = lp1.bottomToTop;
@@ -179,17 +181,18 @@ public class Colombia extends GameActivity {
 
     }
     public void loadKeyboard() {
-
-        switch (challengeLevel) {
+        switch (challengeLevel)
+        {
             case 1:
                 // Build an array of only the required tiles
                 // Will it list <a> twice if <a> is needed twice? Yes, that's what it does
                 // The limited set keyboard is built with GAME TILES not with KEYS
-                keysInUse = tilesInArray(parsedWordArrayFinal);
-                tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KP
-                Collections.shuffle(tempKeys); // KP
-                for (int k = 0; k < keysInUse; k++) {
-                    TextView key = findViewById(KEYS[k]);
+                visibleTiles = tilesInArray(parsedWordArrayFinal);
+                tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KRP
+                Collections.shuffle(tempKeys); // KRP
+                for (int k = 0; k < visibleTiles; k++)
+                {
+                    TextView key = findViewById(TILE_BUTTONS[k]);
                     key.setText(tempKeys.get(k));
                 }
                 break;
@@ -197,25 +200,28 @@ public class Colombia extends GameActivity {
                 // Build an array of the required tiles plus a corresponding tile from the distractor trio for each tile
                 // So, for a five tile word, there will be 10 tiles
                 // The limited-set keyboard is built with GAME TILES not with KEYS
-                int firstHalf = tilesInArray(parsedWordArrayFinal); // KP
-                keysInUse = 2 * firstHalf; // KP
-                tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KP
+                int firstHalf = tilesInArray(parsedWordArrayFinal); // KRP
+                visibleTiles = 2 * firstHalf; // KRP
+                tempKeys = (ArrayList<String>)parsedWordArrayFinal.clone(); // KRP
                 int a = 0;
-                for (int i = firstHalf; i < keysInUse; i++) {
-                    tempKeys.add( Start.tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(a))); // KP
+                for (int i = firstHalf; i < visibleTiles; i++)
+                {
+                    tempKeys.add(tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(a))); // KRP
                     a++;
                 }
-                Collections.shuffle(tempKeys); // KP
-                for (int k = 0; k < keysInUse; k++) {
-                    TextView key = findViewById(KEYS[k]);
+                Collections.shuffle(tempKeys); // KRP
+                for (int k = 0; k < visibleTiles; k++)
+                {
+                    TextView key = findViewById(TILE_BUTTONS[k]);
                     key.setText(tempKeys.get(k));
                 }
                 break;
             case 3:
-                // There are 35 key buttons available (KEYS.length) per screen, but the language may need a smaller amount (Start.keysArraySize)
-                keysInUse = Start.keyList.size(); // KP
-                partial = keysInUse % (KEYS.length - 2);
-                totalScreens = keysInUse / (KEYS.length - 2);
+                // There are 35 key buttons available (KEYS.length), but the language may need a smaller amount (Start.keysArraySize)
+                // Starting with k = 1 to skip the header row
+                keysInUse = keyList.size(); // KP
+                partial = keysInUse % (TILE_BUTTONS.length - 2);
+                totalScreens = keysInUse / (TILE_BUTTONS.length - 2);
 
                 LOGGER.info("Remember: partial = " + partial);
                 LOGGER.info("Remember: totalScreens = " + totalScreens);
@@ -224,50 +230,54 @@ public class Colombia extends GameActivity {
                 }
 
                 LOGGER.info("Remember: April 22 2021 A1");
-                int visibleKeys;
-                if (keysInUse > KEYS.length) {
-                    visibleKeys = KEYS.length;
+                if (keysInUse > TILE_BUTTONS.length) {
+                    visibleTiles = TILE_BUTTONS.length;
                 } else {
-                    visibleKeys = keysInUse;
+                    visibleTiles = keysInUse;
                 }
-                for (int k = 0; k < visibleKeys; k++) {
-                    TextView key = findViewById(KEYS[k]);
-                    key.setText(keyList.get(k).baseKey); // KP
-                    String tileColorStr = COLORS[Integer.parseInt(Start.keyList.get(k).keyColor)];
+                for (int k = 0; k < visibleTiles; k++)
+                {
+                    TextView key = findViewById(TILE_BUTTONS[k]);
+                    key.setText(keyList.get(k).baseKey); // KRP
+                    String tileColorStr = COLORS[Integer.parseInt(keyList.get(k).keyColor)];
                     int tileColor = Color.parseColor(tileColorStr);
                     key.setBackgroundColor(tileColor);
                 }
                 LOGGER.info("Remember: April 22 2021 A2");
-                if (keysInUse > KEYS.length) {
+                if (keysInUse > TILE_BUTTONS.length) {
                     LOGGER.info("Remember: keysInUse = " + keysInUse);
-                    LOGGER.info("Remember: KEYS.length = " + KEYS.length);
+                    LOGGER.info("Remember: KEYS.length = " + TILE_BUTTONS.length);
                     LOGGER.info("Remember: April 22 2021 A2");
-                    TextView key34 = findViewById(KEYS[KEYS.length - 2]);
+                    TextView key34 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 2]);
                     key34.setBackgroundResource(R.drawable.zz_backward_green);
                     key34.setText("");
-                    TextView key35 = findViewById(KEYS[KEYS.length - 1]);
+                    LOGGER.info("key34's text: " + key34.getText());
+                    TextView key35 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 1]);
                     key35.setBackgroundResource(R.drawable.zz_forward_green);
                     key35.setText("");
+                    LOGGER.info("key35's text: " + key35.getText());
                 }
                 LOGGER.info("Remember: April 22 2021 A3");
                 break;
             default:
         }
 
-        LOGGER.info("Remember: April 22 2021 A4");
-        for (int k = 0; k < KEYS.length; k++) {
+        for (int k = 0; k < TILE_BUTTONS.length; k++)
+        {
 
-            TextView key = findViewById(KEYS[k]);
-            if (k < keysInUse) {
+            TextView key = findViewById(TILE_BUTTONS[k]);
+            if (k < visibleTiles)
+            {
                 key.setVisibility(View.VISIBLE);
                 key.setClickable(true);
-            } else {
+            }
+            else
+            {
                 key.setVisibility(View.INVISIBLE);
                 key.setClickable(false);
             }
 
         }
-        LOGGER.info("Remember: April 22 2021 A5");
 
     }
 
@@ -302,7 +312,7 @@ public class Colombia extends GameActivity {
             wordToBuild.setBackgroundColor(Color.parseColor("#4CAF50"));      // theme green
             wordToBuild.setTextColor(Color.parseColor("#FFFFFF")); // white
 
-            for (int i : KEYS) {                    // RR
+            for (int i : TILE_BUTTONS) {                    // RR
                 TextView key = findViewById(i);     // RR
                 key.setClickable(false);
             }
@@ -317,7 +327,7 @@ public class Colombia extends GameActivity {
             trackerCount++;
             updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
@@ -325,7 +335,7 @@ public class Colombia extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-            playCorrectSoundThenActiveWordClip();
+            playCorrectSoundThenActiveWordClip(false);
 
             repeatLocked = false;
 
@@ -365,20 +375,20 @@ public class Colombia extends GameActivity {
 
     public void onBtnClick(View view) {
 
-        int justClickedKey = Integer.parseInt((String) view.getTag());
+        int justClickedKey = Integer.parseInt((String)view.getTag());
         // Next line says ... if a basic keyboard (which all fits on one screen) or (even when on a complex keyboard) if something other than the last two buttons (the two arrows) are tapped...
-        if (keysInUse <= KEYS.length || justClickedKey <= (KEYS.length - 2)) {
+        if (keysInUse <= TILE_BUTTONS.length || justClickedKey <= (TILE_BUTTONS.length - 2)) {
             int keyIndex = (33 * (keyboardScreenNo - 1)) + justClickedKey - 1;
             respondToKeySelection(keyIndex);
         } else {
             // This branch = when a backward or forward arrow is clicked on
-            if (justClickedKey == KEYS.length - 1) {
+            if (justClickedKey == TILE_BUTTONS.length - 1) {
                 keyboardScreenNo--;
                 if (keyboardScreenNo < 1) {
                     keyboardScreenNo = 1;
                 }
             }
-            if (justClickedKey == KEYS.length) {
+            if (justClickedKey == TILE_BUTTONS.length) {
                 keyboardScreenNo++;
                 if (keyboardScreenNo > totalScreens) {
                     keyboardScreenNo = totalScreens;
@@ -395,16 +405,16 @@ public class Colombia extends GameActivity {
         int keysLimit;
         if(totalScreens == keyboardScreenNo) {
             keysLimit = partial;
-            for (int k = keysLimit; k < (KEYS.length - 2); k++) {
-                TextView key = findViewById(KEYS[k]);
+            for (int k = keysLimit; k < (TILE_BUTTONS.length - 2); k++) {
+                TextView key = findViewById(TILE_BUTTONS[k]);
                 key.setVisibility(View.INVISIBLE);
             }
         } else {
-            keysLimit = KEYS.length - 2;
+            keysLimit = TILE_BUTTONS.length - 2;
         }
 
         for (int k = 0; k < keysLimit; k++) {
-            TextView key = findViewById(KEYS[k]);
+            TextView key = findViewById(TILE_BUTTONS[k]);
             int keyIndex = (33 * (keyboardScreenNo - 1)) + k;
             key.setText(keyList.get(keyIndex).baseKey); // KP
             key.setVisibility(View.VISIBLE);
@@ -416,98 +426,13 @@ public class Colombia extends GameActivity {
 
     }
 
-    private void setAllTilesUnclickable() {
-
-        for (int k = 0; k < KEYS.length; k++) {
-
-            if (k < keysInUse) {
-                TextView key = findViewById(KEYS[k]);
-                key.setClickable(false);
-            }
-
-        }
-
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
     }
 
-    private void setAllTilesClickable() {
-
-        for (int k = 0; k < KEYS.length; k++) {
-
-            if (k < keysInUse) {
-                TextView key = findViewById(KEYS[k]);
-                key.setClickable(true);
-            }
-
-        }
-
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-        wordImage.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        wordImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
-    }
-
-    public void clickPicHearAudio (View view) {
-
-        playActiveWordClip();
-
-    }
-
-    public void playActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mediaPlayerIsPlaying = false;
-                if (repeatLocked) {
-                    setAllTilesClickable();
-                }
-                setOptionsRowClickable();
-                mp1.release();
-                mp1 = null;
-            }
-        });
-    }
-
-    public void playCorrectSoundThenActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveWordClip();
-            }
-        });
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }

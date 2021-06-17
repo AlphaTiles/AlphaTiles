@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -20,14 +19,17 @@ public class UnitedStates extends GameActivity {
 
     int upperTileLimit = 5;
     int neutralFontSize;
-    int tileButtonCount;
     String scriptLR;
     String[] selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
 
-    private static final int[] TILE_BUTTONS = {
+    protected static final int[] TILE_BUTTONS = {
             R.id.button01a, R.id.button01b, R.id.button02a, R.id.button02b, R.id.button03a, R.id.button03b, R.id.button04a, R.id.button04b, R.id.button05a, R.id.button05b,
             R.id.button06a, R.id.button06b, R.id.button07a, R.id.button07b, R.id.button08a, R.id.button08b, R.id.button09a, R.id.button09b
     };
+
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+
+    protected int[] getWordImages() {return null;}
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -66,7 +68,7 @@ public class UnitedStates extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -99,7 +101,7 @@ public class UnitedStates extends GameActivity {
         float percentTopToTop;
         float percentHeight;
 
-        for (int t = 0; t < tileButtonCount; t++) {
+        for (int t = 0; t < visibleTiles; t++) {
 
             LOGGER.info("Remember: t = " + t);
 
@@ -175,24 +177,24 @@ public class UnitedStates extends GameActivity {
         switch (challengeLevel)
         {
             case 2:
-                tileButtonCount = 14;   // RR
+                visibleTiles = 14;   // RR
                 break;
             case 3:
-                tileButtonCount = 18;   // RR
+                visibleTiles = 18;   // RR
                 break;
             default:
-                tileButtonCount = 10;   // RR
+                visibleTiles = 10;   // RR
         }
 
         int c = 0;      // iterate through the parsedWordArray2
         int randomNum2;
         int correspondingRow = 0;
 
-        for (int b = 0; b < tileButtonCount; b+=2 ) {
+        for (int b = 0; b < visibleTiles; b+=2 ) {
 
             int bLRRL;
             if (scriptLR.equals("RL")) {
-                bLRRL = tileButtonCount - 2 - b;
+                bLRRL = visibleTiles - 2 - b;
             } else {
                 bLRRL = b;
             }
@@ -299,7 +301,7 @@ public class UnitedStates extends GameActivity {
             trackerCount++;
             updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
@@ -307,7 +309,7 @@ public class UnitedStates extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply(); // requires API 9 as per https://developer.android.com/reference/android/content/SharedPreferences.Editor
 
-            playCorrectSoundThenActiveWordClip();
+            playCorrectSoundThenActiveWordClip(false);
 
         } else {
             constructedWord.setTextColor(Color.BLACK);
@@ -346,88 +348,31 @@ public class UnitedStates extends GameActivity {
 
     }
 
-    private void setAllTilesUnclickable() {
-
-        for (int b = 0; b < tileButtonCount; b++) {
-            TextView tile = findViewById(TILE_BUTTONS[b]);
-            tile.setClickable(false);
+    protected void setAllTilesUnclickable()
+    {
+        for (int t = 0; t < upperTileLimit; t++)
+        {
+            TextView gameTile = findViewById(getTileButtons()[t]);
+            gameTile.setClickable(false);
         }
-
     }
-    private void setAllTilesClickable() {
+    protected void setAllTilesClickable()
+    {
 
-        for (int b = 0; b < tileButtonCount; b++) {
-            TextView tile = findViewById(TILE_BUTTONS[b]);
-            tile.setClickable(true);
+        for (int t = 0; t < upperTileLimit; t++)
+        {
+            TextView gameTile = findViewById(getTileButtons()[t]);
+            gameTile.setClickable(true);
         }
-
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-        wordImage.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        wordImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
     }
 
-    public void clickPicHearAudio (View view) {
-
-        playActiveWordClip();
-
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
     }
 
-    public void playActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mediaPlayerIsPlaying = false;
-                if (repeatLocked) {
-                    setAllTilesClickable();
-                }
-                setOptionsRowClickable();
-                mp1.release();
-            }
-        });
-    }
-
-    public void playCorrectSoundThenActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveWordClip();
-            }
-        });
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }

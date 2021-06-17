@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -23,9 +22,13 @@ public class Peru extends GameActivity {
 
     String gameIDString;
 
-    private static final int[] WORD_CHOICES = {
+    protected static final int[] TILE_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
     };
+
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+
+    protected int[] getWordImages() {return null;}
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -41,13 +44,14 @@ public class Peru extends GameActivity {
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
+        visibleTiles = TILE_BUTTONS.length;
 
         setTitle(Start.localAppName + ": " + gameNumber);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -78,9 +82,9 @@ public class Peru extends GameActivity {
         float percentTopToTop;
         float percentHeight;
 
-        for (int w = 0; w < WORD_CHOICES.length; w++) {
+        for (int w = 0; w < TILE_BUTTONS.length; w++) {
 
-            TextView nextWord = findViewById(WORD_CHOICES[w]);
+            TextView nextWord = findViewById(TILE_BUTTONS[w]);
             if (w == 0) {
                 ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) nextWord.getLayoutParams();
                 bottomToTopId = lp1.bottomToTop;
@@ -127,8 +131,8 @@ public class Peru extends GameActivity {
         int tileLength = tilesInArray(parsedWordArrayFinal);
 
         // Set thematic colors for four word choice TextViews, also make clickable
-        for (int i = 0; i < WORD_CHOICES.length; i++) {
-            TextView nextWord = (TextView) findViewById(WORD_CHOICES[i]);
+        for (int i = 0; i < TILE_BUTTONS.length; i++) {
+            TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
             String wordColorStr = COLORS[i];
             int wordColorNo = Color.parseColor(wordColorStr);
             nextWord.setBackgroundColor(wordColorNo);
@@ -144,10 +148,9 @@ public class Peru extends GameActivity {
         List<String> shuffledDistractorTiles = Arrays.asList(Start.tileList.get(Start.tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).altTiles);
         Collections.shuffle(shuffledDistractorTiles);
 
-
         int incorrectLapNo = 0;
-        for (int i = 0; i < WORD_CHOICES.length; i++) {
-            TextView nextWord = (TextView) findViewById(WORD_CHOICES[i]);
+        for (int i = 0; i < TILE_BUTTONS.length; i++) {
+            TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
             if (i == randomNum2) {
                 nextWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP)); // the correct answer (the unmodified version of the word)
             } else {
@@ -159,7 +162,7 @@ public class Peru extends GameActivity {
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (THE FIRST TILE) REPLACED
                         // REPLACEMENT IS FROM DISTRACTOR TRIO
                         List<String> tempArray1 = new ArrayList<>(parsedWordArrayFinal);
-                        tempArray1.set(0, shuffledDistractorTiles.get(incorrectLapNo-1)); // KP
+                        tempArray1.set(0, shuffledDistractorTiles.get(incorrectLapNo-1)); // KP // LM
                         StringBuilder builder1 = new StringBuilder("");
                         for(String s : tempArray1) {
                             builder1.append(s);
@@ -218,11 +221,12 @@ public class Peru extends GameActivity {
 
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
                             for(int answerChoice = 0; answerChoice < i; answerChoice++){
-                                if(incorrectChoice3.compareTo(((TextView)findViewById(WORD_CHOICES[answerChoice])).getText().toString()) == 0){
+                                if(incorrectChoice3.compareTo(((TextView)findViewById(TILE_BUTTONS[answerChoice])).getText().toString()) == 0){
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
                         }
+                        break;
                     default:
 
                 }
@@ -233,7 +237,7 @@ public class Peru extends GameActivity {
     private void respondToWordSelection(int justClickedWord) {
 
         int t = justClickedWord - 1; //  justClickedWord uses 1 to 4, t uses the array ID (between [0] and [3]
-        TextView chosenWord = findViewById(WORD_CHOICES[t]);
+        TextView chosenWord = findViewById(TILE_BUTTONS[t]);
         String chosenWordText = chosenWord.getText().toString();
 
         if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
@@ -247,7 +251,7 @@ public class Peru extends GameActivity {
             trackerCount++;
             updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
@@ -255,8 +259,8 @@ public class Peru extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-            for (int w = 0; w < WORD_CHOICES.length; w++ ) {
-                TextView nextWord = findViewById(WORD_CHOICES[w]);
+            for (int w = 0; w < TILE_BUTTONS.length; w++ ) {
+                TextView nextWord = findViewById(TILE_BUTTONS[w]);
                 nextWord.setClickable(false);
                 if (w != t) {
                     String wordColorStr = "#A9A9A9"; // dark gray
@@ -266,7 +270,7 @@ public class Peru extends GameActivity {
                 }
             }
 
-            playCorrectSoundThenActiveWordClip();
+            playCorrectSoundThenActiveWordClip(false);
 
         } else {
             playIncorrectSound();
@@ -278,102 +282,13 @@ public class Peru extends GameActivity {
         respondToWordSelection(wordNo);
     }
 
-    private void setAllTilesUnclickable() {
-
-        for (int wordChoice : WORD_CHOICES) {               // RR
-            TextView nextWord = findViewById(wordChoice);   // RR
-            nextWord.setClickable(false);
-        }
-
-    }
-    private void setAllTilesClickable() {
-
-        for (int wordChoice : WORD_CHOICES) {               // RR
-            TextView nextWord = findViewById(wordChoice);   // RR
-            nextWord.setClickable(true);
-        }
-
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-        wordImage.setClickable(false);
-
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView wordImage = findViewById(R.id.wordImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        wordImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
+    public void clickPicHearAudio(View view)
+    {
+        super.clickPicHearAudio(view);
     }
 
-    public void clickPicHearAudio (View view) {
-
-        playActiveWordClip();
-
-    }
-    public void playActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mediaPlayerIsPlaying = false;
-                if (repeatLocked) {
-                    setAllTilesClickable();
-                }
-                setOptionsRowClickable();
-                mp1.release();
-            }
-        });
-    }
-    public void playCorrectSoundThenActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveWordClip();
-            }
-        });
-    }
-    public void playIncorrectSound() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
-        mediaPlayerIsPlaying = true;
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
-                setOptionsRowClickable();
-                mp3.release();
-            }
-        });
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
     }
 
 }
