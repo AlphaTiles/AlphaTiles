@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import static org.alphatilesapps.alphatiles.Testing.forceRTL;
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 
 public class About extends AppCompatActivity {
 

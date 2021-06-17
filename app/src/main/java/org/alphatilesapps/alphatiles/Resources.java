@@ -1,34 +1,22 @@
 package org.alphatilesapps.alphatiles;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import static org.alphatilesapps.alphatiles.Testing.forceRTL;
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 
 public class Resources extends AppCompatActivity {
 

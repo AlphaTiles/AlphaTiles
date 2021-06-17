@@ -17,6 +17,7 @@ android {
         // API 21 = Lollipop (5.0) - required for correct display of special characters in TextViews without Grandroid, etc.
         // As of July 20th, 2020, SIL Reading App Builder supported 4.0 (Ice Cream Sandwich) and above; this is API
         // https://software.sil.org/readingappbuilder/support/faq/
+        // API 17 = Jelly Bean MR1 (4.2) - required for forcing RTL
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -34,17 +35,17 @@ android {
         // If you are using only one dimension, this property is optional,
         // and the plugin automatically assigns all the module's flavors to
         // that dimension.
-        /*ajzAmriKarbi {
+        ajzAmriKarbi {
             dimension "language"
             applicationIdSuffix ".blue.ajzAmriKarbi"
             resValue "string", "app_name", "Ahiasang Kachilem Kicheng"
-        }*/
+        }
         huvMateoDelMar {
             dimension "language"
             applicationIdSuffix ".blue.huvMateoDelMar"
             resValue "string", "app_name", "Ombeayiüets"
         }
-        /*klvMaskelynes {
+        klvMaskelynes {
             dimension "language"
             applicationIdSuffix ".blue.klvMaskelynes"
             resValue "string", "app_name", "Naleta Gail"
@@ -148,7 +149,7 @@ android {
             dimension "language"
             applicationIdSuffix ".blue.ztpLoxicha"
             resValue "string", "app_name", 'Dí’ztè'
-        }*/
+        }
     }
 }
 

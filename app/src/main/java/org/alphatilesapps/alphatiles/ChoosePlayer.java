@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 
 import static org.alphatilesapps.alphatiles.Start.*;
-import static org.alphatilesapps.alphatiles.Testing.forceRTL;
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 //import static org.alphatilesapps.alphatiles.Util.parseWord;   // KRP
 
 public class ChoosePlayer extends AppCompatActivity

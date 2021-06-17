@@ -17,8 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static org.alphatilesapps.alphatiles.Start.*;	
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
-import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
-import static org.alphatilesapps.alphatiles.Testing.forceRTL;
+import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 
 import android.annotation.TargetApi;
 import android.os.Build;

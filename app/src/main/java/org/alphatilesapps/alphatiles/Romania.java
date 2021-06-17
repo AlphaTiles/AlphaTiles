@@ -13,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
+
 public class Romania extends GameActivity {
 
     boolean failedToMatchInitialTile = false;
@@ -210,9 +212,9 @@ public class Romania extends GameActivity {
         } else {
             LOGGER.info("Remember: failed to find anything (skipWord = true) so advancing one more");
             if (directionIsForward) {
-                goForwardOneTile(null);
+                goToTileOnTheRight(null);
             } else {
-                goBackOneTile(null);
+                goToTileOnTheLeft(null);
             }
         }
     }
@@ -271,11 +273,16 @@ public class Romania extends GameActivity {
 
     }
 
-    public void goForwardOneTile(View View) {
-        directionIsForward = true;
+    public void goToTileOnTheRight(View View) {
+        directionIsForward = forceRTL;
         TextView tileBox = (TextView) findViewById(R.id.tileBoxTextView);
         String oldTile = tileBox.getText().toString();
-        activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
+        if(forceRTL) {
+            activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
+        }
+        else{
+            activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
+        }
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
         wordTokenNoGroupThree = 0;
@@ -286,11 +293,16 @@ public class Romania extends GameActivity {
         setUpBasedOnGameTile(activeTile);
     }
 
-    public void goBackOneTile(View View) {
+    public void goToTileOnTheLeft(View View) {
         directionIsForward = false;
         TextView tileBox = (TextView) findViewById(R.id.tileBoxTextView);
         String oldTile = tileBox.getText().toString();
-        activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile);
+        if(forceRTL) {
+            activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
+        }
+        else{
+            activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
+        }
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
         wordTokenNoGroupThree = 0;

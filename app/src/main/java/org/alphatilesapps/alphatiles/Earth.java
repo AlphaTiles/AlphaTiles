@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import static android.view.View.VISIBLE;
 
 import static org.alphatilesapps.alphatiles.Start.*;
-import static org.alphatilesapps.alphatiles.Testing.forceRTL;
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 
 public class Earth extends AppCompatActivity {
     Context context;

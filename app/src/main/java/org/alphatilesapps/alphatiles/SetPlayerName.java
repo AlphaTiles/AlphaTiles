@@ -22,7 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.keyList;
-import static org.alphatilesapps.alphatiles.Testing.forceRTL;
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 
 public class SetPlayerName extends AppCompatActivity {
 
