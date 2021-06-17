@@ -191,13 +191,17 @@ public class Peru extends GameActivity {
                             nextWord.setText(incorrectChoice2);
 
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
-                            for(int answerChoice = 0; answerChoice < i; answerChoice++) {
-                                if (incorrectChoice2.compareTo(((TextView) findViewById(TILE_BUTTONS[answerChoice])).getText().toString()) == 0) {
+                            for(int answerChoice = 0; answerChoice < i; answerChoice++){
+                                if(incorrectChoice2.compareTo(((TextView)findViewById(WORD_CHOICES[answerChoice])).getText().toString()) == 0){
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
+                            if(incorrectChoice2.compareTo(wordInLOP) == 0){
+                                isDuplicateAnswerChoice = true;
+                            }
                         }
                         break;
+
                     case 3:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
                         // REPLACEMENT IS FROM DISTRACTOR TRIO
