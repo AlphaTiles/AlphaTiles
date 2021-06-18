@@ -15,7 +15,7 @@
         android:contentDescription="@string/avatarIcon01"
         android:onClick="goToEarthFromAvatar"
         android:tag="1"
-        android:rotationY="180"
+        android:rotationY="@integer/mirror_flip"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"

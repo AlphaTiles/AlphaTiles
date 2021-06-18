@@ -91,6 +91,9 @@ public class Earth extends AppCompatActivity {
         if(forceRTL){
             forceRTLIfSupported();
         }
+        else{
+            forceLTRIfSupported();
+        }
     }
 
     @Override
@@ -331,4 +334,11 @@ public class Earth extends AppCompatActivity {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceLTRIfSupported()
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
+    }
 }

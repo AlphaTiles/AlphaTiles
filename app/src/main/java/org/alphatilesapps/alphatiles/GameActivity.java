@@ -70,6 +70,9 @@ public abstract class GameActivity extends AppCompatActivity {
 		if(forceRTL){
 			forceRTLIfSupported();
 		}
+		else{
+			forceLTRIfSupported();
+		}
 
 		super.onCreate(state);
 
@@ -398,6 +401,14 @@ public abstract class GameActivity extends AppCompatActivity {
 	{
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
 			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	private void forceLTRIfSupported()
+	{
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		}
 	}
 }
