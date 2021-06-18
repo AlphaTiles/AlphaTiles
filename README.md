@@ -7,6 +7,7 @@ Alpha Tiles requires a set of build files (word list, audio, images, etc.) for t
 # Preparing the build files for an Alpha Tiles app
 
 English instructions: https://docs.google.com/presentation/d/1w-BTKk2MuJIwTFXfXP8cNShU0QI6MSXM5YJQxcaP4uk/edit#slide=id.p1
+
 Spanish instructions: https://docs.google.com/presentation/d/1pjhPZvCVU7T50IdSWVTc0GXgBd24-klR1f3yDuTFhJ0/edit#slide=id.p1
 
 # Building an Alpha Tiles app
