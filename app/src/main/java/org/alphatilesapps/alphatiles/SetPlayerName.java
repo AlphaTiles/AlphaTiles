@@ -49,7 +49,7 @@ public class SetPlayerName extends AppCompatActivity {
         context = this;
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.start_update_avatars);
+        setContentView(R.layout.set_player_name);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
