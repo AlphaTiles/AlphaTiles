@@ -1,6 +1,6 @@
 ![Alpha Tiles](/app/src/main/res/drawable/zz_splash.png?raw=true)
 
-This program is an Android app generator used to build literacy games for minority language communities (for Android). Learn more at http://alphatilesapps.org/.
+This program is an Android app generator used to build literacy games for minority language communities. Learn more at http://alphatilesapps.org/.
 
 Alpha Tiles requires a set of build files (word list, audio, images, etc.) for the desired language. The design goal is that this program should be able to generate these games for any language that prepares the necessary language definitions and media, with no need for a language community to manage actual code. As we work with new language build files, adaptations will be made to make the app generator program flexible enough to handle new language-specific challenges.
 
