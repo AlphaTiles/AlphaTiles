@@ -86,13 +86,13 @@ public abstract class GameActivity extends AppCompatActivity {
 
 	}
 
-	public void goBackToStart(View view) {
+	public void goBackToChoosePlayer(View view) {
 
 		if (mediaPlayerIsPlaying)
 		{
 			return;
 		}
-		startActivity(new Intent(context, Start.class));
+		startActivity(new Intent(context, ChoosePlayer.class));
 		finish();
 
 	}
