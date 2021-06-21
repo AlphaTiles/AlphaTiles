@@ -81,7 +81,7 @@ public abstract class GameActivity extends AppCompatActivity {
 		{
 			return;
 		}
-		startActivity(new Intent(context, Start.class));
+		startActivity(new Intent(context, ChoosePlayer.class));
 		finish();
 
 	}
