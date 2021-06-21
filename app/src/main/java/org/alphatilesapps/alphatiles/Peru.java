@@ -192,7 +192,7 @@ public class Peru extends GameActivity {
 
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
                             for(int answerChoice = 0; answerChoice < i; answerChoice++){
-                                if(incorrectChoice2.compareTo(((TextView)findViewById(WORD_CHOICES[answerChoice])).getText().toString()) == 0){
+                                if(incorrectChoice2.compareTo(((TextView)findViewById(TILE_BUTTONS[answerChoice])).getText().toString()) == 0){
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
