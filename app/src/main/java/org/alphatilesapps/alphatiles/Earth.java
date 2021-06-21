@@ -254,9 +254,9 @@ public class Earth extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void goBackToStart(View view)
+    public void goBackToChoosePlayer(View view)
     {
-        startActivity(new Intent(context, Start.class));
+        startActivity(new Intent(context, ChoosePlayer.class));
         finish();
     }
 

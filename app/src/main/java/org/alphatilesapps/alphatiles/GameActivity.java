@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static org.alphatilesapps.alphatiles.Start.*;	
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
-import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
+import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
 
 public abstract class GameActivity extends AppCompatActivity {
 
@@ -75,7 +75,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
 	}
 
-	public void goBackToStart(View view) {
+	public void goBackToChoosePlayer(View view) {
 
 		if (mediaPlayerIsPlaying)
 		{
