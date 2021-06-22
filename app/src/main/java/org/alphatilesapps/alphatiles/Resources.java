@@ -1,31 +1,22 @@
 package org.alphatilesapps.alphatiles;
 
-import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Scanner;
 import java.util.logging.Logger;
+
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 
 public class Resources extends AppCompatActivity {
 
@@ -56,6 +47,13 @@ public class Resources extends AppCompatActivity {
 
         buildResourcesArray();
         loadResources();
+
+        if(forceRTL){
+            forceRTLIfSupported();
+        }
+        else{
+            forceLTRIfSupported();
+        }
 
     }
 
@@ -131,6 +129,22 @@ public class Resources extends AppCompatActivity {
         startActivity(intent);
         finish();
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceRTLIfSupported()
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceLTRIfSupported()
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
     }
 
 }

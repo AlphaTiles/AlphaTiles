@@ -3,6 +3,7 @@ package org.alphatilesapps.alphatiles;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.DisplayMetrics;
@@ -25,6 +27,7 @@ import java.util.logging.Logger;
 
 
 import static org.alphatilesapps.alphatiles.Start.*;
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 //import static org.alphatilesapps.alphatiles.Util.parseWord;   // KRP
 
 public class ChoosePlayer extends AppCompatActivity
@@ -149,6 +152,13 @@ public class ChoosePlayer extends AppCompatActivity
 		}
 
 		setTextSizes();
+
+		if(forceRTL){
+			forceRTLIfSupported();
+		}
+		else{
+			forceLTRIfSupported();
+		}
 
 	}
 
@@ -1005,6 +1015,22 @@ public class ChoosePlayer extends AppCompatActivity
 
 		public String title;
 
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	private void forceRTLIfSupported()
+	{
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	private void forceLTRIfSupported()
+	{
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+		}
 	}
 
 }

@@ -187,7 +187,8 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineV10"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
         app:srcCompat="@drawable/zz_deletetext"
-        android:contentDescription="@string/backspace" />
+        android:contentDescription="@string/backspace"
+        android:rotationY="@integer/mirror_flip"/>
 
     <TextView
         android:id="@+id/key01"
@@ -870,6 +871,7 @@
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         android:contentDescription="@string/playAgain"
+        android:rotationY="@integer/mirror_flip"
         app:srcCompat="@drawable/zz_forward" />
 
     <androidx.constraintlayout.widget.Guideline

@@ -2,11 +2,14 @@ package org.alphatilesapps.alphatiles;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -18,6 +21,7 @@ import java.util.logging.Logger;
 import static android.view.View.VISIBLE;
 
 import static org.alphatilesapps.alphatiles.Start.*;
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 
 public class Earth extends AppCompatActivity {
     Context context;
@@ -84,6 +88,12 @@ public class Earth extends AppCompatActivity {
 
         setTextSizes();
 
+        if(forceRTL){
+            forceRTLIfSupported();
+        }
+        else{
+            forceLTRIfSupported();
+        }
     }
 
     @Override
@@ -316,4 +326,19 @@ public class Earth extends AppCompatActivity {
 
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceRTLIfSupported()
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceLTRIfSupported()
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
+    }
 }

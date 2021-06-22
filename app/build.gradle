@@ -10,13 +10,14 @@ android {
         applicationId "org.alphatilesapps.alphatiles"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 42
-        versionName "0.6.0"
+        versionCode 43
+        versionName "0.6.1"
         // API 14 = Ice Cream (4.0)
         // API 16 = Jelly Bean (4.1) - required for Firebase
         // API 21 = Lollipop (5.0) - required for correct display of special characters in TextViews without Grandroid, etc.
         // As of July 20th, 2020, SIL Reading App Builder supported 4.0 (Ice Cream Sandwich) and above; this is API
         // https://software.sil.org/readingappbuilder/support/faq/
+        // API 17 = Jelly Bean MR1 (4.2) - required for forcing RTL
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

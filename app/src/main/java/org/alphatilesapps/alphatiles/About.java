@@ -1,12 +1,16 @@
 package org.alphatilesapps.alphatiles;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 
 public class About extends AppCompatActivity {
 
@@ -44,6 +48,13 @@ public class About extends AppCompatActivity {
         TextView verInfo = findViewById(R.id.appVersionInEnglish);
         verInfo.setText(getString(R.string.ver_info, verName));
 
+        if(forceRTL){
+            forceRTLIfSupported();
+        }
+        else{
+            forceLTRIfSupported();
+        }
+
     }
 
     public void goBackToEarth(View view)
@@ -52,6 +63,22 @@ public class About extends AppCompatActivity {
         intent.setClass(context, Earth.class);
         startActivity(intent);
         finish();
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceRTLIfSupported()
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceLTRIfSupported()
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
     }
 
 }
