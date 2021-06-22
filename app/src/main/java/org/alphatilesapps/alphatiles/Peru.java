@@ -156,25 +156,34 @@ public class Peru extends GameActivity {
             } else {
 
                 incorrectLapNo++;
+                boolean isDuplicateAnswerChoice = true; // LM // generate answer choices until there are no duplicates (or dangerous combinations)
 
                 switch (challengeLevel) {
+
                     case 1:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (THE FIRST TILE) REPLACED
                         // REPLACEMENT IS FROM DISTRACTOR TRIO
-                        List<String> tempArray1 = new ArrayList<>(parsedWordArrayFinal);
-                        tempArray1.set(0, shuffledDistractorTiles.get(incorrectLapNo-1)); // KP // LM
-                        StringBuilder builder1 = new StringBuilder("");
-                        for(String s : tempArray1) {
-                            builder1.append(s);
+                        while(isDuplicateAnswerChoice){
+                            List<String> tempArray1 = new ArrayList<>(parsedWordArrayFinal);
+                            tempArray1.set(0, shuffledDistractorTiles.get(incorrectLapNo-1)); // KP // LM
+                            StringBuilder builder1 = new StringBuilder("");
+                            for(String s : tempArray1) {
+                                builder1.append(s);
+                            }
+                            String incorrectChoice1 = builder1.toString();
+                            nextWord.setText(incorrectChoice1);
+                            isDuplicateAnswerChoice = false;
+                            for(int j = 0; j< incorrectChoice1.length() -2; j++){
+                                if(incorrectChoice1.substring(j, j+3).compareTo("للہ") == 0){
+                                    isDuplicateAnswerChoice = true;
+                                }
+                            }
+
                         }
-                        String incorrectChoice1 = builder1.toString();
-                        nextWord.setText(incorrectChoice1);
                         break;
                     case 2:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
                         // REPLACEMENT IS ANY GAME TILE FROM THE WHOLE ARRAY
-
-                        boolean isDuplicateAnswerChoice = true; // LM // generate answer choices until there are no duplicates
 
                         while(isDuplicateAnswerChoice) {
                             int randomNum3 = rand.nextInt(tileLength - 1);       // KP // this represents which position in word string will be replaced
@@ -199,6 +208,12 @@ public class Peru extends GameActivity {
                             if(incorrectChoice2.compareTo(wordInLOP) == 0){
                                 isDuplicateAnswerChoice = true;
                             }
+                            for(int j = 0; j< incorrectChoice2.length() -2; j++){
+                                if(incorrectChoice2.substring(j, j+3).compareTo("للہ") == 0){
+                                    isDuplicateAnswerChoice = true;
+                                }
+                            }
+
                         }
                         break;
 
@@ -222,6 +237,11 @@ public class Peru extends GameActivity {
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
                             for(int answerChoice = 0; answerChoice < i; answerChoice++){
                                 if(incorrectChoice3.compareTo(((TextView)findViewById(TILE_BUTTONS[answerChoice])).getText().toString()) == 0){
+                                    isDuplicateAnswerChoice = true;
+                                }
+                            }
+                            for(int j = 0; j< incorrectChoice3.length() -2; j++){
+                                if(incorrectChoice3.substring(j, j+3).compareTo("للہ") == 0){
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
