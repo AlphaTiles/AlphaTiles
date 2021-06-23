@@ -104,7 +104,7 @@ android {
             dimension "language"
             applicationIdSuffix ".blue.rmyGaborR"
             resValue "string", "app_name", "Te drabarah!"
-        }
+        }*/
         skrSaraiki {
             dimension "language"
             applicationIdSuffix ".blue.skrSaraiki"
@@ -162,5 +162,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
+    implementation 'com.segment.analytics.android:analytics:4.0.7'
+    implementation 'com.segment.analytics.android.integrations:firebase:+@aar'
 }
+
+apply plugin: 'com.google.gms.google-services'
