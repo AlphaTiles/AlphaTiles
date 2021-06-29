@@ -58,8 +58,6 @@ public class Brazil extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
 
-        Analytics.with(context).screen("screen view", "Brazil", null);
-
         if (challengeLevel == 3 || challengeLevel == 6) {
             setContentView(R.layout.brazil_cl3);
         } else {

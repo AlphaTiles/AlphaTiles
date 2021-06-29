@@ -23,7 +23,6 @@ public class About extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         context = this;
-        Analytics.with(context).screen("screen view", "About", null);
 
         setContentView(R.layout.about);
 

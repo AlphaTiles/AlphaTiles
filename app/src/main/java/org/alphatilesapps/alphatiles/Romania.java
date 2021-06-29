@@ -48,7 +48,6 @@ public class Romania extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        Analytics.with(context).screen("screen view", "Romania", null);
         setContentView(R.layout.romania);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 

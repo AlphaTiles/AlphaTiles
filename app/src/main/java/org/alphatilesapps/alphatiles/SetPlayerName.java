@@ -53,7 +53,6 @@ public class SetPlayerName extends AppCompatActivity {
 
         context = this;
         super.onCreate(savedInstanceState);
-        Analytics.with(context).screen("screen view", "Set Player Name", null);
 
         setContentView(R.layout.set_player_name);
 

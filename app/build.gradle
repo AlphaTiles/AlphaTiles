@@ -3,7 +3,7 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.0"
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
@@ -151,7 +151,16 @@ android {
             resValue "string", "app_name", 'Dí’ztè'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/*'
+        exclude 'firebase-*.properties'
+        exclude 'play-services-*.properties'
+        exclude 'res/interpolator/*'
+
+    }
 }
+
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
@@ -162,7 +171,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'com.segment.analytics.android:analytics:4.0.7'
+    implementation 'com.segment.analytics.android:analytics:4.7.0'
     implementation 'com.segment.analytics.android.integrations:firebase:+@aar'
 }
 

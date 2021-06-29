@@ -54,7 +54,6 @@ public class Ecuador extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        Analytics.with(context).screen("screen view", "Ecuador", null);
         setContentView(R.layout.ecuador);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 

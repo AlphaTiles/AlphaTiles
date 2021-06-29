@@ -94,7 +94,6 @@ public class ChoosePlayer extends AppCompatActivity
 
 		setTheme(R.style.AppTheme);
 		super.onCreate(savedInstanceState);
-		Analytics.with(context).screen("screen view", "Choose Player", null);
 		setContentView(R.layout.choose_player);
 
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
