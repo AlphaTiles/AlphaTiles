@@ -21,6 +21,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.segment.analytics.Analytics;
+
 import java.util.ArrayList;
 import java.util.HashMap;   // KRP
 import java.util.logging.Logger;
@@ -92,6 +94,7 @@ public class ChoosePlayer extends AppCompatActivity
 
 		setTheme(R.style.AppTheme);
 		super.onCreate(savedInstanceState);
+		Analytics.with(context).screen("screen view", "Choose Player", null);
 		setContentView(R.layout.choose_player);
 
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only

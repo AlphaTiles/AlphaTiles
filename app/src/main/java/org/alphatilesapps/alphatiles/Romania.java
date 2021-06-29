@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.segment.analytics.Analytics;
+
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -45,6 +48,7 @@ public class Romania extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        Analytics.with(context).screen("screen view", "Romania", null);
         setContentView(R.layout.romania);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 

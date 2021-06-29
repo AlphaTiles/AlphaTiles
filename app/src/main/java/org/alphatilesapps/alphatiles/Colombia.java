@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.segment.analytics.Analytics;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -44,6 +47,7 @@ public class Colombia extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        Analytics.with(context).screen("screen view", "Colombia", null);
         setContentView(R.layout.colombia);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 

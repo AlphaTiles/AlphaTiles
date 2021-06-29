@@ -8,7 +8,7 @@ android {
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "org.alphatilesapps.alphatiles"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 30
         versionCode 43
         versionName "0.6.1"
@@ -104,13 +104,13 @@ android {
             dimension "language"
             applicationIdSuffix ".blue.rmyGaborR"
             resValue "string", "app_name", "Te drabarah!"
-        }*/
+        }
         skrSaraiki {
             dimension "language"
             applicationIdSuffix ".blue.skrSaraiki"
             resValue "string", "app_name", "سرائیکی"
         }
-        tpxTeocuitlapa {
+       tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
             resValue "string", "app_name", 'Mu′tsíin (me′phaa Xma′íín)'

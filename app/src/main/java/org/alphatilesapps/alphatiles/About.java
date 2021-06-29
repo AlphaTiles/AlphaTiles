@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.segment.analytics.Analytics;
+
 import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 
 public class About extends AppCompatActivity {
@@ -21,6 +23,7 @@ public class About extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         context = this;
+        Analytics.with(context).screen("screen view", "About", null);
 
         setContentView(R.layout.about);
 

@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.segment.analytics.Analytics;
+
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,6 +57,9 @@ public class Brazil extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+
+        Analytics.with(context).screen("screen view", "Brazil", null);
+
         if (challengeLevel == 3 || challengeLevel == 6) {
             setContentView(R.layout.brazil_cl3);
         } else {

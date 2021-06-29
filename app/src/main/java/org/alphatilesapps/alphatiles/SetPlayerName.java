@@ -19,6 +19,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.segment.analytics.Analytics;
+
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.keyList;
@@ -50,9 +52,11 @@ public class SetPlayerName extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         context = this;
-
         super.onCreate(savedInstanceState);
+        Analytics.with(context).screen("screen view", "Set Player Name", null);
+
         setContentView(R.layout.set_player_name);
+
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 

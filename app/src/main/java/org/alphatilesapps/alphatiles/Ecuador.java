@@ -17,6 +17,8 @@ import android.view.WindowManager;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.segment.analytics.Analytics;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,6 +54,7 @@ public class Ecuador extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        Analytics.with(context).screen("screen view", "Ecuador", null);
         setContentView(R.layout.ecuador);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 

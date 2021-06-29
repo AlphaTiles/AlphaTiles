@@ -13,6 +13,8 @@ import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Bundle;
 
+import com.segment.analytics.Analytics;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;   // KP
@@ -63,6 +65,8 @@ public class Start extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         context = this;
+
+        Analytics.with(context).track("App started",null, null);
 
         buildLangInfoArray();
         LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
