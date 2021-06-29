@@ -31,6 +31,6 @@ You may wish to use one or more of our publicly-available build asset bundles fo
 
 By default, the code in this repository runs on a minimum API level of 17. Tailoring the features below would tailor the minimum API level required.
 
-API 16 = Jelly Bean (4.1) - required for Firebase
-API 17 = Jelly Bean MR1 (4.2) - required for forcing RTL/LTR layout direction
-API 21 = Lollipop (5.0) - required for correct display of special characters in TextViews without Grandroid, etc.
+* API 16 = Jelly Bean (4.1) - required for Firebase
+* API 17 = Jelly Bean MR1 (4.2) - required for forcing RTL/LTR layout direction
+* API 21 = Lollipop (5.0) - required for correct display of special characters in TextViews without Grandroid, etc.
