@@ -16,11 +16,21 @@ In order to build a literacy game for your language using the Alpha Tiles engine
 
 A visual reference for this is available as [productFlavorsInAlphaTiles.pdf](productFlavorsInAlphaTiles.pdf).
 
-As Alpha Tiles uses [Firebase](https://firebase.google.com/), a valid `google-services.json` file must also be provided.  You may wish to use Firebase's "Get started" tutorial in order to generate one for yourself unless you are part of the Alpha Tiles development team.
-
 Finally, you will need to adjust [app/build.gradle](app/build.gradle) with details specific to  your build assets.  Look for the section on `productFlavors` and remove all entries that you do not have available build assets for.  That said, you may wish to preserve one and edit it (as a template) for use with your assets.  Note that each entry's name must exactly match the name of that product flavor's main folder.
 
-After cloning the repository and saving the language assets in the src folder of the app, click on the "Build Variants" tab in the bottom left of Android Studio. To configure and build the app with the flavor of language assets just installed, select "{productFlavor}Debug" from the "Active Build Variant" drop-down selector in the Build Variants window.
+After cloning the repository and saving the language assets in the src folder of the app, select File > 'Sync Project with Gradle Files' to build the app with the product flavor just selected in the build.gradle.
+
+
+To use [Firebase Analytics](https://firebase.google.com/), a valid `google-services.json` file must also be provided. You may wish to use Firebase's "Get started" tutorial in order to generate one for yourself unless you are part of the Alpha Tiles development team. 
+
+Also for Firebase: In app/build.gradle, add this line to the top:
+
+* apply plugin: 'com.google.gms.google-services'
+
+and add these lines to dependencies { }:
+
+* implementation platform('com.google.firebase:firebase-bom:25.12.0')
+* implementation 'com.google.firebase:firebase-analytics'
 
 
 ## Sample build assets
