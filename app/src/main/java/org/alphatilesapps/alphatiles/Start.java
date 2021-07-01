@@ -49,6 +49,7 @@ public class Start extends AppCompatActivity
     public static int incorrectSoundID;
     public static int correctFinalSoundID;
     public static HashMap<String, Integer> speechIDs;
+    public static HashMap<String, Integer> tileAudioIDs;
     public static int correctSoundDuration;
     public static int incorrectSoundDuration;
     public static int correctFinalSoundDuration;
@@ -125,6 +126,14 @@ public class Start extends AppCompatActivity
             speechIDs.put(word.nationalWord, gameSounds.load(context, resId, 2));
             speechDurations.put(word.nationalWord, word.duration + 100);
 //			speechDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
+        }
+
+        tileAudioIDs = new HashMap(0);
+
+        for(Tile tile : tileList){
+
+            int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
+            tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
         }
 
 
