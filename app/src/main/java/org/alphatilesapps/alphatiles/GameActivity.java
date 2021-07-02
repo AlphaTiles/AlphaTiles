@@ -53,6 +53,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	
 	protected abstract int[] getTileButtons();	
 	protected abstract int[] getWordImages();
+	protected abstract int getAudioInstructionsResID();
 
 	@Override
 	protected void onCreate(Bundle state) {
@@ -169,7 +170,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	}	
 	protected void setOptionsRowUnclickable()	
 	{	
-		ImageView repeatImage = findViewById(R.id.repeatImage);	
+		ImageView repeatImage = findViewById(R.id.repeatImage);
 		ImageView wordImage = findViewById(R.id.wordImage);	
 		repeatImage.setBackgroundResource(0);	
 		repeatImage.setImageResource(R.drawable.zz_forward_inactive);	
@@ -185,7 +186,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	}	
 	protected void setOptionsRowClickable()	
 	{	
-		ImageView repeatImage = findViewById(R.id.repeatImage);	
+		ImageView repeatImage = findViewById(R.id.repeatImage);
 		ImageView wordImage = findViewById(R.id.wordImage);	
 		ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);	
 		repeatImage.setBackgroundResource(0);	
@@ -311,7 +312,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	protected void playIncorrectSound1()	
 	{	
 		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();	
+		setOptionsRowUnclickable();
 		gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
 		setAllTilesClickable();	
 		setOptionsRowClickable();	
@@ -368,7 +369,34 @@ public abstract class GameActivity extends AppCompatActivity {
 				mp3.release();	
 			}	
 		});	
-	}	
+	}
+	public void playAudioInstructions(View view){
+		/*setAllTilesUnclickable();
+		setOptionsRowUnclickable();
+		int instructionsSoundID = gameSounds.load(context, getAudioInstructionsResID(), 2);
+		gameSounds.play(instructionsSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+		setAllTilesClickable();
+		setOptionsRowClickable();*/
+
+		setAllTilesUnclickable();
+		setOptionsRowUnclickable();
+		mediaPlayerIsPlaying = true;
+		MediaPlayer mp3 = MediaPlayer.create(this, getAudioInstructionsResID());
+		mp3.start();
+		mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+		{
+			@Override
+			public void onCompletion(MediaPlayer mp3)
+			{
+				mediaPlayerIsPlaying = false;
+				setAllTilesClickable();
+				setOptionsRowClickable();
+				mp3.release();
+			}
+		});
+
+	}
+
 	protected void mpCompletion(MediaPlayer mp, boolean isFinal)	
 	{	
 		if (isFinal)	

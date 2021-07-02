@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -41,6 +42,19 @@ public class Myanmar extends GameActivity {
     protected int[] getTileButtons() {return TILE_BUTTONS;}
 
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("myanmar_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
 
     private static final int[] WORD_IMAGES = {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04, R.id.wordImage05, R.id.wordImage06, R.id.wordImage07
@@ -743,6 +757,12 @@ public class Myanmar extends GameActivity {
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }

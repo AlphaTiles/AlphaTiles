@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -45,6 +46,19 @@ public class Thailand extends GameActivity {
     protected int[] getTileButtons() {return null;}
 
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("thailand_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -556,6 +570,12 @@ public class Thailand extends GameActivity {
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }

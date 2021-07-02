@@ -127,6 +127,18 @@ public class Start extends AppCompatActivity
 //			speechDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
         }
 
+        /*//load audio instructions
+        instructionsIDs = new HashMap();
+        instructionsDurations = new HashMap();
+        for (Game game : gameList)
+        {
+            int resId = res.getIdentifier(game.gameCountry.toLowerCase() + "_" + game.gameLevel, "raw", context.getPackageName());
+            instructionsIDs.put(game.gameCountry.toLowerCase() + "_" + game.gameLevel, gameSounds.load(context, resId, 2));
+            speechDurations.put(game.gameCountry.toLowerCase() + "_" + game.gameLevel, game.duration + 100);
+//			speechDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
+        }*/
+
+
 
     }
     public void buildTilesArray() {

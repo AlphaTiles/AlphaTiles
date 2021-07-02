@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -36,6 +37,19 @@ public class Romania extends GameActivity {
     protected int[] getTileButtons() {return null;}
 
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("romania_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (Resources.NotFoundException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -451,6 +465,12 @@ public class Romania extends GameActivity {
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }

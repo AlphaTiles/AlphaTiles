@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -41,6 +42,19 @@ public class Brazil extends GameActivity {
     protected int[] getTileButtons() {return TILE_BUTTONS;}
     
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("brazil_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#4CAF50", "#E91E63"};
 
@@ -560,6 +574,12 @@ public class Brazil extends GameActivity {
 
     public void onBtnClick (View view) {
         respondToTileSelection(Integer.parseInt((String)view.getTag())); // KP
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > -1) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }

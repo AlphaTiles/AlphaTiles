@@ -502,11 +502,24 @@
         android:layout_height="0dp"
         android:onClick="goBackToEarth"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toStartOf="@+id/repeatImage"
+        app:layout_constraintEnd_toStartOf="@+id/instructions"
         app:layout_constraintStart_toEndOf="@+id/pointsImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         android:contentDescription="@string/playerAvatar"
         app:srcCompat="@drawable/zz_games_home" />
+
+    <ImageView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="playAudioInstructions"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintEnd_toEndOf="@+id/repeatImage"
+        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        android:contentDescription="@string/playAgain"
+        android:rotationY="@integer/mirror_flip"
+        app:srcCompat="@drawable/zz_instructions" />
 
     <ImageView
         android:id="@+id/repeatImage"
@@ -515,7 +528,7 @@
         android:onClick="repeatGame"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintStart_toEndOf="@+id/instructions"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         android:contentDescription="@string/playAgain"
         android:rotationY="@integer/mirror_flip"
