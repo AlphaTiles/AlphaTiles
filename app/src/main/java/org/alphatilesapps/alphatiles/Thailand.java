@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,6 +61,21 @@ public class Thailand extends GameActivity {
         return audioInstructionsResID;
     }
 
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = R.id.thailandCL;
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
+    }
+
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger( Thailand.class.getName() );
@@ -102,6 +118,10 @@ public class Thailand extends GameActivity {
 
         LOGGER.info("Remember: F");
         setTextSizes();
+
+        if(getAudioInstructionsResID()==0) {
+            centerGamesHomeImage();
+        }
 
         LOGGER.info("Remember: G");
         playAgain();

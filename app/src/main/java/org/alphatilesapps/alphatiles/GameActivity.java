@@ -54,6 +54,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	protected abstract int[] getTileButtons();	
 	protected abstract int[] getWordImages();
 	protected abstract int getAudioInstructionsResID();
+	protected abstract void centerGamesHomeImage();
 
 	@Override
 	protected void onCreate(Bundle state) {

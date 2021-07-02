@@ -13,6 +13,8 @@ import android.widget.TextView;
 import java.util.Random;
 import java.util.logging.Logger;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import android.graphics.Typeface;
 import android.widget.Button;
 
@@ -43,6 +45,34 @@ public class UnitedStates extends GameActivity {
             audioInstructionsResID = -1;
         }
         return audioInstructionsResID;
+    }
+
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = 0;
+        switch(challengeLevel){
+            case 1:
+                gameID = R.id.united_states_cl1_CL;
+                break;
+            case 2:
+                gameID = R.id.united_states_cl2_CL;
+                break;
+            case 3:
+                gameID = R.id.united_states_cl3_CL;
+                break;
+            default:
+                break;
+        }
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
     }
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
@@ -91,6 +121,9 @@ public class UnitedStates extends GameActivity {
 
         scriptLR = Start.langInfoList.find("Script direction (LR or RL)");
 
+        if(getAudioInstructionsResID()==0){
+            centerGamesHomeImage();
+        }
         playAgain();
 
         setTextSizes();
@@ -156,6 +189,7 @@ public class UnitedStates extends GameActivity {
         pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
 
     }
+
 
     public void repeatGame (View view) {
 
