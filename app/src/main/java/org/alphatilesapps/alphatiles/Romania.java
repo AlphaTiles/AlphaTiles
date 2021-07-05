@@ -274,7 +274,7 @@ public class Romania extends GameActivity {
     }
 
     public void goToTileOnTheRight(View View) {
-        directionIsForward = forceRTL;
+        directionIsForward = !forceRTL;
         TextView tileBox = (TextView) findViewById(R.id.tileBoxTextView);
         String oldTile = tileBox.getText().toString();
         if(forceRTL) {
@@ -294,7 +294,7 @@ public class Romania extends GameActivity {
     }
 
     public void goToTileOnTheLeft(View View) {
-        directionIsForward = false;
+        directionIsForward = forceRTL;
         TextView tileBox = (TextView) findViewById(R.id.tileBoxTextView);
         String oldTile = tileBox.getText().toString();
         if(forceRTL) {
