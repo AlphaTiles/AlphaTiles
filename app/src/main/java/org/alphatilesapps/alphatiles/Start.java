@@ -20,6 +20,8 @@ import java.util.Random;   // KP
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+import static org.alphatilesapps.alphatiles.Settings.hasTileAudio;
+
 public class Start extends AppCompatActivity
 {
     Context context;
@@ -29,6 +31,8 @@ public class Start extends AppCompatActivity
     public static String localAppName; // KP add "public"
 
     public static TileList tileList; // KP // from aa_gametiles.txt
+
+    public static ArrayList<String> tileListWithMultipleTypes;
 
     public static WordList wordList;     // KP  // from aa_wordlist.txt
 
@@ -128,12 +132,32 @@ public class Start extends AppCompatActivity
 //			speechDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
         }
 
-        tileAudioIDs = new HashMap(0);
+        if (hasTileAudio) {
+            tileAudioIDs = new HashMap(0);
 
-        for(Tile tile : tileList){
+            tileListWithMultipleTypes = new ArrayList<String>();
 
-            int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
-            tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
+            for (Tile tile : tileList) {
+
+                int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
+                tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
+                tileListWithMultipleTypes.add(tile.baseTile);
+
+                if (tile.audioForTileB.compareTo("X") != 0) {
+                    resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
+                    tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
+                    tileListWithMultipleTypes.add(tile.baseTile + "B");
+
+                }
+
+                if (tile.audioForTileC.compareTo("X") != 0) {
+                    resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
+                    tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
+                    tileListWithMultipleTypes.add(tile.baseTile + "C");
+
+                }
+
+            }
         }
 
 
