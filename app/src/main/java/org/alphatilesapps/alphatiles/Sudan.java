@@ -234,7 +234,7 @@ public class Sudan extends GameActivity {
                     }
                     setOptionsRowClickable();
                 }
-        }, 1400);
+        }, 1300);
 
     }
 

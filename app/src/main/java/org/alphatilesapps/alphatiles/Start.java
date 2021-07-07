@@ -143,18 +143,20 @@ public class Start extends AppCompatActivity
                 tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
                 tileListWithMultipleTypes.add(tile.baseTile);
 
-                if (tile.audioForTileB.compareTo("X") != 0) {
-                    resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
-                    tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
+                if (tile.tileTypeB.compareTo("none")!= 0) {
                     tileListWithMultipleTypes.add(tile.baseTile + "B");
-
+                    if (tile.audioForTileB.compareTo("X") != 0) {
+                        resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
+                        tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
+                    }
                 }
 
-                if (tile.audioForTileC.compareTo("X") != 0) {
-                    resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
-                    tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
+                if(tile.tileTypeC.compareTo("none")!= 0) {
                     tileListWithMultipleTypes.add(tile.baseTile + "C");
-
+                    if (tile.audioForTileC.compareTo("X") != 0) {
+                        resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
+                        tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
+                    }
                 }
 
             }
