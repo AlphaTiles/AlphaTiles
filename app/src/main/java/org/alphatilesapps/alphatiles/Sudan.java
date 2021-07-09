@@ -44,7 +44,7 @@ public class Sudan extends GameActivity {
         return null;
     }
 
-    int scanSetting = 1;
+    int differentiateMultipleTypes = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -72,12 +72,12 @@ public class Sudan extends GameActivity {
 
 
     public void showCorrectNumTiles(){
-        scanSetting = Integer.parseInt(Start.settingsList.find("Sudan multi-type symbols"));
+        differentiateMultipleTypes = Integer.parseInt(Start.settingsList.find("Differentiate uses of multitype symbols"));
 
-        if(scanSetting==1){
+        if(differentiateMultipleTypes ==1){
             showCorrectNumTiles1PerSymbol();
         }
-        else if(scanSetting==2){
+        else if(differentiateMultipleTypes ==2){
             showCorrectNumTiles1PerSymbolAndType();
         }
 
@@ -221,9 +221,16 @@ public class Sudan extends GameActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
+        String tileText = "";
+        differentiateMultipleTypes = Integer.parseInt(Start.settingsList.find("Differentiate uses of multitype symbols"));
         int justClickedKey = Integer.parseInt((String)view.getTag());
-        String tileTextAndType = Start.tileListWithMultipleTypes.get(justClickedKey-1);
-        gameSounds.play(tileAudioIDs.get(tileTextAndType), 1.0f, 1.0f, 2, 0, 1.0f);
+        if(differentiateMultipleTypes == 1 ){//Not differentiating the uses of multifunction tiles
+            tileText = tileList.get(justClickedKey-1).baseTile;
+        }
+        else{ //differentiateMultipleTypes ==2,we ARE differentiating the uses of multifunction tiles
+            tileText = Start.tileListWithMultipleTypes.get(justClickedKey-1);
+        }
+        gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
         soundSequencer.postDelayed(new Runnable()
         {
             public void run()
