@@ -19,14 +19,23 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
+import static org.alphatilesapps.alphatiles.Start.correctSoundID;
+import static org.alphatilesapps.alphatiles.Start.gameSounds;
+import static org.alphatilesapps.alphatiles.Start.speechIDs;
+import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileList;
+import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
 
 public class Thailand extends GameActivity {
 
     Start.TileList sortableTilesArray;
 
+
+
 //    ArrayList<String><ArrayList<String>> fourChoices = new ArrayList<String><ArrayList<String>>;  // will store LWC and LOP word or will store tile audio name and tile (lower or upper)
-    ArrayList<String[]> fourChoices = new ArrayList();  // will store LWC and LOP word or will store tile audio name and tile (lower or upper)
+    ArrayList<String[]> fourChoices = new ArrayList<>();  // will store LWC and LOP word or will store tile audio name and tile (lower or upper)
+    //JP: solved raw type issue by including <> before ()
+
 
     private static final String[] TYPES = {"TILE_LOWER", "TILE_UPPER", "TILE_AUDIO","WORD_TEXT","WORD_IMAGE","WORD_AUDIO"};
 
@@ -41,8 +50,16 @@ public class Thailand extends GameActivity {
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
     };
+    /*
+    JP reminder: R links the ID to have access to all the resources, like layouts, etc.
+    so the lines above create the buttons
+    where is choice01 defined? these choices are what need to be filtered to fix c vs ch issue
+    it corresponds to the layout ID
+    */
 
-    protected int[] getTileButtons() {return null;}
+    //JP added Override
+    @Override
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
 
     protected int[] getWordImages() {return null;}
 
@@ -75,6 +92,9 @@ public class Thailand extends GameActivity {
 
         sortableTilesArray = (Start.TileList) tileList.clone();
         Collections.shuffle(sortableTilesArray);
+        //JP reminder: this shuffles the tiles; INDIVIDUAL LETTERS
+        //so where do the words get generated as buttons???
+        //try game 31
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
@@ -305,7 +325,7 @@ public class Thailand extends GameActivity {
                 break;
         }
 
-        playActiveClip();
+        playActiveTileClip();
 
     }
 
@@ -348,12 +368,14 @@ public class Thailand extends GameActivity {
                 switch (refType) {
                     case "TILE_LOWER":
                     case "TILE_AUDIO":
-                        if (refItemText.equals(chosenItemText)) {
+                        //JP problem: method invocation "equals" may produce null ptr exception
+                        //added "refItemText != null" to fix this
+                        if (refItemText != null && refItemText.equals(chosenItemText)) {
                             goodMatch = true;
                         }
                         break;
                     case "TILE_UPPER":
-                        if (refItemText.equals(tileList.get(tileList.returnPositionInAlphabet(chosenItemText)).upperTile)) {
+                        if (refItemText != null && refItemText.equals(tileList.get(tileList.returnPositionInAlphabet(chosenItemText)).upperTile)) {
                             goodMatch = true;
                         }
                         break;
@@ -377,7 +399,7 @@ public class Thailand extends GameActivity {
                         }
                         break;
                     case "TILE_UPPER":
-                        if (refItemText.equals(chosenItemText)) {
+                        if (refItemText != null && refItemText.equals(chosenItemText)) {
                             goodMatch = true;
                         }
                         break;
@@ -405,14 +427,14 @@ public class Thailand extends GameActivity {
                         break;
                     case "TILE_UPPER":
                         parsedChosenWordArrayFinal = tileList.parseWord(chosenItemText);
-                        if (refItemText.equals(tileList.get(tileList.returnPositionInAlphabet(parsedChosenWordArrayFinal.get(0))).upperTile)) {
+                        if (refItemText != null && refItemText.equals(tileList.get(tileList.returnPositionInAlphabet(parsedChosenWordArrayFinal.get(0))).upperTile)) {
                             goodMatch = true;
                         }
                         break;
                     case "WORD_TEXT":
                     case "WORD_IMAGE":
                     case "WORD_AUDIO":
-                        if (refItemText.equals(chosenItemText)) {
+                        if (refItemText != null && refItemText.equals(chosenItemText)) {
                             goodMatch = true;
                         }
                         break;
@@ -467,6 +489,7 @@ public class Thailand extends GameActivity {
         }
     }
 
+    //JP: we need to edit chooseWord to solve c vs ch issue
     private void chooseWord() {
 
         Random rand = new Random();
@@ -477,6 +500,7 @@ public class Thailand extends GameActivity {
 
     }
 
+    //what is onChoiceClick vs onRefClick??
     public void onChoiceClick (View view) {
         respondToSelection(Integer.parseInt((String)view.getTag())); // KP
     }
@@ -484,12 +508,15 @@ public class Thailand extends GameActivity {
     public void onRefClick (View view) {
 
         LOGGER.info("Remember: pre playActiveClip()");
-        playActiveClip();
+        playActiveTileClip();
         LOGGER.info("Remember: post playActiveClip()");
 
     }
 
-    public void playActiveClip() {
+    //TO DO:
+    //JP: added view to arguments of this function
+    //not sure if this should be final or not
+    public void playActiveTileClip() {
         LOGGER.info("Remember: pre setAllTilesUnclickable()");
         setAllTilesUnclickable();
         LOGGER.info("Remember: post setAllTilesUnclickable()");
@@ -516,37 +543,99 @@ public class Thailand extends GameActivity {
                 break;
         }
 
+        //since "X" represents no audio file
         if (!audioToPlay.equals("X")) {
-            int resID = getResources().getIdentifier(audioToPlay, "raw", getPackageName());
-            MediaPlayer mp1 = MediaPlayer.create(this, resID);
-            mediaPlayerIsPlaying = true;
-            mp1.start();
-            mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp1) {
-                    mediaPlayerIsPlaying = false;
+            if (tempSoundPoolSwitch) {
+                if(audioToPlay.equals(wordInLWC)){ //JP: for words as ref
+                    LOGGER.info("testing word audio");
+                    //need to find sound ID of words
+                    //or should I use playActiveWordClip from GameActivity?
+                    gameSounds.play(speechIDs.get(audioToPlay), 1.0f, 1.0f, 1, 0, 1.0f);
+
+                } else { //JP: for tiles as ref
+                    String tileText = null;
+                    tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
+                    gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+                }
+                soundSequencer.postDelayed(new Runnable() {
+                    public void run() {
+                        if (repeatLocked) {
+                            setAllTilesClickable();
+                        }
+                        setOptionsRowClickable();
+                    }
+                }, 1100);
+            } else { // for media player
+                LOGGER.info("media player being used in playActiveTileClip");
+                int resID = getResources().getIdentifier(audioToPlay, "raw", getPackageName());
+                MediaPlayer mp1 = MediaPlayer.create(this, resID);
+                mediaPlayerIsPlaying = true;
+                mp1.start();
+                mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp1) {
+                        mediaPlayerIsPlaying = false;
+                        if (repeatLocked) {
+                            setAllTilesClickable();
+                        }
+                        setOptionsRowClickable();
+                        mp1.release();
+                    }
+                });
+            }
+        }
+    }
+
+    public void playCorrectSoundThenRefClip() {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+        if (tempSoundPoolSwitch) {
+            //plays correct sound
+            LOGGER.info("correct sound test");
+            //why is this not playing now??? it plays when playActiveTileClip in line 601 is commented out.
+            //the two sounds are interfering
+            gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+
+            //JP: this delays word audio after correct sound audio so they don't overlap
+            soundSequencer.postDelayed(new Runnable() {
+                public void run() {
+                    if (refType.equals("WORD_TEXT") || refType.equals("WORD_IMAGE") || refType.equals("WORD_AUDIO")){
+                        gameSounds.play(speechIDs.get(wordInLWC), 1.0f, 1.0f, 1, 0, 1.0f);
+                    } else {
+                        String tileText = null;
+                        tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
+                        //find out the name of the line/array that audioToPlay comes from, then use the [0] of that array
+                        //as hashmap key to get the audioID int value
+                        gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 1, 0, 1.0f);
+                    }
+                }
+            }, 1250);
+
+            //JP: this delays the blue arrow becoming clickable too soon, so that the word sound must be repeated again
+            soundSequencer.postDelayed(new Runnable() {
+                public void run() {
                     if (repeatLocked) {
                         setAllTilesClickable();
                     }
                     setOptionsRowClickable();
-                    mp1.release();
+                }
+            }, 2000);
+
+
+        } else {
+            //media player:
+            LOGGER.info("media player being used in final");
+            MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
+            mediaPlayerIsPlaying = true;
+            mp2.start();
+            mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp2) {
+                    mp2.release();
+                    playActiveTileClip();
                 }
             });
         }
-    }
-    public void playCorrectSoundThenRefClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.release();
-                playActiveClip();
-            }
-        });
     }
 
     public void clickPicHearAudio(View view)
