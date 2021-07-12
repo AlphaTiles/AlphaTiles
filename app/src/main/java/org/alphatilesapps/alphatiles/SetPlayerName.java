@@ -22,11 +22,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.keyList;
-import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 
 public class SetPlayerName extends AppCompatActivity {
 
     Context context;
+    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
     int keysInUse;
     int keyboardScreenNo; // for languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
@@ -94,7 +94,7 @@ public class SetPlayerName extends AppCompatActivity {
             name.setSelection(name.getText().length());
         }
 
-        if(forceRTL){
+        if(scriptDirection.compareTo("RTL")==0){
             forceRTLIfSupported();
         }
         else{
