@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import static org.alphatilesapps.alphatiles.Start.*;	
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
 import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
-import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -28,6 +27,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	// KP, Oct 2020
 
 	Context context;
+	String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
 	int points;
 	int challengeLevel = -1;
@@ -67,7 +67,7 @@ public abstract class GameActivity extends AppCompatActivity {
 		
 		className = getClass().getName();
 
-		if(forceRTL){
+		if(scriptDirection.compareTo("RTL") == 0){
 			forceRTLIfSupported();
 		}
 		else{
