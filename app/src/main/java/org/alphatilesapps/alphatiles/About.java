@@ -10,11 +10,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import static org.alphatilesapps.alphatiles.Settings.forceRTL;
-
 public class About extends AppCompatActivity {
 
     Context context;
+    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,7 @@ public class About extends AppCompatActivity {
         TextView verInfo = findViewById(R.id.appVersionInEnglish);
         verInfo.setText(getString(R.string.ver_info, verName));
 
-        if(forceRTL){
+        if(scriptDirection.compareTo("RTL") == 0){
             forceRTLIfSupported();
         }
         else{
