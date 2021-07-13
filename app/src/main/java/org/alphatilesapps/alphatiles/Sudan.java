@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
+import static org.alphatilesapps.alphatiles.Start.settingsList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 
@@ -44,7 +45,7 @@ public class Sudan extends GameActivity {
         return null;
     }
 
-    int differentiateMultipleTypes = 1;
+    Boolean differentiateTypes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -66,19 +67,26 @@ public class Sudan extends GameActivity {
         View repeatArrow = findViewById(R.id.repeatImage);
         repeatArrow.setVisibility(View.INVISIBLE);
 
+        String differentiateTypesSetting = settingsList.find("Differentiates types of multitype symbols");
+        if(differentiateTypesSetting.compareTo("") != 0){
+            differentiateTypes = Boolean.parseBoolean(differentiateTypesSetting);
+        }
+        else{
+            differentiateTypes = false;
+        }
+
         showCorrectNumTiles();
 
     }
 
 
     public void showCorrectNumTiles(){
-        differentiateMultipleTypes = Integer.parseInt(Start.settingsList.find("Differentiate uses of multitype symbols"));
 
-        if(differentiateMultipleTypes ==1){
-            showCorrectNumTiles1PerSymbol();
-        }
-        else if(differentiateMultipleTypes ==2){
+        if(differentiateTypes){
             showCorrectNumTiles1PerSymbolAndType();
+        }
+        else {
+            showCorrectNumTiles1PerSymbol();
         }
 
     }
@@ -222,9 +230,8 @@ public class Sudan extends GameActivity {
         setOptionsRowUnclickable();
 
         String tileText = "";
-        differentiateMultipleTypes = Integer.parseInt(Start.settingsList.find("Differentiate uses of multitype symbols"));
         int justClickedKey = Integer.parseInt((String)view.getTag());
-        if(differentiateMultipleTypes == 1 ){//Not differentiating the uses of multifunction tiles
+        if(!differentiateTypes){//Not differentiating the uses of multifunction tiles
             tileText = tileList.get(justClickedKey-1).baseTile;
         }
         else{ //differentiateMultipleTypes ==2,we ARE differentiating the uses of multifunction tiles

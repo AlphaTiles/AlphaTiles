@@ -20,8 +20,6 @@ import java.util.Random;   // KP
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-import static org.alphatilesapps.alphatiles.Settings.hasTileAudio;
-
 public class Start extends AppCompatActivity
 {
     Context context;
@@ -62,12 +60,14 @@ public class Start extends AppCompatActivity
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
     ConstraintLayout startCL;
+    Boolean hasTileAudio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         context = this;
+
 
         buildLangInfoArray();
         LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
@@ -78,11 +78,20 @@ public class Start extends AppCompatActivity
         buildSettingsArray();
         LOGGER.info("Remember: completed buildSettingsArray()");
 
+        String hasAudioSetting = settingsList.find("Has tile audio");
+        if(hasAudioSetting.compareTo("")!=0){
+            hasTileAudio = Boolean.parseBoolean(hasAudioSetting);
+        }
+        else{
+            hasTileAudio = false;
+        }
+
         buildGamesArray();
         LOGGER.info("Remember: completed buildGamesArray()");
 
         buildWordAndTileArrays();
         LOGGER.info("Remember: completed buildWordAndTileArrays()");
+
 
         Intent intent = new Intent(this, ChoosePlayer.class);
 
