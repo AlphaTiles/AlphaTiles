@@ -19,12 +19,11 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
+import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
-import static org.alphatilesapps.alphatiles.Start.speechIDs;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileList;
-import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
 
 public class Thailand extends GameActivity {
 
@@ -324,9 +323,21 @@ public class Thailand extends GameActivity {
             default:
                 break;
         }
-
-        playActiveTileClip();
-
+        switch (refType) {
+            case "TILE_LOWER":
+            case "TILE_UPPER":
+            case "TILE_AUDIO":
+                playActiveTileClip();
+                break;
+            case "WORD_TEXT":
+            case "WORD_IMAGE":
+            case "WORD_AUDIO":
+                if (tempSoundPoolSwitch){
+                    playActiveWordClip1(false);
+                } else{
+                    playActiveWordClip0(false);
+                }
+        }
     }
 
     private void respondToSelection(int justClickedItem) {
@@ -482,7 +493,22 @@ public class Thailand extends GameActivity {
                 }
             }
 
-            playCorrectSoundThenRefClip();
+            //JP: added switch statement to determine which method to call: tile or word
+            switch (refType) {
+                case "TILE_LOWER":
+                case "TILE_UPPER":
+                case "TILE_AUDIO":
+                    playCorrectSoundThenActiveTileClip(); //includes functionality for both SoundPool and MediaPlayer
+                    break;
+                case "WORD_TEXT":
+                case "WORD_IMAGE":
+                case "WORD_AUDIO":
+                    if (tempSoundPoolSwitch){
+                        playCorrectSoundThenActiveWordClip1(false);
+                    } else{
+                        playCorrectSoundThenActiveWordClip0(false);
+                    }
+            }
 
         } else {
             playIncorrectSound();
@@ -508,55 +534,45 @@ public class Thailand extends GameActivity {
     public void onRefClick (View view) {
 
         LOGGER.info("Remember: pre playActiveClip()");
-        playActiveTileClip();
-        LOGGER.info("Remember: post playActiveClip()");
-
-    }
-
-    //TO DO:
-    //JP: added view to arguments of this function
-    //not sure if this should be final or not
-    public void playActiveTileClip() {
-        LOGGER.info("Remember: pre setAllTilesUnclickable()");
-        setAllTilesUnclickable();
-        LOGGER.info("Remember: post setAllTilesUnclickable()");
-        setOptionsRowUnclickable();
-        LOGGER.info("Remember: post setOptionsRowUnclickable()()");
-
-
-        LOGGER.info("Remember: wordInLWC = " + wordInLWC);
-        LOGGER.info("Remember: wordInLOP = " + wordInLOP);
-
-        String audioToPlay = null;
+        //JP: added switch statement to determine which method to call: tile or word
         switch (refType) {
             case "TILE_LOWER":
             case "TILE_UPPER":
             case "TILE_AUDIO":
-                audioToPlay = tileList.get(tileList.returnPositionInAlphabet(refTile)).audioForTile;
+                playActiveTileClip(); //includes functionality for both SoundPool and MediaPlayer
                 break;
             case "WORD_TEXT":
             case "WORD_IMAGE":
             case "WORD_AUDIO":
-                audioToPlay = wordInLWC;
-                break;
-            default:
-                break;
+                if (tempSoundPoolSwitch){
+                    playActiveWordClip1(false); //for SoundPool
+                } else{
+                    playActiveWordClip0(false); //for MediaPlayer
+                }
         }
+        LOGGER.info("Remember: post playActiveClip()");
+
+    }
+
+    /*JP: added SoundPool functionality to this method
+    -edited this method to ONLY be used for Tile clips
+    -there are separate methods called for Word clips
+     */
+    public void playActiveTileClip() {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+
+        String audioToPlay = null;
+
+        audioToPlay = tileList.get(tileList.returnPositionInAlphabet(refTile)).audioForTile;
 
         //since "X" represents no audio file
         if (!audioToPlay.equals("X")) {
-            if (tempSoundPoolSwitch) {
-                if(audioToPlay.equals(wordInLWC)){ //JP: for words as ref
-                    LOGGER.info("testing word audio");
-                    //need to find sound ID of words
-                    //or should I use playActiveWordClip from GameActivity?
-                    gameSounds.play(speechIDs.get(audioToPlay), 1.0f, 1.0f, 1, 0, 1.0f);
-
-                } else { //JP: for tiles as ref
-                    String tileText = null;
-                    tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
-                    gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
-                }
+            if (tempSoundPoolSwitch) { //for SoundPool
+                LOGGER.info("SoundPool being used in playActiveTileClip");
+                String tileText = null;
+                tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
+                gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
                 soundSequencer.postDelayed(new Runnable() {
                     public void run() {
                         if (repeatLocked) {
@@ -586,28 +602,19 @@ public class Thailand extends GameActivity {
         }
     }
 
-    public void playCorrectSoundThenRefClip() {
+    public void playCorrectSoundThenActiveTileClip() { //JP: specifically for TILE audio; playCorrectSoundThenActiveWordClip is for WORDS
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
-        if (tempSoundPoolSwitch) {
-            //plays correct sound
-            LOGGER.info("correct sound test");
-            //why is this not playing now??? it plays when playActiveTileClip in line 601 is commented out.
-            //the two sounds are interfering
+        if (tempSoundPoolSwitch) {//for SoundPool
+            LOGGER.info("SoundPool being used in final");
             gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
 
             //JP: this delays word audio after correct sound audio so they don't overlap
             soundSequencer.postDelayed(new Runnable() {
                 public void run() {
-                    if (refType.equals("WORD_TEXT") || refType.equals("WORD_IMAGE") || refType.equals("WORD_AUDIO")){
-                        gameSounds.play(speechIDs.get(wordInLWC), 1.0f, 1.0f, 1, 0, 1.0f);
-                    } else {
-                        String tileText = null;
-                        tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
-                        //find out the name of the line/array that audioToPlay comes from, then use the [0] of that array
-                        //as hashmap key to get the audioID int value
-                        gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 1, 0, 1.0f);
-                    }
+                    String tileText = null;
+                    tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
+                    gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 1, 0, 1.0f);
                 }
             }, 1250);
 
