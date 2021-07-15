@@ -327,7 +327,11 @@ public class Thailand extends GameActivity {
             case "TILE_LOWER":
             case "TILE_UPPER":
             case "TILE_AUDIO":
-                playActiveTileClip();
+                if (tempSoundPoolSwitch){
+                    playActiveTileClip1();
+                } else{
+                    playActiveTileClip0();
+                }
                 break;
             case "WORD_TEXT":
             case "WORD_IMAGE":
@@ -337,6 +341,7 @@ public class Thailand extends GameActivity {
                 } else{
                     playActiveWordClip0(false);
                 }
+                break;
         }
     }
 
@@ -539,7 +544,11 @@ public class Thailand extends GameActivity {
             case "TILE_LOWER":
             case "TILE_UPPER":
             case "TILE_AUDIO":
-                playActiveTileClip(); //includes functionality for both SoundPool and MediaPlayer
+                if (tempSoundPoolSwitch){
+                    playActiveTileClip1();
+                } else{
+                    playActiveTileClip0();
+                }
                 break;
             case "WORD_TEXT":
             case "WORD_IMAGE":
@@ -549,27 +558,33 @@ public class Thailand extends GameActivity {
                 } else{
                     playActiveWordClip0(false); //for MediaPlayer
                 }
+                break;
         }
         LOGGER.info("Remember: post playActiveClip()");
 
     }
 
-    /*JP: added SoundPool functionality to this method
-    -edited this method to ONLY be used for Tile clips
-    -there are separate methods called for Word clips
-     */
     public void playActiveTileClip() {
+        if (tempSoundPoolSwitch){
+            playActiveTileClip1();
+        } else{
+            playActiveTileClip0();
+        }
+    }
+
+    //JP: for SoundPool, for tile audio
+    public void playActiveTileClip1() {
+        LOGGER.info("SoundPool being used in playActiveTileClip");
+
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
         String audioToPlay = null;
-
         audioToPlay = tileList.get(tileList.returnPositionInAlphabet(refTile)).audioForTile;
 
         //since "X" represents no audio file
         if (!audioToPlay.equals("X")) {
-            if (tempSoundPoolSwitch) { //for SoundPool
-                LOGGER.info("SoundPool being used in playActiveTileClip");
+
                 String tileText = null;
                 tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
                 gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
@@ -580,69 +595,86 @@ public class Thailand extends GameActivity {
                         }
                         setOptionsRowClickable();
                     }
-                }, 1100);
-            } else { // for media player
-                LOGGER.info("media player being used in playActiveTileClip");
-                int resID = getResources().getIdentifier(audioToPlay, "raw", getPackageName());
-                MediaPlayer mp1 = MediaPlayer.create(this, resID);
-                mediaPlayerIsPlaying = true;
-                mp1.start();
-                mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp1) {
-                        mediaPlayerIsPlaying = false;
-                        if (repeatLocked) {
-                            setAllTilesClickable();
-                        }
-                        setOptionsRowClickable();
-                        mp1.release();
-                    }
-                });
+                }, 1200); //JP: must use fixed number unless we make an array for tile durations
             }
+        }
+
+    //JP: for Media Player; tile audio
+    public void playActiveTileClip0(){
+        LOGGER.info("mediaplayer being used in playActiveTileClip");
+
+        String audioToPlay = null;
+        audioToPlay = tileList.get(tileList.returnPositionInAlphabet(refTile)).audioForTile;
+
+        int resID = getResources().getIdentifier(audioToPlay, "raw", getPackageName());
+        MediaPlayer mp1 = MediaPlayer.create(this, resID);
+        mediaPlayerIsPlaying = true;
+        mp1.start();
+        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp1) {
+                mediaPlayerIsPlaying = false;
+                if (repeatLocked) {
+                    setAllTilesClickable();
+                }
+                setOptionsRowClickable();
+                mp1.reset(); //JP: this fixes "mediaplayer went away with unhandled events" issue
+                mp1.release();
+            }
+        });
+    }
+
+    public void playCorrectSoundThenActiveTileClip() {
+        LOGGER.info("remember: testing");
+        if (tempSoundPoolSwitch){
+            playCorrectSoundThenActiveTileClip1(); //SoundPool
+        } else{
+            playCorrectSoundThenActiveTileClip0(); //MediaPlayer
         }
     }
 
-    public void playCorrectSoundThenActiveTileClip() { //JP: specifically for TILE audio; playCorrectSoundThenActiveWordClip is for WORDS
+    public void playCorrectSoundThenActiveTileClip1() { //JP: specifically for TILE audio; playCorrectSoundThenActiveWordClip is for WORDS
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
-        if (tempSoundPoolSwitch) {//for SoundPool
-            LOGGER.info("SoundPool being used in final");
-            gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
 
-            //JP: this delays word audio after correct sound audio so they don't overlap
-            soundSequencer.postDelayed(new Runnable() {
-                public void run() {
-                    String tileText = null;
-                    tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
-                    gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 1, 0, 1.0f);
+        LOGGER.info("SoundPool being used in final");
+        gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+
+        //JP: this delays word audio after correct sound audio so they don't overlap
+
+        soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                String tileText = null;
+                tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
+                gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 1, 0, 1.0f);
+            }
+        }, 1200); //JP: having this fixed at 1200 should be fine since this is specifically for tile audio, NOT words
+
+        //JP: this delays the blue arrow becoming clickable too soon, so that the word sound must be repeated again
+        soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                if (repeatLocked) {
+                    setAllTilesClickable();
                 }
-            }, 1250);
+                setOptionsRowClickable();
+            }
+        }, 1200);
+    }
 
-            //JP: this delays the blue arrow becoming clickable too soon, so that the word sound must be repeated again
-            soundSequencer.postDelayed(new Runnable() {
-                public void run() {
-                    if (repeatLocked) {
-                        setAllTilesClickable();
-                    }
-                    setOptionsRowClickable();
-                }
-            }, 2000);
-
-
-        } else {
-            //media player:
-            LOGGER.info("media player being used in final");
-            MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-            mediaPlayerIsPlaying = true;
-            mp2.start();
-            mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp2) {
-                    mp2.release();
-                    playActiveTileClip();
-                }
-            });
-        }
+    public void playCorrectSoundThenActiveTileClip0() {
+        //media player:
+        LOGGER.info("media player being used in final");
+        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
+        mediaPlayerIsPlaying = true;
+        mp2.start();
+        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp2) {
+                mp2.reset(); //JP: this fixes "mediaplayer went away with unhandled events" issue
+                mp2.release();
+                playActiveTileClip();
+            }
+        });
     }
 
     public void clickPicHearAudio(View view)

@@ -301,6 +301,7 @@ public abstract class GameActivity extends AppCompatActivity {
 			@Override	
 			public void onCompletion(MediaPlayer mp2)	
 			{
+				mp2.reset(); //JP: fixed "mediaplayer went away with unhandled events" issue
 				mp2.release();	
 				playActiveWordClip(playFinalSound);	
 			}	
@@ -335,7 +336,8 @@ public abstract class GameActivity extends AppCompatActivity {
 			{	
 				mediaPlayerIsPlaying = false;	
 				setAllTilesClickable();	
-				setOptionsRowClickable();	
+				setOptionsRowClickable();
+				mp3.reset(); //JP
 				mp3.release();	
 			}	
 		});	
@@ -369,7 +371,8 @@ public abstract class GameActivity extends AppCompatActivity {
 			{	
 				mediaPlayerIsPlaying = false;	
 				setAllTilesClickable();	
-				setOptionsRowClickable();	
+				setOptionsRowClickable();
+				mp3.reset(); //JP
 				mp3.release();	
 			}	
 		});	
@@ -395,7 +398,8 @@ public abstract class GameActivity extends AppCompatActivity {
 			{	
 				setAllTilesClickable();	
 			}	
-			setOptionsRowClickable();	
+			setOptionsRowClickable();
+			mp.reset(); //JP
 			mp.release();	
 		}
 
