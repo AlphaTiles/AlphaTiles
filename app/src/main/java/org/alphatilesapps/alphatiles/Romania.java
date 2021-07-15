@@ -13,8 +13,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import static org.alphatilesapps.alphatiles.Settings.forceRTL;
-
 public class Romania extends GameActivity {
 
     boolean failedToMatchInitialTile = false;
@@ -24,6 +22,8 @@ public class Romania extends GameActivity {
     // 1 = only show word if tile is initial
     // 2 = for tiles with initial examples only, initial, for tiles without initial examples, non-initial acceptable
     // 3 = show all words regardless of where tile ocurrs
+    String scriptDirection; //lang info value for Script Direction (LTR or RTL)
+    boolean forceRTL; //true if lang info has RTL for script direction; false if lang info has LTR for script direction
 
     boolean skipThisWord = false; // Set to true when it's a gray word (a word that demonstrates the tile with a medial instance not a word-initial instance)
     int wordTokenNoGroupOne = 0; // // Group One = words that START with the active tile
@@ -79,6 +79,14 @@ public class Romania extends GameActivity {
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String startingAlphabetTile = prefs.getString("lastActiveTileGame001_player" + playerString, firstAlphabetTile);
+
+        scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+        if(scriptDirection.compareTo("RTL")==0){
+            forceRTL = true;
+        }
+        else{
+            forceRTL = false;
+        }
 
         activeTile = startingAlphabetTile;
         setUpBasedOnGameTile(activeTile);
@@ -274,7 +282,7 @@ public class Romania extends GameActivity {
     }
 
     public void goToTileOnTheRight(View View) {
-        directionIsForward = forceRTL;
+        directionIsForward = !forceRTL;
         TextView tileBox = (TextView) findViewById(R.id.tileBoxTextView);
         String oldTile = tileBox.getText().toString();
         if(forceRTL) {
@@ -294,7 +302,7 @@ public class Romania extends GameActivity {
     }
 
     public void goToTileOnTheLeft(View View) {
-        directionIsForward = false;
+        directionIsForward = forceRTL;
         TextView tileBox = (TextView) findViewById(R.id.tileBoxTextView);
         String oldTile = tileBox.getText().toString();
         if(forceRTL) {
