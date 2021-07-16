@@ -34,6 +34,7 @@ android {
         // If you are using only one dimension, this property is optional,
         // and the plugin automatically assigns all the module's flavors to
         // that dimension.
+        /*
         ajzAmriKarbi {
             dimension "language"
             applicationIdSuffix ".blue.ajzAmriKarbi"
@@ -94,11 +95,13 @@ android {
             applicationIdSuffix ".blue.rifRifian"
             resValue "string", "app_name", "Iwaren s taqervact"
         }
+         */
         rmyGaborH {
             dimension "language"
             applicationIdSuffix ".blue.rmyGaborH"
             resValue "string", "app_name", "Té drábáráh!"
         }
+        /*
         rmyGaborR {
             dimension "language"
             applicationIdSuffix ".blue.rmyGaborR"
@@ -149,8 +152,12 @@ android {
             applicationIdSuffix ".blue.ztpLoxicha"
             resValue "string", "app_name", 'Dí’ztè'
         }
+
+         */
     }
 }
+
+
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
@@ -159,5 +166,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
 }

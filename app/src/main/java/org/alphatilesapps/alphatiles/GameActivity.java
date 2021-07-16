@@ -1,26 +1,36 @@
 package org.alphatilesapps.alphatiles;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;	
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;	
+import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import static org.alphatilesapps.alphatiles.Start.*;	
-import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
-import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
+import java.util.ArrayList;
 
+import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
+
+import static org.alphatilesapps.alphatiles.Settings.forceRTL;
+import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
+import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
+import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
+import static org.alphatilesapps.alphatiles.Start.correctSoundID;
+import static org.alphatilesapps.alphatiles.Start.gameSounds;
+import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
+import static org.alphatilesapps.alphatiles.Start.speechDurations;
+import static org.alphatilesapps.alphatiles.Start.speechIDs;
 import android.annotation.TargetApi;
 import android.os.Build;
+
 
 public abstract class GameActivity extends AppCompatActivity {
 
@@ -208,9 +218,9 @@ public abstract class GameActivity extends AppCompatActivity {
 	protected void playActiveWordClip(final boolean playFinalSound)	
 	{	
 		if (tempSoundPoolSwitch)	
-			playActiveWordClip1(playFinalSound);	
+			playActiveWordClip1(playFinalSound);	//SoundPool
 		else	
-			playActiveWordClip0(playFinalSound);	
+			playActiveWordClip0(playFinalSound);	//MediaPlayer
 	}	
 	protected void playActiveWordClip1(final boolean playFinalSound)	
 	{	
@@ -237,7 +247,7 @@ public abstract class GameActivity extends AppCompatActivity {
 				{	
 					if (repeatLocked)	
 					{	
-						setAllTilesClickable();	
+						setAllTilesClickable();
 					}	
 					setOptionsRowClickable();	
 				}	
@@ -296,6 +306,7 @@ public abstract class GameActivity extends AppCompatActivity {
 			@Override	
 			public void onCompletion(MediaPlayer mp2)	
 			{
+				mp2.reset(); //JP: fixed "mediaplayer went away with unhandled events" issue
 				mp2.release();	
 				playActiveWordClip(playFinalSound);	
 			}	
@@ -330,7 +341,8 @@ public abstract class GameActivity extends AppCompatActivity {
 			{	
 				mediaPlayerIsPlaying = false;	
 				setAllTilesClickable();	
-				setOptionsRowClickable();	
+				setOptionsRowClickable();
+				mp3.reset(); //JP
 				mp3.release();	
 			}	
 		});	
@@ -364,7 +376,8 @@ public abstract class GameActivity extends AppCompatActivity {
 			{	
 				mediaPlayerIsPlaying = false;	
 				setAllTilesClickable();	
-				setOptionsRowClickable();	
+				setOptionsRowClickable();
+				mp3.reset(); //JP
 				mp3.release();	
 			}	
 		});	
@@ -390,7 +403,8 @@ public abstract class GameActivity extends AppCompatActivity {
 			{	
 				setAllTilesClickable();	
 			}	
-			setOptionsRowClickable();	
+			setOptionsRowClickable();
+			mp.reset(); //JP
 			mp.release();	
 		}
 
