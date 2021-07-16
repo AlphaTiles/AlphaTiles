@@ -30,6 +30,8 @@ public class Start extends AppCompatActivity
 
     public static TileList tileList; // KP // from aa_gametiles.txt
 
+    public static ArrayList<String> tileListWithMultipleTypes;
+
     public static WordList wordList;     // KP  // from aa_wordlist.txt
 
     public static KeyList keyList; // KP // from aa_keyboard.txt
@@ -49,6 +51,7 @@ public class Start extends AppCompatActivity
     public static int incorrectSoundID;
     public static int correctFinalSoundID;
     public static HashMap<String, Integer> speechIDs;
+    public static HashMap<String, Integer> tileAudioIDs;
     public static int correctSoundDuration;
     public static int incorrectSoundDuration;
     public static int correctFinalSoundDuration;
@@ -57,12 +60,14 @@ public class Start extends AppCompatActivity
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
     ConstraintLayout startCL;
+    Boolean hasTileAudio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         context = this;
+
 
         buildLangInfoArray();
         LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
@@ -73,11 +78,20 @@ public class Start extends AppCompatActivity
         buildSettingsArray();
         LOGGER.info("Remember: completed buildSettingsArray()");
 
+        String hasAudioSetting = settingsList.find("Has tile audio");
+        if(hasAudioSetting.compareTo("")!=0){
+            hasTileAudio = Boolean.parseBoolean(hasAudioSetting);
+        }
+        else{
+            hasTileAudio = false;
+        }
+
         buildGamesArray();
         LOGGER.info("Remember: completed buildGamesArray()");
 
         buildWordAndTileArrays();
         LOGGER.info("Remember: completed buildWordAndTileArrays()");
+
 
         Intent intent = new Intent(this, ChoosePlayer.class);
 
@@ -125,6 +139,36 @@ public class Start extends AppCompatActivity
             speechIDs.put(word.nationalWord, gameSounds.load(context, resId, 2));
             speechDurations.put(word.nationalWord, word.duration + 100);
 //			speechDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
+        }
+
+        if (hasTileAudio) {
+            tileAudioIDs = new HashMap(0);
+
+            tileListWithMultipleTypes = new ArrayList<String>();
+
+            for (Tile tile : tileList) {
+
+                int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
+                tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
+                tileListWithMultipleTypes.add(tile.baseTile);
+
+                if (tile.tileTypeB.compareTo("none")!= 0) {
+                    tileListWithMultipleTypes.add(tile.baseTile + "B");
+                    if (tile.audioForTileB.compareTo("X") != 0) {
+                        resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
+                        tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
+                    }
+                }
+
+                if(tile.tileTypeC.compareTo("none")!= 0) {
+                    tileListWithMultipleTypes.add(tile.baseTile + "C");
+                    if (tile.audioForTileC.compareTo("X") != 0) {
+                        resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
+                        tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
+                    }
+                }
+
+            }
         }
 
 
