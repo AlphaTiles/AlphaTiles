@@ -18,8 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
-
-import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
@@ -28,8 +26,6 @@ import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.speechDurations;
 import static org.alphatilesapps.alphatiles.Start.speechIDs;
-import android.annotation.TargetApi;
-import android.os.Build;
 
 
 public abstract class GameActivity extends AppCompatActivity {
