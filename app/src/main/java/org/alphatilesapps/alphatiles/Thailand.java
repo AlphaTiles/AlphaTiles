@@ -595,7 +595,7 @@ public class Thailand extends GameActivity {
                         }
                         setOptionsRowClickable();
                     }
-                }, 1200); //JP: must use fixed number unless we make an array for tile durations
+                }, 925); //JP: must use fixed number unless we make an array for tile durations
             }
         }
 
@@ -648,7 +648,7 @@ public class Thailand extends GameActivity {
                 tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
                 gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 1, 0, 1.0f);
             }
-        }, 1200); //JP: having this fixed at 1200 should be fine since this is specifically for tile audio, NOT words
+        }, 925); //JP: having this fixed at 1200 should be fine since this is specifically for tile audio, NOT words
 
         //JP: this delays the blue arrow becoming clickable too soon, so that the word sound must be repeated again
         soundSequencer.postDelayed(new Runnable() {
@@ -658,7 +658,8 @@ public class Thailand extends GameActivity {
                 }
                 setOptionsRowClickable();
             }
-        }, 1200);
+        }, 1850); //JP: 1850 makes sure the arrow button stays unclickable for the duration of the correct sound
+        //AND for the duration of the tile audio repeated back
     }
 
     public void playCorrectSoundThenActiveTileClip0() {

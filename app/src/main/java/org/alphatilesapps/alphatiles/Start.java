@@ -141,7 +141,6 @@ public class Start extends AppCompatActivity
 //			speechDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
         }
 
-
         if (hasTileAudio) {
             tileAudioIDs = new HashMap(0);
 
@@ -180,10 +179,6 @@ public class Start extends AppCompatActivity
         // AH Mar 2021, add new column for audio tile and for upper case tile
 
         Scanner scanner = new 	Scanner(getResources().openRawResource(R.raw.aa_gametiles));
-        /*
-        JP reminder: this is scanning/parsing the aa_gametiles.txt file to obtain the tiles
-        each line is a new tile with 11 attributes
-        */
         boolean header = true;
         tileList = new TileList();
 
@@ -204,8 +199,6 @@ public class Start extends AppCompatActivity
                 tileList.audioForTileCTitle = thisLineArray[10];
                 header = false;
             } else {
-                //JP reminder: each tile has 11 attributes
-                //are the Or1, Or2, and Or3 distractor tiles?
                 Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10]);
                 if (!tile.hasNull()) {
                     tileList.add(tile);
