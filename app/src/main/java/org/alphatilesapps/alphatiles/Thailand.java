@@ -53,7 +53,7 @@ public class Thailand extends GameActivity {
     JP reminder: R links the ID to have access to all the resources, like layouts, etc.
     so the lines above create the buttons
     where is choice01 defined? these choices are what need to be filtered to fix c vs ch issue
-    it corresponds to the layout ID
+    -it corresponds to the layout ID
     */
 
     //JP added Override
@@ -80,7 +80,7 @@ public class Thailand extends GameActivity {
 
         // So, if challengeLevel is 235, then...
             // challengeLevelThai = 2 (distractors not random)
-            // refType = "TILE_AUDIO" ... note that one is subtracted below so you refer to the array at 1 to x + 1, not 0 to x
+            // refType = "TILE_AUDIO" ... note that one is subtracted below so you refer to the array as 1 to x + 1, not 0 to x
             // choiceType = "WORD_IMAGE"
         String clString = String.valueOf(challengeLevel);
         challengeLevelThai = Integer.parseInt(clString.substring(0, 1));
@@ -525,6 +525,10 @@ public class Thailand extends GameActivity {
 
         Random rand = new Random();
         int randomNum = rand.nextInt(Start.wordList.size());
+
+        String test = Start.wordList.get(70).localWord; //is local word the target language?
+        char test_char = test.charAt(0);
+        //if (test.charAt(0).equals())
 
         wordInLWC = Start.wordList.get(randomNum).nationalWord;
         wordInLOP = Start.wordList.get(randomNum).localWord;

@@ -187,9 +187,9 @@ public class Start extends AppCompatActivity
             String[] thisLineArray = thisLine.split("\t",11);
             if (header) {
                 tileList.baseTitle = thisLineArray[0];
-                tileList.alt1Title = thisLineArray[1];
-                tileList.alt2Title = thisLineArray[2];
-                tileList.alt3Title = thisLineArray[3];
+                tileList.alt1Title = thisLineArray[1]; //distractor tile
+                tileList.alt2Title = thisLineArray[2]; //distractor tile
+                tileList.alt3Title = thisLineArray[3]; //distractor tile
                 tileList.tileTypeTitle = thisLineArray[4];
                 tileList.audioForTileTitle = thisLineArray[5];
                 tileList.upperTileTitle = thisLineArray[6];
