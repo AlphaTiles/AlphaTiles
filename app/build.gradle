@@ -34,126 +34,13 @@ android {
         // If you are using only one dimension, this property is optional,
         // and the plugin automatically assigns all the module's flavors to
         // that dimension.
-        /*
-        ajzAmriKarbi {
-            dimension "language"
-            applicationIdSuffix ".blue.ajzAmriKarbi"
-            resValue "string", "app_name", "Ahiasang Kachilem Kicheng"
-        }
-        huvMateoDelMar {
-            dimension "language"
-            applicationIdSuffix ".blue.huvMateoDelMar"
-            resValue "string", "app_name", "Ombeayiüets"
-        }
-        klvMaskelynes {
-            dimension "language"
-            applicationIdSuffix ".blue.klvMaskelynes"
-            resValue "string", "app_name", "Naleta Gail"
-        }
-        kvlKayaw {
-            dimension "language"
-            applicationIdSuffix ".blue.kvlKayaw"
-            resValue "string", "app_name", "Thè̄lǒ Ghegē Kayaw Cèphlô̄"
-        }
-        lwlEasternLawa {
-            dimension "language"
-            applicationIdSuffix ".blue.lwlEasternLawa"
-            resValue "string", "app_name", "เกม"
-        }
-        mbzAmoltepec {
-            dimension "language"
-            applicationIdSuffix ".blue.mbzAmoltepec"
-            resValue "string", "app_name", "Na sɨkɨo"
-        }
-        mlsMasarak {
-            dimension "language"
-            applicationIdSuffix ".blue.mlsMasarak"
-            resValue "string", "app_name", "Tîŋge gosinja"
-        }
-        nguGuerrero {
-            dimension "language"
-            applicationIdSuffix ".blue.nguGuerrero"
-            resValue "string", "app_name", "auiltilistli"
-        }
-        pbsCentralPame {
-            dimension "language"
-            applicationIdSuffix ".blue.pbsCentralPame"
-            resValue "string", "app_name", "Ma imjien"
-        }
-        pduKayan {
-            dimension "language"
-            applicationIdSuffix ".blue.pduKayan"
-            resValue "string", "app_name", "Taklantapya Lilai Kayǎn"
-        }
-        poiPopoluca {
-            dimension "language"
-            applicationIdSuffix ".blue.poiPopoluca"
-            resValue "string", "app_name", "Pucunchi"
-        }
-        rifRifian {
-            dimension "language"
-            applicationIdSuffix ".blue.rifRifian"
-            resValue "string", "app_name", "Iwaren s taqervact"
-        }
-         */
-        rmyGaborH {
-            dimension "language"
-            applicationIdSuffix ".blue.rmyGaborH"
-            resValue "string", "app_name", "Té drábáráh!"
-        }
-        /*
-        rmyGaborR {
-            dimension "language"
-            applicationIdSuffix ".blue.rmyGaborR"
-            resValue "string", "app_name", "Te drabarah!"
-        }
-        skrSaraiki {
-            dimension "language"
-            applicationIdSuffix ".blue.skrSaraiki"
-            resValue "string", "app_name", "سرائیکی"
-        }
+
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
             resValue "string", "app_name", 'Mu′tsíin (me′phaa Xma′íín)'
         }
-        tzhTzeltal {
-            dimension "language"
-            applicationIdSuffix ".blue.tzhTzeltal"
-            resValue "string", "app_name", 'Ixta′il ta tseltal'
-        }
-        xtmSanPedroElAlto {
-            dimension "language"
-            applicationIdSuffix ".blue.xtmSanPedroElAlto"
-            resValue "string", "app_name", '¡Naka′vi o!'
-        }
-        zawMitla {
-            dimension "language"
-            applicationIdSuffix ".blue.zawMitla"
-            resValue "string", "app_name", 'Didxsaj'
-        }
-        zpfQuiatoni {
-            dimension "language"
-            applicationIdSuffix ".blue.zpfQuiatoni"
-            resValue "string", "app_name", 'Giäl gi′t diidx zah'
-        }
-        zpoAmatlan {
-            dimension "language"
-            applicationIdSuffix ".blue.zpoAmatlan"
-            resValue "string", "app_name", 'kit bee'
-        }
-        ztgSierraSur {
-            dimension "language"
-            applicationIdSuffix ".blue.ztgSierraSur"
-            resValue "string", "app_name", 'Gilugit Di′tsë'
-        }
-        ztpLoxicha {
-            dimension "language"
-            applicationIdSuffix ".blue.ztpLoxicha"
-            resValue "string", "app_name", 'Dí’ztè'
-        }
 
-         */
     }
 }
 
