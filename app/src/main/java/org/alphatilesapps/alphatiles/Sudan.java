@@ -30,8 +30,6 @@ public class Sudan extends GameActivity {
 
             R.id.tile50, R.id.tile51, R.id.tile52, R.id.tile53, R.id.tile54, R.id.tile55, R.id.tile56, R.id.tile57, R.id.tile58, R.id.tile59,
             R.id.tile60, R.id.tile61, R.id.tile62, R.id.tile63
-
-
     };
 
 
@@ -46,7 +44,7 @@ public class Sudan extends GameActivity {
     }
 
     Boolean differentiateTypes;
-
+  
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -78,7 +76,6 @@ public class Sudan extends GameActivity {
         showCorrectNumTiles();
 
     }
-
 
     public void showCorrectNumTiles(){
 
@@ -237,6 +234,7 @@ public class Sudan extends GameActivity {
         else{ //differentiateMultipleTypes ==2,we ARE differentiating the uses of multifunction tiles
             tileText = Start.tileListWithMultipleTypes.get(justClickedKey-1);
         }
+
         gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
         soundSequencer.postDelayed(new Runnable()
         {
@@ -248,7 +246,9 @@ public class Sudan extends GameActivity {
                     }
                     setOptionsRowClickable();
                 }
+
         }, 925);
+
 
     }
 
