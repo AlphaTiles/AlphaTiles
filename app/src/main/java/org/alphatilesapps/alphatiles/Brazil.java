@@ -32,6 +32,9 @@ public class Brazil extends GameActivity {
     Start.TileList sortableTilesArray; // KP
     int visibleTiles;
     String correctTile = "";
+    String lastWord = "";
+    String secondToLastWord = "";
+    String thirdToLastWord = "";
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -245,11 +248,26 @@ public class Brazil extends GameActivity {
 
     private void chooseWord() {
 
-        Random rand = new Random();
-        int randomNum = rand.nextInt(Start.wordList.size()); // KP
+        boolean freshWord = false;
 
-        wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-        wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+        while(!freshWord) {
+            Random rand = new Random();
+            int randomNum = rand.nextInt(Start.wordList.size()); // KP
+
+            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
+            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+
+            //If this word isn't one of the 3 previously tested words, we're good // LM
+            if(wordInLWC.compareTo(lastWord)!=0
+            && wordInLWC.compareTo(secondToLastWord)!=0
+            && wordInLWC.compareTo(thirdToLastWord)!=0){
+                freshWord = true;
+                thirdToLastWord = secondToLastWord;
+                secondToLastWord = lastWord;
+                lastWord = wordInLWC;
+            }
+
+        }//generates a new word if it got one of the last three tested words // LM
 
         LOGGER.info("Remember wordInLOP = " + wordInLOP);
 

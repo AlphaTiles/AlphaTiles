@@ -21,6 +21,9 @@ public class UnitedStates extends GameActivity {
     int neutralFontSize;
     String scriptLR;
     String[] selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
+    String lastWord = "";
+    String secondToLastWord = "";
+    String thirdToLastWord = "";
 
     protected static final int[] TILE_BUTTONS = {
             R.id.button01a, R.id.button01b, R.id.button02a, R.id.button02b, R.id.button03a, R.id.button03b, R.id.button04a, R.id.button04b, R.id.button05a, R.id.button05b,
@@ -162,10 +165,27 @@ public class UnitedStates extends GameActivity {
 
         while (lengthOfLOPWord > upperTileLimit) {
             // Ensure that the selected word is not too long for a 5/7/9-tile max game
-            Random rand = new Random();
-            int randomNum = rand.nextInt(Start.wordList.size()); // KP
-            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+            boolean freshWord = false;
+
+            while(!freshWord) {
+                Random rand = new Random();
+                int randomNum = rand.nextInt(Start.wordList.size()); // KP
+
+                wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
+                wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+
+                //If this word isn't one of the 3 previously tested words, we're good // LM
+                if(wordInLWC.compareTo(lastWord)!=0
+                        && wordInLWC.compareTo(secondToLastWord)!=0
+                        && wordInLWC.compareTo(thirdToLastWord)!=0){
+                    freshWord = true;
+                    thirdToLastWord = secondToLastWord;
+                    secondToLastWord = lastWord;
+                    lastWord = wordInLWC;
+                }
+
+            }//generates a new word if it got one of the last three tested words // LM
+
             parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP); // KP
             lengthOfLOPWord = parsedWordArrayFinal.size(); // KP
         }

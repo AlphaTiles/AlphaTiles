@@ -18,6 +18,9 @@ public class Georgia extends GameActivity {
     Start.TileList sortableTilesArray; // KP
     String initialTile = "";
     int visibleTiles; // will be 6, 12 or 18 based on challengeLevel 1, 2 or 3
+    String lastWord = "";
+    String secondToLastWord = "";
+    String thirdToLastWord = "";
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -147,13 +150,26 @@ public class Georgia extends GameActivity {
     }
 
     private void chooseWord() {
+        boolean freshWord = false;
 
-        Random rand = new Random();
-        int randomNum = rand.nextInt(Start.wordList.size()); // KP
+        while(!freshWord) {
+            Random rand = new Random();
+            int randomNum = rand.nextInt(Start.wordList.size()); // KP
 
-        wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-        wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
+            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
 
+            //If this word isn't one of the 3 previously tested words, we're good // LM
+            if(wordInLWC.compareTo(lastWord)!=0
+                    && wordInLWC.compareTo(secondToLastWord)!=0
+                    && wordInLWC.compareTo(thirdToLastWord)!=0){
+                freshWord = true;
+                thirdToLastWord = secondToLastWord;
+                secondToLastWord = lastWord;
+                lastWord = wordInLWC;
+            }
+
+        }//generates a new word if it got one of the last three tested words // LM
         ImageView image = (ImageView) findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);

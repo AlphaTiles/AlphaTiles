@@ -414,7 +414,7 @@ public class Start extends AppCompatActivity
     public void buildWordHashMap(){
         wordHashMap = new WordHashMap();
         for(int i = 0; i < wordList.size(); i++){
-            wordHashMap.put(wordList.get(i).localWord, wordList.get(i));
+            wordHashMap.put(wordList.get(i).nationalWord, wordList.get(i));
         }
     }
 

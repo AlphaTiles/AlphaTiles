@@ -21,6 +21,9 @@ import java.util.logging.Logger;
 public class Peru extends GameActivity {
 
     String gameIDString;
+    String lastWord = "";
+    String secondToLastWord = "";
+    String thirdToLastWord = "";
 
     protected static final int[] TILE_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
@@ -123,10 +126,28 @@ public class Peru extends GameActivity {
     public void playAgain () {
 
         repeatLocked = true;
+
+        boolean freshWord = false;
         Random rand = new Random();
-        int randomNum = rand.nextInt(Start.wordList.size()); // KP
-        wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-        wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+
+        while(!freshWord) {
+            int randomNum = rand.nextInt(Start.wordList.size()); // KP
+
+            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
+            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+
+            //If this word isn't one of the 3 previously tested words, we're good // LM
+            if(wordInLWC.compareTo(lastWord)!=0
+                    && wordInLWC.compareTo(secondToLastWord)!=0
+                    && wordInLWC.compareTo(thirdToLastWord)!=0){
+                freshWord = true;
+                thirdToLastWord = secondToLastWord;
+                secondToLastWord = lastWord;
+                lastWord = wordInLWC;
+            }
+
+        }//generates a new word if it got one of the last three tested words // LM
+
         parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP); // KP
         int tileLength = tilesInArray(parsedWordArrayFinal);
 
