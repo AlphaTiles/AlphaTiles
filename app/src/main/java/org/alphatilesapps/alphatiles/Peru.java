@@ -24,6 +24,7 @@ public class Peru extends GameActivity {
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
+    int peruPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
@@ -45,6 +46,7 @@ public class Peru extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0); // KP
+        peruPoints = getIntent().getIntExtra("peruPoints", 0); // LM
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         visibleTiles = TILE_BUTTONS.length;
@@ -52,7 +54,7 @@ public class Peru extends GameActivity {
         setTitle(Start.localAppName + ": " + gameNumber);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(peruPoints));
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -287,7 +289,8 @@ public class Peru extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points+=2;
-            pointsEarned.setText(String.valueOf(points));
+            peruPoints+=2;
+            pointsEarned.setText(String.valueOf(peruPoints));
 
             trackerCount++;
             updateTrackers();
@@ -295,6 +298,7 @@ public class Peru extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedPeruPoints_player" + playerString, peruPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

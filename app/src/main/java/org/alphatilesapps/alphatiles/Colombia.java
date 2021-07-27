@@ -28,6 +28,7 @@ public class Colombia extends GameActivity {
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
+    int colombiaPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
@@ -51,13 +52,14 @@ public class Colombia extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0); // KP
+        colombiaPoints = getIntent().getIntExtra("points", 0); // LM
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
 
         setTitle(Start.localAppName + ": " + gameNumber);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(colombiaPoints));
 
         LOGGER.info("Remember: oC2");
 
@@ -342,7 +344,8 @@ public class Colombia extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points+=4;
-            pointsEarned.setText(String.valueOf(points));
+            colombiaPoints+=4;
+            pointsEarned.setText(String.valueOf(colombiaPoints));
 
             trackerCount++;
             updateTrackers();
@@ -350,6 +353,7 @@ public class Colombia extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedColombiaPoints_player" + playerString, colombiaPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

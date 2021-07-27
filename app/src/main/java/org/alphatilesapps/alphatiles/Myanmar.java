@@ -29,6 +29,7 @@ public class Myanmar extends GameActivity {
     int higherClick = 0;
     int wordsCompleted = 0;
     int completionGoal = 0;
+    int myanmarPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -58,6 +59,7 @@ public class Myanmar extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0); // KP
+        myanmarPoints = getIntent().getIntExtra("myanmarPoints", 0); // LM
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         visibleTiles = TILE_BUTTONS.length;
@@ -65,7 +67,7 @@ public class Myanmar extends GameActivity {
         setTitle(Start.localAppName + ": " + gameNumber);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(myanmarPoints));
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -664,7 +666,8 @@ public class Myanmar extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points+=2;
-            pointsEarned.setText(String.valueOf(points));
+            myanmarPoints+=2;
+            pointsEarned.setText(String.valueOf(myanmarPoints));
 
 //       YOU NEED TO CHANGE THIS TO BE LIKE MEXICO WHERE TRACKERS INCREMENT PER BOARD, NOT PER INDIVIDUAL SELECTION
 //            trackerCount++;
@@ -673,6 +676,7 @@ public class Myanmar extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedMyanmarPoints_player" + playerString, myanmarPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
