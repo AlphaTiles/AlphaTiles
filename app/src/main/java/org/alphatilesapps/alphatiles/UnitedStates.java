@@ -24,6 +24,7 @@ public class UnitedStates extends GameActivity {
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
+    int unitedStatesPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.button01a, R.id.button01b, R.id.button02a, R.id.button02b, R.id.button03a, R.id.button03b, R.id.button04a, R.id.button04b, R.id.button05a, R.id.button05b,
@@ -46,6 +47,7 @@ public class UnitedStates extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0); // KP
+        unitedStatesPoints = getIntent().getIntExtra("unitedStatesPoints", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
 
@@ -69,7 +71,7 @@ public class UnitedStates extends GameActivity {
         }
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(unitedStatesPoints));
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -316,7 +318,8 @@ public class UnitedStates extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points +=2;
-            pointsEarned.setText(String.valueOf(points));
+            unitedStatesPoints+=2;
+            pointsEarned.setText(String.valueOf(unitedStatesPoints));
 
             trackerCount++;
             updateTrackers();
@@ -324,6 +327,7 @@ public class UnitedStates extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedUnitedStatesPoints_player" + playerString, points);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

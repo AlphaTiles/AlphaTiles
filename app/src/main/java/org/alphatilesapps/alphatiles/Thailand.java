@@ -45,6 +45,7 @@ public class Thailand extends GameActivity {
     int challengeLevelThai;
     int pixelHeightRef;
     int pixelHeightChoices;
+    int thailandPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
@@ -74,6 +75,7 @@ public class Thailand extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0);
+        thailandPoints = getIntent().getIntExtra("thailandPoints", 0);
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         visibleTiles = TILE_BUTTONS.length;
@@ -96,7 +98,7 @@ public class Thailand extends GameActivity {
         //try game 31
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(thailandPoints));
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -469,7 +471,8 @@ public class Thailand extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points+=1;
-            pointsEarned.setText(String.valueOf(points));
+            thailandPoints+=1;
+            pointsEarned.setText(String.valueOf(thailandPoints));
 
             trackerCount++;
             updateTrackers();
@@ -477,6 +480,7 @@ public class Thailand extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedThailandPoints_player" + playerString, thailandPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

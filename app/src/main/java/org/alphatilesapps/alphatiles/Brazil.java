@@ -35,6 +35,7 @@ public class Brazil extends GameActivity {
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
+    int brazilPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -67,6 +68,7 @@ public class Brazil extends GameActivity {
 //        LOGGER.info("Remember APR 21 21 # 1");
 
         points = getIntent().getIntExtra("points", 0); // KP
+        brazilPoints = getIntent().getIntExtra("brazilPoints", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
@@ -142,7 +144,7 @@ public class Brazil extends GameActivity {
         sortableTilesArray = (Start.TileList)Start.tileList.clone(); // KP
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(brazilPoints));
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -518,7 +520,8 @@ public class Brazil extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points++;
-            pointsEarned.setText(String.valueOf(points));
+            brazilPoints++;
+            pointsEarned.setText(String.valueOf(brazilPoints));
 
             trackerCount++;
             updateTrackers();
@@ -526,6 +529,7 @@ public class Brazil extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedBrazilPoints_player" + playerString, brazilPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

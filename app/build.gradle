@@ -10,7 +10,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 30
         versionCode 43
-        versionName "0.6.1"
+        versionName "0.7.0"
         // API 14 = Ice Cream (4.0)
         // API 16 = Jelly Bean (4.1) - required for Firebase
         // API 21 = Lollipop (5.0) - required for correct display of special characters in TextViews without Grandroid, etc.

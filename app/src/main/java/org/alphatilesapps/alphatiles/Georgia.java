@@ -21,6 +21,7 @@ public class Georgia extends GameActivity {
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
+    int georgiaPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -41,6 +42,7 @@ public class Georgia extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0); // KP
+        georgiaPoints = getIntent().getIntExtra("georgiaPoints", 0); // LM
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
 
@@ -241,7 +243,8 @@ public class Georgia extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points++;
-            pointsEarned.setText(String.valueOf(points));
+            georgiaPoints++;
+            pointsEarned.setText(String.valueOf(georgiaPoints));
 
             trackerCount++;
             updateTrackers();
@@ -249,6 +252,7 @@ public class Georgia extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedGeorgiaPoints_player" + playerString, georgiaPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
