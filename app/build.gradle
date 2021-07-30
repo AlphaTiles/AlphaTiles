@@ -35,7 +35,7 @@ android {
         // If you are using only one dimension, this property is optional,
         // and the plugin automatically assigns all the module's flavors to
         // that dimension.
-        ajzAmriKarbi {
+        /*ajzAmriKarbi {
             dimension "language"
             applicationIdSuffix ".blue.ajzAmriKarbi"
             resValue "string", "app_name", "Ahiasang Kachilem Kicheng"
@@ -74,13 +74,13 @@ android {
             dimension "language"
             applicationIdSuffix ".blue.nguGuerrero"
             resValue "string", "app_name", "auiltilistli"
-        }
+        }*/
         pbsCentralPame {
             dimension "language"
             applicationIdSuffix ".blue.pbsCentralPame"
             resValue "string", "app_name", "Ma imjien"
         }
-        pduKayan {
+        /*pduKayan {
             dimension "language"
             applicationIdSuffix ".blue.pduKayan"
             resValue "string", "app_name", "Taklantapya Lilai Kayǎn"
@@ -149,7 +149,7 @@ android {
             dimension "language"
             applicationIdSuffix ".blue.ztpLoxicha"
             resValue "string", "app_name", 'Dí’ztè'
-        }
+        }*/
     }
 
     packagingOptions {

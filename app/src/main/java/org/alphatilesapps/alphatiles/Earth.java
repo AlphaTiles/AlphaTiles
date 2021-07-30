@@ -16,6 +16,10 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
+
 import java.util.logging.Logger;
 
 import static android.view.View.VISIBLE;
@@ -94,6 +98,8 @@ public class Earth extends AppCompatActivity {
         else{
             forceLTRIfSupported();
         }
+
+        Analytics.with(context).track("Player " + playerNumber + " points: ", new Properties().putValue("Player " + playerNumber + " points", String.valueOf(points)));
     }
 
     @Override
