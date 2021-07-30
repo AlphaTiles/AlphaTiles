@@ -28,6 +28,10 @@ public class Colombia extends GameActivity {
     int keyboardScreenNo; // for languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
     int totalScreens; // the total number of screens required to show all keys
     int partial; // the number of visible keys on final partial screen
+    String lastWord = "";
+    String secondToLastWord = "";
+    String thirdToLastWord = "";
+    int colombiaPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
@@ -79,13 +83,14 @@ public class Colombia extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0); // KP
+        colombiaPoints = getIntent().getIntExtra("points", 0); // LM
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
 
         setTitle(Start.localAppName + ": " + gameNumber);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(colombiaPoints));
 
         LOGGER.info("Remember: oC2");
 
@@ -201,11 +206,26 @@ public class Colombia extends GameActivity {
 
     private void chooseWord() {
 
-        Random rand = new Random();
-        int randomNum = rand.nextInt(Start.wordList.size()); // KP
+        boolean freshWord = false;
 
-        wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-        wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+        while(!freshWord) {
+            Random rand = new Random();
+            int randomNum = rand.nextInt(Start.wordList.size()); // KP
+
+            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
+            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+
+            //If this word isn't one of the 3 previously tested words, we're good // LM
+            if(wordInLWC.compareTo(lastWord)!=0
+                    && wordInLWC.compareTo(secondToLastWord)!=0
+                    && wordInLWC.compareTo(thirdToLastWord)!=0){
+                freshWord = true;
+                thirdToLastWord = secondToLastWord;
+                secondToLastWord = lastWord;
+                lastWord = wordInLWC;
+            }
+
+        }//generates a new word if it got one of the last three tested words // LM
 
         ImageView image = (ImageView) findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
@@ -359,7 +379,8 @@ public class Colombia extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points+=4;
-            pointsEarned.setText(String.valueOf(points));
+            colombiaPoints+=4;
+            pointsEarned.setText(String.valueOf(colombiaPoints));
 
             trackerCount++;
             updateTrackers();
@@ -367,6 +388,7 @@ public class Colombia extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedColombiaPoints_player" + playerString, colombiaPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

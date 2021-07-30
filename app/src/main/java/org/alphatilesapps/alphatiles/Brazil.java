@@ -35,6 +35,10 @@ public class Brazil extends GameActivity {
     Start.TileList sortableTilesArray; // KP
     int visibleTiles;
     String correctTile = "";
+    String lastWord = "";
+    String secondToLastWord = "";
+    String thirdToLastWord = "";
+    int brazilPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -100,6 +104,7 @@ public class Brazil extends GameActivity {
 //        LOGGER.info("Remember APR 21 21 # 1");
 
         points = getIntent().getIntExtra("points", 0); // KP
+        brazilPoints = getIntent().getIntExtra("brazilPoints", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
@@ -175,7 +180,7 @@ public class Brazil extends GameActivity {
         sortableTilesArray = (Start.TileList)Start.tileList.clone(); // KP
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(brazilPoints));
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -285,11 +290,26 @@ public class Brazil extends GameActivity {
 
     private void chooseWord() {
 
-        Random rand = new Random();
-        int randomNum = rand.nextInt(Start.wordList.size()); // KP
+        boolean freshWord = false;
 
-        wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-        wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+        while(!freshWord) {
+            Random rand = new Random();
+            int randomNum = rand.nextInt(Start.wordList.size()); // KP
+
+            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
+            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+
+            //If this word isn't one of the 3 previously tested words, we're good // LM
+            if(wordInLWC.compareTo(lastWord)!=0
+            && wordInLWC.compareTo(secondToLastWord)!=0
+            && wordInLWC.compareTo(thirdToLastWord)!=0){
+                freshWord = true;
+                thirdToLastWord = secondToLastWord;
+                secondToLastWord = lastWord;
+                lastWord = wordInLWC;
+            }
+
+        }//generates a new word if it got one of the last three tested words // LM
 
         LOGGER.info("Remember wordInLOP = " + wordInLOP);
 
@@ -540,7 +560,8 @@ public class Brazil extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points++;
-            pointsEarned.setText(String.valueOf(points));
+            brazilPoints++;
+            pointsEarned.setText(String.valueOf(brazilPoints));
 
             trackerCount++;
             updateTrackers();
@@ -548,6 +569,7 @@ public class Brazil extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedBrazilPoints_player" + playerString, brazilPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
