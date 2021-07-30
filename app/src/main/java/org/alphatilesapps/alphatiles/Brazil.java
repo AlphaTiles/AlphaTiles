@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,6 +48,39 @@ public class Brazil extends GameActivity {
     protected int[] getTileButtons() {return TILE_BUTTONS;}
     
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("brazil_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
+
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = 0;
+        if (challengeLevel == 3 || challengeLevel == 6) {
+            gameID = R.id.brazil_cl3_CL;
+        } else {
+            gameID = R.id.brazil_cl1_CL;
+        }
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
+    }
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#4CAF50", "#E91E63"};
 
@@ -154,6 +190,10 @@ public class Brazil extends GameActivity {
         updateTrackers();
 
         setTextSizes();
+
+        if(getAudioInstructionsResID()==0){
+            centerGamesHomeImage();
+        }
 
 //        LOGGER.info("Remember APR 21 21 # 5");
 
@@ -582,6 +622,12 @@ public class Brazil extends GameActivity {
 
     public void onBtnClick (View view) {
         respondToTileSelection(Integer.parseInt((String)view.getTag())); // KP
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > -1) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }

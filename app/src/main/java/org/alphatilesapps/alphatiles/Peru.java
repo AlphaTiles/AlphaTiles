@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
+
+import static org.alphatilesapps.alphatiles.Start.gameSounds;
 
 public class Peru extends GameActivity {
 
@@ -33,6 +37,34 @@ public class Peru extends GameActivity {
     protected int[] getTileButtons() {return TILE_BUTTONS;}
 
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("peru_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
+
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = R.id.peruCL;
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
+    }
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -64,6 +96,10 @@ public class Peru extends GameActivity {
         updateTrackers();
 
         setTextSizes();
+
+        if(getAudioInstructionsResID()==0){
+            centerGamesHomeImage();
+        }
 
         playAgain();
 
@@ -334,6 +370,12 @@ public class Peru extends GameActivity {
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }
