@@ -29,12 +29,12 @@ import java.util.logging.Logger;
 
 
 import static org.alphatilesapps.alphatiles.Start.*;
-import static org.alphatilesapps.alphatiles.Settings.forceRTL;
 //import static org.alphatilesapps.alphatiles.Util.parseWord;   // KRP
 
 public class ChoosePlayer extends AppCompatActivity
 {
 	Context context;
+	String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
 	public static final int ALT_COUNT = 3;  // KRP
 /*
@@ -155,7 +155,7 @@ public class ChoosePlayer extends AppCompatActivity
 
 		setTextSizes();
 
-		if(forceRTL){
+		if(scriptDirection.compareTo("RTL") == 0){
 			forceRTLIfSupported();
 		}
 		else{

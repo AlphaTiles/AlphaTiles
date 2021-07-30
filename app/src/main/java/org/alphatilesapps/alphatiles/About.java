@@ -6,17 +6,19 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.segment.analytics.Analytics;
-
-import static org.alphatilesapps.alphatiles.Settings.forceRTL;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 public class About extends AppCompatActivity {
 
     Context context;
+    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String hideSILlogoSetting = Start.settingsList.find("Hide SIL logo");
+    Boolean hideSILlogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +52,30 @@ public class About extends AppCompatActivity {
         TextView verInfo = findViewById(R.id.appVersionInEnglish);
         verInfo.setText(getString(R.string.ver_info, verName));
 
-        if(forceRTL){
+        if(scriptDirection.compareTo("RTL") == 0){
             forceRTLIfSupported();
         }
         else{
             forceLTRIfSupported();
+        }
+
+        if(hideSILlogoSetting.compareTo("")!=0){
+            hideSILlogo = Boolean.parseBoolean(hideSILlogoSetting);
+
+            if(hideSILlogo){
+
+                ImageView SILlogoImage = (ImageView) findViewById(R.id.logoSILImage);
+                SILlogoImage.setVisibility(View.GONE);
+
+                ConstraintLayout constraintLayout = findViewById(R.id.aboutCL);
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(constraintLayout);
+                constraintSet.centerHorizontally(R.id.gamesHomeImage, R.id.aboutCL);
+                constraintSet.applyTo(constraintLayout);
+            }
+        }
+        else{//default
+            hideSILlogo = false;
         }
 
     }

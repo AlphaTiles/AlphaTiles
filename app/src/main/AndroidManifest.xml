@@ -36,6 +36,7 @@
         <activity android:name="org.alphatilesapps.alphatiles.Peru"/>
         <activity android:name="org.alphatilesapps.alphatiles.Resources"/>
         <activity android:name="org.alphatilesapps.alphatiles.Romania"/>
+        <activity android:name="org.alphatilesapps.alphatiles.Sudan"/>
         <activity android:name="org.alphatilesapps.alphatiles.Thailand"/>
         <activity android:name="org.alphatilesapps.alphatiles.UnitedStates"/>
     </application>

@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import java.util.Random;
 import java.util.logging.Logger;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import android.graphics.Typeface;
 import android.widget.Button;
 
@@ -23,6 +26,10 @@ public class UnitedStates extends GameActivity {
     int neutralFontSize;
     String scriptLR;
     String[] selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
+    String lastWord = "";
+    String secondToLastWord = "";
+    String thirdToLastWord = "";
+    int unitedStatesPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.button01a, R.id.button01b, R.id.button02a, R.id.button02b, R.id.button03a, R.id.button03b, R.id.button04a, R.id.button04b, R.id.button05a, R.id.button05b,
@@ -32,6 +39,47 @@ public class UnitedStates extends GameActivity {
     protected int[] getTileButtons() {return TILE_BUTTONS;}
 
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("united_states_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
+
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = 0;
+        switch(challengeLevel){
+            case 1:
+                gameID = R.id.united_states_cl1_CL;
+                break;
+            case 2:
+                gameID = R.id.united_states_cl2_CL;
+                break;
+            case 3:
+                gameID = R.id.united_states_cl3_CL;
+                break;
+            default:
+                break;
+        }
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
+    }
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -45,6 +93,7 @@ public class UnitedStates extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0); // KP
+        unitedStatesPoints = getIntent().getIntExtra("unitedStatesPoints", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
 
@@ -68,7 +117,7 @@ public class UnitedStates extends GameActivity {
         }
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(unitedStatesPoints));
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -79,6 +128,9 @@ public class UnitedStates extends GameActivity {
 
         scriptLR = Start.langInfoList.find("Script direction (LR or RL)");
 
+        if(getAudioInstructionsResID()==0){
+            centerGamesHomeImage();
+        }
         playAgain();
 
         setTextSizes();
@@ -145,6 +197,7 @@ public class UnitedStates extends GameActivity {
 
     }
 
+
     public void repeatGame (View view) {
 
         if (!repeatLocked) {
@@ -164,10 +217,27 @@ public class UnitedStates extends GameActivity {
 
         while (lengthOfLOPWord > upperTileLimit) {
             // Ensure that the selected word is not too long for a 5/7/9-tile max game
-            Random rand = new Random();
-            int randomNum = rand.nextInt(Start.wordList.size()); // KP
-            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+            boolean freshWord = false;
+
+            while(!freshWord) {
+                Random rand = new Random();
+                int randomNum = rand.nextInt(Start.wordList.size()); // KP
+
+                wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
+                wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+
+                //If this word isn't one of the 3 previously tested words, we're good // LM
+                if(wordInLWC.compareTo(lastWord)!=0
+                        && wordInLWC.compareTo(secondToLastWord)!=0
+                        && wordInLWC.compareTo(thirdToLastWord)!=0){
+                    freshWord = true;
+                    thirdToLastWord = secondToLastWord;
+                    secondToLastWord = lastWord;
+                    lastWord = wordInLWC;
+                }
+
+            }//generates a new word if it got one of the last three tested words // LM
+
             parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP); // KP
             lengthOfLOPWord = parsedWordArrayFinal.size(); // KP
         }
@@ -298,7 +368,8 @@ public class UnitedStates extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points +=2;
-            pointsEarned.setText(String.valueOf(points));
+            unitedStatesPoints+=2;
+            pointsEarned.setText(String.valueOf(unitedStatesPoints));
 
             trackerCount++;
             updateTrackers();
@@ -306,6 +377,7 @@ public class UnitedStates extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedUnitedStatesPoints_player" + playerString, points);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
@@ -375,6 +447,12 @@ public class UnitedStates extends GameActivity {
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }

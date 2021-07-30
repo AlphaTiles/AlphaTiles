@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.segment.analytics.Analytics;
 
@@ -21,14 +23,22 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
+import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
+import static org.alphatilesapps.alphatiles.Start.correctSoundID;
+import static org.alphatilesapps.alphatiles.Start.gameSounds;
+import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 
 public class Thailand extends GameActivity {
 
     Start.TileList sortableTilesArray;
 
+
+
 //    ArrayList<String><ArrayList<String>> fourChoices = new ArrayList<String><ArrayList<String>>;  // will store LWC and LOP word or will store tile audio name and tile (lower or upper)
-    ArrayList<String[]> fourChoices = new ArrayList();  // will store LWC and LOP word or will store tile audio name and tile (lower or upper)
+    ArrayList<String[]> fourChoices = new ArrayList<>();  // will store LWC and LOP word or will store tile audio name and tile (lower or upper)
+    //JP: solved raw type issue by including <> before ()
+
 
     private static final String[] TYPES = {"TILE_LOWER", "TILE_UPPER", "TILE_AUDIO","WORD_TEXT","WORD_IMAGE","WORD_AUDIO"};
 
@@ -39,14 +49,51 @@ public class Thailand extends GameActivity {
     int challengeLevelThai;
     int pixelHeightRef;
     int pixelHeightChoices;
+    int thailandPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
     };
+    /*
+    JP reminder: R links the ID to have access to all the resources, like layouts, etc.
+    so the lines above create the buttons
+    where is choice01 defined? these choices are what need to be filtered to fix c vs ch issue
+    -it corresponds to the layout ID
+    */
 
-    protected int[] getTileButtons() {return null;}
+    //JP added Override
+    @Override
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
 
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("thailand_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
+
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = R.id.thailandCL;
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
+    }
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -61,13 +108,14 @@ public class Thailand extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0);
+        thailandPoints = getIntent().getIntExtra("thailandPoints", 0);
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         visibleTiles = TILE_BUTTONS.length;
 
         // So, if challengeLevel is 235, then...
             // challengeLevelThai = 2 (distractors not random)
-            // refType = "TILE_AUDIO" ... note that one is subtracted below so you refer to the array at 1 to x + 1, not 0 to x
+            // refType = "TILE_AUDIO" ... note that one is subtracted below so you refer to the array as 1 to x + 1, not 0 to x
             // choiceType = "WORD_IMAGE"
         String clString = String.valueOf(challengeLevel);
         challengeLevelThai = Integer.parseInt(clString.substring(0, 1));
@@ -78,9 +126,12 @@ public class Thailand extends GameActivity {
 
         sortableTilesArray = (Start.TileList) tileList.clone();
         Collections.shuffle(sortableTilesArray);
+        //JP reminder: this shuffles the tiles; INDIVIDUAL LETTERS
+        //so where do the words get generated as buttons???
+        //try game 31
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(thailandPoints));
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -91,6 +142,10 @@ public class Thailand extends GameActivity {
 
         LOGGER.info("Remember: F");
         setTextSizes();
+
+        if(getAudioInstructionsResID()==0) {
+            centerGamesHomeImage();
+        }
 
         LOGGER.info("Remember: G");
         playAgain();
@@ -307,9 +362,26 @@ public class Thailand extends GameActivity {
             default:
                 break;
         }
-
-        playActiveClip();
-
+        switch (refType) {
+            case "TILE_LOWER":
+            case "TILE_UPPER":
+            case "TILE_AUDIO":
+                if (tempSoundPoolSwitch){
+                    playActiveTileClip1();
+                } else{
+                    playActiveTileClip0();
+                }
+                break;
+            case "WORD_TEXT":
+            case "WORD_IMAGE":
+            case "WORD_AUDIO":
+                if (tempSoundPoolSwitch){
+                    playActiveWordClip1(false);
+                } else{
+                    playActiveWordClip0(false);
+                }
+                break;
+        }
     }
 
     private void respondToSelection(int justClickedItem) {
@@ -351,12 +423,14 @@ public class Thailand extends GameActivity {
                 switch (refType) {
                     case "TILE_LOWER":
                     case "TILE_AUDIO":
-                        if (refItemText.equals(chosenItemText)) {
+                        //JP problem: method invocation "equals" may produce null ptr exception
+                        //added "refItemText != null" to fix this
+                        if (refItemText != null && refItemText.equals(chosenItemText)) {
                             goodMatch = true;
                         }
                         break;
                     case "TILE_UPPER":
-                        if (refItemText.equals(tileList.get(tileList.returnPositionInAlphabet(chosenItemText)).upperTile)) {
+                        if (refItemText != null && refItemText.equals(tileList.get(tileList.returnPositionInAlphabet(chosenItemText)).upperTile)) {
                             goodMatch = true;
                         }
                         break;
@@ -380,7 +454,7 @@ public class Thailand extends GameActivity {
                         }
                         break;
                     case "TILE_UPPER":
-                        if (refItemText.equals(chosenItemText)) {
+                        if (refItemText != null && refItemText.equals(chosenItemText)) {
                             goodMatch = true;
                         }
                         break;
@@ -408,14 +482,14 @@ public class Thailand extends GameActivity {
                         break;
                     case "TILE_UPPER":
                         parsedChosenWordArrayFinal = tileList.parseWord(chosenItemText);
-                        if (refItemText.equals(tileList.get(tileList.returnPositionInAlphabet(parsedChosenWordArrayFinal.get(0))).upperTile)) {
+                        if (refItemText != null && refItemText.equals(tileList.get(tileList.returnPositionInAlphabet(parsedChosenWordArrayFinal.get(0))).upperTile)) {
                             goodMatch = true;
                         }
                         break;
                     case "WORD_TEXT":
                     case "WORD_IMAGE":
                     case "WORD_AUDIO":
-                        if (refItemText.equals(chosenItemText)) {
+                        if (refItemText != null && refItemText.equals(chosenItemText)) {
                             goodMatch = true;
                         }
                         break;
@@ -434,7 +508,8 @@ public class Thailand extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points+=1;
-            pointsEarned.setText(String.valueOf(points));
+            thailandPoints+=1;
+            pointsEarned.setText(String.valueOf(thailandPoints));
 
             trackerCount++;
             updateTrackers();
@@ -442,6 +517,7 @@ public class Thailand extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedThailandPoints_player" + playerString, thailandPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
@@ -463,23 +539,44 @@ public class Thailand extends GameActivity {
                 }
             }
 
-            playCorrectSoundThenRefClip();
+            //JP: added switch statement to determine which method to call: tile or word
+            switch (refType) {
+                case "TILE_LOWER":
+                case "TILE_UPPER":
+                case "TILE_AUDIO":
+                    playCorrectSoundThenActiveTileClip(); //includes functionality for both SoundPool and MediaPlayer
+                    break;
+                case "WORD_TEXT":
+                case "WORD_IMAGE":
+                case "WORD_AUDIO":
+                    if (tempSoundPoolSwitch){
+                        playCorrectSoundThenActiveWordClip1(false);
+                    } else{
+                        playCorrectSoundThenActiveWordClip0(false);
+                    }
+            }
 
         } else {
             playIncorrectSound();
         }
     }
 
+    //JP: we need to edit chooseWord to solve c vs ch issue
     private void chooseWord() {
 
         Random rand = new Random();
         int randomNum = rand.nextInt(Start.wordList.size());
+
+        String test = Start.wordList.get(70).localWord; //is local word the target language?
+        char test_char = test.charAt(0);
+        //if (test.charAt(0).equals())
 
         wordInLWC = Start.wordList.get(randomNum).nationalWord;
         wordInLOP = Start.wordList.get(randomNum).localWord;
 
     }
 
+    //what is onChoiceClick vs onRefClick??
     public void onChoiceClick (View view) {
         respondToSelection(Integer.parseInt((String)view.getTag())); // KP
     }
@@ -487,67 +584,141 @@ public class Thailand extends GameActivity {
     public void onRefClick (View view) {
 
         LOGGER.info("Remember: pre playActiveClip()");
-        playActiveClip();
-        LOGGER.info("Remember: post playActiveClip()");
-
-    }
-
-    public void playActiveClip() {
-        LOGGER.info("Remember: pre setAllTilesUnclickable()");
-        setAllTilesUnclickable();
-        LOGGER.info("Remember: post setAllTilesUnclickable()");
-        setOptionsRowUnclickable();
-        LOGGER.info("Remember: post setOptionsRowUnclickable()()");
-
-
-        LOGGER.info("Remember: wordInLWC = " + wordInLWC);
-        LOGGER.info("Remember: wordInLOP = " + wordInLOP);
-
-        String audioToPlay = null;
+        //JP: added switch statement to determine which method to call: tile or word
         switch (refType) {
             case "TILE_LOWER":
             case "TILE_UPPER":
             case "TILE_AUDIO":
-                audioToPlay = tileList.get(tileList.returnPositionInAlphabet(refTile)).audioForTile;
+                if (tempSoundPoolSwitch){
+                    playActiveTileClip1();
+                } else{
+                    playActiveTileClip0();
+                }
                 break;
             case "WORD_TEXT":
             case "WORD_IMAGE":
             case "WORD_AUDIO":
-                audioToPlay = wordInLWC;
-                break;
-            default:
+                if (tempSoundPoolSwitch){
+                    playActiveWordClip1(false); //for SoundPool
+                } else{
+                    playActiveWordClip0(false); //for MediaPlayer
+                }
                 break;
         }
+        LOGGER.info("Remember: post playActiveClip()");
 
-        if (!audioToPlay.equals("X")) {
-            int resID = getResources().getIdentifier(audioToPlay, "raw", getPackageName());
-            MediaPlayer mp1 = MediaPlayer.create(this, resID);
-            mediaPlayerIsPlaying = true;
-            mp1.start();
-            mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp1) {
-                    mediaPlayerIsPlaying = false;
-                    if (repeatLocked) {
-                        setAllTilesClickable();
-                    }
-                    setOptionsRowClickable();
-                    mp1.release();
-                }
-            });
+    }
+
+    public void playActiveTileClip() {
+        if (tempSoundPoolSwitch){
+            playActiveTileClip1();
+        } else{
+            playActiveTileClip0();
         }
     }
-    public void playCorrectSoundThenRefClip() {
+
+    //JP: for SoundPool, for tile audio
+    public void playActiveTileClip1() {
+        LOGGER.info("SoundPool being used in playActiveTileClip");
+
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
+
+        String audioToPlay = null;
+        audioToPlay = tileList.get(tileList.returnPositionInAlphabet(refTile)).audioForTile;
+
+        //since "X" represents no audio file
+        if (!audioToPlay.equals("X")) {
+
+                String tileText = null;
+                tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
+                gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+                soundSequencer.postDelayed(new Runnable() {
+                    public void run() {
+                        if (repeatLocked) {
+                            setAllTilesClickable();
+                        }
+                        setOptionsRowClickable();
+                    }
+                }, 925); //JP: must use fixed number unless we make an array for tile durations
+            }
+        }
+
+    //JP: for Media Player; tile audio
+    public void playActiveTileClip0(){
+        LOGGER.info("mediaplayer being used in playActiveTileClip");
+
+        String audioToPlay = null;
+        audioToPlay = tileList.get(tileList.returnPositionInAlphabet(refTile)).audioForTile;
+
+        int resID = getResources().getIdentifier(audioToPlay, "raw", getPackageName());
+        MediaPlayer mp1 = MediaPlayer.create(this, resID);
+        mediaPlayerIsPlaying = true;
+        mp1.start();
+        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp1) {
+                mediaPlayerIsPlaying = false;
+                if (repeatLocked) {
+                    setAllTilesClickable();
+                }
+                setOptionsRowClickable();
+                mp1.reset(); //JP: this fixes "mediaplayer went away with unhandled events" issue
+                mp1.release();
+            }
+        });
+    }
+
+    public void playCorrectSoundThenActiveTileClip() {
+        LOGGER.info("remember: testing");
+        if (tempSoundPoolSwitch){
+            playCorrectSoundThenActiveTileClip1(); //SoundPool
+        } else{
+            playCorrectSoundThenActiveTileClip0(); //MediaPlayer
+        }
+    }
+
+    public void playCorrectSoundThenActiveTileClip1() { //JP: specifically for TILE audio; playCorrectSoundThenActiveWordClip is for WORDS
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+
+        LOGGER.info("SoundPool being used in final");
+        gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+
+        //JP: this delays word audio after correct sound audio so they don't overlap
+
+        soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                String tileText = null;
+                tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
+                gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 1, 0, 1.0f);
+            }
+        }, 925); //JP: having this fixed at 1200 should be fine since this is specifically for tile audio, NOT words
+
+        //JP: this delays the blue arrow becoming clickable too soon, so that the word sound must be repeated again
+        soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                if (repeatLocked) {
+                    setAllTilesClickable();
+                }
+                setOptionsRowClickable();
+            }
+        }, 1850); //JP: 1850 makes sure the arrow button stays unclickable for the duration of the correct sound
+        //AND for the duration of the tile audio repeated back
+    }
+
+    public void playCorrectSoundThenActiveTileClip0() {
+        //media player:
+        LOGGER.info("media player being used in final");
         MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
         mediaPlayerIsPlaying = true;
         mp2.start();
         mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp2) {
+                mp2.reset(); //JP: this fixes "mediaplayer went away with unhandled events" issue
                 mp2.release();
-                playActiveClip();
+                playActiveTileClip();
             }
         });
     }
@@ -559,6 +730,12 @@ public class Thailand extends GameActivity {
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }

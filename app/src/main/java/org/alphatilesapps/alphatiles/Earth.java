@@ -25,10 +25,11 @@ import java.util.logging.Logger;
 import static android.view.View.VISIBLE;
 
 import static org.alphatilesapps.alphatiles.Start.*;
-import static org.alphatilesapps.alphatiles.Settings.forceRTL;
+
 
 public class Earth extends AppCompatActivity {
     Context context;
+    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
     int points = 0;
 
@@ -92,7 +93,7 @@ public class Earth extends AppCompatActivity {
 
         setTextSizes();
 
-        if(forceRTL){
+        if(scriptDirection.compareTo("RTL") == 0){
             forceRTLIfSupported();
         }
         else{
