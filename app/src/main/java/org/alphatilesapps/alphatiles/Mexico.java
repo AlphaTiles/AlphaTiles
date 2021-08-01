@@ -96,6 +96,11 @@ public class Mexico extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         mexicoPoints = getIntent().getIntExtra("mexicoPoints", 0); // LM
+
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        mexicoPoints = prefs.getInt("storedMexicoPoints_level" + challengeLevel + "_player" + playerString, 0);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
 
@@ -118,8 +123,8 @@ public class Mexico extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(mexicoPoints));
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
@@ -413,7 +418,7 @@ public class Mexico extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedMexicoPoints_player" + playerString, mexicoPoints);
+            editor.putInt("storedMexicoPoints_level" + challengeLevel + "_player" + playerString, mexicoPoints);
             editor.apply();
 
             wordInLWC = memoryCollection.get(cardHitA)[0];

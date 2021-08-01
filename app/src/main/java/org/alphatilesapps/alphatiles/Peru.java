@@ -79,6 +79,11 @@ public class Peru extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         peruPoints = getIntent().getIntExtra("peruPoints", 0); // LM
+
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        peruPoints = prefs.getInt("storedPeruPoints_level" + challengeLevel + "_player" + playerString, 0);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         visibleTiles = TILE_BUTTONS.length;
@@ -88,8 +93,8 @@ public class Peru extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(peruPoints));
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
@@ -334,7 +339,7 @@ public class Peru extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedPeruPoints_player" + playerString, peruPoints);
+            editor.putInt("storedPeruPoints_level" + challengeLevel + "_player" + playerString, peruPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

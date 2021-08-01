@@ -92,6 +92,10 @@ public class Ecuador extends GameActivity {
         points = getIntent().getIntExtra("points", 0); // KP
         ecuadorPoints = getIntent().getIntExtra("ecuadorPoints", 0); // LM
 
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        ecuadorPoints = prefs.getInt("storedEcuadorPoints_level" + challengeLevel + "_player" + playerString, 0);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
 
         wordListArray = new ArrayList(); // KP
@@ -103,8 +107,8 @@ public class Ecuador extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(ecuadorPoints));
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
@@ -448,7 +452,7 @@ public class Ecuador extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedEcuadorPoints_player" + playerString, ecuadorPoints);
+            editor.putInt("storedEcuadorPoints_level" + challengeLevel + "_player" + playerString, ecuadorPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

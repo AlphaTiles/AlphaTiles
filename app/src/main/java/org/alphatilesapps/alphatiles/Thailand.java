@@ -106,6 +106,11 @@ public class Thailand extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0);
         thailandPoints = getIntent().getIntExtra("thailandPoints", 0);
+
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        thailandPoints = prefs.getInt("storedThailandPoints_level" + challengeLevel + "_player" + playerString, 0);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         visibleTiles = TILE_BUTTONS.length;
@@ -130,8 +135,8 @@ public class Thailand extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(thailandPoints));
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
@@ -514,7 +519,7 @@ public class Thailand extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedThailandPoints_player" + playerString, thailandPoints);
+            editor.putInt("storedThailandPoints_level" + challengeLevel + "_player" + playerString, thailandPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
