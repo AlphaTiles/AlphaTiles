@@ -894,7 +894,9 @@ public class Start extends AppCompatActivity
 
         }
 
-        public ArrayList<String[]> returnFourWords(String wordInLOP, String wordInLWC, String refTile, int challengeLevel, String refType, String choiceType) {
+        public ArrayList<String[]> returnFourWords(String wordInLOP, String wordInLWC, String refTile, int challengeLevel, String refType, String choiceType){
+
+        //}, float adjustmentCutoff) {
 
             ArrayList<String[]> fourChoices = new ArrayList();
             ArrayList<String[]> easyWords = new ArrayList();        // words that do not begin with same tile or with distractor tile
@@ -996,11 +998,36 @@ public class Start extends AppCompatActivity
             if (challengeLevel == 1) {
                 // use easy words
                 // ASSUMING that there will always be three words that do not start with refTile or distractor tiles
+                // since problematic tiles may not be included in distractor tiles for certain languages, always need to check using while loop
 
                 for (int i = 0; i < 3; i++) {
+                    //JP edits to fix c vs ch issue:
+                    if (refType.equals("TILE_UPPER") || refType.equals("TILE_LOWER")) { //conditions where c vs ch conflicts can occur
+                        String[] possibleWordArr;
+                        String possibleWord;
+                        String firstTile;
 
-                    fourChoices.add(easyWords.get(i));
+                        possibleWordArr = easyWords.get(i);
 
+                        possibleWord = possibleWordArr[1]; //should be LOP word
+                        parsedWordArrayFinal = Start.tileList.parseWord(possibleWord);
+                        firstTile = parsedWordArrayFinal.get(0);
+
+                        while ((Character.toLowerCase(firstTile.charAt(0)) == Character.toLowerCase(refTile.charAt(0))) && (firstTile.length() > refTile.length())
+                                || fourChoices.contains(possibleWordArr)) { //loops continues until a non-conflicting tile is chosen
+                            Random rand = new Random();
+                            int rand1 = rand.nextInt(easyWords.size());
+
+                            possibleWordArr = easyWords.get(rand1);
+                            possibleWord = possibleWordArr[1];
+                            parsedWordArrayFinal = Start.tileList.parseWord(possibleWord);
+                            firstTile = parsedWordArrayFinal.get(0);
+                        }
+
+                        fourChoices.add(possibleWordArr);
+                    } else{
+                        fourChoices.add(easyWords.get(i));
+                    }
                 }
 
             }
@@ -1009,18 +1036,50 @@ public class Start extends AppCompatActivity
                 // use moderate words and if the supply runs out use easy words
 
                 for (int i = 0; i < 3; i++) {
-                    if (moderateWords.size() > i) {
+                    //JP: edits to try to fix c vs ch issue;
+                    if (refType.equals("TILE_UPPER") || refType.equals("TILE_LOWER")) { //conditions where c vs ch conflicts can occur
+                        String[] possibleWordArr;
+                        String possibleWord;
+                        String firstTile;
+                        if (moderateWords.size() > i) {
+                            //first try to simply get a moderate word if there are enough moderate wordds
+                            possibleWordArr = moderateWords.get(i);
+                        }else {
+                            //if there are not enough moderate words go straight to trying a random easy word
+                            Random rand = new Random();
+                            int rand1 = rand.nextInt(easyWords.size());
 
-                        fourChoices.add(moderateWords.get(i));
+                            possibleWordArr = easyWords.get(rand1);
+                        }
+                        possibleWord = possibleWordArr[1]; //should be LOP word
+                        parsedWordArrayFinal = Start.tileList.parseWord(possibleWord);
+                        firstTile = parsedWordArrayFinal.get(0); //should be tile
 
-                    } else {
+                        //then test whether this possible word is problematic, and if so, replace it with a (different) random easy word.
+                        //the random easy word also needs to be tested, since some languages may have instances where tiles "c" and "ch" both exist
+                        //but one is not listed as a distractor tile of the other
+                        while ((Character.toLowerCase(firstTile.charAt(0)) == Character.toLowerCase(refTile.charAt(0))) && (firstTile.length() > refTile.length())) {
+                            Random rand = new Random();
+                            int rand1 = rand.nextInt(easyWords.size());
 
-                        fourChoices.add(easyWords.get(i - moderateWords.size()));
+                            possibleWordArr = easyWords.get(rand1);
+                            possibleWord = possibleWordArr[1];
+                            parsedWordArrayFinal = Start.tileList.parseWord(possibleWord);
+                            firstTile = parsedWordArrayFinal.get(0);
+                        }
 
+                        //after those tests, the possible word has been validated and can be added to the answer choices
+                        fourChoices.add(possibleWordArr);
+                    } //inner if
+                    else { //when ref is a word or picture
+                        if (moderateWords.size() > i) {
+                            fourChoices.add(moderateWords.get(i));
+                        } else {
+                            fourChoices.add(easyWords.get(i - moderateWords.size()));
+                        }
                     }
-                }
-
-            }
+                } //for loop
+            } //level
 
             if (challengeLevel == 3) {
                 // use hard words and if the supply runs out use moderate words and if the supply runs out use easy words
@@ -1261,16 +1320,20 @@ public class Start extends AppCompatActivity
 //            LOGGER.info("Remember: challengeLevelX = " + challengeLevelX);
             if (challengeLevelX == 1) {
                 // use random tiles
+                //JP TO-DO: NEED TO CHECK THAT RANDOM TILE IS NOT AN ISSUE
 
                 Random rand = new Random();
                 int rand1 = 0; // forces into while loop
                 int rand2 = 0; // forces into while loop
                 int rand3 = 0; // forces into while loop
-                String altTile = null;
+                String altTile = "";
 
                 while (rand1 == 0) {
                     rand1 = rand.nextInt(tileList.size());
-                    if (correctRow == rand1) {
+                    altTile = Start.tileList.get(rand1).baseTile;
+                    if (correctRow == rand1 || Character.toLowerCase(correctTile.charAt(0)) == Character.toLowerCase(altTile.charAt(0))) {
+                        //think through why this is always false
+                        //and fix condition to deal with upper and lower (convert test to lower)
                         rand1 = 0;
                     } else {
                         altTile = Start.tileList.get(rand1).baseTile;
@@ -1289,7 +1352,8 @@ public class Start extends AppCompatActivity
 
                 while (rand2 == 0) {
                     rand2 = rand.nextInt(tileList.size());
-                    if (correctRow == rand1 || correctRow == rand2 || rand1 == rand2) {
+                    altTile = Start.tileList.get(rand2).baseTile;
+                    if (correctRow == rand2 || rand1 == rand2 || Character.toLowerCase(correctTile.charAt(0)) == Character.toLowerCase(altTile.charAt(0))) {
                         rand2 = 0;
                     } else {
                         altTile = Start.tileList.get(rand2).baseTile;
@@ -1308,7 +1372,9 @@ public class Start extends AppCompatActivity
 
                 while (rand3 == 0) {
                     rand3 = rand.nextInt(tileList.size());
-                    if (correctRow == rand1 || correctRow == rand2 || correctRow == rand3 || rand1 == rand2 || rand1 == rand3 || rand2 == rand3) {
+                    altTile = Start.tileList.get(rand3).baseTile;
+                    if (correctRow == rand3 || rand1 == rand2 || rand1 == rand3 || rand2 == rand3
+                            || Character.toLowerCase(correctTile.charAt(0)) == Character.toLowerCase(altTile.charAt(0))) {
                         rand3 = 0;
                     } else {
                         altTile = Start.tileList.get(rand3).baseTile;
@@ -1325,13 +1391,9 @@ public class Start extends AppCompatActivity
 //                LOGGER.info("Remember: O4: tileEntry = " + Arrays.toString(tileEntry));
                 fourChoices.add(tileEntry);
 
-            } else {
-
-//                LOGGER.info("Remember: O5: skipped challengeLevel 1");
-
             }
 
-//            LOGGER.info("Remember: P");
+
             if (challengeLevelX == 2) {
                 // use distractor tiles
 
@@ -1340,11 +1402,45 @@ public class Start extends AppCompatActivity
 //                    LOGGER.info("Remember: P2");
                     if (choiceType.equals("TILE_LOWER")) {
                         partB = Start.tileList.get(correctRow).altTiles[i - 1];
+
                     }
 //                    LOGGER.info("Remember: P3");
                     if (choiceType.equals("TILE_UPPER")) {
                         partB = Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[i - 1])).upperTile;
                     }
+
+                    //JP approach 2:
+
+                    //while (replace) {
+
+                        if (partB.charAt(0) == correctTile.charAt(0)) {
+                            if (partB.length() <= correctTile.length()) {
+                                Random rand = new Random();
+                                int rand5 = rand.nextInt(tileList.size());
+                                if (choiceType.equals("TILE_UPPER")) {
+                                    partB = Start.tileList.get(rand5).upperTile;
+                                    while ((Character.toLowerCase(partB.charAt(0)) == Character.toLowerCase(correctTile.charAt(0))) ||
+                                            partB.equals(Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[0])).upperTile) ||
+                                            partB.equals(Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[0])).upperTile) ||
+                                            partB.equals(Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[0])).upperTile)) {
+                                        rand5 = rand.nextInt(tileList.size());
+                                        partB = Start.tileList.get(rand5).upperTile;
+                                    }
+                                } else if (choiceType.equals("TILE_LOWER")) {
+                                    partB = Start.tileList.get(rand5).baseTile;
+                                    while ((Character.toLowerCase(partB.charAt(0)) == Character.toLowerCase(correctTile.charAt(0))) ||
+                                        partB.equals(Start.tileList.get(correctRow).altTiles[0]) ||
+                                        partB.equals(Start.tileList.get(correctRow).altTiles[1]) ||
+                                        partB.equals(Start.tileList.get(correctRow).altTiles[2])) {
+                                            rand5 = rand.nextInt(tileList.size());
+                                            partB = Start.tileList.get(rand5).baseTile;
+                                    }
+                                }
+
+                            }
+                        }
+                    //}
+                    //
 //                    LOGGER.info("Remember: P4");
                     partA = Start.tileList.get(returnPositionInAlphabet(partB)).audioForTile;
 //                    LOGGER.info("Remember: P5");

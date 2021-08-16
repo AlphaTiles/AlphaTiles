@@ -1,20 +1,25 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 import java.util.logging.Logger;
-import android.os.Handler;
+
 import static android.graphics.Color.BLACK;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -172,7 +177,7 @@ public class Mexico extends GameActivity {
 
         }
 
-        LOGGER.info("Remember: pixelHeight (initial value) = " + pixelHeight);
+        //LOGGER.info("Remember: pixelHeight (initial value) = " + pixelHeight);
 
 
         // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit

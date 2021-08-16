@@ -101,8 +101,7 @@ public class Thailand extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        setContentView(R.layout.thailand);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+
 
         points = getIntent().getIntExtra("points", 0);
         thailandPoints = getIntent().getIntExtra("thailandPoints", 0);
@@ -123,6 +122,13 @@ public class Thailand extends GameActivity {
         challengeLevelThai = Integer.parseInt(clString.substring(0, 1));
         refType = TYPES[Integer.parseInt(clString.substring(1, 2)) - 1];
         choiceType = TYPES[Integer.parseInt(clString.substring(2, 3)) - 1];
+
+        if (choiceType.equals("WORD_TEXT")){
+            setContentView(R.layout.thailand2);
+        } else {
+            setContentView(R.layout.thailand);
+        }
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         setTitle(Start.localAppName + ": " + gameNumber);
 
@@ -174,12 +180,12 @@ public class Thailand extends GameActivity {
         float percentHeight;
 
         if(refType.equals("WORD_TEXT")) {
-            scalingRef = 0.29;
+            scalingRef = 0.35;
         } else {
             scalingRef = 0.45;
         }
         if(choiceType.equals("WORD_TEXT")) {
-            scalingChoices = 0.26;
+            scalingChoices = 0.45;
         } else {
             scalingChoices = 0.45;
         }
@@ -294,8 +300,9 @@ public class Thailand extends GameActivity {
                 refItem.setBackgroundColor(WHITE);
                 refItem.setTextColor(Color.parseColor("#000000")); // black
                 refItem.setText(wordInLOP);
-                float fontAdjustment = Float.parseFloat(Start.wordList.get(Start.wordList.returnPositionInWordList(wordInLWC)).adjustment);
-                int thisCardPixelHeight = (int) (pixelHeightRef * fontAdjustment);
+                //float fontAdjustment = Float.parseFloat(Start.wordList.get(Start.wordList.returnPositionInWordList(wordInLWC)).adjustment);
+                int thisCardPixelHeight = (int) (pixelHeightRef);
+                //* fontAdjustment);
                 refItem.setTextSize(TypedValue.COMPLEX_UNIT_PX, thisCardPixelHeight);
                 break;
             case "WORD_IMAGE":
@@ -319,6 +326,8 @@ public class Thailand extends GameActivity {
         LOGGER.info("Remember: Z");
         if (choiceType.equals("WORD_TEXT") || choiceType.equals("WORD_IMAGE")) {
                 fourChoices = Start.wordList.returnFourWords(wordInLOP, wordInLWC, refTile, challengeLevelThai, refType, choiceType);
+                //, (float) 0.4);
+                //so words with less than or equal to 0.4
             // challengeLevelThai 1 = pull words that begin with random tiles (not distractor, not same) for wrong choices
             // challengeLevelThai 2 = pull words that begin with distractor tiles (or if not random) for wrong choices
             // challengeLevelThai 3 = pull words that begin with same tile (as correct word) for wrong choices
@@ -344,10 +353,11 @@ public class Thailand extends GameActivity {
                     int choiceColorNo = Color.parseColor(choiceColorStr);
                     choiceButton.setBackgroundColor(choiceColorNo);
                     choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                    LOGGER.info("Remember: AB1: fourChoices.get(t)[1] = " + fourChoices.get(t)[1]);
+                    //LOGGER.info("Remember: AB1: fourChoices.get(t)[1] = " + fourChoices.get(t)[1]);
                     choiceButton.setText(fourChoices.get(t)[1]);
-                    float fontAdjustment = Float.parseFloat(Start.wordList.get(Start.wordList.returnPositionInWordList(fourChoices.get(t)[0])).adjustment);
-                    int thisCardPixelHeight = (int) (pixelHeightChoices * fontAdjustment);
+                    //float fontAdjustment = Float.parseFloat(Start.wordList.get(Start.wordList.returnPositionInWordList(fourChoices.get(t)[0])).adjustment);
+                    int thisCardPixelHeight = (int) (pixelHeightChoices);
+                            //* fontAdjustment);
                     choiceButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, thisCardPixelHeight);
                     LOGGER.info("Remember: AB2");
                 }
@@ -569,8 +579,8 @@ public class Thailand extends GameActivity {
         Random rand = new Random();
         int randomNum = rand.nextInt(Start.wordList.size());
 
-        String test = Start.wordList.get(70).localWord; //is local word the target language?
-        char test_char = test.charAt(0);
+        //ERASE String test = Start.wordList.get(70).localWord; //is local word the target language?
+        //char test_char = test.charAt(0);
         //if (test.charAt(0).equals())
 
         wordInLWC = Start.wordList.get(randomNum).nationalWord;
