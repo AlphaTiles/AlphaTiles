@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.Random;
 import java.util.logging.Logger;
@@ -29,6 +31,7 @@ public class Myanmar extends GameActivity {
     int higherClick = 0;
     int wordsCompleted = 0;
     int completionGoal = 0;
+    int myanmarPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -41,6 +44,34 @@ public class Myanmar extends GameActivity {
     protected int[] getTileButtons() {return TILE_BUTTONS;}
 
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("myanmar_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
+
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = R.id.myanmarCL;
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
+    }
 
     private static final int[] WORD_IMAGES = {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04, R.id.wordImage05, R.id.wordImage06, R.id.wordImage07
@@ -58,6 +89,12 @@ public class Myanmar extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0); // KP
+        myanmarPoints = getIntent().getIntExtra("myanmarPoints", 0); // LM
+
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        myanmarPoints = prefs.getInt("storedMyanmarPoints_level" + challengeLevel + "_player" + playerString, 0);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         visibleTiles = TILE_BUTTONS.length;
@@ -65,16 +102,20 @@ public class Myanmar extends GameActivity {
         setTitle(Start.localAppName + ": " + gameNumber);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(myanmarPoints));
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
         updateTrackers();
 
         setTextSizes();
+
+        if(getAudioInstructionsResID()==0){
+            centerGamesHomeImage();
+        }
 
         playAgain();
 
@@ -664,7 +705,8 @@ public class Myanmar extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points+=2;
-            pointsEarned.setText(String.valueOf(points));
+            myanmarPoints+=2;
+            pointsEarned.setText(String.valueOf(myanmarPoints));
 
 //       YOU NEED TO CHANGE THIS TO BE LIKE MEXICO WHERE TRACKERS INCREMENT PER BOARD, NOT PER INDIVIDUAL SELECTION
 //            trackerCount++;
@@ -673,6 +715,7 @@ public class Myanmar extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedMyanmarPoints_level" + challengeLevel + "_player" + playerString, myanmarPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
@@ -743,6 +786,12 @@ public class Myanmar extends GameActivity {
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }

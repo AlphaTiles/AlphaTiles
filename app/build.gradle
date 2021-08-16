@@ -1,14 +1,6 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('/Users/jade/Downloads/alphatileskeystore.keystore')
-            storePassword 'akzapotec13!'
-            keyPassword 'aazapotec13!'
-            keyAlias 'alphatileskeyalias'
-        }
-    }
     compileSdkVersion 30
     buildToolsVersion "30.0.0"
 
@@ -17,8 +9,8 @@ android {
         applicationId "org.alphatilesapps.alphatiles"
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 43
-        versionName "0.6.1"
+        versionCode 44
+        versionName "0.7.2"
         // API 14 = Ice Cream (4.0)
         // API 16 = Jelly Bean (4.1) - required for Firebase
         // API 21 = Lollipop (5.0) - required for correct display of special characters in TextViews without Grandroid, etc.
@@ -43,31 +35,14 @@ android {
         // and the plugin automatically assigns all the module's flavors to
         // that dimension.
 
-
-        rmyGaborH {
-            dimension "language"
-            applicationIdSuffix ".blue.rmyGaborH"
-            resValue "string", "app_name", "Té drábáráh!"
-        }
-
-
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
             resValue "string", "app_name", 'Mu′tsíin (me′phaa Xma′íín)'
         }
 
-        kayKamayura {
-            dimension "language"
-            applicationIdSuffix ".blue.kayKamayura"
-            resValue "string", "app_name", "Escreve em Kamaiurá"
-        }
-
-
     }
 }
-
-
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
@@ -76,4 +51,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
 }

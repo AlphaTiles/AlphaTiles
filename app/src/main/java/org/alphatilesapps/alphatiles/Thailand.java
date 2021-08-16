@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +21,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
-import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
+import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
@@ -45,6 +47,7 @@ public class Thailand extends GameActivity {
     int challengeLevelThai;
     int pixelHeightRef;
     int pixelHeightChoices;
+    int thailandPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
@@ -62,6 +65,34 @@ public class Thailand extends GameActivity {
 
     protected int[] getWordImages() {return null;}
 
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("thailand_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
+
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = R.id.thailandCL;
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
+    }
+
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger( Thailand.class.getName() );
@@ -73,6 +104,12 @@ public class Thailand extends GameActivity {
 
 
         points = getIntent().getIntExtra("points", 0);
+        thailandPoints = getIntent().getIntExtra("thailandPoints", 0);
+
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        thailandPoints = prefs.getInt("storedThailandPoints_level" + challengeLevel + "_player" + playerString, 0);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         visibleTiles = TILE_BUTTONS.length;
@@ -102,10 +139,10 @@ public class Thailand extends GameActivity {
         //try game 31
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(thailandPoints));
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
@@ -113,6 +150,10 @@ public class Thailand extends GameActivity {
 
         LOGGER.info("Remember: F");
         setTextSizes();
+
+        if(getAudioInstructionsResID()==0) {
+            centerGamesHomeImage();
+        }
 
         LOGGER.info("Remember: G");
         playAgain();
@@ -479,7 +520,8 @@ public class Thailand extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points+=1;
-            pointsEarned.setText(String.valueOf(points));
+            thailandPoints+=1;
+            pointsEarned.setText(String.valueOf(thailandPoints));
 
             trackerCount++;
             updateTrackers();
@@ -487,6 +529,7 @@ public class Thailand extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedThailandPoints_level" + challengeLevel + "_player" + playerString, thailandPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
@@ -699,6 +742,12 @@ public class Thailand extends GameActivity {
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }

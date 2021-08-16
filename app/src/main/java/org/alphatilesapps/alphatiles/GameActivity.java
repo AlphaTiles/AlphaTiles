@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
-import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
+import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
@@ -36,6 +36,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
 	int points;
+	int brazilPoints, colombiaPoints, ecuadorPoints, georgiaPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
 	int challengeLevel = -1;
 	int playerNumber = -1;
 	int gameNumber = 0;
@@ -59,6 +60,8 @@ public abstract class GameActivity extends AppCompatActivity {
 	
 	protected abstract int[] getTileButtons();	
 	protected abstract int[] getWordImages();
+	protected abstract int getAudioInstructionsResID();
+	protected abstract void centerGamesHomeImage();
 
 	@Override
 	protected void onCreate(Bundle state) {
@@ -67,6 +70,15 @@ public abstract class GameActivity extends AppCompatActivity {
 		soundSequencer = new Handler(Looper.getMainLooper());	
 
 		points = getIntent().getIntExtra("points", 0);
+		brazilPoints = getIntent().getIntExtra("brazilPoints", 0);
+		colombiaPoints = getIntent().getIntExtra("colombiaPoints", 0);
+		ecuadorPoints = getIntent().getIntExtra("ecuadorPoints", 0);
+		georgiaPoints = getIntent().getIntExtra("georgiaPoints", 0);
+		mexicoPoints = getIntent().getIntExtra("mexicoPoints", 0);
+		myanmarPoints = getIntent().getIntExtra("myanmarPoints", 0);
+		peruPoints = getIntent().getIntExtra("peruPoints", 0);
+		thailandPoints = getIntent().getIntExtra("brazilPoints", 0);
+		unitedStatesPoints = getIntent().getIntExtra("brazilPoints", 0);
 		playerNumber = getIntent().getIntExtra("playerNumber", -1);
 		challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
 		gameNumber = getIntent().getIntExtra("gameNumber", 0);
@@ -175,7 +187,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	}	
 	protected void setOptionsRowUnclickable()	
 	{	
-		ImageView repeatImage = findViewById(R.id.repeatImage);	
+		ImageView repeatImage = findViewById(R.id.repeatImage);
 		ImageView wordImage = findViewById(R.id.wordImage);	
 		repeatImage.setBackgroundResource(0);	
 		repeatImage.setImageResource(R.drawable.zz_forward_inactive);	
@@ -191,7 +203,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	}	
 	protected void setOptionsRowClickable()	
 	{	
-		ImageView repeatImage = findViewById(R.id.repeatImage);	
+		ImageView repeatImage = findViewById(R.id.repeatImage);
 		ImageView wordImage = findViewById(R.id.wordImage);	
 		ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);	
 		repeatImage.setBackgroundResource(0);	
@@ -318,7 +330,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	protected void playIncorrectSound1()	
 	{	
 		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();	
+		setOptionsRowUnclickable();
 		gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
 		setAllTilesClickable();	
 		setOptionsRowClickable();	
@@ -377,7 +389,34 @@ public abstract class GameActivity extends AppCompatActivity {
 				mp3.release();	
 			}	
 		});	
-	}	
+	}
+	public void playAudioInstructions(View view){
+		/*setAllTilesUnclickable();
+		setOptionsRowUnclickable();
+		int instructionsSoundID = gameSounds.load(context, getAudioInstructionsResID(), 2);
+		gameSounds.play(instructionsSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+		setAllTilesClickable();
+		setOptionsRowClickable();*/
+
+		setAllTilesUnclickable();
+		setOptionsRowUnclickable();
+		mediaPlayerIsPlaying = true;
+		MediaPlayer mp3 = MediaPlayer.create(this, getAudioInstructionsResID());
+		mp3.start();
+		mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+		{
+			@Override
+			public void onCompletion(MediaPlayer mp3)
+			{
+				mediaPlayerIsPlaying = false;
+				setAllTilesClickable();
+				setOptionsRowClickable();
+				mp3.release();
+			}
+		});
+
+	}
+
 	protected void mpCompletion(MediaPlayer mp, boolean isFinal)	
 	{	
 		if (isFinal)	

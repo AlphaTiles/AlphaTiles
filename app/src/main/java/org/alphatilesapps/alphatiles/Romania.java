@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -10,8 +11,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
+
+import static org.alphatilesapps.alphatiles.Start.settingsList;
 
 public class Romania extends GameActivity {
 
@@ -31,11 +37,39 @@ public class Romania extends GameActivity {
     int wordTokenNoGroupThree = 0; // Group Three = words containing the active tile anywhere (initial and/or non-initial)
     String firstAlphabetTile;
 
-    ArrayList<String> settingsList;
+    Boolean differentiateTypes;
 
     protected int[] getTileButtons() {return null;}
 
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("romania_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (Resources.NotFoundException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
+
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = R.id.romaniaCL;
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
+    }
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -75,7 +109,19 @@ public class Romania extends GameActivity {
 
         pointsEarned.setText(String.valueOf(points));
 
-        firstAlphabetTile = Start.tileList.get(0).baseTile; // KP
+        String differentiateTypesSetting = Start.settingsList.find("Differentiates types of multitype symbols");
+        if(differentiateTypesSetting.compareTo("") != 0){
+            differentiateTypes = Boolean.parseBoolean(differentiateTypesSetting);
+
+            if(differentiateTypes) {
+                firstAlphabetTile = Start.tileListWithMultipleTypes.get(0); // LM
+            }
+        }
+        else{
+            differentiateTypes = false;
+            firstAlphabetTile = Start.tileList.get(0).baseTile; // KP
+        }
+
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String startingAlphabetTile = prefs.getString("lastActiveTileGame001_player" + playerString, firstAlphabetTile);
@@ -92,6 +138,10 @@ public class Romania extends GameActivity {
         setUpBasedOnGameTile(activeTile);
 
         setTextSizes();
+
+        if(getAudioInstructionsResID()==0){
+            centerGamesHomeImage();
+        }
 
     }
 
@@ -179,7 +229,11 @@ public class Romania extends GameActivity {
         }
 
         TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
-        gameTile.setText(activeTileString);
+        String tileText = activeTileString;
+        if(activeTileString.endsWith("B") || activeTileString.endsWith("C")){
+            tileText = activeTileString.substring(0, activeTileString.length() -1);
+        }
+        gameTile.setText(tileText);
 
         TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
         magTile.setText(String.valueOf(myMagCount));
@@ -284,12 +338,23 @@ public class Romania extends GameActivity {
     public void goToTileOnTheRight(View View) {
         directionIsForward = !forceRTL;
         TextView tileBox = (TextView) findViewById(R.id.tileBoxTextView);
-        String oldTile = tileBox.getText().toString();
-        if(forceRTL) {
-            activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
+        //String oldTile = tileBox.getText().toString();
+        String oldTile = activeTile;
+        if(forceRTL) {//RTL layout
+            if(differentiateTypes){
+                activeTile = Start.tileListWithMultipleTypes.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
+            }
+            else {
+                activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
+            }
         }
-        else{
-            activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
+        else{//LTR layout
+            if(differentiateTypes){
+                activeTile = Start.tileListWithMultipleTypes.returnNextAlphabetTileDifferentiateTypes(oldTile);
+            }
+            else {
+                activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
+            }
         }
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
@@ -304,12 +369,23 @@ public class Romania extends GameActivity {
     public void goToTileOnTheLeft(View View) {
         directionIsForward = forceRTL;
         TextView tileBox = (TextView) findViewById(R.id.tileBoxTextView);
-        String oldTile = tileBox.getText().toString();
-        if(forceRTL) {
-            activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
+        //String oldTile = tileBox.getText().toString();
+        String oldTile = activeTile;
+        if(forceRTL) {//RTL layout
+            if(differentiateTypes){
+                activeTile = Start.tileListWithMultipleTypes.returnNextAlphabetTileDifferentiateTypes(oldTile);
+            }
+            else {
+                activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
+            }
         }
-        else{
-            activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
+        else{//LTR layout
+            if(differentiateTypes){
+                activeTile = Start.tileListWithMultipleTypes.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
+            }
+            else {
+                activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
+            }
         }
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
@@ -459,6 +535,12 @@ public class Romania extends GameActivity {
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }
