@@ -84,7 +84,12 @@ public class Thailand extends GameActivity {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
-        int gameID = R.id.thailandCL;
+        int gameID;
+        if (choiceType.equals("WORD_TEXT")) {
+            gameID = R.id.thailand2;
+        }else{
+            gameID = R.id.thailandCL;
+        }
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
@@ -180,7 +185,7 @@ public class Thailand extends GameActivity {
         float percentHeight;
 
         if(refType.equals("WORD_TEXT")) {
-            scalingRef = 0.35;
+            scalingRef = 0.30;
         } else {
             scalingRef = 0.45;
         }
@@ -300,9 +305,8 @@ public class Thailand extends GameActivity {
                 refItem.setBackgroundColor(WHITE);
                 refItem.setTextColor(Color.parseColor("#000000")); // black
                 refItem.setText(wordInLOP);
-                //float fontAdjustment = Float.parseFloat(Start.wordList.get(Start.wordList.returnPositionInWordList(wordInLWC)).adjustment);
-                int thisCardPixelHeight = (int) (pixelHeightRef);
-                //* fontAdjustment);
+                float fontAdjustment = Float.parseFloat(Start.wordList.get(Start.wordList.returnPositionInWordList(wordInLWC)).adjustment);
+                int thisCardPixelHeight = (int) (pixelHeightRef * fontAdjustment);
                 refItem.setTextSize(TypedValue.COMPLEX_UNIT_PX, thisCardPixelHeight);
                 break;
             case "WORD_IMAGE":
