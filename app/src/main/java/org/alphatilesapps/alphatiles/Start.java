@@ -1,8 +1,5 @@
 package org.alphatilesapps.alphatiles;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -13,12 +10,14 @@ import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Bundle;
 
-import java.lang.reflect.Array;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;   // KP
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;   // KP
+import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -1002,7 +1001,7 @@ public class Start extends AppCompatActivity
 
                 for (int i = 0; i < 3; i++) {
                     //JP edits to fix c vs ch issue:
-                    if (refType.equals("TILE_UPPER") || refType.equals("TILE_LOWER")) { //conditions where c vs ch conflicts can occur
+                    if (refType.equals("TILE_UPPER") || refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO")) { //conditions where c vs ch conflicts can occur
                         String[] possibleWordArr;
                         String possibleWord;
                         String firstTile;
@@ -1037,7 +1036,7 @@ public class Start extends AppCompatActivity
 
                 for (int i = 0; i < 3; i++) {
                     //JP: edits to try to fix c vs ch issue;
-                    if (refType.equals("TILE_UPPER") || refType.equals("TILE_LOWER")) { //conditions where c vs ch conflicts can occur
+                    if (refType.equals("TILE_UPPER") || refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO")) { //conditions where c vs ch conflicts can occur
                         String[] possibleWordArr;
                         String possibleWord;
                         String firstTile;
