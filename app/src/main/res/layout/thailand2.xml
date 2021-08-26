@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/peruCL"
+    android:id="@+id/thailand2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".Peru">
+    tools:context=".Thailand">
 
     <ImageView
         android:id="@+id/tracker01"
@@ -151,26 +151,30 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
-    <ImageView
-        android:id="@+id/wordImage"
+    <TextView
+        android:id="@+id/referenceItem"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="clickPicHearAudio"
+        android:background="#E91E63"
+        android:gravity="center"
+        android:onClick="onRefClick"
+        android:tag="0"
+        android:text="@string/gameTileInFocus"
+        android:textColor="#FFFFFF"
+        android:textSize="120sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
-        android:contentDescription="@string/activeWordPicture"
-        app:srcCompat="@drawable/zz_alphatileslogo" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
 
     <TextView
-        android:id="@+id/word1"
+        android:id="@+id/choice01"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#9C27B0"
         android:gravity="center"
-        android:onClick="onWordClick"
+        android:onClick="onChoiceClick"
         android:tag="1"
         android:text="@string/wordChoice01"
         android:textColor="#FFFFFF"
@@ -181,12 +185,12 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
 
     <TextView
-        android:id="@+id/word2"
+        android:id="@+id/choice02"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#2196F3"
         android:gravity="center"
-        android:onClick="onWordClick"
+        android:onClick="onChoiceClick"
         android:tag="2"
         android:text="@string/wordChoice02"
         android:textColor="#FFFFFF"
@@ -197,12 +201,12 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
 
     <TextView
-        android:id="@+id/word3"
+        android:id="@+id/choice03"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#F44336"
         android:gravity="center"
-        android:onClick="onWordClick"
+        android:onClick="onChoiceClick"
         android:tag="3"
         android:text="@string/wordChoice03"
         android:textColor="#FFFFFF"
@@ -213,12 +217,12 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH7" />
 
     <TextView
-        android:id="@+id/word4"
+        android:id="@+id/choice04"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#4CAF50"
         android:gravity="center"
-        android:onClick="onWordClick"
+        android:onClick="onChoiceClick"
         android:tag="4"
         android:text="@string/wordChoice04"
         android:textColor="#FFFFFF"

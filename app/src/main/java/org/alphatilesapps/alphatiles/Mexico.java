@@ -1,20 +1,25 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 import java.util.logging.Logger;
-import android.os.Handler;
+
 import static android.graphics.Color.BLACK;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -98,6 +103,11 @@ public class Mexico extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         mexicoPoints = getIntent().getIntExtra("mexicoPoints", 0); // LM
+
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        mexicoPoints = prefs.getInt("storedMexicoPoints_level" + challengeLevel + "_player" + playerString, 0);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
 
@@ -120,8 +130,8 @@ public class Mexico extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(mexicoPoints));
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
@@ -169,7 +179,7 @@ public class Mexico extends GameActivity {
 
         }
 
-        LOGGER.info("Remember: pixelHeight (initial value) = " + pixelHeight);
+        //LOGGER.info("Remember: pixelHeight (initial value) = " + pixelHeight);
 
 
         // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
@@ -415,7 +425,7 @@ public class Mexico extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedMexicoPoints_player" + playerString, mexicoPoints);
+            editor.putInt("storedMexicoPoints_level" + challengeLevel + "_player" + playerString, mexicoPoints);
             editor.apply();
 
             wordInLWC = memoryCollection.get(cardHitA)[0];

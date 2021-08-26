@@ -36,6 +36,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
 	int points;
+	int brazilPoints, colombiaPoints, ecuadorPoints, georgiaPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
 	int challengeLevel = -1;
 	int playerNumber = -1;
 	int gameNumber = 0;
@@ -69,6 +70,15 @@ public abstract class GameActivity extends AppCompatActivity {
 		soundSequencer = new Handler(Looper.getMainLooper());	
 
 		points = getIntent().getIntExtra("points", 0);
+		brazilPoints = getIntent().getIntExtra("brazilPoints", 0);
+		colombiaPoints = getIntent().getIntExtra("colombiaPoints", 0);
+		ecuadorPoints = getIntent().getIntExtra("ecuadorPoints", 0);
+		georgiaPoints = getIntent().getIntExtra("georgiaPoints", 0);
+		mexicoPoints = getIntent().getIntExtra("mexicoPoints", 0);
+		myanmarPoints = getIntent().getIntExtra("myanmarPoints", 0);
+		peruPoints = getIntent().getIntExtra("peruPoints", 0);
+		thailandPoints = getIntent().getIntExtra("brazilPoints", 0);
+		unitedStatesPoints = getIntent().getIntExtra("brazilPoints", 0);
 		playerNumber = getIntent().getIntExtra("playerNumber", -1);
 		challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
 		gameNumber = getIntent().getIntExtra("gameNumber", 0);

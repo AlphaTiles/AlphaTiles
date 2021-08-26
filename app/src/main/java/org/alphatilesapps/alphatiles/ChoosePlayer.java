@@ -74,7 +74,7 @@ public class ChoosePlayer extends AppCompatActivity
 
 	private static final Logger LOGGER = Logger.getLogger(ChoosePlayer.class.getName());
 
-	ConstraintLayout startCL;
+	ConstraintLayout choosePlayerCL;
 
 	public static SoundPool gameSounds;
 	public static int correctSoundID;
@@ -98,15 +98,15 @@ public class ChoosePlayer extends AppCompatActivity
 
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
-		startCL = findViewById(R.id.startCL);
+		choosePlayerCL = findViewById(R.id.choosePlayerCL);
 
 		// populate arrays from what is actually in the layout
 		avatarIdList = new ArrayList();
 		avatarJpgList = new ArrayList();
 
-		for (int j = 0; j < startCL.getChildCount(); j++)
+		for (int j = 0; j < choosePlayerCL.getChildCount(); j++)
 		{
-			View child = startCL.getChildAt(j);
+			View child = choosePlayerCL.getChildAt(j);
 			if (child instanceof ImageView && child.getTag() != null)
 			{
 				avatarIdList.add(child.getId());

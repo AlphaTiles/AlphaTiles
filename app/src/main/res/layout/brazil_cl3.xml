@@ -441,7 +441,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         android:contentDescription="@string/pointsImage"
-        app:srcCompat="@drawable/zz_pointsscored" />
+        app:srcCompat="@drawable/zz_pointsscoredthisgame" />
 
     <TextView
         android:id="@+id/pointsTextView"
