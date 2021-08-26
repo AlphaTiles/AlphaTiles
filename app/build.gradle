@@ -9,8 +9,9 @@ android {
         applicationId "org.alphatilesapps.alphatiles"
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 45
-        versionName "0.7.2.1"
+        versionCode 46
+        versionName "0.7.2.2"
+
         // API 14 = Ice Cream (4.0)
         // API 16 = Jelly Bean (4.1) - required for Firebase
         // API 21 = Lollipop (5.0) - required for correct display of special characters in TextViews without Grandroid, etc.
@@ -40,6 +41,8 @@ android {
             applicationIdSuffix ".blue.tpxTeocuitlapa"
             resValue "string", "app_name", 'Mu′tsíin (me′phaa Xma′íín)'
         }
+
+
 
     }
 }
