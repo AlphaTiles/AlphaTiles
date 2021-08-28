@@ -27,11 +27,19 @@ import java.util.logging.Logger;
 //Challenge Level 5: CONSONANTS: Pick from correct tile and its distractor trio
 //Challenge Level 6: CONSONANTS: Pick from all consonant tiles (up to a max of 15)
 
+//AH
+//Challenge Levels 7 through 12: same as 1 through 6 but always the 3rd slot in focus if Left(wordInLOP, 1) = "n" else 1st slot in focus
+//This is a special adaptation for klv in which 87% of nouns begin with an nV- prefix (and so makes the Georgia game a poor fit)
+//Challenge Levels listed as 7 through 12 in aa_games.txt and then converted in onCreate to 1 through 6 (and klvAdaptation set to true)
+
 public class Brazil extends GameActivity {
 
     Start.TileList sortableTilesArray; // KP
     int visibleTiles;
     String correctTile = "";
+
+    boolean klvAdaptation = false;
+    int klvSlot = 1; // For most words, the nV- prefix is slot 0 and the next tile is slot 1
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -54,11 +62,20 @@ public class Brazil extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        LOGGER.info("Remember APR 21 21 # 0.0");
+        LOGGER.info("Remember challengeLevel = " + challengeLevel);
+        if (challengeLevel > 6) {
+            challengeLevel = challengeLevel - 6;
+            klvAdaptation = true;
+        }
+        LOGGER.info("Remember APR 21 21 # 0.1");
+        LOGGER.info("Remember challengeLevel = " + challengeLevel);
         if (challengeLevel == 3 || challengeLevel == 6) {
             setContentView(R.layout.brazil_cl3);
         } else {
             setContentView(R.layout.brazil_cl1);
         }
+        LOGGER.info("Remember APR 21 21 # 0.2");
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
 //        LOGGER.info("Remember APR 21 21 # 1");
@@ -302,6 +319,21 @@ public class Brazil extends GameActivity {
                 }
         }
 
+        LOGGER.info("Remember challengeLevel = " + challengeLevel);
+        LOGGER.info("Remember klvAdaptation = " + klvAdaptation);
+        LOGGER.info("Remember parsedWordArrayFinal.get(klvSlot) = " + parsedWordArrayFinal.get(klvSlot));
+        LOGGER.info("Remember CONSONANTS.contains(parsedWordArrayFinal.get(klvSlot)) = " + CONSONANTS.contains(parsedWordArrayFinal.get(klvSlot)));
+        LOGGER.info("Remember VOWELS.contains(parsedWordArrayFinal.get(klvSlot)) = " + VOWELS.contains(parsedWordArrayFinal.get(klvSlot)));
+
+        if(challengeLevel < 4 && klvAdaptation && CONSONANTS.contains(parsedWordArrayFinal.get(klvSlot))) {
+            proceed = false;
+        }
+
+        if(challengeLevel > 3 && klvAdaptation && VOWELS.contains(parsedWordArrayFinal.get(klvSlot))) {
+            proceed = false;
+        }
+
+
         if (!proceed) { // some languages (e.g. skr) have words without vowels (as defined by game tiles), so we filter out those words
             chooseWord();
         }
@@ -324,7 +356,11 @@ public class Brazil extends GameActivity {
 
         while (repeat && counter < 200) {
             counter++;
-            index = rand.nextInt((max - min) + 1) + min; // 200 chances to randomly draw a functional letter (e.g. a "V" if looking for "V"
+            if (!klvAdaptation) {
+                index = rand.nextInt((max - min) + 1) + min; // 200 chances to randomly draw a functional letter (e.g. a "V" if looking for "V"
+            } else {
+                index = klvSlot;
+            }
             correctTile = parsedWordArrayFinal.get(index);
             if (MULTIFUNCTIONS.contains(correctTile)) {
                 instanceType = Start.tileList.getInstanceTypeForMixedTile(index, wordInLWC);
