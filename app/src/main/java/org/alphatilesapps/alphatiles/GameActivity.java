@@ -1,35 +1,42 @@
 package org.alphatilesapps.alphatiles;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;	
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;	
+import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import static org.alphatilesapps.alphatiles.Start.*;	
-import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
-import static org.alphatilesapps.alphatiles.Settings.tempSoundPoolSwitch;
-import static org.alphatilesapps.alphatiles.Settings.forceRTL;
+import java.util.ArrayList;
 
-import android.annotation.TargetApi;
-import android.os.Build;
+import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
+import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
+import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
+import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
+import static org.alphatilesapps.alphatiles.Start.correctSoundID;
+import static org.alphatilesapps.alphatiles.Start.gameSounds;
+import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
+import static org.alphatilesapps.alphatiles.Start.speechDurations;
+import static org.alphatilesapps.alphatiles.Start.speechIDs;
+
 
 public abstract class GameActivity extends AppCompatActivity {
 
 	// KP, Oct 2020
 
 	Context context;
+	String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
 	int points;
+	int brazilPoints, colombiaPoints, ecuadorPoints, georgiaPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
 	int challengeLevel = -1;
 	int playerNumber = -1;
 	int gameNumber = 0;
@@ -53,6 +60,8 @@ public abstract class GameActivity extends AppCompatActivity {
 	
 	protected abstract int[] getTileButtons();	
 	protected abstract int[] getWordImages();
+	protected abstract int getAudioInstructionsResID();
+	protected abstract void centerGamesHomeImage();
 
 	@Override
 	protected void onCreate(Bundle state) {
@@ -61,13 +70,22 @@ public abstract class GameActivity extends AppCompatActivity {
 		soundSequencer = new Handler(Looper.getMainLooper());	
 
 		points = getIntent().getIntExtra("points", 0);
+		brazilPoints = getIntent().getIntExtra("brazilPoints", 0);
+		colombiaPoints = getIntent().getIntExtra("colombiaPoints", 0);
+		ecuadorPoints = getIntent().getIntExtra("ecuadorPoints", 0);
+		georgiaPoints = getIntent().getIntExtra("georgiaPoints", 0);
+		mexicoPoints = getIntent().getIntExtra("mexicoPoints", 0);
+		myanmarPoints = getIntent().getIntExtra("myanmarPoints", 0);
+		peruPoints = getIntent().getIntExtra("peruPoints", 0);
+		thailandPoints = getIntent().getIntExtra("brazilPoints", 0);
+		unitedStatesPoints = getIntent().getIntExtra("brazilPoints", 0);
 		playerNumber = getIntent().getIntExtra("playerNumber", -1);
 		challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
 		gameNumber = getIntent().getIntExtra("gameNumber", 0);
 		
 		className = getClass().getName();
 
-		if(forceRTL){
+		if(scriptDirection.compareTo("RTL") == 0){
 			forceRTLIfSupported();
 		}
 		else{
@@ -169,7 +187,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	}	
 	protected void setOptionsRowUnclickable()	
 	{	
-		ImageView repeatImage = findViewById(R.id.repeatImage);	
+		ImageView repeatImage = findViewById(R.id.repeatImage);
 		ImageView wordImage = findViewById(R.id.wordImage);	
 		repeatImage.setBackgroundResource(0);	
 		repeatImage.setImageResource(R.drawable.zz_forward_inactive);	
@@ -185,7 +203,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	}	
 	protected void setOptionsRowClickable()	
 	{	
-		ImageView repeatImage = findViewById(R.id.repeatImage);	
+		ImageView repeatImage = findViewById(R.id.repeatImage);
 		ImageView wordImage = findViewById(R.id.wordImage);	
 		ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);	
 		repeatImage.setBackgroundResource(0);	
@@ -208,9 +226,9 @@ public abstract class GameActivity extends AppCompatActivity {
 	protected void playActiveWordClip(final boolean playFinalSound)	
 	{	
 		if (tempSoundPoolSwitch)	
-			playActiveWordClip1(playFinalSound);	
+			playActiveWordClip1(playFinalSound);	//SoundPool
 		else	
-			playActiveWordClip0(playFinalSound);	
+			playActiveWordClip0(playFinalSound);	//MediaPlayer
 	}	
 	protected void playActiveWordClip1(final boolean playFinalSound)	
 	{	
@@ -237,7 +255,7 @@ public abstract class GameActivity extends AppCompatActivity {
 				{	
 					if (repeatLocked)	
 					{	
-						setAllTilesClickable();	
+						setAllTilesClickable();
 					}	
 					setOptionsRowClickable();	
 				}	
@@ -296,6 +314,7 @@ public abstract class GameActivity extends AppCompatActivity {
 			@Override	
 			public void onCompletion(MediaPlayer mp2)	
 			{
+				mp2.reset(); //JP: fixed "mediaplayer went away with unhandled events" issue
 				mp2.release();	
 				playActiveWordClip(playFinalSound);	
 			}	
@@ -311,7 +330,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	protected void playIncorrectSound1()	
 	{	
 		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();	
+		setOptionsRowUnclickable();
 		gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
 		setAllTilesClickable();	
 		setOptionsRowClickable();	
@@ -330,7 +349,8 @@ public abstract class GameActivity extends AppCompatActivity {
 			{	
 				mediaPlayerIsPlaying = false;	
 				setAllTilesClickable();	
-				setOptionsRowClickable();	
+				setOptionsRowClickable();
+				mp3.reset(); //JP
 				mp3.release();	
 			}	
 		});	
@@ -364,11 +384,39 @@ public abstract class GameActivity extends AppCompatActivity {
 			{	
 				mediaPlayerIsPlaying = false;	
 				setAllTilesClickable();	
-				setOptionsRowClickable();	
+				setOptionsRowClickable();
+				mp3.reset(); //JP
 				mp3.release();	
 			}	
 		});	
-	}	
+	}
+	public void playAudioInstructions(View view){
+		/*setAllTilesUnclickable();
+		setOptionsRowUnclickable();
+		int instructionsSoundID = gameSounds.load(context, getAudioInstructionsResID(), 2);
+		gameSounds.play(instructionsSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+		setAllTilesClickable();
+		setOptionsRowClickable();*/
+
+		setAllTilesUnclickable();
+		setOptionsRowUnclickable();
+		mediaPlayerIsPlaying = true;
+		MediaPlayer mp3 = MediaPlayer.create(this, getAudioInstructionsResID());
+		mp3.start();
+		mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+		{
+			@Override
+			public void onCompletion(MediaPlayer mp3)
+			{
+				mediaPlayerIsPlaying = false;
+				setAllTilesClickable();
+				setOptionsRowClickable();
+				mp3.release();
+			}
+		});
+
+	}
+
 	protected void mpCompletion(MediaPlayer mp, boolean isFinal)	
 	{	
 		if (isFinal)	
@@ -390,7 +438,8 @@ public abstract class GameActivity extends AppCompatActivity {
 			{	
 				setAllTilesClickable();	
 			}	
-			setOptionsRowClickable();	
+			setOptionsRowClickable();
+			mp.reset(); //JP
 			mp.release();	
 		}
 

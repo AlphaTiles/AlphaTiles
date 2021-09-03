@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -16,6 +17,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -31,6 +33,10 @@ public class Ecuador extends GameActivity {
 
     int[][] boxCoordinates;   // Will be 8 boxes, defined by 4 parameters each: x1, y1, x2, y2
     int justClickedWord = 0;
+    String lastWord = "";
+    String secondToLastWord = "";
+    String thirdToLastWord = "";
+    int ecuadorPoints;
     // # 1 memoryCollection[LWC word, e.g. Spanish]
     // # 2 [LOP word, e.g. Me'phaa]
     // # 3 [state: "TEXT" or "IMAGE"]
@@ -44,6 +50,34 @@ public class Ecuador extends GameActivity {
 
     protected int[] getWordImages() {return null;}
 
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = R.id.ecuadorCL;
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
+    }
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("ecuador_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
+
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger(Ecuador.class.getName());
@@ -56,6 +90,12 @@ public class Ecuador extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0); // KP
+        ecuadorPoints = getIntent().getIntExtra("ecuadorPoints", 0); // LM
+
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        ecuadorPoints = prefs.getInt("storedEcuadorPoints_level" + challengeLevel + "_player" + playerString, 0);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
 
         wordListArray = new ArrayList(); // KP
@@ -65,14 +105,18 @@ public class Ecuador extends GameActivity {
         setTitle(Start.localAppName + ": " + gameNumber);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(ecuadorPoints));
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
         updateTrackers();
+
+        if(getAudioInstructionsResID()==0){
+            centerGamesHomeImage();
+        }
 
         playAgain();
 
@@ -301,13 +345,31 @@ public class Ecuador extends GameActivity {
     }
 
     public void setWords() {
-        Random rand = new Random();
-        int min = 0;
-        int max = TILE_BUTTONS.length - 1;
-        int rightWordIndex = rand.nextInt((max - min) + 1) + min;
+        Boolean freshWord = false;
+        int rightWordIndex = -1;
+
+        while(!freshWord) {
+            Random rand = new Random();
+            int min = 0;
+            int max = TILE_BUTTONS.length - 1;
+            rightWordIndex = rand.nextInt((max - min) + 1) + min;
+
+            wordInLOP = wordListArray.get(rightWordIndex)[1];
+            wordInLWC = wordListArray.get(rightWordIndex)[0];
+
+            //If this word isn't one of the 3 previously tested words, we're good // LM
+            if(wordInLWC.compareTo(lastWord)!=0
+                    && wordInLWC.compareTo(secondToLastWord)!=0
+                    && wordInLWC.compareTo(thirdToLastWord)!=0){
+                freshWord = true;
+                thirdToLastWord = secondToLastWord;
+                secondToLastWord = lastWord;
+                lastWord = wordInLWC;
+            }
+
+        } //generates a new word if it got one of the last three tested words // LM
+
         TextView rightWordTile = findViewById(R.id.activeWordTextView);
-        wordInLOP = wordListArray.get(rightWordIndex)[1];
-        wordInLWC = wordListArray.get(rightWordIndex)[0];
         rightWordTile.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
 
         ImageView image = (ImageView) findViewById(R.id.wordImage);
@@ -381,7 +443,8 @@ public class Ecuador extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points+=2;
-            pointsEarned.setText(String.valueOf(points));
+            ecuadorPoints+=2;
+            pointsEarned.setText(String.valueOf(ecuadorPoints));
 
             trackerCount++;
             updateTrackers();
@@ -389,6 +452,7 @@ public class Ecuador extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedEcuadorPoints_level" + challengeLevel + "_player" + playerString, ecuadorPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
@@ -424,6 +488,12 @@ public class Ecuador extends GameActivity {
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }

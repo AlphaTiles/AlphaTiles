@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -9,7 +10,9 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +24,10 @@ import java.util.logging.Logger;
 public class Peru extends GameActivity {
 
     String gameIDString;
+    String lastWord = "";
+    String secondToLastWord = "";
+    String thirdToLastWord = "";
+    int peruPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
@@ -29,6 +36,34 @@ public class Peru extends GameActivity {
     protected int[] getTileButtons() {return TILE_BUTTONS;}
 
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("peru_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
+
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = R.id.peruCL;
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
+    }
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
@@ -42,6 +77,12 @@ public class Peru extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0); // KP
+        peruPoints = getIntent().getIntExtra("peruPoints", 0); // LM
+
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        peruPoints = prefs.getInt("storedPeruPoints_level" + challengeLevel + "_player" + playerString, 0);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         visibleTiles = TILE_BUTTONS.length;
@@ -49,16 +90,20 @@ public class Peru extends GameActivity {
         setTitle(Start.localAppName + ": " + gameNumber);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(peruPoints));
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
         updateTrackers();
 
         setTextSizes();
+
+        if(getAudioInstructionsResID()==0){
+            centerGamesHomeImage();
+        }
 
         playAgain();
 
@@ -123,10 +168,28 @@ public class Peru extends GameActivity {
     public void playAgain () {
 
         repeatLocked = true;
+
+        boolean freshWord = false;
         Random rand = new Random();
-        int randomNum = rand.nextInt(Start.wordList.size()); // KP
-        wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-        wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+
+        while(!freshWord) {
+            int randomNum = rand.nextInt(Start.wordList.size()); // KP
+
+            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
+            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+
+            //If this word isn't one of the 3 previously tested words, we're good // LM
+            if(wordInLWC.compareTo(lastWord)!=0
+                    && wordInLWC.compareTo(secondToLastWord)!=0
+                    && wordInLWC.compareTo(thirdToLastWord)!=0){
+                freshWord = true;
+                thirdToLastWord = secondToLastWord;
+                secondToLastWord = lastWord;
+                lastWord = wordInLWC;
+            }
+
+        }//generates a new word if it got one of the last three tested words // LM
+
         parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP); // KP
         int tileLength = tilesInArray(parsedWordArrayFinal);
 
@@ -266,7 +329,8 @@ public class Peru extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points+=2;
-            pointsEarned.setText(String.valueOf(points));
+            peruPoints+=2;
+            pointsEarned.setText(String.valueOf(peruPoints));
 
             trackerCount++;
             updateTrackers();
@@ -274,6 +338,7 @@ public class Peru extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedPeruPoints_level" + challengeLevel + "_player" + playerString, peruPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
@@ -311,4 +376,9 @@ public class Peru extends GameActivity {
         super.goBackToEarth(view);
     }
 
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
+    }
 }

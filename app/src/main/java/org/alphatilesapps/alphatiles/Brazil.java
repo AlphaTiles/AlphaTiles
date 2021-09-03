@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +40,10 @@ public class Brazil extends GameActivity {
     Start.TileList sortableTilesArray; // KP
     int visibleTiles;
     String correctTile = "";
+    String lastWord = "";
+    String secondToLastWord = "";
+    String thirdToLastWord = "";
+    int brazilPoints;
 
     boolean klvAdaptation = false;
     int klvSlot;
@@ -49,6 +56,39 @@ public class Brazil extends GameActivity {
     protected int[] getTileButtons() {return TILE_BUTTONS;}
     
     protected int[] getWordImages() {return null;}
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier("brazil_" + challengeLevel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
+
+    @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = 0;
+        if (challengeLevel == 3 || challengeLevel == 6) {
+            gameID = R.id.brazil_cl3_CL;
+        } else {
+            gameID = R.id.brazil_cl1_CL;
+        }
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+
+    }
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#4CAF50", "#E91E63"};
 
@@ -81,6 +121,12 @@ public class Brazil extends GameActivity {
 //        LOGGER.info("Remember APR 21 21 # 1");
 
         points = getIntent().getIntExtra("points", 0); // KP
+        brazilPoints = getIntent().getIntExtra("brazilPoints", 0); // KP
+
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        brazilPoints = prefs.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, 0);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
@@ -160,16 +206,18 @@ public class Brazil extends GameActivity {
         sortableTilesArray = (Start.TileList)Start.tileList.clone(); // KP
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(brazilPoints));
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
 
         updateTrackers();
 
         setTextSizes();
+
+        if(getAudioInstructionsResID()==0){
+            centerGamesHomeImage();
+        }
 
 //        LOGGER.info("Remember APR 21 21 # 5");
 
@@ -266,11 +314,26 @@ public class Brazil extends GameActivity {
 
     private void chooseWord() {
 
-        Random rand = new Random();
-        int randomNum = rand.nextInt(Start.wordList.size()); // KP
+        boolean freshWord = false;
 
-        wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-        wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+        while(!freshWord) {
+            Random rand = new Random();
+            int randomNum = rand.nextInt(Start.wordList.size()); // KP
+
+            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
+            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
+
+            //If this word isn't one of the 3 previously tested words, we're good // LM
+            if(wordInLWC.compareTo(lastWord)!=0
+            && wordInLWC.compareTo(secondToLastWord)!=0
+            && wordInLWC.compareTo(thirdToLastWord)!=0){
+                freshWord = true;
+                thirdToLastWord = secondToLastWord;
+                secondToLastWord = lastWord;
+                lastWord = wordInLWC;
+            }
+
+        }//generates a new word if it got one of the last three tested words // LM
 
         LOGGER.info("Remember wordInLOP = " + wordInLOP);
 
@@ -540,7 +603,8 @@ public class Brazil extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points++;
-            pointsEarned.setText(String.valueOf(points));
+            brazilPoints++;
+            pointsEarned.setText(String.valueOf(brazilPoints));
 
             trackerCount++;
             updateTrackers();
@@ -548,6 +612,8 @@ public class Brazil extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.apply();
+            editor.putInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, brazilPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
@@ -600,6 +666,12 @@ public class Brazil extends GameActivity {
 
     public void onBtnClick (View view) {
         respondToTileSelection(Integer.parseInt((String)view.getTag())); // KP
+    }
+
+    public void playAudioInstructions(View view){
+        if(getAudioInstructionsResID() > -1) {
+            super.playAudioInstructions(view);
+        }
     }
 
 }
