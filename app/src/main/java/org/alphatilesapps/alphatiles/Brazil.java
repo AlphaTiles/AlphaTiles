@@ -39,7 +39,7 @@ public class Brazil extends GameActivity {
     String correctTile = "";
 
     boolean klvAdaptation = false;
-    int klvSlot = 1; // For most words, the nV- prefix is slot 0 and the next tile is slot 1
+    int klvSlot;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -97,6 +97,8 @@ public class Brazil extends GameActivity {
 
             Collections.shuffle(VOWELS); // AH
 
+            klvSlot = 1; // AH for words like navus, will remove "v", for words like amas, will remove "m"
+
         } else {
 
             if (CONSONANTS.isEmpty()) {  //makes sure CONSONANTS is populated only once when the app is running
@@ -108,6 +110,8 @@ public class Brazil extends GameActivity {
             }
 
             Collections.shuffle(CONSONANTS);
+
+            klvSlot = 2; // AH for words like navus, will remove "u", for words like amas, will remove second "a"
 
         }
 
