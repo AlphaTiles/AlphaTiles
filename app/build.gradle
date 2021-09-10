@@ -36,6 +36,9 @@ android {
         // and the plugin automatically assigns all the module's flavors to
         // that dimension.
 
+        //Alpha Tiles internal team developers can find active product flavor definitions here:
+        // https://docs.google.com/document/d/1a3satcmHFa5r6l7THrKLgxSWVCs-Mp2yOGyzk4oETsk/edit
+
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
