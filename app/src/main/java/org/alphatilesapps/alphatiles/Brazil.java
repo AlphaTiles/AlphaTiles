@@ -102,6 +102,18 @@ public class Brazil extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+
+        points = getIntent().getIntExtra("points", 0); // KP
+        brazilPoints = getIntent().getIntExtra("brazilPoints", 0); // KP
+
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        brazilPoints = prefs.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, 0);
+
+        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
+        challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
+        gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
+
         LOGGER.info("Remember APR 21 21 # 0.0");
         LOGGER.info("Remember challengeLevel = " + challengeLevel);
         if (challengeLevel > 6) {
@@ -120,17 +132,6 @@ public class Brazil extends GameActivity {
 
 //        LOGGER.info("Remember APR 21 21 # 1");
 
-        points = getIntent().getIntExtra("points", 0); // KP
-        brazilPoints = getIntent().getIntExtra("brazilPoints", 0); // KP
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        brazilPoints = prefs.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, 0);
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
-        gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
-
         if (challengeLevel < 4) {
 
             if (VOWELS.isEmpty()) {  //makes sure VOWELS is populated only once when the app is running
@@ -143,7 +144,6 @@ public class Brazil extends GameActivity {
 
             Collections.shuffle(VOWELS); // AH
 
-            klvSlot = 1; // AH for words like navus, will remove "v", for words like amas, will remove "m"
 
         } else {
 
@@ -157,7 +157,6 @@ public class Brazil extends GameActivity {
 
             Collections.shuffle(CONSONANTS);
 
-            klvSlot = 2; // AH for words like navus, will remove "u", for words like amas, will remove second "a"
 
         }
 
@@ -384,6 +383,19 @@ public class Brazil extends GameActivity {
                     }
 
                 }
+        }
+
+        if (challengeLevel < 4) {
+
+            klvSlot = 2; // AH for words like navus, will remove "u", for words like amas, will remove second "a"
+            if (Start.tileList.get(Start.tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(klvSlot))).tileType.equals("C")) {
+                klvSlot = 1; // AH for words like naulav, will shift from "u" to the first "a"
+            }
+
+        } else {
+
+            klvSlot = 1; // AH for words like navus, will remove "v", for words like amas, will remove "m"
+
         }
 
         LOGGER.info("Remember challengeLevel = " + challengeLevel);
