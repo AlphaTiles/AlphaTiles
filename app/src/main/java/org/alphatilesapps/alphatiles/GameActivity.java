@@ -24,8 +24,8 @@ import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
-import static org.alphatilesapps.alphatiles.Start.speechDurations;
-import static org.alphatilesapps.alphatiles.Start.speechIDs;
+import static org.alphatilesapps.alphatiles.Start.wordDurations;
+import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 
 
 public abstract class GameActivity extends AppCompatActivity {
@@ -234,7 +234,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	{	
 		setAllTilesUnclickable();	
 		setOptionsRowUnclickable();	
-		gameSounds.play(speechIDs.get(wordInLWC), 1.0f, 1.0f, 2, 0, 1.0f);	
+		gameSounds.play(wordAudioIDs.get(wordInLWC), 1.0f, 1.0f, 2, 0, 1.0f);	
 		soundSequencer.postDelayed(new Runnable()	
 		{	
 			public void run()	
@@ -260,7 +260,7 @@ public abstract class GameActivity extends AppCompatActivity {
 					setOptionsRowClickable();	
 				}	
 			}	
-		}, speechDurations.get(wordInLWC));	
+		}, wordDurations.get(wordInLWC));	
 	}	
 	protected void playActiveWordClip0(final boolean playFinalSound)	
 	{	
