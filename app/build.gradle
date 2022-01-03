@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -7,10 +8,10 @@ android {
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "org.alphatilesapps.alphatiles"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 30
-        versionCode 46
-        versionName "0.7.2.2"
+        versionCode 47
+        versionName "0.8.0"
 
         // API 14 = Ice Cream (4.0)
         // API 16 = Jelly Bean (4.1) - required for Firebase
@@ -57,5 +58,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation platform('com.google.firebase:firebase-bom:29.0.1')
+    implementation 'com.google.firebase:firebase-analytics'
 
 }

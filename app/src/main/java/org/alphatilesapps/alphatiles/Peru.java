@@ -43,6 +43,7 @@ public class Peru extends GameActivity {
         int audioInstructionsResID;
         try{
             audioInstructionsResID = res.getIdentifier("peru_" + challengeLevel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         }
         catch (NullPointerException e){
             audioInstructionsResID = -1;
@@ -54,7 +55,7 @@ public class Peru extends GameActivity {
     protected void centerGamesHomeImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-        instructionsButton.setVisibility(View.GONE);
+//        instructionsButton.setVisibility(View.GONE); // commented out by AGH for testing on Dec 29th, 2021
 
         int gameID = R.id.peruCL;
         ConstraintLayout constraintLayout = findViewById(gameID);

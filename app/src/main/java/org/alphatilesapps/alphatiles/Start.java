@@ -79,7 +79,7 @@ public class Start extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         context = this;
-
+        LOGGER.info("Remember: pre-completed buildLangInfoArray()");
 
         buildLangInfoArray();
         LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
@@ -141,7 +141,7 @@ public class Start extends AppCompatActivity
     }
 
     public void buildWordAndTileArrays()    {
-        LOGGER.info("Remember: entered buildAllArrays() method");
+        LOGGER.info("Remember: entered buildWordAndTileArrays() method");
 //        Util.logMemory();
         buildTilesArray();
         LOGGER.info("Remember: completed buildTilesArray()");
@@ -169,7 +169,7 @@ public class Start extends AppCompatActivity
             int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
             wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 2));
             wordDurations.put(word.nationalWord, word.duration + 100);
-            LOGGER.info("Remember word.duration = " + word.duration);
+//            LOGGER.info("Remember word.duration = " + word.duration);
 //			wordDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
         }
 
@@ -320,9 +320,11 @@ public class Start extends AppCompatActivity
                 gameList.gameCountry = thisLineArray[1];
                 gameList.gameLevel = thisLineArray[2];
                 gameList.gameColor = thisLineArray[3];
+                gameList.gameInstrLabel = thisLineArray[4];
+                gameList.gameInstrDuration = thisLineArray[5];
                 header = false;
             } else {
-                Game game = new Game(thisLineArray[0], thisLineArray[1],thisLineArray[2], thisLineArray[3]);
+                Game game = new Game(thisLineArray[0], thisLineArray[1],thisLineArray[2], thisLineArray[3],thisLineArray[4], thisLineArray[5]);
                 if (!game.hasNull()) {
                     gameList.add(game);
                 }
@@ -507,16 +509,20 @@ public class Start extends AppCompatActivity
         public String gameCountry;
         public String gameLevel;
         public String gameColor;
+        public String gameInstrLabel;
+        public String gameInstrDuration;
 
-        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor) {
+        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration) {
             this.gameNumber = gameNumber;
             this.gameCountry = gameCountry;
             this.gameLevel = gameLevel;
             this.gameColor = gameColor;
+            this.gameInstrLabel = gameInstrLabel;
+            this.gameInstrDuration = gameInstrDuration;
         }
 
         public boolean hasNull() {
-            return gameNumber == null || gameCountry == null|| gameLevel == null|| gameColor == null;
+            return gameNumber == null || gameCountry == null|| gameLevel == null|| gameColor == null || gameInstrLabel == null|| gameInstrDuration == null;
         }
     }
 
@@ -1535,6 +1541,8 @@ public class Start extends AppCompatActivity
         public String gameCountry;
         public String gameLevel;
         public String gameColor;
+        public String gameInstrLabel;
+        public String gameInstrDuration;
 
     }
 

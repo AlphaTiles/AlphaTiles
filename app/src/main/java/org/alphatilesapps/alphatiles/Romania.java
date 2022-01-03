@@ -48,7 +48,8 @@ public class Romania extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try{
-            audioInstructionsResID = res.getIdentifier("romania_" + challengeLevel, "raw", context.getPackageName());
+//          audioInstructionsResID = res.getIdentifier("romania_" + challengeLevel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         }
         catch (Resources.NotFoundException e){
             audioInstructionsResID = -1;
@@ -60,7 +61,7 @@ public class Romania extends GameActivity {
     protected void centerGamesHomeImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-        instructionsButton.setVisibility(View.GONE);
+//      instructionsButton.setVisibility(View.GONE);
 
         int gameID = R.id.romaniaCL;
         ConstraintLayout constraintLayout = findViewById(gameID);
@@ -91,6 +92,31 @@ public class Romania extends GameActivity {
         // This is for the magnifying glass button (should probably be renamed)
         ImageView image = (ImageView) findViewById(R.id.repeatImage);
         image.setVisibility(View.INVISIBLE);
+
+        // Added Dec 30th, 2021
+        // Display or show the three filter options based on value in aa_settings.txt
+        Boolean showFilterOptions;
+        String hasFilterSetting = settingsList.find("Show filter options for Game 001");
+        if(hasFilterSetting.compareTo("")!=0){
+            showFilterOptions = Boolean.parseBoolean(hasFilterSetting);
+        }
+        else{
+            showFilterOptions = false;
+        }
+
+        ImageView button1 = (ImageView) findViewById(R.id.toggleInitialOnly);
+        ImageView button2 = (ImageView) findViewById(R.id.toggleInitialPlusGaps);
+        ImageView button3 = (ImageView) findViewById(R.id.toggleAllOfAll);
+
+        if (showFilterOptions) {
+            button1.setVisibility(View.VISIBLE);
+            button2.setVisibility(View.VISIBLE);
+            button3.setVisibility(View.VISIBLE);
+        } else {
+            button1.setVisibility(View.INVISIBLE);
+            button2.setVisibility(View.INVISIBLE);
+            button3.setVisibility(View.INVISIBLE);
+        }
 
         scanSetting = Integer.parseInt(Start.settingsList.find("Game 001 Scan Setting"));
 
