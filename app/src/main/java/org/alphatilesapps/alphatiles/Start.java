@@ -58,12 +58,15 @@ public class Start extends AppCompatActivity
     public static int correctSoundID;
     public static int incorrectSoundID;
     public static int correctFinalSoundID;
-    public static HashMap<String, Integer> speechIDs;
+    public static HashMap<String, Integer> wordAudioIDs;
     public static HashMap<String, Integer> tileAudioIDs;
+//    public static HashMap<String, Integer> instructionAudioIDs;
     public static int correctSoundDuration;
     public static int incorrectSoundDuration;
     public static int correctFinalSoundDuration;
-    public static HashMap<String, Integer> speechDurations;
+    public static HashMap<String, Integer> wordDurations;
+    public static HashMap<String, Integer> tileDurations;
+//    public static HashMap<String, Integer> instructionDurations;
 
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
@@ -76,7 +79,7 @@ public class Start extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         context = this;
-
+        LOGGER.info("Remember: pre-completed buildLangInfoArray()");
 
         buildLangInfoArray();
         LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
@@ -138,7 +141,7 @@ public class Start extends AppCompatActivity
     }
 
     public void buildWordAndTileArrays()    {
-        LOGGER.info("Remember: entered buildAllArrays() method");
+        LOGGER.info("Remember: entered buildWordAndTileArrays() method");
 //        Util.logMemory();
         buildTilesArray();
         LOGGER.info("Remember: completed buildTilesArray()");
@@ -159,14 +162,15 @@ public class Start extends AppCompatActivity
 
         // load speech sounds
         Resources res = context.getResources();
-        speechIDs = new HashMap();
-        speechDurations = new HashMap();
+        wordAudioIDs = new HashMap();
+        wordDurations = new HashMap();
         for (Word word : wordList)
         {
             int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
-            speechIDs.put(word.nationalWord, gameSounds.load(context, resId, 2));
-            speechDurations.put(word.nationalWord, word.duration + 100);
-//			speechDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
+            wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 2));
+            wordDurations.put(word.nationalWord, word.duration + 100);
+//            LOGGER.info("Remember word.duration = " + word.duration);
+//			wordDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
         }
 
         if(differentiateTypes) {
@@ -187,10 +191,13 @@ public class Start extends AppCompatActivity
 
         if (hasTileAudio) {
             tileAudioIDs = new HashMap(0);
+            tileDurations = new HashMap();
 
             for (Tile tile : tileList) {
                 int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
                 tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
+                tileDurations.put(tile.baseTile, tile.tileDuration1 + 100);
+                LOGGER.info("Remember tile.tileDuration1 = " + tile.tileDuration1);
 
                 if (tile.tileTypeB.compareTo("none")!= 0) {
                     if (tile.audioForTileB.compareTo("X") != 0) {
@@ -221,7 +228,7 @@ public class Start extends AppCompatActivity
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
-            String[] thisLineArray = thisLine.split("\t",11);
+            String[] thisLineArray = thisLine.split("\t",14);
             if (header) {
                 tileList.baseTitle = thisLineArray[0];
                 tileList.alt1Title = thisLineArray[1];
@@ -234,9 +241,12 @@ public class Start extends AppCompatActivity
                 tileList.audioForTileBTitle = thisLineArray[8];
                 tileList.tileTypeCTitle = thisLineArray[9];
                 tileList.audioForTileCTitle = thisLineArray[10];
+                tileList.tileDuration1 = thisLineArray[11];
+                tileList.tileDuration2 = thisLineArray[12];
+                tileList.tileDuration3 = thisLineArray[13];
                 header = false;
             } else {
-                Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10]);
+                Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], Integer.parseInt(thisLineArray[11]), Integer.parseInt(thisLineArray[12]), Integer.parseInt(thisLineArray[13]));
                 if (!tile.hasNull()) {
                     tileList.add(tile);
                 }
@@ -310,9 +320,11 @@ public class Start extends AppCompatActivity
                 gameList.gameCountry = thisLineArray[1];
                 gameList.gameLevel = thisLineArray[2];
                 gameList.gameColor = thisLineArray[3];
+                gameList.gameInstrLabel = thisLineArray[4];
+                gameList.gameInstrDuration = thisLineArray[5];
                 header = false;
             } else {
-                Game game = new Game(thisLineArray[0], thisLineArray[1],thisLineArray[2], thisLineArray[3]);
+                Game game = new Game(thisLineArray[0], thisLineArray[1],thisLineArray[2], thisLineArray[3],thisLineArray[4], thisLineArray[5]);
                 if (!game.hasNull()) {
                     gameList.add(game);
                 }
@@ -447,7 +459,10 @@ public class Start extends AppCompatActivity
         public String audioForTileB;
         public String tileTypeC;
         public String audioForTileC;
-        public Tile(String baseTile, String alt1Tile, String alt2Tile, String alt3Tile, String tileType, String audioForTile, String upperTile, String tileTypeB, String audioForTileB, String tileTypeC, String audioForTileC) {
+        public int tileDuration1;
+        public int tileDuration2;
+        public int tileDuration3;
+        public Tile(String baseTile, String alt1Tile, String alt2Tile, String alt3Tile, String tileType, String audioForTile, String upperTile, String tileTypeB, String audioForTileB, String tileTypeC, String audioForTileC, int tileDuration1, int tileDuration2, int tileDuration3) {
             this.baseTile = baseTile;
             altTiles = new String[ALT_COUNT];
             altTiles[0] = alt1Tile;
@@ -460,6 +475,9 @@ public class Start extends AppCompatActivity
             this.audioForTileB = audioForTileB;
             this.tileTypeC = tileTypeC;
             this.audioForTileC = audioForTileC;
+            this.tileDuration1 = tileDuration1;
+            this.tileDuration2 = tileDuration2;
+            this.tileDuration3 = tileDuration3;
         }
 
         public boolean hasNull() {
@@ -491,16 +509,20 @@ public class Start extends AppCompatActivity
         public String gameCountry;
         public String gameLevel;
         public String gameColor;
+        public String gameInstrLabel;
+        public String gameInstrDuration;
 
-        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor) {
+        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration) {
             this.gameNumber = gameNumber;
             this.gameCountry = gameCountry;
             this.gameLevel = gameLevel;
             this.gameColor = gameColor;
+            this.gameInstrLabel = gameInstrLabel;
+            this.gameInstrDuration = gameInstrDuration;
         }
 
         public boolean hasNull() {
-            return gameNumber == null || gameCountry == null|| gameLevel == null|| gameColor == null;
+            return gameNumber == null || gameCountry == null|| gameLevel == null|| gameColor == null || gameInstrLabel == null|| gameInstrDuration == null;
         }
     }
 
@@ -1126,6 +1148,9 @@ public class Start extends AppCompatActivity
         public String audioForTileBTitle;
         public String tileTypeCTitle;
         public String audioForTileCTitle;
+        public String tileDuration1;
+        public String tileDuration2;
+        public String tileDuration3;
 
         public ArrayList<String> parseWord(String parseMe) {
             // Updates by KP, Oct 2020
@@ -1516,6 +1541,8 @@ public class Start extends AppCompatActivity
         public String gameCountry;
         public String gameLevel;
         public String gameColor;
+        public String gameInstrLabel;
+        public String gameInstrDuration;
 
     }
 

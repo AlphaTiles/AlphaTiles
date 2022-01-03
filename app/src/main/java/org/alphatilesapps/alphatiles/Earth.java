@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -155,12 +156,17 @@ public class Earth extends AppCompatActivity {
                 // So we are forcing this game's door to initialize with a start
                 // This code is in two places
                 // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                if (country.equals("Romania")) {
+                if (country.equals("Romania")||country.equals("Sudan")) {
                     trackerCount = 12;
                 }
 
+                String color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
+
                 scaling = 0.45;
-                if (trackerCount > 11) {
+                // For normal games, when tracking hits 12, the door becomes a star shape, requiring a smaller font
+                // For games without a right or wrong answer (Romania, Sudan), because there is always a circle shape...
+                // We do NOT need to reduce font size when Romania or Sudan (which have the "5" color door, yellow)
+                if (trackerCount > 11 && !color.equals("5")) {
                     scaling = 0.25;
                 }
 
@@ -205,8 +211,11 @@ public class Earth extends AppCompatActivity {
                         // So we are forcing this game's door to initialize with a start
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                        if (country.equals("Romania")) {
+                        if (country.equals("Romania")||country.equals("Sudan")) {
                             trackerCount = 12;
+                            ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
+                        } else {
+                            ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
                         }
 
                         String color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;

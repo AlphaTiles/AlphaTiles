@@ -39,7 +39,7 @@ public class Georgia extends GameActivity {
     protected void centerGamesHomeImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-        instructionsButton.setVisibility(View.GONE);
+//      instructionsButton.setVisibility(View.GONE);
 
         int gameID = R.id.georgiaCL;
         ConstraintLayout constraintLayout = findViewById(gameID);
@@ -55,7 +55,9 @@ public class Georgia extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try{
-            audioInstructionsResID = res.getIdentifier("georgia_" + challengeLevel, "raw", context.getPackageName());
+//          audioInstructionsResID = res.getIdentifier("georgia_" + challengeLevel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+
         }
         catch (Exception e){
             audioInstructionsResID = -1;

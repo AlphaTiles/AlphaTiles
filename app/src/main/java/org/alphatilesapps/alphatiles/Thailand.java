@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
+import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
@@ -70,7 +71,8 @@ public class Thailand extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try{
-            audioInstructionsResID = res.getIdentifier("thailand_" + challengeLevel, "raw", context.getPackageName());
+//          audioInstructionsResID = res.getIdentifier("thailand_" + challengeLevel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         }
         catch (NullPointerException e){
             audioInstructionsResID = -1;
@@ -82,7 +84,7 @@ public class Thailand extends GameActivity {
     protected void centerGamesHomeImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-        instructionsButton.setVisibility(View.GONE);
+//      instructionsButton.setVisibility(View.GONE);
 
         int gameID;
         if (choiceType.equals("WORD_TEXT")) {
@@ -635,7 +637,7 @@ public class Thailand extends GameActivity {
 
     //JP: for SoundPool, for tile audio
     public void playActiveTileClip1() {
-        LOGGER.info("SoundPool being used in playActiveTileClip");
+        LOGGER.info("Remember: 901: SoundPool being used in playActiveTileClip");
 
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
@@ -646,23 +648,26 @@ public class Thailand extends GameActivity {
         //since "X" represents no audio file
         if (!audioToPlay.equals("X")) {
 
-                String tileText = null;
-                tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
-                gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
-                soundSequencer.postDelayed(new Runnable() {
-                    public void run() {
-                        if (repeatLocked) {
-                            setAllTilesClickable();
-                        }
-                        setOptionsRowClickable();
+            String tileText = null;
+            tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
+            LOGGER.info("Remember: 902: About to play audio...");
+            LOGGER.info("Remember: 903: tileDurations.get(tileText)) = " + tileDurations.get(tileText));
+            gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+            soundSequencer.postDelayed(new Runnable() {
+                public void run() {
+                    if (repeatLocked) {
+                        setAllTilesClickable();
                     }
-                }, 925); //JP: must use fixed number unless we make an array for tile durations
-            }
+                    setOptionsRowClickable();
+                }
+//            }, 925); //JP: must use fixed number unless we make an array for tile durations
+            }, tileDurations.get(tileText));
         }
+    }
 
     //JP: for Media Player; tile audio
     public void playActiveTileClip0(){
-        LOGGER.info("mediaplayer being used in playActiveTileClip");
+        LOGGER.info("Remember: mediaplayer being used in playActiveTileClip");
 
         String audioToPlay = null;
         audioToPlay = tileList.get(tileList.returnPositionInAlphabet(refTile)).audioForTile;
@@ -686,7 +691,7 @@ public class Thailand extends GameActivity {
     }
 
     public void playCorrectSoundThenActiveTileClip() {
-        LOGGER.info("remember: testing");
+        LOGGER.info("Remember: testing");
         if (tempSoundPoolSwitch){
             playCorrectSoundThenActiveTileClip1(); //SoundPool
         } else{
@@ -698,7 +703,7 @@ public class Thailand extends GameActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
-        LOGGER.info("SoundPool being used in final");
+        LOGGER.info("Remember: SoundPool being used in final");
         gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
 
         //JP: this delays word audio after correct sound audio so they don't overlap
@@ -710,6 +715,7 @@ public class Thailand extends GameActivity {
                 gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 1, 0, 1.0f);
             }
         }, 925); //JP: having this fixed at 1200 should be fine since this is specifically for tile audio, NOT words
+        // AH: The correct sound in 876 ms, so 925 is a hardcoded value for the current zz_correct.mp3 file
 
         //JP: this delays the blue arrow becoming clickable too soon, so that the word sound must be repeated again
         soundSequencer.postDelayed(new Runnable() {
@@ -719,13 +725,13 @@ public class Thailand extends GameActivity {
                 }
                 setOptionsRowClickable();
             }
-        }, 1850); //JP: 1850 makes sure the arrow button stays unclickable for the duration of the correct sound
-        //AND for the duration of the tile audio repeated back
+        }, 925 + tileDurations.get(tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile));
+        // Above represents the hardcoded value of zz_correct.mp3 (876 ms) + duration of tile audio
     }
 
     public void playCorrectSoundThenActiveTileClip0() {
         //media player:
-        LOGGER.info("media player being used in final");
+        LOGGER.info("Remember: media player being used in final");
         MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
         mediaPlayerIsPlaying = true;
         mp2.start();

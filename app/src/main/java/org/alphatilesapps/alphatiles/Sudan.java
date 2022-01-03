@@ -53,7 +53,8 @@ public class Sudan extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try{
-            audioInstructionsResID = res.getIdentifier("sudan_" + challengeLevel, "raw", context.getPackageName());
+//          audioInstructionsResID = res.getIdentifier("sudan_" + challengeLevel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         }
         catch (NullPointerException e){
             audioInstructionsResID = -1;
@@ -65,7 +66,7 @@ public class Sudan extends GameActivity {
     protected void centerGamesHomeImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-        instructionsButton.setVisibility(View.GONE);
+//      instructionsButton.setVisibility(View.GONE);
 
         int gameID = R.id.sudanCL;
         ConstraintLayout constraintLayout = findViewById(gameID);
