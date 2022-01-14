@@ -67,7 +67,7 @@ public class Brazil extends GameActivity {
     protected void centerGamesHomeImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-//      instructionsButton.setVisibility(View.GONE);
+        instructionsButton.setVisibility(View.GONE);
 
         int gameID = 0;
         if (challengeLevel == 3 || challengeLevel == 6) {

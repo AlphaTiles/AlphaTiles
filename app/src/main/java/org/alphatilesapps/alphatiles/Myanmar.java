@@ -63,7 +63,7 @@ public class Myanmar extends GameActivity {
     protected void centerGamesHomeImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-//      instructionsButton.setVisibility(View.GONE);
+        instructionsButton.setVisibility(View.GONE);
 
         int gameID = R.id.myanmarCL;
         ConstraintLayout constraintLayout = findViewById(gameID);

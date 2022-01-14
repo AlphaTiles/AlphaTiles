@@ -55,7 +55,7 @@ public class Peru extends GameActivity {
     protected void centerGamesHomeImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-//        instructionsButton.setVisibility(View.GONE); // commented out by AGH for testing on Dec 29th, 2021
+        instructionsButton.setVisibility(View.GONE);
 
         int gameID = R.id.peruCL;
         ConstraintLayout constraintLayout = findViewById(gameID);

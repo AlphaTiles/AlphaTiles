@@ -56,7 +56,7 @@ public class UnitedStates extends GameActivity {
     protected void centerGamesHomeImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-//      instructionsButton.setVisibility(View.GONE);
+        instructionsButton.setVisibility(View.GONE);
 
         int gameID = 0;
         switch(challengeLevel){
