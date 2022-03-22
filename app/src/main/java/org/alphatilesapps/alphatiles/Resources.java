@@ -23,6 +23,11 @@ public class Resources extends AppCompatActivity {
 
     static int resourcesArraySize;      // the number of resources (plus the header row) in aa_resources.txt, as determined below
     static String[][] resourcesList;     // will capture the name, link and image name [3 items]
+    int resourcesInUse; // number of keys in the language's total keyboard
+    int resourcesScreenNo = 1; // for languages with more than 6 resources, page 1 will have 6 resources with arrows to advance
+    int totalScreens; // the total number of screens required to show all keys
+    int partial; // the number of visible keys on final partial screen
+
 
     private static final int[] RESOURCES = {
             R.id.resourcePromo01, R.id.resourcePromo02, R.id.resourcePromo03, R.id.resourcePromo04, R.id.resourcePromo05, R.id.resourcePromo06
@@ -45,7 +50,9 @@ public class Resources extends AppCompatActivity {
         setTitle(Start.localAppName);
 
         buildResourcesArray();
+        LOGGER.info("Remember: resources array built");
         loadResources();
+        LOGGER.info("Remember: resources loaded");
 
         if(scriptDirection.compareTo("RTL") == 0){
             forceRTLIfSupported();
@@ -63,6 +70,7 @@ public class Resources extends AppCompatActivity {
 
     public void buildResourcesArray() {
 
+        boolean header = true;
         Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_resources)); // prep scan of aa_resources.txt
 
         String[][] tempResourcesList = new String[8][3];      // 7 = hard-coded at six until you make a scrollable window for more links
@@ -71,12 +79,17 @@ public class Resources extends AppCompatActivity {
         while(scanner.hasNext()) {
 
             if (scanner.hasNextLine()) {
-                String thisLine = scanner.nextLine();
-                String[] thisLineArray = thisLine.split("\t", 3);
-                tempResourcesList[resourcesArraySize][0] = thisLineArray[0];
-                tempResourcesList[resourcesArraySize][1] = thisLineArray[1];
-                tempResourcesList[resourcesArraySize][2] = thisLineArray[2];
-                resourcesArraySize++;
+                if (header) {
+                    String thisLine = scanner.nextLine();
+                    header = false;
+                } else {
+                    String thisLine = scanner.nextLine();
+                    String[] thisLineArray = thisLine.split("\t", 3);
+                    tempResourcesList[resourcesArraySize][0] = thisLineArray[0];
+                    tempResourcesList[resourcesArraySize][1] = thisLineArray[1];
+                    tempResourcesList[resourcesArraySize][2] = thisLineArray[2];
+                    resourcesArraySize++;
+                }
             }
         }
 
@@ -94,31 +107,134 @@ public class Resources extends AppCompatActivity {
 
     public void loadResources() {
 
-        for (int r = 0; r < RESOURCES.length; r++ ) {
+        resourcesInUse = Resources.resourcesArraySize;
+        partial = resourcesInUse % (RESOURCES.length);
+        totalScreens = resourcesInUse / (RESOURCES.length);
 
-            LOGGER.info("Remember: r = " + r);
+        if (partial != 0) {
+            totalScreens++;
+        }
+
+        int visibleResources;
+
+        ImageView goBackward = findViewById(R.id.backward);
+        ImageView goForward = findViewById(R.id.forward);
+
+        if (resourcesInUse > RESOURCES.length) {
+
+            visibleResources = RESOURCES.length;
+            goBackward.setVisibility(View.VISIBLE);
+            goForward.setVisibility(View.VISIBLE);
+
+        } else {
+
+            visibleResources = resourcesInUse;
+            goBackward.setVisibility(View.INVISIBLE);
+            goForward.setVisibility(View.INVISIBLE);
+
+        }
+
+        for (int r = 0; r < RESOURCES.length; r++) {
 
             ImageView promotedResource = findViewById(RESOURCES[r]);
-            TextView promotedText = findViewById(RESOURCE_TEXTS[r]);
-            if (r + 1 < resourcesArraySize) {
-                int resID = getResources().getIdentifier(resourcesList[r + 1][2], "drawable", getPackageName());
+
+            if (r < visibleResources) {
+
+                int resID = getResources().getIdentifier(resourcesList[r][2], "drawable", getPackageName());
+                promotedResource.setVisibility(View.VISIBLE);
                 promotedResource.setImageResource(resID);
                 promotedResource.setVisibility(View.VISIBLE);
 
-                String httpText = resourcesList[r + 1][1];
-                String displayText = resourcesList[r + 1][0];
-
+                TextView promotedText = findViewById(RESOURCE_TEXTS[r]);
+                String httpText = resourcesList[r][1];
+                String displayText = resourcesList[r][0];
                 String linkText = "<a href=\"" + httpText + "\">" + displayText + "</a>";
-
                 promotedText.setText(Html.fromHtml(linkText));
                 promotedText.setMovementMethod(LinkMovementMethod.getInstance());
 
             } else {
+
                 promotedResource.setVisibility(View.INVISIBLE);
-                promotedText.setText("");
+
             }
 
         }
+
+
+        for (int r = 0; r < RESOURCES.length; r++) {
+
+            TextView promotedText= findViewById(RESOURCE_TEXTS[r]);
+
+            if (r < visibleResources) {
+                promotedText.setVisibility(View.VISIBLE);
+                promotedText.setClickable(true);
+            } else {
+                promotedText.setVisibility(View.INVISIBLE);
+                promotedText.setClickable(false);
+            }
+
+        }
+
+
+    }
+
+    private void updateResources() {
+
+// This routine will only be called when there are seven or more resources (the layout has space for six)
+        int resourcesLimit;
+        if(totalScreens == resourcesScreenNo) {
+            resourcesLimit = partial;
+            for (int r = resourcesLimit; r < (RESOURCES.length); r++) {
+                ImageView promotedResource = findViewById(RESOURCES[r]);
+                TextView promotedText = findViewById(RESOURCE_TEXTS[r]);
+                promotedResource.setVisibility(View.INVISIBLE);
+                promotedText.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            resourcesLimit = RESOURCES.length;
+        }
+
+        for (int r = 0; r < resourcesLimit; r++) {
+            ImageView promotedResource = findViewById(RESOURCES[r]);
+            TextView promotedText = findViewById(RESOURCE_TEXTS[r]);
+
+            int resourceIndex = (6 * (resourcesScreenNo - 1)) + r;
+
+            int resID = getResources().getIdentifier(resourcesList[resourceIndex][2], "drawable", getPackageName());
+            promotedResource.setImageResource(resID);
+
+            String httpText = resourcesList[resourceIndex][1];
+            String displayText = resourcesList[resourceIndex][0];
+            String linkText = "<a href=\"" + httpText + "\">" + displayText + "</a>";
+            promotedText.setText(Html.fromHtml(linkText));
+            promotedText.setMovementMethod(LinkMovementMethod.getInstance());
+
+            promotedResource.setVisibility(View.VISIBLE);
+            promotedText.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    public void nextPage(View view) {
+
+        resourcesScreenNo++;
+        if (resourcesScreenNo > totalScreens) {
+            resourcesScreenNo = totalScreens;
+        }
+
+        updateResources();
+
+    }
+
+    public void previousPage(View view) {
+
+        resourcesScreenNo--;
+        if (resourcesScreenNo < 1) {
+            resourcesScreenNo = 1;
+        }
+
+        updateResources();
+
     }
 
     public void goBackToEarth(View view) {

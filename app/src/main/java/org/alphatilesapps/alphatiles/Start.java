@@ -106,6 +106,7 @@ public class Start extends AppCompatActivity
             differentiateTypes = false;
         }
 
+        LOGGER.info("Remember: completed hasTileAudio & differentiateTypes");
         buildGamesArray();
         LOGGER.info("Remember: completed buildGamesArray()");
 
@@ -197,7 +198,7 @@ public class Start extends AppCompatActivity
                 int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
                 tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
                 tileDurations.put(tile.baseTile, tile.tileDuration1 + 100);
-                LOGGER.info("Remember tile.tileDuration1 = " + tile.tileDuration1);
+//                LOGGER.info("Remember tile.tileDuration1 = " + tile.tileDuration1);
 
                 if (tile.tileTypeB.compareTo("none")!= 0) {
                     if (tile.audioForTileB.compareTo("X") != 0) {

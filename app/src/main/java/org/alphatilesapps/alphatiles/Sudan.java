@@ -108,6 +108,10 @@ public class Sudan extends GameActivity {
 
         showCorrectNumTiles();
 
+        if(getAudioInstructionsResID()==0){
+            centerGamesHomeImage();
+        }
+
     }
 
     public void showCorrectNumTiles(){
