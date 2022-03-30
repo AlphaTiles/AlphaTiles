@@ -51,7 +51,9 @@ public class China extends GameActivity {
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
 
-        setTitle(Start.localAppName + ": " + gameNumber);
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+
+        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));

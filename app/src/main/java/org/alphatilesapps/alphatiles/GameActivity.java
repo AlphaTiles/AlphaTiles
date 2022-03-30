@@ -40,6 +40,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	int challengeLevel = -1;
 	int playerNumber = -1;
 	int gameNumber = 0;
+	String country;
 	int visibleTiles;	
 	String className;
 
@@ -82,7 +83,8 @@ public abstract class GameActivity extends AppCompatActivity {
 		playerNumber = getIntent().getIntExtra("playerNumber", -1);
 		challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
 		gameNumber = getIntent().getIntExtra("gameNumber", 0);
-		
+		country = getIntent().getStringExtra("country");
+
 		className = getClass().getName();
 
 		if(scriptDirection.compareTo("RTL") == 0){

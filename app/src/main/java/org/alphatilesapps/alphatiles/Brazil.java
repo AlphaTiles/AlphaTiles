@@ -163,7 +163,9 @@ public class Brazil extends GameActivity {
 
         Collections.shuffle(MULTIFUNCTIONS);
 
-        setTitle(Start.localAppName + ": " + gameNumber);
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+
+        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         switch (challengeLevel) {
             case 3:
                 visibleTiles = VOWELS.size();

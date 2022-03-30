@@ -87,7 +87,10 @@ public class Sudan extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        setTitle(Start.localAppName + ": " + gameNumber);
+
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+
+        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));

@@ -112,7 +112,9 @@ public class Mexico extends GameActivity {
 
         wordListArray = new ArrayList(); // KP
 
-        setTitle(Start.localAppName + ": " + gameNumber);
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+
+        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         switch (challengeLevel) {
             case 2:

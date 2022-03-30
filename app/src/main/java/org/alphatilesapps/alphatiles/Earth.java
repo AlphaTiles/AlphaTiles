@@ -36,6 +36,8 @@ public class Earth extends AppCompatActivity {
 
     int gameNumber;
 
+    String country;
+
     int pageNumber; // Games 001 to 023 are displayed on page 1, games 024 to 046 are displayed on page 2, etc.
 
     int doorsPerPage = 23;
@@ -147,7 +149,7 @@ public class Earth extends AppCompatActivity {
 
             if (child instanceof TextView && child.getVisibility() == VISIBLE && child.getTag() != null) {
                 int doorIndex = Integer.parseInt((String) earthCL.getChildAt(j).getTag()) - 1;
-                String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
+                country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
                 String challengeLevel = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel;
                 String uniqueGameLevelPlayerID = String.format("%s%s%s%s", project, country, challengeLevel, playerString);
                 int trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
@@ -201,7 +203,7 @@ public class Earth extends AppCompatActivity {
                     if (((pageNumber * doorsPerPage) + doorIndex) >= Start.gameList.size() ) {
                         ((TextView) child).setVisibility(View.INVISIBLE);
                     } else {
-                        String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
+                        country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
                         String challengeLevel = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel;
                         String uniqueGameLevelPlayerID = String.format("%s%s%s%s", project, country, challengeLevel, playerString);
 
@@ -307,6 +309,7 @@ public class Earth extends AppCompatActivity {
         intent.putExtra("points", points);
         intent.putExtra("gameNumber", gameNumber);
         intent.putExtra("pageNumber", pageNumber);
+        intent.putExtra("country", country);
         startActivity(intent);
         finish();
 

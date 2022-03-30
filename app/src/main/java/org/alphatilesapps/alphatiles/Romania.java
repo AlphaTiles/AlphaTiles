@@ -87,7 +87,9 @@ public class Romania extends GameActivity {
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
 
 
-        setTitle(Start.localAppName + ": " + gameNumber);
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+
+        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         // This is for the magnifying glass button (should probably be renamed)
         ImageView image = (ImageView) findViewById(R.id.repeatImage);
