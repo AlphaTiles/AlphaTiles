@@ -38,16 +38,17 @@ public class Georgia extends GameActivity {
     @Override
     protected void centerGamesHomeImage() {
 
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-        instructionsButton.setVisibility(View.GONE);
+            ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+            instructionsButton.setVisibility(View.GONE);
 
-        int gameID = R.id.georgiaCL;
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
-
+            int gameID = R.id.georgiaCL;
+            ConstraintLayout constraintLayout = findViewById(gameID);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+            constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
+            constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
+            constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+            constraintSet.applyTo(constraintLayout);
     }
 
     @Override
