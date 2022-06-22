@@ -192,7 +192,7 @@ public class Mexico extends GameActivity {
         percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
         percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
         percentHeight = percentBottomToTop - percentTopToTop;
-        int pixelHeight2 = (int) (0.7 * scaling * percentHeight * heightOfDisplay);     // renamed because we want to access pixelHeight (from above) later on
+        int pixelHeight2 = (int) (0.5 * scaling * percentHeight * heightOfDisplay);     // renamed because we want to access pixelHeight (from above) later on
         pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight2);
 
     }

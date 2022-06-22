@@ -178,7 +178,8 @@ public class Colombia extends GameActivity {
         percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
         percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
         percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.7 * scaling * percentHeight * heightOfDisplay);
+        pixelHeight = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
+        //CHANGED TO 0.5 BY JP SO THAT 4-DIGIT SCORE WILL FIT IN GEM
         pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
 
     }

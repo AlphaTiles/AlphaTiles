@@ -150,17 +150,18 @@
         app:layout_constraintStart_toEndOf="@+id/tracker11"
         app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
+
     <ImageView
         android:id="@+id/wordImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/activeWordPicture"
         android:onClick="clickPicHearAudio"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV12"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
-        android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo" />
 
     <TextView
@@ -183,8 +184,8 @@
         android:background="#9C27B0"
         android:gravity="center_horizontal|center_vertical"
         android:onClick="onBtnClick"
-        android:text="@string/gametile01"
         android:tag="1"
+        android:text="@string/gametile01"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
@@ -200,8 +201,8 @@
         android:background="#2196F3"
         android:gravity="center_horizontal|center_vertical"
         android:onClick="onBtnClick"
-        android:text="@string/gametile02"
         android:tag="2"
+        android:text="@string/gametile02"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
@@ -217,8 +218,8 @@
         android:background="#F44336"
         android:gravity="center_horizontal|center_vertical"
         android:onClick="onBtnClick"
-        android:text="@string/gametile03"
         android:tag="3"
+        android:text="@string/gametile03"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
@@ -234,8 +235,8 @@
         android:background="#4CAF50"
         android:gravity="center_horizontal|center_vertical"
         android:onClick="onBtnClick"
-        android:text="@string/gametile04"
         android:tag="4"
+        android:text="@string/gametile04"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
@@ -248,17 +249,21 @@
         android:id="@+id/pointsImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/pointsImage"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toStartOf="@+id/gamesHomeImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/pointsImage"
         app:srcCompat="@drawable/zz_pointsscoredthisgame" />
 
     <TextView
         android:id="@+id/pointsTextView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:text="@string/pointsScored"
         android:textAlignment="center"
@@ -268,44 +273,45 @@
         app:layout_constraintBottom_toBottomOf="@+id/pointsImage"
         app:layout_constraintEnd_toEndOf="@+id/pointsImage"
         app:layout_constraintStart_toStartOf="@+id/pointsImage"
-        app:layout_constraintTop_toTopOf="@+id/pointsImage" />
+        app:layout_constraintTop_toTopOf="@+id/pointsImage"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/gamesHomeImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/playerAvatar"
         android:onClick="goBackToEarth"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toStartOf="@+id/instructions"
         app:layout_constraintStart_toEndOf="@+id/pointsImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/playerAvatar"
         app:srcCompat="@drawable/zz_games_home" />
 
     <ImageView
         android:id="@+id/instructions"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/playAgain"
         android:onClick="playAudioInstructions"
+        android:rotationY="@integer/mirror_flip"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toEndOf="@+id/repeatImage"
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/playAgain"
-        android:rotationY="@integer/mirror_flip"
         app:srcCompat="@drawable/zz_instructions" />
 
     <ImageView
         android:id="@+id/repeatImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/playAgain"
         android:onClick="repeatGame"
+        android:rotationY="@integer/mirror_flip"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/instructions"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/playAgain"
-        android:rotationY="@integer/mirror_flip"
         app:srcCompat="@drawable/zz_forward" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -369,7 +375,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.91" />
+        app:layout_constraintGuide_percent="0.89" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHSys2"
