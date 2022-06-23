@@ -1156,11 +1156,12 @@
         android:id="@+id/pointsImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/pointsImage"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toStartOf="@+id/gamesHomeImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/pointsImage"
         app:srcCompat="@drawable/zz_pointsscoredthisgame" />
 
     <TextView
@@ -1173,6 +1174,7 @@
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/pointsImage"
         app:layout_constraintEnd_toEndOf="@+id/pointsImage"
         app:layout_constraintStart_toStartOf="@+id/pointsImage"
