@@ -20,7 +20,12 @@ Finally, you will need to adjust [app/build.gradle](app/build.gradle) with detai
 
 After cloning the repository and saving the language assets in the src folder of the app, select File > 'Sync Project with Gradle Files' to build the app with the product flavor just selected in the build.gradle.
 
+# Full support of scripts written from right to left (RTL):
+If your language has right-to-left script, put "RTL" for "Script direction (LTR or RTL)" in your raw/langinfo.txt file.
+Then, in the src/main/res/values/integers.xml file, enter 180 as the value of the integer resource "mirror_flip." This will reflect images so that they point in the proper directions.
 
+
+# Analytics
 To use [Firebase Analytics](https://firebase.google.com/), a valid `google-services.json` file must also be provided. You may wish to use Firebase's "Get started" tutorial in order to generate one for yourself unless you are part of the Alpha Tiles development team. 
 
 Also for Firebase: In app/build.gradle, add this line to the top:
