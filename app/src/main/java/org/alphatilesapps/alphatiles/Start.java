@@ -9,6 +9,8 @@ import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -19,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public class Start extends AppCompatActivity
@@ -74,6 +78,10 @@ public class Start extends AppCompatActivity
     Boolean hasTileAudio;
     Boolean differentiateTypes;
 
+    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -105,12 +113,12 @@ public class Start extends AppCompatActivity
         else{
             differentiateTypes = false;
         }
-
+        // 5 seconds
         LOGGER.info("Remember: completed hasTileAudio & differentiateTypes");
-        buildGamesArray();
+        buildGamesArray(); // less than a second
         LOGGER.info("Remember: completed buildGamesArray()");
 
-        buildWordAndTileArrays();
+        buildWordAndTileArrays(); // 13 seconds
         LOGGER.info("Remember: completed buildWordAndTileArrays()");
 
         if(differentiateTypes){
@@ -127,7 +135,7 @@ public class Start extends AppCompatActivity
 
         Intent intent = new Intent(this, ChoosePlayer.class);
 
-        startActivity(intent);
+        startActivity(intent); //this also takes a bit of time
 
         finish();
 
@@ -144,35 +152,53 @@ public class Start extends AppCompatActivity
     public void buildWordAndTileArrays()    {
         LOGGER.info("Remember: entered buildWordAndTileArrays() method");
 //        Util.logMemory();
-        buildTilesArray();
+        buildTilesArray(); // 6 seconds to here
         LOGGER.info("Remember: completed buildTilesArray()");
 //        Util.logMemory();
-        buildWordsArray();
+        buildWordsArray(); // immediate - not problem
         LOGGER.info("Remember: completed buildWordsArray()");
 //        Util.logMemory();
 
-        // load music sounds
-        gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-        correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
-        incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
-        correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
+        executor.execute(() -> {
+            final R result;
+            try {
+                // perform task asynchronously
+                // load music sounds
+                gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+                correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
+                incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
+                correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
 
-        correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
-//		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
-//		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
+                correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
+                //		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
+                //		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
 
-        // load speech sounds
-        Resources res = context.getResources();
-        wordAudioIDs = new HashMap();
-        wordDurations = new HashMap();
-        for (Word word : wordList)
-        {
-            int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
-            wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 2));
-            wordDurations.put(word.nationalWord, word.duration + 100);
-//            LOGGER.info("Remember word.duration = " + word.duration);
-//			wordDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
-        }
+                // load speech sounds
+                Resources res = context.getResources();
+                wordAudioIDs = new HashMap();
+                wordDurations = new HashMap();
+                for (Word word : wordList)
+                { //THIS LOOP IS A BIG PART OF THE PROBLEM
+                    int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
+                    wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 1));
+                    wordDurations.put(word.nationalWord, word.duration + 100);
+                }
+
+
+                // you can also execute runnable or callable
+                handler.post(() -> {
+                    // update the result to the UI thread
+                    // or any operation you want to perform on UI thread. It is similar to onPostExecute() of AsyncTask
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                handler.post(() -> {
+                    // update error to UI thread or handle
+                });
+            }
+        });
+
+
 
         if(differentiateTypes) {
 
@@ -189,7 +215,7 @@ public class Start extends AppCompatActivity
                 }
             }
         }
-
+        //immediate from 177 to here
         if (hasTileAudio) {
             tileAudioIDs = new HashMap(0);
             tileDurations = new HashMap();
