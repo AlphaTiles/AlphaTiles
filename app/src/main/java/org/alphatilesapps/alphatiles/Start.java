@@ -79,12 +79,19 @@ public class Start extends AppCompatActivity
     Boolean hasTileAudio;
     Boolean differentiateTypes;
 
+    private static int cores = Runtime.getRuntime().availableProcessors();
+    // 4 on Pixel 4 API 31
+    //
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         context = this;
+
+        LOGGER.info(String.valueOf(cores));
 
         /*JP: begin loading audio as soon as possible because it takes a while, and do it while
         other tasks are executing
