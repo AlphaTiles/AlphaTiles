@@ -302,9 +302,9 @@ public class Romania extends GameActivity {
         } else {
             LOGGER.info("Remember: failed to find anything (skipWord = true) so advancing one more");
             if (directionIsForward) {
-                goToTileOnTheRight(null);
+                goToNextTile(null);
             } else {
-                goToTileOnTheLeft(null);
+                goToPreviousTile(null);
             }
         }
     }
@@ -363,26 +363,14 @@ public class Romania extends GameActivity {
 
     }
 
-    public void goToTileOnTheRight(View View) {
-        directionIsForward = !forceRTL;
-        TextView tileBox = (TextView) findViewById(R.id.tileBoxTextView);
-        //String oldTile = tileBox.getText().toString();
+    public void goToNextTile(View View) {
+        directionIsForward = true;
         String oldTile = activeTile;
-        if(forceRTL) {//RTL layout
-            if(differentiateTypes){
-                activeTile = Start.tileListWithMultipleTypes.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
-            }
-            else {
-                activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
-            }
+        if(differentiateTypes){
+            activeTile = Start.tileListWithMultipleTypes.returnNextAlphabetTileDifferentiateTypes(oldTile);
         }
-        else{//LTR layout
-            if(differentiateTypes){
-                activeTile = Start.tileListWithMultipleTypes.returnNextAlphabetTileDifferentiateTypes(oldTile);
-            }
-            else {
-                activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
-            }
+        else {
+            activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
         }
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
@@ -394,26 +382,14 @@ public class Romania extends GameActivity {
         setUpBasedOnGameTile(activeTile);
     }
 
-    public void goToTileOnTheLeft(View View) {
-        directionIsForward = forceRTL;
-        TextView tileBox = (TextView) findViewById(R.id.tileBoxTextView);
-        //String oldTile = tileBox.getText().toString();
+    public void goToPreviousTile(View View) {
+        directionIsForward = false;
         String oldTile = activeTile;
-        if(forceRTL) {//RTL layout
-            if(differentiateTypes){
-                activeTile = Start.tileListWithMultipleTypes.returnNextAlphabetTileDifferentiateTypes(oldTile);
-            }
-            else {
-                activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
-            }
+        if(differentiateTypes){
+            activeTile = Start.tileListWithMultipleTypes.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
         }
-        else{//LTR layout
-            if(differentiateTypes){
-                activeTile = Start.tileListWithMultipleTypes.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
-            }
-            else {
-                activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
-            }
+        else {
+            activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
         }
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
@@ -510,15 +486,15 @@ public class Romania extends GameActivity {
         ImageView word = findViewById(R.id.wordImage);
         word.setClickable(false);
 
-        ImageView rightArrow = findViewById(R.id.rightArrowImage);
-        rightArrow.setClickable(false);
-        rightArrow.setBackgroundResource(0);
-        rightArrow.setImageResource(R.drawable.zz_forward_inactive);
+        ImageView forwardArrow = findViewById(R.id.forwardArrowImage);
+        forwardArrow.setClickable(false);
+        forwardArrow.setBackgroundResource(0);
+        forwardArrow.setImageResource(R.drawable.zz_forward_inactive);
 
-        ImageView leftArrow = findViewById(R.id.leftArrowImage);
-        leftArrow.setClickable(false);
-        leftArrow.setBackgroundResource(0);
-        leftArrow.setImageResource(R.drawable.zz_backward_inactive);
+        ImageView backwardArrow = findViewById(R.id.backwardArrowImage);
+        backwardArrow.setClickable(false);
+        backwardArrow.setBackgroundResource(0);
+        backwardArrow.setImageResource(R.drawable.zz_backward_inactive);
 
         TextView magTile = findViewById(R.id.tileInMagnifyingGlass);
         magTile.setClickable(false);
@@ -538,15 +514,15 @@ public class Romania extends GameActivity {
         ImageView word = findViewById(R.id.wordImage);
         word.setClickable(true);
 
-        ImageView rightArrow = findViewById(R.id.rightArrowImage);
-        rightArrow.setClickable(true);
-        rightArrow.setBackgroundResource(0);
-        rightArrow.setImageResource(R.drawable.zz_forward);
+        ImageView forwardArrow = findViewById(R.id.forwardArrowImage);
+        forwardArrow.setClickable(true);
+        forwardArrow.setBackgroundResource(0);
+        forwardArrow.setImageResource(R.drawable.zz_forward);
 
-        ImageView leftArrow = findViewById(R.id.leftArrowImage);
-        leftArrow.setClickable(true);
-        leftArrow.setBackgroundResource(0);
-        leftArrow.setImageResource(R.drawable.zz_backward);
+        ImageView backwardArrow = findViewById(R.id.backwardArrowImage);
+        backwardArrow.setClickable(true);
+        backwardArrow.setBackgroundResource(0);
+        backwardArrow.setImageResource(R.drawable.zz_backward);
 
         TextView magTile = findViewById(R.id.tileInMagnifyingGlass);
         magTile.setClickable(true);
