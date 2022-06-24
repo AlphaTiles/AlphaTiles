@@ -81,7 +81,8 @@ public class Start extends AppCompatActivity
 
     private static int cores = Runtime.getRuntime().availableProcessors();
     // 4 on Pixel 4 API 31
-    //
+    // 4 on WXGA Tablet API 28
+    // 4 on Pixel API 24
 
 
 
@@ -90,8 +91,6 @@ public class Start extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         context = this;
-
-        LOGGER.info(String.valueOf(cores));
 
         /*JP: begin loading audio as soon as possible because it takes a while, and do it while
         other tasks are executing
@@ -134,13 +133,7 @@ public class Start extends AppCompatActivity
         }
 
         gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-        // THREAD 1:
-        service.execute(new Runnable() {
-            @Override
-            public void run() {
-                loadGameAudio();
-            }
-        });
+        loadGameAudio();
 
         // THREAD 2:
         service.execute(new Runnable() {
@@ -158,13 +151,33 @@ public class Start extends AppCompatActivity
 
         //THREADS 3 - ? -- get it working with one thread first, then think about splitting into
         // multiple loops across threads
-        service.execute(new Runnable() {
-            @Override
-            public void run() {
-                buildWordsArray();
-                loadWordAudio();
-            }
-        });
+
+        /*to split the loading of the word audio across multiple threads:
+        - threads = cores minus 1 for the tile audio
+        - words_per_thread = num_of_words / threads
+        */
+        buildWordsArray();
+
+        int num_of_words = wordList.size();
+        int threads = cores - 1;
+        int words_per_thread = num_of_words / threads;
+
+        for (int i = 0; i < threads; i++){
+            int finalI = i;
+            service.execute(new Runnable() {
+                @Override
+                public void run() {
+                    loadWordAudio(finalI*words_per_thread, (finalI + 1)*words_per_thread);
+                    /*
+                    i = 0 : 0, words_per_thread
+                    i = 1 : words_per_thread, 2 * words_per_thread
+                     */
+                }
+            });
+        }
+
+        // NOW NEED TO ADD NULL CHECKING WITHIN GAMES
+
 
         // leave this where it is
         if(differentiateTypes){
@@ -234,16 +247,16 @@ public class Start extends AppCompatActivity
         }
     }
 
-    public void loadWordAudio() {
+    public void loadWordAudio(int start, int end) {
         // load speech sounds
         Resources res = context.getResources();
         wordAudioIDs = new HashMap();
         wordDurations = new HashMap();
-        for (Word word : wordList)
+        for (int i = start; i < end; i++)
         { //THIS LOOP IS A BIG PART OF THE PROBLEM
-            int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
-            wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 1));
-            wordDurations.put(word.nationalWord, word.duration + 100);
+            int resId = res.getIdentifier(wordList.get(i).nationalWord, "raw", context.getPackageName());
+            wordAudioIDs.put(wordList.get(i).nationalWord, gameSounds.load(context, resId, 1));
+            wordDurations.put(wordList.get(i).nationalWord, wordList.get(i).duration + 100);
         }
     }
 
