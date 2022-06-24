@@ -79,36 +79,27 @@ public class Start extends AppCompatActivity
     Boolean hasTileAudio;
     Boolean differentiateTypes;
 
-    private final Executor executor = Executors.newSingleThreadExecutor();
-    private final Handler handler = new Handler(Looper.getMainLooper());
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         context = this;
-        LOGGER.info("Remember: pre-completed buildLangInfoArray()");
 
         /*JP: begin loading audio as soon as possible because it takes a while, and do it while
         other tasks are executing
-        this video as reference: https://www.youtube.com/watch?v=nKBKe1O_W5A */
+
+        load tile audio first
+
+        then load word audio
+
+        this video as reference: https://www.youtube.com/watch?v=nKBKe1O_W5A
+
+        threads, start AFTER settings list is built:
+         1. loadGameAudio()
+         2.
+         */
         ExecutorService service = Executors.newFixedThreadPool(3);
-
-        service.execute(new Runnable() {
-            @Override
-            public void run() {
-                // load music sounds
-                gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-                correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
-                incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
-                correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
-
-                correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
-                //		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
-                //		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
-            }
-        });
 
         buildLangInfoArray();
         LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
@@ -134,30 +125,41 @@ public class Start extends AppCompatActivity
         else{
             differentiateTypes = false;
         }
-        // 5 seconds
-        LOGGER.info("Remember: completed hasTileAudio & differentiateTypes");
-        buildGamesArray(); // less than a second
-        LOGGER.info("Remember: completed buildGamesArray()");
 
-        buildWordAndTileArrays(); // 13 seconds
-        LOGGER.info("Remember: completed buildWordAndTileArrays()");
-
+        gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        // THREAD 1:
         service.execute(new Runnable() {
             @Override
             public void run() {
-                // load speech sounds
-                Resources res = context.getResources();
-                wordAudioIDs = new HashMap();
-                wordDurations = new HashMap();
-                for (Word word : wordList)
-                { //THIS LOOP IS A BIG PART OF THE PROBLEM
-                    int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
-                    wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 1));
-                    wordDurations.put(word.nationalWord, word.duration + 100);
+                loadGameAudio();
+            }
+        });
+
+        // THREAD 2:
+        service.execute(new Runnable() {
+            @Override
+            public void run() {
+                buildTilesArray();
+                if(hasTileAudio){
+                    loadTileAudio();
                 }
             }
         });
 
+        buildGamesArray();
+        LOGGER.info("Remember: completed buildGamesArray()");
+
+        //THREADS 3 - ? -- get it working with one thread first, then think about splitting into
+        // multiple loops across threads
+        service.execute(new Runnable() {
+            @Override
+            public void run() {
+                buildWordsArray();
+                loadWordAudio();
+            }
+        });
+
+        // leave this where it is
         if(differentiateTypes){
 
             if (MULTIFUNCTIONS.isEmpty()) {  //makes sure MULTIFUNCTIONS is populated only once when the app is running
@@ -186,61 +188,58 @@ public class Start extends AppCompatActivity
         return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
 
-    public void buildWordAndTileArrays()    {
-        LOGGER.info("Remember: entered buildWordAndTileArrays() method");
-//        Util.logMemory();
-        buildTilesArray(); // 6 seconds to here
-        LOGGER.info("Remember: completed buildTilesArray()");
-//        Util.logMemory();
-        buildWordsArray(); // immediate - not problem
-        LOGGER.info("Remember: completed buildWordsArray()");
-//        Util.logMemory();
+    public void loadGameAudio() {
+        // load music sounds
+        //^ this constructor is deprecated
+        correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
+        incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
+        correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
 
-        if(differentiateTypes) {
+        correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
+        //		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
+        //		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
+    }
 
-            tileListWithMultipleTypes = new TileListWithMultipleTypes();
-
-            for (Tile tile : tileList) {
-                tileListWithMultipleTypes.add(tile.baseTile);
-
-                if (tile.tileTypeB.compareTo("none") != 0) {
-                    tileListWithMultipleTypes.add(tile.baseTile + "B");
-                }
-                if (tile.tileTypeC.compareTo("none") != 0) {
-                    tileListWithMultipleTypes.add(tile.baseTile + "C");
-                }
-            }
-        }
-        //immediate from 177 to here
+    public void loadTileAudio(){
         Resources res = context.getResources();
-        if (hasTileAudio) {
-            tileAudioIDs = new HashMap(0);
-            tileDurations = new HashMap();
+        tileAudioIDs = new HashMap(0);
+        tileDurations = new HashMap();
 
-            for (Tile tile : tileList) {
-                int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
-                tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
-                tileDurations.put(tile.baseTile, tile.tileDuration1 + 100);
+        for (Tile tile : tileList) {
+            int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
+            tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
+            tileDurations.put(tile.baseTile, tile.tileDuration1 + 100);
 //                LOGGER.info("Remember tile.tileDuration1 = " + tile.tileDuration1);
 
-                if (tile.tileTypeB.compareTo("none")!= 0) {
-                    if (tile.audioForTileB.compareTo("X") != 0) {
-                        resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
-                        tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
-                    }
+            if (tile.tileTypeB.compareTo("none")!= 0) {
+                if (tile.audioForTileB.compareTo("X") != 0) {
+                    resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
+                    tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
                 }
-                if(tile.tileTypeC.compareTo("none")!= 0) {
-                    if (tile.audioForTileC.compareTo("X") != 0) {
-                        resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
-                        tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
-                    }
-                }
-
             }
+            if(tile.tileTypeC.compareTo("none")!= 0) {
+                if (tile.audioForTileC.compareTo("X") != 0) {
+                    resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
+                    tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
+                }
+            }
+
         }
-
-
     }
+
+    public void loadWordAudio() {
+        // load speech sounds
+        Resources res = context.getResources();
+        wordAudioIDs = new HashMap();
+        wordDurations = new HashMap();
+        for (Word word : wordList)
+        { //THIS LOOP IS A BIG PART OF THE PROBLEM
+            int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
+            wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 1));
+            wordDurations.put(word.nationalWord, word.duration + 100);
+        }
+    }
+
     public void buildTilesArray() {
         // KP, Oct 2020
         // AH Nov 2020, updated by AH to allow for spaces in fields (some common nouns in some languages have spaces
@@ -273,6 +272,22 @@ public class Start extends AppCompatActivity
                 Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], Integer.parseInt(thisLineArray[11]), Integer.parseInt(thisLineArray[12]), Integer.parseInt(thisLineArray[13]));
                 if (!tile.hasNull()) {
                     tileList.add(tile);
+                }
+            }
+        }
+
+        if(differentiateTypes) {
+
+            tileListWithMultipleTypes = new TileListWithMultipleTypes();
+
+            for (Tile tile : tileList) {
+                tileListWithMultipleTypes.add(tile.baseTile);
+
+                if (tile.tileTypeB.compareTo("none") != 0) {
+                    tileListWithMultipleTypes.add(tile.baseTile + "B");
+                }
+                if (tile.tileTypeC.compareTo("none") != 0) {
+                    tileListWithMultipleTypes.add(tile.baseTile + "C");
                 }
             }
         }
