@@ -61,6 +61,16 @@ public class Earth extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
+        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+            ImageView goForwardImage = (ImageView) findViewById(R.id.goForward);
+            ImageView goBackImage = (ImageView) findViewById(R.id.goBack);
+            ImageView activePlayerImage = (ImageView) findViewById(R.id.activePlayerImage);
+
+            goForwardImage.setRotationY(180);
+            goBackImage.setRotationY(180);
+            activePlayerImage.setRotationY(180);
+        }
+
         setTitle(Start.localAppName);
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
