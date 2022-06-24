@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
@@ -89,6 +90,26 @@ public class Start extends AppCompatActivity
         context = this;
         LOGGER.info("Remember: pre-completed buildLangInfoArray()");
 
+        /*JP: begin loading audio as soon as possible because it takes a while, and do it while
+        other tasks are executing
+        this video as reference: https://www.youtube.com/watch?v=nKBKe1O_W5A */
+        ExecutorService service = Executors.newFixedThreadPool(3);
+
+        service.execute(new Runnable() {
+            @Override
+            public void run() {
+                // load music sounds
+                gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+                correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
+                incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
+                correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
+
+                correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
+                //		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
+                //		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
+            }
+        });
+
         buildLangInfoArray();
         LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
 
@@ -120,6 +141,22 @@ public class Start extends AppCompatActivity
 
         buildWordAndTileArrays(); // 13 seconds
         LOGGER.info("Remember: completed buildWordAndTileArrays()");
+
+        service.execute(new Runnable() {
+            @Override
+            public void run() {
+                // load speech sounds
+                Resources res = context.getResources();
+                wordAudioIDs = new HashMap();
+                wordDurations = new HashMap();
+                for (Word word : wordList)
+                { //THIS LOOP IS A BIG PART OF THE PROBLEM
+                    int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
+                    wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 1));
+                    wordDurations.put(word.nationalWord, word.duration + 100);
+                }
+            }
+        });
 
         if(differentiateTypes){
 
@@ -159,47 +196,6 @@ public class Start extends AppCompatActivity
         LOGGER.info("Remember: completed buildWordsArray()");
 //        Util.logMemory();
 
-        executor.execute(() -> {
-            final R result;
-            try {
-                // perform task asynchronously
-                // load music sounds
-                gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-                correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
-                incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
-                correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
-
-                correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
-                //		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
-                //		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
-
-                // load speech sounds
-                Resources res = context.getResources();
-                wordAudioIDs = new HashMap();
-                wordDurations = new HashMap();
-                for (Word word : wordList)
-                { //THIS LOOP IS A BIG PART OF THE PROBLEM
-                    int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
-                    wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 1));
-                    wordDurations.put(word.nationalWord, word.duration + 100);
-                }
-
-
-                // you can also execute runnable or callable
-                handler.post(() -> {
-                    // update the result to the UI thread
-                    // or any operation you want to perform on UI thread. It is similar to onPostExecute() of AsyncTask
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-                handler.post(() -> {
-                    // update error to UI thread or handle
-                });
-            }
-        });
-
-
-
         if(differentiateTypes) {
 
             tileListWithMultipleTypes = new TileListWithMultipleTypes();
@@ -216,6 +212,7 @@ public class Start extends AppCompatActivity
             }
         }
         //immediate from 177 to here
+        Resources res = context.getResources();
         if (hasTileAudio) {
             tileAudioIDs = new HashMap(0);
             tileDurations = new HashMap();

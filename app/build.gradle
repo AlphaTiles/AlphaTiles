@@ -40,12 +40,6 @@ android {
         //Alpha Tiles internal team developers can find active product flavor definitions here:
         // https://docs.google.com/document/d/1a3satcmHFa5r6l7THrKLgxSWVCs-Mp2yOGyzk4oETsk/edit
 
-        /*kayKamayura {
-            dimension "language"
-            applicationIdSuffix ".blue.kayKamayura"
-            resValue "string", "app_name", 'Kamayura Jade Set Up'
-        }*/
-
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
