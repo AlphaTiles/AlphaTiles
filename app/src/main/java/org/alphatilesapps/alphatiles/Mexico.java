@@ -100,6 +100,14 @@ public class Mexico extends GameActivity {
         setContentView(R.layout.mexico);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
+        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+        }
+
         points = getIntent().getIntExtra("points", 0); // KP
         mexicoPoints = getIntent().getIntExtra("mexicoPoints", 0); // LM
 

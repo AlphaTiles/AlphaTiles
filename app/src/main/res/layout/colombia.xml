@@ -188,7 +188,7 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
         app:srcCompat="@drawable/zz_deletetext"
         android:contentDescription="@string/backspace"
-        android:rotationY="@integer/mirror_flip"/>
+        android:rotationY="0"/>
 
     <TextView
         android:id="@+id/key01"
@@ -871,7 +871,7 @@
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         android:contentDescription="@string/playAgain"
-        android:rotationY="@integer/mirror_flip"
+        android:rotationY="0"
         app:srcCompat="@drawable/zz_instructions" />
 
     <ImageView
@@ -884,7 +884,7 @@
         app:layout_constraintStart_toEndOf="@+id/instructions"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         android:contentDescription="@string/playAgain"
-        android:rotationY="@integer/mirror_flip"
+        android:rotationY="0"
         app:srcCompat="@drawable/zz_forward" />
 
     <androidx.constraintlayout.widget.Guideline

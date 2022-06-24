@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
@@ -26,6 +27,22 @@ import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.wordDurations;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
+
+//LM for forcing RTL layouts
+import java.io.File;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 
 public abstract class GameActivity extends AppCompatActivity {
@@ -448,18 +465,16 @@ public abstract class GameActivity extends AppCompatActivity {
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-	private void forceRTLIfSupported()
-	{
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+	private void forceRTLIfSupported() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
 		}
 	}
-
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-	private void forceLTRIfSupported()
-	{
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
-			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+		@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+		private void forceLTRIfSupported ()
+		{
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+				getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+			}
 		}
 	}
-}

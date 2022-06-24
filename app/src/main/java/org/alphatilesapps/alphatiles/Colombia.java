@@ -84,6 +84,17 @@ public class Colombia extends GameActivity {
         setContentView(R.layout.colombia);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
+        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+            ImageView deleteImage = (ImageView) findViewById(R.id.deleteImage);
+
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+            deleteImage.setRotationY(180);
+        }
+
+
         points = getIntent().getIntExtra("points", 0); // KP
         colombiaPoints = getIntent().getIntExtra("colombiaPoints", 0); // LM
 
@@ -314,12 +325,16 @@ public class Colombia extends GameActivity {
                     LOGGER.info("Remember: April 22 2021 A2");
                     TextView key34 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 2]);
                     key34.setBackgroundResource(R.drawable.zz_backward_green);
-                    key34.setRotationY(getResources().getInteger(R.integer.mirror_flip));
+                    if(scriptDirection.compareTo("RTL")==0) { //LTR is default
+                        key34.setRotationY(180);
+                    }
                     key34.setText("");
                     LOGGER.info("key34's text: " + key34.getText());
                     TextView key35 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 1]);
                     key35.setBackgroundResource(R.drawable.zz_forward_green);
-                    key35.setRotationY(getResources().getInteger(R.integer.mirror_flip));
+                    if(scriptDirection.compareTo("RTL")==0) { //LTR is default
+                        key35.setRotationY(180);
+                    }
                     key35.setText("");
                     LOGGER.info("key35's text: " + key35.getText());
                 }
