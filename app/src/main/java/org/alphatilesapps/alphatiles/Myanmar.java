@@ -105,8 +105,7 @@ public class Myanmar extends GameActivity {
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        //pointsEarned.setText(String.valueOf(myanmarPoints));
-        pointsEarned.setText(String.valueOf(9999));
+        pointsEarned.setText(String.valueOf(myanmarPoints));
 
         /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
