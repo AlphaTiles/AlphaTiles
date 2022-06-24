@@ -243,7 +243,7 @@ public class Thailand extends GameActivity {
         percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
         percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
         percentHeight = percentBottomToTop - percentTopToTop;
-        int pixelHeightGem = (int) (0.7 * scaling * percentHeight * heightOfDisplay);
+        int pixelHeightGem = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
         pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeightGem);
 
     }

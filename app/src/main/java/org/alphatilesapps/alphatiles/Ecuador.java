@@ -318,7 +318,7 @@ public class Ecuador extends GameActivity {
         percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
         percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
         percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.7 * scaling * percentHeight * heightOfDisplay);
+        pixelHeight = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
         pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
 
     }
