@@ -111,6 +111,13 @@ public class Thailand extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
 
+        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+        }
 
         points = getIntent().getIntExtra("points", 0);
         thailandPoints = getIntent().getIntExtra("thailandPoints", 0);

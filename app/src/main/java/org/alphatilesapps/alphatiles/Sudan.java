@@ -87,6 +87,14 @@ public class Sudan extends GameActivity {
         setContentView(R.layout.sudan);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
+        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+        }
+
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
 

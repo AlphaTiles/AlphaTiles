@@ -162,6 +162,20 @@ public class Romania extends GameActivity {
             forceRTL = false;
         }
 
+        if (forceRTL){ //LM: flips images for RTL layouts. LTR is default
+            ImageView backwardArrowImage = (ImageView) findViewById(R.id.backwardArrowImage);
+            ImageView forwardArrowImage = (ImageView) findViewById(R.id.forwardArrowImage);
+            ImageView findMoreOfSameTileImage = (ImageView) findViewById(R.id.findMoreOfSameTile);
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+
+            backwardArrowImage.setRotationY(180);
+            forwardArrowImage.setRotationY(180);
+            findMoreOfSameTileImage.setRotationY(180);
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+        }
+
         activeTile = startingAlphabetTile;
         setUpBasedOnGameTile(activeTile);
 

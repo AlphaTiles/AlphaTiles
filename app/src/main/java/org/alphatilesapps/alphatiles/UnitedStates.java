@@ -134,7 +134,13 @@ public class UnitedStates extends GameActivity {
 
         updateTrackers();
 
-        scriptLR = Start.langInfoList.find("Script direction (LR or RL)");
+        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+        }
 
         if(getAudioInstructionsResID()==0){
             centerGamesHomeImage();
@@ -273,7 +279,7 @@ public class UnitedStates extends GameActivity {
         for (int b = 0; b < visibleTiles; b+=2 ) {
 
             int bLRRL;
-            if (scriptLR.equals("RL")) {
+            if (scriptDirection.compareTo("RTL") == 0) {
                 bLRRL = visibleTiles - 2 - b;
             } else {
                 bLRRL = b;
@@ -343,7 +349,7 @@ public class UnitedStates extends GameActivity {
         LOGGER.info("Remember: 45");
 
         // KP
-        if(scriptLR.equals("RL")) {
+        if(scriptDirection.compareTo("RTL") == 0) {
             for (int j = selections.length - 1; j >= 0; j--) {
 
                 if (!selections[j].equals("")) {

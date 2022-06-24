@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
         app:srcCompat="@drawable/zz_alphatileslogo"
-        android:rotationY="@integer/mirror_flip"
+        android:rotationY="0"
         android:contentDescription="avatar" />
 
     <EditText
@@ -64,7 +64,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="deleteLastKeyedLetter"
-        android:rotationY="@integer/mirror_flip"
+        android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="parent"
