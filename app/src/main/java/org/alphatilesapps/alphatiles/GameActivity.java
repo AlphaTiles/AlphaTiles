@@ -235,8 +235,14 @@ public abstract class GameActivity extends AppCompatActivity {
 	protected void playActiveWordClip1(final boolean playFinalSound)	
 	{	
 		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();	
-		gameSounds.play(wordAudioIDs.get(wordInLWC), 1.0f, 1.0f, 2, 0, 1.0f);	
+		setOptionsRowUnclickable();
+		try{
+			gameSounds.play(wordAudioIDs.get(wordInLWC), 1.0f, 1.0f, 2, 0, 1.0f);
+		}
+		catch(NullPointerException e){
+			// figure out how to get a pop-up to tell the user to wait for the audio to load
+		}
+
 		soundSequencer.postDelayed(new Runnable()	
 		{	
 			public void run()	
@@ -461,5 +467,13 @@ public abstract class GameActivity extends AppCompatActivity {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
 			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		}
+	}
+
+	//added by JP
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		gameSounds.release();
+		gameSounds = null;
 	}
 }
