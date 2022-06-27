@@ -86,6 +86,8 @@ public class Start extends AppCompatActivity
     // 4 on WXGA Tablet API 28
     // 4 on Pixel API 24
 
+    //public static boolean loaded;
+
 
 
     @Override
@@ -146,6 +148,17 @@ public class Start extends AppCompatActivity
         }else{
             gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         }
+        /*
+        gameSounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId,
+                                       int status) {
+                loaded = true; //does this just tell me if all sounds are loaded or if certain ones are?
+            }
+        });
+
+         */
+
         loadGameAudio();
 
         // THREAD 2:
@@ -154,7 +167,9 @@ public class Start extends AppCompatActivity
             public void run() {
                 buildTilesArray();
                 if(hasTileAudio){
+                    LOGGER.info("loading tile audio");
                     loadTileAudio();
+                    LOGGER.info("finished loading tile audio");
                 }
             }
         });
@@ -170,6 +185,12 @@ public class Start extends AppCompatActivity
         - words_per_thread = num_of_words / threads
         */
         buildWordsArray();
+        populateWordDurations(); /* JP separated from the loop where we populate wordAudioIDs for
+        the purpose of making sure durations hashmap will be done even if loading the audio isn't;
+        makes null checking simpler
+        */
+
+        //NEW APPROACH FOR NULL CHECKING: check is length of wordAudioIDs == length of wordList
 
         int num_of_words = wordList.size();
         int threads = cores - 1;
@@ -188,8 +209,6 @@ public class Start extends AppCompatActivity
                 }
             });
         }
-
-        // NOW NEED TO ADD NULL CHECKING WITHIN GAMES
 
 
         // leave this where it is
@@ -264,12 +283,19 @@ public class Start extends AppCompatActivity
         // load speech sounds
         Resources res = context.getResources();
         wordAudioIDs = new HashMap();
-        wordDurations = new HashMap();
+
         for (int i = start; i < end; i++)
         { //THIS LOOP IS A BIG PART OF THE PROBLEM
             int resId = res.getIdentifier(wordList.get(i).nationalWord, "raw", context.getPackageName());
             wordAudioIDs.put(wordList.get(i).nationalWord, gameSounds.load(context, resId, 1));
-            wordDurations.put(wordList.get(i).nationalWord, wordList.get(i).duration + 100);
+        }
+    }
+
+    public void populateWordDurations(){
+        wordDurations = new HashMap();
+        for (Word word: wordList)
+        {
+            wordDurations.put(word.nationalWord, word.duration + 100);
         }
     }
 
