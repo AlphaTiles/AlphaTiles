@@ -19,6 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="org.alphatilesapps.alphatiles.LoadingScreen" />
         <activity android:name="org.alphatilesapps.alphatiles.ChoosePlayer"/>
         <activity android:name="org.alphatilesapps.alphatiles.SetPlayerName"/>
         <activity android:name="org.alphatilesapps.alphatiles.Earth"/>

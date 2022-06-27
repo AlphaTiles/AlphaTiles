@@ -96,6 +96,34 @@ public class ChoosePlayer extends AppCompatActivity
 
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
+		if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+			ImageView avatar01Image = (ImageView) findViewById(R.id.avatar01);
+			ImageView avatar02Image = (ImageView) findViewById(R.id.avatar02);
+			ImageView avatar03Image = (ImageView) findViewById(R.id.avatar03);
+			ImageView avatar04Image = (ImageView) findViewById(R.id.avatar04);
+			ImageView avatar05Image = (ImageView) findViewById(R.id.avatar05);
+			ImageView avatar06Image = (ImageView) findViewById(R.id.avatar06);
+			ImageView avatar07Image = (ImageView) findViewById(R.id.avatar07);
+			ImageView avatar08Image = (ImageView) findViewById(R.id.avatar08);
+			ImageView avatar09Image = (ImageView) findViewById(R.id.avatar09);
+			ImageView avatar10Image = (ImageView) findViewById(R.id.avatar10);
+			ImageView avatar11Image = (ImageView) findViewById(R.id.avatar11);
+			ImageView avatar12Image = (ImageView) findViewById(R.id.avatar12);
+
+			avatar01Image.setRotationY(180);
+			avatar02Image.setRotationY(180);
+			avatar03Image.setRotationY(180);
+			avatar04Image.setRotationY(180);
+			avatar05Image.setRotationY(180);
+			avatar06Image.setRotationY(180);
+			avatar07Image.setRotationY(180);
+			avatar08Image.setRotationY(180);
+			avatar09Image.setRotationY(180);
+			avatar10Image.setRotationY(180);
+			avatar11Image.setRotationY(180);
+			avatar12Image.setRotationY(180);
+
+		}
 		choosePlayerCL = findViewById(R.id.choosePlayerCL);
 
 		// populate arrays from what is actually in the layout

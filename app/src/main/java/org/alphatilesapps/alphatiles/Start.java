@@ -109,7 +109,7 @@ public class Start extends AppCompatActivity
          1. loadGameAudio()
          2.
          */
-        ExecutorService service = Executors.newFixedThreadPool(3);
+        ExecutorService service = Executors.newFixedThreadPool(cores);
 
         buildLangInfoArray();
         LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
@@ -224,7 +224,7 @@ public class Start extends AppCompatActivity
         }
 
 
-        Intent intent = new Intent(this, ChoosePlayer.class);
+        Intent intent = new Intent(this, LoadingScreen.class);
 
         startActivity(intent); //this also takes a bit of time
 
