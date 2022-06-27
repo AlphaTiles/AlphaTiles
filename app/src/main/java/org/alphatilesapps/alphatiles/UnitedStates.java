@@ -75,6 +75,8 @@ public class UnitedStates extends GameActivity {
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
+        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
         constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
         constraintSet.applyTo(constraintLayout);
 
@@ -132,7 +134,13 @@ public class UnitedStates extends GameActivity {
 
         updateTrackers();
 
-        scriptLR = Start.langInfoList.find("Script direction (LR or RL)");
+        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+        }
 
         if(getAudioInstructionsResID()==0){
             centerGamesHomeImage();
@@ -198,7 +206,7 @@ public class UnitedStates extends GameActivity {
         percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
         percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
         percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.7 * scaling * percentHeight * heightOfDisplay);
+        pixelHeight = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
         pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
 
     }
@@ -271,7 +279,7 @@ public class UnitedStates extends GameActivity {
         for (int b = 0; b < visibleTiles; b+=2 ) {
 
             int bLRRL;
-            if (scriptLR.equals("RL")) {
+            if (scriptDirection.compareTo("RTL") == 0) {
                 bLRRL = visibleTiles - 2 - b;
             } else {
                 bLRRL = b;
@@ -341,7 +349,7 @@ public class UnitedStates extends GameActivity {
         LOGGER.info("Remember: 45");
 
         // KP
-        if(scriptLR.equals("RL")) {
+        if(scriptDirection.compareTo("RTL") == 0) {
             for (int j = selections.length - 1; j >= 0; j--) {
 
                 if (!selections[j].equals("")) {

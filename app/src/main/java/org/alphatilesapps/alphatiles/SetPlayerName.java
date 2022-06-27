@@ -56,6 +56,14 @@ public class SetPlayerName extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
+        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+            ImageView deleteImage = (ImageView) findViewById(R.id.deleteImage);
+            ImageView avatarImage = (ImageView) findViewById(R.id.avatar);
+
+            deleteImage.setRotationY(180);
+            avatarImage.setRotationY(180);
+        }
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
         setTitle(Start.localAppName);
@@ -177,10 +185,14 @@ public class SetPlayerName extends AppCompatActivity {
         if (keysInUse > KEYS.length) {
             TextView key34 = findViewById(KEYS[KEYS.length - 2]);
             key34.setBackgroundResource(R.drawable.zz_backward_green);
-            key34.setRotationY(getResources().getInteger(R.integer.mirror_flip));
+            if(scriptDirection.compareTo("RTL")==0){ //LM: LTR is default
+                key34.setRotationY(180);
+            }
             key34.setText("");
             TextView key35 = findViewById(KEYS[KEYS.length - 1]);
-            key35.setRotationY(getResources().getInteger(R.integer.mirror_flip));
+            if(scriptDirection.compareTo("RTL")==0){ //LM: LTR is default
+                key35.setRotationY(180);
+            }
             key35.setBackgroundResource(R.drawable.zz_forward_green);
             key35.setText("");
         }

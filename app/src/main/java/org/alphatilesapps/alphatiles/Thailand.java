@@ -95,6 +95,8 @@ public class Thailand extends GameActivity {
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
+        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
         constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
         constraintSet.applyTo(constraintLayout);
 
@@ -109,6 +111,13 @@ public class Thailand extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
 
+        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+        }
 
         points = getIntent().getIntExtra("points", 0);
         thailandPoints = getIntent().getIntExtra("thailandPoints", 0);
@@ -234,7 +243,7 @@ public class Thailand extends GameActivity {
         percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
         percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
         percentHeight = percentBottomToTop - percentTopToTop;
-        int pixelHeightGem = (int) (0.7 * scaling * percentHeight * heightOfDisplay);
+        int pixelHeightGem = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
         pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeightGem);
 
     }
