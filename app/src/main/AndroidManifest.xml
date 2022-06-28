@@ -2,40 +2,42 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.alphatilesapps.alphatiles">
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="false"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:largeHeap="false"
         android:theme="@style/AppTheme">
         <activity
-            android:name="org.alphatilesapps.alphatiles.Start"
+            android:name=".LoadingScreen"
+            android:exported="false" />
+        <activity
+            android:name=".Start"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="org.alphatilesapps.alphatiles.LoadingScreen" />
-        <activity android:name="org.alphatilesapps.alphatiles.ChoosePlayer"/>
-        <activity android:name="org.alphatilesapps.alphatiles.SetPlayerName"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Earth"/>
-        <activity android:name="org.alphatilesapps.alphatiles.About"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Brazil"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Colombia"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Ecuador"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Georgia"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Mexico"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Myanmar"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Peru"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Resources"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Romania"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Sudan"/>
-        <activity android:name="org.alphatilesapps.alphatiles.Thailand"/>
-        <activity android:name="org.alphatilesapps.alphatiles.UnitedStates"/>
+        <activity android:name=".ChoosePlayer" />
+        <activity android:name=".SetPlayerName" />
+        <activity android:name=".Earth" />
+        <activity android:name=".About" />
+        <activity android:name=".Brazil" />
+        <activity android:name=".Colombia" />
+        <activity android:name=".Ecuador" />
+        <activity android:name=".Georgia" />
+        <activity android:name=".Mexico" />
+        <activity android:name=".Myanmar" />
+        <activity android:name=".Peru" />
+        <activity android:name=".Resources" />
+        <activity android:name=".Romania" />
+        <activity android:name=".Sudan" />
+        <activity android:name=".Thailand" />
+        <activity android:name=".UnitedStates" />
     </application>
 
 </manifest>

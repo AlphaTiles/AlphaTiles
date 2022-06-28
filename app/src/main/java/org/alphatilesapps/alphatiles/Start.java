@@ -196,20 +196,30 @@ public class Start extends AppCompatActivity
         int threads = cores - 1;
         int words_per_thread = num_of_words / threads;
 
+        /*
         for (int i = 0; i < threads; i++){
             int finalI = i;
             service.execute(new Runnable() {
                 @Override
                 public void run() {
                     loadWordAudio(finalI*words_per_thread, (finalI + 1)*words_per_thread);
-                    /*
-                    i = 0 : 0, words_per_thread
-                    i = 1 : words_per_thread, 2 * words_per_thread
-                     */
+                    // i = 0 : 0, words_per_thread
+                    // i = 1 : words_per_thread, 2 * words_per_thread
                 }
             });
         }
+        temporarily remove threading to test out issue of not all word audios being added
+        - yeah that fixed it
+         */
 
+        //trying out one thread for whole word list
+
+        service.execute(new Runnable() {
+            @Override
+            public void run() {
+                loadWordAudio(0, num_of_words);
+            }
+        });
 
         // leave this where it is
         if(differentiateTypes){
@@ -226,7 +236,7 @@ public class Start extends AppCompatActivity
 
         Intent intent = new Intent(this, LoadingScreen.class);
 
-        startActivity(intent); //this also takes a bit of time
+        startActivity(intent);
 
         finish();
 
