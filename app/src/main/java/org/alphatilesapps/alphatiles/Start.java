@@ -90,6 +90,7 @@ public class Start extends AppCompatActivity
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -109,7 +110,7 @@ public class Start extends AppCompatActivity
          1. loadGameAudio()
          2.
          */
-        ExecutorService service = Executors.newFixedThreadPool(cores);
+        //ExecutorService service = Executors.newFixedThreadPool(cores);
 
         buildLangInfoArray();
         LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
@@ -162,20 +163,21 @@ public class Start extends AppCompatActivity
         loadGameAudio();
 
         // THREAD 2:
-        service.execute(new Runnable() {
+        /*
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                buildTilesArray();
-                if(hasTileAudio){
-                    LOGGER.info("loading tile audio");
-                    loadTileAudio();
-                    LOGGER.info("finished loading tile audio");
-                }
+
             }
         });
+         */
+
+        buildTilesArray();
+        if(hasTileAudio){
+            loadTileAudio();
+        }
 
         buildGamesArray();
-        LOGGER.info("Remember: completed buildGamesArray()");
 
         //THREADS 3 - ? -- get it working with one thread first, then think about splitting into
         // multiple loops across threads
@@ -192,9 +194,9 @@ public class Start extends AppCompatActivity
 
         //NEW APPROACH FOR NULL CHECKING: check is length of wordAudioIDs == length of wordList
 
-        int num_of_words = wordList.size();
-        int threads = cores - 1;
-        int words_per_thread = num_of_words / threads;
+        //int num_of_words = wordList.size();
+        //int threads = cores - 1;
+        //int words_per_thread = num_of_words / threads;
 
         /*
         for (int i = 0; i < threads; i++){
@@ -213,13 +215,6 @@ public class Start extends AppCompatActivity
          */
 
         //trying out one thread for whole word list
-
-        service.execute(new Runnable() {
-            @Override
-            public void run() {
-                loadWordAudio(0, num_of_words);
-            }
-        });
 
         // leave this where it is
         if(differentiateTypes){
@@ -241,6 +236,8 @@ public class Start extends AppCompatActivity
         finish();
 
     }
+
+
 
     private int getAssetDuration(int assetID)
     {
@@ -286,18 +283,6 @@ public class Start extends AppCompatActivity
                 }
             }
 
-        }
-    }
-
-    public void loadWordAudio(int start, int end) {
-        // load speech sounds
-        Resources res = context.getResources();
-        wordAudioIDs = new HashMap();
-
-        for (int i = start; i < end; i++)
-        { //THIS LOOP IS A BIG PART OF THE PROBLEM
-            int resId = res.getIdentifier(wordList.get(i).nationalWord, "raw", context.getPackageName());
-            wordAudioIDs.put(wordList.get(i).nationalWord, gameSounds.load(context, resId, 1));
         }
     }
 
