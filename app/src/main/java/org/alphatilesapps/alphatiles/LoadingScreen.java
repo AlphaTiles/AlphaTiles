@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
+import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +15,15 @@ import android.widget.ProgressBar;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
+import static org.alphatilesapps.alphatiles.Start.totalAudio;
+import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.tileList;
+import static org.alphatilesapps.alphatiles.Start.tileDurations;
+import static org.alphatilesapps.alphatiles.Start.hasTileAudio;
+import static org.alphatilesapps.alphatiles.Start.correctSoundID;
+import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
+import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
+import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -43,9 +54,26 @@ public class LoadingScreen extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                loadGameAudio();
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
                 loadWordAudio(0, num_of_words);
             }
         }).start();
+
+        if (hasTileAudio){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    loadTileAudio();
+                }
+            }).start();
+        }
+
 
         // do I need to worry about a race condition?
         /*new Thread(new Runnable() {
@@ -56,7 +84,7 @@ public class LoadingScreen extends AppCompatActivity {
         }).start();
 
          */
-        final int[] words_loaded = {0};
+        final int[] audio_loaded = {0};
         gameSounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener(){
 
            float percentage = 0.0F;
@@ -64,15 +92,15 @@ public class LoadingScreen extends AppCompatActivity {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status)
             {
-                words_loaded[0]++;
-                percentage = ((float) words_loaded[0] / (float) wordList.size()) * 100;
+                audio_loaded[0]++;
+                percentage = ((float) audio_loaded[0] / (float) totalAudio) * 100;
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         progressBar.setProgress((int) percentage);
                     }
                 });
-                if (words_loaded[0] == wordList.size()){
+                if (audio_loaded[0] == totalAudio){
                     startActivity(intent);
 
                     finish();
@@ -112,6 +140,55 @@ public class LoadingScreen extends AppCompatActivity {
 
 
         }
+    }
+
+    public void loadTileAudio(){
+        Resources res = context.getResources();
+        tileAudioIDs = new HashMap(0);
+        tileDurations = new HashMap();
+
+        for (Start.Tile tile : tileList) {
+            int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
+            tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
+            tileDurations.put(tile.baseTile, tile.tileDuration1 + 100);
+//                LOGGER.info("Remember tile.tileDuration1 = " + tile.tileDuration1);
+
+            if (tile.tileTypeB.compareTo("none")!= 0) {
+                if (tile.audioForTileB.compareTo("X") != 0) {
+                    resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
+                    tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
+                    totalAudio++;
+                }
+            }
+            if(tile.tileTypeC.compareTo("none")!= 0) {
+                if (tile.audioForTileC.compareTo("X") != 0) {
+                    resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
+                    tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
+                    totalAudio++;
+                }
+            }
+
+        }
+    }
+
+    public void loadGameAudio() {
+        // load music sounds
+        //^ this constructor is deprecated
+        correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
+        incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
+        correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
+
+        correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
+        //		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
+        //		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
+    }
+
+    private int getAssetDuration(int assetID)
+    {
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        AssetFileDescriptor afd = context.getResources().openRawResourceFd(assetID);
+        mmr.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+        return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
 }
 

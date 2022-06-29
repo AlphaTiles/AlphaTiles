@@ -73,12 +73,13 @@ public class Start extends AppCompatActivity
     public static int correctFinalSoundDuration;
     public static HashMap<String, Integer> wordDurations;
     public static HashMap<String, Integer> tileDurations;
+    public static int totalAudio; //the total number of audio files to be loaded into the soundpool
 //    public static HashMap<String, Integer> instructionDurations;
 
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
     ConstraintLayout startCL;
-    Boolean hasTileAudio;
+    public static Boolean hasTileAudio;
     Boolean differentiateTypes;
 
     private static int cores = Runtime.getRuntime().availableProcessors();
@@ -96,6 +97,7 @@ public class Start extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         context = this;
+        totalAudio = 3; //for correct, incorrect, and correctFinal sounds
 
         /*JP: begin loading audio as soon as possible because it takes a while, and do it while
         other tasks are executing
@@ -160,8 +162,6 @@ public class Start extends AppCompatActivity
 
          */
 
-        loadGameAudio();
-
         // THREAD 2:
         /*
         new Thread(new Runnable() {
@@ -173,9 +173,7 @@ public class Start extends AppCompatActivity
          */
 
         buildTilesArray();
-        if(hasTileAudio){
-            loadTileAudio();
-        }
+        totalAudio = totalAudio + tileList.size();
 
         buildGamesArray();
 
@@ -187,6 +185,7 @@ public class Start extends AppCompatActivity
         - words_per_thread = num_of_words / threads
         */
         buildWordsArray();
+        totalAudio = totalAudio + wordList.size();
         populateWordDurations(); /* JP separated from the loop where we populate wordAudioIDs for
         the purpose of making sure durations hashmap will be done even if loading the audio isn't;
         makes null checking simpler
@@ -238,53 +237,6 @@ public class Start extends AppCompatActivity
     }
 
 
-
-    private int getAssetDuration(int assetID)
-    {
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        AssetFileDescriptor afd = context.getResources().openRawResourceFd(assetID);
-        mmr.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-        return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-    }
-
-    public void loadGameAudio() {
-        // load music sounds
-        //^ this constructor is deprecated
-        correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
-        incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
-        correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
-
-        correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
-        //		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
-        //		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
-    }
-
-    public void loadTileAudio(){
-        Resources res = context.getResources();
-        tileAudioIDs = new HashMap(0);
-        tileDurations = new HashMap();
-
-        for (Tile tile : tileList) {
-            int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
-            tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
-            tileDurations.put(tile.baseTile, tile.tileDuration1 + 100);
-//                LOGGER.info("Remember tile.tileDuration1 = " + tile.tileDuration1);
-
-            if (tile.tileTypeB.compareTo("none")!= 0) {
-                if (tile.audioForTileB.compareTo("X") != 0) {
-                    resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
-                    tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
-                }
-            }
-            if(tile.tileTypeC.compareTo("none")!= 0) {
-                if (tile.audioForTileC.compareTo("X") != 0) {
-                    resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
-                    tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
-                }
-            }
-
-        }
-    }
 
     public void populateWordDurations(){
         wordDurations = new HashMap();
