@@ -103,7 +103,7 @@ public class LoadingScreen extends AppCompatActivity {
 
                color_index++; //JP: used w/mod_color to iterate through colors in reds, greens,
                // blues arrays
-               mod_color = color_index % 8; //JP: 9 alpha tiles colors in use
+               mod_color = color_index % 9; //JP: 9 alpha tiles colors in use
                // (removed yellow and white), so indices 0-8
 
                percentage = ((float) audio_loaded[0] / (float) totalAudio) * 100;
