@@ -738,15 +738,9 @@ public class Myanmar extends GameActivity {
 
             for (int w = 0; w < 7; w++) {
 
-                LOGGER.info("Remember: displayWord = " + displayWord);
-                LOGGER.info("Remember: sevenWordsInLopLwc[w][1] = " + sevenWordsInLopLwc[w][1]);
-
-
-                if (displayWord.equals(sevenWordsInLopLwc[w][1])) {
+                if (displayWord.equals(wordList.stripInstructionCharacters(sevenWordsInLopLwc[w][1]))) {
 
                     wordInLWC = sevenWordsInLopLwc[w][0];
-
-                    LOGGER.info("Remember: new wordInLWC = " + wordInLWC);
 
                 }
 
