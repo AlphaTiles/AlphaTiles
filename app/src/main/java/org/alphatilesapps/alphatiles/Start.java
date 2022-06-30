@@ -78,50 +78,23 @@ public class Start extends AppCompatActivity
 
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
-    ConstraintLayout startCL;
     public static Boolean hasTileAudio;
     Boolean differentiateTypes;
-
-    private static int cores = Runtime.getRuntime().availableProcessors();
-    // 4 on Pixel 4 API 31
-    // 4 on WXGA Tablet API 28
-    // 4 on Pixel API 24
-
-    //public static boolean loaded;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         context = this;
-        totalAudio = 3; //for correct, incorrect, and correctFinal sounds
-
-        /*JP: begin loading audio as soon as possible because it takes a while, and do it while
-        other tasks are executing
-
-        load tile audio first
-
-        then load word audio
-
-        this video as reference: https://www.youtube.com/watch?v=nKBKe1O_W5A
-
-        threads, start AFTER settings list is built:
-         1. loadGameAudio()
-         2.
-         */
-        //ExecutorService service = Executors.newFixedThreadPool(cores);
+        totalAudio = 3; // JP: how many total audio files to load
+        // will be used in LoadingScreen.java to determine when all audio files have loaded -> advance to ChoosePlayer
+        // initialize to 3 for correct, incorrect, and correctFinal sounds
 
         buildLangInfoArray();
-        LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
 
         buildKeysArray();
-        LOGGER.info("Remember: completed buildKeysArray()");
 
         buildSettingsArray();
-        LOGGER.info("Remember: completed buildSettingsArray()");
 
         String hasAudioSetting = settingsList.find("Has tile audio");
         if(hasAudioSetting.compareTo("")!=0){
@@ -151,39 +124,12 @@ public class Start extends AppCompatActivity
         }else{
             gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         }
-        /*
-        gameSounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int sampleId,
-                                       int status) {
-                loaded = true; //does this just tell me if all sounds are loaded or if certain ones are?
-            }
-        });
-
-         */
-
-        // THREAD 2:
-        /*
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
-         */
 
         buildTilesArray();
         totalAudio = totalAudio + tileList.size();
 
         buildGamesArray();
 
-        //THREADS 3 - ? -- get it working with one thread first, then think about splitting into
-        // multiple loops across threads
-
-        /*to split the loading of the word audio across multiple threads:
-        - threads = cores minus 1 for the tile audio
-        - words_per_thread = num_of_words / threads
-        */
         buildWordsArray();
         totalAudio = totalAudio + wordList.size();
         populateWordDurations(); /* JP separated from the loop where we populate wordAudioIDs for
@@ -191,31 +137,6 @@ public class Start extends AppCompatActivity
         makes null checking simpler
         */
 
-        //NEW APPROACH FOR NULL CHECKING: check is length of wordAudioIDs == length of wordList
-
-        //int num_of_words = wordList.size();
-        //int threads = cores - 1;
-        //int words_per_thread = num_of_words / threads;
-
-        /*
-        for (int i = 0; i < threads; i++){
-            int finalI = i;
-            service.execute(new Runnable() {
-                @Override
-                public void run() {
-                    loadWordAudio(finalI*words_per_thread, (finalI + 1)*words_per_thread);
-                    // i = 0 : 0, words_per_thread
-                    // i = 1 : words_per_thread, 2 * words_per_thread
-                }
-            });
-        }
-        temporarily remove threading to test out issue of not all word audios being added
-        - yeah that fixed it
-         */
-
-        //trying out one thread for whole word list
-
-        // leave this where it is
         if(differentiateTypes){
 
             if (MULTIFUNCTIONS.isEmpty()) {  //makes sure MULTIFUNCTIONS is populated only once when the app is running
@@ -226,7 +147,6 @@ public class Start extends AppCompatActivity
                 }
             }
         }
-
 
         Intent intent = new Intent(this, LoadingScreen.class);
 
