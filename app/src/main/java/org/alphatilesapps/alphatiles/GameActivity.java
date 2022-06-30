@@ -15,10 +15,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
+import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
@@ -64,6 +65,8 @@ public abstract class GameActivity extends AppCompatActivity {
 	protected abstract int[] getWordImages();
 	protected abstract int getAudioInstructionsResID();
 	protected abstract void centerGamesHomeImage();
+
+	private static final Logger LOGGER = Logger.getLogger( GameActivity.class.getName() );
 
 	@Override
 	protected void onCreate(Bundle state) {
@@ -228,43 +231,53 @@ public abstract class GameActivity extends AppCompatActivity {
 	}	
 	protected void playActiveWordClip(final boolean playFinalSound)	
 	{	
-		if (tempSoundPoolSwitch)	
+		if (tempSoundPoolSwitch){
 			playActiveWordClip1(playFinalSound);	//SoundPool
+		}
+
 		else	
 			playActiveWordClip0(playFinalSound);	//MediaPlayer
 	}	
 	protected void playActiveWordClip1(final boolean playFinalSound)	
 	{	
 		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();	
-		gameSounds.play(wordAudioIDs.get(wordInLWC), 1.0f, 1.0f, 2, 0, 1.0f);	
-		soundSequencer.postDelayed(new Runnable()	
-		{	
-			public void run()	
-			{	
-				if (playFinalSound)	
-				{	
-					trackerCount++;	
-					updateTrackers();	
-					repeatLocked = false;	
-					SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();	
-					String playerString = Util.returnPlayerStringToAppend(playerNumber);	
-					String uniqueGameLevelPlayerID = className + challengeLevel + playerString;	
-					editor.putInt(uniqueGameLevelPlayerID, trackerCount);	
-					editor.apply();	
-					playCorrectFinalSound();	
-				}	
-				else	
-				{	
-					if (repeatLocked)	
-					{	
+		setOptionsRowUnclickable();
+
+			//ISSUE: OnLoadCompleteListener not working because it just checks one load at a time ?
+		if(wordAudioIDs.containsKey(wordInLWC)){
+			gameSounds.play(wordAudioIDs.get(wordInLWC), 1.0f, 1.0f, 2, 0, 1.0f);
+		}
+		soundSequencer.postDelayed(new Runnable()
+		{
+			public void run()
+			{
+				if (playFinalSound)
+				{
+					trackerCount++;
+					updateTrackers();
+					repeatLocked = false;
+					SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();
+					String playerString = Util.returnPlayerStringToAppend(playerNumber);
+					String uniqueGameLevelPlayerID = className + challengeLevel + playerString;
+					editor.putInt(uniqueGameLevelPlayerID, trackerCount);
+					editor.apply();
+					playCorrectFinalSound();
+				}
+				else
+				{
+					if (repeatLocked)
+					{
 						setAllTilesClickable();
-					}	
-					setOptionsRowClickable();	
-				}	
-			}	
-		}, wordDurations.get(wordInLWC));	
-	}	
+					}
+					setOptionsRowClickable();
+				}
+			}
+		}, wordDurations.get(wordInLWC));
+	}
+
+
+
+
 	protected void playActiveWordClip0(final boolean playFinalSound)	
 	{	
 		setAllTilesUnclickable();	
@@ -293,18 +306,20 @@ public abstract class GameActivity extends AppCompatActivity {
 	protected void playCorrectSoundThenActiveWordClip1(final boolean playFinalSound)	
 	{	
 		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();	
-		gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);	
-		soundSequencer.postDelayed(new Runnable()	
-		{	
-			public void run()	
+		setOptionsRowUnclickable();
+
+		gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+
+		soundSequencer.postDelayed(new Runnable()
+		{
+			public void run()
 			{
-				setAllTilesClickable();	
-				setOptionsRowClickable();	
-				playActiveWordClip(playFinalSound);	
-			}	
-		}, correctSoundDuration);	
-	}	
+				setAllTilesClickable();
+				setOptionsRowClickable();
+				playActiveWordClip(playFinalSound);
+			}
+		}, correctSoundDuration);
+	}
 	protected void playCorrectSoundThenActiveWordClip0(final boolean playFinalSound)	
 	{	
 		setAllTilesUnclickable();	
@@ -368,8 +383,8 @@ public abstract class GameActivity extends AppCompatActivity {
 	protected void playCorrectFinalSound1()	
 	{	
 		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();	
-		gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);	
+		setOptionsRowUnclickable();
+		gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
 		setAllTilesClickable();	
 		setOptionsRowClickable();	
 	}	
@@ -449,16 +464,28 @@ public abstract class GameActivity extends AppCompatActivity {
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-	private void forceRTLIfSupported() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+	private void forceRTLIfSupported()
+	{
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
 			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
 		}
 	}
-		@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-		private void forceLTRIfSupported ()
-		{
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-				getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-			}
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+	private void forceLTRIfSupported()
+	{
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		}
 	}
+
+	//added by JP
+	/*
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		gameSounds.release();
+		gameSounds = null;
+	}
+	 */
+}

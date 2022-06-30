@@ -2,16 +2,14 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,12 +64,12 @@ public class Start extends AppCompatActivity
     public static int correctFinalSoundDuration;
     public static HashMap<String, Integer> wordDurations;
     public static HashMap<String, Integer> tileDurations;
+    public static int totalAudio; //the total number of audio files to be loaded into the soundpool
 //    public static HashMap<String, Integer> instructionDurations;
 
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
-    ConstraintLayout startCL;
-    Boolean hasTileAudio;
+    public static Boolean hasTileAudio;
     Boolean differentiateTypes;
 
     @Override
@@ -79,8 +77,11 @@ public class Start extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         context = this;
-        LOGGER.info("Remember: pre-completed buildLangInfoArray()");
+        totalAudio = 3; // JP: how many total audio files to load
+        // will be used in LoadingScreen.java to determine when all audio files have loaded -> advance to ChoosePlayer
+        // initialize to 3 for correct, incorrect, and correctFinal sounds
 
+        LOGGER.info("Remember: pre-completed buildLangInfoArray()");
         buildLangInfoArray();
         LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
 
@@ -105,13 +106,35 @@ public class Start extends AppCompatActivity
         else{
             differentiateTypes = false;
         }
-
         LOGGER.info("Remember: completed hasTileAudio & differentiateTypes");
+
+        // JP: the old constructor is deprecated after API 21, so account for both scenarios
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            AudioAttributes attributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            gameSounds = new SoundPool.Builder()
+                    .setAudioAttributes(attributes)
+                    .build();
+        }else{
+            gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        }
+
+        buildTilesArray();
+        totalAudio = totalAudio + tileList.size();
+        LOGGER.info("Remember: completed buildTilesArray()");
+
         buildGamesArray();
         LOGGER.info("Remember: completed buildGamesArray()");
 
-        buildWordAndTileArrays();
-        LOGGER.info("Remember: completed buildWordAndTileArrays()");
+        buildWordsArray();
+        totalAudio = totalAudio + wordList.size();
+        populateWordDurations(); /* JP separated from the loop where we populate wordAudioIDs for
+        the purpose of making sure durations hashmap will be done even if loading the audio isn't;
+        makes null checking simpler
+        */
+        LOGGER.info("Remember: completed buildWordsArray()");
 
         if(differentiateTypes){
 
@@ -124,8 +147,7 @@ public class Start extends AppCompatActivity
             }
         }
 
-
-        Intent intent = new Intent(this, ChoosePlayer.class);
+        Intent intent = new Intent(this, LoadingScreen.class);
 
         startActivity(intent);
 
@@ -133,91 +155,16 @@ public class Start extends AppCompatActivity
 
     }
 
-    private int getAssetDuration(int assetID)
-    {
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        AssetFileDescriptor afd = context.getResources().openRawResourceFd(assetID);
-        mmr.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-        return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-    }
 
-    public void buildWordAndTileArrays()    {
-        LOGGER.info("Remember: entered buildWordAndTileArrays() method");
-//        Util.logMemory();
-        buildTilesArray();
-        LOGGER.info("Remember: completed buildTilesArray()");
-//        Util.logMemory();
-        buildWordsArray();
-        LOGGER.info("Remember: completed buildWordsArray()");
-//        Util.logMemory();
 
-        // load music sounds
-        gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-        correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
-        incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
-        correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
-
-        correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
-//		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
-//		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
-
-        // load speech sounds
-        Resources res = context.getResources();
-        wordAudioIDs = new HashMap();
+    public void populateWordDurations(){
         wordDurations = new HashMap();
-        for (Word word : wordList)
+        for (Word word: wordList)
         {
-            int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
-            wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 2));
             wordDurations.put(word.nationalWord, word.duration + 100);
-//            LOGGER.info("Remember word.duration = " + word.duration);
-//			wordDurations.put(word.nationalWord, getAssetDuration(resId) + 200);
         }
-
-        if(differentiateTypes) {
-
-            tileListWithMultipleTypes = new TileListWithMultipleTypes();
-
-            for (Tile tile : tileList) {
-                tileListWithMultipleTypes.add(tile.baseTile);
-
-                if (tile.tileTypeB.compareTo("none") != 0) {
-                    tileListWithMultipleTypes.add(tile.baseTile + "B");
-                }
-                if (tile.tileTypeC.compareTo("none") != 0) {
-                    tileListWithMultipleTypes.add(tile.baseTile + "C");
-                }
-            }
-        }
-
-        if (hasTileAudio) {
-            tileAudioIDs = new HashMap(0);
-            tileDurations = new HashMap();
-
-            for (Tile tile : tileList) {
-                int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
-                tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
-                tileDurations.put(tile.baseTile, tile.tileDuration1 + 100);
-//                LOGGER.info("Remember tile.tileDuration1 = " + tile.tileDuration1);
-
-                if (tile.tileTypeB.compareTo("none")!= 0) {
-                    if (tile.audioForTileB.compareTo("X") != 0) {
-                        resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
-                        tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
-                    }
-                }
-                if(tile.tileTypeC.compareTo("none")!= 0) {
-                    if (tile.audioForTileC.compareTo("X") != 0) {
-                        resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
-                        tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
-                    }
-                }
-
-            }
-        }
-
-
     }
+
     public void buildTilesArray() {
         // KP, Oct 2020
         // AH Nov 2020, updated by AH to allow for spaces in fields (some common nouns in some languages have spaces
@@ -250,6 +197,22 @@ public class Start extends AppCompatActivity
                 Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], Integer.parseInt(thisLineArray[11]), Integer.parseInt(thisLineArray[12]), Integer.parseInt(thisLineArray[13]));
                 if (!tile.hasNull()) {
                     tileList.add(tile);
+                }
+            }
+        }
+
+        if(differentiateTypes) {
+
+            tileListWithMultipleTypes = new TileListWithMultipleTypes();
+
+            for (Tile tile : tileList) {
+                tileListWithMultipleTypes.add(tile.baseTile);
+
+                if (tile.tileTypeB.compareTo("none") != 0) {
+                    tileListWithMultipleTypes.add(tile.baseTile + "B");
+                }
+                if (tile.tileTypeC.compareTo("none") != 0) {
+                    tileListWithMultipleTypes.add(tile.baseTile + "C");
                 }
             }
         }

@@ -648,7 +648,6 @@ public class Thailand extends GameActivity {
 
     //JP: for SoundPool, for tile audio
     public void playActiveTileClip1() {
-        LOGGER.info("Remember: 901: SoundPool being used in playActiveTileClip");
 
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
@@ -661,9 +660,9 @@ public class Thailand extends GameActivity {
 
             String tileText = null;
             tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
-            LOGGER.info("Remember: 902: About to play audio...");
-            LOGGER.info("Remember: 903: tileDurations.get(tileText)) = " + tileDurations.get(tileText));
-            gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+            if (tileAudioIDs.containsKey(tileText)) {
+                gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+            }
             soundSequencer.postDelayed(new Runnable() {
                 public void run() {
                     if (repeatLocked) {
@@ -671,9 +670,9 @@ public class Thailand extends GameActivity {
                     }
                     setOptionsRowClickable();
                 }
-//            }, 925); //JP: must use fixed number unless we make an array for tile durations
             }, tileDurations.get(tileText));
         }
+
     }
 
     //JP: for Media Player; tile audio
@@ -714,16 +713,16 @@ public class Thailand extends GameActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
-        LOGGER.info("Remember: SoundPool being used in final");
         gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
-
-        //JP: this delays word audio after correct sound audio so they don't overlap
+            //JP: this delays word audio after correct sound audio so they don't overlap
 
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 String tileText = null;
                 tileText = tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile;
-                gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 1, 0, 1.0f);
+                if (tileAudioIDs.containsKey(tileText)) {
+                    gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 1, 0, 1.0f);
+                }
             }
         }, 925); //JP: having this fixed at 1200 should be fine since this is specifically for tile audio, NOT words
         // AH: The correct sound in 876 ms, so 925 is a hardcoded value for the current zz_correct.mp3 file
@@ -739,6 +738,7 @@ public class Thailand extends GameActivity {
         }, 925 + tileDurations.get(tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile));
         // Above represents the hardcoded value of zz_correct.mp3 (876 ms) + duration of tile audio
     }
+
 
     public void playCorrectSoundThenActiveTileClip0() {
         //media player:
