@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
+import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
@@ -250,9 +251,9 @@ public class Thailand extends GameActivity {
 
     public void repeatGame (View view) {
 
-//        if (!repeatLocked) {
+        if (!repeatLocked) {
             playAgain();
-//        }
+        }
 
     }
 
@@ -273,7 +274,7 @@ public class Thailand extends GameActivity {
         refColor = Color.parseColor(refColorStr);
 
         LOGGER.info("Remember: J");
-        // if either or both elements are word-based, then three if statement, but if both elements are tile based, then while loop
+        // if either or both elements are word-based, then three IF statements, but if both elements are tile based, then WHILE LOOP
         if (refType.contains("WORD") || choiceType.contains("WORD")) {
             chooseWord();
             parsedWordArrayFinal = tileList.parseWord(wordInLOP);
@@ -317,7 +318,7 @@ public class Thailand extends GameActivity {
             case "WORD_TEXT":
                 refItem.setBackgroundColor(WHITE);
                 refItem.setTextColor(Color.parseColor("#000000")); // black
-                refItem.setText(wordInLOP);
+                refItem.setText(wordList.stripInstructionCharacters(wordInLOP));
                 float fontAdjustment = Float.parseFloat(Start.wordList.get(Start.wordList.returnPositionInWordList(wordInLWC)).adjustment);
                 int thisCardPixelHeight = (int) (pixelHeightRef * fontAdjustment);
                 refItem.setTextSize(TypedValue.COMPLEX_UNIT_PX, thisCardPixelHeight);
@@ -371,7 +372,7 @@ public class Thailand extends GameActivity {
                     choiceButton.setBackgroundColor(choiceColorNo);
                     choiceButton.setTextColor(Color.parseColor("#000000")); // black
                     //LOGGER.info("Remember: AB1: fourChoices.get(t)[1] = " + fourChoices.get(t)[1]);
-                    choiceButton.setText(fourChoices.get(t)[1]);
+                    choiceButton.setText(wordList.stripInstructionCharacters((fourChoices.get(t)[1])));
                     //float fontAdjustment = Float.parseFloat(Start.wordList.get(Start.wordList.returnPositionInWordList(fourChoices.get(t)[0])).adjustment);
                     int thisCardPixelHeight = (int) (pixelHeightChoices);
                             //* fontAdjustment);
@@ -429,7 +430,7 @@ public class Thailand extends GameActivity {
                 break;
             case "WORD_IMAGE":
             case "WORD_AUDIO":
-                refItemText = wordInLOP;
+                refItemText = wordList.stripInstructionCharacters(wordInLOP);
                 break;
             default:
                 break;
@@ -442,7 +443,7 @@ public class Thailand extends GameActivity {
         if (!choiceType.equals("WORD_IMAGE")) {
             chosenItemText = chosenItem.getText().toString();   // all cases except WORD_IMAGE
         } else {
-            chosenItemText = fourChoices.get(t)[1];             // when WORD_IMAGE
+            chosenItemText = wordList.stripInstructionCharacters(fourChoices.get(t)[1]);             // when WORD_IMAGE
         }
 
         boolean goodMatch = false;
