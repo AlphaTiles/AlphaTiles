@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme">
 
         <activity
+            android:exported="true"
             android:name=".Start"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
