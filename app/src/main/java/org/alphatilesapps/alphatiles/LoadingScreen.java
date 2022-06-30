@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
+
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -89,14 +92,27 @@ public class LoadingScreen extends AppCompatActivity {
 
            float percentage = 0.0F;
 
+           //alpha tiles colors
+           int[] reds = {98,55,3,0,156,33,244,76,233};
+           int[] greens = {0,0,218,255,39,150,67,175,30};
+           int[] blues = {238, 179,197,0,176,243,54,80,99};
+
+           int color_index = 0;
+           int mod_color = 0;
+
+
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status)
             {
                 audio_loaded[0]++;
+                color_index++;
+                mod_color = color_index % 8; // 9 alpha tiles colors in use (removed yellow and white)
                 percentage = ((float) audio_loaded[0] / (float) totalAudio) * 100;
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        progressBar.getProgressDrawable().setColorFilter(
+                                Color.rgb(reds[mod_color],greens[mod_color],blues[mod_color]), android.graphics.PorterDuff.Mode.SRC_IN);
                         progressBar.setProgress((int) percentage);
                     }
                 });
