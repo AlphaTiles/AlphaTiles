@@ -2,20 +2,14 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,9 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public class Start extends AppCompatActivity
@@ -90,11 +81,15 @@ public class Start extends AppCompatActivity
         // will be used in LoadingScreen.java to determine when all audio files have loaded -> advance to ChoosePlayer
         // initialize to 3 for correct, incorrect, and correctFinal sounds
 
+        LOGGER.info("Remember: pre-completed buildLangInfoArray()");
         buildLangInfoArray();
+        LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
 
         buildKeysArray();
+        LOGGER.info("Remember: completed buildKeysArray()");
 
         buildSettingsArray();
+        LOGGER.info("Remember: completed buildSettingsArray()");
 
         String hasAudioSetting = settingsList.find("Has tile audio");
         if(hasAudioSetting.compareTo("")!=0){
@@ -111,6 +106,7 @@ public class Start extends AppCompatActivity
         else{
             differentiateTypes = false;
         }
+        LOGGER.info("Remember: completed hasTileAudio & differentiateTypes");
 
         // JP: the old constructor is deprecated after API 21, so account for both scenarios
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
@@ -127,8 +123,10 @@ public class Start extends AppCompatActivity
 
         buildTilesArray();
         totalAudio = totalAudio + tileList.size();
+        LOGGER.info("Remember: completed buildTilesArray()");
 
         buildGamesArray();
+        LOGGER.info("Remember: completed buildGamesArray()");
 
         buildWordsArray();
         totalAudio = totalAudio + wordList.size();
@@ -136,6 +134,7 @@ public class Start extends AppCompatActivity
         the purpose of making sure durations hashmap will be done even if loading the audio isn't;
         makes null checking simpler
         */
+        LOGGER.info("Remember: completed buildWordsArray()");
 
         if(differentiateTypes){
 

@@ -26,8 +26,6 @@ import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 
-import com.google.android.material.progressindicator.LinearProgressIndicator;
-
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -58,6 +56,7 @@ public class LoadingScreen extends AppCompatActivity {
             @Override
             public void run() {
                 loadGameAudio();
+                LOGGER.info("Remember: completed loadGameAudio()");
             }
         }).start();
 
@@ -65,6 +64,7 @@ public class LoadingScreen extends AppCompatActivity {
             @Override
             public void run() {
                 loadWordAudio(0, num_of_words);
+                LOGGER.info("Remember: completed loadWordAudio()");
             }
         }).start();
 
@@ -73,6 +73,7 @@ public class LoadingScreen extends AppCompatActivity {
                 @Override
                 public void run() {
                     loadTileAudio();
+                    LOGGER.info("Remember: completed loadTileAudio()");
                 }
             }).start();
         }
