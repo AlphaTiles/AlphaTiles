@@ -45,15 +45,6 @@ android {
             applicationIdSuffix ".blue.tpxTeocuitlapa"
             resValue "string", "app_name", 'Mu′tsíin (me′phaa Xma′íín)'
         }
-
-        ajzAmriKarbi {
-            dimension "language"
-            applicationIdSuffix ".blue.ajzAmriKarbi"
-            resValue "string", "app_name", "Ahiasang Kachilem Kicheng"
-        }
-
-
-
     }
 }
 
