@@ -56,7 +56,7 @@ public class LoadingScreen extends AppCompatActivity {
             @Override
             public void run() {
                 loadGameAudio();
-                LOGGER.info("Remember: completed loadGameAudio()");
+                LOGGER.info("Remember: initiated loadGameAudio()");
             }
         }).start();
 
@@ -64,7 +64,7 @@ public class LoadingScreen extends AppCompatActivity {
             @Override
             public void run() {
                 loadWordAudio(0, num_of_words);
-                LOGGER.info("Remember: completed loadWordAudio()");
+                LOGGER.info("Remember: initiated loadWordAudio()");
             }
         }).start();
 
@@ -73,7 +73,7 @@ public class LoadingScreen extends AppCompatActivity {
                 @Override
                 public void run() {
                     loadTileAudio();
-                    LOGGER.info("Remember: completed loadTileAudio()");
+                    LOGGER.info("Remember: initiated loadTileAudio()");
                 }
             }).start();
         }
@@ -119,6 +119,7 @@ public class LoadingScreen extends AppCompatActivity {
 
                //once all audio files have finished loading, launch ChoosePlayer
                if (audio_loaded[0] == totalAudio){
+                   LOGGER.info("Remember: all audio loading complete");
                    startActivity(intent);
 
                    finish();
