@@ -1,6 +1,7 @@
 package org.alphatilesapps.alphatiles;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
@@ -60,7 +63,8 @@ public abstract class GameActivity extends AppCompatActivity {
 			R.id.tracker11, R.id.tracker12
 
 	};
-	
+	private MyApplication AppUtils;
+
 	protected abstract int[] getTileButtons();	
 	protected abstract int[] getWordImages();
 	protected abstract int getAudioInstructionsResID();
@@ -478,14 +482,4 @@ public abstract class GameActivity extends AppCompatActivity {
 			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		}
 	}
-
-	//added by JP
-	/*
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		gameSounds.release();
-		gameSounds = null;
-	}
-	 */
 }

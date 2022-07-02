@@ -11,12 +11,14 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 public class Start extends AppCompatActivity
@@ -33,6 +35,8 @@ public class Start extends AppCompatActivity
 
     public static WordList wordList;     // KP  // from aa_wordlist.txt
 
+    public static SyllableList syllableList; // JP // from aa_syllables.txt
+
     public static KeyList keyList; // KP // from aa_keyboard.txt
 
     public static GameList gameList; // from aa_games.text
@@ -48,6 +52,8 @@ public class Start extends AppCompatActivity
 
     public static WordHashMap wordHashMap;
 
+    public static SyllableHashMap syllableHashMap; //JP
+
     public static List<String> MULTIFUNCTIONS = new ArrayList<>();
 
     public static ArrayList<Integer> avatarIdList;
@@ -58,18 +64,21 @@ public class Start extends AppCompatActivity
     public static int correctFinalSoundID;
     public static HashMap<String, Integer> wordAudioIDs;
     public static HashMap<String, Integer> tileAudioIDs;
+    public static HashMap<String, Integer> syllableAudioIDs; //JP
 //    public static HashMap<String, Integer> instructionAudioIDs;
     public static int correctSoundDuration;
     public static int incorrectSoundDuration;
     public static int correctFinalSoundDuration;
     public static HashMap<String, Integer> wordDurations;
     public static HashMap<String, Integer> tileDurations;
-    public static int totalAudio; //the total number of audio files to be loaded into the soundpool
+    public static HashMap<String, Integer> syllableDurations;
+    public static int totalAudio; //JP: the total number of audio files to be loaded into the soundpool
 //    public static HashMap<String, Integer> instructionDurations;
 
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
     public static Boolean hasTileAudio;
+    public static Boolean hasSyllableGames;
     Boolean differentiateTypes;
 
     @Override
@@ -135,6 +144,12 @@ public class Start extends AppCompatActivity
         makes null checking simpler
         */
         LOGGER.info("Remember: completed buildWordsArray()");
+
+        if(hasSyllableGames){
+            buildSyllablesArray();
+            totalAudio = totalAudio + syllableList.size();
+            LOGGER.info("Remember: completed buildSyllablesArray()");
+        }
 
         if(differentiateTypes){
 
@@ -218,6 +233,37 @@ public class Start extends AppCompatActivity
         }
 
         buildTileHashMap();
+    }
+
+    public void buildSyllablesArray() {
+        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_syllables));
+
+        boolean header = true;
+        syllableList = new SyllableList();
+
+        while (scanner.hasNext()) {
+            String thisLine = scanner.nextLine();
+            String[] thisLineArray = thisLine.split("\t", 14);
+            if (header) {
+                syllableList.syllableTitle = thisLineArray[0];
+                syllableList.syllableAudioNameTitle = thisLineArray[1];
+                syllableList.syllableDurationTitle = thisLineArray[2];
+            } else {
+                Syllable syllable = new Syllable(thisLineArray[0], thisLineArray[1], Integer.parseInt(thisLineArray[2]));
+                if (!syllable.hasNull()) {
+                    syllableList.add(syllable);
+                }
+            }
+        }
+
+        buildSyllableHashMap();
+    }
+
+    private void buildSyllableHashMap() {
+        syllableHashMap = new SyllableHashMap();
+        for(int i = 0; i < syllableList.size(); i++){
+            syllableHashMap.put(syllableList.get(i).syllable, syllableList.get(i));
+        }
     }
 
     public void buildWordsArray() {
@@ -521,7 +567,7 @@ public class Start extends AppCompatActivity
             int tilesCount = 0;
 
             for (int i = 0; i < size(); i++) {
-                parsedWordArrayFinal = tileList.parseWord(get(i).localWord);
+                parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
 
                 wordInitialTile = parsedWordArrayFinal.get(0);
 
@@ -580,7 +626,7 @@ public class Start extends AppCompatActivity
             }
 
             for (int i = 0; i < size(); i++) {
-                parsedWordArrayFinal = tileList.parseWord(get(i).localWord);
+                parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
 
                 wordInitialTile = parsedWordArrayFinal.get(0);
 
@@ -640,7 +686,7 @@ public class Start extends AppCompatActivity
             int tilesCount = 0;
 
             for (int i = 0; i < size(); i++) {
-                parsedWordArrayFinal = tileList.parseWord(get(i).localWord);
+                parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
 
                 for (int k = 1; k < parsedWordArrayFinal.size(); k++) {
                     tileInFocus = parsedWordArrayFinal.get(k);
@@ -700,7 +746,7 @@ public class Start extends AppCompatActivity
             }
 
             for (int i = 0; i < size(); i++) {
-                parsedWordArrayFinal = tileList.parseWord(get(i).localWord);
+                parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
 
                 for (int k = 1; k < parsedWordArrayFinal.size(); k++) {
                     tileInFocus = parsedWordArrayFinal.get(k);
@@ -761,7 +807,7 @@ public class Start extends AppCompatActivity
             int tilesCount = 0;
 
             for (int i = 0; i < size(); i++) {
-                parsedWordArrayFinal = tileList.parseWord(get(i).localWord);
+                parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
 
                 for (int k = 0; k < parsedWordArrayFinal.size(); k++) {
                     tileInFocus = parsedWordArrayFinal.get(k);
@@ -821,7 +867,7 @@ public class Start extends AppCompatActivity
             }
 
             for (int i = 0; i < size(); i++) {
-                parsedWordArrayFinal = tileList.parseWord(get(i).localWord);
+                parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
 
                 for (int k = 0; k < parsedWordArrayFinal.size(); k++) {
                     tileInFocus = parsedWordArrayFinal.get(k);
@@ -929,7 +975,7 @@ public class Start extends AppCompatActivity
             for (int i = 0; i < wordList.size(); i++) {
 
                 String activeWord = Start.wordList.get(i).localWord;
-                parsedWordArrayFinal = Start.tileList.parseWord(activeWord);
+                parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(activeWord);
                 String activeTileLower = parsedWordArrayFinal.get(0);
                 String activeTile;
 
@@ -995,7 +1041,7 @@ public class Start extends AppCompatActivity
                         possibleWordArr = easyWords.get(i);
 
                         possibleWord = possibleWordArr[1]; //should be LOP word
-                        parsedWordArrayFinal = Start.tileList.parseWord(possibleWord);
+                        parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(possibleWord);
                         firstTile = parsedWordArrayFinal.get(0);
 
                         while ((Character.toLowerCase(firstTile.charAt(0)) == Character.toLowerCase(refTile.charAt(0))) && (firstTile.length() > refTile.length())
@@ -1005,7 +1051,7 @@ public class Start extends AppCompatActivity
 
                             possibleWordArr = easyWords.get(rand1);
                             possibleWord = possibleWordArr[1];
-                            parsedWordArrayFinal = Start.tileList.parseWord(possibleWord);
+                            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(possibleWord);
                             firstTile = parsedWordArrayFinal.get(0);
                         }
 
@@ -1037,7 +1083,7 @@ public class Start extends AppCompatActivity
                             possibleWordArr = easyWords.get(rand1);
                         }
                         possibleWord = possibleWordArr[1]; //should be LOP word
-                        parsedWordArrayFinal = Start.tileList.parseWord(possibleWord);
+                        parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(possibleWord);
                         firstTile = parsedWordArrayFinal.get(0); //should be tile
 
                         //then test whether this possible word is problematic, and if so, replace it with a (different) random easy word.
@@ -1049,7 +1095,7 @@ public class Start extends AppCompatActivity
 
                             possibleWordArr = easyWords.get(rand1);
                             possibleWord = possibleWordArr[1];
-                            parsedWordArrayFinal = Start.tileList.parseWord(possibleWord);
+                            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(possibleWord);
                             firstTile = parsedWordArrayFinal.get(0);
                         }
 
@@ -1100,6 +1146,38 @@ public class Start extends AppCompatActivity
 
     }
 
+    public class Syllable{
+        public String syllable;
+        public String syllableAudioName;
+        public int syllableDuration;
+
+        public Syllable(String syllable, String syllableAudioName, int syllableDuration) {
+            this.syllable = syllable;
+            this.syllableAudioName = syllableAudioName;
+            this.syllableDuration = syllableDuration;
+        }
+
+        public boolean hasNull() {
+            return syllable == null || syllableAudioName == null;
+        }
+    }
+
+    public class SyllableList extends ArrayList<Syllable>{
+        public String syllableTitle;
+        public String syllableAudioNameTitle;
+        public String syllableDurationTitle;
+
+        public ArrayList<String> parseWordIntoSyllables(String parseMe) {
+            ArrayList<String> parsedWordArrayTemp = new ArrayList();
+            StringTokenizer st = new StringTokenizer(parseMe, ".");
+            while (st.hasMoreTokens()) {
+                parsedWordArrayTemp.add(st.nextToken());
+            }
+
+            return parsedWordArrayTemp;
+        }
+    }
+
     public class TileList extends ArrayList<Tile> {
         public String baseTitle;
         public String alt1Title;
@@ -1116,7 +1194,7 @@ public class Start extends AppCompatActivity
         public String tileDuration2;
         public String tileDuration3;
 
-        public ArrayList<String> parseWord(String parseMe) {
+        public ArrayList<String> parseWordIntoTiles(String parseMe) {
             // Updates by KP, Oct 2020
             // AH, Nov 2020, extended to check up to four characters in a game tile
 
@@ -1475,6 +1553,19 @@ public class Start extends AppCompatActivity
                 }
             }
         return null;
+        }
+
+    }
+
+    public class SyllableHashMap extends HashMap<String, Syllable>{
+
+        public Syllable find(String key) {
+            for (String k : keySet()) {
+                if (k.compareTo(key) == 0) {
+                    return (get(k));
+                }
+            }
+            return null;
         }
 
     }

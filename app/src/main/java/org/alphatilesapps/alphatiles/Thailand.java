@@ -277,7 +277,7 @@ public class Thailand extends GameActivity {
         // if either or both elements are word-based, then three IF statements, but if both elements are tile based, then WHILE LOOP
         if (refType.contains("WORD") || choiceType.contains("WORD")) {
             chooseWord();
-            parsedWordArrayFinal = tileList.parseWord(wordInLOP);
+            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
             if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO") || choiceType.equals("TILE_LOWER")) {
                 refTile = parsedWordArrayFinal.get(0);
                 LOGGER.info("Remember: J2: refTile = " + refTile);
@@ -505,13 +505,13 @@ public class Thailand extends GameActivity {
                 switch (refType) {
                     case "TILE_LOWER":
                     case "TILE_AUDIO":
-                        parsedChosenWordArrayFinal = tileList.parseWord(chosenItemText);
+                        parsedChosenWordArrayFinal = tileList.parseWordIntoTiles(chosenItemText);
                         if (parsedChosenWordArrayFinal.get(0).equals(refItemText)) {
                             goodMatch = true;
                         }
                         break;
                     case "TILE_UPPER":
-                        parsedChosenWordArrayFinal = tileList.parseWord(chosenItemText);
+                        parsedChosenWordArrayFinal = tileList.parseWordIntoTiles(chosenItemText);
                         if (refItemText != null && refItemText.equals(tileList.get(tileList.returnPositionInAlphabet(parsedChosenWordArrayFinal.get(0))).upperTile)) {
                             goodMatch = true;
                         }

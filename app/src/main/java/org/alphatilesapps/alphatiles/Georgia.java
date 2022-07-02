@@ -19,6 +19,7 @@ import java.util.Random;
 public class Georgia extends GameActivity {
 
     Start.TileList sortableTilesArray; // KP
+    Start.SyllableList sortableSyllArray; //JP
     String initialTile = "";
     int visibleTiles; // will be 6, 12 or 18 based on challengeLevel 1, 2 or 3
     String lastWord = "";
@@ -108,6 +109,8 @@ public class Georgia extends GameActivity {
                 visibleTiles = 6;
         }
 
+
+        sortableSyllArray = (Start.SyllableList)Start.syllableList.clone();
         sortableTilesArray = (Start.TileList)Start.tileList.clone(); // KP
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
@@ -229,8 +232,51 @@ public class Georgia extends GameActivity {
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
-        parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP); // KP
+        parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
+        parsedWordSyllArrayFinal = Start.tileList.parseWordIntoSyllables(wordInLOP); //JP
         initialTile = parsedWordArrayFinal.get(0);
+        initialSyll = parsedWordSyllArrayFinal.get(0);
+
+    }
+
+    private void setUpSyllables() {
+        boolean correctSyllRepresented = false;
+
+        for (int t = 0; t < TILE_BUTTONS.length; t++){
+            TextView gameTile = findViewById(TILE_BUTTONS[t]);
+
+            if (sortableSyllArray.get(t).syllable.equals(initialTile) && t < visibleTiles) {
+                correctTileRepresented = true;
+            }
+
+            String tileColorStr = COLORS[t % 5];
+            int tileColor = Color.parseColor(tileColorStr);
+
+            if (t < visibleTiles) {
+                gameTile.setText(sortableTilesArray.get(t).baseTile); // KP
+                gameTile.setBackgroundColor(tileColor);
+                gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                gameTile.setVisibility(View.VISIBLE);
+            } else {
+                gameTile.setText(String.valueOf(t + 1));
+                gameTile.setBackgroundResource(R.drawable.textview_border);
+                gameTile.setTextColor(Color.parseColor("#000000")); // black
+                gameTile.setClickable(false);
+                gameTile.setVisibility(View.INVISIBLE);
+            }
+
+        }
+
+        if (!correctTileRepresented) {
+
+            // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
+
+            Random rand = new Random();
+            int randomNum = rand.nextInt(visibleTiles - 1); // KP
+            TextView gameTile = findViewById(TILE_BUTTONS[randomNum]);
+            gameTile.setText(initialTile);
+
+        }
 
     }
 

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,10 +24,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;   // KRP
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 
 import static org.alphatilesapps.alphatiles.Start.*;
+import static org.alphatilesapps.alphatiles.Start.gameSounds;
 //import static org.alphatilesapps.alphatiles.Util.parseWord;   // KRP
 
 public class ChoosePlayer extends AppCompatActivity
@@ -188,6 +192,36 @@ public class ChoosePlayer extends AppCompatActivity
 			forceLTRIfSupported();
 		}
 
+	}
+
+	//added by JP
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		LOGGER.info("onDestroy called");
+		if(isAppRunning() == false){
+			gameSounds.release();
+			gameSounds = null;
+			LOGGER.info("sound pool released");
+		}
+		LOGGER.info("onDestroy ended");
+	}
+
+	private boolean isAppRunning() {
+		ActivityManager m = (ActivityManager) this.getSystemService( ACTIVITY_SERVICE );
+		List<ActivityManager.RunningTaskInfo> runningTaskInfoList =  m.getRunningTasks(10);
+		Iterator<ActivityManager.RunningTaskInfo> itr = runningTaskInfoList.iterator();
+		int n=0;
+		while(itr.hasNext()){
+			n++;
+			itr.next();
+		}
+		if(n==1){ // App is killed
+			return false;
+		}
+
+		return true; // App is in background or foreground
 	}
 
 	@Override

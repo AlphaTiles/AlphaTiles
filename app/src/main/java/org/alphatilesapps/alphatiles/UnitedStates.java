@@ -252,7 +252,7 @@ public class UnitedStates extends GameActivity {
 
             }//generates a new word if it got one of the last three tested words // LM
 
-            parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP); // KP
+            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
             lengthOfLOPWord = parsedWordArrayFinal.size(); // KP
         }
 

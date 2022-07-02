@@ -254,7 +254,7 @@ public class Colombia extends GameActivity {
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
-        parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP); // KP
+        parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
         initialLetter = parsedWordArrayFinal.get(0); // KP
 
     }

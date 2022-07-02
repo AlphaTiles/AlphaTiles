@@ -334,7 +334,7 @@ public class Brazil extends GameActivity {
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
-        parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP);
+        parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP);
 
         boolean proceed = false;
         String nextTile;
