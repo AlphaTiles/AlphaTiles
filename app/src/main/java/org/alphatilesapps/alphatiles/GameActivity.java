@@ -50,6 +50,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	String className;
 
 	ArrayList<String> parsedWordArrayFinal;
+	ArrayList<String> parsedWordSyllArrayFinal;
 
 	String wordInLWC = "";    // the lWC word (e.g. Spanish), which exactly matches the image and audio file names
 	String wordInLOP = "";    // the corresponding word in the language of play (e.g. Me'phaa)

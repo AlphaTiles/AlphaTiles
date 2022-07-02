@@ -21,6 +21,7 @@ public class Georgia extends GameActivity {
     Start.TileList sortableTilesArray; // KP
     Start.SyllableList sortableSyllArray; //JP
     String initialTile = "";
+    String initialSyll = "";
     int visibleTiles; // will be 6, 12 or 18 based on challengeLevel 1, 2 or 3
     String lastWord = "";
     String secondToLastWord = "";
@@ -233,7 +234,7 @@ public class Georgia extends GameActivity {
         image.setImageResource(resID);
 
         parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
-        parsedWordSyllArrayFinal = Start.tileList.parseWordIntoSyllables(wordInLOP); //JP
+        parsedWordSyllArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); //JP
         initialTile = parsedWordArrayFinal.get(0);
         initialSyll = parsedWordSyllArrayFinal.get(0);
 
@@ -246,7 +247,7 @@ public class Georgia extends GameActivity {
             TextView gameTile = findViewById(TILE_BUTTONS[t]);
 
             if (sortableSyllArray.get(t).syllable.equals(initialTile) && t < visibleTiles) {
-                correctTileRepresented = true;
+                correctSyllRepresented = true;
             }
 
             String tileColorStr = COLORS[t % 5];
@@ -267,7 +268,7 @@ public class Georgia extends GameActivity {
 
         }
 
-        if (!correctTileRepresented) {
+        if (!correctSyllRepresented) {
 
             // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
 
