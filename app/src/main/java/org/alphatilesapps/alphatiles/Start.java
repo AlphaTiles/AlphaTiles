@@ -78,7 +78,7 @@ public class Start extends AppCompatActivity
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
     public static Boolean hasTileAudio;
-    public static Boolean hasSyllableGames;
+    public static Boolean hasSyllableGames = false;
     Boolean differentiateTypes;
 
     @Override
@@ -243,11 +243,12 @@ public class Start extends AppCompatActivity
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
-            String[] thisLineArray = thisLine.split("\t", 14);
+            String[] thisLineArray = thisLine.split("\t", 3);
             if (header) {
                 syllableList.syllableTitle = thisLineArray[0];
                 syllableList.syllableAudioNameTitle = thisLineArray[1];
                 syllableList.syllableDurationTitle = thisLineArray[2];
+                header = false;
             } else {
                 Syllable syllable = new Syllable(thisLineArray[0], thisLineArray[1], Integer.parseInt(thisLineArray[2]));
                 if (!syllable.hasNull()) {
@@ -332,11 +333,15 @@ public class Start extends AppCompatActivity
                 gameList.gameColor = thisLineArray[3];
                 gameList.gameInstrLabel = thisLineArray[4];
                 gameList.gameInstrDuration = thisLineArray[5];
+                gameList.gameMode = thisLineArray[6];
                 header = false;
             } else {
-                Game game = new Game(thisLineArray[0], thisLineArray[1],thisLineArray[2], thisLineArray[3],thisLineArray[4], thisLineArray[5]);
+                Game game = new Game(thisLineArray[0], thisLineArray[1],thisLineArray[2], thisLineArray[3],thisLineArray[4], thisLineArray[5], thisLineArray[6]);
                 if (!game.hasNull()) {
                     gameList.add(game);
+                }
+                if (thisLineArray[6].equals("S")){ //JP
+                    hasSyllableGames = true;
                 }
             }
         }
@@ -521,18 +526,20 @@ public class Start extends AppCompatActivity
         public String gameColor;
         public String gameInstrLabel;
         public String gameInstrDuration;
+        public String gameMode; //JP : for syllable or tile mode
 
-        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration) {
+        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration, String gameMode) {
             this.gameNumber = gameNumber;
             this.gameCountry = gameCountry;
             this.gameLevel = gameLevel;
             this.gameColor = gameColor;
             this.gameInstrLabel = gameInstrLabel;
             this.gameInstrDuration = gameInstrDuration;
+            this.gameMode = gameMode;
         }
 
         public boolean hasNull() {
-            return gameNumber == null || gameCountry == null|| gameLevel == null|| gameColor == null || gameInstrLabel == null|| gameInstrDuration == null;
+            return gameNumber == null || gameCountry == null|| gameLevel == null|| gameColor == null || gameInstrLabel == null|| gameInstrDuration == null || gameMode == null;
         }
     }
 
@@ -1598,6 +1605,7 @@ public class Start extends AppCompatActivity
         public String gameColor;
         public String gameInstrLabel;
         public String gameInstrDuration;
+        public String gameMode;
 
     }
 

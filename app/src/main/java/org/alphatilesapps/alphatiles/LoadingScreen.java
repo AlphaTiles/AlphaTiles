@@ -170,7 +170,8 @@ public class LoadingScreen extends AppCompatActivity {
 
     public void loadSyllableAudio(){
         Resources res = context.getResources();
-        wordAudioIDs = new HashMap();
+        syllableAudioIDs = new HashMap();
+        syllableDurations = new HashMap();
 
         for (Start.Syllable syll : syllableList)
         {

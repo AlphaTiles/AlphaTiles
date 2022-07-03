@@ -308,6 +308,7 @@ public class Earth extends AppCompatActivity {
 
         challengeLevel = Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel);
         gameNumber = (pageNumber * doorsPerPage) + doorIndex + 1;
+        String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameMode;
 
         Intent intent = getIntent();	// preserve Extras
         try {
@@ -320,6 +321,7 @@ public class Earth extends AppCompatActivity {
         intent.putExtra("gameNumber", gameNumber);
         intent.putExtra("pageNumber", pageNumber);
         intent.putExtra("country", country);
+        intent.putExtra("syllableGame", syllableGame);
         startActivity(intent);
         finish();
 
