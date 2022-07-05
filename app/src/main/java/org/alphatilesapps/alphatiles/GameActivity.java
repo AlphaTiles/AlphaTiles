@@ -65,7 +65,6 @@ public abstract class GameActivity extends AppCompatActivity {
 			R.id.tracker11, R.id.tracker12
 
 	};
-	private MyApplication AppUtils;
 
 	protected abstract int[] getTileButtons();	
 	protected abstract int[] getWordImages();

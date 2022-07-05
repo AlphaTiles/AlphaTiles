@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
+import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
@@ -32,13 +33,9 @@ import static org.alphatilesapps.alphatiles.Start.tileList;
 public class Thailand extends GameActivity {
 
     Start.TileList sortableTilesArray;
+    Start.SyllableList sortableSyllArray;
 
-
-
-//    ArrayList<String><ArrayList<String>> fourChoices = new ArrayList<String><ArrayList<String>>;  // will store LWC and LOP word or will store tile audio name and tile (lower or upper)
     ArrayList<String[]> fourChoices = new ArrayList<>();  // will store LWC and LOP word or will store tile audio name and tile (lower or upper)
-    //JP: solved raw type issue by including <> before ()
-
 
     private static final String[] TYPES = {"TILE_LOWER", "TILE_UPPER", "TILE_AUDIO","WORD_TEXT","WORD_IMAGE","WORD_AUDIO"};
 
@@ -54,12 +51,6 @@ public class Thailand extends GameActivity {
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
     };
-    /*
-    JP reminder: R links the ID to have access to all the resources, like layouts, etc.
-    so the lines above create the buttons
-    where is choice01 defined? these choices are what need to be filtered to fix c vs ch issue
-    -it corresponds to the layout ID
-    */
 
     //JP added Override
     @Override
@@ -129,6 +120,7 @@ public class Thailand extends GameActivity {
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
+        syllableGame = getIntent().getStringExtra("syllableGame");
         visibleTiles = TILE_BUTTONS.length;
 
         // So, if challengeLevel is 235, then...
@@ -151,17 +143,17 @@ public class Thailand extends GameActivity {
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
-        sortableTilesArray = (Start.TileList) tileList.clone();
-        Collections.shuffle(sortableTilesArray);
-        //JP reminder: this shuffles the tiles; INDIVIDUAL LETTERS
-        //so where do the words get generated as buttons???
-        //try game 31
+        if (syllableGame.equals("S")){
+            sortableSyllArray = (Start.SyllableList) syllableList.clone();
+            Collections.shuffle(sortableSyllArray);
+        }else{
+            sortableTilesArray = (Start.TileList) tileList.clone();
+            Collections.shuffle(sortableTilesArray);
+        }
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(thailandPoints));
 
-        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
@@ -277,20 +269,26 @@ public class Thailand extends GameActivity {
         // if either or both elements are word-based, then three IF statements, but if both elements are tile based, then WHILE LOOP
         if (refType.contains("WORD") || choiceType.contains("WORD")) {
             chooseWord();
-            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
+            if(syllableGame.equals("S")){
+                parsedWordArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
+            }else{
+                parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
+            }
             if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO") || choiceType.equals("TILE_LOWER")) {
                 refTile = parsedWordArrayFinal.get(0);
                 LOGGER.info("Remember: J2: refTile = " + refTile);
             }
-            if (refType.equals("TILE_UPPER")|| choiceType.equals("TILE_UPPER")) {
+            else if (refType.equals("TILE_UPPER")|| choiceType.equals("TILE_UPPER")) {
+                //JP: would there ever be a scenario where we have uppercase syllables?
                 refTile = tileList.get(tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).upperTile;
                 LOGGER.info("Remember: J3: refTile = " + refTile);
             }
-            if (refType.contains("WORD") && choiceType.contains("WORD")) {
+            else if (refType.contains("WORD") && choiceType.contains("WORD")) {
                 refTile = parsedWordArrayFinal.get(0);
                 LOGGER.info("Remember: J3.5: refTile = " + refTile);
             }
         } else {
+            // JP: RESUME HERE AND FIGURE OUT WHAT THIS DOES 
             String refCVX = "X";
             while (refCVX.equals("X")) {
                 int randomNum2 = rand.nextInt(sortableTilesArray.size());
@@ -591,15 +589,10 @@ public class Thailand extends GameActivity {
         }
     }
 
-    //JP: we need to edit chooseWord to solve c vs ch issue
     private void chooseWord() {
 
         Random rand = new Random();
         int randomNum = rand.nextInt(Start.wordList.size());
-
-        //ERASE String test = Start.wordList.get(70).localWord; //is local word the target language?
-        //char test_char = test.charAt(0);
-        //if (test.charAt(0).equals())
 
         wordInLWC = Start.wordList.get(randomNum).nationalWord;
         wordInLOP = Start.wordList.get(randomNum).localWord;
