@@ -243,14 +243,17 @@ public class Start extends AppCompatActivity
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
-            String[] thisLineArray = thisLine.split("\t", 3);
+            String[] thisLineArray = thisLine.split("\t", 6);
             if (header) {
                 syllableList.syllableTitle = thisLineArray[0];
-                syllableList.syllableAudioNameTitle = thisLineArray[1];
-                syllableList.syllableDurationTitle = thisLineArray[2];
+                syllableList.syllableAlt1Title = thisLineArray[1];
+                syllableList.syllableAlt2Title = thisLineArray[2];
+                syllableList.syllableAlt3Title = thisLineArray[3];
+                syllableList.syllableAudioNameTitle = thisLineArray[4];
+                syllableList.syllableDurationTitle = thisLineArray[5];
                 header = false;
             } else {
-                Syllable syllable = new Syllable(thisLineArray[0], thisLineArray[1], Integer.parseInt(thisLineArray[2]));
+                Syllable syllable = new Syllable(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], Integer.parseInt(thisLineArray[5]));
                 if (!syllable.hasNull()) {
                     syllableList.add(syllable);
                 }
@@ -1155,22 +1158,31 @@ public class Start extends AppCompatActivity
 
     public class Syllable{
         public String syllable;
+        public String syllableAlt1;
+        public String syllableAlt2;
+        public String syllableAlt3;
         public String syllableAudioName;
         public int syllableDuration;
 
-        public Syllable(String syllable, String syllableAudioName, int syllableDuration) {
+        public Syllable(String syllable, String syllableAlt1, String syllableAlt2, String syllableAlt3, String syllableAudioName, int syllableDuration) {
             this.syllable = syllable;
+            this.syllableAlt1 = syllableAlt1;
+            this.syllableAlt2 = syllableAlt2;
+            this.syllableAlt3 = syllableAlt3;
             this.syllableAudioName = syllableAudioName;
             this.syllableDuration = syllableDuration;
         }
 
         public boolean hasNull() {
-            return syllable == null || syllableAudioName == null;
+            return syllable == null || syllableAlt1 == null || syllableAlt2 == null || syllableAlt3 == null || syllableAudioName == null;
         }
     }
 
     public class SyllableList extends ArrayList<Syllable>{
         public String syllableTitle;
+        public String syllableAlt1Title;
+        public String syllableAlt2Title;
+        public String syllableAlt3Title;
         public String syllableAudioNameTitle;
         public String syllableDurationTitle;
 

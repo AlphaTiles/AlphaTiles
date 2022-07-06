@@ -13,13 +13,30 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
+
+//level 1: 6 visible tiles
+//level 2: 12 visible tiles
+//level 3: 18 visible tiles
+
+//level 1 + S: 6 visible syllables, random wrong choices
+//level 2 + S: 12 visible syllables, random wrong choices
+//level 3 + S: 18 visible syllables, random wrong choices
+//level 4 + S: 6 visible syllables, distractor wrong choices
+//level 5 + S: 12 visible syllables, distractor wrong choices
+//level 6 + S: 18 visible syllables, distractor wrong choices
 
 public class Georgia extends GameActivity {
 
     Start.TileList sortableTilesArray; // KP
     Start.SyllableList sortableSyllArray; //JP
+    Set<String> answerChoices = new HashSet<String>();
     String initialTile = "";
     String initialSyll = "";
     int visibleTiles; // will be 6, 12 or 18 based on challengeLevel 1, 2 or 3
@@ -33,7 +50,7 @@ public class Georgia extends GameActivity {
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16, R.id.tile17, R.id.tile18
     };
 
-    protected int[] getTileButtons() {return TILE_BUTTONS;}
+    protected int[] getTileButtons() { return TILE_BUTTONS;}
 
     protected int[] getWordImages() {return null;}
 
@@ -74,7 +91,12 @@ public class Georgia extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        setContentView(R.layout.georgia);
+        if (syllableGame.equals("S")){
+            setContentView(R.layout.georgia_syll);
+        }else{
+            setContentView(R.layout.georgia);
+        }
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
@@ -100,17 +122,19 @@ public class Georgia extends GameActivity {
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
+
         switch (challengeLevel) {
+            case 5:
             case 2:
                 visibleTiles = 12;
                 break;
+            case 6:
             case 3:
                 visibleTiles = 18;
                 break;
             default:
                 visibleTiles = 6;
         }
-
 
         sortableSyllArray = (Start.SyllableList)Start.syllableList.clone();
         sortableTilesArray = (Start.TileList)Start.tileList.clone(); // KP
@@ -255,6 +279,46 @@ public class Georgia extends GameActivity {
     private void setUpSyllables() {
         boolean correctSyllRepresented = false;
 
+        //find corresponding syllable object for initialSyll
+        Start.Syllable answer = syllableHashMap.find(initialSyll);
+
+        answerChoices.add(initialSyll);
+        answerChoices.add(answer.syllableAlt1);
+        answerChoices.add(answer.syllableAlt2);
+        answerChoices.add(answer.syllableAlt3);
+
+        int i = 0;
+        while (answerChoices.size() < visibleTiles && i < sortableSyllArray.size()){
+            // and does so while skipping repeats because it is a set
+            // and a set has no order so it will be randomized anyways
+            String option = sortableSyllArray.get(i).syllable;
+            if (option.length() >= 2 && initialSyll.length() >= 2){
+                if (option.charAt(0) == initialSyll.charAt(0)
+                        && option.charAt(1) == initialSyll.charAt(1)){
+                    answerChoices.add(option);
+                }else if(option.charAt(0) == initialSyll.charAt(0)){
+                    answerChoices.add(option);
+                }
+            }else{
+                if(option.charAt(0) == initialSyll.charAt(0)){
+                    answerChoices.add(option);
+                }else if(option.charAt(option.length()-1) == initialSyll.charAt(initialSyll.length()-1)){
+                    answerChoices.add(option);
+                }
+            }
+
+            i++;
+        }
+
+        int j = 0;
+        while (answerChoices.size() < visibleTiles){
+            //this will probably never happen
+            answerChoices.add(sortableSyllArray.get(j).syllable);
+            j++;
+        }
+
+        List<String> answerChoicesList = new ArrayList<>(answerChoices); //so we can index into answer choices now
+
         for (int t = 0; t < TILE_BUTTONS.length; t++){
             TextView gameTile = findViewById(TILE_BUTTONS[t]);
 
@@ -265,18 +329,42 @@ public class Georgia extends GameActivity {
             String tileColorStr = COLORS[t % 5];
             int tileColor = Color.parseColor(tileColorStr);
 
-            if (t < visibleTiles) {
-                gameTile.setText(sortableSyllArray.get(t).syllable); // KP
-                gameTile.setBackgroundColor(tileColor);
-                gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
-                gameTile.setVisibility(View.VISIBLE);
-            } else {
-                gameTile.setText(String.valueOf(t + 1));
-                gameTile.setBackgroundResource(R.drawable.textview_border);
-                gameTile.setTextColor(Color.parseColor("#000000")); // black
-                gameTile.setClickable(false);
-                gameTile.setVisibility(View.INVISIBLE);
+            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3){
+                if (t < visibleTiles) {
+                    gameTile.setText(sortableSyllArray.get(t).syllable); // KP
+                    gameTile.setBackgroundColor(tileColor);
+                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                    gameTile.setVisibility(View.VISIBLE);
+                } else {
+                    gameTile.setText(String.valueOf(t + 1));
+                    gameTile.setBackgroundResource(R.drawable.textview_border);
+                    gameTile.setTextColor(Color.parseColor("#000000")); // black
+                    gameTile.setClickable(false);
+                    gameTile.setVisibility(View.INVISIBLE);
+                }
+            }else{
+                if (t < visibleTiles) {
+                    // think through this logic more -- how to get distractor syllables in there but
+                    // also fill other syllables beyond the 3 distractors
+
+                    // first make a visibleTiles-sized array with the correct answer,
+                    // its distractor syllables, and any other syllables that start with the same tile;
+                    // filter out repeats
+
+                    // then iterate through TILE_BUTTONS and fill them in using the other array, shuffled
+                    gameTile.setText(answerChoicesList.get(t)); // KP
+                    gameTile.setBackgroundColor(tileColor);
+                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                    gameTile.setVisibility(View.VISIBLE);
+                }else {
+                    gameTile.setText(String.valueOf(t + 1));
+                    gameTile.setBackgroundResource(R.drawable.textview_border);
+                    gameTile.setTextColor(Color.parseColor("#000000")); // black
+                    gameTile.setClickable(false);
+                    gameTile.setVisibility(View.INVISIBLE);
+                }
             }
+
 
         }
 

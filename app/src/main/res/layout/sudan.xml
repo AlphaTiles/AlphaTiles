@@ -476,10 +476,10 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH12"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV8"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH11" />
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
 
     <TextView
         android:id="@+id/tile27"
@@ -494,10 +494,10 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH12"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV11"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH11" />
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
 
     <TextView
         android:id="@+id/tile28"
@@ -512,10 +512,10 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH12"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV12"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH11" />
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
 
     <TextView
         android:id="@+id/tile29"
@@ -530,10 +530,10 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH14"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH13" />
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
 
     <TextView
         android:id="@+id/tile30"
@@ -548,10 +548,10 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH14"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH13" />
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV8"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
 
     <TextView
         android:id="@+id/tile31"
@@ -566,10 +566,10 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH13" />
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH18"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
 
     <TextView
         android:id="@+id/tile32"
@@ -584,10 +584,10 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH13" />
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH18"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
 
     <TextView
         android:id="@+id/tile33"
@@ -602,10 +602,11 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV8"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH13" />
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH18"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
+
 
     <TextView
         android:id="@+id/tile34"
@@ -620,10 +621,10 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV11"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH13" />
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH18"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
 
     <TextView
         android:id="@+id/tile35"
@@ -638,519 +639,10 @@
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV12"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH13" />
-
-    <TextView
-        android:id="@+id/tile36"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="36"
-        android:text="@string/gametile36"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
-
-    <TextView
-        android:id="@+id/tile37"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#2196F3"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="37"
-        android:text="@string/gametile37"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
-
-    <TextView
-        android:id="@+id/tile38"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#F44336"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="38"
-        android:text="@string/gametile38"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
-
-    <TextView
-        android:id="@+id/tile39"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#4CAF50"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="39"
-        android:text="@string/gametile39"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
-
-    <TextView
-        android:id="@+id/tile40"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#E91E63"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="40"
-        android:text="@string/gametile40"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV8"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
-
-    <TextView
-        android:id="@+id/tile41"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="41"
-        android:text="@string/gametile41"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV11"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
-
-    <TextView
-        android:id="@+id/tile42"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#2196F3"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="42"
-        android:text="@string/gametile42"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV12"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH15" />
-
-    <TextView
-        android:id="@+id/tile43"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#F44336"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="43"
-        android:text="@string/gametile43"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH18"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
-
-    <TextView
-        android:id="@+id/tile44"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#4CAF50"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="44"
-        android:text="@string/gametile44"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH18"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
-
-
-    <TextView
-        android:id="@+id/tile45"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#E91E63"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="45"
-        android:text="@string/gametile45"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH18"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
-
-
-    <TextView
-        android:id="@+id/tile46"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="46"
-        android:text="@string/gametile46"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH18"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
-
-
-    <TextView
-        android:id="@+id/tile47"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#2196F3"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="47"
-        android:text="@string/gametile47"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH18"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH18"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV9"
         app:layout_constraintStart_toStartOf="@+id/guidelineV8"
         app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
-
-
-    <TextView
-        android:id="@+id/tile48"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#F44336"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="48"
-        android:text="@string/gametile48"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH18"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV11"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
-
-
-    <TextView
-        android:id="@+id/tile49"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#4CAF50"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="49"
-        android:text="@string/gametile49"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH18"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV12"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
-
-    <TextView
-        android:id="@+id/tile50"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#E91E63"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="50"
-        android:text="@string/gametile50"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH20"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH19" />
-
-    <TextView
-        android:id="@+id/tile51"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="51"
-        android:text="@string/gametile51"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH20"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH19" />
-
-    <TextView
-        android:id="@+id/tile52"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#2196F3"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="52"
-        android:text="@string/gametile52"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH20"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH19" />
-
-    <TextView
-        android:id="@+id/tile53"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#F44336"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="54"
-        android:text="@string/gametile39"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH20"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH19" />
-
-    <TextView
-        android:id="@+id/tile54"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#4CAF50"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="54"
-        android:text="@string/gametile54"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH20"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV8"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH19" />
-
-    <TextView
-        android:id="@+id/tile55"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#E91E63"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="55"
-        android:text="@string/gametile55"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH20"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV11"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH19" />
-
-    <TextView
-        android:id="@+id/tile56"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="56"
-        android:text="@string/gametile56"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH20"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV12"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH19" />
-
-    <TextView
-        android:id="@+id/tile57"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#2196F3"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="57"
-        android:text="@string/gametile57"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH22"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH21" />
-
-    <TextView
-        android:id="@+id/tile58"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#F44336"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="58"
-        android:text="@string/gametile58"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH22"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH21" />
-
-    <TextView
-        android:id="@+id/tile59"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#4CAF50"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="59"
-        android:text="@string/gametile59"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH22"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH21" />
-
-    <TextView
-        android:id="@+id/tile60"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#E91E63"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="60"
-        android:text="@string/gametile60"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH22"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH21" />
-
-    <TextView
-        android:id="@+id/tile61"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="61"
-        android:text="@string/gametile61"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH22"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV8"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH21" />
-
-    <TextView
-        android:id="@+id/tile62"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#2196F3"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="62"
-        android:text="@string/gametile62"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH22"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV11"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH21" />
-
-    <TextView
-        android:id="@+id/tile63"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#F44336"
-        android:gravity="center_horizontal|center_vertical"
-        android:onClick="onBtnClick"
-        android:tag="63"
-        android:text="@string/gametile63"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH22"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV12"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH21" />
 
     <ImageView
         android:id="@+id/pointsImage"
@@ -1229,119 +721,91 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.09" />
+        app:layout_constraintGuide_percent="0.108671" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.11" />
+        app:layout_constraintGuide_percent="0.128671" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.19" />
+        app:layout_constraintGuide_percent="0.23724" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.21" />
+        app:layout_constraintGuide_percent="0.25724" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.29" />
+        app:layout_constraintGuide_percent="0.36581" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.31" />
+        app:layout_constraintGuide_percent="0.38581" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.39" />
+        app:layout_constraintGuide_percent="0.49438" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.41" />
+        app:layout_constraintGuide_percent="0.51438" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.49" />
+        app:layout_constraintGuide_percent="0.62295" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.51" />
+        app:layout_constraintGuide_percent="0.64295" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.59" />
+        app:layout_constraintGuide_percent="0.75152" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.61" />
+        app:layout_constraintGuide_percent="0.77152" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH18"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.69" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH19"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.71" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH20"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.79" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH21"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.81" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.89" />
+        app:layout_constraintGuide_percent="0.88009" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHSys1"
