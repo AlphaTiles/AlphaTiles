@@ -96,7 +96,7 @@ public class Georgia extends GameActivity {
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         syllableGame = getIntent().getStringExtra("syllableGame");
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 

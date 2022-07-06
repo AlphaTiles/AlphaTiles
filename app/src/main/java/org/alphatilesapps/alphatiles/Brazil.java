@@ -190,7 +190,7 @@ public class Brazil extends GameActivity {
 
         Collections.shuffle(MULTIFUNCTIONS);
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel  + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         if (syllableGame.equals("S")){
