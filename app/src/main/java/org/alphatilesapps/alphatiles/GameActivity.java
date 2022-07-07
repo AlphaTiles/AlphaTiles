@@ -175,12 +175,13 @@ public abstract class GameActivity extends AppCompatActivity {
 		if(trackerCount>0 && trackerCount%12==0 && after12checkedTrackers==3){
 			trackerCount++;
 
-			//show celebration screen, then switch after 3 seconds
+			//show celebration screen
 			Intent intent = getIntent();
 			intent.setClass(context, Celebration.class); //so we retain the Extras
 			startActivity(intent);
 			finish();
 
+			//Then switch to next uncompleted game after 3 seconds
 			Timer timer = new Timer();
 			timer.schedule(new TimerTask() {
 				@Override
