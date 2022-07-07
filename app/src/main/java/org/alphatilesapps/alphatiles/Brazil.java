@@ -13,11 +13,15 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import java.util.HashSet;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
+
+import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.syllableList;
 
 // RR
@@ -32,13 +36,15 @@ import static org.alphatilesapps.alphatiles.Start.syllableList;
 //Challenge Level 6: CONSONANTS: Pick from all consonant tiles (up to a max of 15)
 
 // JP (ideas)
-// Syllable Level 1: Pick from correct syllable and three random syllables
-// Syllable Level 2: Pick from correct syllable and its distractor trio (if we add that to syllables tab)
+// Syllable Level 1: Pick from correct syllable and three random syllables (4 choices)
+// Syllable Level 2: Pick from correct syllable and its distractor trio (if we add that to syllables tab) (4 choices)
+// No reason to accommodate 15 syllables, right?
 
 public class Brazil extends GameActivity {
 
     Start.TileList sortableTilesArray; // KP
     Start.SyllableList sortableSyllArray; //JP
+    Set<String> answerChoices = new HashSet<String>();
     int visibleTiles;
     String correctTile = "";
     String lastWord = "";
@@ -327,7 +333,11 @@ public class Brazil extends GameActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 //        LOGGER.info("Remember APR 21 21 # 6");
-        setUpTiles();
+        if (syllableGame.equals("S")){
+            setUpSyllables();
+        }else{
+            setUpTiles();
+        }
 //        LOGGER.info("Remember APR 21 21 # 7");
         playActiveWordClip(false);
 //        LOGGER.info("Remember APR 21 21 # 8");
@@ -492,115 +502,132 @@ public class Brazil extends GameActivity {
 
     }
 
+    private void setUpSyllables() {
+        boolean correctSyllRepresented = false;
+
+        //find corresponding syllable object for correct answer
+        Start.Syllable answer = syllableHashMap.find(correctTile);
+
+        // TO DO: FIX ISSUE OF SOMETIMES RIGHT ANSWER NOT SHOWING UP
+        answerChoices.clear();
+        answerChoices.add(correctTile);
+        answerChoices.add(answer.syllableAlt1);
+        answerChoices.add(answer.syllableAlt2);
+        answerChoices.add(answer.syllableAlt3);
+
+        List<String> answerChoicesList = new ArrayList<>(answerChoices); //so we can index into answer choices now
+
+        for (int t = 0; t < visibleTiles; t++){
+            TextView gameTile = findViewById(TILE_BUTTONS[t]);
+
+            if (sortableSyllArray.get(t).syllable.equals(correctTile) && t < visibleTiles) {
+                correctSyllRepresented = true;
+            }
+
+            String tileColorStr = COLORS[t % 5];
+            int tileColor = Color.parseColor(tileColorStr);
+
+            if (challengeLevel == 1){
+                if (t < visibleTiles) {
+                    gameTile.setText(sortableSyllArray.get(t).syllable); // KP
+                    gameTile.setBackgroundColor(tileColor);
+                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                    gameTile.setVisibility(View.VISIBLE);
+                } else {
+                    gameTile.setText(String.valueOf(t + 1));
+                    gameTile.setBackgroundResource(R.drawable.textview_border);
+                    gameTile.setTextColor(Color.parseColor("#000000")); // black
+                    gameTile.setClickable(false);
+                    gameTile.setVisibility(View.INVISIBLE);
+                }
+            }else{
+                if (t < visibleTiles) {
+                    // think through this logic more -- how to get distractor syllables in there but
+                    // also fill other syllables beyond the 3 distractors
+
+                    // first make a visibleTiles-sized array with the correct answer,
+                    // its distractor syllables, and any other syllables that start with the same tile;
+                    // filter out repeats
+
+                    // then iterate through TILE_BUTTONS and fill them in using the other array, shuffled
+                    if (answerChoicesList.get(t) == correctTile){
+                        correctSyllRepresented = true;
+                    }
+                    gameTile.setText(answerChoicesList.get(t)); // KP
+                    gameTile.setBackgroundColor(tileColor);
+                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                    gameTile.setVisibility(View.VISIBLE);
+                }else {
+                    gameTile.setText(String.valueOf(t + 1));
+                    gameTile.setBackgroundResource(R.drawable.textview_border);
+                    gameTile.setTextColor(Color.parseColor("#000000")); // black
+                    gameTile.setClickable(false);
+                    gameTile.setVisibility(View.INVISIBLE);
+                }
+            }
+
+
+        }
+
+        if (!correctSyllRepresented) {
+
+            // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
+
+            Random rand = new Random();
+            int randomNum = rand.nextInt(visibleTiles - 1); // KP
+            TextView gameTile = findViewById(TILE_BUTTONS[randomNum]);
+            gameTile.setText(correctTile);
+
+        }
+
+    }
+
     private void setUpTiles() {
 
         boolean correctTileRepresented = false;
-        if (!syllableGame.equals("S")){
-            if (challengeLevel == 3 || challengeLevel == 6) {
-                for (int t = 0; t < visibleTiles; t++) {
-                    TextView gameTile = findViewById(TILE_BUTTONS[t]);
-                    if (challengeLevel == 3) {
-                        gameTile.setText(VOWELS.get(t));
-                        if (VOWELS.get(t).equals(correctTile)) {
-                            correctTileRepresented = true;
-                        }
-                    } else {
-                        gameTile.setText(CONSONANTS.get(t));
-                        if (CONSONANTS.get(t).equals(correctTile)) {
-                            correctTileRepresented = true;
-                        }
-                    }
-
-                    String tileColorStr = COLORS[t % 5];
-                    int tileColor = Color.parseColor(tileColorStr);
-
-                    gameTile.setBackgroundColor(tileColor);
-                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
-                    gameTile.setVisibility(View.VISIBLE);
-                }
-
-                for (int i = visibleTiles; i < TILE_BUTTONS.length; i++) {
-                    TextView gameTile = findViewById(TILE_BUTTONS[i]);
-                    gameTile.setVisibility(View.INVISIBLE);
-                }
-            } else if (challengeLevel == 1 || challengeLevel == 4) {
-
-                for (int t = 0; t < visibleTiles; t++) {
-
-                    TextView gameTile = findViewById(TILE_BUTTONS[t]);
-
-                    if (sortableTilesArray.get(t).baseTile.equals(correctTile)) {
+        if (challengeLevel == 3 || challengeLevel == 6) {
+            for (int t = 0; t < visibleTiles; t++) {
+                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                if (challengeLevel == 3) {
+                    gameTile.setText(VOWELS.get(t));
+                    if (VOWELS.get(t).equals(correctTile)) {
                         correctTileRepresented = true;
                     }
-
-                    String tileColorStr = COLORS[t % 5];
-                    int tileColor = Color.parseColor(tileColorStr);
-
-                    gameTile.setText(sortableTilesArray.get(t).baseTile);
-                    if (sortableTilesArray.get(t).baseTile.equals("tiles")) {
-                        gameTile.setText(sortableTilesArray.get(Start.tileList.size() - 1).baseTile);
-                    }
-                    gameTile.setBackgroundColor(tileColor);
-                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
-                    gameTile.setVisibility(View.VISIBLE);
-
-                }
-
-            } else {
-                // when Earth.challengeLevel == 2 || == 5
-                correctTileRepresented = true;
-                int correspondingRow = 0;
-                for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (Start.tileList.get(d).baseTile.equals(correctTile)) {
-                        correspondingRow = d;
-                        break;
+                } else {
+                    gameTile.setText(CONSONANTS.get(t));
+                    if (CONSONANTS.get(t).equals(correctTile)) {
+                        correctTileRepresented = true;
                     }
                 }
 
-                List<String> usedTiles = new ArrayList<>();
-                Random rand = new Random();
-                int randomNum;
-                for (int t = 0; t < visibleTiles; t++) {
-                    TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                String tileColorStr = COLORS[t % 5];
+                int tileColor = Color.parseColor(tileColorStr);
 
-                    String tileColorStr = COLORS[t % 5];
-                    int tileColor = Color.parseColor(tileColorStr);
-
-                    gameTile.setBackgroundColor(tileColor);
-                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
-                    gameTile.setVisibility(View.VISIBLE);
-
-                    randomNum = rand.nextInt(visibleTiles); //
-                    String nextTile;
-                    if (randomNum == 0) {
-                        nextTile = Start.tileList.get(correspondingRow).baseTile;
-                    } else {
-                        nextTile = Start.tileList.get(correspondingRow).altTiles[randomNum - 1];
-                    }
-                    if (!usedTiles.contains(nextTile)) {
-                        gameTile.setText(nextTile);
-                        usedTiles.add(t, nextTile);
-                    } else {
-                        t--;
-                    }
-                }
+                gameTile.setBackgroundColor(tileColor);
+                gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                gameTile.setVisibility(View.VISIBLE);
             }
-        }else{ //syllable game
-            // TO DO: add code in here for distractors if we add them
+
+            for (int i = visibleTiles; i < TILE_BUTTONS.length; i++) {
+                TextView gameTile = findViewById(TILE_BUTTONS[i]);
+                gameTile.setVisibility(View.INVISIBLE);
+            }
+        } else if (challengeLevel == 1 || challengeLevel == 4) {
+
             for (int t = 0; t < visibleTiles; t++) {
 
                 TextView gameTile = findViewById(TILE_BUTTONS[t]);
 
-                if (sortableSyllArray.get(t).syllable.equals(correctTile)) {
+                if (sortableTilesArray.get(t).baseTile.equals(correctTile)) {
                     correctTileRepresented = true;
                 }
 
                 String tileColorStr = COLORS[t % 5];
                 int tileColor = Color.parseColor(tileColorStr);
 
-                gameTile.setText(sortableSyllArray.get(t).syllable.toString());
-                if (sortableSyllArray.get(t).syllable.equals("Syllable")) {
-                    gameTile.setText(sortableSyllArray.get(syllableList.size() - 1).toString());
+                gameTile.setText(sortableTilesArray.get(t).baseTile);
+                if (sortableTilesArray.get(t).baseTile.equals("tiles")) {
+                    gameTile.setText(sortableTilesArray.get(Start.tileList.size() - 1).baseTile);
                 }
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
@@ -608,6 +635,44 @@ public class Brazil extends GameActivity {
 
             }
 
+        } else {
+            // when Earth.challengeLevel == 2 || == 5
+            correctTileRepresented = true;
+            int correspondingRow = 0;
+            for (int d = 0; d < Start.tileList.size(); d++) {
+                if (Start.tileList.get(d).baseTile.equals(correctTile)) {
+                    correspondingRow = d;
+                    break;
+                }
+            }
+
+            List<String> usedTiles = new ArrayList<>();
+            Random rand = new Random();
+            int randomNum;
+            for (int t = 0; t < visibleTiles; t++) {
+                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+
+                String tileColorStr = COLORS[t % 5];
+                int tileColor = Color.parseColor(tileColorStr);
+
+                gameTile.setBackgroundColor(tileColor);
+                gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                gameTile.setVisibility(View.VISIBLE);
+
+                randomNum = rand.nextInt(visibleTiles); //
+                String nextTile;
+                if (randomNum == 0) {
+                    nextTile = Start.tileList.get(correspondingRow).baseTile;
+                } else {
+                    nextTile = Start.tileList.get(correspondingRow).altTiles[randomNum - 1];
+                }
+                if (!usedTiles.contains(nextTile)) {
+                    gameTile.setText(nextTile);
+                    usedTiles.add(t, nextTile);
+                } else {
+                    t--;
+                }
+            }
         }
 
 

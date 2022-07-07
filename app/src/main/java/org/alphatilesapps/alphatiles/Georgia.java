@@ -282,6 +282,7 @@ public class Georgia extends GameActivity {
         //find corresponding syllable object for initialSyll
         Start.Syllable answer = syllableHashMap.find(initialSyll);
 
+        answerChoices.clear();
         answerChoices.add(initialSyll);
         answerChoices.add(answer.syllableAlt1);
         answerChoices.add(answer.syllableAlt2);
@@ -352,6 +353,9 @@ public class Georgia extends GameActivity {
                     // filter out repeats
 
                     // then iterate through TILE_BUTTONS and fill them in using the other array, shuffled
+                    if (answerChoicesList.get(t) == initialSyll){
+                        correctSyllRepresented = true;
+                    }
                     gameTile.setText(answerChoicesList.get(t)); // KP
                     gameTile.setBackgroundColor(tileColor);
                     gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
