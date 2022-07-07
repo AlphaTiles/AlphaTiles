@@ -34,7 +34,6 @@ import static org.alphatilesapps.alphatiles.Start.syllableList;
 // JP (ideas)
 // Syllable Level 1: Pick from correct syllable and three random syllables
 // Syllable Level 2: Pick from correct syllable and its distractor trio (if we add that to syllables tab)
-// Syllable Level 3: Pick from all syllables (up to a max of 15?)
 
 public class Brazil extends GameActivity {
 
@@ -194,16 +193,7 @@ public class Brazil extends GameActivity {
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         if (syllableGame.equals("S")){
-            switch (challengeLevel) {
-                case 3:
-                    visibleTiles = syllableList.size();
-                    if (visibleTiles > 15) {    // AH
-                        visibleTiles = 15;      // AH
-                    }                           // AH
-                    break;
-                default:
-                    visibleTiles = 4;
-            }
+            visibleTiles = 4;
         }else{
             switch (challengeLevel) {
                 case 3:
