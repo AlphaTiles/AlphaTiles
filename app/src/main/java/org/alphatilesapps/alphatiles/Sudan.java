@@ -14,17 +14,36 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.settingsList;
+import static org.alphatilesapps.alphatiles.Start.syllableAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //To work on:
-//Do any languages have more than 49 tiles?
-//Should the repeat image be hidden?
+//Do any languages have more than 49 tiles? - now can scroll through multiple pages of 35 each (JP)
+//Should the repeat image be hidden? - need it to scroll through pages now (JP)
 //How should we color tiles that are multi-type?
+
+//every time user clicks right arrow, go to next item in pagesList and display it
+//every time user clicks left arrow, go to previous item in pagesList and display it
+//look at Romania for an example
 
 public class Sudan extends GameActivity {
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
+
+    // will contain, for example:
+    // List page 1 (which will contain <= 35 tiles or syllables)
+    // List page 2, etc.
+    List<List<String>> pagesList = new ArrayList<List<String>>();
+    List<String> page = new ArrayList<>();
+
+    int numPages = 1;
+    int currentPageNumber = 0; //increment whenever user clicks right arrow; decrement whenever user clicks left arrow
+    //use as index for pagesList
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -60,7 +79,7 @@ public class Sudan extends GameActivity {
 
     @Override
     protected void centerGamesHomeImage() {
-
+        // TO DO: TEST THIS WITH A LANGUAGE THAT DOESN'T HAVE INSTRUCTION AUDIO, CONNECT BACK ARROW
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
@@ -94,7 +113,7 @@ public class Sudan extends GameActivity {
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel  + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
@@ -104,8 +123,8 @@ public class Sudan extends GameActivity {
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
 
-        View repeatArrow = findViewById(R.id.repeatImage);
-        repeatArrow.setVisibility(View.INVISIBLE);
+        //View repeatArrow = findViewById(R.id.repeatImage);
+        //repeatArrow.setVisibility(View.INVISIBLE);
 
         String differentiateTypesSetting = settingsList.find("Differentiates types of multitype symbols");
         if(differentiateTypesSetting.compareTo("") != 0){
@@ -115,12 +134,67 @@ public class Sudan extends GameActivity {
             differentiateTypes = false;
         }
 
+        determineNumPages(); //JP
+
+        if(syllableGame.equals("S")){
+            splitSyllablesListAcrossPages();
+        }else{
+            splitTileListAcrossPages();
+        }
+
         showCorrectNumTiles();
 
         if(getAudioInstructionsResID()==0){
             centerGamesHomeImage();
         }
 
+    }
+
+    public void determineNumPages(){
+        pagesList.add(page);
+        if (syllableGame.equals("S")){
+            int total = syllableList.size() - 35; // 1 page is accounted for in numPages init
+            while (total >= 0){
+                numPages++;
+                List<String> page = new ArrayList<>();
+                pagesList.add(page); //add another page(list of syllables) to list
+                total = total - 35;
+            }
+        }else{
+            int total = tileList.size() - 35; // 1 page is accounted for in numPages init
+            while (total >= 0){
+                numPages++;
+                List<String> page = new ArrayList<>();
+                pagesList.add(page); //add another page(list of tiles) to list
+                total = total - 35;
+            }
+        }
+    }
+
+    public void splitTileListAcrossPages(){
+        int numTiles = tileList.size();
+        int cont = 0;
+        for (int i = 0; i < numPages; i++){
+            for (int j = 0; j < 35; j++){
+                if (cont < numTiles){
+                    pagesList.get(i).add(tileList.get(cont).baseTile);
+                }
+                cont++;
+            }
+        }
+    }
+
+    public void splitSyllablesListAcrossPages(){
+        int numSylls = syllableList.size();
+        int cont = 0;
+        for (int i = 0; i < numPages; i++){
+            for (int j = 0; j < 35; j++){
+                if (cont < numSylls){
+                    pagesList.get(i).add(syllableList.get(cont).syllable);
+                }
+                cont++;
+            }
+        }
     }
 
     public void showCorrectNumTiles(){
@@ -135,6 +209,8 @@ public class Sudan extends GameActivity {
     }
 
     public void showCorrectNumTiles1PerSymbolAndType(){
+        // visibleTiles must now be <= 35
+        // if tileList.size() > 35, the rest will go on next page
         visibleTiles = 0;
 
 
@@ -268,7 +344,37 @@ public class Sudan extends GameActivity {
         }
     }
 
-    public void onBtnClick(View view) {
+    public void showCorrectNumSyllables() {
+
+    }
+
+    public void onBtnClickSyllables(View view) {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+
+        String tileText = "";
+        int justClickedKey = Integer.parseInt((String)view.getTag());
+
+        tileText = Start.syllableList.get(justClickedKey-1).syllable;
+
+        gameSounds.play(syllableAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+        soundSequencer.postDelayed(new Runnable()
+        {
+            public void run()
+            {
+                if (repeatLocked)
+                {
+                    setAllTilesClickable();
+                }
+                setOptionsRowClickable();
+            }
+
+        }, 925);
+
+
+    }
+
+    public void onBtnClickTiles(View view) {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
