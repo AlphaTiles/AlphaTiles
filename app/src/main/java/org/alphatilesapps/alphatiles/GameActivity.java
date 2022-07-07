@@ -146,6 +146,13 @@ public abstract class GameActivity extends AppCompatActivity {
 				tracker.setImageResource(resID2);
 			}
 		}
+		if(trackerCount == 12){
+			trackerCount = 13;
+			Intent intent = getIntent();
+			intent.setClass(context, Earth.class); // so we retain the Extras
+			startActivity(intent);
+			finish();
+		}
 	}
 
 	public int tilesInArray(ArrayList<String> array) {
