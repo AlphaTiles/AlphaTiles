@@ -16,9 +16,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
+import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
@@ -28,6 +31,7 @@ import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.wordDurations;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.after12checkedTrackers;
 
 
 public abstract class GameActivity extends AppCompatActivity {
@@ -39,12 +43,14 @@ public abstract class GameActivity extends AppCompatActivity {
 
 	int points;
 	int brazilPoints, colombiaPoints, ecuadorPoints, georgiaPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
+	Boolean brazilHasChecked12Trackers, colombiaHasChecked12Trackers, ecuadorHasChecked12Trackers, georgiaHasChecked12Trackers, mexicoHasChecked12Trackers, myanmarHasChecked12Trackers, peruHasChecked12Trackers, thailandHasChecked12Trackers, unitedStatesHasChecked12Trackers;
 	int challengeLevel = -1;
 	int playerNumber = -1;
 	int gameNumber = 0;
 	String country;
 	int visibleTiles;	
 	String className;
+	boolean hasChecked12Trackers;
 
 	ArrayList<String> parsedWordArrayFinal;
 
@@ -88,6 +94,15 @@ public abstract class GameActivity extends AppCompatActivity {
 		challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
 		gameNumber = getIntent().getIntExtra("gameNumber", 0);
 		country = getIntent().getStringExtra("country");
+		brazilHasChecked12Trackers = getIntent().getBooleanExtra("brazilHasChecked12Trackers", false);
+		colombiaHasChecked12Trackers = getIntent().getBooleanExtra("columbiaHasChecked12Trackers", false);
+		ecuadorHasChecked12Trackers = getIntent().getBooleanExtra("ecuadorHasChecked12Trackers", false);
+		georgiaHasChecked12Trackers = getIntent().getBooleanExtra("georgiaHasChecked12Trackers", false);
+		mexicoHasChecked12Trackers = getIntent().getBooleanExtra("mexicoHasChecked12Trackers", false);
+		myanmarHasChecked12Trackers = getIntent().getBooleanExtra("myanmarHasChecked12Trackers", false);
+		peruHasChecked12Trackers = getIntent().getBooleanExtra("peruHasChecked12Trackers", false);
+		thailandHasChecked12Trackers = getIntent().getBooleanExtra("thailandHasChecked12Trackers", false);
+		unitedStatesHasChecked12Trackers = getIntent().getBooleanExtra("unitedStatesHasChecked12Trackers", false);
 
 		className = getClass().getName();
 
@@ -146,13 +161,83 @@ public abstract class GameActivity extends AppCompatActivity {
 				tracker.setImageResource(resID2);
 			}
 		}
-		if(trackerCount == 12){
-			trackerCount = 13;
+		//LM
+		//after12CheckedTrackers option 1: nothing happens; players keep playing even after checking all 12 trackers
+		//after12CheckedTrackers option 2: app returns players to Earth after checking all 12 trackers. They can get back in. Will return to Earth again after another 12 correct answers.
+		if(trackerCount>0 && trackerCount%12==0 && after12checkedTrackers==2){
+			trackerCount++;
 			Intent intent = getIntent();
 			intent.setClass(context, Earth.class); // so we retain the Extras
 			startActivity(intent);
 			finish();
 		}
+		//after12CheckedTrackers option 3: app displays celebration screen and moves on to the next unchecked game after checking all 12 trackers.
+		if(trackerCount>0 && trackerCount%12==0 && after12checkedTrackers==3){
+			trackerCount++;
+
+			//show celebration screen, then switch after 3 seconds
+			Intent intent = getIntent();
+			intent.setClass(context, Celebration.class); //so we retain the Extras
+			startActivity(intent);
+			finish();
+
+			Timer timer = new Timer();
+			timer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+
+					//select and go to the next unfinished game to play
+					//if the game with gameNumber (gameNumber+1) has not checked all 12 trackers, go to it. If not, keep looking for one like this.
+					Intent intent = getIntent();
+					String project = "org.alphatilesapps.alphatiles.";
+					boolean foundNextUncompletedGame = false;
+					int steps = 1;
+					while(!foundNextUncompletedGame && steps<gameList.size()){
+
+						String country = gameList.get(gameNumber+steps).gameCountry;
+						int challengeLevel = Integer.valueOf(gameList.get(gameNumber+steps).gameLevel);
+						String activityClass = project + country;
+
+						try {
+							intent.setClass(context, Class.forName(activityClass));
+						} catch (ClassNotFoundException e) {
+							e.printStackTrace();
+						}
+
+						intent.putExtra("challengeLevel", challengeLevel);
+						String playerString = Util.returnPlayerStringToAppend(playerNumber);
+						SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+						hasChecked12Trackers = prefs.getBoolean("stored" + country + "HasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, false);
+
+						if(!hasChecked12Trackers){
+							foundNextUncompletedGame = true;
+
+							intent.putExtra("challengeLevel", challengeLevel);
+							intent.putExtra("points", points);
+							gameNumber = gameNumber+steps;
+							intent.putExtra("gameNumber", gameNumber);
+							intent.putExtra("country", country);
+							startActivity(intent);
+							finish();
+						}
+						else{
+							steps++; //step to see if the next game is uncompleted
+						}
+
+					}
+
+					//If all of the games are complete, return to Earth
+					if(!foundNextUncompletedGame){
+						intent.setClass(context, Earth.class); // so we retain the Extras
+						startActivity(intent);
+						finish();
+					}
+
+				}
+			}, 3000);
+
+		}
+
 	}
 
 	public int tilesInArray(ArrayList<String> array) {

@@ -50,6 +50,7 @@ public class Mexico extends GameActivity {
     Handler handler; // KP
 
     int mexicoPoints;
+    boolean mexicoHasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.card01, R.id.card02, R.id.card03, R.id.card04, R.id.card05, R.id.card06, R.id.card07, R.id.card08, R.id.card09, R.id.card10,
@@ -112,10 +113,12 @@ public class Mexico extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         mexicoPoints = getIntent().getIntExtra("mexicoPoints", 0); // LM
+        mexicoHasChecked12Trackers = getIntent().getBooleanExtra("mexicoHasChecked12Trackers", false);
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         mexicoPoints = prefs.getInt("storedMexicoPoints_level" + challengeLevel + "_player" + playerString, 0);
+        mexicoHasChecked12Trackers = prefs.getBoolean("storedMexicoHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
@@ -146,6 +149,9 @@ public class Mexico extends GameActivity {
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
+        if(trackerCount >= 12){
+            mexicoHasChecked12Trackers = true;
+        }
         updateTrackers();
 
         if(getAudioInstructionsResID()==0){
@@ -437,6 +443,7 @@ public class Mexico extends GameActivity {
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.putInt("storedMexicoPoints_level" + challengeLevel + "_player" + playerString, mexicoPoints);
+            editor.putBoolean("storedMexicoHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, mexicoHasChecked12Trackers);
             editor.apply();
 
             wordInLWC = memoryCollection.get(cardHitA)[0];

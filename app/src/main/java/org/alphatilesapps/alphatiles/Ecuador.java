@@ -37,6 +37,7 @@ public class Ecuador extends GameActivity {
     String secondToLastWord = "";
     String thirdToLastWord = "";
     int ecuadorPoints;
+    boolean ecuadorHasChecked12Trackers;
     // # 1 memoryCollection[LWC word, e.g. Spanish]
     // # 2 [LOP word, e.g. Me'phaa]
     // # 3 [state: "TEXT" or "IMAGE"]
@@ -102,10 +103,12 @@ public class Ecuador extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         ecuadorPoints = getIntent().getIntExtra("ecuadorPoints", 0); // LM
+        ecuadorHasChecked12Trackers = getIntent().getBooleanExtra("ecuadorHasChecked12Trackers", false);
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         ecuadorPoints = prefs.getInt("storedEcuadorPoints_level" + challengeLevel + "_player" + playerString, 0);
+        ecuadorHasChecked12Trackers = prefs.getBoolean("storedEcuadorHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
 
@@ -460,12 +463,16 @@ public class Ecuador extends GameActivity {
             pointsEarned.setText(String.valueOf(ecuadorPoints));
 
             trackerCount++;
+            if(trackerCount>=12){
+                ecuadorHasChecked12Trackers = true;
+            }
             updateTrackers();
 
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.putInt("storedEcuadorPoints_level" + challengeLevel + "_player" + playerString, ecuadorPoints);
+            editor.putBoolean("storedEcuadorHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, ecuadorHasChecked12Trackers);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

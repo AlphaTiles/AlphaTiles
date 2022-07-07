@@ -32,6 +32,7 @@ public class Colombia extends GameActivity {
     String secondToLastWord = "";
     String thirdToLastWord = "";
     int colombiaPoints;
+    boolean colombiaHasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
@@ -99,10 +100,12 @@ public class Colombia extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         colombiaPoints = getIntent().getIntExtra("colombiaPoints", 0); // LM
+        colombiaHasChecked12Trackers = getIntent().getBooleanExtra("colombiaHasChecked12Trackers", false);
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         colombiaPoints = prefs.getInt("storedColombiaPoints_level" + challengeLevel + "_player" + playerString, 0);
+        colombiaHasChecked12Trackers = prefs.getBoolean("storedColombiaHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
@@ -410,12 +413,16 @@ public class Colombia extends GameActivity {
             pointsEarned.setText(String.valueOf(colombiaPoints));
 
             trackerCount++;
+            if(trackerCount>=12){
+                colombiaHasChecked12Trackers = true;
+            }
             updateTrackers();
 
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.putInt("storedColombiaPoints_level" + challengeLevel + "_player" + playerString, colombiaPoints);
+            editor.putBoolean("storedColumbiaHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, colombiaHasChecked12Trackers);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

@@ -70,7 +70,9 @@ public class Start extends AppCompatActivity
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
     public static Boolean hasTileAudio;
+    public static int after12checkedTrackers;
     Boolean differentiateTypes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +108,15 @@ public class Start extends AppCompatActivity
         else{
             differentiateTypes = false;
         }
+
+        String after12checkedTrackersSetting = settingsList.find("After 12 checked trackers");
+        if(after12checkedTrackersSetting.compareTo("") != 0){
+            after12checkedTrackers = Integer.valueOf(after12checkedTrackersSetting);
+        }
+        else{
+            after12checkedTrackers = 3;
+        }
+
         LOGGER.info("Remember: completed hasTileAudio & differentiateTypes");
 
         // JP: the old constructor is deprecated after API 21, so account for both scenarios
