@@ -20,10 +20,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
+import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 
-//level 1: 6 visible tiles
-//level 2: 12 visible tiles
-//level 3: 18 visible tiles
+//level 1: 6 visible tiles, random wrong choices
+//level 2: 12 visible tiles, random wrong choices
+//level 3: 18 visible tiles, random wrong choices
+//level 4: 6 visible tiles, distractor wrong choices
+//level 5: 12 visible tiles, distractor wrong choices
+//level 6: 18 visible tiles, distractor wrong choices
 
 //level 1 + S: 6 visible syllables, random wrong choices
 //level 2 + S: 12 visible syllables, random wrong choices
@@ -389,6 +393,45 @@ public class Georgia extends GameActivity {
 
         boolean correctTileRepresented = false;
 
+        Start.Tile answer = tileHashMap.find(initialTile);
+
+        answerChoices.clear();
+        answerChoices.add(initialTile);
+        answerChoices.add(answer.altTiles[0]);
+        answerChoices.add(answer.altTiles[1]);
+        answerChoices.add(answer.altTiles[2]);
+
+        int i = 0;
+        while (answerChoices.size() < visibleTiles && i < sortableTilesArray.size()){
+            // and does so while skipping repeats because it is a set
+            // and a set has no order so it will be randomized anyways
+            String option = sortableTilesArray.get(i).baseTile;
+            if (option.length() >= 2 && initialTile.length() >= 2){
+                if (option.charAt(0) == initialTile.charAt(0)
+                        && option.charAt(1) == initialTile.charAt(1)){
+                    answerChoices.add(option);
+                }else if(option.charAt(0) == initialTile.charAt(0)){
+                    answerChoices.add(option);
+                }
+            }else{
+                if(option.charAt(0) == initialTile.charAt(0)){
+                    answerChoices.add(option);
+                }else if(option.charAt(option.length()-1) == initialTile.charAt(initialTile.length()-1)){
+                    answerChoices.add(option);
+                }
+            }
+
+            i++;
+        }
+
+        int j = 0;
+        while (answerChoices.size() < visibleTiles){
+            answerChoices.add(sortableTilesArray.get(j).baseTile);
+            j++;
+        }
+
+        List<String> answerChoicesList = new ArrayList<>(answerChoices); //so we can index into answer choices now
+
         for (int t = 0; t < TILE_BUTTONS.length; t++ ) {
 
             TextView gameTile = findViewById(TILE_BUTTONS[t]);
@@ -400,18 +443,45 @@ public class Georgia extends GameActivity {
             String tileColorStr = COLORS[t % 5];
             int tileColor = Color.parseColor(tileColorStr);
 
-            if (t < visibleTiles) {
-                gameTile.setText(sortableTilesArray.get(t).baseTile); // KP
-                gameTile.setBackgroundColor(tileColor);
-                gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3){ //random wrong
+                if (t < visibleTiles) {
+                    gameTile.setText(sortableTilesArray.get(t).baseTile); // KP
+                    gameTile.setBackgroundColor(tileColor);
+                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                     gameTile.setVisibility(View.VISIBLE);
-            } else {
-                gameTile.setText(String.valueOf(t + 1));
-                gameTile.setBackgroundResource(R.drawable.textview_border);
-                gameTile.setTextColor(Color.parseColor("#000000")); // black
-                gameTile.setClickable(false);
-                gameTile.setVisibility(View.INVISIBLE);
+                } else {
+                    gameTile.setText(String.valueOf(t + 1));
+                    gameTile.setBackgroundResource(R.drawable.textview_border);
+                    gameTile.setTextColor(Color.parseColor("#000000")); // black
+                    gameTile.setClickable(false);
+                    gameTile.setVisibility(View.INVISIBLE);
+                }
+            }else{ //distractors
+                if (t < visibleTiles) {
+                    // think through this logic more -- how to get distractor syllables in there but
+                    // also fill other syllables beyond the 3 distractors
+
+                    // first make a visibleTiles-sized array with the correct answer,
+                    // its distractor syllables, and any other syllables that start with the same tile;
+                    // filter out repeats
+
+                    // then iterate through TILE_BUTTONS and fill them in using the other array, shuffled
+                    if (answerChoicesList.get(t) == initialTile){
+                        correctTileRepresented = true;
+                    }
+                    gameTile.setText(answerChoicesList.get(t)); // KP
+                    gameTile.setBackgroundColor(tileColor);
+                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                    gameTile.setVisibility(View.VISIBLE);
+                }else {
+                    gameTile.setText(String.valueOf(t + 1));
+                    gameTile.setBackgroundResource(R.drawable.textview_border);
+                    gameTile.setTextColor(Color.parseColor("#000000")); // black
+                    gameTile.setClickable(false);
+                    gameTile.setVisibility(View.INVISIBLE);
+                }
             }
+
 
         }
 
