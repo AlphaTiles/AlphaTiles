@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.settingsList;
 import static org.alphatilesapps.alphatiles.Start.syllableAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
@@ -33,7 +34,7 @@ import java.util.List;
 
 public class Sudan extends GameActivity {
 
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
+    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63", "#6200EE"};
 
     // will contain, for example:
     // List page 1 (which will contain <= 35 tiles or syllables)
@@ -41,7 +42,7 @@ public class Sudan extends GameActivity {
     List<List<String>> pagesList = new ArrayList<List<String>>();
     List<String> page = new ArrayList<>();
 
-    int numPages = 1;
+    int numPages = 0;
     int currentPageNumber = 0; //increment whenever user clicks right arrow; decrement whenever user clicks left arrow
     //use as index for pagesList
 
@@ -138,11 +139,11 @@ public class Sudan extends GameActivity {
 
         if(syllableGame.equals("S")){
             splitSyllablesListAcrossPages();
+            showCorrectNumSyllables(0);
         }else{
             splitTileListAcrossPages();
+            showCorrectNumTiles(0);
         }
-
-        showCorrectNumTiles();
 
         if(getAudioInstructionsResID()==0){
             centerGamesHomeImage();
@@ -175,7 +176,7 @@ public class Sudan extends GameActivity {
         int numTiles = tileList.size();
         int cont = 0;
         for (int i = 0; i < numPages; i++){
-            for (int j = 0; j < 35; j++){
+            for (int j = 0; j < TILE_BUTTONS.length; j++){
                 if (cont < numTiles){
                     pagesList.get(i).add(tileList.get(cont).baseTile);
                 }
@@ -188,7 +189,7 @@ public class Sudan extends GameActivity {
         int numSylls = syllableList.size();
         int cont = 0;
         for (int i = 0; i < numPages; i++){
-            for (int j = 0; j < 35; j++){
+            for (int j = 0; j < TILE_BUTTONS.length; j++){
                 if (cont < numSylls){
                     pagesList.get(i).add(syllableList.get(cont).syllable);
                 }
@@ -197,21 +198,22 @@ public class Sudan extends GameActivity {
         }
     }
 
-    public void showCorrectNumTiles(){
+    public void showCorrectNumTiles(int page){
 
         if(differentiateTypes){
-            showCorrectNumTiles1PerSymbolAndType();
+            showCorrectNumTiles1PerSymbolAndType(page);
         }
         else {
-            showCorrectNumTiles1PerSymbol();
+            showCorrectNumTiles1PerSymbol(page);
         }
 
     }
 
-    public void showCorrectNumTiles1PerSymbolAndType(){
+    public void showCorrectNumTiles1PerSymbolAndType(int page){
         // visibleTiles must now be <= 35
         // if tileList.size() > 35, the rest will go on next page
-        visibleTiles = 0;
+        //visibleTiles = pagesList.get(page).size();
+        visibleTiles = 0; //????
 
 
         for(int tileListLine = 0; tileListLine < tileList.size();  tileListLine++){
@@ -305,9 +307,9 @@ public class Sudan extends GameActivity {
 
     }
 
-    public void showCorrectNumTiles1PerSymbol(){
+    public void showCorrectNumTiles1PerSymbol(int page){
 
-        visibleTiles = tileList.size();
+        visibleTiles = pagesList.get(page).size();
 
         for (int k = 0; k < visibleTiles; k++)
         {
@@ -344,62 +346,100 @@ public class Sudan extends GameActivity {
         }
     }
 
-    public void showCorrectNumSyllables() {
+    public void showCorrectNumSyllables(int page) {
 
-    }
+        visibleTiles = pagesList.get(page).size();
 
-    public void onBtnClickSyllables(View view) {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
+        for (int i = 0; i < visibleTiles; i++){
+            TextView tile = findViewById(TILE_BUTTONS[i]);
+            tile.setText(pagesList.get(page).get(i));
+            String color = syllableHashMap.find(pagesList.get(page).get(i)).color;
+            String typeColor = COLORS[Integer.parseInt(color)];
+            int tileColor = Color.parseColor(typeColor);
+            tile.setBackgroundColor(tileColor);
+        }
 
-        String tileText = "";
-        int justClickedKey = Integer.parseInt((String)view.getTag());
+        for (int k = 0; k < TILE_BUTTONS.length; k++) {
 
-        tileText = Start.syllableList.get(justClickedKey-1).syllable;
-
-        gameSounds.play(syllableAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
-        soundSequencer.postDelayed(new Runnable()
-        {
-            public void run()
-            {
-                if (repeatLocked)
-                {
-                    setAllTilesClickable();
-                }
-                setOptionsRowClickable();
+            TextView key = findViewById(TILE_BUTTONS[k]);
+            if (k < visibleTiles) {
+                key.setVisibility(View.VISIBLE);
+                key.setClickable(true);
+            } else {
+                key.setVisibility(View.INVISIBLE);
+                key.setClickable(false);
             }
-
-        }, 925);
-
-
+        }
     }
 
-    public void onBtnClickTiles(View view) {
+    public void nextPageArrow(View view){
+        if (currentPageNumber < numPages){
+            currentPageNumber++;
+            if (syllableGame.equals("S")){
+                showCorrectNumSyllables(currentPageNumber);
+            }else{
+                showCorrectNumTiles(currentPageNumber);
+            }
+        }
+    }
+
+    public void prevPageArrow(View view){
+        if (currentPageNumber > 0){
+            currentPageNumber--;
+            if (syllableGame.equals("S")){
+                showCorrectNumSyllables(currentPageNumber);
+            }else{
+                showCorrectNumTiles(currentPageNumber);
+            }
+        }
+    }
+
+    public void onBtnClick(View view) {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
         String tileText = "";
         int justClickedKey = Integer.parseInt((String)view.getTag());
-        if(!differentiateTypes){//Not differentiating the uses of multifunction tiles
-            tileText = tileList.get(justClickedKey-1).baseTile;
-        }
-        else{ //differentiateMultipleTypes ==2,we ARE differentiating the uses of multifunction tiles
-            tileText = Start.tileListWithMultipleTypes.get(justClickedKey-1);
-        }
+        if (syllableGame.equals("S")){
+            tileText = Start.syllableList.get(justClickedKey-1).syllable;
 
-        gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
-        soundSequencer.postDelayed(new Runnable()
-        {
-            public void run()
+            gameSounds.play(syllableAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+            soundSequencer.postDelayed(new Runnable()
             {
-                if (repeatLocked)
+                public void run()
+                {
+                    if (repeatLocked)
                     {
                         setAllTilesClickable();
                     }
                     setOptionsRowClickable();
                 }
 
-        }, 925);
+            }, 925);
+        }else{
+            if(!differentiateTypes){//Not differentiating the uses of multifunction tiles
+                tileText = tileList.get(justClickedKey-1).baseTile;
+            }
+            else{ //differentiateMultipleTypes ==2,we ARE differentiating the uses of multifunction tiles
+                tileText = Start.tileListWithMultipleTypes.get(justClickedKey-1);
+            }
+
+            gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+            soundSequencer.postDelayed(new Runnable()
+            {
+                public void run()
+                {
+                    if (repeatLocked)
+                    {
+                        setAllTilesClickable();
+                    }
+                    setOptionsRowClickable();
+                }
+
+            }, 925);
+        }
+
+
 
 
     }
