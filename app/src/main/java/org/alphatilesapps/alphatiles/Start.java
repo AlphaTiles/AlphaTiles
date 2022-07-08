@@ -243,17 +243,17 @@ public class Start extends AppCompatActivity
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
-            String[] thisLineArray = thisLine.split("\t", 6);
+            String[] thisLineArray = thisLine.split("\t", 7);
             if (header) {
                 syllableList.syllableTitle = thisLineArray[0];
-                syllableList.syllableAlt1Title = thisLineArray[1];
-                syllableList.syllableAlt2Title = thisLineArray[2];
-                syllableList.syllableAlt3Title = thisLineArray[3];
+                syllableList.distractorsTitles = new String[]{thisLineArray[1], thisLineArray[2], thisLineArray[3]};
                 syllableList.syllableAudioNameTitle = thisLineArray[4];
                 syllableList.syllableDurationTitle = thisLineArray[5];
+                syllableList.colorTitle = thisLineArray[6];
                 header = false;
             } else {
-                Syllable syllable = new Syllable(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], Integer.parseInt(thisLineArray[5]));
+                String[] distractors = {thisLineArray[1], thisLineArray[2], thisLineArray[3]};
+                Syllable syllable = new Syllable(thisLineArray[0], distractors, thisLineArray[4], Integer.parseInt(thisLineArray[5]), thisLineArray[6]);
                 if (!syllable.hasNull()) {
                     syllableList.add(syllable);
                 }
@@ -1158,33 +1158,32 @@ public class Start extends AppCompatActivity
 
     public class Syllable{
         public String syllable;
-        public String syllableAlt1;
-        public String syllableAlt2;
-        public String syllableAlt3;
+        public String[] distractors;
         public String syllableAudioName;
         public int syllableDuration;
+        public String color;
 
-        public Syllable(String syllable, String syllableAlt1, String syllableAlt2, String syllableAlt3, String syllableAudioName, int syllableDuration) {
+
+        public Syllable(String syllable, String[] distractors, String syllableAudioName, int syllableDuration, String color) {
             this.syllable = syllable;
-            this.syllableAlt1 = syllableAlt1;
-            this.syllableAlt2 = syllableAlt2;
-            this.syllableAlt3 = syllableAlt3;
+            this.distractors = distractors;
             this.syllableAudioName = syllableAudioName;
             this.syllableDuration = syllableDuration;
+            this.color = color;
         }
 
         public boolean hasNull() {
-            return syllable == null || syllableAlt1 == null || syllableAlt2 == null || syllableAlt3 == null || syllableAudioName == null;
+            return syllable == null || distractors[0] == null || distractors[1] == null || distractors[2] == null || syllableAudioName == null || color == null;
         }
     }
 
     public class SyllableList extends ArrayList<Syllable>{
+        //TO DO: RESUME HERE FOR MAKING DISTRACTORS INTO ARRAY
         public String syllableTitle;
-        public String syllableAlt1Title;
-        public String syllableAlt2Title;
-        public String syllableAlt3Title;
+        public String[] distractorsTitles;
         public String syllableAudioNameTitle;
         public String syllableDurationTitle;
+        public String colorTitle;
 
         public ArrayList<String> parseWordIntoSyllables(String parseMe) {
             ArrayList<String> parsedWordArrayTemp = new ArrayList();
@@ -1194,6 +1193,23 @@ public class Start extends AppCompatActivity
             }
 
             return parsedWordArrayTemp;
+        }
+
+        public String returnRandomCorrespondingSyllable(String correctSyll) {
+
+            String wrongTile = "";
+            Random rand = new Random();
+
+            for (int i = 0; i < size(); i++) {
+                if (get(i).syllable.equals(correctSyll)) {
+                    int randomNum = rand.nextInt(get(i).distractors.length);
+                    wrongTile = get(i).distractors[randomNum];
+                    break;
+                }
+            }
+
+            return wrongTile;
+
         }
     }
 

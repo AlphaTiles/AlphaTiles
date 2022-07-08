@@ -288,9 +288,9 @@ public class Georgia extends GameActivity {
 
         answerChoices.clear();
         answerChoices.add(initialSyll);
-        answerChoices.add(answer.syllableAlt1);
-        answerChoices.add(answer.syllableAlt2);
-        answerChoices.add(answer.syllableAlt3);
+        answerChoices.add(answer.distractors[0]);
+        answerChoices.add(answer.distractors[1]);
+        answerChoices.add(answer.distractors[2]);
 
         int i = 0;
         while (answerChoices.size() < visibleTiles && i < sortableSyllArray.size()){

@@ -511,9 +511,9 @@ public class Brazil extends GameActivity {
         // TO DO: FIX ISSUE OF SOMETIMES RIGHT ANSWER NOT SHOWING UP
         answerChoices.clear();
         answerChoices.add(correctTile);
-        answerChoices.add(answer.syllableAlt1);
-        answerChoices.add(answer.syllableAlt2);
-        answerChoices.add(answer.syllableAlt3);
+        answerChoices.add(answer.distractors[0]);
+        answerChoices.add(answer.distractors[1]);
+        answerChoices.add(answer.distractors[2]);
 
         List<String> answerChoicesList = new ArrayList<>(answerChoices); //so we can index into answer choices now
 
