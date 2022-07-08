@@ -166,24 +166,41 @@ public abstract class GameActivity extends AppCompatActivity {
 		//after12CheckedTrackers option 2: app returns players to Earth after checking all 12 trackers. They can get back in. Will return to Earth again after another 12 correct answers.
 		if(trackerCount>0 && trackerCount%12==0 && after12checkedTrackers==2){
 			trackerCount++;
-			Intent intent = getIntent();
-			intent.setClass(context, Earth.class); // so we retain the Extras
-			startActivity(intent);
-			finish();
+
+			playCorrectFinalSound();
+			soundSequencer.postDelayed(new Runnable()
+			{
+				public void run()
+				{
+					Intent intent = getIntent();
+					intent.setClass(context, Earth.class); // so we retain the Extras
+					startActivity(intent);
+					finish();
+				}
+			}, correctSoundDuration);
+
 		}
 		//after12CheckedTrackers option 3: app displays celebration screen and moves on to the next unchecked game after checking all 12 trackers.
 		if(trackerCount>0 && trackerCount%12==0 && after12checkedTrackers==3){
 			trackerCount++;
 
-			//show celebration screen
-			Intent intent = getIntent();
-			intent.setClass(context, Celebration.class); //so we retain the Extras
-			startActivity(intent);
-			finish();
+			playCorrectFinalSound();
+			soundSequencer.postDelayed(new Runnable()
+			{
+				public void run()
+				{
+					//show celebration screen
+					Intent intent = getIntent();
+					intent.setClass(context, Celebration.class);
+					startActivity(intent);
+					finish();
+				}
+			}, correctSoundDuration);
 
-			//Then switch to next uncompleted game after 3 seconds
-			Timer timer = new Timer();
-			timer.schedule(new TimerTask() {
+
+			//Then switch to next uncompleted game after 4.8 seconds
+			Timer nextScreenTimer = new Timer();
+			nextScreenTimer.schedule(new TimerTask() {
 				@Override
 				public void run() {
 
@@ -192,11 +209,12 @@ public abstract class GameActivity extends AppCompatActivity {
 					Intent intent = getIntent();
 					String project = "org.alphatilesapps.alphatiles.";
 					boolean foundNextUncompletedGame = false;
-					int steps = 1;
-					while(!foundNextUncompletedGame && steps<gameList.size()){
 
-						String country = gameList.get(gameNumber+steps).gameCountry;
-						int challengeLevel = Integer.valueOf(gameList.get(gameNumber+steps).gameLevel);
+					while(foundNextUncompletedGame==false && gameNumber<=gameList.size()){
+
+						challengeLevel = Integer.valueOf(gameList.get(gameNumber).gameLevel); //challengeLevel of next game
+						String country = gameList.get(gameNumber).gameCountry; //country of next game
+						gameNumber = gameNumber+1; //actually increment game number
 						String activityClass = project + country;
 
 						try {
@@ -205,29 +223,26 @@ public abstract class GameActivity extends AppCompatActivity {
 							e.printStackTrace();
 						}
 
-						intent.putExtra("challengeLevel", challengeLevel);
 						String playerString = Util.returnPlayerStringToAppend(playerNumber);
 						SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
 						hasChecked12Trackers = prefs.getBoolean("stored" + country + "HasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, false);
 
 						if(!hasChecked12Trackers){
 							foundNextUncompletedGame = true;
-
 							intent.putExtra("challengeLevel", challengeLevel);
 							intent.putExtra("points", points);
-							gameNumber = gameNumber+steps;
 							intent.putExtra("gameNumber", gameNumber);
 							intent.putExtra("country", country);
 							startActivity(intent);
 							finish();
 						}
 						else{
-							steps++; //step to see if the next game is uncompleted
+							//keep looping
 						}
 
 					}
 
-					//If all of the games are complete, return to Earth
+					//If it's looped through all of the games and they're all complete, return to Earth
 					if(!foundNextUncompletedGame){
 						intent.setClass(context, Earth.class); // so we retain the Extras
 						startActivity(intent);
@@ -235,7 +250,7 @@ public abstract class GameActivity extends AppCompatActivity {
 					}
 
 				}
-			}, 3000);
+			}, 4800);
 
 		}
 
@@ -389,7 +404,7 @@ public abstract class GameActivity extends AppCompatActivity {
 		});	
 		mp1.start();	
 	}	
-	protected void playCorrectSoundThenActiveWordClip(final boolean playFinalSound)	
+	protected void playCorrectSoundThenActiveWordClip(final boolean playFinalSound)
 	{	
 		if (tempSoundPoolSwitch)	
 			playCorrectSoundThenActiveWordClip1(playFinalSound);	
