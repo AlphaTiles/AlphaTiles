@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -12,16 +14,23 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;   // KRP
 import java.util.logging.Logger;
 
@@ -71,6 +80,9 @@ public class ChoosePlayer extends AppCompatActivity
 	public static final String SHARED_PREFS = "sharedPrefs";
 
 	private static final Logger LOGGER = Logger.getLogger(ChoosePlayer.class.getName());
+	private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	private final long ONE_DAY = 24 * 60 * 60 * 1000;
+
 
 	ConstraintLayout choosePlayerCL;
 
@@ -139,19 +151,7 @@ public class ChoosePlayer extends AppCompatActivity
 				avatarJpgList.add(((ImageView)child).getDrawable());
 			}
 		}
-/*
-		buildLangInfoArray();
-		LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
 
-		buildKeysArray();
-		LOGGER.info("Remember: completed buildKeysArray()");
-
-		buildSettingsArray();
-		LOGGER.info("Remember: completed buildSettingsArray()");
-
-		buildGamesArray();
-		LOGGER.info("Remember: completed buildGamesArray()");
-*/
 		SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
 
 		int nameID;
@@ -186,6 +186,60 @@ public class ChoosePlayer extends AppCompatActivity
 		}
 		else{
 			forceLTRIfSupported();
+		}
+
+		int daysUntilExpiration = Integer.valueOf(settingsList.find("Days until expiration"));
+
+
+		String installDate = prefs.getString("InstallDate", null);
+		if(installDate == null) {
+			// First run, so save the current date
+			SharedPreferences.Editor editor = prefs.edit();
+			Date now = new Date();
+			String dateString = formatter.format(now);
+			editor.putString("InstallDate", dateString);
+			// Commit the edits!
+			editor.commit();
+		}
+		else {
+			// This is not the 1st run, check install date
+			Date before = null;
+			try {
+				before = (Date)formatter.parse(installDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			Date now = new Date();
+			long diff = now.getTime() - before.getTime();
+			long days = diff / ONE_DAY;
+
+			if(days > daysUntilExpiration) {
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+				//Setting message manually and performing action on button click
+				builder.setMessage(R.string.expiration_dialog_message)
+						.setCancelable(false)
+						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								finish();
+								Toast.makeText(getApplicationContext(),"Removing " +localAppName,
+										Toast.LENGTH_SHORT).show();
+								//finish();
+								Intent intent = new Intent(Intent.ACTION_DELETE);
+								intent.setData(Uri.parse("package:"+getApplicationContext().getPackageName()));
+								startActivity(intent);
+							}
+						});
+
+				//Creating dialog box
+				AlertDialog alert = builder.create();
+				//Setting the title manually
+				alert.setTitle(R.string.expiration_dialog_title);
+				alert.show();
+
+			}
+
 		}
 
 	}

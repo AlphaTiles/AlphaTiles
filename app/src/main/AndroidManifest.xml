@@ -42,4 +42,6 @@
         <activity android:name=".UnitedStates" />
     </application>
 
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+
 </manifest>
