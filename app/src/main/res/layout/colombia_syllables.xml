@@ -183,7 +183,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/backspace"
-        android:onClick="deleteLastKeyedSyllable"
+        android:onClick="deleteLastKeyed"
         android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH3"
         app:layout_constraintEnd_toEndOf="parent"

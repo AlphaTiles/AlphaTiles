@@ -43,8 +43,8 @@ public class Colombia extends GameActivity {
     String thirdToLastWord = "";
     int colombiaPoints;
     static List<String> syllableKeysList = new ArrayList<>();
-    static List<String> syllablesClicked = new ArrayList<>(); // will be used to keep track of the order
-    // that the user clicked syllables so that we can backtrack in deleteLastKeyedSyllable
+    static List<String> keysClicked = new ArrayList<>(); // will be used to keep track of the order
+    // that the user clicked keys so that we can backtrack in deleteLastKeyedSyllable, and used in evaluateStatus for orange color
 
     protected static final int[] TILE_BUTTONS = {
             R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
@@ -279,6 +279,7 @@ public class Colombia extends GameActivity {
     private void chooseWord() {
 
         boolean freshWord = false;
+        keysClicked.clear();
 
         while(!freshWord) {
             Random rand = new Random();
@@ -511,17 +512,15 @@ public class Colombia extends GameActivity {
             case 3:
                 if (syllableGame.equals("S")){
                     tileToAdd = syllableKeysList.get(justClickedIndex);
-                    syllablesClicked.add(tileToAdd);
                 }else{
                     tileToAdd = Start.keyList.get(justClickedIndex).baseKey;
                 }
+                keysClicked.add(tileToAdd);
 
                 break;
             default:
                 tileToAdd = tempKeys.get(justClickedIndex); // KP (case 1)
-                if (syllableGame.equals("S")) {
-                    syllablesClicked.add(tileToAdd);
-                }
+                keysClicked.add(tileToAdd);
         }
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
@@ -541,8 +540,8 @@ public class Colombia extends GameActivity {
             wordToBuild.setTextColor(Color.parseColor("#FFFFFF")); // white
 
             if (syllableGame.equals("S")){
-                for (int i : SYLL_BUTTONS) {                    // RR
-                    TextView key = findViewById(i);     // RR
+                for (int i : SYLL_BUTTONS) {
+                    TextView key = findViewById(i);
                     key.setClickable(false);
                 }
             }else{
@@ -585,10 +584,33 @@ public class Colombia extends GameActivity {
 
             if (wordInLOP.length() > wordToBuild.getText().length()) {
 
+                //orange if there is no tile/key option that would allow you to continue correctly
+
+                //use keysClicked and parsedWordArrayFinal
+
                 if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP).substring(0, wordToBuild.getText().length()))) {
                     // Word, so far, spelled correctly, but a less than complete match
-                    wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
-                    wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+                    if (challengeLevel == 1 || challengeLevel == 2){
+                        boolean orange = false;
+                        for (int i = 0; i < keysClicked.size(); i++){
+                            if (!keysClicked.get(i).equals(parsedWordArrayFinal.get(i))){
+                                orange = true;
+                                break;
+                            }
+                        }
+
+                        if (orange){
+                            // indicates that there is no key available to continue correctly; ex: you typed i but need í
+                            wordToBuild.setBackgroundColor(Color.parseColor("#F44336")); // orange
+                        }else{
+                            wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
+                        }
+                        wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+                    }else{
+                        wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B"));
+                        wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+                    }
+
                 }
 
             }
@@ -604,6 +626,7 @@ public class Colombia extends GameActivity {
 
         if (typedLettersSoFar.length() > 0) {       // RR
             nowWithOneLessChar = typedLettersSoFar.substring(0, typedLettersSoFar.length() - 1);
+            keysClicked.remove(keysClicked.size() -1);
         }
 
         wordToBuild.setText(nowWithOneLessChar);
@@ -611,18 +634,18 @@ public class Colombia extends GameActivity {
 
     }
 
-    public void deleteLastKeyedSyllable (View view) { //JP
+    public void deleteLastKeyed (View view) { //JP
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
 
 
         String typedLettersSoFar = wordToBuild.getText().toString();
-        int shortenFromThisIndex = typedLettersSoFar.lastIndexOf(syllablesClicked.get(syllablesClicked.size() -1));
+        int shortenFromThisIndex = typedLettersSoFar.lastIndexOf(keysClicked.get(keysClicked.size() -1));
         String nowWithOneLessSyll = "";
 
         if (typedLettersSoFar.length() > 0) {       // RR
             nowWithOneLessSyll = typedLettersSoFar.substring(0, shortenFromThisIndex);
-            syllablesClicked.remove(syllablesClicked.size() -1);
+            keysClicked.remove(keysClicked.size() -1);
         }
 
         wordToBuild.setText(nowWithOneLessSyll);

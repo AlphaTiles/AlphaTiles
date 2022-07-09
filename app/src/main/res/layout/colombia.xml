@@ -181,14 +181,14 @@
         android:id="@+id/deleteImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="deleteLastKeyedLetter"
+        android:contentDescription="@string/backspace"
+        android:onClick="deleteLastKeyed"
+        android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineV10"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        app:srcCompat="@drawable/zz_deletetext"
-        android:contentDescription="@string/backspace"
-        android:rotationY="0"/>
+        app:srcCompat="@drawable/zz_deletetext" />
 
     <TextView
         android:id="@+id/key01"
