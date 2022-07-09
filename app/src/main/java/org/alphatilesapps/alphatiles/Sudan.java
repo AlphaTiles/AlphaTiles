@@ -16,6 +16,7 @@ import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.settingsList;
 import static org.alphatilesapps.alphatiles.Start.syllableAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
+import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
@@ -175,7 +176,7 @@ public class Sudan extends GameActivity {
     public void splitTileListAcrossPages(){
         int numTiles = tileList.size();
         int cont = 0;
-        for (int i = 0; i < numPages; i++){
+        for (int i = 0; i < numPages + 1; i++){
             for (int j = 0; j < TILE_BUTTONS.length; j++){
                 if (cont < numTiles){
                     pagesList.get(i).add(tileList.get(cont).baseTile);
@@ -188,7 +189,7 @@ public class Sudan extends GameActivity {
     public void splitSyllablesListAcrossPages(){
         int numSylls = syllableList.size();
         int cont = 0;
-        for (int i = 0; i < numPages; i++){
+        for (int i = 0; i < numPages + 1; i++){
             for (int j = 0; j < TILE_BUTTONS.length; j++){
                 if (cont < numSylls){
                     pagesList.get(i).add(syllableList.get(cont).syllable);
@@ -213,8 +214,7 @@ public class Sudan extends GameActivity {
         // visibleTiles must now be <= 35
         // if tileList.size() > 35, the rest will go on next page
         //visibleTiles = pagesList.get(page).size();
-        visibleTiles = 0; //????
-
+        visibleTiles = 0;
 
         for(int tileListLine = 0; tileListLine < tileList.size();  tileListLine++){
 
@@ -314,8 +314,8 @@ public class Sudan extends GameActivity {
         for (int k = 0; k < visibleTiles; k++)
         {
             TextView tile = findViewById(TILE_BUTTONS[k]);
-            tile.setText(tileList.get(k).baseTile);
-            String type = tileList.get(k).tileType;
+            tile.setText(pagesList.get(page).get(k));
+            String type = tileHashMap.find(pagesList.get(page).get(k)).tileType;
             String typeColor = COLORS[1];
             switch(type){
                 case "C":
@@ -403,6 +403,7 @@ public class Sudan extends GameActivity {
         if (syllableGame.equals("S")){
             tileText = Start.syllableList.get(justClickedKey-1).syllable;
 
+
             gameSounds.play(syllableAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
             soundSequencer.postDelayed(new Runnable()
             {
@@ -438,10 +439,6 @@ public class Sudan extends GameActivity {
 
             }, 925);
         }
-
-
-
-
     }
 
     public void clickPicHearAudio(View view)

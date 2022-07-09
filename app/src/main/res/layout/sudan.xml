@@ -585,8 +585,8 @@
         android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH18"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH17" />
 
     <TextView
