@@ -590,7 +590,7 @@ public class Colombia extends GameActivity {
 
                 if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP).substring(0, wordToBuild.getText().length()))) {
                     // Word, so far, spelled correctly, but a less than complete match
-                    if (challengeLevel == 1 || challengeLevel == 2){
+                    if (challengeLevel == 1 || challengeLevel == 2 || syllableGame.equals("S")){
                         boolean orange = false;
                         for (int i = 0; i < keysClicked.size(); i++){
                             if (!keysClicked.get(i).equals(parsedWordArrayFinal.get(i))){
@@ -606,7 +606,7 @@ public class Colombia extends GameActivity {
                             wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
                         }
                         wordToBuild.setTextColor(Color.parseColor("#000000")); // black
-                    }else{
+                    }else {
                         wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B"));
                         wordToBuild.setTextColor(Color.parseColor("#000000")); // black
                     }
