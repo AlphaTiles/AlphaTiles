@@ -30,6 +30,7 @@
         <activity android:name=".About" />
         <activity android:name=".Brazil" />
         <activity android:name=".Colombia" />
+        <activity android:name=".Celebration" />
         <activity android:name=".Ecuador" />
         <activity android:name=".Georgia" />
         <activity android:name=".Mexico" />
