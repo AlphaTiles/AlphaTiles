@@ -9,6 +9,8 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import static org.alphatilesapps.alphatiles.Start.langInfoList;
+import static org.alphatilesapps.alphatiles.Start.gameSounds;
+import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 
 
 public class Celebration extends AppCompatActivity {
@@ -21,6 +23,8 @@ public class Celebration extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.celebration);
+
+        gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 2, 0, 1.0f);
 
 
     }

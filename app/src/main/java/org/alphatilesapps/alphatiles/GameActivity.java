@@ -21,6 +21,7 @@ import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
+import static org.alphatilesapps.alphatiles.Start.correctFinalSoundDuration;
 import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
@@ -167,7 +168,6 @@ public abstract class GameActivity extends AppCompatActivity {
 		if(trackerCount>0 && trackerCount%12==0 && after12checkedTrackers==2){
 			trackerCount++;
 
-			playCorrectFinalSound();
 			soundSequencer.postDelayed(new Runnable()
 			{
 				public void run()
@@ -184,7 +184,6 @@ public abstract class GameActivity extends AppCompatActivity {
 		if(trackerCount>0 && trackerCount%12==0 && after12checkedTrackers==3){
 			trackerCount++;
 
-			playCorrectFinalSound();
 			soundSequencer.postDelayed(new Runnable()
 			{
 				public void run()

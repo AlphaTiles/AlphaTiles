@@ -439,6 +439,11 @@ public class Mexico extends GameActivity {
             mexicoPoints++;
             pointsEarned.setText(String.valueOf(mexicoPoints));
 
+            if(trackerCount>=12){
+                mexicoHasChecked12Trackers = true;
+            }
+            updateTrackers();
+
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);

@@ -352,6 +352,10 @@ public class Peru extends GameActivity {
             pointsEarned.setText(String.valueOf(peruPoints));
 
             trackerCount++;
+
+            if(trackerCount>=12){
+                peruHasChecked12Trackers = true;
+            }
             updateTrackers();
 
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
