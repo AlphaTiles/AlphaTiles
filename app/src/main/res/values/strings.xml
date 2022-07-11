@@ -239,4 +239,7 @@
     <string name="word06">word06</string>
     <string name="word07">word07</string>
     <string name="word08">word08</string>
+
+    <string name="expiration_dialog_message">This app has expired.</string>
+    <string name="expiration_dialog_title">Expired</string>
 </resources>

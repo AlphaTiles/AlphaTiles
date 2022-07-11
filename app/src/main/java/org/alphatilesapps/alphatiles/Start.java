@@ -1,18 +1,22 @@
 package org.alphatilesapps.alphatiles;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.Intent;import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -79,6 +83,7 @@ public class Start extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         context = this;
+
         totalAudio = 3; // JP: how many total audio files to load
         // will be used in LoadingScreen.java to determine when all audio files have loaded -> advance to ChoosePlayer
         // initialize to 3 for correct, incorrect, and correctFinal sounds
