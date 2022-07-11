@@ -184,6 +184,7 @@ public abstract class GameActivity extends AppCompatActivity {
 		if(trackerCount>0 && trackerCount%12==0 && after12checkedTrackers==3){
 			trackerCount++;
 
+
 			soundSequencer.postDelayed(new Runnable()
 			{
 				public void run()
@@ -194,10 +195,9 @@ public abstract class GameActivity extends AppCompatActivity {
 					startActivity(intent);
 					finish();
 				}
-			}, correctSoundDuration);
+			}, correctSoundDuration + 1800);
 
-
-			//Then switch to next uncompleted game after 4.8 seconds
+			//Then switch to next uncompleted game after 4 seconds
 			Timer nextScreenTimer = new Timer();
 			nextScreenTimer.schedule(new TimerTask() {
 				@Override
@@ -249,7 +249,7 @@ public abstract class GameActivity extends AppCompatActivity {
 					}
 
 				}
-			}, 4800);
+			}, 4500);
 
 		}
 
