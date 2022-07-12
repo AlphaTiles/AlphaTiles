@@ -188,59 +188,62 @@ public class ChoosePlayer extends AppCompatActivity
 			forceLTRIfSupported();
 		}
 
-		int daysUntilExpiration = Integer.valueOf(settingsList.find("Days until expiration"));
+		String daysUntilExpirationSetting = settingsList.find("Days until expiration");
 
-
-		String installDate = prefs.getString("InstallDate", null);
-		if(installDate == null) {
-			// First run, so save the current date
-			SharedPreferences.Editor editor = prefs.edit();
-			Date now = new Date();
-			String dateString = formatter.format(now);
-			editor.putString("InstallDate", dateString);
-			// Commit the edits!
-			editor.commit();
-		}
-		else {
-			// This is not the 1st run, check install date
-			Date before = null;
-			try {
-				before = (Date)formatter.parse(installDate);
-			} catch (ParseException e) {
-				e.printStackTrace();
+		if(daysUntilExpirationSetting.compareTo("") != 0){
+			int daysUntilExpiration = Integer.valueOf(daysUntilExpirationSetting);
+			String installDate = prefs.getString("InstallDate", null);
+			if(installDate == null) {
+				// First run, so save the current date
+				SharedPreferences.Editor editor = prefs.edit();
+				Date now = new Date();
+				String dateString = formatter.format(now);
+				editor.putString("InstallDate", dateString);
+				// Commit the edits!
+				editor.commit();
 			}
-			Date now = new Date();
-			long diff = now.getTime() - before.getTime();
-			long days = diff / ONE_DAY;
+			else {
+				// This is not the 1st run, check install date
+				Date before = null;
+				try {
+					before = (Date)formatter.parse(installDate);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				Date now = new Date();
+				long diff = now.getTime() - before.getTime();
+				long days = diff / ONE_DAY;
 
-			if(days > daysUntilExpiration) {
+				if(days > daysUntilExpiration) {
 
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-				//Setting message manually and performing action on button click
-				builder.setMessage(R.string.expiration_dialog_message)
-						.setCancelable(false)
-						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								finish();
-								Toast.makeText(getApplicationContext(),"Removing " +localAppName,
-										Toast.LENGTH_SHORT).show();
-								//finish();
-								Intent intent = new Intent(Intent.ACTION_DELETE);
-								intent.setData(Uri.parse("package:"+getApplicationContext().getPackageName()));
-								startActivity(intent);
-							}
-						});
+					//Setting message manually and performing action on button click
+					builder.setMessage(R.string.expiration_dialog_message)
+							.setCancelable(false)
+							.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int id) {
+									finish();
+									Toast.makeText(getApplicationContext(),"Removing " +localAppName,
+											Toast.LENGTH_SHORT).show();
+									//finish();
+									Intent intent = new Intent(Intent.ACTION_DELETE);
+									intent.setData(Uri.parse("package:"+getApplicationContext().getPackageName()));
+									startActivity(intent);
+								}
+							});
 
-				//Creating dialog box
-				AlertDialog alert = builder.create();
-				//Setting the title manually
-				alert.setTitle(R.string.expiration_dialog_title);
-				alert.show();
+					//Creating dialog box
+					AlertDialog alert = builder.create();
+					//Setting the title manually
+					alert.setTitle(R.string.expiration_dialog_title);
+					alert.show();
+
+				}
 
 			}
-
 		}
+
 
 	}
 
