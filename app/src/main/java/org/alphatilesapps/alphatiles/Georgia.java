@@ -244,6 +244,11 @@ public class Georgia extends GameActivity {
         setAllTilesClickable();
         setOptionsRowClickable();
 
+        for (int i = 0; i < TILE_BUTTONS.length; i++) {
+            TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
+            nextWord.setClickable(true);
+        }
+
     }
 
     private void chooseWord() {
@@ -498,7 +503,7 @@ public class Georgia extends GameActivity {
 
     }
 
-    private void respondToTileSelection(int justClickedTile) {
+    private void respondToTileSelection(int justClickedTile) { //for both tiles and syllables
 
         if (mediaPlayerIsPlaying) {
             return;
@@ -541,6 +546,7 @@ public class Georgia extends GameActivity {
 
             for (int t = 0; t < TILE_BUTTONS.length; t++ ) {
                 TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                gameTile.setClickable(false);
                 if (t != (tileNo)) {
                     String wordColorStr = "#A9A9A9"; // dark gray
                     int wordColorNo = Color.parseColor(wordColorStr);

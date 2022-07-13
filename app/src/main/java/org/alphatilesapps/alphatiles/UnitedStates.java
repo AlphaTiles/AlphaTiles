@@ -336,6 +336,8 @@ public class UnitedStates extends GameActivity {
         TextView constructedWord = findViewById(R.id.activeWordTextView); // KP
         constructedWord.setText(""); // KP
 
+        setAllTilesClickable();
+
     }
 
     public void buildWord (String tileNumber, String tileString) {
@@ -396,6 +398,8 @@ public class UnitedStates extends GameActivity {
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply(); // requires API 9 as per https://developer.android.com/reference/android/content/SharedPreferences.Editor
+
+            setAllTilesUnclickable();
 
             playCorrectSoundThenActiveWordClip(false);
 

@@ -343,6 +343,11 @@ public class Brazil extends GameActivity {
 //        LOGGER.info("Remember APR 21 21 # 8");
         setAllTilesClickable();
         setOptionsRowClickable();
+
+        for (int i = 0; i < visibleTiles; i++) {
+            TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
+            nextWord.setClickable(true);
+        }
     }
 
     private void chooseWord() {
@@ -746,6 +751,7 @@ public class Brazil extends GameActivity {
 
             for (int t = 0; t < visibleTiles; t++) {
                 TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                gameTile.setClickable(false);
                 if (t != (tileNo)) {
                     String wordColorStr = "#A9A9A9"; // dark gray
                     int wordColorNo = Color.parseColor(wordColorStr);
