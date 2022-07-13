@@ -166,9 +166,16 @@ public class Start extends AppCompatActivity
 
         startActivity(intent);
 
-        finish();
-
     }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        gameSounds.release();
+        gameSounds = null;
+    }
+
 
 
 

@@ -297,6 +297,9 @@ public class Georgia extends GameActivity {
         answerChoices.add(answer.distractors[1]);
         answerChoices.add(answer.distractors[2]);
 
+        // first distractors, then syllables with same first and second unicode character,
+        // then with same last letter, then random
+
         int i = 0;
         while (answerChoices.size() < visibleTiles && i < sortableSyllArray.size()){
             // and does so while skipping repeats because it is a set

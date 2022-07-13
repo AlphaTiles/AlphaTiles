@@ -649,10 +649,10 @@ public class Colombia extends GameActivity {
 
 
         String typedLettersSoFar = wordToBuild.getText().toString();
-        int shortenFromThisIndex = typedLettersSoFar.lastIndexOf(keysClicked.get(keysClicked.size() -1));
         String nowWithOneLessSyll = "";
 
         if (typedLettersSoFar.length() > 0) {       // RR
+            int shortenFromThisIndex = typedLettersSoFar.lastIndexOf(keysClicked.get(keysClicked.size() -1));
             nowWithOneLessSyll = typedLettersSoFar.substring(0, shortenFromThisIndex);
             keysClicked.remove(keysClicked.size() -1);
         }
