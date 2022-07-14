@@ -153,6 +153,7 @@ public class Start extends AppCompatActivity
 
     }
 
+    //memory leak fix
     @Override
     public void onDestroy(){
         super.onDestroy();
