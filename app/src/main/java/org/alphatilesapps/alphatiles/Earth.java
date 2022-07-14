@@ -301,6 +301,7 @@ public class Earth extends AppCompatActivity {
 
     public void goToDoor(View view) {
 
+        finish();
         int doorIndex = Integer.parseInt((String)view.getTag()) - 1;
         String project = "org.alphatilesapps.alphatiles.";  // how to call this with code? It seemed to produce variable results
         String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;

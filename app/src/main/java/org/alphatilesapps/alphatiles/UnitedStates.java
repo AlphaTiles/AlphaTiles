@@ -28,6 +28,7 @@ public class UnitedStates extends GameActivity {
     String secondToLastWord = "";
     String thirdToLastWord = "";
     int unitedStatesPoints;
+    boolean unitedStatesHasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.button01a, R.id.button01b, R.id.button02a, R.id.button02b, R.id.button03a, R.id.button03b, R.id.button04a, R.id.button04b, R.id.button05a, R.id.button05b,
@@ -95,10 +96,12 @@ public class UnitedStates extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         unitedStatesPoints = getIntent().getIntExtra("unitedStatesPoints", 0); // KP
+        unitedStatesHasChecked12Trackers = getIntent().getBooleanExtra("unitedStatesHasChecked12Trackers", false);
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         unitedStatesPoints = prefs.getInt("storedUnitedStatesPoints_level" + challengeLevel + "_player" + playerString, 0);
+        unitedStatesHasChecked12Trackers = prefs.getBoolean("storedUnitedStatesHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
@@ -131,6 +134,9 @@ public class UnitedStates extends GameActivity {
         String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
+        if(trackerCount>=12){
+            unitedStatesHasChecked12Trackers = true;
+        }
 
         updateTrackers();
 

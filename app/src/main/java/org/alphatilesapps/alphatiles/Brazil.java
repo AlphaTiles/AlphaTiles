@@ -51,6 +51,7 @@ public class Brazil extends GameActivity {
     String secondToLastWord = "";
     String thirdToLastWord = "";
     int brazilPoints;
+    boolean brazilhasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -130,10 +131,12 @@ public class Brazil extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         brazilPoints = getIntent().getIntExtra("brazilPoints", 0); // KP
+        brazilHasChecked12Trackers = getIntent().getBooleanExtra("brazilHasChecked12Trackers", false); //LM
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         brazilPoints = prefs.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, 0);
+        brazilHasChecked12Trackers = prefs.getBoolean("storedBrazilHasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, false); //LM
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
@@ -722,6 +725,9 @@ public class Brazil extends GameActivity {
             pointsEarned.setText(String.valueOf(brazilPoints));
 
             trackerCount++;
+            if(trackerCount>=12){
+                brazilHasChecked12Trackers = true;
+            }
             updateTrackers();
 
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
@@ -729,6 +735,8 @@ public class Brazil extends GameActivity {
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
             editor.putInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, brazilPoints);
+            editor.apply();
+            editor.putBoolean("storedBrazilHasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, brazilHasChecked12Trackers);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

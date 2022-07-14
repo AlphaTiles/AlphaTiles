@@ -32,6 +32,7 @@ public class Myanmar extends GameActivity {
     int wordsCompleted = 0;
     int completionGoal = 0;
     int myanmarPoints;
+    boolean myanmarHasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -101,10 +102,12 @@ public class Myanmar extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         myanmarPoints = getIntent().getIntExtra("myanmarPoints", 0); // LM
+        myanmarHasChecked12Trackers = getIntent().getBooleanExtra("myanmarHasChecked12Trackers", false);
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         myanmarPoints = prefs.getInt("storedMyanmarPoints_level" + challengeLevel + "_player" + playerString, 0);
+        myanmarHasChecked12Trackers = prefs.getBoolean("storedMyanmarHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
@@ -121,6 +124,9 @@ public class Myanmar extends GameActivity {
         String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
+        if(trackerCount>= 12){
+            myanmarHasChecked12Trackers = true;
+        }
 
         updateTrackers();
 
@@ -729,6 +735,7 @@ public class Myanmar extends GameActivity {
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.putInt("storedMyanmarPoints_level" + challengeLevel + "_player" + playerString, myanmarPoints);
+            editor.putBoolean("storedMyanmarHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, myanmarHasChecked12Trackers);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

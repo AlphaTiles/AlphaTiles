@@ -32,6 +32,7 @@
         <activity android:name=".About" />
         <activity android:name=".Brazil" />
         <activity android:name=".Colombia" />
+        <activity android:name=".Celebration" />
         <activity android:name=".Ecuador" />
         <activity android:name=".Georgia" />
         <activity android:name=".Mexico" />
@@ -43,5 +44,7 @@
         <activity android:name=".Thailand" />
         <activity android:name=".UnitedStates" />
     </application>
+
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 
 </manifest>
