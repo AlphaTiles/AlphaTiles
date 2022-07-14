@@ -11,7 +11,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -79,6 +78,7 @@ public class Start extends AppCompatActivity
 
     public static Boolean hasTileAudio;
     public static Boolean hasSyllableGames = false;
+    public static int after12checkedTrackers;
     Boolean differentiateTypes;
 
     @Override
@@ -115,6 +115,14 @@ public class Start extends AppCompatActivity
         else{
             differentiateTypes = false;
         }
+
+        String after12checkedTrackersSetting = settingsList.find("After 12 checked trackers");
+        if (after12checkedTrackersSetting.compareTo("") != 0) {
+            after12checkedTrackers = Integer.valueOf(after12checkedTrackersSetting);
+        } else {
+            after12checkedTrackers = 3;
+        }
+
         LOGGER.info("Remember: completed hasTileAudio & differentiateTypes");
 
         // JP: the old constructor is deprecated after API 21, so account for both scenarios
@@ -168,7 +176,7 @@ public class Start extends AppCompatActivity
 
     }
 
-
+    //memory leak fix
     @Override
     protected void onDestroy() {
         super.onDestroy();
