@@ -167,8 +167,14 @@ public class Start extends AppCompatActivity
 
         startActivity(intent);
 
-        finish();
+    }
 
+    //memory leak fix
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        gameSounds.release();
+        gameSounds = null;
     }
 
 
