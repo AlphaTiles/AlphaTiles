@@ -122,7 +122,9 @@ public class Start extends AppCompatActivity
         }
 
         buildTilesArray();
-        totalAudio = totalAudio + tileList.size();
+        if (hasTileAudio){
+            totalAudio = totalAudio + tileList.size();
+        }
         LOGGER.info("Remember: completed buildTilesArray()");
 
         buildGamesArray();
