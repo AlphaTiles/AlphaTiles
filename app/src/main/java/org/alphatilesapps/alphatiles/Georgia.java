@@ -455,11 +455,12 @@ public class Georgia extends GameActivity {
             int tileColor = Color.parseColor(tileColorStr);
 
             if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3){ //random wrong
-                if (t < visibleTiles) {
-                    gameTile.setText(sortableTilesArray.get(t).baseTile); // KP
-                    gameTile.setBackgroundColor(tileColor);
-                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
-                    gameTile.setVisibility(View.VISIBLE);
+            if (t < visibleTiles) {
+                gameTile.setText(sortableTilesArray.get(t).baseTile); // KP
+                gameTile.setBackgroundColor(tileColor);
+                gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                gameTile.setVisibility(View.VISIBLE);
+                gameTile.setClickable(true);
                 } else {
                     gameTile.setText(String.valueOf(t + 1));
                     gameTile.setBackgroundResource(R.drawable.textview_border);

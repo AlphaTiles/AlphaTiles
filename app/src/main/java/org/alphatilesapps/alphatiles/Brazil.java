@@ -614,6 +614,7 @@ public class Brazil extends GameActivity {
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameTile.setVisibility(View.VISIBLE);
+                gameTile.setClickable(true);
             }
 
             for (int i = visibleTiles; i < TILE_BUTTONS.length; i++) {
@@ -640,7 +641,7 @@ public class Brazil extends GameActivity {
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameTile.setVisibility(View.VISIBLE);
-
+                gameTile.setClickable(true);
             }
 
         } else {
@@ -666,6 +667,7 @@ public class Brazil extends GameActivity {
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameTile.setVisibility(View.VISIBLE);
+                gameTile.setClickable(true);
 
                 randomNum = rand.nextInt(visibleTiles); //
                 String nextTile;
