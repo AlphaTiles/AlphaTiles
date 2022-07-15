@@ -60,6 +60,7 @@
     <string name="playerAvatar">Change Players</string>
     <string name="clickLogoGoToAbout">About This App</string>
     <string name="playAgain">Play Again</string>
+    <string name="celebrate">Great job! You found correct answers to 12 questions on this game!</string>
     <string name="gametile01">01</string>
     <string name="gametile02">02</string>
     <string name="gametile03">03</string>
@@ -238,4 +239,7 @@
     <string name="word06">word06</string>
     <string name="word07">word07</string>
     <string name="word08">word08</string>
+
+    <string name="expiration_dialog_message">This app has expired.</string>
+    <string name="expiration_dialog_title">Expired</string>
 </resources>

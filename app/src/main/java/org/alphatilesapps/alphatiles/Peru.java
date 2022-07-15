@@ -28,6 +28,7 @@ public class Peru extends GameActivity {
     String secondToLastWord = "";
     String thirdToLastWord = "";
     int peruPoints;
+    boolean peruHasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
@@ -89,10 +90,12 @@ public class Peru extends GameActivity {
 
         points = getIntent().getIntExtra("points", 0); // KP
         peruPoints = getIntent().getIntExtra("peruPoints", 0); // LM
+        peruHasChecked12Trackers = getIntent().getBooleanExtra("peruHasChecked12Trackers", false);
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         peruPoints = prefs.getInt("storedPeruPoints_level" + challengeLevel + "_player" + playerString, 0);
+        peruHasChecked12Trackers = prefs.getBoolean("storedPeruHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
@@ -109,6 +112,9 @@ public class Peru extends GameActivity {
         String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
+        if(trackerCount >= 12){
+            peruHasChecked12Trackers = true;
+        }
 
         updateTrackers();
 
@@ -346,12 +352,17 @@ public class Peru extends GameActivity {
             pointsEarned.setText(String.valueOf(peruPoints));
 
             trackerCount++;
+
+            if(trackerCount>=12){
+                peruHasChecked12Trackers = true;
+            }
             updateTrackers();
 
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.putInt("storedPeruPoints_level" + challengeLevel + "_player" + playerString, peruPoints);
+            editor.putBoolean("storedPeruHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, peruHasChecked12Trackers);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

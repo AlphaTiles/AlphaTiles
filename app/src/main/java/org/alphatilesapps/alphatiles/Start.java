@@ -1,18 +1,22 @@
 package org.alphatilesapps.alphatiles;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.Intent;import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -70,13 +74,16 @@ public class Start extends AppCompatActivity
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
     public static Boolean hasTileAudio;
+    public static int after12checkedTrackers;
     Boolean differentiateTypes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         context = this;
+
         totalAudio = 3; // JP: how many total audio files to load
         // will be used in LoadingScreen.java to determine when all audio files have loaded -> advance to ChoosePlayer
         // initialize to 3 for correct, incorrect, and correctFinal sounds
@@ -106,6 +113,15 @@ public class Start extends AppCompatActivity
         else{
             differentiateTypes = false;
         }
+
+        String after12checkedTrackersSetting = settingsList.find("After 12 checked trackers");
+        if(after12checkedTrackersSetting.compareTo("") != 0){
+            after12checkedTrackers = Integer.valueOf(after12checkedTrackersSetting);
+        }
+        else{
+            after12checkedTrackers = 3;
+        }
+
         LOGGER.info("Remember: completed hasTileAudio & differentiateTypes");
 
         // JP: the old constructor is deprecated after API 21, so account for both scenarios
@@ -153,8 +169,14 @@ public class Start extends AppCompatActivity
 
         startActivity(intent);
 
-        finish();
+    }
 
+    //memory leak fix
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        gameSounds.release();
+        gameSounds = null;
     }
 
 

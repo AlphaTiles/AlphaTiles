@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -27,6 +28,8 @@ import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 public class LoadingScreen extends AppCompatActivity {
@@ -41,8 +44,10 @@ public class LoadingScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         progressBar = findViewById(R.id.progressBar);
         context = this;
@@ -78,20 +83,39 @@ public class LoadingScreen extends AppCompatActivity {
             }).start();
         }
 
+        //JP: alpha tiles colors separated into r,g,b
+        //ex: the first color 6200EE corresponds to 98, 0, 1 in the 0 index of each array
+        //for the progress bar
+        int[] reds = {98,55,3,0,156,33,244,76,233};
+        int[] greens = {0,0,218,255,39,150,67,175,30};
+        int[] blues = {238, 179,197,0,176,243,54,80,99};
+
+        final int[] color_index = {0};
+        final int[] mod_color = {0};
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                color_index[0]++; //JP: used w/mod_color to iterate through colors in reds, greens,
+                // blues arrays
+                mod_color[0] = color_index[0] % 9; //JP: 9 alpha tiles colors in use
+                // (removed yellow and white), so indices 0-8
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.getProgressDrawable().setColorFilter(
+                                Color.rgb(reds[mod_color[0]],greens[mod_color[0]],blues[mod_color[0]]),
+                                android.graphics.PorterDuff.Mode.SRC_IN);
+                    }
+                });
+            }
+        }, 0, 1500);//wait 0 ms before doing the action and do it every 1500ms (1.5 sec)
+
         final int[] audio_loaded = {0}; //JP: tracks how many audio files have already been loaded
         gameSounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener(){
 
            float percentage = 0.0F;
-
-           //JP: alpha tiles colors separated into r,g,b
-           //ex: the first color 6200EE corresponds to 98, 0, 1 in the 0 index of each array
-           //for the progress bar
-           int[] reds = {98,55,3,0,156,33,244,76,233};
-           int[] greens = {0,0,218,255,39,150,67,175,30};
-           int[] blues = {238, 179,197,0,176,243,54,80,99};
-
-           int color_index = 0;
-           int mod_color = 0;
 
            @Override
            public void onLoadComplete(SoundPool soundPool, int sampleId, int status)
@@ -101,18 +125,11 @@ public class LoadingScreen extends AppCompatActivity {
 
                audio_loaded[0]++; //JP: tracks how many audio files have been loaded so far
 
-               color_index++; //JP: used w/mod_color to iterate through colors in reds, greens,
-               // blues arrays
-               mod_color = color_index % 9; //JP: 9 alpha tiles colors in use
-               // (removed yellow and white), so indices 0-8
-
                percentage = ((float) audio_loaded[0] / (float) totalAudio) * 100;
+
                mHandler.post(new Runnable() {
                    @Override
                    public void run() {
-                       progressBar.getProgressDrawable().setColorFilter(
-                               Color.rgb(reds[mod_color],greens[mod_color],blues[mod_color]),
-                               android.graphics.PorterDuff.Mode.SRC_IN);
                        progressBar.setProgress((int) percentage);
                    }
                });
