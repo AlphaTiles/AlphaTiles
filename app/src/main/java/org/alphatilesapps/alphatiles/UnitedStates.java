@@ -258,7 +258,11 @@ public class UnitedStates extends GameActivity {
 
             }//generates a new word if it got one of the last three tested words // LM
 
-            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
+            if (syllableGame.equals("S")){
+                parsedWordArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); // JP
+            }else{
+                parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
+            }
             lengthOfLOPWord = parsedWordArrayFinal.size(); // KP
         }
 
@@ -309,10 +313,19 @@ public class UnitedStates extends GameActivity {
                 if ((parsedWordArrayFinal.get(c) == null) || (parsedWordArrayFinal.get(c).isEmpty())) {
                     c = Util.parsedWordTileLength;
                 } else {
-                    for (int d = 0; d < Start.tileList.size(); d++) {
-                        if (Start.tileList.get(d).baseTile.equals(parsedWordArrayFinal.get(c))) {
-                            correspondingRow = d;
-                            break;
+                    if (syllableGame.equals("S")){
+                        for (int d = 0; d < Start.syllableList.size(); d++) {
+                            if (Start.syllableList.get(d).syllable.equals(parsedWordArrayFinal.get(c))) {
+                                correspondingRow = d;
+                                break;
+                            }
+                        }
+                    }else{
+                        for (int d = 0; d < Start.tileList.size(); d++) {
+                            if (Start.tileList.get(d).baseTile.equals(parsedWordArrayFinal.get(c))) {
+                                correspondingRow = d;
+                                break;
+                            }
                         }
                     }
                 }
@@ -322,9 +335,17 @@ public class UnitedStates extends GameActivity {
                 randomNum2 = rand.nextInt(Start.ALT_COUNT); // KP // choosing between 2nd and 4th item of game tiles array
                 if (randomNum == 0) {
                     tileButtonA.setText(parsedWordArrayFinal.get(c));   // the correct tile
-                    tileButtonB.setText(Start.tileList.get(correspondingRow).altTiles[randomNum2]);   // the (incorrect) suggested alternative
+                    if (syllableGame.equals("S")){
+                        tileButtonB.setText(Start.syllableList.get(correspondingRow).distractors[randomNum2]);   // the (incorrect) suggested alternative
+                    }else{
+                        tileButtonB.setText(Start.tileList.get(correspondingRow).altTiles[randomNum2]);   // the (incorrect) suggested alternative
+                    }
                 } else {
-                    tileButtonA.setText(Start.tileList.get(correspondingRow).altTiles[randomNum2]);   // the (incorrect) suggested alternative
+                    if (syllableGame.equals("S")){
+                        tileButtonA.setText(Start.syllableList.get(correspondingRow).distractors[randomNum2]);   // the (incorrect) suggested alternative
+                    }else{
+                        tileButtonA.setText(Start.tileList.get(correspondingRow).altTiles[randomNum2]);   // the (incorrect) suggested alternative
+                    }
                     tileButtonB.setText(parsedWordArrayFinal.get(c));   // the correct tile
                 }
                 tileButtonA.setVisibility(View.VISIBLE);

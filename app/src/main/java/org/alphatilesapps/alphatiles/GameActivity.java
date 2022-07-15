@@ -200,15 +200,16 @@ public abstract class GameActivity extends AppCompatActivity {
 
                     //select and go to the next unfinished game to play
                     //if the game with gameNumber (gameNumber+1) has not checked all 12 trackers, go to it. If not, keep looking for one like this.
-                    Intent intent = getIntent();
+                    Intent intent = getIntent(); //gets intent that launched the current activity
                     String project = "org.alphatilesapps.alphatiles.";
                     boolean foundNextUncompletedGame = false;
+					int repeat = 0;
 
-                    while (foundNextUncompletedGame == false && gameNumber <= gameList.size()) {
+                    while (foundNextUncompletedGame == false && repeat < gameList.size()) {
 
                         challengeLevel = Integer.valueOf(gameList.get(gameNumber).gameLevel); //challengeLevel of next game
                         String country = gameList.get(gameNumber).gameCountry; //country of next game
-                        gameNumber = gameNumber + 1; //actually increment game number
+                        gameNumber = (gameNumber + 1) % gameList.size(); //actually increment game number and use mod to avoid out of bounds error
                         String activityClass = project + country;
 
                         try {
@@ -232,7 +233,7 @@ public abstract class GameActivity extends AppCompatActivity {
                         } else {
                             //keep looping
                         }
-
+						repeat++;
                     }
 
                     //If it's looped through all of the games and they're all complete, return to Earth
