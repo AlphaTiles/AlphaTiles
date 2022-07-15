@@ -208,12 +208,13 @@ public abstract class GameActivity extends AppCompatActivity {
 					Intent intent = getIntent();
 					String project = "org.alphatilesapps.alphatiles.";
 					boolean foundNextUncompletedGame = false;
+					int repeat = 0;
 
-					while(foundNextUncompletedGame==false && gameNumber<=gameList.size()){
+					while (foundNextUncompletedGame == false && repeat < gameList.size()) {
 
-						challengeLevel = Integer.valueOf(gameList.get(gameNumber).gameLevel); //challengeLevel of next game
-						String country = gameList.get(gameNumber).gameCountry; //country of next game
-						gameNumber = gameNumber+1; //actually increment game number
+						gameNumber = (gameNumber + 1) % gameList.size(); //actually increment game number and use mod to avoid out of bounds error
+						challengeLevel = Integer.valueOf(gameList.get(gameNumber-1).gameLevel); //challengeLevel of next game
+						String country = gameList.get(gameNumber-1).gameCountry; //country of next game
 						String activityClass = project + country;
 
 						try {
@@ -226,19 +227,17 @@ public abstract class GameActivity extends AppCompatActivity {
 						SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
 						hasChecked12Trackers = prefs.getBoolean("stored" + country + "HasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, false);
 
-						if(!hasChecked12Trackers){
+						if (!hasChecked12Trackers) {
 							foundNextUncompletedGame = true;
 							intent.putExtra("challengeLevel", challengeLevel);
 							intent.putExtra("points", points);
 							intent.putExtra("gameNumber", gameNumber);
 							intent.putExtra("country", country);
 							startActivity(intent);
-							finish();
-						}
-						else{
+						} else {
 							//keep looping
 						}
-
+						repeat++;
 					}
 
 					//If it's looped through all of the games and they're all complete, return to Earth
