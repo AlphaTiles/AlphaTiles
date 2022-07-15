@@ -474,6 +474,7 @@ public class Brazil extends GameActivity {
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameTile.setVisibility(View.VISIBLE);
+                gameTile.setClickable(true);
             }
 
             for (int i = visibleTiles; i < TILE_BUTTONS.length; i++) {
@@ -500,7 +501,7 @@ public class Brazil extends GameActivity {
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameTile.setVisibility(View.VISIBLE);
-
+                gameTile.setClickable(true);
             }
 
         } else {
@@ -526,6 +527,7 @@ public class Brazil extends GameActivity {
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameTile.setVisibility(View.VISIBLE);
+                gameTile.setClickable(true);
 
                 randomNum = rand.nextInt(visibleTiles); //
                 String nextTile;
@@ -618,6 +620,7 @@ public class Brazil extends GameActivity {
 
             for (int t = 0; t < visibleTiles; t++) {
                 TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                gameTile.setClickable(false);
                 if (t != (tileNo)) {
                     String wordColorStr = "#A9A9A9"; // dark gray
                     int wordColorNo = Color.parseColor(wordColorStr);

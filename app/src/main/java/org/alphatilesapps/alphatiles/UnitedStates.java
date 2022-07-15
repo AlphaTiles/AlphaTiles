@@ -403,6 +403,10 @@ public class UnitedStates extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply(); // requires API 9 as per https://developer.android.com/reference/android/content/SharedPreferences.Editor
 
+            for (int i = 0; i < visibleTiles; i++){
+                TextView gameTile = findViewById(TILE_BUTTONS[i]);
+                gameTile.setClickable(false);
+            }
             playCorrectSoundThenActiveWordClip(false);
 
         } else {
