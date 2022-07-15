@@ -256,7 +256,8 @@ public class Georgia extends GameActivity {
                 gameTile.setText(sortableTilesArray.get(t).baseTile); // KP
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
-                    gameTile.setVisibility(View.VISIBLE);
+                gameTile.setVisibility(View.VISIBLE);
+                gameTile.setClickable(true);
             } else {
                 gameTile.setText(String.valueOf(t + 1));
                 gameTile.setBackgroundResource(R.drawable.textview_border);
@@ -320,6 +321,7 @@ public class Georgia extends GameActivity {
 
             for (int t = 0; t < TILE_BUTTONS.length; t++ ) {
                 TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                gameTile.setClickable(false);
                 if (t != (tileNo)) {
                     String wordColorStr = "#A9A9A9"; // dark gray
                     int wordColorNo = Color.parseColor(wordColorStr);
