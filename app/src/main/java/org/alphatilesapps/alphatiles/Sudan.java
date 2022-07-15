@@ -49,11 +49,21 @@ public class Sudan extends GameActivity {
     int currentPageNumber = 0; //increment whenever user clicks right arrow; decrement whenever user clicks left arrow
     //use as index for pagesList
 
-    protected static final int[] TILE_BUTTONS = {
+    protected static final int[] SYLL_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16, R.id.tile17, R.id.tile18, R.id.tile19, R.id.tile20,
             R.id.tile21, R.id.tile22, R.id.tile23, R.id.tile24, R.id.tile25, R.id.tile26, R.id.tile27, R.id.tile28, R.id.tile29, R.id.tile30,
             R.id.tile31, R.id.tile32, R.id.tile33, R.id.tile34, R.id.tile35
+    };
+
+    protected static final int[] TILE_BUTTONS = {
+            R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
+            R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16, R.id.tile17, R.id.tile18, R.id.tile19, R.id.tile20,
+            R.id.tile21, R.id.tile22, R.id.tile23, R.id.tile24, R.id.tile25, R.id.tile26, R.id.tile27, R.id.tile28, R.id.tile29, R.id.tile30,
+            R.id.tile31, R.id.tile32, R.id.tile33, R.id.tile34, R.id.tile35, R.id.tile36, R.id.tile37, R.id.tile38, R.id.tile39, R.id.tile40,
+            R.id.tile41, R.id.tile42, R.id.tile43, R.id.tile44, R.id.tile45, R.id.tile46, R.id.tile47, R.id.tile48, R.id.tile49, R.id.tile50,
+            R.id.tile51, R.id.tile52, R.id.tile53, R.id.tile54, R.id.tile55, R.id.tile56, R.id.tile57, R.id.tile58, R.id.tile59, R.id.tile60,
+            R.id.tile61, R.id.tile62, R.id.tile63
     };
 
 
@@ -87,7 +97,13 @@ public class Sudan extends GameActivity {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
-        int gameID = R.id.sudanCL;
+        int gameID;
+        if (syllableGame.equals("S")){
+            gameID = R.id.sudansyllCL;
+        }else{
+            gameID = R.id.sudanCL;
+        }
+
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
@@ -103,7 +119,12 @@ public class Sudan extends GameActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         context = this;
-        setContentView(R.layout.sudan);
+        if (syllableGame.equals("S")){
+            setContentView(R.layout.sudan_syll);
+        }else{
+            setContentView(R.layout.sudan);
+        }
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
@@ -159,20 +180,20 @@ public class Sudan extends GameActivity {
     public void determineNumPages(){
         pagesList.add(page);
         if (syllableGame.equals("S")){
-            int total = syllableList.size() - 35; // 1 page is accounted for in numPages init
+            int total = syllableList.size() - SYLL_BUTTONS.length; // 1 page is accounted for in numPages init
             while (total >= 0){
                 numPages++;
                 List<String> page = new ArrayList<>();
                 pagesList.add(page); //add another page(list of syllables) to list
-                total = total - 35;
+                total = total - SYLL_BUTTONS.length;
             }
         }else{
-            int total = tileList.size() - 35; // 1 page is accounted for in numPages init
+            int total = tileList.size() - TILE_BUTTONS.length; // 1 page is accounted for in numPages init
             while (total >= 0){
                 numPages++;
                 List<String> page = new ArrayList<>();
                 pagesList.add(page); //add another page(list of tiles) to list
-                total = total - 35;
+                total = total - TILE_BUTTONS.length;
             }
         }
     }
@@ -194,7 +215,7 @@ public class Sudan extends GameActivity {
         int numSylls = syllableList.size();
         int cont = 0;
         for (int i = 0; i < numPages + 1; i++){
-            for (int j = 0; j < TILE_BUTTONS.length; j++){
+            for (int j = 0; j < SYLL_BUTTONS.length; j++){
                 if (cont < numSylls){
                     pagesList.get(i).add(syllableList.get(cont).syllable);
                 }
@@ -215,8 +236,8 @@ public class Sudan extends GameActivity {
     }
 
     public void showCorrectNumTiles1PerSymbolAndType(int page){
-        // visibleTiles must now be <= 35
-        // if tileList.size() > 35, the rest will go on next page
+        // visibleTiles must now be <= 63
+        // if tileList.size() > 63, the rest will go on next page
         //visibleTiles = pagesList.get(page).size();
         visibleTiles = 0;
 
@@ -363,21 +384,40 @@ public class Sudan extends GameActivity {
         float percentTopToTop;
         float percentHeight;
 
-        for (int t = 0; t < TILE_BUTTONS.length; t++) {
+        if (syllableGame.equals("S")){
+            for (int t = 0; t < SYLL_BUTTONS.length; t++) {
 
-            TextView gameTile = findViewById(TILE_BUTTONS[t]);
-            if (t == 0) {
-                ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) gameTile.getLayoutParams();
-                bottomToTopId = lp1.bottomToTop;
-                topToTopId = lp1.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                TextView gameTile = findViewById(SYLL_BUTTONS[t]);
+                if (t == 0) {
+                    ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) gameTile.getLayoutParams();
+                    bottomToTopId = lp1.bottomToTop;
+                    topToTopId = lp1.topToTop;
+                    percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
+                    percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
+                    percentHeight = percentBottomToTop - percentTopToTop;
+                    pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                }
+                gameTile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+
             }
-            gameTile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+        }else{
+            for (int t = 0; t < TILE_BUTTONS.length; t++) {
 
+                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                if (t == 0) {
+                    ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) gameTile.getLayoutParams();
+                    bottomToTopId = lp1.bottomToTop;
+                    topToTopId = lp1.topToTop;
+                    percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
+                    percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
+                    percentHeight = percentBottomToTop - percentTopToTop;
+                    pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                }
+                gameTile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+
+            }
         }
+
 
         // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
         TextView pointsEarned = findViewById(R.id.pointsTextView);
@@ -398,7 +438,7 @@ public class Sudan extends GameActivity {
         visibleTiles = pagesList.get(page).size();
 
         for (int i = 0; i < visibleTiles; i++){
-            TextView tile = findViewById(TILE_BUTTONS[i]);
+            TextView tile = findViewById(SYLL_BUTTONS[i]);
             tile.setText(pagesList.get(page).get(i));
             String color = syllableHashMap.find(pagesList.get(page).get(i)).color;
             String typeColor = COLORS[Integer.parseInt(color)];
@@ -406,9 +446,9 @@ public class Sudan extends GameActivity {
             tile.setBackgroundColor(tileColor);
         }
 
-        for (int k = 0; k < TILE_BUTTONS.length; k++) {
+        for (int k = 0; k < SYLL_BUTTONS.length; k++) {
 
-            TextView key = findViewById(TILE_BUTTONS[k]);
+            TextView key = findViewById(SYLL_BUTTONS[k]);
             if (k < visibleTiles) {
                 key.setVisibility(View.VISIBLE);
                 key.setClickable(true);
