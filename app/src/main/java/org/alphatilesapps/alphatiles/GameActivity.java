@@ -234,6 +234,7 @@ public abstract class GameActivity extends AppCompatActivity {
 							intent.putExtra("gameNumber", gameNumber);
 							intent.putExtra("country", country);
 							startActivity(intent);
+							finish();
 						} else {
 							//keep looping
 						}
