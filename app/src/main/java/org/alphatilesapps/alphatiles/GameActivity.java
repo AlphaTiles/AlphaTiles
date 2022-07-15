@@ -207,9 +207,9 @@ public abstract class GameActivity extends AppCompatActivity {
 
                     while (foundNextUncompletedGame == false && repeat < gameList.size()) {
 
-                        challengeLevel = Integer.valueOf(gameList.get(gameNumber).gameLevel); //challengeLevel of next game
-                        String country = gameList.get(gameNumber).gameCountry; //country of next game
-                        gameNumber = (gameNumber + 1) % gameList.size(); //actually increment game number and use mod to avoid out of bounds error
+						gameNumber = (gameNumber + 1) % gameList.size(); //actually increment game number and use mod to avoid out of bounds error
+						challengeLevel = Integer.valueOf(gameList.get(gameNumber-1).gameLevel); //challengeLevel of next game
+						String country = gameList.get(gameNumber-1).gameCountry; //country of next game
                         String activityClass = project + country;
 
                         try {
