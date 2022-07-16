@@ -239,8 +239,6 @@ public class Brazil extends GameActivity {
 
         updateTrackers();
 
-        setTextSizes();
-
         if(getAudioInstructionsResID()==0){
             centerGamesHomeImage();
         }
@@ -256,58 +254,6 @@ public class Brazil extends GameActivity {
         // no action
     }
 
-    public void setTextSizes() {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        int pixelHeight = 0;
-        double scaling = 0.45;
-        int bottomToTopId;
-        int topToTopId;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        for (int t = 0; t < visibleTiles; t++) {
-
-            TextView gameTile = findViewById(TILE_BUTTONS[t]);
-            if (t == 0) {
-                ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) gameTile.getLayoutParams();
-                bottomToTopId = lp1.bottomToTop;
-                topToTopId = lp1.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-            }
-            gameTile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        }
-
-        TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
-        ConstraintLayout.LayoutParams lp2 = (ConstraintLayout.LayoutParams) activeWord.getLayoutParams();
-        int bottomToTopId2 = lp2.bottomToTop;
-        int topToTopId2 = lp2.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId2).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId2).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-        activeWord.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        ImageView pointsEarnedImage = (ImageView) findViewById(R.id.pointsImage);
-        ConstraintLayout.LayoutParams lp3 = (ConstraintLayout.LayoutParams) pointsEarnedImage.getLayoutParams();
-        int bottomToTopId3 = lp3.bottomToTop;
-        int topToTopId3 = lp3.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
-        pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-    }
 
     public void repeatGame(View View) {
         if (!repeatLocked) {
@@ -516,12 +462,17 @@ public class Brazil extends GameActivity {
         //find corresponding syllable object for correct answer
         Start.Syllable answer = syllableHashMap.find(correctTile);
 
-        // TO DO: FIX ISSUE OF SOMETIMES RIGHT ANSWER NOT SHOWING UP
         answerChoices.clear();
         answerChoices.add(correctTile);
         answerChoices.add(answer.distractors[0]);
         answerChoices.add(answer.distractors[1]);
         answerChoices.add(answer.distractors[2]);
+
+        Random rand = new Random();
+
+        while (answerChoices.size() < 4){ // this shouldn't happen if distractors are set up correctly
+            answerChoices.add(syllableList.get(rand.nextInt(syllableList.size())).syllable);
+        }
 
         List<String> answerChoicesList = new ArrayList<>(answerChoices); //so we can index into answer choices now
 
@@ -581,7 +532,7 @@ public class Brazil extends GameActivity {
 
             // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
 
-            Random rand = new Random();
+            rand = new Random();
             int randomNum = rand.nextInt(visibleTiles - 1); // KP
             TextView gameTile = findViewById(TILE_BUTTONS[randomNum]);
             gameTile.setText(correctTile);

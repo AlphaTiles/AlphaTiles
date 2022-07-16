@@ -106,7 +106,7 @@ public class UnitedStates extends GameActivity {
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
@@ -153,70 +153,12 @@ public class UnitedStates extends GameActivity {
         }
         playAgain();
 
-        setTextSizes();
-
     }
 
     @Override
     public void onBackPressed() {
         // no action
     }
-
-    public void setTextSizes() {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        int pixelHeight = 0;
-        double scaling = 0.45;
-        int bottomToTopId;
-        int topToTopId;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        for (int t = 0; t < visibleTiles; t++) {
-
-            LOGGER.info("Remember: t = " + t);
-
-            TextView tileButton = findViewById(TILE_BUTTONS[t]);
-            if (t == 0) {
-                ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) tileButton.getLayoutParams();
-                bottomToTopId = lp1.bottomToTop;
-                topToTopId = lp1.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-            }
-            tileButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        }
-
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-        ConstraintLayout.LayoutParams lp2 = (ConstraintLayout.LayoutParams) wordToBuild.getLayoutParams();
-        int bottomToTopId2 = lp2.bottomToTop;
-        int topToTopId2 = lp2.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId2).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId2).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-        wordToBuild.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        ImageView pointsEarnedImage = (ImageView) findViewById(R.id.pointsImage);
-        ConstraintLayout.LayoutParams lp3 = (ConstraintLayout.LayoutParams) pointsEarnedImage.getLayoutParams();
-        int bottomToTopId3 = lp3.bottomToTop;
-        int topToTopId3 = lp3.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
-        pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-    }
-
 
     public void repeatGame (View view) {
 
@@ -426,7 +368,10 @@ public class UnitedStates extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply(); // requires API 9 as per https://developer.android.com/reference/android/content/SharedPreferences.Editor
 
-            setAllTilesUnclickable();
+            for (int i = 0; i < visibleTiles; i++){
+                TextView gameTile = findViewById(TILE_BUTTONS[i]);
+                gameTile.setClickable(false);
+            }
 
             playCorrectSoundThenActiveWordClip(false);
 

@@ -156,8 +156,6 @@ public class Georgia extends GameActivity {
 
         updateTrackers();
 
-        setTextSizes();
-
         if(getAudioInstructionsResID()==0){
             centerGamesHomeImage();
         }
@@ -169,49 +167,6 @@ public class Georgia extends GameActivity {
     @Override
     public void onBackPressed() {
         // no action
-    }
-
-    public void setTextSizes() {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        int pixelHeight = 0;
-        double scaling = 0.45;
-        int bottomToTopId;
-        int topToTopId;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        for (int t = 0; t < TILE_BUTTONS.length; t++) {
-
-            TextView gameTile = findViewById(TILE_BUTTONS[t]);
-            if (t == 0) {
-                ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) gameTile.getLayoutParams();
-                bottomToTopId = lp1.bottomToTop;
-                topToTopId = lp1.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-            }
-            gameTile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        }
-
-        // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        ImageView pointsEarnedImage = (ImageView) findViewById(R.id.pointsImage);
-        ConstraintLayout.LayoutParams lp3 = (ConstraintLayout.LayoutParams) pointsEarnedImage.getLayoutParams();
-        int bottomToTopId3 = lp3.bottomToTop;
-        int topToTopId3 = lp3.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
-        pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
     }
 
     public void repeatGame(View View) {

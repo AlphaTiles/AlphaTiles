@@ -154,8 +154,6 @@ public class Colombia extends GameActivity {
 
         LOGGER.info("Remember: oC3");
 
-        setTextSizes();
-
         LOGGER.info("Remember: oC4");
 
         if(getAudioInstructionsResID()==0){
@@ -170,79 +168,6 @@ public class Colombia extends GameActivity {
     @Override
     public void onBackPressed() {
         // no action
-    }
-
-    public void setTextSizes() {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        int pixelHeight = 0;
-        double scaling = 0.45;
-        int bottomToTopId;
-        int topToTopId;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        if (syllableGame.equals("S")){
-            for (int k = 0; k < SYLL_BUTTONS.length; k++) {
-
-                TextView key = findViewById(SYLL_BUTTONS[k]);
-                if (k == 0) {
-                    ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) key.getLayoutParams();
-                    bottomToTopId = lp1.bottomToTop;
-                    topToTopId = lp1.topToTop;
-                    percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                    percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                    percentHeight = percentBottomToTop - percentTopToTop;
-                    pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-                }
-                key.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-            }
-        }else{
-            for (int k = 0; k < TILE_BUTTONS.length; k++) {
-
-                TextView key = findViewById(TILE_BUTTONS[k]);
-                if (k == 0) {
-                    ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) key.getLayoutParams();
-                    bottomToTopId = lp1.bottomToTop;
-                    topToTopId = lp1.topToTop;
-                    percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                    percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                    percentHeight = percentBottomToTop - percentTopToTop;
-                    pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-                }
-                key.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-            }
-        }
-
-
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-        ConstraintLayout.LayoutParams lp2 = (ConstraintLayout.LayoutParams) wordToBuild.getLayoutParams();
-        int bottomToTopId2 = lp2.bottomToTop;
-        int topToTopId2 = lp2.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId2).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId2).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-        wordToBuild.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        ImageView pointsEarnedImage = (ImageView) findViewById(R.id.pointsImage);
-        ConstraintLayout.LayoutParams lp3 = (ConstraintLayout.LayoutParams) pointsEarnedImage.getLayoutParams();
-        int bottomToTopId3 = lp3.bottomToTop;
-        int topToTopId3 = lp3.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
-        //CHANGED TO 0.5 BY JP SO THAT 4-DIGIT SCORE WILL FIT IN GEM
-        pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
     }
     
     public void repeatGame(View View) {

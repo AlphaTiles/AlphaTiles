@@ -192,7 +192,11 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH4.5"
-        tools:layout_editor_absoluteX="38dp" />
+        tools:layout_editor_absoluteX="38dp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"/>
 
     <TextView
         android:id="@+id/tile02"
@@ -208,7 +212,11 @@
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5.5" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5.5"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"/>
 
     <TextView
         android:id="@+id/tile03"
@@ -224,7 +232,11 @@
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV12"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4.5" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4.5"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"/>
 
     <TextView
         android:id="@+id/tile04"
@@ -240,7 +252,11 @@
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintTop_toTopOf="@+id/guidelineH5.5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV12"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6" />
+        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"/>
 
     <ImageView
         android:id="@+id/pointsImage"
@@ -255,23 +271,24 @@
 
     <TextView
         android:id="@+id/pointsTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="40dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginEnd="26dp"
         android:gravity="center"
+        android:maxLines="1"
         android:text="@string/pointsScored"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
-        android:textSize="16sp"
         android:textStyle="bold"
+        app:autoSizeMaxTextSize="23sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="@+id/pointsImage"
         app:layout_constraintEnd_toEndOf="@+id/pointsImage"
         app:layout_constraintStart_toStartOf="@+id/pointsImage"
-        app:layout_constraintTop_toTopOf="@+id/pointsImage"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="@+id/pointsImage" />
 
     <ImageView
         android:id="@+id/gamesHomeImage"
