@@ -196,7 +196,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile02"
@@ -216,7 +218,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile03"
@@ -236,7 +240,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile04"
@@ -256,7 +262,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/pointsImage"

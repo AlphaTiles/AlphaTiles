@@ -32,7 +32,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile02"
@@ -54,7 +56,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile03"
@@ -76,7 +80,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile04"
@@ -98,7 +104,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile05"
@@ -120,7 +128,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile06"
@@ -142,7 +152,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile07"
@@ -165,7 +177,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile08"
@@ -187,7 +201,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile09"
@@ -209,7 +225,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile10"
@@ -231,7 +249,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile11"
@@ -253,7 +273,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile12"
@@ -275,7 +297,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile13"
@@ -297,7 +321,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile14"
@@ -319,7 +345,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile15"
@@ -341,7 +369,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile16"
@@ -363,7 +393,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile17"
@@ -385,7 +417,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile18"
@@ -407,7 +441,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile19"
@@ -429,7 +465,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile20"
@@ -451,7 +489,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile21"
@@ -473,7 +513,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile22"
@@ -495,7 +537,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile23"
@@ -517,7 +561,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile24"
@@ -539,7 +585,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile25"
@@ -561,7 +609,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile26"
@@ -583,7 +633,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile27"
@@ -605,7 +657,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile28"
@@ -627,7 +681,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile29"
@@ -649,7 +705,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile30"
@@ -671,7 +729,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile31"
@@ -693,7 +753,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile32"
@@ -715,7 +777,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile33"
@@ -737,7 +801,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile34"
@@ -759,7 +825,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile35"
@@ -781,7 +849,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile36"
@@ -803,7 +873,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile37"
@@ -825,7 +897,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile38"
@@ -847,7 +921,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile39"
@@ -869,7 +945,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile40"
@@ -891,7 +969,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile41"
@@ -913,7 +993,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile42"
@@ -935,7 +1017,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile43"
@@ -957,7 +1041,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile44"
@@ -979,7 +1065,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
 
     <TextView
@@ -1002,7 +1090,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
 
     <TextView
@@ -1025,7 +1115,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
 
     <TextView
@@ -1048,7 +1140,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
 
     <TextView
@@ -1071,7 +1165,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
 
     <TextView
@@ -1094,7 +1190,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp" />
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile50"
@@ -1116,7 +1214,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile51"
@@ -1138,7 +1238,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile52"
@@ -1160,7 +1262,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile53"
@@ -1182,7 +1286,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile54"
@@ -1204,7 +1310,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile55"
@@ -1226,7 +1334,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile56"
@@ -1248,7 +1358,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile57"
@@ -1270,7 +1382,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile58"
@@ -1292,7 +1406,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile59"
@@ -1314,7 +1430,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile60"
@@ -1336,7 +1454,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile61"
@@ -1358,7 +1478,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile62"
@@ -1380,7 +1502,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/tile63"
@@ -1402,7 +1526,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/gamesHomeImage"

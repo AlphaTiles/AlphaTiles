@@ -209,7 +209,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key02"
@@ -229,7 +231,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key03"
@@ -249,7 +253,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key04"
@@ -270,7 +276,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key05"
@@ -291,7 +299,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key06"
@@ -312,7 +322,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key07"
@@ -332,7 +344,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key08"
@@ -352,7 +366,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key09"
@@ -372,7 +388,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key10"
@@ -393,7 +411,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key11"
@@ -414,7 +434,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key12"
@@ -435,7 +457,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key13"
@@ -455,7 +479,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key14"
@@ -475,7 +501,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key15"
@@ -495,7 +523,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key16"
@@ -516,7 +546,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key17"
@@ -537,7 +569,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/key18"
@@ -557,7 +591,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/pointsImage"

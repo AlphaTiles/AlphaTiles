@@ -14,9 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
@@ -1195,7 +1197,6 @@ public class Start extends AppCompatActivity
     }
 
     public class SyllableList extends ArrayList<Syllable>{
-        //TO DO: RESUME HERE FOR MAKING DISTRACTORS INTO ARRAY
         public String syllableTitle;
         public String[] distractorsTitles;
         public String syllableAudioNameTitle;
@@ -1228,6 +1229,123 @@ public class Start extends AppCompatActivity
             return wrongTile;
 
         }
+
+        public ArrayList<String[]> returnFourWords(String refTile, int chall){
+            ArrayList<String> potentialWordParsed;
+            String potentialWord;
+            String natWord;
+            ArrayList<String[]> fourWords = new ArrayList<>();
+            Set<String> trackWords = new HashSet<>(); //used to prevent repeats
+            Syllable refSyllable = syllableHashMap.find(refTile);
+            Random rand = new Random();
+            boolean correctRep = false;
+            while (!correctRep){
+                int randomNum = rand.nextInt(wordList.size());
+                potentialWord = wordList.get(randomNum).localWord;
+                natWord = wordList.get(randomNum).nationalWord;
+                potentialWordParsed = syllableList.parseWordIntoSyllables(potentialWord);
+                if (potentialWordParsed.get(0).equals(refTile)){
+                    fourWords.add(new String[]{natWord, potentialWord});
+                    trackWords.add(potentialWord);
+                    correctRep = true;
+                }
+            }
+            if (chall == 1){ //easy words = not same initial syllable and no distractor syllables word-initially
+                while (fourWords.size() < 4){
+                    int randomNum = rand.nextInt(wordList.size());
+                    potentialWord = wordList.get(randomNum).localWord;
+                    natWord = wordList.get(randomNum).nationalWord;
+                    potentialWordParsed = syllableList.parseWordIntoSyllables(potentialWord);
+                    if (!potentialWordParsed.get(0).equals(refTile) && !potentialWordParsed.get(0)
+                            .equals(refSyllable.distractors[0]) && !potentialWordParsed.get(0)
+                            .equals(refSyllable.distractors[1]) && !potentialWordParsed.get(0)
+                            .equals(refSyllable.distractors[2])){
+                        String[] tileEntry = new String[]{natWord, potentialWord};
+                        if (!trackWords.contains(potentialWord)) {
+                            trackWords.add(potentialWord);
+                            fourWords.add(tileEntry);
+                        }
+                    }
+                }
+            }else if (chall == 2){ // medium words = start w/distractor syllables
+                int count = 0;
+                while (fourWords.size() < 4 && count < wordList.size()){
+                    int randomNum = rand.nextInt(wordList.size());
+                    potentialWord = wordList.get(randomNum).localWord;
+                    natWord = wordList.get(randomNum).nationalWord;
+                    potentialWordParsed = syllableList.parseWordIntoSyllables(potentialWord);
+                    if (!potentialWordParsed.get(0).equals(refTile) && (potentialWordParsed.get(0)
+                            .equals(refSyllable.distractors[0]) || potentialWordParsed.get(0)
+                            .equals(refSyllable.distractors[1]) || potentialWordParsed.get(0)
+                            .equals(refSyllable.distractors[2]))){
+                        String[] tileEntry = new String[]{natWord, potentialWord};
+                        if (!trackWords.contains(potentialWord)) {
+                            trackWords.add(potentialWord);
+                            fourWords.add(tileEntry);
+                        }
+                    }
+                    count++;
+                }
+                while (fourWords.size() < 4){
+                    int randomNum = rand.nextInt(wordList.size());
+                    potentialWord = wordList.get(randomNum).localWord;
+                    natWord = wordList.get(randomNum).nationalWord;
+                    potentialWordParsed = syllableList.parseWordIntoSyllables(potentialWord);
+                    if (!potentialWordParsed.get(0).equals(refTile) && (potentialWord.charAt(0)
+                            == refTile.charAt(0))){
+                        String[] tileEntry = new String[]{natWord, potentialWord};
+                        if (!trackWords.contains(potentialWord)) {
+                            trackWords.add(potentialWord);
+                            fourWords.add(tileEntry);
+                        }
+                    }
+                }
+            }
+
+            return fourWords;
+        }
+
+        public ArrayList<String[]> returnFourSylls(String refTile, int chall){
+            ArrayList<String[]> fourSylls = new ArrayList<>();
+            Syllable refSyllable = syllableHashMap.find(refTile);
+            String potentialSyll;
+            String potentialSyllAud;
+            Random rand = new Random();
+            fourSylls.add(new String[] {refSyllable.syllableAudioName, refSyllable.syllable}); // correct
+            if (chall == 1){ //random wrong syllables
+                while (fourSylls.size() < 4){
+                    int randomNum = rand.nextInt(syllableList.size());
+                    potentialSyll = syllableList.get(randomNum).syllable;
+                    potentialSyllAud = syllableList.get(randomNum).syllableAudioName;
+                    if (!potentialSyll.equals(refTile) && !potentialSyll
+                            .equals(refSyllable.distractors[0]) && !potentialSyll
+                            .equals(refSyllable.distractors[1]) && !potentialSyll
+                            .equals(refSyllable.distractors[2])){
+                        fourSylls.add(new String[]{potentialSyllAud, potentialSyll});
+                    }
+                }
+            }else if (chall == 2){ //distractor syllables
+                fourSylls.add(new String [] {refSyllable.syllableAudioName, refSyllable.distractors[0]});
+                fourSylls.add(new String[] {refSyllable.syllableAudioName, refSyllable.distractors[1]});
+                fourSylls.add(new String[] {refSyllable.syllableAudioName, refSyllable.distractors[2]});
+            }
+            return (ArrayList<String[]>) fourSylls;
+        }
+
+        public int returnPositionInSyllList(String someGameTile) {
+
+            int alphabetPosition = 0;
+            for (int i = 0; i < size(); i++) {
+
+                if (get(i).syllable.equals(someGameTile)) {
+                    alphabetPosition = i;
+                }
+            }
+
+            return alphabetPosition;
+
+        }
+
     }
 
     public class TileList extends ArrayList<Tile> {

@@ -169,7 +169,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button01b"
@@ -190,7 +192,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button02a"
@@ -211,7 +215,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button02b"
@@ -232,7 +238,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button03a"
@@ -253,7 +261,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button03b"
@@ -274,7 +284,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button04a"
@@ -295,7 +307,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button04b"
@@ -316,7 +330,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button05a"
@@ -337,7 +353,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button05b"
@@ -358,7 +376,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button06a"
@@ -379,7 +399,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button06b"
@@ -400,7 +422,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button07a"
@@ -421,7 +445,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button07b"
@@ -442,7 +468,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button08a"
@@ -463,7 +491,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button08b"
@@ -484,7 +514,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button09a"
@@ -505,7 +537,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button09b"
@@ -526,7 +560,9 @@
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"/>
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/wordImage"
