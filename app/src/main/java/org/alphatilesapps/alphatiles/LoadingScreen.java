@@ -93,7 +93,7 @@ public class LoadingScreen extends AppCompatActivity {
                 @Override
                 public void run() {
                     loadSyllableAudio();
-                    LOGGER.info("Remember: initiated loadTileAudio()");
+                    LOGGER.info("Remember: initiated loadSyllableAudio()");
                 }
             }).start();
         }
