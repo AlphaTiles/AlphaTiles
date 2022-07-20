@@ -1,6 +1,9 @@
 package org.alphatilesapps.alphatiles;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 
@@ -167,8 +170,16 @@ public class Japan extends GameActivity {
 
         TextView leftTile = findViewById(TILES[tag]);
         leftTile.setClickable(true);
-        //leftTile. - change constraints
 
         TextView rightTile = findViewById(TILES[tag+1]);
+        rightTile.setClickable(true);
+
+        ConstraintLayout constraintLayout = findViewById(R.id.japancl);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(TILES[tag],ConstraintSet.END,TILES[tag+1],ConstraintSet.START,0);
+        constraintSet.connect(TILES[tag+1],ConstraintSet.START,TILES[tag],ConstraintSet.END,0);
+
+        constraintSet.applyTo(constraintLayout);
     }
 }

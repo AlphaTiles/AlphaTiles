@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/japancl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Japan">
@@ -153,11 +154,11 @@
         android:id="@+id/pointsImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/pointsImage"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toStartOf="@+id/gamesHomeImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/pointsImage"
         app:srcCompat="@drawable/zz_pointsscoredthisgame" />
 
     <TextView
@@ -185,38 +186,38 @@
         android:id="@+id/gamesHomeImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/playerAvatar"
         android:onClick="goBackToEarth"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toStartOf="@+id/instructions"
         app:layout_constraintStart_toEndOf="@+id/pointsImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/playerAvatar"
         app:srcCompat="@drawable/zz_games_home" />
 
     <ImageView
         android:id="@+id/instructions"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/playAgain"
         android:onClick="playAudioInstructions"
+        android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toEndOf="@+id/repeatImage"
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/playAgain"
-        android:rotationY="0"
         app:srcCompat="@drawable/zz_instructions" />
 
     <ImageView
         android:id="@+id/repeatImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/playAgain"
         android:onClick="repeatGame"
+        android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/instructions"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/playAgain"
-        android:rotationY="0"
         app:srcCompat="@drawable/zz_forward" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -224,7 +225,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.30"/>
+        app:layout_constraintGuide_percent="0.30" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHneg1"
@@ -272,10 +273,10 @@
         android:layout_height="50dp"
         android:clickable="false"
         android:maxLines="1"
-        android:padding="7dp"
-        android:text="TextView"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="0"
+        android:text="TextView"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeStepGranularity="2sp"
@@ -289,334 +290,334 @@
         android:id="@+id/button1"
         android:layout_width="12dp"
         android:layout_height="50dp"
+        android:onClick="onClickJapan"
         android:tag="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile02"
         app:layout_constraintStart_toEndOf="@id/tile01"
-        app:layout_constraintTop_toBottomOf="@+id/guideline8"
-        android:onClick="onClickJapan"/>
+        app:layout_constraintTop_toBottomOf="@+id/guideline8" />
 
     <TextView
         android:id="@+id/tile02"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:maxLines="1"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="1"
+        android:text="TextView"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/button2"
         app:layout_constraintStart_toEndOf="@id/button1"
-        app:layout_constraintTop_toBottomOf="@+id/guideline8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toBottomOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="12dp"
         android:layout_height="50dp"
+        android:onClick="onClickJapan"
         android:tag="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile03"
         app:layout_constraintStart_toEndOf="@id/tile02"
-        app:layout_constraintTop_toBottomOf="@+id/guideline8"
-        android:onClick="onClickJapan"/>
+        app:layout_constraintTop_toBottomOf="@+id/guideline8" />
 
     <TextView
         android:id="@+id/tile03"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:maxLines="1"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="2"
+        android:text="TextView"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/button3"
         app:layout_constraintStart_toEndOf="@id/button2"
-        app:layout_constraintTop_toBottomOf="@+id/guideline8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toBottomOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="12dp"
         android:layout_height="50dp"
+        android:onClick="onClickJapan"
         android:tag="2"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile04"
         app:layout_constraintStart_toEndOf="@id/tile03"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        android:onClick="onClickJapan"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <TextView
         android:id="@+id/tile04"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:maxLines="1"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="3"
+        android:text="TextView"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/button4"
         app:layout_constraintStart_toEndOf="@id/button3"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/button4"
         android:layout_width="12dp"
         android:layout_height="50dp"
+        android:onClick="onClickJapan"
         android:tag="3"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile05"
         app:layout_constraintStart_toEndOf="@id/tile04"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        android:onClick="onClickJapan"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <TextView
         android:id="@+id/tile05"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:maxLines="1"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="4"
+        android:text="TextView"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/button5"
         app:layout_constraintStart_toEndOf="@id/button4"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/button5"
         android:layout_width="12dp"
         android:layout_height="50dp"
+        android:onClick="onClickJapan"
         android:tag="4"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile06"
         app:layout_constraintStart_toEndOf="@+id/tile05"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        android:onClick="onClickJapan"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <TextView
         android:id="@+id/tile06"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:maxLines="1"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="5"
+        android:text="TextView"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/button6"
         app:layout_constraintStart_toEndOf="@+id/button5"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/button6"
         android:layout_width="12dp"
         android:layout_height="50dp"
+        android:onClick="onClickJapan"
         android:tag="5"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile07"
         app:layout_constraintStart_toEndOf="@+id/tile06"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        android:onClick="onClickJapan"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <TextView
         android:id="@+id/tile07"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:maxLines="1"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="6"
+        android:text="TextView"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/button7"
         app:layout_constraintStart_toEndOf="@+id/button6"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/button7"
         android:layout_width="12dp"
         android:layout_height="50dp"
+        android:onClick="onClickJapan"
         android:tag="6"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile08"
         app:layout_constraintStart_toEndOf="@+id/tile07"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        android:onClick="onClickJapan"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <TextView
         android:id="@+id/tile08"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:maxLines="1"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="7"
+        android:text="TextView"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/button8"
         app:layout_constraintStart_toEndOf="@+id/button7"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/button8"
         android:layout_width="12dp"
         android:layout_height="50dp"
+        android:onClick="onClickJapan"
         android:tag="7"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile09"
         app:layout_constraintStart_toEndOf="@+id/tile08"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        android:onClick="onClickJapan"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <TextView
         android:id="@+id/tile09"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:maxLines="1"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="8"
+        android:text="TextView"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/button9"
         app:layout_constraintStart_toEndOf="@+id/button8"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/button9"
         android:layout_width="12dp"
         android:layout_height="50dp"
+        android:onClick="onClickJapan"
         android:tag="8"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile10"
         app:layout_constraintStart_toEndOf="@+id/tile09"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        android:onClick="onClickJapan"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <TextView
         android:id="@+id/tile10"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:maxLines="1"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="9"
+        android:text="TextView"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/button10"
         app:layout_constraintStart_toEndOf="@+id/button9"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/button10"
         android:layout_width="12dp"
         android:layout_height="50dp"
+        android:onClick="onClickJapan"
         android:tag="9"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile11"
         app:layout_constraintStart_toEndOf="@+id/tile10"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        android:onClick="onClickJapan"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <TextView
         android:id="@+id/tile11"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:maxLines="1"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="10"
+        android:text="TextView"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/button11"
         app:layout_constraintStart_toEndOf="@+id/button10"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/button11"
         android:layout_width="12dp"
         android:layout_height="50dp"
+        android:onClick="onClickJapan"
         android:tag="10"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile12"
         app:layout_constraintStart_toEndOf="@+id/tile11"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        android:onClick="onClickJapan"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <TextView
         android:id="@+id/tile12"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:text="TextView"
+        android:maxLines="1"
         android:onClick="onClickTile"
+        android:padding="7dp"
         android:tag="11"
+        android:text="TextView"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineR"
         app:layout_constraintStart_toEndOf="@+id/button11"
-        app:layout_constraintTop_toTopOf="@+id/guideline8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.01"/>
+        app:layout_constraintGuide_percent="0.01" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.99"/>
+        app:layout_constraintGuide_percent="0.99" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
