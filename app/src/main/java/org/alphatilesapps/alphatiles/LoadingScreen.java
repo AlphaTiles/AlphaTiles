@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ProgressBar;
 
-import static org.alphatilesapps.alphatiles.Start.hasSyllableGames;
+import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
@@ -88,7 +88,7 @@ public class LoadingScreen extends AppCompatActivity {
             }).start();
         }
 
-        if (hasSyllableGames){
+        if (hasSyllableAudio){
             new Thread(new Runnable() {
                 @Override
                 public void run() {

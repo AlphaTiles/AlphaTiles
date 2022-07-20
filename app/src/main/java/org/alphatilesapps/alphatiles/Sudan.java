@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.widget.TextViewCompat;
 
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
+import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
 import static org.alphatilesapps.alphatiles.Start.settingsList;
 import static org.alphatilesapps.alphatiles.Start.syllableAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
@@ -172,6 +173,8 @@ public class Sudan extends GameActivity {
         if(getAudioInstructionsResID()==0){
             centerGamesHomeImage();
         }
+
+
 
     }
 
@@ -423,6 +426,8 @@ public class Sudan extends GameActivity {
 
     public void showCorrectNumSyllables(int page) {
 
+
+
         visibleTiles = pagesList.get(page).size();
 
         for (int i = 0; i < visibleTiles; i++){
@@ -439,7 +444,11 @@ public class Sudan extends GameActivity {
             TextView key = findViewById(SYLL_BUTTONS[k]);
             if (k < visibleTiles) {
                 key.setVisibility(View.VISIBLE);
-                key.setClickable(true);
+                if (hasSyllableAudio){
+                    key.setClickable(true);
+                }else{
+                    key.setClickable(false);
+                }
             } else {
                 key.setVisibility(View.INVISIBLE);
                 key.setClickable(false);
@@ -479,19 +488,20 @@ public class Sudan extends GameActivity {
             tileText = Start.syllableList.get(justClickedKey-1).syllable;
 
 
-            gameSounds.play(syllableAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
-            soundSequencer.postDelayed(new Runnable()
-            {
-                public void run()
+                gameSounds.play(syllableAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+                soundSequencer.postDelayed(new Runnable()
                 {
-                    if (repeatLocked)
+                    public void run()
                     {
-                        setAllTilesClickable();
+                        if (repeatLocked)
+                        {
+                            setAllTilesClickable();
+                        }
+                        setOptionsRowClickable();
                     }
-                    setOptionsRowClickable();
-                }
 
-            }, 925);
+                }, 925);
+
         }else{
             if(!differentiateTypes){//Not differentiating the uses of multifunction tiles
                 tileText = tileList.get(justClickedKey-1).baseTile;

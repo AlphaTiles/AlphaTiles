@@ -79,6 +79,7 @@ public class Start extends AppCompatActivity
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
     public static Boolean hasTileAudio;
+    public static Boolean hasSyllableAudio;
     public static Boolean hasSyllableGames = false;
     public static int after12checkedTrackers;
     Boolean differentiateTypes;
@@ -125,7 +126,16 @@ public class Start extends AppCompatActivity
             after12checkedTrackers = 3;
         }
 
-        LOGGER.info("Remember: completed hasTileAudio & differentiateTypes");
+        //to make syllable audio optional
+        String hasSyllableAudioSetting = settingsList.find("Has syllable audio");
+        if(hasSyllableAudioSetting.compareTo("")!=0){
+            hasSyllableAudio = Boolean.parseBoolean(hasSyllableAudioSetting);
+        }
+        else{
+            hasSyllableAudio = false;
+        }
+
+        LOGGER.info("Remember: completed hasTileAudio & differentiateTypes & hasSyllableAudio");
 
         // JP: the old constructor is deprecated after API 21, so account for both scenarios
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
@@ -157,10 +167,13 @@ public class Start extends AppCompatActivity
         */
         LOGGER.info("Remember: completed buildWordsArray()");
 
-        if(hasSyllableGames){
+        if (hasSyllableGames){
             buildSyllablesArray();
-            totalAudio = totalAudio + syllableList.size();
             LOGGER.info("Remember: completed buildSyllablesArray()");
+        }
+
+        if(hasSyllableAudio){
+            totalAudio = totalAudio + syllableList.size();
         }
 
         if(differentiateTypes){

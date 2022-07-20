@@ -21,6 +21,8 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
+import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
+import static org.alphatilesapps.alphatiles.Start.settingsList;
 import static org.alphatilesapps.alphatiles.Start.syllableAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.syllableDurations;
 import static org.alphatilesapps.alphatiles.Start.syllableList;
@@ -328,6 +330,9 @@ public class Thailand extends GameActivity {
                     //LOGGER.info("Remember: AB1: fourChoices.get(t)[1] = " + fourChoices.get(t)[1]);
                     choiceButton.setText(wordList.stripInstructionCharacters((fourChoices.get(t)[1])));
                     LOGGER.info("Remember: AB2");
+                    if (refType.contains("SYLL") && !hasSyllableAudio){
+                        choiceButton.setClickable(true);
+                    }
                 }
                 break;
             case "WORD_IMAGE":
@@ -337,6 +342,9 @@ public class Thailand extends GameActivity {
                     choiceButton.setBackgroundResource(0);
                     choiceButton.setBackgroundResource(resID);
                     choiceButton.setText("");
+                    if (refType.contains("SYLL") && !hasSyllableAudio){
+                        choiceButton.setClickable(true);
+                    }
                 }
                 break;
             case "SYLL_TEXT":
@@ -347,6 +355,9 @@ public class Thailand extends GameActivity {
                     choiceButton.setBackgroundColor(choiceColorNo);
                     choiceButton.setTextColor(Color.parseColor("#000000")); // black
                     choiceButton.setText(fourChoices.get(t)[1]);
+                    if (!hasSyllableAudio){
+                        choiceButton.setClickable(true);
+                    }
                 }
                 break;
             default:
@@ -355,7 +366,9 @@ public class Thailand extends GameActivity {
         switch (refType) {
             case "SYLL_AUDIO":
             case "SYLL_TEXT":
-                playActiveSyllClip(); //never implemented media player for syll audio
+                if (hasSyllableAudio){
+                    playActiveSyllClip(); //never implemented media player for syll audio
+                }
                 break;
             case "TILE_LOWER":
             case "TILE_UPPER":
@@ -559,7 +572,11 @@ public class Thailand extends GameActivity {
             switch (refType) {
                 case "SYLL_TEXT":
                 case "SYLL_AUDIO":
-                    playCorrectSoundThenActiveSyllClip();
+                    if (hasSyllableAudio){
+                        playCorrectSoundThenActiveSyllClip();
+                    }else{
+                        playCorrectSound();
+                    }
                     break;
                 case "TILE_LOWER":
                 case "TILE_UPPER":
@@ -604,7 +621,9 @@ public class Thailand extends GameActivity {
         switch (refType) {
             case "SYLL_TEXT":
             case "SYLL_AUDIO":
-                playActiveSyllClip();
+                if (hasSyllableAudio){
+                    playActiveSyllClip();
+                }
                 break;
             case "TILE_LOWER":
             case "TILE_UPPER":
@@ -649,6 +668,7 @@ public class Thailand extends GameActivity {
 
             String tileText = null;
             tileText = syllableList.get(syllableList.returnPositionInSyllList(refTile)).syllable;
+
             if (syllableAudioIDs.containsKey(tileText)) {
                 gameSounds.play(syllableAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
             }
@@ -716,6 +736,21 @@ public class Thailand extends GameActivity {
                 mp1.release();
             }
         });
+    }
+
+    private void playCorrectSound(){
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+
+        gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+        soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                if (repeatLocked) {
+                    setAllTilesClickable();
+                }
+                setOptionsRowClickable();
+            }
+        }, 925);
     }
 
     private void playCorrectSoundThenActiveSyllClip() {
