@@ -286,16 +286,18 @@
         app:layout_constraintStart_toStartOf="@id/guidelineL"
         app:layout_constraintTop_toBottomOf="@+id/guideline8" />
 
-    <Button
+    <TextView
         android:id="@+id/button1"
         android:layout_width="12dp"
         android:layout_height="50dp"
         android:onClick="onClickJapan"
         android:tag="0"
+        android:text="."
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile02"
         app:layout_constraintStart_toEndOf="@id/tile01"
-        app:layout_constraintTop_toBottomOf="@+id/guideline8" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline8"
+        android:background="#000000"/>
 
     <TextView
         android:id="@+id/tile02"
@@ -315,16 +317,18 @@
         app:layout_constraintStart_toEndOf="@id/button1"
         app:layout_constraintTop_toBottomOf="@+id/guideline8" />
 
-    <Button
+    <TextView
         android:id="@+id/button2"
         android:layout_width="12dp"
         android:layout_height="50dp"
         android:onClick="onClickJapan"
         android:tag="1"
+        android:text="."
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile03"
         app:layout_constraintStart_toEndOf="@id/tile02"
-        app:layout_constraintTop_toBottomOf="@+id/guideline8" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline8"
+        android:background="#000000"/>
 
     <TextView
         android:id="@+id/tile03"
@@ -344,16 +348,18 @@
         app:layout_constraintStart_toEndOf="@id/button2"
         app:layout_constraintTop_toBottomOf="@+id/guideline8" />
 
-    <Button
+    <TextView
         android:id="@+id/button3"
         android:layout_width="12dp"
         android:layout_height="50dp"
         android:onClick="onClickJapan"
         android:tag="2"
+        android:text="."
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile04"
         app:layout_constraintStart_toEndOf="@id/tile03"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:background="#000000"/>
 
     <TextView
         android:id="@+id/tile04"
@@ -373,16 +379,18 @@
         app:layout_constraintStart_toEndOf="@id/button3"
         app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
-    <Button
+    <TextView
         android:id="@+id/button4"
         android:layout_width="12dp"
         android:layout_height="50dp"
         android:onClick="onClickJapan"
         android:tag="3"
+        android:text="."
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile05"
         app:layout_constraintStart_toEndOf="@id/tile04"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:background="#000000"/>
 
     <TextView
         android:id="@+id/tile05"
@@ -402,16 +410,18 @@
         app:layout_constraintStart_toEndOf="@id/button4"
         app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
-    <Button
+    <TextView
         android:id="@+id/button5"
         android:layout_width="12dp"
         android:layout_height="50dp"
         android:onClick="onClickJapan"
         android:tag="4"
+        android:text="."
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile06"
         app:layout_constraintStart_toEndOf="@+id/tile05"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:background="#000000"/>
 
     <TextView
         android:id="@+id/tile06"
@@ -431,16 +441,18 @@
         app:layout_constraintStart_toEndOf="@+id/button5"
         app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
-    <Button
+    <TextView
         android:id="@+id/button6"
         android:layout_width="12dp"
         android:layout_height="50dp"
         android:onClick="onClickJapan"
         android:tag="5"
+        android:text="."
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile07"
         app:layout_constraintStart_toEndOf="@+id/tile06"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:background="#000000"/>
 
     <TextView
         android:id="@+id/tile07"
@@ -460,16 +472,18 @@
         app:layout_constraintStart_toEndOf="@+id/button6"
         app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
-    <Button
+    <TextView
         android:id="@+id/button7"
         android:layout_width="12dp"
         android:layout_height="50dp"
         android:onClick="onClickJapan"
         android:tag="6"
+        android:text="."
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile08"
         app:layout_constraintStart_toEndOf="@+id/tile07"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:background="#000000"/>
 
     <TextView
         android:id="@+id/tile08"
@@ -489,16 +503,18 @@
         app:layout_constraintStart_toEndOf="@+id/button7"
         app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
-    <Button
+    <TextView
         android:id="@+id/button8"
         android:layout_width="12dp"
         android:layout_height="50dp"
         android:onClick="onClickJapan"
         android:tag="7"
+        android:text="."
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile09"
         app:layout_constraintStart_toEndOf="@+id/tile08"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:background="#000000"/>
 
     <TextView
         android:id="@+id/tile09"
@@ -518,16 +534,18 @@
         app:layout_constraintStart_toEndOf="@+id/button8"
         app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
-    <Button
+    <TextView
         android:id="@+id/button9"
         android:layout_width="12dp"
         android:layout_height="50dp"
         android:onClick="onClickJapan"
         android:tag="8"
+        android:text="."
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile10"
         app:layout_constraintStart_toEndOf="@+id/tile09"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:background="#000000"/>
 
     <TextView
         android:id="@+id/tile10"
@@ -545,18 +563,21 @@
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/button10"
         app:layout_constraintStart_toEndOf="@+id/button9"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        />
 
-    <Button
+    <TextView
         android:id="@+id/button10"
         android:layout_width="12dp"
         android:layout_height="50dp"
         android:onClick="onClickJapan"
         android:tag="9"
+        android:text="."
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile11"
         app:layout_constraintStart_toEndOf="@+id/tile10"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
+        android:background="#000000"/>
 
     <TextView
         android:id="@+id/tile11"
@@ -576,12 +597,14 @@
         app:layout_constraintStart_toEndOf="@+id/button10"
         app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
-    <Button
+    <TextView
         android:id="@+id/button11"
         android:layout_width="12dp"
         android:layout_height="50dp"
         android:onClick="onClickJapan"
         android:tag="10"
+        android:text="."
+        android:background="#000000"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/tile12"
         app:layout_constraintStart_toEndOf="@+id/tile11"

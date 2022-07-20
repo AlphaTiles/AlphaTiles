@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 
@@ -13,7 +14,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Japan extends GameActivity {
@@ -33,8 +36,10 @@ public class Japan extends GameActivity {
     String secondToLastWord = "";
     String thirdToLastWord = "";
     ArrayList<String> parsedWordIntoTiles;
+    ArrayList<String> parsedWordIntoSyllables;
     ArrayList<Integer> joinedTracker = new ArrayList<>();
-    ArrayList<Integer> correctSyllabification = new ArrayList<>();
+    HashMap<String, ArrayList<Integer>> inProgSyllabification = new HashMap<>();
+    ArrayList<String> correctSyllabification = new ArrayList<>();
 
     protected static final int[] TILES = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07,
@@ -93,6 +98,15 @@ public class Japan extends GameActivity {
             wordInLOP = Start.wordList.get(randomNum).localWord;
 
             parsedWordIntoTiles = tileList.parseWordIntoTiles(wordInLOP);
+            /*
+            parsedWordIntoSyllables = syllableList.parseWordIntoSyllables(wordInLOP);
+            for (String syll : parsedWordIntoSyllables){
+                correctSyllabification.add(syll);
+                correctSyllabification.add("*");
+            }
+            // other option -- every time you change joinedTracker, convert it into a string and
+            check if that string is equal to wordInLOP with the periods in it still
+             */
             if (parsedWordIntoTiles.size() <= TILES.length){ //JP: choose word w/ <= 7 tiles
                 //If this word isn't one of the 3 previously tested words, we're good // LM
                 if(wordInLWC.compareTo(lastWord)!=0
@@ -199,6 +213,56 @@ public class Japan extends GameActivity {
         // check if correct and change color
         // if correct, set those Tiles unclickable to help the user
         joinedTracker.remove(BUTTONS[tag]);
+
+        // build string of configuration that we have so far
+        StringBuilder config = new StringBuilder();
+        StringBuilder partialConfig = new StringBuilder(); // hold one in-progress syll at a time
+        ArrayList<Integer> listOfIds = new ArrayList<>(); // list of ids that corresponds to
+        // that one in-progress syll in partialConfig
+        for (int i : joinedTracker){
+            TextView view = findViewById(i);
+            if (view.getText().equals(".")){
+                inProgSyllabification.put(partialConfig.toString(), listOfIds);
+                listOfIds.clear();
+                partialConfig.setLength(0);
+            }
+            listOfIds.add(i);
+            partialConfig.append(view.getText());
+            config.append(view.getText());
+        }
+
+        if (config.equals(wordInLOP)){
+            //great job!
+            //play word audio
+            //play correct sound
+            playCorrectSoundThenActiveWordClip(false); //JP not sure what this bool is for
+
+            TextView pointsEarned = findViewById(R.id.pointsTextView);
+            points+=1;
+            japanPoints+=1;
+            pointsEarned.setText(String.valueOf(japanPoints));
+
+            trackerCount++;
+            updateTrackers();
+            //increase points
+            //update 12 trackers
+            //make everything unclickable
+        } else{
+            for (String syll : parsedWordIntoSyllables){
+                if (inProgSyllabification.containsKey(syll)){
+                    // that one syllable is correct so turn them all green
+                    for (int i : inProgSyllabification.get(syll)){
+                        TextView view = findViewById(i);
+                        view.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
+                        view.setTextColor(Color.parseColor("#FFFFFF")); // white
+                        view.setClickable(false);
+                    }
+                }
+            }
+        }
+
+
+
 
     }
 }

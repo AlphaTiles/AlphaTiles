@@ -43,7 +43,7 @@ public abstract class GameActivity extends AppCompatActivity {
     String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
 	int points;
-	int brazilPoints, colombiaPoints, ecuadorPoints, georgiaPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
+	int brazilPoints, colombiaPoints, ecuadorPoints, georgiaPoints, japanPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
 	int challengeLevel = -1;
 	Boolean brazilHasChecked12Trackers, colombiaHasChecked12Trackers, ecuadorHasChecked12Trackers, georgiaHasChecked12Trackers, mexicoHasChecked12Trackers, myanmarHasChecked12Trackers, peruHasChecked12Trackers, thailandHasChecked12Trackers, unitedStatesHasChecked12Trackers;
 	int playerNumber = -1;
@@ -89,6 +89,7 @@ public abstract class GameActivity extends AppCompatActivity {
         colombiaPoints = getIntent().getIntExtra("colombiaPoints", 0);
         ecuadorPoints = getIntent().getIntExtra("ecuadorPoints", 0);
         georgiaPoints = getIntent().getIntExtra("georgiaPoints", 0);
+		japanPoints = getIntent().getIntExtra("japanPoints", 0);
         mexicoPoints = getIntent().getIntExtra("mexicoPoints", 0);
         myanmarPoints = getIntent().getIntExtra("myanmarPoints", 0);
         peruPoints = getIntent().getIntExtra("peruPoints", 0);
@@ -333,7 +334,6 @@ public abstract class GameActivity extends AppCompatActivity {
 		setAllTilesUnclickable();	
 		setOptionsRowUnclickable();
 
-        //ISSUE: OnLoadCompleteListener not working because it just checks one load at a time ?
         if (wordAudioIDs.containsKey(wordInLWC)) {
             gameSounds.play(wordAudioIDs.get(wordInLWC), 1.0f, 1.0f, 2, 0, 1.0f);
         }
