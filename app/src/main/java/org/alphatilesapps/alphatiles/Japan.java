@@ -33,6 +33,8 @@ public class Japan extends GameActivity {
     String secondToLastWord = "";
     String thirdToLastWord = "";
     ArrayList<String> parsedWordIntoTiles;
+    ArrayList<Integer> joinedTracker = new ArrayList<>();
+    ArrayList<Integer> correctSyllabification = new ArrayList<>();
 
     protected static final int[] TILES = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07,
@@ -40,7 +42,8 @@ public class Japan extends GameActivity {
     };
 
     protected static final int[] BUTTONS = {
-            R.id.button1, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6
+            R.id.button1, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6,
+            R.id.button7, R.id.button8, R.id.button9, R.id.button10, R.id.button11
     };
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#4CAF50", "#E91E63"};
@@ -70,6 +73,12 @@ public class Japan extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.japan);
+
+        joinedTracker.add(TILES[0]);
+        for (int i = 1; i < BUTTONS.length; i++){
+            joinedTracker.add(BUTTONS[i]);
+            joinedTracker.add(TILES[i+1]);
+        }
     }
 
     private void chooseWord(){
@@ -152,17 +161,23 @@ public class Japan extends GameActivity {
         // change color back to grey
         // change constraints back to original
         // set visibility of button back to visible
-        //
+        separateTiles((Integer) view.getTag());
+    }
+
+    private void separateTiles(Integer tag) {
+        // find the clicked button in JoinedTracker
+        // check if there is a button missing on either side
+        // if there is, add it back in on that side
     }
 
     private void respondToSelection(int tag) {
     }
 
     private void joinTiles(int tag) {
-        // make the button between the tiles invisible
-        // change the constraints so the two tiles touch each other
-        // change the color of the two tiles depending on whether they're correct
-        // make them clickable -- if either tile is clicked, restore the button between them
+        // make the button between the tiles invisible - DONE
+        // change the constraints so the two tiles touch each other - DONE
+        // change the color of the two tiles depending on whether they're correct - TO DO
+        // make them clickable - DONE
 
         Button button = findViewById(BUTTONS[tag]);
         button.setClickable(false);
@@ -179,7 +194,11 @@ public class Japan extends GameActivity {
         constraintSet.clone(constraintLayout);
         constraintSet.connect(TILES[tag],ConstraintSet.END,TILES[tag+1],ConstraintSet.START,0);
         constraintSet.connect(TILES[tag+1],ConstraintSet.START,TILES[tag],ConstraintSet.END,0);
-
         constraintSet.applyTo(constraintLayout);
+
+        // check if correct and change color
+        // if correct, set those Tiles unclickable to help the user
+        joinedTracker.remove(BUTTONS[tag]);
+
     }
 }
