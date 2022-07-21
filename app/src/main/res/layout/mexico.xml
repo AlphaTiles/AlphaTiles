@@ -160,12 +160,16 @@
         android:padding="3dp"
         android:tag="1"
         android:text="@string/memoryCard01"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card02"
@@ -176,12 +180,16 @@
         android:padding="3dp"
         android:tag="2"
         android:text="@string/memoryCard02"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
         app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card03"
@@ -192,12 +200,16 @@
         android:padding="3dp"
         android:tag="3"
         android:text="@string/memoryCard03"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card04"
@@ -208,12 +220,16 @@
         android:padding="3dp"
         android:tag="4"
         android:text="@string/memoryCard04"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card05"
@@ -224,12 +240,16 @@
         android:padding="3dp"
         android:tag="5"
         android:text="@string/memoryCard05"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card06"
@@ -240,12 +260,16 @@
         android:padding="3dp"
         android:tag="6"
         android:text="@string/memoryCard06"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
         app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card07"
@@ -256,12 +280,16 @@
         android:padding="3dp"
         android:tag="7"
         android:text="@string/memoryCard07"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card08"
@@ -272,12 +300,16 @@
         android:padding="3dp"
         android:tag="8"
         android:text="@string/memoryCard08"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card09"
@@ -288,12 +320,16 @@
         android:padding="3dp"
         android:tag="9"
         android:text="@string/memoryCard09"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card10"
@@ -304,12 +340,16 @@
         android:padding="3dp"
         android:tag="10"
         android:text="@string/memoryCard10"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
         app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card11"
@@ -320,12 +360,16 @@
         android:padding="3dp"
         android:tag="11"
         android:text="@string/memoryCard11"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card12"
@@ -336,12 +380,16 @@
         android:padding="3dp"
         android:tag="12"
         android:text="@string/memoryCard12"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card13"
@@ -352,12 +400,16 @@
         android:padding="3dp"
         android:tag="13"
         android:text="@string/memoryCard13"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card14"
@@ -368,12 +420,16 @@
         android:padding="3dp"
         android:tag="14"
         android:text="@string/memoryCard14"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
         app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card15"
@@ -384,12 +440,16 @@
         android:padding="3dp"
         android:tag="15"
         android:text="@string/memoryCard15"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card16"
@@ -400,12 +460,16 @@
         android:padding="3dp"
         android:tag="16"
         android:text="@string/memoryCard16"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card17"
@@ -416,12 +480,16 @@
         android:padding="3dp"
         android:tag="17"
         android:text="@string/memoryCard17"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH9" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card18"
@@ -432,12 +500,16 @@
         android:padding="3dp"
         android:tag="18"
         android:text="@string/memoryCard18"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
         app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH9" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card19"
@@ -448,12 +520,16 @@
         android:padding="3dp"
         android:tag="19"
         android:text="@string/memoryCard19"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH9" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/card20"
@@ -464,12 +540,16 @@
         android:padding="3dp"
         android:tag="20"
         android:text="@string/memoryCard20"
-        android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH9" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/pointsImage"
@@ -484,14 +564,20 @@
 
     <TextView
         android:id="@+id/pointsTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="40dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginEnd="26dp"
         android:gravity="center"
+        android:maxLines="1"
         android:text="@string/pointsScored"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
-        android:textSize="16sp"
         android:textStyle="bold"
+        app:autoSizeMaxTextSize="23sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="@+id/pointsImage"
         app:layout_constraintEnd_toEndOf="@+id/pointsImage"
         app:layout_constraintStart_toStartOf="@+id/pointsImage"

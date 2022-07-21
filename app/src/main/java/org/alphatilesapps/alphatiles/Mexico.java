@@ -167,52 +167,6 @@ public class Mexico extends GameActivity {
         // no action
     }
 
-    public void setTextSizes() {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        double scaling = 0.45;
-        double scalingCards = 0.6;
-        int bottomToTopId;
-        int topToTopId;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        for (int c = 0; c < visibleTiles; c++) {
-
-            TextView cards = findViewById(TILE_BUTTONS[c]);
-            if (c == 0) {
-                ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) cards.getLayoutParams();
-                bottomToTopId = lp1.bottomToTop;
-                topToTopId = lp1.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * scalingCards * percentHeight * heightOfDisplay);
-            }
-            cards.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        }
-
-        //LOGGER.info("Remember: pixelHeight (initial value) = " + pixelHeight);
-
-
-        // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        ImageView pointsEarnedImage = (ImageView) findViewById(R.id.pointsImage);
-        ConstraintLayout.LayoutParams lp3 = (ConstraintLayout.LayoutParams) pointsEarnedImage.getLayoutParams();
-        int bottomToTopId3 = lp3.bottomToTop;
-        int topToTopId3 = lp3.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        int pixelHeight2 = (int) (0.5 * scaling * percentHeight * heightOfDisplay);     // renamed because we want to access pixelHeight (from above) later on
-        pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight2);
-
-    }
-
     public void repeatGame(View View) {
 
         if (mediaPlayerIsPlaying) {
@@ -230,8 +184,6 @@ public class Mexico extends GameActivity {
     }
 
     public void playAgain() {
-
-        setTextSizes();
 
         setCardTextToEmpty();
         buildWordsArray();
@@ -356,9 +308,6 @@ public class Mexico extends GameActivity {
 
         if (appearance.equals("TEXT")) {
             card.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
-            float fontAdjustment = Float.parseFloat(memoryCollection.get(t)[5]);
-            int thisCardPixelHeight = (int) (pixelHeight * fontAdjustment);
-            card.setTextSize(TypedValue.COMPLEX_UNIT_PX, thisCardPixelHeight);
             card.setBackgroundResource(0);
         } else {
             card.setBackgroundResource(resID);
@@ -424,10 +373,6 @@ public class Mexico extends GameActivity {
 
             cardA.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitA)[1]));
             cardB.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitB)[1]));
-            float fontAdjustment = Float.parseFloat(memoryCollection.get(cardHitA)[5]);
-            int thisCardPixelHeight = (int) (pixelHeight * fontAdjustment);
-            cardA.setTextSize(TypedValue.COMPLEX_UNIT_PX, thisCardPixelHeight);
-            cardB.setTextSize(TypedValue.COMPLEX_UNIT_PX, thisCardPixelHeight);
 
             String tileColorStr = COLORS[cardHitA % 5];
             int tileColor = Color.parseColor(tileColorStr);
