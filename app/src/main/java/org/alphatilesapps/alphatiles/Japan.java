@@ -8,6 +8,7 @@ import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -37,8 +38,9 @@ public class Japan extends GameActivity {
     String thirdToLastWord = "";
     ArrayList<String> parsedWordIntoTiles;
     ArrayList<String> parsedWordIntoSyllables;
-    ArrayList<Integer> joinedTracker = new ArrayList<>();
-    HashMap<String, ArrayList<Integer>> inProgSyllabification = new HashMap<>();
+    ArrayList<TextView> joinedTracker = new ArrayList<>();
+    HashMap<String, ArrayList<TextView>> inProgSyllabification = new HashMap<>();
+    int visibleViews = 0;
     ArrayList<String> correctSyllabification = new ArrayList<>();
 
     protected static final int[] TILES = {
@@ -79,11 +81,23 @@ public class Japan extends GameActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.japan);
 
-        joinedTracker.add(TILES[0]);
-        for (int i = 1; i < BUTTONS.length; i++){
-            joinedTracker.add(BUTTONS[i]);
-            joinedTracker.add(TILES[i+1]);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     // forces landscape mode only
+
+        joinedTracker.add(findViewById(TILES[0]));
+        for (int i = 0; i < BUTTONS.length; i++){
+            joinedTracker.add(findViewById(BUTTONS[i]));
+            joinedTracker.add(findViewById(TILES[i+1]));
         }
+
+        play();
+    }
+
+    private void play() {
+        chooseWord();
+        displayWordRef();
+        displayTileChoices();
+        setVisButtonsClickable();
+        setTilesUnclickable();
     }
 
     private void chooseWord(){
@@ -98,8 +112,9 @@ public class Japan extends GameActivity {
             wordInLOP = Start.wordList.get(randomNum).localWord;
 
             parsedWordIntoTiles = tileList.parseWordIntoTiles(wordInLOP);
-            /*
             parsedWordIntoSyllables = syllableList.parseWordIntoSyllables(wordInLOP);
+
+            /*
             for (String syll : parsedWordIntoSyllables){
                 correctSyllabification.add(syll);
                 correctSyllabification.add("*");
@@ -142,19 +157,23 @@ public class Japan extends GameActivity {
             TextView tile = findViewById(TILES[i]);
             tile.setClickable(false);
             tile.setVisibility(View.INVISIBLE);
+            tile = findViewById(BUTTONS[i-1]);
+            tile.setClickable(false);
+            tile.setVisibility(View.INVISIBLE);
         }
+        visibleViews = parsedWordIntoTiles.size()*2 - 1; // accounts for both buttons and tiles
     }
 
     private void setVisButtonsClickable(){
         for (int i = 0; i < parsedWordIntoTiles.size() - 1; i ++){
-            Button button = findViewById(BUTTONS[i]);
+            TextView button = findViewById(BUTTONS[i]);
             button.setClickable(true);
         }
     }
 
     private void setAllButtonsUnclickable(){
         for (int i = 0; i < BUTTONS.length; i++){
-            Button button = findViewById(BUTTONS[i]);
+            TextView button = findViewById(BUTTONS[i]);
             button.setClickable(false);
         }
     }
@@ -167,15 +186,15 @@ public class Japan extends GameActivity {
     }
 
     public void onClickJapan(View view) {
-        joinTiles((Integer) view.getTag());
-        respondToSelection((Integer)view.getTag());
+        joinTiles(Integer.parseInt((String) view.getTag()));
+        respondToSelection(Integer.parseInt((String) view.getTag()));
     }
 
     public void onClickTile(View view) {
         // change color back to grey
         // change constraints back to original
         // set visibility of button back to visible
-        separateTiles((Integer) view.getTag());
+        separateTiles(Integer.parseInt((String) view.getTag()));
     }
 
     private void separateTiles(Integer tag) {
@@ -185,6 +204,63 @@ public class Japan extends GameActivity {
     }
 
     private void respondToSelection(int tag) {
+        // check if correct and change color
+        // if correct, set those Tiles unclickable to help the user
+        // build string of configuration that we have so far
+        StringBuilder config = new StringBuilder();
+        StringBuilder partialConfig = new StringBuilder(); // hold one in-progress syll at a time
+        ArrayList<TextView> listOfIds = new ArrayList<>(); // list of ids that corresponds to
+        // that one in-progress syll in partialConfig
+        for (int i = 0; i < visibleViews; i++){ //why was this size 20?
+            TextView view = joinedTracker.get(i);
+            if (view.getText().equals(".")){
+                inProgSyllabification.put(partialConfig.toString(), listOfIds);
+                listOfIds = new ArrayList<TextView>();
+                partialConfig.setLength(0);
+            }else{
+                listOfIds.add(view);
+                partialConfig.append(view.getText());
+            }
+            config.append(view.getText());
+        }
+
+        if (config.equals(wordInLOP)){ // completely correct
+            //great job!
+            playCorrectSoundThenActiveWordClip(false); //JP not sure what this bool is for
+
+            TextView pointsEarned = findViewById(R.id.pointsTextView);
+            points+=1;
+            japanPoints+=1;
+            pointsEarned.setText(String.valueOf(japanPoints));
+
+            trackerCount++;
+            updateTrackers();
+
+            TextView view = findViewById(TILES[0]);
+            view.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
+            view.setTextColor(Color.parseColor("#FFFFFF")); // white
+            view.setClickable(false);
+            for (int i = 0; i < BUTTONS.length; i++){
+                view = findViewById(TILES[i+1]);
+                view.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
+                view.setTextColor(Color.parseColor("#FFFFFF")); // white
+                view.setClickable(false);
+                view = findViewById(BUTTONS[i]);
+                view.setClickable(false);
+            }
+        } else{ // one or more syllables correct
+            for (String syll : parsedWordIntoSyllables){
+                if (inProgSyllabification.containsKey(syll)){
+                    // that one syllable is correct so turn them all green
+                    for (TextView view : inProgSyllabification.get(syll)){
+                        view.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
+                        view.setTextColor(Color.parseColor("#FFFFFF")); // white
+                        view.setClickable(false);
+                    }
+                }
+            }
+        }
+        inProgSyllabification.clear();
     }
 
     private void joinTiles(int tag) {
@@ -193,7 +269,7 @@ public class Japan extends GameActivity {
         // change the color of the two tiles depending on whether they're correct - TO DO
         // make them clickable - DONE
 
-        Button button = findViewById(BUTTONS[tag]);
+        TextView button = findViewById(BUTTONS[tag]);
         button.setClickable(false);
         button.setVisibility(View.INVISIBLE);
 
@@ -210,59 +286,7 @@ public class Japan extends GameActivity {
         constraintSet.connect(TILES[tag+1],ConstraintSet.START,TILES[tag],ConstraintSet.END,0);
         constraintSet.applyTo(constraintLayout);
 
-        // check if correct and change color
-        // if correct, set those Tiles unclickable to help the user
-        joinedTracker.remove(BUTTONS[tag]);
-
-        // build string of configuration that we have so far
-        StringBuilder config = new StringBuilder();
-        StringBuilder partialConfig = new StringBuilder(); // hold one in-progress syll at a time
-        ArrayList<Integer> listOfIds = new ArrayList<>(); // list of ids that corresponds to
-        // that one in-progress syll in partialConfig
-        for (int i : joinedTracker){
-            TextView view = findViewById(i);
-            if (view.getText().equals(".")){
-                inProgSyllabification.put(partialConfig.toString(), listOfIds);
-                listOfIds.clear();
-                partialConfig.setLength(0);
-            }
-            listOfIds.add(i);
-            partialConfig.append(view.getText());
-            config.append(view.getText());
-        }
-
-        if (config.equals(wordInLOP)){
-            //great job!
-            //play word audio
-            //play correct sound
-            playCorrectSoundThenActiveWordClip(false); //JP not sure what this bool is for
-
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points+=1;
-            japanPoints+=1;
-            pointsEarned.setText(String.valueOf(japanPoints));
-
-            trackerCount++;
-            updateTrackers();
-            //increase points
-            //update 12 trackers
-            //make everything unclickable
-        } else{
-            for (String syll : parsedWordIntoSyllables){
-                if (inProgSyllabification.containsKey(syll)){
-                    // that one syllable is correct so turn them all green
-                    for (int i : inProgSyllabification.get(syll)){
-                        TextView view = findViewById(i);
-                        view.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
-                        view.setTextColor(Color.parseColor("#FFFFFF")); // white
-                        view.setClickable(false);
-                    }
-                }
-            }
-        }
-
-
-
+        joinedTracker.remove(button);
 
     }
 }
