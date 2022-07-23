@@ -35,8 +35,9 @@ public class Japan extends GameActivity {
      */
 
     // TO DO:
-    // add onClick for word up top to play audio
     // make a reset layout function for repeatGame() before play()
+    // fix the separate tiles function so that it doesn't undo a green on other side
+    // fix the separate tiles function so that it doesn't screw up whole layout when you try to undo last tile
 
     String lastWord = "";
     String secondToLastWord = "";
@@ -227,6 +228,11 @@ public class Japan extends GameActivity {
         for (int i = 0; i < TILES_AND_BUTTONS.length; i++){
             joinedTracker.add(findViewById(TILES_AND_BUTTONS[i]));
             findViewById(TILES_AND_BUTTONS[i]).setVisibility(View.VISIBLE);
+            if (i % 2 == 0){
+                findViewById(TILES_AND_BUTTONS[i]).setClickable(false);
+            }else{
+                findViewById(TILES_AND_BUTTONS[i]).setClickable(true);
+            }
         }
 
         ConstraintLayout constraintLayout = findViewById(R.id.japancl);
@@ -454,7 +460,7 @@ public class Japan extends GameActivity {
             trackerCount++;
             updateTrackers();
 
-            for (int i = 0; i < visibleViews; i++){
+            for (int i = 0; i < visibleViewsImm; i++){
                 if (i % 2 == 0){
                     TextView view = findViewById(TILES_AND_BUTTONS[i]);
                     view.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
