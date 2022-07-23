@@ -40,12 +40,17 @@
         android:gravity="center"
         android:text="Name your avatar"
         android:textColor="#FFFFFF"
-        android:textSize="32sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        android:inputType="textNoSuggestions"/>
+        android:inputType="textNoSuggestions"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="10sp"
+        app:autoSizeMaxTextSize="35sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp"
+        android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/acceptName"

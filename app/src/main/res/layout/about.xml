@@ -26,11 +26,15 @@
         android:layout_height="0dp"
         android:text="@string/localAppName"
         android:textColor="#9C27B0               "
-        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="26sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp" />
 
     <TextView
         android:id="@+id/langNamesPlusCountry"
@@ -38,11 +42,15 @@
         android:layout_height="0dp"
         android:text="@string/langsAndCountry"
         android:textColor="#4CAF50"
-        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeMaxTextSize="18sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp" />
 
     <TextView
         android:id="@+id/photoAudioCredits"
@@ -50,11 +58,15 @@
         android:layout_height="0dp"
         android:text="@string/audioAndPhoto"
         android:textColor="#2196F3"
-        android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="15sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp" />
 
     <TextView
         android:id="@+id/appVersionInEnglish"
@@ -62,11 +74,15 @@
         android:layout_height="0dp"
         android:text="@string/alphaTilesVersionInfo"
         android:textColor="#E91E63"
-        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH9" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="18sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "7dp" />
 
     <ImageView
         android:id="@+id/gamesHomeImage"
