@@ -265,7 +265,8 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH0" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH0"
+        android:onClick="onClickWord"/>
 
     <TextView
         android:id="@+id/tile01"
