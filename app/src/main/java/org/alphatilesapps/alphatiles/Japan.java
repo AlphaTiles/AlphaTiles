@@ -261,7 +261,7 @@ public class Japan extends GameActivity {
             // TO DO: only one tile ?
         } else if (indexOfTileJT == 0){ //first tile
             // check index + 1
-            if (!joinedTracker.get(1).getText().equals(".")){ // if it's NOT a button
+            if (!joinedTracker.get(1).getText().toString().equals(".".toString())){ // if it's NOT a button
                 // restore the button
                 TextView button = findViewById(TILES_AND_BUTTONS[1]);
                 button.setVisibility(View.VISIBLE);
@@ -286,20 +286,22 @@ public class Japan extends GameActivity {
                 String tileColorStr = COLORS[i % 5];
                 int tileColor = Color.parseColor(tileColorStr);
                 nextTile.setBackgroundColor(tileColor);
+                nextTile.setClickable(false);
 
                 i = rand.nextInt(10);
                 tileColorStr = COLORS[i % 5];
                 tileColor = Color.parseColor(tileColorStr);
                 clickedTile.setBackgroundColor(tileColor);
+                clickedTile.setClickable(false);
 
                 joinedTracker.add(1, button);
                 visibleViews = visibleViews + 1;
             }
         } else if (indexOfTileJT == visibleViews - 1){ //final tile
             // check index - 1
-            if (!joinedTracker.get(indexOfTileJT - 1).getText().equals(".")){ // if it's NOT a button
+            if (!joinedTracker.get(indexOfTileJT - 1).getText().toString().equals(".".toString())){ // if it's NOT a button
 
-                int indexOfMissingButton = visibleViews - 2;
+                int indexOfMissingButton = visibleViewsImm - 2;
                 // restore the button
                 TextView button = findViewById(TILES_AND_BUTTONS[indexOfMissingButton]);
                 button.setVisibility(View.VISIBLE);
@@ -310,12 +312,16 @@ public class Japan extends GameActivity {
                 ConstraintLayout constraintLayout = findViewById(R.id.japancl);
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(constraintLayout);
+                //end of prevTile to start of button
                 constraintSet.connect(TILES_AND_BUTTONS[indexOfMissingButton - 1], ConstraintSet.END,
                         TILES_AND_BUTTONS[indexOfMissingButton],ConstraintSet.START,0);
+                //start of button to end of prevTile
                 constraintSet.connect(TILES_AND_BUTTONS[indexOfMissingButton],ConstraintSet.START,
                         TILES_AND_BUTTONS[indexOfMissingButton -1],ConstraintSet.END,0);
+                //start of last tile to end of button
                 constraintSet.connect(TILES_AND_BUTTONS[indexOfMissingButton + 1],ConstraintSet.START,
                         TILES_AND_BUTTONS[indexOfMissingButton],ConstraintSet.END,0);
+                //end of button to start of last tile
                 constraintSet.connect(TILES_AND_BUTTONS[indexOfMissingButton],ConstraintSet.END,
                         TILES_AND_BUTTONS[indexOfMissingButton + 1],ConstraintSet.START,0);
                 constraintSet.applyTo(constraintLayout);
@@ -325,18 +331,20 @@ public class Japan extends GameActivity {
                 String tileColorStr = COLORS[i % 5];
                 int tileColor = Color.parseColor(tileColorStr);
                 prevTile.setBackgroundColor(tileColor);
+                prevTile.setClickable(false);
 
                 i = rand.nextInt(10);
                 tileColorStr = COLORS[i % 5];
                 tileColor = Color.parseColor(tileColorStr);
                 clickedTile.setBackgroundColor(tileColor);
+                clickedTile.setClickable(false);
 
-                joinedTracker.add(indexOfTileJT - 1, button);
+                joinedTracker.add(indexOfTileJT, button);
                 visibleViews = visibleViews + 1;
             }
         } else{  //any other tile
             // check index + 1 and index -1
-            if (!joinedTracker.get(indexOfTileJT - 1).getText().equals(".")){ // if - 1 NOT a button
+            if (!joinedTracker.get(indexOfTileJT - 1).getText().toString().equals(".".toString())){ // if - 1 NOT a button
 
                 int indexOfMBinOG = originalLayout.indexOf(clickedTile) - 1;
                 // restore the button
@@ -369,17 +377,20 @@ public class Japan extends GameActivity {
                 String tileColorStr = COLORS[i % 5];
                 int tileColor = Color.parseColor(tileColorStr);
                 prevTile.setBackgroundColor(tileColor);
+                prevTile.setClickable(false);
 
                 i = rand.nextInt(10);
                 tileColorStr = COLORS[i % 5];
                 tileColor = Color.parseColor(tileColorStr);
                 clickedTile.setBackgroundColor(tileColor);
+                clickedTile.setClickable(false);
 
-                int newIndex = joinedTracker.indexOf(clickedTile) - 1;
-                joinedTracker.add(newIndex, button);
+
+                joinedTracker.add(indexOfTileJT, button);
                 visibleViews = visibleViews + 1;
             }
-            if (!joinedTracker.get(indexOfTileJT + 1).getText().equals(".")){ // if it's NOT a button
+            String text = joinedTracker.get(indexOfTileJT + 1).getText().toString();
+            if (!joinedTracker.get(indexOfTileJT + 1).getText().toString().equals(".".toString())){ // if it's NOT a button
 
                 int indexOfMBinOG = originalLayout.indexOf(clickedTile) + 1;
 
@@ -413,11 +424,13 @@ public class Japan extends GameActivity {
                 String tileColorStr = COLORS[i % 5];
                 int tileColor = Color.parseColor(tileColorStr);
                 nextTile.setBackgroundColor(tileColor);
+                nextTile.setClickable(false);
 
                 i = rand.nextInt(10);
                 tileColorStr = COLORS[i % 5];
                 tileColor = Color.parseColor(tileColorStr);
                 clickedTile.setBackgroundColor(tileColor);
+                clickedTile.setClickable(false);
 
                 int newIndex = joinedTracker.indexOf(clickedTile) + 1;
                 joinedTracker.add(newIndex, button);
@@ -478,9 +491,23 @@ public class Japan extends GameActivity {
                 if (inProgSyllabification.containsKey(syll)){
                     // that one syllable is correct so turn them all green
                     for (TextView view : inProgSyllabification.get(syll)){
+                        int viewIndexJT = joinedTracker.indexOf(view);
                         view.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
                         view.setTextColor(Color.parseColor("#FFFFFF")); // white
                         view.setClickable(false);
+                        if (viewIndexJT > 0){
+                            if (joinedTracker.get(viewIndexJT - 1).getText().equals(".")){
+                                TextView priorButton = joinedTracker.get(viewIndexJT - 1);
+                                priorButton.setClickable(false);
+                            }
+                        }
+                        if (viewIndexJT < visibleViews - 1){
+                            if (joinedTracker.get(viewIndexJT + 1).getText().equals(".")){
+                                TextView endButton = joinedTracker.get(viewIndexJT + 1);
+                                endButton.setClickable(false);
+                            }
+                        }
+
                     }
                 }
             }
