@@ -212,6 +212,7 @@ public class Japan extends GameActivity {
         // change constraints back to original
         // set visibility of button back to visible
         separateTiles((TextView) view);
+        respondToSelection();
     }
 
     public void onClickWord(View view){
@@ -286,7 +287,6 @@ public class Japan extends GameActivity {
                 String tileColorStr = COLORS[i % 5];
                 int tileColor = Color.parseColor(tileColorStr);
                 nextTile.setBackgroundColor(tileColor);
-                nextTile.setClickable(false);
 
                 i = rand.nextInt(10);
                 tileColorStr = COLORS[i % 5];
@@ -331,7 +331,6 @@ public class Japan extends GameActivity {
                 String tileColorStr = COLORS[i % 5];
                 int tileColor = Color.parseColor(tileColorStr);
                 prevTile.setBackgroundColor(tileColor);
-                prevTile.setClickable(false);
 
                 i = rand.nextInt(10);
                 tileColorStr = COLORS[i % 5];
@@ -377,7 +376,6 @@ public class Japan extends GameActivity {
                 String tileColorStr = COLORS[i % 5];
                 int tileColor = Color.parseColor(tileColorStr);
                 prevTile.setBackgroundColor(tileColor);
-                prevTile.setClickable(false);
 
                 i = rand.nextInt(10);
                 tileColorStr = COLORS[i % 5];
@@ -388,9 +386,57 @@ public class Japan extends GameActivity {
 
                 joinedTracker.add(indexOfTileJT, button);
                 visibleViews = visibleViews + 1;
+
+                //check next button after prior button already added back in
+                //indexOfTileJT now becomes the location of the next button
+                if (!joinedTracker.get(indexOfTileJT).getText().toString().equals(".".toString())){ // if it's NOT a button
+
+                    indexOfMBinOG = originalLayout.indexOf(clickedTile) + 1;
+
+                    // restore the button
+                    button = originalLayout.get(indexOfMBinOG);
+                    button.setVisibility(View.VISIBLE);
+                    button.setClickable(true);
+
+                    // reset constraints of clickedTile and nextTile
+                    TextView nextTile = originalLayout.get(indexOfMBinOG + 1);
+                    constraintLayout = findViewById(R.id.japancl);
+                    constraintSet = new ConstraintSet();
+                    constraintSet.clone(constraintLayout);
+
+                    // end of button to start of right tile
+                    constraintSet.connect(TILES_AND_BUTTONS[indexOfMBinOG],ConstraintSet.END,
+                            TILES_AND_BUTTONS[indexOfMBinOG + 1],ConstraintSet.START,0);
+                    // start of button to end of left tile
+                    constraintSet.connect(TILES_AND_BUTTONS[indexOfMBinOG],ConstraintSet.START,
+                            TILES_AND_BUTTONS[indexOfMBinOG - 1],ConstraintSet.END,0);
+                    // start of right tile to end of button
+                    constraintSet.connect(TILES_AND_BUTTONS[indexOfMBinOG + 1],ConstraintSet.START,
+                            TILES_AND_BUTTONS[indexOfMBinOG],ConstraintSet.END,0);
+                    // end of left tile to start of button
+                    constraintSet.connect(TILES_AND_BUTTONS[indexOfMBinOG - 1],ConstraintSet.END,
+                            TILES_AND_BUTTONS[indexOfMBinOG],ConstraintSet.START,0);
+                    constraintSet.applyTo(constraintLayout);
+
+                    rand = new Random();
+                    i = rand.nextInt(10);
+                    tileColorStr = COLORS[i % 5];
+                    tileColor = Color.parseColor(tileColorStr);
+                    nextTile.setBackgroundColor(tileColor);
+
+                    i = rand.nextInt(10);
+                    tileColorStr = COLORS[i % 5];
+                    tileColor = Color.parseColor(tileColorStr);
+                    clickedTile.setBackgroundColor(tileColor);
+                    clickedTile.setClickable(false);
+
+                    joinedTracker.add(indexOfTileJT, button);
+                    visibleViews = visibleViews + 1;
+                }
             }
-            String text = joinedTracker.get(indexOfTileJT + 1).getText().toString();
-            if (!joinedTracker.get(indexOfTileJT + 1).getText().toString().equals(".".toString())){ // if it's NOT a button
+            // i think the issue is joinedTrack being dynamic; it changes here before this next if statement
+            // so now this else if deals with next button if prior button did NOT have to be restored
+            else if (!joinedTracker.get(indexOfTileJT + 1).getText().toString().equals(".".toString())){ // if it's NOT a button
 
                 int indexOfMBinOG = originalLayout.indexOf(clickedTile) + 1;
 
@@ -424,7 +470,6 @@ public class Japan extends GameActivity {
                 String tileColorStr = COLORS[i % 5];
                 int tileColor = Color.parseColor(tileColorStr);
                 nextTile.setBackgroundColor(tileColor);
-                nextTile.setClickable(false);
 
                 i = rand.nextInt(10);
                 tileColorStr = COLORS[i % 5];
@@ -444,19 +489,27 @@ public class Japan extends GameActivity {
         // check if correct and change color
         // if correct, set those Tiles unclickable to help the user
         // build string of configuration that we have so far
+
+        // ISSUE TO FIX: NOT ONLY IF SYLL IN INPROGRESSSYLLABIFICATION BUT
+        // MUST BE IN CORRECT POSITION TOO
         StringBuilder config = new StringBuilder();
         StringBuilder partialConfig = new StringBuilder(); // hold one in-progress syll at a time
         ArrayList<TextView> listOfIds = new ArrayList<>(); // list of ids that corresponds to
         // that one in-progress syll in partialConfig
         for (int i = 0; i < visibleViews; i++){ //why was this size 20?
             TextView view = joinedTracker.get(i);
-            if (view.getText().equals(".")){
+            if (view.getText().toString().equals(".".toString())){
                 inProgSyllabification.put(partialConfig.toString(), listOfIds);
                 listOfIds = new ArrayList<TextView>();
                 partialConfig.setLength(0);
             }else{
                 listOfIds.add(view);
                 partialConfig.append(view.getText());
+            }
+            if (i == visibleViews - 1){ // last tile after its been appended
+                inProgSyllabification.put(partialConfig.toString(), listOfIds);
+                listOfIds = new ArrayList<TextView>();
+                partialConfig.setLength(0);
             }
             config.append(view.getText());
         }
