@@ -33,12 +33,12 @@ public class Japan extends GameActivity {
      */
 
     // TO DO:
-    // fix separateTiles to either consistently replace only the left button or replace both
     // fix gem text size
     // fix repeat arrow to not be able to advance w/o getting it correct
     // write better comments and documentation
-    // somehow make font size bigger
-    // make 7-tile layout with bigger buttons
+    // set up title
+    // ask literacy advisors about levels -- what else should be unique about 1 vs 2
+    // fix points - points are not saving after the activity is closed
 
 
     String lastWord = "";
@@ -52,15 +52,23 @@ public class Japan extends GameActivity {
     HashMap<Integer, Integer> numsToButtons = new HashMap<>();
     int visibleViews = 0;
     int visibleViewsImm = 0;
-    int MAX_TILES = 12;
+    int MAX_TILES = 0;
     ArrayList<String> correctSyllabification = new ArrayList<>();
 
-    protected static final int[] TILES_AND_BUTTONS = {
+    protected static final int[] TILES_AND_BUTTONS_12 = {
             R.id.tile01, R.id.button1, R.id.tile02, R.id.button2, R.id.tile03, R.id.button3,
             R.id.tile04, R.id.button4, R.id.tile05, R.id.button5, R.id.tile06, R.id.button6,
             R.id.tile07, R.id.button7, R.id.tile08, R.id.button8, R.id.tile09, R.id.button9,
             R.id.tile10, R.id.button10, R.id.tile11, R.id.button11, R.id.tile12
     };
+
+    protected static final int[] TILES_AND_BUTTONS_7 = {
+            R.id.tile01, R.id.button1, R.id.tile02, R.id.button2, R.id.tile03, R.id.button3,
+            R.id.tile04, R.id.button4, R.id.tile05, R.id.button5, R.id.tile06, R.id.button6,
+            R.id.tile07
+    };
+
+    protected static int[] TILES_AND_BUTTONS;
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#6200EE", "#E91E63"};
     // theme purple
@@ -103,7 +111,24 @@ public class Japan extends GameActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.japan_12);
+        challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
+
+        if (challengeLevel == 1){
+            setContentView(R.layout.japan_7);
+            TILES_AND_BUTTONS = new int[13];
+            for (int i = 0; i < TILES_AND_BUTTONS_7.length; i++){
+                TILES_AND_BUTTONS[i] = TILES_AND_BUTTONS_7[i];
+            }
+            MAX_TILES = 7;
+        } else if (challengeLevel == 2){
+            setContentView(R.layout.japan_12);
+            TILES_AND_BUTTONS = new int[23];
+            for (int i = 0; i < TILES_AND_BUTTONS_12.length; i++){
+                TILES_AND_BUTTONS[i] = TILES_AND_BUTTONS_12[i];
+            }
+            MAX_TILES = 12;
+        }
+
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     // forces landscape mode only
 
@@ -615,9 +640,6 @@ public class Japan extends GameActivity {
                             }
                             view.setClickable(false); //set button at end of sequence unclickable
                             firstButton.setClickable(false); //set button (or tile if index 0) at beginning of sequence unclickable
-                        }
-                        if (view.getId() == correctButtons.get(correctButtons.size() - 1)){
-                            break;
                         }
                     } else if(correctButtons.contains(view.getId())){
                         buildingIntermediate = true;
