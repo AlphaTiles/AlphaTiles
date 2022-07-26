@@ -129,6 +129,9 @@ public class Japan extends GameActivity {
             MAX_TILES = 12;
         }
 
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
+
+        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     // forces landscape mode only
 

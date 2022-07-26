@@ -153,7 +153,7 @@ public class Thailand extends GameActivity {
         }
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
