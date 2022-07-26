@@ -33,12 +33,12 @@ public class Japan extends GameActivity {
      */
 
     // TO DO:
-    // fix respondToSelection to not turn everything green when all buttons are clicked away
     // fix separateTiles to either consistently replace only the left button or replace both
-    // figure out why buttons get smaller
     // fix gem text size
     // fix repeat arrow to not be able to advance w/o getting it correct
     // write better comments and documentation
+    // somehow make font size bigger
+    // make 7-tile layout with bigger buttons
 
 
     String lastWord = "";
@@ -63,6 +63,11 @@ public class Japan extends GameActivity {
     };
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#6200EE", "#E91E63"};
+    // theme purple
+    // theme blue
+    // theme orange
+    // colorPrimary
+    // theme read
 
 
     @Override
@@ -98,7 +103,7 @@ public class Japan extends GameActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.japan);
+        setContentView(R.layout.japan_12);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     // forces landscape mode only
 
@@ -252,17 +257,35 @@ public class Japan extends GameActivity {
         ConstraintLayout constraintLayout = findViewById(R.id.japancl);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        for (int i = 1; i < TILES_AND_BUTTONS.length - 1; i = i + 2){
+        for (int i = 1; i < TILES_AND_BUTTONS.length; i++){
             constraintSet.connect(TILES_AND_BUTTONS[i-1],ConstraintSet.END,TILES_AND_BUTTONS[i],
-                    ConstraintSet.START,0); //end of t to start of b
+                    ConstraintSet.START,0); //end of t1 to start of b1
             constraintSet.connect(TILES_AND_BUTTONS[i],ConstraintSet.START,TILES_AND_BUTTONS[i-1],
-                    ConstraintSet.END,0); // start of b to end of t
+                    ConstraintSet.END,0); //start of b1 to end of t1
+            constraintSet.applyTo(constraintLayout); //end of b1 to start of t2
+        }
+
+
+/*
+        ConstraintLayout constraintLayout = findViewById(R.id.japancl);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        for (int i = 1; i < TILES_AND_BUTTONS.length - 1; i++){
+            constraintSet.connect(TILES_AND_BUTTONS[i-1],ConstraintSet.END,TILES_AND_BUTTONS[i],
+                    ConstraintSet.START,0); //end of one to start of next
+            constraintSet.connect(TILES_AND_BUTTONS[i],ConstraintSet.START,TILES_AND_BUTTONS[i-1],
+                    ConstraintSet.END,0); // start of next to end of one
+
+ */
+            /*
             constraintSet.connect(TILES_AND_BUTTONS[i],ConstraintSet.END,TILES_AND_BUTTONS[i+1],
                     ConstraintSet.START,0); // end of b to start of next t
             constraintSet.connect(TILES_AND_BUTTONS[i+1],ConstraintSet.START,TILES_AND_BUTTONS[i],
                     ConstraintSet.END,0); // start of next t to end of b
+
+             */
+        //}
         }
-    }
 
     private void separateTiles(TextView clickedTile) {
         // find the clicked tile in JoinedTracker
@@ -568,6 +591,8 @@ public class Japan extends GameActivity {
             // if not, empty the list and pick a new first button and repeat the process until
             // you have iterated over visibleViews number of items in joinedTracker
 
+            // but what about when all tiles are gone?
+
             boolean buildingIntermediate = true;
             TextView firstButton = joinedTracker.get(0);
             ArrayList<TextView> intermediateTiles = new ArrayList<>();
@@ -580,13 +605,20 @@ public class Japan extends GameActivity {
                     }else if (correctButtons.contains(view.getId()) && buildingIntermediate){
                         // is a correct button and its 2nd in sequence
                         // that one syllable is correct so turn them all green
-                        for (TextView tile : intermediateTiles){
-                            tile.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
-                            tile.setTextColor(Color.parseColor("#FFFFFF")); // white
-                            tile.setClickable(false);
+                        if (intermediateTiles.size() != sum){
+                            // this prevents all tiles from turning green if all buttons have been clicked
+                            // but in wrong order
+                            for (TextView tile : intermediateTiles){
+                                tile.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
+                                tile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                                tile.setClickable(false);
+                            }
+                            view.setClickable(false); //set button at end of sequence unclickable
+                            firstButton.setClickable(false); //set button (or tile if index 0) at beginning of sequence unclickable
                         }
-                        view.setClickable(false); //set button at end of sequence unclickable
-                        firstButton.setClickable(false); //set button (or tile if index 0) at beginning of sequence unclickable
+                        if (view.getId() == correctButtons.get(correctButtons.size() - 1)){
+                            break;
+                        }
                     } else if(correctButtons.contains(view.getId())){
                         buildingIntermediate = true;
                         firstButton = view;
