@@ -1,6 +1,5 @@
 package org.alphatilesapps.alphatiles;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -13,10 +12,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -35,9 +32,13 @@ public class Japan extends GameActivity {
      */
 
     // TO DO:
-    // make a reset layout function for repeatGame() before play()
-    // fix the separate tiles function so that it doesn't undo a green on other side
-    // fix the separate tiles function so that it doesn't screw up whole layout when you try to undo last tile
+    // fix respondToSelection to not turn everything green when all buttons are clicked away
+    // fix separateTiles to either consistently replace only the left button or replace both
+    // figure out why buttons get smaller
+    // fix gem text size
+    // fix repeat arrow to not be able to advance w/o getting it correct
+    // write better comments and documentation
+
 
     String lastWord = "";
     String secondToLastWord = "";
@@ -46,7 +47,8 @@ public class Japan extends GameActivity {
     ArrayList<String> parsedWordIntoSyllables;
     ArrayList<TextView> joinedTracker = new ArrayList<>();
     ArrayList<TextView> originalLayout = new ArrayList<>();
-    HashMap<String, ArrayList<TextView>> inProgSyllabification = new HashMap<>();
+    ArrayList<Integer> buttonIDs = new ArrayList<>();
+    HashMap<Integer, Integer> numsToButtons = new HashMap<>();
     int visibleViews = 0;
     int visibleViewsImm = 0;
     int MAX_TILES = 12;
@@ -99,9 +101,16 @@ public class Japan extends GameActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     // forces landscape mode only
 
+        int j = 1;
         for (int i = 0; i < TILES_AND_BUTTONS.length; i++){
             joinedTracker.add(findViewById(TILES_AND_BUTTONS[i]));
             originalLayout.add(findViewById(TILES_AND_BUTTONS[i]));
+            if (i % 2 == 1){
+                //button
+                numsToButtons.put(j, TILES_AND_BUTTONS[i]);
+                buttonIDs.add(TILES_AND_BUTTONS[i]);
+                j++;
+            }
         }
 
         play();
@@ -498,19 +507,6 @@ public class Japan extends GameActivity {
         // that one in-progress syll in partialConfig
         for (int i = 0; i < visibleViews; i++){ //why was this size 20?
             TextView view = joinedTracker.get(i);
-            if (view.getText().toString().equals(".".toString())){
-                inProgSyllabification.put(partialConfig.toString(), listOfIds);
-                listOfIds = new ArrayList<TextView>();
-                partialConfig.setLength(0);
-            }else{
-                listOfIds.add(view);
-                partialConfig.append(view.getText());
-            }
-            if (i == visibleViews - 1){ // last tile after its been appended
-                inProgSyllabification.put(partialConfig.toString(), listOfIds);
-                listOfIds = new ArrayList<TextView>();
-                partialConfig.setLength(0);
-            }
             config.append(view.getText());
         }
 
@@ -540,32 +536,66 @@ public class Japan extends GameActivity {
 
             }
         } else{ // one or more syllables correct
-            for (String syll : parsedWordIntoSyllables){
-                if (inProgSyllabification.containsKey(syll)){
-                    // that one syllable is correct so turn them all green
-                    for (TextView view : inProgSyllabification.get(syll)){
-                        int viewIndexJT = joinedTracker.indexOf(view);
-                        view.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
-                        view.setTextColor(Color.parseColor("#FFFFFF")); // white
-                        view.setClickable(false);
-                        if (viewIndexJT > 0){
-                            if (joinedTracker.get(viewIndexJT - 1).getText().equals(".")){
-                                TextView priorButton = joinedTracker.get(viewIndexJT - 1);
-                                priorButton.setClickable(false);
-                            }
-                        }
-                        if (viewIndexJT < visibleViews - 1){
-                            if (joinedTracker.get(viewIndexJT + 1).getText().equals(".")){
-                                TextView endButton = joinedTracker.get(viewIndexJT + 1);
-                                endButton.setClickable(false);
-                            }
-                        }
 
+            // find number of tiles per correct syllable
+            ArrayList<Integer> numTilesPerSyll = new ArrayList<>();
+            for (String syll: parsedWordIntoSyllables){
+                ArrayList<String> parsedSyllIntoTiles = tileList.parseWordIntoTiles(syll);
+                numTilesPerSyll.add(parsedSyllIntoTiles.size());
+                parsedSyllIntoTiles.clear();
+            }
+
+            ArrayList<Integer> correctButtons = new ArrayList<>();
+            int sum = 0;
+            for (int num : numTilesPerSyll){
+                sum = sum + num;
+                correctButtons.add(numsToButtons.get(sum)); // maps numbers to R.id's
+            }
+
+            // now somehow check if sequence of buttons in joinedTiles anywhere matches correctButtons
+            // if so, turn all tiles between those two buttons in joinedTiles green and make them unClickable
+
+            // we know that all of the odd indexes in TILES_AND_BUTTONS are buttons
+            // when we find an id in joinedTracker that matches an id in correctButtons,
+            // keep iterating through joinedTracker and store intermediate tiles in a list
+            // until you reach another button, then check if that next button is also the next button in
+            // correctButtons
+            // if so, go back and turn all the intermediate tiles in the list green and unclickable
+            // if not, empty the list and pick a new first button and repeat the process until
+            // you have iterated over visibleViews number of items in joinedTracker
+
+            boolean buildingIntermediate = true;
+            TextView firstButton = joinedTracker.get(0);
+            ArrayList<TextView> intermediateTiles = new ArrayList<>();
+            for (TextView view : joinedTracker){
+                if (buttonIDs.contains(view.getId())){ // must be button
+                    if (!correctButtons.contains(view.getId())){
+                        // not a correct button
+                        intermediateTiles.clear();
+                        buildingIntermediate = false;
+                    }else if (correctButtons.contains(view.getId()) && buildingIntermediate){
+                        // is a correct button and its 2nd in sequence
+                        // that one syllable is correct so turn them all green
+                        for (TextView tile : intermediateTiles){
+                            tile.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
+                            tile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                            tile.setClickable(false);
+                        }
+                        view.setClickable(false); //set button at end of sequence unclickable
+                        firstButton.setClickable(false); //set button (or tile if index 0) at beginning of sequence unclickable
+                    } else if(correctButtons.contains(view.getId())){
+                        buildingIntermediate = true;
+                        firstButton = view;
+                    }
+                }
+                else{ //must be tile
+                    if (buildingIntermediate){
+                        intermediateTiles.add(view);
                     }
                 }
             }
+
         }
-        inProgSyllabification.clear();
     }
 
     private void joinTiles(TextView button) {
