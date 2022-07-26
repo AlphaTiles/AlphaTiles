@@ -12,6 +12,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -164,6 +165,9 @@ public class Japan extends GameActivity {
     private void displayWordRef(){
         TextView ref = findViewById(R.id.word);
         ref.setText(wordList.stripInstructionCharacters(wordInLOP));
+        ImageView image = findViewById(R.id.wordImage);
+        int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+        image.setImageResource(resID);
     }
 
     private void displayTileChoices(){
