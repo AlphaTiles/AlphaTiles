@@ -210,12 +210,19 @@ public abstract class GameActivity extends AppCompatActivity {
 
                     while (foundNextUncompletedGame == false && repeat < gameList.size()) {
 
+						String country;
 						gameNumber = (gameNumber + 1) % gameList.size(); //actually increment game number and use mod to avoid out of bounds error
-						challengeLevel = Integer.valueOf(gameList.get(gameNumber-1).gameLevel); //challengeLevel of next game
-						String country = gameList.get(gameNumber-1).gameCountry; //country of next game
-                        String activityClass = project + country;
+						if (gameNumber != 0){
+							challengeLevel = Integer.valueOf(gameList.get(gameNumber-1).gameLevel); //challengeLevel of next game
+							country = gameList.get(gameNumber-1).gameCountry; //country of next game
+						} else{
+							challengeLevel = Integer.valueOf(gameList.get(0).gameLevel); //challengeLevel of next game
+							country = gameList.get(0).gameCountry; //country of next game
+						}
+						String activityClass = project + country;
 
-                        try {
+
+						try {
                             intent.setClass(context, Class.forName(activityClass));
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();

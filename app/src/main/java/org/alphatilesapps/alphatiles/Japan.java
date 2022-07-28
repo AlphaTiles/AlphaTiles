@@ -37,7 +37,6 @@ public class Japan extends GameActivity {
     // fix gem text size
     // write better comments and documentation
     // ask literacy advisors about levels -- what else should be unique about 1 vs 2
-    // fix points - points are not saving after the activity is closed
     // centerGamesHomeImage
 
 
@@ -104,7 +103,17 @@ public class Japan extends GameActivity {
 
     @Override
     protected void centerGamesHomeImage() {
-        // TO DO
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = R.id.japancl;
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
+        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
     }
 
     @Override
@@ -165,6 +174,10 @@ public class Japan extends GameActivity {
                 buttonIDs.add(TILES_AND_BUTTONS[i]);
                 j++;
             }
+        }
+
+        if(getAudioInstructionsResID()==0){
+            centerGamesHomeImage();
         }
 
         play();
