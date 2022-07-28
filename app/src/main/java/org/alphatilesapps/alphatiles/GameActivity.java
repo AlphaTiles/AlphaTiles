@@ -45,7 +45,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	int points;
 	int brazilPoints, colombiaPoints, ecuadorPoints, georgiaPoints, japanPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
 	int challengeLevel = -1;
-	Boolean brazilHasChecked12Trackers, colombiaHasChecked12Trackers, ecuadorHasChecked12Trackers, georgiaHasChecked12Trackers, mexicoHasChecked12Trackers, myanmarHasChecked12Trackers, peruHasChecked12Trackers, thailandHasChecked12Trackers, unitedStatesHasChecked12Trackers;
+	Boolean brazilHasChecked12Trackers, colombiaHasChecked12Trackers, ecuadorHasChecked12Trackers, georgiaHasChecked12Trackers, japanHasChecked12Trackers, mexicoHasChecked12Trackers, myanmarHasChecked12Trackers, peruHasChecked12Trackers, thailandHasChecked12Trackers, unitedStatesHasChecked12Trackers;
 	int playerNumber = -1;
 	int gameNumber = 0;
 	String syllableGame;

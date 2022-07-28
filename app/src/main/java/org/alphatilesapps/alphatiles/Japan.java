@@ -7,6 +7,7 @@ import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -132,6 +133,27 @@ public class Japan extends GameActivity {
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     // forces landscape mode only
+
+        points = getIntent().getIntExtra("points", 0); // KP
+        japanPoints = getIntent().getIntExtra("japanPoints", 0); // KP
+        japanHasChecked12Trackers = getIntent().getBooleanExtra("japanHasChecked12Trackers", false); //LM
+
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        japanPoints = prefs.getInt("storedJapanPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, 0);
+        japanHasChecked12Trackers = prefs.getBoolean("storedJapanHasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, false); //LM
+
+        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
+        gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
+        syllableGame = getIntent().getStringExtra("syllableGame");
+
+        TextView pointsEarned = findViewById(R.id.pointsTextView);
+        pointsEarned.setText(String.valueOf(japanPoints));
+
+        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
+
+        updateTrackers();
 
         int j = 1;
         for (int i = 0; i < TILES_AND_BUTTONS.length; i++){
@@ -578,6 +600,18 @@ public class Japan extends GameActivity {
 
             trackerCount++;
             updateTrackers();
+
+            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
+            String playerString = Util.returnPlayerStringToAppend(playerNumber);
+            editor.putInt("storedPoints_player" + playerString, points);
+            editor.apply();
+            editor.putInt("storedJapanPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, japanPoints);
+            editor.apply();
+            editor.putBoolean("storedJapanHasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, japanHasChecked12Trackers);
+            editor.apply();
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
+            editor.apply();
 
             for (int i = 0; i < visibleViewsImm; i++){
                 if (i % 2 == 0){
