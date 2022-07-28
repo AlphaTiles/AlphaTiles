@@ -710,7 +710,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/activeWordPicture"
-        android:onClick="clickPicHearAudio"
+        android:onClick="onClickWord"
         app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/word"

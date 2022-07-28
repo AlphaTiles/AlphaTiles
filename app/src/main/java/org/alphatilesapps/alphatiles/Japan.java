@@ -34,11 +34,10 @@ public class Japan extends GameActivity {
 
     // TO DO:
     // fix gem text size
-    // fix repeat arrow to not be able to advance w/o getting it correct
     // write better comments and documentation
-    // set up title
     // ask literacy advisors about levels -- what else should be unique about 1 vs 2
     // fix points - points are not saving after the activity is closed
+    // centerGamesHomeImage
 
 
     String lastWord = "";
@@ -93,7 +92,6 @@ public class Japan extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try{
-//          audioInstructionsResID = res.getIdentifier("colombia_" + challengeLevel, "raw", context.getPackageName());
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
 
         }
@@ -151,6 +149,7 @@ public class Japan extends GameActivity {
     }
 
     private void play() {
+        repeatLocked = true;
         chooseWord();
         displayWordRef();
         displayTileChoices();
@@ -266,8 +265,10 @@ public class Japan extends GameActivity {
     }
 
     public void repeatGame(View view){
-        resetLayout();
-        play();
+        if (!repeatLocked){
+            resetLayout();
+            play();
+        }
     }
 
     private void resetLayout() {
@@ -567,6 +568,7 @@ public class Japan extends GameActivity {
 
         if (config.toString().equals(wordInLOP)){ // completely correct
             //great job!
+            repeatLocked = false;
             playCorrectSoundThenActiveWordClip(false); //JP not sure what this bool is for
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
@@ -590,6 +592,7 @@ public class Japan extends GameActivity {
                 }
 
             }
+            setOptionsRowClickable();
         } else{ // one or more syllables correct
 
             // find number of tiles per correct syllable
