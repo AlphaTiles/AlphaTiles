@@ -205,9 +205,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -227,9 +227,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -249,9 +249,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -271,9 +271,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -293,9 +293,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -315,9 +315,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -337,9 +337,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -359,9 +359,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -381,9 +381,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -403,9 +403,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -425,9 +425,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -447,9 +447,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMaxTextSize="75sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <androidx.constraintlayout.widget.Guideline

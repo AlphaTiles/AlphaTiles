@@ -33,7 +33,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -57,7 +57,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -81,7 +81,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -105,7 +105,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -129,7 +129,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -153,7 +153,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -178,7 +178,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -202,7 +202,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -226,7 +226,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -250,7 +250,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -274,7 +274,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -298,7 +298,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -322,7 +322,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -346,7 +346,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -370,7 +370,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -394,7 +394,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -418,7 +418,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -442,7 +442,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -466,7 +466,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -490,7 +490,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -514,7 +514,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -538,7 +538,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -562,7 +562,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -586,7 +586,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -610,7 +610,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -634,7 +634,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -658,7 +658,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -682,7 +682,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -706,7 +706,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -730,7 +730,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -754,7 +754,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -778,7 +778,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -802,7 +802,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -826,7 +826,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -850,7 +850,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -874,7 +874,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -898,7 +898,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -922,7 +922,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -946,7 +946,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -970,7 +970,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -994,7 +994,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1018,7 +1018,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1042,7 +1042,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1066,7 +1066,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
 
@@ -1091,7 +1091,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
 
@@ -1116,7 +1116,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
 
@@ -1141,7 +1141,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
 
@@ -1166,7 +1166,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
 
@@ -1191,7 +1191,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1215,7 +1215,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1239,7 +1239,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1263,7 +1263,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1287,7 +1287,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1311,7 +1311,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1335,7 +1335,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1359,7 +1359,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1383,7 +1383,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1407,7 +1407,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1431,7 +1431,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1455,7 +1455,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1479,7 +1479,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1503,7 +1503,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -1527,7 +1527,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <ImageView

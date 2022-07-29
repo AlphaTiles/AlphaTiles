@@ -172,7 +172,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <Button
@@ -195,7 +195,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <Button
@@ -218,7 +218,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <Button
@@ -241,7 +241,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <Button
@@ -264,7 +264,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <Button
@@ -287,7 +287,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <Button
@@ -310,7 +310,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <Button
@@ -333,7 +333,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"
         />
 
@@ -357,7 +357,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <Button
@@ -380,7 +380,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <ImageView
@@ -407,7 +407,13 @@
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/pointsImage"

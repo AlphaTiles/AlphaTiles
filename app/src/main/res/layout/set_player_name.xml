@@ -49,7 +49,7 @@
         app:autoSizeMinTextSize="10sp"
         app:autoSizeMaxTextSize="35sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <ImageView

@@ -159,7 +159,7 @@
         android:gravity="center"
         android:maxLines="1"
         android:onClick="onRefClick"
-        android:padding="7dp"
+        android:padding="2dp"
         android:tag="0"
         android:text="@string/gameTileInFocus"
         android:textColor="#FFFFFF"
@@ -192,7 +192,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -214,7 +214,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -236,7 +236,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -258,7 +258,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <ImageView

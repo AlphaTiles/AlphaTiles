@@ -60,9 +60,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH0"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="25sp"
-        app:autoSizeMaxTextSize="35sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <ImageView
@@ -97,9 +97,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH2"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -108,7 +108,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="2"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color1"
         android:contentDescription="@string/door002"
@@ -121,9 +121,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH2"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -132,7 +132,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="3"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color2"
         android:contentDescription="@string/door003"
@@ -145,9 +145,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH2"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -156,7 +156,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="4"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color3"
         android:contentDescription="@string/door004"
@@ -169,9 +169,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH2"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -180,7 +180,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="5"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color4"
         android:contentDescription="@string/door005"
@@ -193,9 +193,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -204,7 +204,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="6"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color0"
         android:contentDescription="@string/door006"
@@ -217,9 +217,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -228,7 +228,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="7"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color1"
         android:contentDescription="@string/door007"
@@ -241,9 +241,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -252,7 +252,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="8"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color2"
         android:contentDescription="@string/door008"
@@ -265,9 +265,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -276,7 +276,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="9"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color3"
         android:contentDescription="@string/door009"
@@ -289,9 +289,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -300,7 +300,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="10"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color4"
         android:contentDescription="@string/door010"
@@ -313,9 +313,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -324,7 +324,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="11"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color0"
         android:contentDescription="@string/door011"
@@ -337,9 +337,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -348,7 +348,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="12"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color1"
         android:contentDescription="@string/door012"
@@ -361,9 +361,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -373,7 +373,7 @@
         android:contentDescription="@string/door013"
         android:gravity="center"
         android:text="13"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color2"
         android:onClick="goToDoor"
@@ -385,9 +385,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -397,7 +397,7 @@
         android:contentDescription="@string/door014"
         android:gravity="center"
         android:text="14"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color3"
         android:onClick="goToDoor"
@@ -409,9 +409,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -421,7 +421,7 @@
         android:contentDescription="@string/door015"
         android:gravity="center"
         android:text="15"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color4"
         android:onClick="goToDoor"
@@ -433,9 +433,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH8"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -445,7 +445,7 @@
         android:contentDescription="@string/door016"
         android:gravity="center"
         android:text="16"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color0"
         android:onClick="goToDoor"
@@ -457,9 +457,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH8"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -469,7 +469,7 @@
         android:contentDescription="@string/door017"
         android:gravity="center"
         android:text="17"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color1"
         android:onClick="goToDoor"
@@ -481,9 +481,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH8"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -493,7 +493,7 @@
         android:contentDescription="@string/door018"
         android:gravity="center"
         android:text="18"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color2"
         android:onClick="goToDoor"
@@ -505,9 +505,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH8"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -517,7 +517,7 @@
         android:contentDescription="@string/door019"
         android:gravity="center"
         android:text="19"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color3"
         android:onClick="goToDoor"
@@ -529,9 +529,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH8"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -541,7 +541,7 @@
         android:contentDescription="@string/door020"
         android:gravity="center"
         android:text="20"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color4"
         android:onClick="goToDoor"
@@ -553,9 +553,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH10"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -565,7 +565,7 @@
         android:contentDescription="@string/door021"
         android:gravity="center"
         android:text="21"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color0"
         android:onClick="goToDoor"
@@ -577,9 +577,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH10"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -589,7 +589,7 @@
         android:contentDescription="@string/door022"
         android:gravity="center"
         android:text="22"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color1"
         android:onClick="goToDoor"
@@ -601,9 +601,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH10"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <TextView
@@ -613,7 +613,7 @@
         android:contentDescription="@string/door023"
         android:gravity="center"
         android:text="23"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="#FFFFFF"
         android:background="@drawable/zz_door_color2"
         android:onClick="goToDoor"
@@ -625,9 +625,9 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH10"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="15sp"
-        app:autoSizeMaxTextSize="32sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "7dp"
+        android:padding = "2dp"
         android:maxLines="1"/>
 
     <ImageView
