@@ -35,9 +35,9 @@ import static org.alphatilesapps.alphatiles.Start.syllableList;
 //Challenge Level 5: CONSONANTS: Pick from correct tile and its distractor trio
 //Challenge Level 6: CONSONANTS: Pick from all consonant tiles (up to a max of 15)
 
-// JP (ideas)
+// JP
 // Syllable Level 1: Pick from correct syllable and three random syllables (4 choices)
-// Syllable Level 2: Pick from correct syllable and its distractor trio (if we add that to syllables tab) (4 choices)
+// Syllable Level 2: Pick from correct syllable and its distractor trio (4 choices)
 // No reason to accommodate 15 syllables, right?
 
 public class Brazil extends GameActivity {
@@ -51,7 +51,6 @@ public class Brazil extends GameActivity {
     String secondToLastWord = "";
     String thirdToLastWord = "";
     int brazilPoints;
-    boolean brazilhasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -443,7 +442,7 @@ public class Brazil extends GameActivity {
 
 
 //        LOGGER.info("Remember APR 21 21 # 5.2.6");
-        parsedWordArrayFinal.set(index, "_");
+        parsedWordArrayFinal.set(index, "__");
         TextView constructedWord = findViewById(R.id.activeWordTextView);
         StringBuilder word = new StringBuilder();
         for (String s : parsedWordArrayFinal) {
@@ -696,7 +695,7 @@ public class Brazil extends GameActivity {
             editor.apply();
 
             for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
-                if ("_".equals(parsedWordArrayFinal.get(i))) {
+                if ("__".equals(parsedWordArrayFinal.get(i))) {
                     parsedWordArrayFinal.set(i, gameTileString);
                 }
             }
