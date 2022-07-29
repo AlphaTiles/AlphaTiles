@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -584,6 +586,19 @@ public abstract class GameActivity extends AppCompatActivity {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
 			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		}
+	}
+
+	protected void fixConstraintsRTL(int gameID){
+		ConstraintLayout constraintLayout = findViewById(gameID);
+		ConstraintSet constraintSet = new ConstraintSet();
+		constraintSet.clone(constraintLayout);
+		constraintSet.connect(R.id.pointsImage,ConstraintSet.END,R.id.gamesHomeImage,ConstraintSet.START,0);
+		constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.START,R.id.pointsImage,ConstraintSet.END,0);
+		constraintSet.connect(R.id.instructions,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
+		constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.instructions,ConstraintSet.START,0);
+		constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.instructions,ConstraintSet.END,0);
+		constraintSet.connect(R.id.instructions,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
+		constraintSet.applyTo(constraintLayout);
 	}
 
 	//added by JP

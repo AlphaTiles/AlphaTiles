@@ -113,13 +113,7 @@ public class Thailand extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
-            instructionsImage.setRotationY(180);
-            repeatImage.setRotationY(180);
-        }
 
         points = getIntent().getIntExtra("points", 0);
         thailandPoints = getIntent().getIntExtra("thailandPoints", 0);
@@ -149,6 +143,16 @@ public class Thailand extends GameActivity {
             setContentView(R.layout.thailand);
         }
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+
+        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+
+            fixConstraintsRTL(R.id.thailandCL);
+        }
 
         String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
 

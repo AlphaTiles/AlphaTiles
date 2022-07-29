@@ -95,6 +95,8 @@ public class Colombia extends GameActivity {
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
             deleteImage.setRotationY(180);
+
+            fixConstraintsRTL(R.id.colombiaCL);
         }
 
 

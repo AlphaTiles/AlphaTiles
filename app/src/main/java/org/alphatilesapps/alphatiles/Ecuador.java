@@ -99,6 +99,8 @@ public class Ecuador extends GameActivity {
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
+
+            fixConstraintsRTL(R.id.ecuadorCL);
         }
 
         points = getIntent().getIntExtra("points", 0); // KP
