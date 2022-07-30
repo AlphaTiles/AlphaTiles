@@ -129,6 +129,7 @@ public class Mexico extends GameActivity {
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
+        // new levels
         // Level 1: 3 pairs = 6
         // Level 2: 4 pairs = 8
         // Level 3: 6 pairs = 12
