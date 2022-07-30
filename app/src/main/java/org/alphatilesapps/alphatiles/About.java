@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,6 +48,7 @@ public class About extends AppCompatActivity {
 
         TextView photoAudioCredits = findViewById(R.id.photoAudioCredits);
         photoAudioCredits.setText(Start.langInfoList.find("Audio and image credits"));
+        photoAudioCredits.setMovementMethod(new ScrollingMovementMethod());
 
         String verName = BuildConfig.VERSION_NAME;
         TextView verInfo = findViewById(R.id.appVersionInEnglish);
