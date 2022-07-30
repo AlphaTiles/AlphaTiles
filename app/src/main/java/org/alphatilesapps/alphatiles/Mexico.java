@@ -129,16 +129,26 @@ public class Mexico extends GameActivity {
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
+        // Level 1: 3 pairs = 6
+        // Level 2: 4 pairs = 8
+        // Level 3: 6 pairs = 12
+        // Level 4: 8 pairs = 16
+        // Level 5: 10 pairs = 20
         switch (challengeLevel) {
             case 2:
-                visibleTiles = 16;                       // RR
+                visibleTiles = 8;
                 break;
             case 3:
-                visibleTiles = 20;                       // RR
+                visibleTiles = 12;
+                break;
+            case 4:
+                visibleTiles = 16;
+                break;
+            case 5:
+                visibleTiles = 20;
                 break;
             default:
-                visibleTiles = 12;                       // RR
-
+                visibleTiles = 6;
         }
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
