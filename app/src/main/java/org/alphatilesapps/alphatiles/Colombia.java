@@ -453,7 +453,12 @@ public class Colombia extends GameActivity {
         }
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-        String currentWord = wordToBuild.getText() + tileToAdd;     // RR
+        String currentWord;
+        if (scriptDirection.compareTo("RTL") == 0){
+            currentWord = tileToAdd + wordToBuild.getText();     // RR
+        }else{
+            currentWord = wordToBuild.getText() + tileToAdd;     // RR
+        }
         wordToBuild.setText(currentWord);                           // RR
 
         evaluateStatus();
@@ -517,34 +522,86 @@ public class Colombia extends GameActivity {
 
                 //use keysClicked and parsedWordArrayFinal
 
-                if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP)
-                        .substring(0, wordToBuild.getText().length()))) {
-                    // problem when what's in textbox is longer than the correct word??
-                    // doesn't prev if statement take care of that?
-                    // specifically on level 3 syllables ??
-                    
-                    // Word, so far, spelled correctly, but a less than complete match
-                    if (challengeLevel == 1 || challengeLevel == 2 || syllableGame.equals("S")){
-                        boolean orange = false;
-                        for (int i = 0; i < keysClicked.size(); i++){
-                            if (!keysClicked.get(i).equals(parsedWordArrayFinal.get(i))){
-                                orange = true;
-                                break;
-                            }
-                        }
+                if (scriptDirection.compareTo("RTL") == 0){
+                    // think of parsedWordArrayFinal as always storing the tiles from LTR
+                    // but if user is clicking keys in RTL, must reverse keysClicked?
+                    // ex: ed - cb - a is parsedWordArrayFinal
+                    // users clicked keys in this order: a - cb - ed
+                    // reverse keysClicked to get ed - cb - a
+                    /*
+                    List<String> keysClickedRTL = new ArrayList<String>(keysClicked);
+                    Collections.reverse(keysClickedRTL);
 
-                        if (orange){
-                            // indicates that there is no key available to continue correctly; ex: you typed i but need í
-                            wordToBuild.setBackgroundColor(Color.parseColor("#F44336")); // orange
-                        }else{
-                            wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
-                        }
-                        wordToBuild.setTextColor(Color.parseColor("#000000")); // black
-                    }else {
-                        wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B"));
-                        wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+                    // also need to get substring of wordInLOP beginning from the end of it
+                    String word = Start.wordList.stripInstructionCharacters(wordInLOP);
+                    StringBuilder RTLword = new StringBuilder();
+                    for (int i = word.length() - 1; i >= 0; i--) {
+                        RTLword.append(word.charAt(i));
                     }
 
+                    String test = wordToBuild.getText().toString();
+                    if (wordToBuild.getText().toString().equals(RTLword.toString().substring(0, wordToBuild.getText().length()))) {
+                        // problem when what's in textbox is longer than the correct word??
+                        // doesn't prev if statement take care of that?
+                        // specifically on level 3 syllables ??
+
+                        // Word, so far, spelled correctly, but a less than complete match
+                        if (challengeLevel == 1 || challengeLevel == 2 || syllableGame.equals("S")){
+                            boolean orange = false;
+                            for (int i = 0; i < keysClicked.size(); i++){
+
+                                if (!keysClicked.get(i).equals(parsedWordArrayFinal.get(i))){
+                                    orange = true;
+                                    break;
+                                }
+                            }
+
+                            if (orange){
+                                // indicates that there is no key available to continue correctly; ex: you typed i but need í
+                                wordToBuild.setBackgroundColor(Color.parseColor("#F44336")); // orange
+                            }else{
+                                wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
+                            }
+                            wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+                        }else {
+                            wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B"));
+                            wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+                        }
+
+                    }
+                }else{
+
+                     */
+                    if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP)
+                            .substring(0, wordToBuild.getText().length()))) {
+                        // problem when what's in textbox is longer than the correct word??
+                        // doesn't prev if statement take care of that?
+                        // specifically on level 3 syllables ??
+
+                        // Word, so far, spelled correctly, but a less than complete match
+                        if (challengeLevel == 1 || challengeLevel == 2 || syllableGame.equals("S")){
+                            boolean orange = false;
+                            for (int i = 0; i < keysClicked.size(); i++){
+
+                                if (!keysClicked.get(i).equals(parsedWordArrayFinal.get(i))){
+                                    orange = true;
+                                    break;
+                                }
+                            }
+
+                            if (orange){
+                                // indicates that there is no key available to continue correctly; ex: you typed i but need í
+                                wordToBuild.setBackgroundColor(Color.parseColor("#F44336")); // orange
+                            }else{
+                                wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
+                            }
+                            wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+                        }else {
+                            wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B"));
+                            wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+                        }
+
+                    }
                 }
 
             }
