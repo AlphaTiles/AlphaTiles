@@ -110,21 +110,25 @@ public class UnitedStates extends GameActivity {
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
+        int gameID = 0;
         switch (challengeLevel) {
             case 2:
                 setContentView(R.layout.united_states_cl2);
                 upperTileLimit = 7;
                 neutralFontSize = 24;
+                gameID = R.id.united_states_cl2_CL;
                 break;
             case 3:
                 setContentView(R.layout.united_states_cl3);
                 upperTileLimit = 9;
                 neutralFontSize = 18;
+                gameID = R.id.united_states_cl3_CL;
                 break;
             default:
                 setContentView(R.layout.united_states_cl1);
                 upperTileLimit = 5;
                 neutralFontSize = 30;
+                gameID = R.id.united_states_cl1_CL;
         }
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
@@ -146,6 +150,8 @@ public class UnitedStates extends GameActivity {
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
+
+            fixConstraintsRTL(gameID);
         }
 
         if(getAudioInstructionsResID()==0){

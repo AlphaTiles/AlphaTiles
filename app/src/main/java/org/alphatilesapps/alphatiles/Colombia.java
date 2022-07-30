@@ -56,7 +56,7 @@ public class Colombia extends GameActivity {
             R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
             R.id.key11, R.id.key12, R.id.key13, R.id.key14, R.id.key15, R.id.key16, R.id.key17, R.id.key18
     };
-    
+
     protected int[] getTileButtons() {return TILE_BUTTONS;}
     protected int[] getWordImages() {return null;}
 
@@ -123,6 +123,8 @@ public class Colombia extends GameActivity {
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
             deleteImage.setRotationY(180);
+
+            fixConstraintsRTL(R.id.colombiaCL);
         }
 
 
@@ -169,7 +171,7 @@ public class Colombia extends GameActivity {
     public void onBackPressed() {
         // no action
     }
-    
+
     public void repeatGame(View View) {
 
         if (!repeatLocked) {
@@ -437,7 +439,6 @@ public class Colombia extends GameActivity {
         String tileToAdd = "";
 
         switch (challengeLevel) {
-            // KP
             case 3:
                 if (syllableGame.equals("S")){
                     tileToAdd = keysList.get(justClickedIndex);
@@ -453,12 +454,7 @@ public class Colombia extends GameActivity {
         }
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-        String currentWord;
-        if (scriptDirection.compareTo("RTL") == 0){
-            currentWord = tileToAdd + wordToBuild.getText();     // RR
-        }else{
-            currentWord = wordToBuild.getText() + tileToAdd;     // RR
-        }
+        String currentWord = wordToBuild.getText() + tileToAdd;     // RR
         wordToBuild.setText(currentWord);                           // RR
 
         evaluateStatus();
@@ -495,12 +491,16 @@ public class Colombia extends GameActivity {
             pointsEarned.setText(String.valueOf(colombiaPoints));
 
             trackerCount++;
+            if(trackerCount>=12){
+                colombiaHasChecked12Trackers = true;
+            }
             updateTrackers();
 
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.putInt("storedColombiaPoints_level" + challengeLevel + "_player" + playerString, colombiaPoints);
+            editor.putBoolean("storedColumbiaHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, colombiaHasChecked12Trackers);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
@@ -522,13 +522,14 @@ public class Colombia extends GameActivity {
 
                 //use keysClicked and parsedWordArrayFinal
 
+                /*
                 if (scriptDirection.compareTo("RTL") == 0){
                     // think of parsedWordArrayFinal as always storing the tiles from LTR
                     // but if user is clicking keys in RTL, must reverse keysClicked?
                     // ex: ed - cb - a is parsedWordArrayFinal
                     // users clicked keys in this order: a - cb - ed
                     // reverse keysClicked to get ed - cb - a
-                    /*
+
                     List<String> keysClickedRTL = new ArrayList<String>(keysClicked);
                     Collections.reverse(keysClickedRTL);
 

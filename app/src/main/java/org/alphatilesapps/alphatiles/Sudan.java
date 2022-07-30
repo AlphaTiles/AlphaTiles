@@ -135,6 +135,8 @@ public class Sudan extends GameActivity {
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
+
+            fixConstraintsRTL(R.id.sudanCL);
         }
 
         points = getIntent().getIntExtra("points", 0); // KP

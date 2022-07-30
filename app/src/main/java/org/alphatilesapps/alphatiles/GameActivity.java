@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -54,7 +56,6 @@ public abstract class GameActivity extends AppCompatActivity {
 	String className;
 	boolean hasChecked12Trackers;
 
-
 	ArrayList<String> parsedWordArrayFinal;
 	ArrayList<String> parsedWordSyllArrayFinal;
 
@@ -70,7 +71,7 @@ public abstract class GameActivity extends AppCompatActivity {
 			R.id.tracker11, R.id.tracker12
 
 	};
-
+	
 	protected abstract int[] getTileButtons();	
 	protected abstract int[] getWordImages();
 	protected abstract int getAudioInstructionsResID();
@@ -287,7 +288,16 @@ public abstract class GameActivity extends AppCompatActivity {
             gameTile.setClickable(true);
         }
 
+		/*for (int word : getTileButtons()) {
+			TextView nextWord = findViewById(word);
+			nextWord.setClickable(true);
+		}*/
 
+		/*for (int t = 0; t < getTileButtons().length; t++)
+		{
+			TextView gameTile = findViewById(getTileButtons()[t]);
+			gameTile.setClickable(true);
+		}*/
 	}	
 	protected void setOptionsRowUnclickable()	
 	{	
@@ -564,4 +574,18 @@ public abstract class GameActivity extends AppCompatActivity {
 			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 		}
 	}
+
+	protected void fixConstraintsRTL(int gameID){
+		ConstraintLayout constraintLayout = findViewById(gameID);
+		ConstraintSet constraintSet = new ConstraintSet();
+		constraintSet.clone(constraintLayout);
+		constraintSet.connect(R.id.pointsImage,ConstraintSet.END,R.id.gamesHomeImage,ConstraintSet.START,0);
+		constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.START,R.id.pointsImage,ConstraintSet.END,0);
+		constraintSet.connect(R.id.instructions,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
+		constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.instructions,ConstraintSet.START,0);
+		constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.instructions,ConstraintSet.END,0);
+		constraintSet.connect(R.id.instructions,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
+		constraintSet.applyTo(constraintLayout);
+	}
+
 }

@@ -118,12 +118,21 @@ public class Brazil extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
 
+        // JP commented out
         if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
+
+            int gameID = 0;
+            if (challengeLevel == 3 || challengeLevel == 6) {
+                gameID = R.id.brazil_cl3_CL;
+            } else {
+                gameID = R.id.brazil_cl1_CL;
+            }
+            fixConstraintsRTL(gameID);
         }
 
 //        LOGGER.info("Remember APR 21 21 # 1");

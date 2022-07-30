@@ -109,6 +109,8 @@ public class Mexico extends GameActivity {
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
+
+            fixConstraintsRTL(R.id.mexicoCL);
         }
 
         points = getIntent().getIntExtra("points", 0); // KP
