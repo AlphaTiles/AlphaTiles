@@ -387,11 +387,13 @@ public class Colombia extends GameActivity {
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
         String currentWord;
-        if (scriptDirection.compareTo("RTL") == 0){
+        /*if (scriptDirection.compareTo("RTL") == 0){
             currentWord =  tileToAdd + wordToBuild.getText();     // JP
         }else{
-            currentWord = wordToBuild.getText() + tileToAdd;     // RR
-        }
+
+         */
+        currentWord = wordToBuild.getText() + tileToAdd;     // RR
+        //}
         wordToBuild.setText(currentWord);                           // RR
 
         evaluateStatus();
