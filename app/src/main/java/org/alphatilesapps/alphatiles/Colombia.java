@@ -95,6 +95,8 @@ public class Colombia extends GameActivity {
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
             deleteImage.setRotationY(180);
+
+            fixConstraintsRTL(R.id.colombiaCL);
         }
 
 
@@ -384,11 +386,10 @@ public class Colombia extends GameActivity {
         }
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-        String currentWord = wordToBuild.getText() + tileToAdd;     // RR
+        String currentWord= wordToBuild.getText() + tileToAdd;     // RR
         wordToBuild.setText(currentWord);                           // RR
 
         evaluateStatus();
-
     }
     private void evaluateStatus() {
 

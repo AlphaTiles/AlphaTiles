@@ -98,6 +98,8 @@ public class Myanmar extends GameActivity {
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
+
+            fixConstraintsRTL(R.id.myanmarCL);
         }
 
         points = getIntent().getIntExtra("points", 0); // KP

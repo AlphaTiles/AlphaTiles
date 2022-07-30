@@ -86,6 +86,8 @@ public class Peru extends GameActivity {
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
+
+            fixConstraintsRTL(R.id.peruCL);
         }
 
         points = getIntent().getIntExtra("points", 0); // KP
