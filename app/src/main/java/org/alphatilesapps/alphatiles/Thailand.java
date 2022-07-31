@@ -88,7 +88,7 @@ public class Thailand extends GameActivity {
 
         int gameID;
         if (choiceType.equals("WORD_TEXT")) {
-            gameID = R.id.thailand2;
+            gameID = R.id.thailand2CL;
         }else{
             gameID = R.id.thailandCL;
         }
@@ -140,10 +140,13 @@ public class Thailand extends GameActivity {
         refType = TYPES[Integer.parseInt(clString.substring(1, 2)) - 1];
         choiceType = TYPES[Integer.parseInt(clString.substring(2, 3)) - 1];
 
+        int gameID = 0;
         if (choiceType.equals("WORD_TEXT")){
             setContentView(R.layout.thailand2);
+            gameID = R.id.thailand2CL;
         } else {
             setContentView(R.layout.thailand);
+            gameID = R.id.thailandCL;
         }
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
@@ -155,10 +158,8 @@ public class Thailand extends GameActivity {
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
 
-            fixConstraintsRTL(R.id.thailandCL);
+            fixConstraintsRTL(gameID);
         }
-
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 

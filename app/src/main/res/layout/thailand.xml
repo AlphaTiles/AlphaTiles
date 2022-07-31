@@ -168,7 +168,7 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMaxTextSize="150sp"
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"/>
@@ -287,7 +287,7 @@
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
-        app:autoSizeMaxTextSize="15sp"
+        app:autoSizeMaxTextSize="30sp"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"

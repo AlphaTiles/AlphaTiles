@@ -107,10 +107,13 @@ public class Colombia extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        int gameID = 0;
         if (syllableGame.equals("S")){
             setContentView(R.layout.colombia_syllables);
+            gameID = R.id.colombiaCL_syll;
         }else{
             setContentView(R.layout.colombia);
+            gameID = R.id.colombiaCL;
         }
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
@@ -124,7 +127,7 @@ public class Colombia extends GameActivity {
             repeatImage.setRotationY(180);
             deleteImage.setRotationY(180);
 
-            fixConstraintsRTL(R.id.colombiaCL);
+            fixConstraintsRTL(gameID);
         }
 
 
@@ -607,7 +610,6 @@ public class Colombia extends GameActivity {
 
             }
         }
-    }
 
     public void deleteLastKeyedLetter (View view) {
 

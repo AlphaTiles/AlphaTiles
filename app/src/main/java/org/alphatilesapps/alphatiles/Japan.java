@@ -106,7 +106,12 @@ public class Japan extends GameActivity {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
-        int gameID = R.id.japancl;
+        int gameID = 0;
+        if (challengeLevel == 1){
+            gameID = R.id.japancl_7;
+        }else{
+            gameID = R.id.japancl_12;
+        }
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
@@ -121,6 +126,7 @@ public class Japan extends GameActivity {
         super.onCreate(savedInstanceState);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
 
+        int gameID = 0;
         if (challengeLevel == 1){
             setContentView(R.layout.japan_7);
             TILES_AND_BUTTONS = new int[13];
@@ -128,6 +134,7 @@ public class Japan extends GameActivity {
                 TILES_AND_BUTTONS[i] = TILES_AND_BUTTONS_7[i];
             }
             MAX_TILES = 7;
+            gameID = R.id.japancl_7;
         } else if (challengeLevel == 2){
             setContentView(R.layout.japan_12);
             TILES_AND_BUTTONS = new int[23];
@@ -135,6 +142,7 @@ public class Japan extends GameActivity {
                 TILES_AND_BUTTONS[i] = TILES_AND_BUTTONS_12[i];
             }
             MAX_TILES = 12;
+            gameID = R.id.japancl_12;
         }
 
         String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
@@ -142,6 +150,16 @@ public class Japan extends GameActivity {
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     // forces landscape mode only
+
+        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+
+            fixConstraintsRTL(gameID);
+        }
 
         points = getIntent().getIntExtra("points", 0); // KP
         japanPoints = getIntent().getIntExtra("japanPoints", 0); // KP
@@ -318,7 +336,13 @@ public class Japan extends GameActivity {
             }
         }
 
-        ConstraintLayout constraintLayout = findViewById(R.id.japancl);
+        int gameID = 0;
+        if (challengeLevel == 1){
+            gameID = R.id.japancl_7;
+        }else{
+            gameID = R.id.japancl_12;
+        }
+        ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
         for (int i = 1; i < TILES_AND_BUTTONS.length; i++){
@@ -358,6 +382,13 @@ public class Japan extends GameActivity {
 
         int indexOfTileJT = joinedTracker.indexOf(clickedTile);
 
+        int gameID = 0;
+        if (challengeLevel == 1){
+            gameID = R.id.japancl_7;
+        }else{
+            gameID = R.id.japancl_12;
+        }
+
         if (visibleViews == 1){
             // TO DO: only one tile ?
         } else if (indexOfTileJT == 0){ //first tile
@@ -370,7 +401,8 @@ public class Japan extends GameActivity {
 
                 // reset constraints of clickedTile and nextTile
                 TextView nextTile = findViewById(TILES_AND_BUTTONS[2]);
-                ConstraintLayout constraintLayout = findViewById(R.id.japancl);
+
+                ConstraintLayout constraintLayout = findViewById(gameID);
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(constraintLayout);
                 constraintSet.connect(TILES_AND_BUTTONS[0],ConstraintSet.END,TILES_AND_BUTTONS[1],
@@ -409,7 +441,7 @@ public class Japan extends GameActivity {
 
                 // reset constraints of clickedTile and prevTile
                 TextView prevTile = findViewById(TILES_AND_BUTTONS[indexOfMissingButton - 1]);
-                ConstraintLayout constraintLayout = findViewById(R.id.japancl);
+                ConstraintLayout constraintLayout = findViewById(gameID);
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(constraintLayout);
                 //end of prevTile to start of button
@@ -453,7 +485,7 @@ public class Japan extends GameActivity {
 
                 // reset constraints of clickedTile and prevTile
                 TextView prevTile = originalLayout.get(indexOfMBinOG - 1);
-                ConstraintLayout constraintLayout = findViewById(R.id.japancl);
+                ConstraintLayout constraintLayout = findViewById(gameID);
                 ConstraintSet constraintSet = new ConstraintSet();
 
                 constraintSet.clone(constraintLayout);
@@ -500,7 +532,7 @@ public class Japan extends GameActivity {
 
                     // reset constraints of clickedTile and nextTile
                     TextView nextTile = originalLayout.get(indexOfMBinOG + 1);
-                    constraintLayout = findViewById(R.id.japancl);
+                    constraintLayout = findViewById(gameID);
                     constraintSet = new ConstraintSet();
                     constraintSet.clone(constraintLayout);
 
@@ -547,7 +579,7 @@ public class Japan extends GameActivity {
 
                 // reset constraints of clickedTile and nextTile
                 TextView nextTile = originalLayout.get(indexOfMBinOG + 1);
-                ConstraintLayout constraintLayout = findViewById(R.id.japancl);
+                ConstraintLayout constraintLayout = findViewById(gameID);
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(constraintLayout);
 
@@ -725,7 +757,14 @@ public class Japan extends GameActivity {
         TextView rightTile = originalLayout.get(buttonIndex + 1);
         rightTile.setClickable(true);
 
-        ConstraintLayout constraintLayout = findViewById(R.id.japancl);
+        int gameID = 0;
+        if (challengeLevel == 1){
+            gameID = R.id.japancl_7;
+        }else{
+            gameID = R.id.japancl_12;
+        }
+
+        ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
         // start of right tile to end of left tile

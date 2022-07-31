@@ -118,7 +118,6 @@ public class Brazil extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
 
-        // JP commented out
         if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
@@ -240,7 +239,7 @@ public class Brazil extends GameActivity {
         }
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(brazilPoints));
+        pointsEarned.setText(String.valueOf(9999));
 
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);

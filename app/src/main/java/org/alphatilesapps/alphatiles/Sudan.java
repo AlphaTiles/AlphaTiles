@@ -121,23 +121,32 @@ public class Sudan extends GameActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         context = this;
+        int gameID = 0;
         if (syllableGame.equals("S")){
             setContentView(R.layout.sudan_syll);
+            gameID = R.id.sudansyllCL;
         }else{
             setContentView(R.layout.sudan);
+            gameID = R.id.sudanCL;
         }
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+
 
         if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
+            ImageView repeatImage2 = (ImageView) findViewById(R.id.repeatImage2);
+            repeatImage2.setRotationY(180);
+
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
 
-            fixConstraintsRTL(R.id.sudanCL);
+            fixConstraintsRTLSudan(gameID);
         }
+
+
 
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
@@ -178,6 +187,19 @@ public class Sudan extends GameActivity {
 
 
 
+    }
+
+    private void fixConstraintsRTLSudan(int gameID) {
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.repeatImage2,ConstraintSet.END,R.id.gamesHomeImage,ConstraintSet.START,0);
+        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.START,R.id.repeatImage2,ConstraintSet.END,0);
+        constraintSet.connect(R.id.instructions,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
+        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.instructions,ConstraintSet.START,0);
+        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.instructions,ConstraintSet.END,0);
+        constraintSet.connect(R.id.instructions,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
+        constraintSet.applyTo(constraintLayout);
     }
 
     public void determineNumPages(){

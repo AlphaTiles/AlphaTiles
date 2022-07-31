@@ -96,10 +96,13 @@ public class Georgia extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        int gameID = 0;
         if (syllableGame.equals("S")){
             setContentView(R.layout.georgia_syll);
+            gameID = R.id.georgiaCL_syll;
         }else{
             setContentView(R.layout.georgia);
+            gameID = R.id.georgiaCL;
         }
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
@@ -111,7 +114,7 @@ public class Georgia extends GameActivity {
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
 
-            fixConstraintsRTL(R.id.georgiaCL);
+            fixConstraintsRTL(gameID);
         }
 
         points = getIntent().getIntExtra("points", 0); // KP
