@@ -573,7 +573,7 @@
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
-        app:autoSizeMaxTextSize="30sp"
+        app:autoSizeMaxTextSize="25sp"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
@@ -582,7 +582,6 @@
         app:layout_constraintEnd_toEndOf="@+id/pointsImage"
         app:layout_constraintStart_toStartOf="@+id/pointsImage"
         app:layout_constraintTop_toTopOf="@+id/pointsImage" />
-
     <ImageView
         android:id="@+id/gamesHomeImage"
         android:layout_width="0dp"
