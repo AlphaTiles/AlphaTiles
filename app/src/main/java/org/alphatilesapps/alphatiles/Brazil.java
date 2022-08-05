@@ -239,7 +239,7 @@ public class Brazil extends GameActivity {
         }
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(9999));
+        pointsEarned.setText(String.valueOf(brazilPoints));
 
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
