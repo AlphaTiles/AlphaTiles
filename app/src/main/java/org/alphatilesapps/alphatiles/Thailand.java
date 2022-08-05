@@ -273,8 +273,10 @@ public class Thailand extends GameActivity {
                 refItem.setText(refTile);
                 break;
             case "TILE_AUDIO":
-            case "SYLL_AUDIO":
                 refItem.setBackgroundResource(R.drawable.zz_click_for_tile_audio);
+                break;
+            case "SYLL_AUDIO":
+                refItem.setBackgroundResource(R.drawable.zz_click_for_syllable_audio);
                 break;
             case "WORD_TEXT":
                 refItem.setBackgroundColor(WHITE);
