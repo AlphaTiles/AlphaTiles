@@ -161,12 +161,17 @@
         android:text="@string/gameTile1a"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button01b"
@@ -178,12 +183,17 @@
         android:text="@string/gameTile1b"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button02a"
@@ -195,12 +205,17 @@
         android:text="@string/gameTile2a"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button02b"
@@ -212,12 +227,17 @@
         android:text="@string/gameTile2b"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button03a"
@@ -229,12 +249,17 @@
         android:text="@string/gameTile3a"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button03b"
@@ -246,12 +271,17 @@
         android:text="@string/gameTile3b"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button04a"
@@ -263,12 +293,17 @@
         android:text="@string/gameTile4a"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV8"
         app:layout_constraintStart_toStartOf="@+id/guidelineV7"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button04b"
@@ -280,12 +315,17 @@
         android:text="@string/gameTile4b"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV8"
         app:layout_constraintStart_toStartOf="@+id/guidelineV7"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button05a"
@@ -297,12 +337,17 @@
         android:text="@string/gameTile5a"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV10"
         app:layout_constraintStart_toStartOf="@+id/guidelineV9"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button05b"
@@ -314,12 +359,17 @@
         android:text="@string/gameTile5b"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV10"
         app:layout_constraintStart_toStartOf="@+id/guidelineV9"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button06a"
@@ -331,12 +381,17 @@
         android:text="@string/gameTile6a"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV12"
         app:layout_constraintStart_toStartOf="@+id/guidelineV11"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button06b"
@@ -348,12 +403,17 @@
         android:text="@string/gameTile6b"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV12"
         app:layout_constraintStart_toStartOf="@+id/guidelineV11"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button07a"
@@ -365,12 +425,17 @@
         android:text="@string/gameTile7a"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV14"
         app:layout_constraintStart_toStartOf="@+id/guidelineV13"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button07b"
@@ -382,12 +447,17 @@
         android:text="@string/gameTile7b"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV14"
         app:layout_constraintStart_toStartOf="@+id/guidelineV13"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/wordImage"
@@ -413,7 +483,13 @@
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/pointsImage"
@@ -431,12 +507,18 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
+        android:maxLines="1"
+        android:padding="7dp"
         android:text="@string/pointsScored"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
-        android:textSize="16sp"
         android:textStyle="bold"
+        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="@+id/pointsImage"
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="@+id/pointsImage"
         app:layout_constraintStart_toStartOf="@+id/pointsImage"
         app:layout_constraintTop_toTopOf="@+id/pointsImage" />

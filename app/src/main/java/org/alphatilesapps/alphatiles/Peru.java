@@ -211,7 +211,7 @@ public class Peru extends GameActivity {
 
         }//generates a new word if it got one of the last three tested words // LM
 
-        parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP); // KP
+        parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
         int tileLength = tilesInArray(parsedWordArrayFinal);
 
         // Set thematic colors for four word choice TextViews, also make clickable

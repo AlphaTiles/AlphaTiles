@@ -100,8 +100,6 @@ public class Earth extends AppCompatActivity {
 
         updateDoors();
 
-        setTextSizes();
-
         if(scriptDirection.compareTo("RTL") == 0){
             forceRTLIfSupported();
         }
@@ -113,86 +111,6 @@ public class Earth extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // no action
-    }
-
-    public void setTextSizes() {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        int pixelHeight;
-        double scaling = 0.45;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        TextView avatarName = (TextView) findViewById(R.id.avatarName);
-        ConstraintLayout.LayoutParams lp2 = (ConstraintLayout.LayoutParams) avatarName.getLayoutParams();
-        int bottomToTopId2 = lp2.bottomToTop;
-        int topToTopId2 = lp2.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId2).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId2).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-        avatarName.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        ImageView pointsEarnedImage = (ImageView) findViewById(R.id.pointsImage);
-        ConstraintLayout.LayoutParams lp3 = (ConstraintLayout.LayoutParams) pointsEarnedImage.getLayoutParams();
-        int bottomToTopId3 = lp3.bottomToTop;
-        int topToTopId3 = lp3.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
-        pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        // The size of the text will depend on whether a star or a square/circle is loaded
-        String project = "org.alphatilesapps.alphatiles.";  // how to call this with code? It seemed to produce variable results
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-
-        for (int j = 0; j < earthCL.getChildCount(); j++) {
-
-            View child = earthCL.getChildAt(j);
-
-            if (child instanceof TextView && child.getVisibility() == VISIBLE && child.getTag() != null) {
-                int doorIndex = Integer.parseInt((String) earthCL.getChildAt(j).getTag()) - 1;
-                country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
-                String challengeLevel = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel;
-                String uniqueGameLevelPlayerID = String.format("%s%s%s%s", project, country, challengeLevel, playerString);
-                int trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-
-                // This is currently the only game that has no right/wrong responses with an incrementing trackerCount variable
-                // So we are forcing this game's door to initialize with a start
-                // This code is in two places
-                // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                if (country.equals("Romania")||country.equals("Sudan")) {
-                    trackerCount = 12;
-                }
-
-                String color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
-
-                scaling = 0.45;
-                // For normal games, when tracking hits 12, the door becomes a star shape, requiring a smaller font
-                // For games without a right or wrong answer (Romania, Sudan), because there is always a circle shape...
-                // We do NOT need to reduce font size when Romania or Sudan (which have the "5" color door, yellow)
-                if (trackerCount > 11 && !color.equals("5")) {
-                    scaling = 0.25;
-                }
-
-                ConstraintLayout.LayoutParams lp4 = (ConstraintLayout.LayoutParams) child.getLayoutParams();
-                int bottomToTopId4 = lp4.bottomToTop;
-                int topToTopId4 = lp4.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId4).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId4).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-                ((TextView) child).setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-            }
-        }
     }
 
     public void updateDoors() {
@@ -226,17 +144,30 @@ public class Earth extends AppCompatActivity {
                         if (country.equals("Romania")||country.equals("Sudan")) {
                             trackerCount = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
-                        } else {
+                        } else if (trackerCount < 12) {
                             ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
+                        } else { // >= 12
+                            ((TextView) child).setTextColor(Color.parseColor("#4CAF50")); // green;
                         }
 
-                        String color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
-                        String drawableBase = "zz_door_color" + color;
-
+                        String color = "";
                         String doorStyle = "";
-                        if (trackerCount > 0) {
-                            doorStyle = trackerCount >= 12 ? "_mastery" : "_inprocess";
+                        if (country.equals("Sudan")||country.equals("Romania")){
+                            doorStyle = "_mastery";
+                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
                         }
+                        else if (trackerCount > 0 && trackerCount < 12) {
+                            doorStyle = "_inprocess";
+                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
+                        } else if (trackerCount >= 12){
+                            doorStyle = "_mastery";
+                            color = "6";
+                        } else{ // 0
+                            doorStyle = "";
+                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
+                        }
+
+                        String drawableBase = "zz_door_color" + color;
 
                         String drawableEntryName = drawableBase + doorStyle;
 
@@ -309,6 +240,7 @@ public class Earth extends AppCompatActivity {
 
         challengeLevel = Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel);
         gameNumber = (pageNumber * doorsPerPage) + doorIndex + 1;
+        String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameMode;
 
         Intent intent = getIntent();	// preserve Extras
         try {
@@ -321,6 +253,7 @@ public class Earth extends AppCompatActivity {
         intent.putExtra("gameNumber", gameNumber);
         intent.putExtra("pageNumber", pageNumber);
         intent.putExtra("country", country);
+        intent.putExtra("syllableGame", syllableGame);
         startActivity(intent);
         finish();
 
@@ -334,7 +267,6 @@ public class Earth extends AppCompatActivity {
         LOGGER.info("Remember: pre updateDoors (Backward): pageNumber = " + pageNumber);
         updateDoors();
         LOGGER.info("Remember: post updateDoors (Backward): pageNumber = " + pageNumber);
-        setTextSizes();
 
     }
 
@@ -346,7 +278,6 @@ public class Earth extends AppCompatActivity {
         LOGGER.info("Remember: pre updateDoors (Forward): pageNumber = " + pageNumber);
         updateDoors();
         LOGGER.info("Remember: post updateDoors (Forward): pageNumber = " + pageNumber);
-        setTextSizes();
 
     }
 

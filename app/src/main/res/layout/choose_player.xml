@@ -202,7 +202,13 @@
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/playername02"
@@ -218,7 +224,13 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV4" />
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/playername03"
@@ -234,7 +246,13 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV6" />
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/playername04"
@@ -250,7 +268,13 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH7"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2" />
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/playername05"
@@ -266,7 +290,13 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH7"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV4" />
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/playername06"
@@ -282,7 +312,13 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH7"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
         app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV6" />
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/playername07"
@@ -298,7 +334,13 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH11"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH12"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2" />
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/playername08"
@@ -314,7 +356,13 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH11"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH12"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV4" />
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/playername09"
@@ -330,7 +378,13 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH11"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH12"
         app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV6" />
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/playername10"
@@ -346,7 +400,13 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH15"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2" />
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/playername11"
@@ -362,7 +422,13 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH15"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV4" />
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/playername12"
@@ -378,7 +444,13 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH15"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
         app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV6" />
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="75sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding = "2dp"
+        android:maxLines="1"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH1"

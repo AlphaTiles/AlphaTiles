@@ -247,7 +247,7 @@ public class Romania extends GameActivity {
                         wordTokenNoGroupThree = 0;
                     }
                     myMagCount = groupCount;
-                    parsedWordArrayFinal = Start.tileList.parseWord(wordInLOP); // KP
+                    parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
                     failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
                 }
                 break;

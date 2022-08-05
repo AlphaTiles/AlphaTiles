@@ -242,7 +242,7 @@ public class Myanmar extends GameActivity {
             int tileLength = 0;
 
             for (int j = 0; j < i; j++) {
-                tileLength = tilesInArray(Start.tileList.parseWord(sevenWordsInLopLwc[i][1]));
+                tileLength = tilesInArray(Start.tileList.parseWordIntoTiles(sevenWordsInLopLwc[i][1]));
                 if (sevenWordsInLopLwc[i][0].equals(sevenWordsInLopLwc[j][0])) {
                     LOGGER.info("Remember: word rejected for repeating already selected word");
                     i--;
@@ -319,7 +319,7 @@ public class Myanmar extends GameActivity {
 
                 wordDirection = directions[wordD][0];
                 wordFail = false;
-                wordLen = tilesInArray(Start.tileList.parseWord(sevenWordsInLopLwc[w][1]));
+                wordLen = tilesInArray(Start.tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]));
 
                 // four checks to ensure that the word will not leave the board
                 if (wordDirection == 1 || wordDirection == 2 || wordDirection == 3) {
@@ -382,7 +382,7 @@ public class Myanmar extends GameActivity {
 
                     wordPlaced = true;
 
-                    parsedWordArrayFinal = Start.tileList.parseWord(sevenWordsInLopLwc[w][1]);
+                    parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]);
                     int tileX = 0;
                     int tileY = 0;
                     for (int t = 0; t < wordLen; t++) {

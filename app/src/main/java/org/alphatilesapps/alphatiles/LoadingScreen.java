@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ProgressBar;
 
+import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
@@ -22,6 +23,9 @@ import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.hasTileAudio;
+import static org.alphatilesapps.alphatiles.Start.syllableAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.syllableList;
+import static org.alphatilesapps.alphatiles.Start.syllableDurations;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
@@ -53,6 +57,7 @@ public class LoadingScreen extends AppCompatActivity {
         context = this;
 
         int num_of_words = wordList.size();
+
         Intent intent = new Intent(this, ChoosePlayer.class);
 
         // load audio in background threads to avoid blocking UI thread
@@ -79,6 +84,16 @@ public class LoadingScreen extends AppCompatActivity {
                 public void run() {
                     loadTileAudio();
                     LOGGER.info("Remember: initiated loadTileAudio()");
+                }
+            }).start();
+        }
+
+        if (hasSyllableAudio){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    loadSyllableAudio();
+                    LOGGER.info("Remember: initiated loadSyllableAudio()");
                 }
             }).start();
         }
@@ -153,6 +168,19 @@ public class LoadingScreen extends AppCompatActivity {
         {
             int resId = res.getIdentifier(wordList.get(i).nationalWord, "raw", context.getPackageName());
             wordAudioIDs.put(wordList.get(i).nationalWord, gameSounds.load(context, resId, 1));
+        }
+    }
+
+    public void loadSyllableAudio(){
+        Resources res = context.getResources();
+        syllableAudioIDs = new HashMap();
+        syllableDurations = new HashMap();
+
+        for (Start.Syllable syll : syllableList)
+        {
+            int resId = res.getIdentifier(syll.syllableAudioName, "raw", context.getPackageName());
+            syllableAudioIDs.put(syll.syllable, gameSounds.load(context, resId, 2));
+            syllableDurations.put(syll.syllable, syll.syllableDuration + 100);
         }
     }
 
