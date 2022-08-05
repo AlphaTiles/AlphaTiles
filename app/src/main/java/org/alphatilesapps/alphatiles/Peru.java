@@ -1,5 +1,7 @@
 package org.alphatilesapps.alphatiles;
 
+import static org.alphatilesapps.alphatiles.Start.syllableList;
+
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
@@ -29,6 +31,9 @@ public class Peru extends GameActivity {
     String thirdToLastWord = "";
     int peruPoints;
     boolean peruHasChecked12Trackers;
+    static List<String> VOWELS = new ArrayList<>();
+    static List<String> CONSONANTS = new ArrayList<>();
+    static List<String> OTHERS = new ArrayList<>();
 
     protected static final int[] TILE_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
@@ -120,10 +125,42 @@ public class Peru extends GameActivity {
 
         updateTrackers();
 
-        setTextSizes();
-
         if(getAudioInstructionsResID()==0){
             centerGamesHomeImage();
+        }
+
+        if (challengeLevel == 2) {
+
+            if (VOWELS.isEmpty()) {  //makes sure VOWELS is populated only once when the app is running
+                for (int d = 0; d < Start.tileList.size(); d++) {
+                    if (Start.tileList.get(d).tileType.equals("V")) {
+                        VOWELS.add(Start.tileList.get(d).baseTile);
+                    }
+                }
+            }
+
+            Collections.shuffle(VOWELS); // AH
+
+            if (CONSONANTS.isEmpty()) {  //makes sure CONSONANTS is populated only once when the app is running
+                for (int d = 0; d < Start.tileList.size(); d++) {
+                    if (Start.tileList.get(d).tileType.equals("C")) {
+                        CONSONANTS.add(Start.tileList.get(d).baseTile);
+                    }
+                }
+            }
+
+            Collections.shuffle(CONSONANTS);
+
+            if (OTHERS.isEmpty()) {  //makes sure OTHERS is populated only once when the app is running
+                for (int d = 0; d < Start.tileList.size(); d++) {
+                    if (!Start.tileList.get(d).tileType.equals("C") && !Start.tileList.get(d).tileType.equals("V")) {
+                        OTHERS.add(Start.tileList.get(d).baseTile);
+                    }
+                }
+            }
+
+            Collections.shuffle(OTHERS);
+
         }
 
         playAgain();
@@ -135,48 +172,6 @@ public class Peru extends GameActivity {
         // no action
     }
 
-    public void setTextSizes() {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        int pixelHeight = 0;
-        double scaling = 0.45;
-        int bottomToTopId;
-        int topToTopId;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        for (int w = 0; w < TILE_BUTTONS.length; w++) {
-
-            TextView nextWord = findViewById(TILE_BUTTONS[w]);
-            if (w == 0) {
-                ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) nextWord.getLayoutParams();
-                bottomToTopId = lp1.bottomToTop;
-                topToTopId = lp1.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-            }
-            nextWord.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        }
-
-        // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        ImageView pointsEarnedImage = (ImageView) findViewById(R.id.pointsImage);
-        ConstraintLayout.LayoutParams lp3 = (ConstraintLayout.LayoutParams) pointsEarnedImage.getLayoutParams();
-        int bottomToTopId3 = lp3.bottomToTop;
-        int topToTopId3 = lp3.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
-        pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-    }
 
     public void repeatGame (View view) {
 
@@ -241,7 +236,6 @@ public class Peru extends GameActivity {
 
                 incorrectLapNo++;
                 boolean isDuplicateAnswerChoice = true; // LM // generate answer choices until there are no duplicates (or dangerous combinations)
-
                 switch (challengeLevel) {
 
                     case 1:
@@ -268,14 +262,24 @@ public class Peru extends GameActivity {
                     case 2:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
                         // REPLACEMENT IS ANY GAME TILE FROM THE WHOLE ARRAY
+                        // JP changed: REPLACEMENT IS NOW ANY TILE OF THE SAME TYPE (C OR V) FROM THE WHOLE ARRAY
 
+                        //fix: some accidental duplicates
                         while(isDuplicateAnswerChoice) {
                             int randomNum3 = rand.nextInt(tileLength - 1);       // KP // this represents which position in word string will be replaced
-                            int randomNum4 = rand.nextInt(Start.tileList.size());       // KP // this represents which game tile will overwrite some part of the correct wor
-
                             List<String> tempArray2 = new ArrayList<>(parsedWordArrayFinal);
+                            int randomNum4;
+                            if (VOWELS.contains(tempArray2.get(randomNum3))){
+                                randomNum4 = rand.nextInt(VOWELS.size());       // KP // this represents which game tile will overwrite some part of the correct wor
+                                tempArray2.set(randomNum3, VOWELS.get(randomNum4)); // JP
+                            }else if (CONSONANTS.contains(tempArray2.get(randomNum3))){
+                                randomNum4 = rand.nextInt(CONSONANTS.size());
+                                tempArray2.set(randomNum3, CONSONANTS.get(randomNum4)); // JP
+                            }else{
+                                randomNum4 = rand.nextInt(OTHERS.size());
+                                tempArray2.set(randomNum3, OTHERS.get(randomNum4)); // JP
+                            }
 
-                            tempArray2.set(randomNum3, Start.tileList.get(randomNum4).baseTile); // KP
                             StringBuilder builder2 = new StringBuilder("");
                             for (String s : tempArray2) {
                                 builder2.append(s);
@@ -289,7 +293,7 @@ public class Peru extends GameActivity {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
-                            if(incorrectChoice2.compareTo(wordInLOP) == 0){
+                            if(incorrectChoice2.compareTo(Start.wordList.stripInstructionCharacters(wordInLOP)) == 0){
                                 isDuplicateAnswerChoice = true;
                             }
                             for(int j = 0; j< incorrectChoice2.length() -2; j++){
