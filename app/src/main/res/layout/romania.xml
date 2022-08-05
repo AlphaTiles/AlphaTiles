@@ -72,30 +72,32 @@
         android:id="@+id/findMoreOfSameTile"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/seeMoreOfSameGameTile"
         android:gravity="center"
         android:onClick="repeatGame"
+        android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHMagBottom"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVMagRight"
         app:layout_constraintStart_toStartOf="@+id/guidelineVMagLeft"
         app:layout_constraintTop_toTopOf="@+id/guidelineHMagTop"
-        app:srcCompat="@drawable/zz_magnifying_glass"
-        android:rotationY="0"
-        android:contentDescription="@string/seeMoreOfSameGameTile" />
+        app:srcCompat="@drawable/zz_plus_sign" />
 
     <TextView
         android:id="@+id/tileInMagnifyingGlass"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#00FFFFFF"
-        android:gravity="center"
+        android:gravity="center|center_vertical"
         android:onClick="repeatGame"
         android:text="@string/countWordsBeginningWithThisGameTile"
         android:textColor="#9C27B0"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHMagTileBottom"
-        app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVMagTileRight"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="15sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineHMagTileBottom"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineVMagTileRight"
         app:layout_constraintStart_toStartOf="@+id/guidelineVMagTileLeft"
         app:layout_constraintTop_toTopOf="@+id/guidelineHMagTileTop" />
 
@@ -351,7 +353,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.74" />
+        app:layout_constraintGuide_percent="0.79" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHMagTop"
@@ -372,7 +374,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.27" />
+        app:layout_constraintGuide_percent="0.30" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHMagTileBottom"
