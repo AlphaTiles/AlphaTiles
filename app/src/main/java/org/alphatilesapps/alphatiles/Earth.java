@@ -144,20 +144,30 @@ public class Earth extends AppCompatActivity {
                         if (country.equals("Romania")||country.equals("Sudan")) {
                             trackerCount = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
-                        } else {
+                        } else if (trackerCount < 12) {
                             ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
+                        } else { // >= 12
+                            ((TextView) child).setTextColor(Color.parseColor("#4CAF50")); // green;
                         }
 
-                        String color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
-                        String drawableBase = "zz_door_color" + color;
-
+                        String color = "";
                         String doorStyle = "";
                         if (country.equals("Sudan")||country.equals("Romania")){
                             doorStyle = "_mastery";
+                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
                         }
-                        else if (trackerCount > 0) {
-                            doorStyle = trackerCount >= 12 ? "_mastery" : "_inprocess";
+                        else if (trackerCount > 0 && trackerCount < 12) {
+                            doorStyle = "_inprocess";
+                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
+                        } else if (trackerCount >= 12){
+                            doorStyle = "_mastery";
+                            color = "6";
+                        } else{ // 0
+                            doorStyle = "";
+                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
                         }
+
+                        String drawableBase = "zz_door_color" + color;
 
                         String drawableEntryName = drawableBase + doorStyle;
 
