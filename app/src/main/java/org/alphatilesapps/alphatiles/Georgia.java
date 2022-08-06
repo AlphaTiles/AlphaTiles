@@ -148,7 +148,9 @@ public class Georgia extends GameActivity {
                 visibleTiles = 6;
         }
 
-        sortableSyllArray = (Start.SyllableList)Start.syllableList.clone();
+        if (syllableGame.equals("S")){
+            sortableSyllArray = (Start.SyllableList)Start.syllableList.clone();
+        }
         sortableTilesArray = (Start.TileList)Start.tileList.clone(); // KP
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
