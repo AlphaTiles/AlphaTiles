@@ -84,6 +84,8 @@ public class Start extends AppCompatActivity
     public static int after12checkedTrackers;
     Boolean differentiateTypes;
 
+    public static int numberOfAvatars = 12; //default
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -134,6 +136,12 @@ public class Start extends AppCompatActivity
         else{
             hasSyllableAudio = false;
         }
+
+        String customNumOfAvatars = settingsList.find("Number of avatars");
+        if (customNumOfAvatars.compareTo("")!=0){
+            numberOfAvatars = Integer.parseInt(customNumOfAvatars);
+        }
+        // otherwise keep 12 default
 
         LOGGER.info("Remember: completed hasTileAudio & differentiateTypes & hasSyllableAudio");
 

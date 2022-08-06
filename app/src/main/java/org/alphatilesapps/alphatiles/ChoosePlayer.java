@@ -64,6 +64,11 @@ public class ChoosePlayer extends AppCompatActivity
 	public static ArrayList<Integer> avatarIdList;
 	public static ArrayList<Drawable> avatarJpgList;
 
+	public static final int[] AVATAR_IMAGE_IDS = {
+			R.id.avatar01, R.id.avatar02, R.id.avatar03, R.id.avatar04, R.id.avatar05, R.id.avatar06,
+			R.id.avatar07, R.id.avatar08, R.id.avatar09, R.id.avatar10, R.id.avatar11, R.id.avatar12
+	};
+
 	public static final int[] AVATAR_JPG_IDS = {
 			R.drawable.zz_avataricon01, R.drawable.zz_avataricon02, R.drawable.zz_avataricon03, R.drawable.zz_avataricon04,
 			R.drawable.zz_avataricon05, R.drawable.zz_avataricon06, R.drawable.zz_avataricon07, R.drawable.zz_avataricon08,
@@ -179,13 +184,32 @@ public class ChoosePlayer extends AppCompatActivity
 
 		}
 
-		setTextSizes();
-
 		if(scriptDirection.compareTo("RTL") == 0){
 			forceRTLIfSupported();
 		}
 		else{
 			forceLTRIfSupported();
+		}
+
+		// show correct number of avatars
+		for (int i = 0; i < numberOfAvatars; i++){
+			ImageView animal = findViewById(AVATAR_IMAGE_IDS[i]);
+			animal.setVisibility(View.VISIBLE);
+			animal.setClickable(true);
+
+			TextView name = findViewById(AVATAR_NAMES[i]);
+			name.setVisibility(View.VISIBLE);
+			name.setClickable(true);
+		}
+
+		for (int i = numberOfAvatars; i < 12; i++){
+			ImageView animal = findViewById(AVATAR_IMAGE_IDS[i]);
+			animal.setVisibility(View.INVISIBLE);
+			animal.setClickable(false);
+
+			TextView name = findViewById(AVATAR_NAMES[i]);
+			name.setVisibility(View.INVISIBLE);
+			name.setClickable(false);
 		}
 
 		String daysUntilExpirationSetting = settingsList.find("Days until expiration");
@@ -261,39 +285,7 @@ public class ChoosePlayer extends AppCompatActivity
 		return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
 	}
 
-	public void setTextSizes()
-	{
 
-		DisplayMetrics displayMetrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-		int heightOfDisplay = displayMetrics.heightPixels;
-		int pixelHeight = 0;
-		double scaling = 0.35;
-		int bottomToTopId;
-		int topToTopId;
-		float percentBottomToTop;
-		float percentTopToTop;
-		float percentHeight;
-
-		for (int n = 0; n < AVATAR_NAMES.length; n++)
-		{
-
-			TextView key = findViewById(AVATAR_NAMES[n]);
-			if (n == 0)
-			{
-				ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams)key.getLayoutParams();
-				bottomToTopId = lp1.bottomToTop;
-				topToTopId = lp1.topToTop;
-				percentBottomToTop = ((ConstraintLayout.LayoutParams)findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-				percentTopToTop = ((ConstraintLayout.LayoutParams)findViewById(topToTopId).getLayoutParams()).guidePercent;
-				percentHeight = percentBottomToTop - percentTopToTop;
-				pixelHeight = (int)(scaling * percentHeight * heightOfDisplay);
-			}
-			key.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-		}
-
-	}
 
 /*
 		public void buildWordAndTileArrays()
