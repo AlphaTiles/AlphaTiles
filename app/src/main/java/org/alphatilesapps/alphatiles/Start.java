@@ -1252,6 +1252,8 @@ public class Start extends AppCompatActivity
             Syllable refSyllable = syllableHashMap.find(refTile);
             Random rand = new Random();
             boolean correctRep = false;
+
+            // get a word that starts with the refTile (syllable)
             while (!correctRep){
                 int randomNum = rand.nextInt(wordList.size());
                 potentialWord = wordList.get(randomNum).localWord;
@@ -1263,6 +1265,8 @@ public class Start extends AppCompatActivity
                     correctRep = true;
                 }
             }
+
+
             if (chall == 1){ //easy words = not same initial syllable and no distractor syllables word-initially
                 while (fourWords.size() < 4){
                     int randomNum = rand.nextInt(wordList.size());
@@ -1299,13 +1303,15 @@ public class Start extends AppCompatActivity
                     }
                     count++;
                 }
-                while (fourWords.size() < 4){
+                while (fourWords.size() < 4){ // maybe this is an infinite loop - change to allow
+                    // any word that doesn't begin with correct syll
                     int randomNum = rand.nextInt(wordList.size());
                     potentialWord = wordList.get(randomNum).localWord;
                     natWord = wordList.get(randomNum).nationalWord;
                     potentialWordParsed = syllableList.parseWordIntoSyllables(potentialWord);
-                    if (!potentialWordParsed.get(0).equals(refTile) && (potentialWord.charAt(0)
-                            == refTile.charAt(0))){
+                    // if (!potentialWordParsed.get(0).equals(refTile) && (potentialWord.charAt(0)
+                    //                            == refTile.charAt(0)))
+                    if (!potentialWordParsed.get(0).equals(refTile)){
                         String[] tileEntry = new String[]{natWord, potentialWord};
                         if (!trackWords.contains(potentialWord)) {
                             trackWords.add(potentialWord);

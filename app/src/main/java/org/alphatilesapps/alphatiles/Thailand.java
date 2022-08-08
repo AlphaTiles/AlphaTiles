@@ -48,6 +48,7 @@ public class Thailand extends GameActivity {
     String refType;
     String refTile;
     String choiceType;
+    String refSyll;
     int refColor;
     int challengeLevelThai;
     int pixelHeightRef;
@@ -237,16 +238,16 @@ public class Thailand extends GameActivity {
                 LOGGER.info("Remember: J3.5: refTile = " + refTile);
             }
 
+        } else if(choiceType.contains("SYLL") && refType.contains("SYLL")){
+            int randomNum2 = rand.nextInt(sortableSyllArray.size());
+            refTile = sortableSyllArray.get(randomNum2).syllable;
         } else if(choiceType.contains("WORD") && refType.contains("SYLL")){
             chooseWord();
 
             parsedWordArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
             refTile = parsedWordArrayFinal.get(0);
-
-        }else if(choiceType.contains("SYLL") && refType.contains("SYLL")){
-            int randomNum2 = rand.nextInt(sortableSyllArray.size());
-            refTile = sortableSyllArray.get(randomNum2).syllable;
-        }else {
+        }
+        else {
             // JP: FIGURE OUT WHAT THIS DOES
             // it makes sure that the reference tile chosen is not a glottal stop for ex;
             // ensures that chosen tile is an actual consonant or vowel
