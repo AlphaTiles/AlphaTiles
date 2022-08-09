@@ -47,7 +47,11 @@ public class Thailand extends GameActivity {
 
     String refType;
     String refTile;
+    String refTileLast = "";
+    String refTileSecondToLast = "";
+    String refTileThirdToLast = "";
     String choiceType;
+    String refSyll;
     int refColor;
     int challengeLevelThai;
     int pixelHeightRef;
@@ -221,47 +225,132 @@ public class Thailand extends GameActivity {
         // if either or both elements are word-based, then three IF statements, but if both elements are tile based, then WHILE LOOP
 
         if (refType.contains("WORD") || (choiceType.contains("WORD") && !refType.contains("SYLL"))){
-            chooseWord();
 
-            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
             if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO") || choiceType.equals("TILE_LOWER")) {
-                refTile = parsedWordArrayFinal.get(0);
+                boolean freshTile = false;
+                while (!freshTile){
+                    chooseWord();
+                    parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
+                    refTile = parsedWordArrayFinal.get(0);
+                    if(refTile.compareTo(refTileLast)!=0
+                            && refTile.compareTo(refTileSecondToLast)!=0
+                            && refTile.compareTo(refTileThirdToLast)!=0){
+                        freshTile = true;
+                        refTileThirdToLast = refTileSecondToLast;
+                        refTileSecondToLast = refTileLast;
+                        refTileLast = refTile;
+                    }
+                }
+
                 LOGGER.info("Remember: J2: refTile = " + refTile);
             }
             else if (refType.equals("TILE_UPPER")|| choiceType.equals("TILE_UPPER")) {
-                refTile = tileList.get(tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).upperTile;
+                boolean freshTile = false;
+                while (!freshTile){
+                    chooseWord();
+                    parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
+                    refTile = tileList.get(tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).upperTile;
+                    if(refTile.compareTo(refTileLast)!=0
+                            && refTile.compareTo(refTileSecondToLast)!=0
+                            && refTile.compareTo(refTileThirdToLast)!=0){
+                        freshTile = true;
+                        refTileThirdToLast = refTileSecondToLast;
+                        refTileSecondToLast = refTileLast;
+                        refTileLast = refTile;
+                    }
+                }
+
                 LOGGER.info("Remember: J3: refTile = " + refTile);
             }
             else if (refType.contains("WORD") && choiceType.contains("WORD")) {
-                refTile = parsedWordArrayFinal.get(0);
+                boolean freshTile = false;
+                while (!freshTile){
+                    chooseWord();
+                    parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
+                    refTile = parsedWordArrayFinal.get(0);
+                    if(refTile.compareTo(refTileLast)!=0
+                            && refTile.compareTo(refTileSecondToLast)!=0
+                            && refTile.compareTo(refTileThirdToLast)!=0){
+                        freshTile = true;
+                        refTileThirdToLast = refTileSecondToLast;
+                        refTileSecondToLast = refTileLast;
+                        refTileLast = refTile;
+                    }
+                }
+
                 LOGGER.info("Remember: J3.5: refTile = " + refTile);
             }
 
+        } else if(choiceType.contains("SYLL") && refType.contains("SYLL")){
+            boolean freshTile = false;
+            while (!freshTile){
+                int randomNum2 = rand.nextInt(sortableSyllArray.size());
+                refTile = sortableSyllArray.get(randomNum2).syllable;
+                if(refTile.compareTo(refTileLast)!=0
+                        && refTile.compareTo(refTileSecondToLast)!=0
+                        && refTile.compareTo(refTileThirdToLast)!=0){
+                    freshTile = true;
+                    refTileThirdToLast = refTileSecondToLast;
+                    refTileSecondToLast = refTileLast;
+                    refTileLast = refTile;
+                }
+            }
+
         } else if(choiceType.contains("WORD") && refType.contains("SYLL")){
-            chooseWord();
+            boolean freshTile = false;
+            while (!freshTile){
+                chooseWord();
+                parsedWordArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
+                refTile = parsedWordArrayFinal.get(0);
+                if(refTile.compareTo(refTileLast)!=0
+                        && refTile.compareTo(refTileSecondToLast)!=0
+                        && refTile.compareTo(refTileThirdToLast)!=0){
+                    freshTile = true;
+                    refTileThirdToLast = refTileSecondToLast;
+                    refTileSecondToLast = refTileLast;
+                    refTileLast = refTile;
+                }
+            }
 
-            parsedWordArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
-            refTile = parsedWordArrayFinal.get(0);
-
-        }else if(choiceType.contains("SYLL") && refType.contains("SYLL")){
-            int randomNum2 = rand.nextInt(sortableSyllArray.size());
-            refTile = sortableSyllArray.get(randomNum2).syllable;
-        }else {
+        }
+        else {
             // JP: FIGURE OUT WHAT THIS DOES
             // it makes sure that the reference tile chosen is not a glottal stop for ex;
             // ensures that chosen tile is an actual consonant or vowel
             String refCVX = "X";
-            while (refCVX.equals("X")) {
-                int randomNum2 = rand.nextInt(sortableTilesArray.size());
-                refCVX = sortableTilesArray.get(randomNum2).tileType;
-                if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO")) {
+            if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO")) {
+                boolean freshTile = false;
+                while (!freshTile || refCVX.equals("X")){
+                    int randomNum2 = rand.nextInt(sortableTilesArray.size());
+                    refCVX = sortableTilesArray.get(randomNum2).tileType;
                     refTile = sortableTilesArray.get(randomNum2).baseTile;
-                    LOGGER.info("Remember: J4: refTile = " + refTile);
+                    if(refTile.compareTo(refTileLast)!=0
+                            && refTile.compareTo(refTileSecondToLast)!=0
+                            && refTile.compareTo(refTileThirdToLast)!=0){
+                        freshTile = true;
+                        refTileThirdToLast = refTileSecondToLast;
+                        refTileSecondToLast = refTileLast;
+                        refTileLast = refTile;
+                    }
                 }
-                if (refType.equals("TILE_UPPER")) {
+                LOGGER.info("Remember: J4: refTile = " + refTile);
+            }
+            if (refType.equals("TILE_UPPER")) {
+                boolean freshTile = false;
+                while (!freshTile || refCVX.equals("X")){
+                    int randomNum2 = rand.nextInt(sortableTilesArray.size());
+                    refCVX = sortableTilesArray.get(randomNum2).tileType;
                     refTile = sortableTilesArray.get(randomNum2).upperTile;
-                    LOGGER.info("Remember: J5: refTile = " + refTile);
+                    if(refTile.compareTo(refTileLast)!=0
+                            && refTile.compareTo(refTileSecondToLast)!=0
+                            && refTile.compareTo(refTileThirdToLast)!=0){
+                        freshTile = true;
+                        refTileThirdToLast = refTileSecondToLast;
+                        refTileSecondToLast = refTileLast;
+                        refTileLast = refTile;
+                    }
                 }
+                LOGGER.info("Remember: J5: refTile = " + refTile);
             }
         }
         switch (refType) {
