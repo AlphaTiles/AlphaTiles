@@ -156,9 +156,9 @@ public class Ecuador extends GameActivity {
 
     public void repeatGame(View View) {
 
-//        if (!repeatLocked) {
+        if (!repeatLocked) {
             playAgain();
-//        }
+        }
 
     }
 
@@ -219,9 +219,7 @@ public class Ecuador extends GameActivity {
 
 
         int minWidth = (int) (usableWidth * 0.25);      // Height will be equal to (width / hwRatio)
-        // minWidth increased from 0.25 to 0.31 by JP
         int maxWidth = (int) (usableWidth * 0.5);
-        // maxWidth increased from 0.5 to 0.6 by JP
 
         int bufferX = (int) (usableWidth * 0.05);
         int bufferY = (int) (usableHeight * 0.05);
