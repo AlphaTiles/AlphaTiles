@@ -4,10 +4,13 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowMetrics;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -176,10 +179,23 @@ public class Ecuador extends GameActivity {
 
         boxCoordinates = new int[8][4];
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightDisplay = displayMetrics.heightPixels;
-        int widthDisplay = displayMetrics.widthPixels;
+        // JP: DisplayMetrics is deprecated after Android 11
+        // must use WindowMetrics instead
+        int heightDisplay;
+        int widthDisplay;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            WindowMetrics displayMetrics = getWindowManager().getCurrentWindowMetrics();
+            Insets insets = displayMetrics.getWindowInsets()
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            widthDisplay = displayMetrics.getBounds().width() - insets.left - insets.right;
+            heightDisplay = displayMetrics.getBounds().height() - insets.top - insets.bottom;
+        }else{
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            heightDisplay = displayMetrics.heightPixels;
+            widthDisplay = displayMetrics.widthPixels;
+        }
+
         LOGGER.info("Remember: heightDisplay = " + heightDisplay);
         LOGGER.info("Remember: widthDisplay = " + widthDisplay);
 
@@ -198,8 +214,7 @@ public class Ecuador extends GameActivity {
         int minStartX = minX1;
         int maxStartX = (int) (usableWidth * 0.65);
 
-        int minStartY = minY1;
-        int maxStartY = (int) (usableHeight * 0.79);
+
 
         int minWidth = (int) (usableWidth * 0.31);      // Height will be equal to (width / hwRatio)
         // minWidth increased from 0.25 to 0.31 by JP
@@ -215,6 +230,13 @@ public class Ecuador extends GameActivity {
         LOGGER.info("Remember: maxY2 = " + maxY2);
 
         final int hwRatio = 4;
+
+        int minStartY = minY1;
+        int maxStartY = (int) (usableHeight * 0.75);
+        //int maxStartY = (int) (usableHeight * 0.79) - (maxWidth / hwRatio);
+
+        // JP: maxStartY should really be (usableHeight * 0.79) - (maxWidth / hwRatio)
+        // to prevent it from going below bottom icons
 
         boolean verticalOverlap;
         boolean horizontalOverlap;
