@@ -183,24 +183,26 @@ public class Ecuador extends GameActivity {
         // must use WindowMetrics instead
         int heightDisplay;
         int widthDisplay;
+        int usableHeight;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
             WindowMetrics displayMetrics = getWindowManager().getCurrentWindowMetrics();
             Insets insets = displayMetrics.getWindowInsets()
                     .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
             widthDisplay = displayMetrics.getBounds().width() - insets.left - insets.right;
             heightDisplay = displayMetrics.getBounds().height() - insets.top - insets.bottom;
+            usableHeight = heightDisplay;
         }else{
             DisplayMetrics displayMetrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
             heightDisplay = displayMetrics.heightPixels;
             widthDisplay = displayMetrics.widthPixels;
+            usableHeight = heightDisplay - getNavigationBarSize(this).y;
         }
 
         LOGGER.info("Remember: heightDisplay = " + heightDisplay);
         LOGGER.info("Remember: widthDisplay = " + widthDisplay);
 
 //        Point xyz = getNavigationBarSize(this);
-        int usableHeight = heightDisplay - getNavigationBarSize(this).y;
         int usableWidth = widthDisplay;
         LOGGER.info("Remember: usableHeight = " + usableHeight);
         LOGGER.info("Remember: usableWidth = " + usableWidth);
@@ -216,9 +218,9 @@ public class Ecuador extends GameActivity {
 
 
 
-        int minWidth = (int) (usableWidth * 0.31);      // Height will be equal to (width / hwRatio)
+        int minWidth = (int) (usableWidth * 0.25);      // Height will be equal to (width / hwRatio)
         // minWidth increased from 0.25 to 0.31 by JP
-        int maxWidth = (int) (usableWidth * 0.6);
+        int maxWidth = (int) (usableWidth * 0.5);
         // maxWidth increased from 0.5 to 0.6 by JP
 
         int bufferX = (int) (usableWidth * 0.05);
@@ -306,6 +308,7 @@ public class Ecuador extends GameActivity {
                 boxCoordinates[currentBoxIndex][1] = coordY1;
                 boxCoordinates[currentBoxIndex][2] = coordX2;
                 boxCoordinates[currentBoxIndex][3] = coordY2;
+                extraLoops = 0;
             } else {
                 if (extraLoops < 10000) {
                     currentBoxIndex = currentBoxIndex - 1;              // force repeat of setting parameters for current box
