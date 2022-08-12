@@ -87,6 +87,7 @@ public class Start extends AppCompatActivity
     public static List<String> CONSONANTS = new ArrayList<>();
     public static List<String> VOWELS = new ArrayList<>();
     public static List<String> CorV = new ArrayList<>();
+    public static List<String> TONES = new ArrayList<>();
 
     public static int numberOfAvatars = 12; //default
 
@@ -172,10 +173,14 @@ public class Start extends AppCompatActivity
                 VOWELS.add(Start.tileList.get(d).baseTile);
                 CorV.add(Start.tileList.get(d).baseTile);
             }
+            else if (Start.tileList.get(d).tileType.equals("T")) {
+                TONES.add(Start.tileList.get(d).baseTile);
+            }
         }
         Collections.shuffle(CONSONANTS);
         Collections.shuffle(VOWELS);
         Collections.shuffle(CorV);
+        Collections.shuffle(TONES);
         if (hasTileAudio){
             totalAudio = totalAudio + tileList.size();
         }

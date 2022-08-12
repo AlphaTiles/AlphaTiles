@@ -25,6 +25,7 @@ import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
 import static org.alphatilesapps.alphatiles.Start.VOWELS;
+import static org.alphatilesapps.alphatiles.Start.TONES;
 
 // RR
 //Game idea: Find the vowel missing from the word
@@ -52,6 +53,7 @@ public class Brazil extends GameActivity {
     Start.SyllableList sortableSyllArray; //JP
     Set<String> answerChoices = new HashSet<String>();
     int visibleTiles;
+    int numTones;
     String correctTile = "";
     String lastWord = "";
     String secondToLastWord = "";
@@ -205,6 +207,13 @@ public class Brazil extends GameActivity {
                         visibleTiles = 15;      // AH
                     }                           // AH
                     break;
+                case 7:
+                    numTones = TONES.size();
+                    if (numTones > 4){
+                        numTones = 4;
+                    }
+                    visibleTiles = 4;
+                    break;
                 default:
                     visibleTiles = 4;
             }
@@ -349,6 +358,24 @@ public class Brazil extends GameActivity {
 
                     }
                     break;
+                case 7:
+                    for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
+
+                        nextTile = parsedWordArrayFinal.get(i);
+                        // include if a simple tone marker
+                        if(TONES.contains(nextTile) && !MULTIFUNCTIONS.contains(nextTile)) {
+                            proceed = true;
+                        }
+                        // include if a multi-function symbol that is a tone marker in this instance
+                        if(MULTIFUNCTIONS.contains(nextTile)) {
+                            String instanceType = Start.tileList.getInstanceTypeForMixedTile(i, wordInLWC);
+                            if (instanceType.equals("T")) {
+                                proceed = true;
+                            }
+                        }
+
+                    }
+                    break;
                 default:
                     for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
 
@@ -413,7 +440,7 @@ public class Brazil extends GameActivity {
 
                 }
 
-                if (challengeLevel > 3) {
+                if (challengeLevel > 3 && challengeLevel < 7) {
 
                     if (instanceType.equals("C")) {
 
@@ -421,6 +448,13 @@ public class Brazil extends GameActivity {
 
                     }
 
+                }
+
+                if (challengeLevel == 7){
+                    if (instanceType.equals("T")){
+
+                        repeat = false;
+                    }
                 }
 
             }
@@ -530,7 +564,6 @@ public class Brazil extends GameActivity {
     }
 
     private void setUpTiles() {
-
         boolean correctTileRepresented = false;
         if (challengeLevel == 3 || challengeLevel == 6) {
             for (int t = 0; t < visibleTiles; t++) {
@@ -600,6 +633,29 @@ public class Brazil extends GameActivity {
                 gameTile.setClickable(true);
             }
 
+        } else if (challengeLevel == 7){
+            for (int t = 0; t < numTones; t++) {
+
+                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+
+                if (TONES.get(t).equals(correctTile)) {
+                    correctTileRepresented = true;
+                }
+
+                String tileColorStr = COLORS[t % 5];
+                int tileColor = Color.parseColor(tileColorStr);
+
+                gameTile.setText(TONES.get(t));
+                gameTile.setBackgroundColor(tileColor);
+                gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                gameTile.setVisibility(View.VISIBLE);
+                gameTile.setClickable(true);
+            }
+            for (int t = numTones; t < visibleTiles; t++){
+                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                gameTile.setVisibility(View.INVISIBLE);
+                gameTile.setClickable(false);
+            }
         }
         else {
             // when Earth.challengeLevel == 2 || == 5
