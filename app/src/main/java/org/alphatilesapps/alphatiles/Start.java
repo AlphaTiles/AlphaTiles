@@ -90,8 +90,6 @@ public class Start extends AppCompatActivity
     public static List<String> VOWELS = new ArrayList<>();
     public static List<String> CorV = new ArrayList<>();
 
-    public static int numberOfAvatars = 12; //default
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
