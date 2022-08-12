@@ -84,11 +84,11 @@ public class Start extends AppCompatActivity
     public static int after12checkedTrackers;
     Boolean differentiateTypes;
 
+    public static int numberOfAvatars = 12; //default
+
     public static List<String> CONSONANTS = new ArrayList<>();
     public static List<String> VOWELS = new ArrayList<>();
     public static List<String> CorV = new ArrayList<>();
-
-    public static int numberOfAvatars = 12; //default
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
