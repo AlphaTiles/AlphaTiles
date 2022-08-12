@@ -234,24 +234,39 @@ public class Georgia extends GameActivity {
             if(wordInLWC.compareTo(lastWord)!=0
                     && wordInLWC.compareTo(secondToLastWord)!=0
                     && wordInLWC.compareTo(thirdToLastWord)!=0){
-                freshWord = true;
-                thirdToLastWord = secondToLastWord;
-                secondToLastWord = lastWord;
-                lastWord = wordInLWC;
+                // this next section was moved by JP to help make sure that whatever word is chosen
+                // actually begins with a C or V
+                if (syllableGame.equals("S")){
+                    parsedWordSyllArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); //JP
+                    initialSyll = parsedWordSyllArrayFinal.get(0);
+
+                    freshWord = true;
+                    thirdToLastWord = secondToLastWord;
+                    secondToLastWord = lastWord;
+                    lastWord = wordInLWC;
+
+                    ImageView image = (ImageView) findViewById(R.id.wordImage);
+                    int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+                    image.setImageResource(resID);
+                }else{
+                    parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
+                    initialTile = parsedWordArrayFinal.get(0);
+
+                    if (CorV.contains(initialTile)){
+                        freshWord = true;
+                        thirdToLastWord = secondToLastWord;
+                        secondToLastWord = lastWord;
+                        lastWord = wordInLWC;
+
+                        ImageView image = (ImageView) findViewById(R.id.wordImage);
+                        int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+                        image.setImageResource(resID);
+                    }
+                }
             }
 
         }//generates a new word if it got one of the last three tested words // LM
-        ImageView image = (ImageView) findViewById(R.id.wordImage);
-        int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
-        image.setImageResource(resID);
 
-        if (syllableGame.equals("S")){
-            parsedWordSyllArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); //JP
-            initialSyll = parsedWordSyllArrayFinal.get(0);
-        }else{
-            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
-            initialTile = parsedWordArrayFinal.get(0);
-        }
     }
 
     private void setUpSyllables() {
