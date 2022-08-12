@@ -86,6 +86,12 @@ public class Start extends AppCompatActivity
 
     public static int numberOfAvatars = 12; //default
 
+    public static List<String> CONSONANTS = new ArrayList<>();
+    public static List<String> VOWELS = new ArrayList<>();
+    public static List<String> CorV = new ArrayList<>();
+
+    public static int numberOfAvatars = 12; //default
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -159,6 +165,19 @@ public class Start extends AppCompatActivity
         }
 
         buildTilesArray();
+        for (int d = 0; d < Start.tileList.size(); d++) {
+            if (Start.tileList.get(d).tileType.equals("C")) {
+                CONSONANTS.add(Start.tileList.get(d).baseTile);
+                CorV.add(Start.tileList.get(d).baseTile);
+            }
+            else if (Start.tileList.get(d).tileType.equals("V")) {
+                VOWELS.add(Start.tileList.get(d).baseTile);
+                CorV.add(Start.tileList.get(d).baseTile);
+            }
+        }
+        Collections.shuffle(CONSONANTS);
+        Collections.shuffle(VOWELS);
+        Collections.shuffle(CorV);
         if (hasTileAudio){
             totalAudio = totalAudio + tileList.size();
         }
