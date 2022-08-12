@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.Set;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
+import static org.alphatilesapps.alphatiles.Start.CorV;
 
 //level 1: 6 visible tiles, random wrong choices
 //level 2: 12 visible tiles, random wrong choices
@@ -36,9 +37,11 @@ import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 //level 5 + S: 12 visible syllables, distractor wrong choices
 //level 6 + S: 18 visible syllables, distractor wrong choices
 
+
+// IF A LANGUAGE HAS WORDS THAT START WITH SOMETHING OTHER THAN C OR V, THIS WILL CRASH
+
 public class Georgia extends GameActivity {
 
-    Start.TileList sortableTilesArray; // KP
     Start.SyllableList sortableSyllArray; //JP
     Set<String> answerChoices = new HashSet<String>();
     String initialTile = "";
@@ -64,8 +67,12 @@ public class Georgia extends GameActivity {
 
             ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
             instructionsButton.setVisibility(View.GONE);
-
-            int gameID = R.id.georgiaCL;
+            int gameID = 0;
+            if (syllableGame.equals("S")){
+                gameID = R.id.georgiaCL_syll;
+            }else{
+                gameID = R.id.georgiaCL;
+            }
             ConstraintLayout constraintLayout = findViewById(gameID);
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(constraintLayout);
@@ -151,7 +158,6 @@ public class Georgia extends GameActivity {
         if (syllableGame.equals("S")){
             sortableSyllArray = (Start.SyllableList)Start.syllableList.clone();
         }
-        sortableTilesArray = (Start.TileList)Start.tileList.clone(); // KP
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(georgiaPoints));
@@ -193,8 +199,6 @@ public class Georgia extends GameActivity {
         repeatLocked = true;
         if (syllableGame.equals("S")){
             Collections.shuffle(sortableSyllArray); //JP
-        }else{
-            Collections.shuffle(sortableTilesArray); // KP
         }
 
         chooseWord();
@@ -230,24 +234,39 @@ public class Georgia extends GameActivity {
             if(wordInLWC.compareTo(lastWord)!=0
                     && wordInLWC.compareTo(secondToLastWord)!=0
                     && wordInLWC.compareTo(thirdToLastWord)!=0){
-                freshWord = true;
-                thirdToLastWord = secondToLastWord;
-                secondToLastWord = lastWord;
-                lastWord = wordInLWC;
+                // this next section was moved by JP to help make sure that whatever word is chosen
+                // actually begins with a C or V
+                if (syllableGame.equals("S")){
+                    parsedWordSyllArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); //JP
+                    initialSyll = parsedWordSyllArrayFinal.get(0);
+
+                    freshWord = true;
+                    thirdToLastWord = secondToLastWord;
+                    secondToLastWord = lastWord;
+                    lastWord = wordInLWC;
+
+                    ImageView image = (ImageView) findViewById(R.id.wordImage);
+                    int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+                    image.setImageResource(resID);
+                }else{
+                    parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
+                    initialTile = parsedWordArrayFinal.get(0);
+
+                    if (CorV.contains(initialTile)){
+                        freshWord = true;
+                        thirdToLastWord = secondToLastWord;
+                        secondToLastWord = lastWord;
+                        lastWord = wordInLWC;
+
+                        ImageView image = (ImageView) findViewById(R.id.wordImage);
+                        int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+                        image.setImageResource(resID);
+                    }
+                }
             }
 
         }//generates a new word if it got one of the last three tested words // LM
-        ImageView image = (ImageView) findViewById(R.id.wordImage);
-        int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
-        image.setImageResource(resID);
 
-        if (syllableGame.equals("S")){
-            parsedWordSyllArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); //JP
-            initialSyll = parsedWordSyllArrayFinal.get(0);
-        }else{
-            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
-            initialTile = parsedWordArrayFinal.get(0);
-        }
     }
 
     private void setUpSyllables() {
@@ -368,6 +387,7 @@ public class Georgia extends GameActivity {
 
         Start.Tile answer = tileHashMap.find(initialTile);
 
+        // LINES 369 - 404 ARE SET UP FOR LEVEL 2
         answerChoices.clear();
         answerChoices.add(initialTile);
         answerChoices.add(answer.altTiles[0]);
@@ -375,10 +395,10 @@ public class Georgia extends GameActivity {
         answerChoices.add(answer.altTiles[2]);
 
         int i = 0;
-        while (answerChoices.size() < visibleTiles && i < sortableTilesArray.size()){
+        while (answerChoices.size() < visibleTiles && i < CorV.size()){
             // and does so while skipping repeats because it is a set
             // and a set has no order so it will be randomized anyways
-            String option = sortableTilesArray.get(i).baseTile;
+            String option = CorV.get(i);
             if (option.length() >= 2 && initialTile.length() >= 2){
                 if (option.charAt(0) == initialTile.charAt(0)
                         && option.charAt(1) == initialTile.charAt(1)){
@@ -399,7 +419,7 @@ public class Georgia extends GameActivity {
 
         int j = 0;
         while (answerChoices.size() < visibleTiles){
-            answerChoices.add(sortableTilesArray.get(j).baseTile);
+            answerChoices.add(CorV.get(j));
             j++;
         }
 
@@ -409,7 +429,7 @@ public class Georgia extends GameActivity {
 
             TextView gameTile = findViewById(TILE_BUTTONS[t]);
 
-            if (sortableTilesArray.get(t).baseTile.equals(initialTile) && t < visibleTiles) {
+            if (CorV.get(t).equals(initialTile) && t < visibleTiles) {
                 correctTileRepresented = true;
             }
 
@@ -418,7 +438,7 @@ public class Georgia extends GameActivity {
 
             if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3){ //random wrong
             if (t < visibleTiles) {
-                gameTile.setText(sortableTilesArray.get(t).baseTile); // KP
+                gameTile.setText(CorV.get(t)); // KP
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameTile.setVisibility(View.VISIBLE);
