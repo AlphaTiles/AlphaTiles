@@ -35,6 +35,10 @@ import static org.alphatilesapps.alphatiles.Start.syllableList;
 //Challenge Level 5: CONSONANTS: Pick from correct tile and its distractor trio
 //Challenge Level 6: CONSONANTS: Pick from all consonant tiles (up to a max of 15)
 
+//JP
+//Challenge Level 7: TONES: Pick from <= 4 tone markers; if the lang has >= 2 and < 4 tone markers,
+// make other views invisible
+
 // JP
 // Syllable Level 1: Pick from correct syllable and three random syllables (4 choices)
 // Syllable Level 2: Pick from correct syllable and its distractor trio (4 choices)
