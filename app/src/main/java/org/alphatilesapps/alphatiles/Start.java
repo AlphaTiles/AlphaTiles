@@ -84,6 +84,12 @@ public class Start extends AppCompatActivity
     public static int after12checkedTrackers;
     Boolean differentiateTypes;
 
+    public static List<String> CONSONANTS = new ArrayList<>();
+    public static List<String> VOWELS = new ArrayList<>();
+    public static List<String> CorV = new ArrayList<>();
+
+    public static int numberOfAvatars = 12; //default
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -135,6 +141,12 @@ public class Start extends AppCompatActivity
             hasSyllableAudio = false;
         }
 
+        String customNumOfAvatars = settingsList.find("Number of avatars");
+        if (customNumOfAvatars.compareTo("")!=0){
+            numberOfAvatars = Integer.parseInt(customNumOfAvatars);
+        }
+        // otherwise keep 12 default
+
         LOGGER.info("Remember: completed hasTileAudio & differentiateTypes & hasSyllableAudio");
 
         // JP: the old constructor is deprecated after API 21, so account for both scenarios
@@ -151,6 +163,19 @@ public class Start extends AppCompatActivity
         }
 
         buildTilesArray();
+        for (int d = 0; d < Start.tileList.size(); d++) {
+            if (Start.tileList.get(d).tileType.equals("C")) {
+                CONSONANTS.add(Start.tileList.get(d).baseTile);
+                CorV.add(Start.tileList.get(d).baseTile);
+            }
+            else if (Start.tileList.get(d).tileType.equals("V")) {
+                VOWELS.add(Start.tileList.get(d).baseTile);
+                CorV.add(Start.tileList.get(d).baseTile);
+            }
+        }
+        Collections.shuffle(CONSONANTS);
+        Collections.shuffle(VOWELS);
+        Collections.shuffle(CorV);
         if (hasTileAudio){
             totalAudio = totalAudio + tileList.size();
         }

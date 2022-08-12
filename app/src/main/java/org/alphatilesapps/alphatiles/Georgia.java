@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.Set;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
+import static org.alphatilesapps.alphatiles.Start.CorV;
 
 //level 1: 6 visible tiles, random wrong choices
 //level 2: 12 visible tiles, random wrong choices
@@ -38,7 +39,6 @@ import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 
 public class Georgia extends GameActivity {
 
-    Start.TileList sortableTilesArray; // KP
     Start.SyllableList sortableSyllArray; //JP
     Set<String> answerChoices = new HashSet<String>();
     String initialTile = "";
@@ -151,7 +151,6 @@ public class Georgia extends GameActivity {
         if (syllableGame.equals("S")){
             sortableSyllArray = (Start.SyllableList)Start.syllableList.clone();
         }
-        sortableTilesArray = (Start.TileList)Start.tileList.clone(); // KP
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(georgiaPoints));
@@ -193,8 +192,6 @@ public class Georgia extends GameActivity {
         repeatLocked = true;
         if (syllableGame.equals("S")){
             Collections.shuffle(sortableSyllArray); //JP
-        }else{
-            Collections.shuffle(sortableTilesArray); // KP
         }
 
         chooseWord();
@@ -368,6 +365,7 @@ public class Georgia extends GameActivity {
 
         Start.Tile answer = tileHashMap.find(initialTile);
 
+        // LINES 369 - 404 ARE SET UP FOR LEVEL 2
         answerChoices.clear();
         answerChoices.add(initialTile);
         answerChoices.add(answer.altTiles[0]);
@@ -375,10 +373,10 @@ public class Georgia extends GameActivity {
         answerChoices.add(answer.altTiles[2]);
 
         int i = 0;
-        while (answerChoices.size() < visibleTiles && i < sortableTilesArray.size()){
+        while (answerChoices.size() < visibleTiles && i < CorV.size()){
             // and does so while skipping repeats because it is a set
             // and a set has no order so it will be randomized anyways
-            String option = sortableTilesArray.get(i).baseTile;
+            String option = CorV.get(i);
             if (option.length() >= 2 && initialTile.length() >= 2){
                 if (option.charAt(0) == initialTile.charAt(0)
                         && option.charAt(1) == initialTile.charAt(1)){
@@ -399,7 +397,7 @@ public class Georgia extends GameActivity {
 
         int j = 0;
         while (answerChoices.size() < visibleTiles){
-            answerChoices.add(sortableTilesArray.get(j).baseTile);
+            answerChoices.add(CorV.get(j));
             j++;
         }
 
@@ -409,7 +407,7 @@ public class Georgia extends GameActivity {
 
             TextView gameTile = findViewById(TILE_BUTTONS[t]);
 
-            if (sortableTilesArray.get(t).baseTile.equals(initialTile) && t < visibleTiles) {
+            if (CorV.get(t).equals(initialTile) && t < visibleTiles) {
                 correctTileRepresented = true;
             }
 
@@ -418,7 +416,7 @@ public class Georgia extends GameActivity {
 
             if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3){ //random wrong
             if (t < visibleTiles) {
-                gameTile.setText(sortableTilesArray.get(t).baseTile); // KP
+                gameTile.setText(CorV.get(t)); // KP
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameTile.setVisibility(View.VISIBLE);
