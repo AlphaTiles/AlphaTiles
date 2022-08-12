@@ -37,6 +37,9 @@ import static org.alphatilesapps.alphatiles.Start.CorV;
 //level 5 + S: 12 visible syllables, distractor wrong choices
 //level 6 + S: 18 visible syllables, distractor wrong choices
 
+
+// IF A LANGUAGE HAS WORDS THAT START WITH SOMETHING OTHER THAN C OR V, THIS WILL CRASH
+
 public class Georgia extends GameActivity {
 
     Start.SyllableList sortableSyllArray; //JP
