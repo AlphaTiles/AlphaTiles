@@ -26,7 +26,6 @@ public class Celebration extends AppCompatActivity {
 
         gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 2, 0, 1.0f);
 
-
     }
 
 

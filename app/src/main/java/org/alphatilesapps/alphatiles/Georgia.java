@@ -67,8 +67,12 @@ public class Georgia extends GameActivity {
 
             ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
             instructionsButton.setVisibility(View.GONE);
-
-            int gameID = R.id.georgiaCL;
+            int gameID = 0;
+            if (syllableGame.equals("S")){
+                gameID = R.id.georgiaCL_syll;
+            }else{
+                gameID = R.id.georgiaCL;
+            }
             ConstraintLayout constraintLayout = findViewById(gameID);
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(constraintLayout);
