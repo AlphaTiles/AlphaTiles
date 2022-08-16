@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.syllableList;
+import static org.alphatilesapps.alphatiles.Start.COLORS;
 
 // RR
 //Game idea: Find the vowel missing from the word
@@ -96,8 +97,6 @@ public class Brazil extends GameActivity {
         constraintSet.applyTo(constraintLayout);
 
     }
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#4CAF50", "#E91E63"};
 
     static List<String> VOWELS = new ArrayList<>();
     static List<String> CONSONANTS = new ArrayList<>();
@@ -490,7 +489,7 @@ public class Brazil extends GameActivity {
                 correctSyllRepresented = true;
             }
 
-            String tileColorStr = COLORS[t % 5];
+            String tileColorStr = COLORS.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
             if (challengeLevel == 1){
@@ -566,7 +565,7 @@ public class Brazil extends GameActivity {
                     }
                 }
 
-                String tileColorStr = COLORS[t % 5];
+                String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setBackgroundColor(tileColor);
@@ -589,7 +588,7 @@ public class Brazil extends GameActivity {
                     correctTileRepresented = true;
                 }
 
-                String tileColorStr = COLORS[t % 5];
+                String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setText(sortableTilesArray.get(t).baseTile);
@@ -619,7 +618,7 @@ public class Brazil extends GameActivity {
             for (int t = 0; t < visibleTiles; t++) {
                 TextView gameTile = findViewById(TILE_BUTTONS[t]);
 
-                String tileColorStr = COLORS[t % 5];
+                String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setBackgroundColor(tileColor);

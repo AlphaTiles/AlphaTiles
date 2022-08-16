@@ -45,6 +45,8 @@ public class Thailand extends GameActivity {
     private static final String[] TYPES = {"TILE_LOWER", "TILE_UPPER", "TILE_AUDIO","WORD_TEXT",
             "WORD_IMAGE","WORD_AUDIO","SYLL_TEXT","SYLL_AUDIO"};
 
+    // 11, 12, 21, 31, 32, 14, 41, 24, 42, 45, 54, 51, 15,
+
     String refType;
     String refTile;
     String choiceType;

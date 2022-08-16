@@ -98,8 +98,6 @@ public class Colombia extends GameActivity {
 
     }
 
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63","#6200EE"};
-
 
     private static final Logger LOGGER = Logger.getLogger(Colombia.class.getName());
 
@@ -342,7 +340,7 @@ public class Colombia extends GameActivity {
                         String syllKey = keysList.get(k);
                         TextView key = findViewById(SYLL_BUTTONS[k]);
                         key.setText(syllKey); // JP
-                        String tileColorStr = COLORS[Integer.parseInt(syllableHashMap.find(syllKey).color)];
+                        String tileColorStr = COLORS.get(Integer.parseInt(syllableHashMap.find(syllKey).color));
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
@@ -367,7 +365,7 @@ public class Colombia extends GameActivity {
                     {
                         TextView key = findViewById(TILE_BUTTONS[k]);
                         key.setText(keyList.get(k).baseKey); // KRP
-                        String tileColorStr = COLORS[Integer.parseInt(keyList.get(k).keyColor)];
+                        String tileColorStr = COLORS.get(Integer.parseInt(keyList.get(k).keyColor));
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
@@ -716,7 +714,7 @@ public class Colombia extends GameActivity {
             key.setText(keyList.get(keyIndex).baseKey); // KP
             key.setVisibility(View.VISIBLE);
             // Added on May 15th, 2021, so that second and following screens use their own color coding
-            String tileColorStr = COLORS[Integer.parseInt(keyList.get(keyIndex).keyColor)];
+            String tileColorStr = COLORS.get(Integer.parseInt(keyList.get(keyIndex).keyColor));
             int tileColor = Color.parseColor(tileColorStr);
             key.setBackgroundColor(tileColor);
         }
