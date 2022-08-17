@@ -507,7 +507,7 @@ public class Sudan extends GameActivity {
         setOptionsRowUnclickable();
 
         String tileText = "";
-        int justClickedKey = Integer.parseInt((String)view.getTag());
+        int justClickedKey = Integer.parseInt((String)view.getTag()) + (currentPageNumber * 35);
         if (syllableGame.equals("S")){
             tileText = Start.syllableList.get(justClickedKey-1).syllable;
 
