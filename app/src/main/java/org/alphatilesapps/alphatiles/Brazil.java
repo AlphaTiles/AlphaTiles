@@ -611,7 +611,7 @@ public class Brazil extends GameActivity {
                     correctTileRepresented = true;
                 }
 
-                String tileColorStr = COLORS[t % 5];
+                String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setText(CONSONANTS.get(t));
