@@ -203,11 +203,11 @@ public class Start extends AppCompatActivity
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
-            // CHANGE THIS BASED ON EXAMPLE OF OTHER FUNCTIONS IF AARON WANTS MORE COLUMNS
+            String[] thisLineArray = thisLine.split("\t",2);
             if (header) {
                 header = false;
             } else {
-                COLORS.add(thisLine);
+                COLORS.add(thisLineArray[1]);
             }
         }
     }
