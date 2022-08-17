@@ -26,6 +26,8 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+import static org.alphatilesapps.alphatiles.Start.*;
+
 public class Ecuador extends GameActivity {
 
     ArrayList<String[]> wordListArray; // KP // the full list of words
@@ -81,8 +83,6 @@ public class Ecuador extends GameActivity {
         }
         return audioInstructionsResID;
     }
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger(Ecuador.class.getName());
 
@@ -157,7 +157,6 @@ public class Ecuador extends GameActivity {
 
         repeatLocked = true;
         setBoxes();
-        setTextSizes();
         setTextBoxColors();
         buildWordsArray();
         Collections.shuffle(wordListArray); // KP
@@ -291,49 +290,12 @@ public class Ecuador extends GameActivity {
 
     }
 
-    public void setTextSizes() {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        int pixelHeight;
-        double scaling = 0.45;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        for (int w = 0; w < TILE_BUTTONS.length; w++) {
-
-            TextView wordTile = findViewById(TILE_BUTTONS[w]);
-            pixelHeight = (int) (0.5 * (boxCoordinates[w][3] - boxCoordinates[w][1]));
-            wordTile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-            int[] location = new int[2];
-            wordTile.getLocationOnScreen(location);
-            LOGGER.info("Remember: for box index [" + w + "], (x,y) = (" + location[0] + ", " + location[1] + ")");
-
-        }
-
-        // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        ImageView pointsEarnedImage = (ImageView) findViewById(R.id.pointsImage);
-        ConstraintLayout.LayoutParams lp3 = (ConstraintLayout.LayoutParams) pointsEarnedImage.getLayoutParams();
-        int bottomToTopId3 = lp3.bottomToTop;
-        int topToTopId3 = lp3.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
-        pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-    }
-
     public void setTextBoxColors() {
 
         for (int w = 0; w < TILE_BUTTONS.length; w++) {
 
             TextView wordTile = findViewById(TILE_BUTTONS[w]);
-            String tileColorStr = COLORS[w % 5];
+            String tileColorStr = COLORS.get(w % 5);
             int tileColor = Color.parseColor(tileColorStr);
             wordTile.setBackgroundColor(tileColor);
             wordTile.setTextColor(Color.parseColor("#FFFFFF")); // white

@@ -18,6 +18,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import android.graphics.Typeface;
 import android.widget.Button;
 
+import static org.alphatilesapps.alphatiles.Start.*;
+
 public class UnitedStates extends GameActivity {
 
     int upperTileLimit = 5;
@@ -82,8 +84,6 @@ public class UnitedStates extends GameActivity {
         constraintSet.applyTo(constraintLayout);
 
     }
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger(UnitedStates.class.getName());
 
@@ -246,7 +246,7 @@ public class UnitedStates extends GameActivity {
             Button tileButtonA = (Button) findViewById(TILE_BUTTONS[bLRRL]);
             Button tileButtonB = (Button) findViewById(TILE_BUTTONS[bLRRL + 1]);
 
-            String tileColorStr = COLORS[(b % 5) / 2];
+            String tileColorStr = COLORS.get((b % 5) / 2);
             int tileColor = Color.parseColor(tileColorStr);
             tileButtonA.setBackgroundColor(tileColor);
             tileButtonB.setBackgroundColor(tileColor);
@@ -401,7 +401,7 @@ public class UnitedStates extends GameActivity {
         Button tile = findViewById(TILE_BUTTONS[tileIndex]);
         Button otherTile = findViewById(TILE_BUTTONS[otherTileIndex]);
 
-        String tileColorStr = COLORS[(tileIndex / 2) % 5];
+        String tileColorStr = COLORS.get((tileIndex / 2) % 5);
         int tileColorNo = Color.parseColor(tileColorStr);
         tile.setBackgroundColor(tileColorNo);
         tile.setTextColor(Color.parseColor("#FFFFFF")); // white

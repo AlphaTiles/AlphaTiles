@@ -17,7 +17,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import static org.alphatilesapps.alphatiles.Start.wordList;
+import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Myanmar extends GameActivity {
 
@@ -80,8 +80,6 @@ public class Myanmar extends GameActivity {
     private static final int[] WORD_IMAGES = {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04, R.id.wordImage05, R.id.wordImage06, R.id.wordImage07
     };
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger(Myanmar.class.getName());
 
@@ -709,7 +707,7 @@ public class Myanmar extends GameActivity {
 
                 TextView tile = findViewById(TILE_BUTTONS[tileY * 7 + tileX]);
 
-                String tileColorStr = COLORS[wordsCompleted % 5];
+                String tileColorStr = COLORS.get(wordsCompleted % 5);
                 int tileColor = Color.parseColor(tileColorStr);
                 tile.setBackgroundColor(tileColor); // theme color
                 tile.setTextColor(Color.parseColor("#FFFFFF")); // white
