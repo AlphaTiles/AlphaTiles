@@ -4,11 +4,15 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowMetrics;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.os.Build;
 import android.content.Context;
@@ -22,11 +26,16 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
+
+// JP TO DO:
+// 1. FIX SETBOXES() FUNCTION
+// 2. FILTER DUPLICATE ANSWER CHOICES
 
 public class Ecuador extends GameActivity {
 
@@ -147,9 +156,9 @@ public class Ecuador extends GameActivity {
 
     public void repeatGame(View View) {
 
-//        if (!repeatLocked) {
+        if (!repeatLocked) {
             playAgain();
-//        }
+        }
 
     }
 
@@ -170,15 +179,30 @@ public class Ecuador extends GameActivity {
 
         boxCoordinates = new int[8][4];
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightDisplay = displayMetrics.heightPixels;
-        int widthDisplay = displayMetrics.widthPixels;
+        // JP: DisplayMetrics is deprecated after Android 11
+        // must use WindowMetrics instead
+        int heightDisplay;
+        int widthDisplay;
+        int usableHeight;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            WindowMetrics displayMetrics = getWindowManager().getCurrentWindowMetrics();
+            Insets insets = displayMetrics.getWindowInsets()
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            widthDisplay = displayMetrics.getBounds().width() - insets.left - insets.right;
+            heightDisplay = displayMetrics.getBounds().height() - insets.top - insets.bottom;
+            usableHeight = heightDisplay;
+        }else{
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            heightDisplay = displayMetrics.heightPixels;
+            widthDisplay = displayMetrics.widthPixels;
+            usableHeight = heightDisplay - getNavigationBarSize(this).y;
+        }
+
         LOGGER.info("Remember: heightDisplay = " + heightDisplay);
         LOGGER.info("Remember: widthDisplay = " + widthDisplay);
 
 //        Point xyz = getNavigationBarSize(this);
-        int usableHeight = heightDisplay - getNavigationBarSize(this).y;
         int usableWidth = widthDisplay;
         LOGGER.info("Remember: usableHeight = " + usableHeight);
         LOGGER.info("Remember: usableWidth = " + usableWidth);
@@ -192,9 +216,6 @@ public class Ecuador extends GameActivity {
         int minStartX = minX1;
         int maxStartX = (int) (usableWidth * 0.65);
 
-        int minStartY = minY1;
-        int maxStartY = (int) (usableHeight * 0.79);
-
         int minWidth = (int) (usableWidth * 0.25);      // Height will be equal to (width / hwRatio)
         int maxWidth = (int) (usableWidth * 0.5);
 
@@ -207,6 +228,13 @@ public class Ecuador extends GameActivity {
         LOGGER.info("Remember: maxY2 = " + maxY2);
 
         final int hwRatio = 4;
+
+        int minStartY = minY1;
+        int maxStartY = (int) (usableHeight * 0.75);
+        //int maxStartY = (int) (usableHeight * 0.79) - (maxWidth / hwRatio);
+
+        // JP: maxStartY should really be (usableHeight * 0.79) - (maxWidth / hwRatio)
+        // to prevent it from going below bottom icons
 
         boolean verticalOverlap;
         boolean horizontalOverlap;
@@ -228,6 +256,25 @@ public class Ecuador extends GameActivity {
 
             // Check to see if current box overlaps previous boxes or if current box goes out of bounds
             boolean setValues = true;
+            if (currentBoxIndex == 0){
+                verticalOverlap = true;
+                horizontalOverlap = true;
+                overlap = true;
+                if ((coordX2 + bufferX) < boxCoordinates[0][0] || (coordX1 - bufferX) > boxCoordinates[0][2]) {horizontalOverlap = false;}
+                if ((coordY2 + bufferY) < boxCoordinates[0][1] || (coordY1 - bufferY) > boxCoordinates[0][3]) {verticalOverlap = false;}
+                if (!horizontalOverlap || !verticalOverlap) {overlap = false;}
+
+                // Check if current box goes out of bounds
+                outOfBounds = false;
+                if (coordX2 > maxX2) {outOfBounds = true;}
+                if (coordY2 > maxY2) {outOfBounds = true;}
+
+//                LOGGER.info("Remember: overlap = " + overlap + " and outOfBounds = " + outOfBounds);
+
+                if (overlap || outOfBounds) {
+                    setValues = false;
+                }
+            }
             for (int definedBoxIndex = 0; definedBoxIndex < currentBoxIndex; definedBoxIndex++) {
                 // So, the very first pass (with currentBoxIndex = 0 and definedBoxIndex = 0), it will skip this loop
                 // But this is wrong, because even in the very first pass, you need to check that it is inside bounds
@@ -256,10 +303,17 @@ public class Ecuador extends GameActivity {
                 boxCoordinates[currentBoxIndex][1] = coordY1;
                 boxCoordinates[currentBoxIndex][2] = coordX2;
                 boxCoordinates[currentBoxIndex][3] = coordY2;
+                extraLoops = 0;
             } else {
                 if (extraLoops < 10000) {
                     currentBoxIndex = currentBoxIndex - 1;              // force repeat of setting parameters for current box
                     extraLoops++;
+                }
+                else{
+                    // something has gone horribly wrong and I have no idea how to fix it
+                    // other than to start over until we find a config that works
+                    currentBoxIndex = 0;
+                    extraLoops = 0;
                 }
             }
 //            LOGGER.info("Remember: currentBoxIndex =" + currentBoxIndex + " and extraLoops = " + extraLoops);
@@ -274,6 +328,7 @@ public class Ecuador extends GameActivity {
                 @Override
                 public void run() {
 
+                    //RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) wordTile.getLayoutParams();
                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) wordTile.getLayoutParams();
 
                     // X1, Y1, X2, Y2
@@ -289,6 +344,56 @@ public class Ecuador extends GameActivity {
         }
 
     }
+
+    // new approach:
+    // set constraints dynamically with random start and end margins to parent
+    // top and bottom constrained to previous and next words with random margins as well
+    public void setBoxesJP(){
+        int gameID = R.id.ecuadorCL;
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        Random rand = new Random();
+        int randInt = 0;
+        for (int c = 0; c < TILE_BUTTONS.length; c++) {
+            int wordTile = TILE_BUTTONS[c];
+            if (c == 0){ // first word tile
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.END,R.id.parent,ConstraintSet.END,randInt);
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.START,R.id.parent,ConstraintSet.START,randInt);
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.TOP,R.id.activeWordTextView,ConstraintSet.BOTTOM,randInt);
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.BOTTOM,R.id.word02,ConstraintSet.TOP,randInt);
+                constraintSet.centerHorizontally(wordTile, gameID);
+                constraintSet.applyTo(constraintLayout);
+            }else if (c == TILE_BUTTONS.length - 1){ // last word tile
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.END,R.id.parent,ConstraintSet.END,randInt);
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.START,R.id.parent,ConstraintSet.START,randInt);
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.TOP,TILE_BUTTONS[c-1],ConstraintSet.BOTTOM,randInt);
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.BOTTOM,R.id.guidelineHSys1,ConstraintSet.TOP,randInt);
+                constraintSet.centerHorizontally(wordTile, gameID);
+                constraintSet.applyTo(constraintLayout);
+            }else{
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.END,R.id.parent,ConstraintSet.END,randInt);
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.START,R.id.parent,ConstraintSet.START,randInt);
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.TOP,TILE_BUTTONS[c-1],ConstraintSet.BOTTOM,randInt);
+                randInt = rand.nextInt(100);
+                constraintSet.connect(wordTile,ConstraintSet.BOTTOM,TILE_BUTTONS[c+1],ConstraintSet.TOP,randInt);
+                constraintSet.centerHorizontally(wordTile, gameID);
+                constraintSet.applyTo(constraintLayout);
+            }
+        }
+    }
+
 
     public void setTextBoxColors() {
 

@@ -85,6 +85,12 @@ public class Start extends AppCompatActivity
     public static int after12checkedTrackers;
     Boolean differentiateTypes;
 
+    public static int numberOfAvatars = 12; //default
+
+    public static List<String> CONSONANTS = new ArrayList<>();
+    public static List<String> VOWELS = new ArrayList<>();
+    public static List<String> CorV = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -138,6 +144,12 @@ public class Start extends AppCompatActivity
             hasSyllableAudio = false;
         }
 
+        String customNumOfAvatars = settingsList.find("Number of avatars");
+        if (customNumOfAvatars.compareTo("")!=0){
+            numberOfAvatars = Integer.parseInt(customNumOfAvatars);
+        }
+        // otherwise keep 12 default
+
         LOGGER.info("Remember: completed hasTileAudio & differentiateTypes & hasSyllableAudio");
 
         // JP: the old constructor is deprecated after API 21, so account for both scenarios
@@ -154,6 +166,19 @@ public class Start extends AppCompatActivity
         }
 
         buildTilesArray();
+        for (int d = 0; d < Start.tileList.size(); d++) {
+            if (Start.tileList.get(d).tileType.equals("C")) {
+                CONSONANTS.add(Start.tileList.get(d).baseTile);
+                CorV.add(Start.tileList.get(d).baseTile);
+            }
+            else if (Start.tileList.get(d).tileType.equals("V")) {
+                VOWELS.add(Start.tileList.get(d).baseTile);
+                CorV.add(Start.tileList.get(d).baseTile);
+            }
+        }
+        Collections.shuffle(CONSONANTS);
+        Collections.shuffle(VOWELS);
+        Collections.shuffle(CorV);
         if (hasTileAudio){
             totalAudio = totalAudio + tileList.size();
         }
@@ -1271,6 +1296,8 @@ public class Start extends AppCompatActivity
             Syllable refSyllable = syllableHashMap.find(refTile);
             Random rand = new Random();
             boolean correctRep = false;
+
+            // get a word that starts with the refTile (syllable)
             while (!correctRep){
                 int randomNum = rand.nextInt(wordList.size());
                 potentialWord = wordList.get(randomNum).localWord;
@@ -1282,6 +1309,8 @@ public class Start extends AppCompatActivity
                     correctRep = true;
                 }
             }
+
+
             if (chall == 1){ //easy words = not same initial syllable and no distractor syllables word-initially
                 while (fourWords.size() < 4){
                     int randomNum = rand.nextInt(wordList.size());
@@ -1318,13 +1347,15 @@ public class Start extends AppCompatActivity
                     }
                     count++;
                 }
-                while (fourWords.size() < 4){
+                while (fourWords.size() < 4){ // maybe this is an infinite loop - change to allow
+                    // any word that doesn't begin with correct syll
                     int randomNum = rand.nextInt(wordList.size());
                     potentialWord = wordList.get(randomNum).localWord;
                     natWord = wordList.get(randomNum).nationalWord;
                     potentialWordParsed = syllableList.parseWordIntoSyllables(potentialWord);
-                    if (!potentialWordParsed.get(0).equals(refTile) && (potentialWord.charAt(0)
-                            == refTile.charAt(0))){
+                    // if (!potentialWordParsed.get(0).equals(refTile) && (potentialWord.charAt(0)
+                    //                            == refTile.charAt(0)))
+                    if (!potentialWordParsed.get(0).equals(refTile)){
                         String[] tileEntry = new String[]{natWord, potentialWord};
                         if (!trackWords.contains(potentialWord)) {
                             trackWords.add(potentialWord);
@@ -1340,10 +1371,12 @@ public class Start extends AppCompatActivity
         public ArrayList<String[]> returnFourSylls(String refTile, int chall){
             ArrayList<String[]> fourSylls = new ArrayList<>();
             Syllable refSyllable = syllableHashMap.find(refTile);
+            Set<String> trackSylls = new HashSet<>(); //used to prevent repeats
             String potentialSyll;
             String potentialSyllAud;
             Random rand = new Random();
             fourSylls.add(new String[] {refSyllable.syllableAudioName, refSyllable.syllable}); // correct
+            trackSylls.add(refSyllable.syllable);
             if (chall == 1){ //random wrong syllables
                 while (fourSylls.size() < 4){
                     int randomNum = rand.nextInt(syllableList.size());
@@ -1352,14 +1385,33 @@ public class Start extends AppCompatActivity
                     if (!potentialSyll.equals(refTile) && !potentialSyll
                             .equals(refSyllable.distractors[0]) && !potentialSyll
                             .equals(refSyllable.distractors[1]) && !potentialSyll
-                            .equals(refSyllable.distractors[2])){
+                            .equals(refSyllable.distractors[2]) && !trackSylls.contains(potentialSyll)){
+                        trackSylls.add(potentialSyll);
                         fourSylls.add(new String[]{potentialSyllAud, potentialSyll});
                     }
                 }
             }else if (chall == 2){ //distractor syllables
-                fourSylls.add(new String [] {refSyllable.syllableAudioName, refSyllable.distractors[0]});
-                fourSylls.add(new String[] {refSyllable.syllableAudioName, refSyllable.distractors[1]});
-                fourSylls.add(new String[] {refSyllable.syllableAudioName, refSyllable.distractors[2]});
+                if (!trackSylls.contains(refSyllable.distractors[0])){
+                    trackSylls.add(refSyllable.distractors[0]);
+                    fourSylls.add(new String [] {refSyllable.syllableAudioName, refSyllable.distractors[0]});
+                }
+                if (!trackSylls.contains(refSyllable.distractors[1])){
+                    trackSylls.add(refSyllable.distractors[1]);
+                    fourSylls.add(new String[] {refSyllable.syllableAudioName, refSyllable.distractors[1]});
+                }
+                if (!trackSylls.contains(refSyllable.distractors[2])){
+                    trackSylls.add(refSyllable.distractors[2]);
+                    fourSylls.add(new String[] {refSyllable.syllableAudioName, refSyllable.distractors[2]});
+                }
+                while (fourSylls.size() < 4){
+                    int randomNum = rand.nextInt(syllableList.size());
+                    potentialSyll = syllableList.get(randomNum).syllable;
+                    potentialSyllAud = syllableList.get(randomNum).syllableAudioName;
+                    if (!potentialSyll.equals(refTile) && !trackSylls.contains(potentialSyll)){
+                        trackSylls.add(potentialSyll);
+                        fourSylls.add(new String[]{potentialSyllAud, potentialSyll});
+                    }
+                }
             }
             return (ArrayList<String[]>) fourSylls;
         }

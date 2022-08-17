@@ -177,8 +177,6 @@ public class Romania extends GameActivity {
         activeTile = startingAlphabetTile;
         setUpBasedOnGameTile(activeTile);
 
-        setTextSizes();
-
         if(getAudioInstructionsResID()==0){
             centerGamesHomeImage();
         }
@@ -319,60 +317,6 @@ public class Romania extends GameActivity {
                 goToPreviousTile(null);
             }
         }
-    }
-
-    public void setTextSizes() {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        double scaling = 0.45;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
-        ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) gameTile.getLayoutParams();
-        int bottomToTopId1 = lp1.bottomToTop;
-        int topToTopId1 = lp1.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId1).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId1).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        int pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-        gameTile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
-        ConstraintLayout.LayoutParams lp2 = (ConstraintLayout.LayoutParams) magTile.getLayoutParams();
-        int bottomToTopId2 = lp2.bottomToTop;
-        int topToTopId2 = lp2.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId2).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId2).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-        magTile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
-        ConstraintLayout.LayoutParams lp3 = (ConstraintLayout.LayoutParams) activeWord.getLayoutParams();
-        int bottomToTopId3 = lp3.bottomToTop;
-        int topToTopId3 = lp3.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId3).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId3).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-        activeWord.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-        // Requires an extra step since the image is anchored to guidelines NOT the textview whose font size we want to edit
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        ImageView pointsEarnedImage = (ImageView) findViewById(R.id.pointsImage);
-        ConstraintLayout.LayoutParams lp4 = (ConstraintLayout.LayoutParams) pointsEarnedImage.getLayoutParams();
-        int bottomToTopId4 = lp4.bottomToTop;
-        int topToTopId4 = lp4.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId4).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId4).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (0.5 * scaling * percentHeight * heightOfDisplay);
-        pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
     }
 
     public void goToNextTile(View View) {
