@@ -1,7 +1,9 @@
 package org.alphatilesapps.alphatiles;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -165,30 +167,33 @@ public class Earth extends AppCompatActivity {
                             }
                         }
 
-                        String color = "";
+                        boolean changeColor = true;
                         String doorStyle = "";
                         if (country.equals("Sudan")||country.equals("Romania")){
-                            doorStyle = "_mastery";
-                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
+                            doorStyle = "_inprocess";
                         }
                         else if (trackerCount > 0 && trackerCount < 12) {
                             doorStyle = "_inprocess";
-                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
                         } else if (trackerCount >= 12){
                             doorStyle = "_mastery";
-                            color = "6";
+                            changeColor = false;
                         } else{ // 0
                             doorStyle = "";
-                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
                         }
 
-                        String drawableBase = "zz_door_color" + color;
+                        String drawableBase = "zz_door";
 
                         String drawableEntryName = drawableBase + doorStyle;
 
                         int resId = getResources().getIdentifier(drawableEntryName, "drawable", getPackageName());
-                        Drawable doorDrawable = getResources().getDrawable(resId);
-                        ((TextView) child).setBackground(doorDrawable);
+                        Drawable unwrappedDrawable = AppCompatResources.getDrawable(context, resId);
+                        Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
+                        if (changeColor){
+                            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(COLORS.get(
+                                    Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage)
+                                            + doorIndex).gameColor))));
+                        }
+                        ((TextView) child).setBackground(wrappedDrawable);
                         ((TextView) child).setVisibility(View.VISIBLE);
 
                     }
