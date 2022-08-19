@@ -228,11 +228,11 @@ public class Start extends AppCompatActivity
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
-            String[] thisLineArray = thisLine.split("\t",2);
+            String[] thisLineArray = thisLine.split("\t",3);
             if (header) {
                 header = false;
             } else {
-                COLORS.add(thisLineArray[1]);
+                COLORS.add(thisLineArray[2]);
             }
         }
     }
