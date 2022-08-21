@@ -528,6 +528,8 @@ public class Brazil extends GameActivity {
     private void setUpTiles() {
 
         boolean correctTileRepresented = false;
+        Collections.shuffle(VOWELS);
+        Collections.shuffle(CONSONANTS);
         if (challengeLevel == 3 || challengeLevel == 6) {
             for (int t = 0; t < visibleTiles; t++) {
                 TextView gameTile = findViewById(TILE_BUTTONS[t]);
