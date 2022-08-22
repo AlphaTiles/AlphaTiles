@@ -149,22 +149,8 @@ public class Earth extends AppCompatActivity {
                         } else if (trackerCount < 12) {
                             ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
                         } else { // >= 12
-                            // LATER: REPLACE THESE COLORS
                             String textColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
-                            if (textColor.equals("0")){
-                                ((TextView) child).setTextColor(Color.parseColor("#9C27B0")); // purple;
-                            } else if (textColor.equals("1")){
-                                ((TextView) child).setTextColor(Color.parseColor("#2196F3")); // blue;
-                            }else if (textColor.equals("2")){
-                                ((TextView) child).setTextColor(Color.parseColor("#F44336")); // orange;
-                            }else if (textColor.equals("3")){
-                                ((TextView) child).setTextColor(Color.parseColor("#4CAF50")); // green;
-                            }else if (textColor.equals("4")){
-                                ((TextView) child).setTextColor(Color.parseColor("#E91E63")); // red;
-                            }else{
-                                ((TextView) child).setTextColor(Color.parseColor("#3700B3")); // colorPrimaryDark;
-                                // should never happen
-                            }
+                            ((TextView) child).setTextColor(Color.parseColor(COLORS.get(Integer.parseInt(textColor))));
                         }
 
                         boolean changeColor = true;
