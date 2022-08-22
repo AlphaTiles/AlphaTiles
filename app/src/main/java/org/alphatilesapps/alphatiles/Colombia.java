@@ -267,10 +267,20 @@ public class Colombia extends GameActivity {
                     TextView key;
                     if (syllableGame.equals("S")){
                         key = findViewById(SYLL_BUTTONS[k]);
+                        key.setText(keysList.get(k));
+                        String tileColorStr = COLORS.get(Integer.parseInt(syllableHashMap.find(keysList.get(k)).color));
+                        int tileColor = Color.parseColor(tileColorStr);
+                        key.setBackgroundColor(tileColor);
                     }else{
                         key = findViewById(TILE_BUTTONS[k]);
+                        key = findViewById(TILE_BUTTONS[k]);
+                        key.setText(keysList.get(k));
+                        Random rand = new Random();
+                        int colorInt = rand.nextInt(4);
+                        String tileColorStr = COLORS.get(colorInt);
+                        int tileColor = Color.parseColor(tileColorStr);
+                        key.setBackgroundColor(tileColor);
                     }
-                    key.setText(keysList.get(k));
 
                 }
                 break;
@@ -304,10 +314,20 @@ public class Colombia extends GameActivity {
                     TextView key;
                     if (syllableGame.equals("S")){
                         key = findViewById(SYLL_BUTTONS[k]);
+                        key.setText(keysList.get(k));
+                        String tileColorStr = COLORS.get(Integer.parseInt(syllableHashMap.find(keysList.get(k)).color));
+                        int tileColor = Color.parseColor(tileColorStr);
+                        key.setBackgroundColor(tileColor);
                     }else{
                         key = findViewById(TILE_BUTTONS[k]);
+                        key.setText(keysList.get(k));
+                        Random rand = new Random();
+                        int colorInt = rand.nextInt(4);
+                        String tileColorStr = COLORS.get(colorInt);
+                        int tileColor = Color.parseColor(tileColorStr);
+                        key.setBackgroundColor(tileColor);
                     }
-                    key.setText(keysList.get(k));
+
 
                 }
                 break;

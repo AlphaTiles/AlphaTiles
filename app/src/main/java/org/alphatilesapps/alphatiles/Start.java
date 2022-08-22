@@ -111,6 +111,7 @@ public class Start extends AppCompatActivity
         LOGGER.info("Remember: completed buildSettingsArray()");
 
         buildColorsArray();
+        LOGGER.info("Remember: completed buildColorsArray()");
 
         String hasAudioSetting = settingsList.find("Has tile audio");
         if(hasAudioSetting.compareTo("")!=0){
