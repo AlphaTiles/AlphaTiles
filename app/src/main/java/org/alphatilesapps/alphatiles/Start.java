@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1242,13 +1243,8 @@ public class Start extends AppCompatActivity
         public String colorTitle;
 
         public ArrayList<String> parseWordIntoSyllables(String parseMe) {
-            ArrayList<String> parsedWordArrayTemp = new ArrayList();
-            StringTokenizer st = new StringTokenizer(parseMe, ".");
-            while (st.hasMoreTokens()) {
-                parsedWordArrayTemp.add(st.nextToken());
-            }
-
-            return parsedWordArrayTemp;
+            String[] parsedWordArrayTemp = parseMe.split("[\\s.-]"); //period, dash, space
+            return new ArrayList<String>(Arrays.asList(parsedWordArrayTemp));
         }
 
         public String returnRandomCorrespondingSyllable(String correctSyll) {
