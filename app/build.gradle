@@ -10,8 +10,8 @@ android {
         applicationId "org.alphatilesapps.alphatiles"
         minSdkVersion 19
         targetSdkVersion 32
-        versionCode 66
-        versionName "1.0.0"
+        versionCode 67
+        versionName "1.0.1"
 
         // API 14 = Ice Cream (4.0)
         // API 16 = Jelly Bean (4.1) - required for Firebase
