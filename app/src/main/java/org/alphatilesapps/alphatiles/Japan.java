@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import static org.alphatilesapps.alphatiles.Start.*;
+
 public class Japan extends GameActivity {
 
     /*JP:
@@ -68,13 +70,6 @@ public class Japan extends GameActivity {
     };
 
     protected static int[] TILES_AND_BUTTONS;
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#6200EE", "#E91E63"};
-    // theme purple
-    // theme blue
-    // theme orange
-    // colorPrimary
-    // theme read
 
 
     @Override
@@ -261,7 +256,7 @@ public class Japan extends GameActivity {
 
         int j = 0;
         for (int i = 0; i < visibleViews; i = i + 2){
-            String tileColorStr = COLORS[i % 5];
+            String tileColorStr = COLORS.get(i % 5);
             int tileColor = Color.parseColor(tileColorStr);
             TextView tile = findViewById(TILES_AND_BUTTONS[i]);
             tile.setText(parsedWordIntoTiles.get(j));
@@ -416,12 +411,12 @@ public class Japan extends GameActivity {
 
                 Random rand = new Random();
                 int i = rand.nextInt(10);
-                String tileColorStr = COLORS[i % 5];
+                String tileColorStr = COLORS.get(i % 5);
                 int tileColor = Color.parseColor(tileColorStr);
                 nextTile.setBackgroundColor(tileColor);
 
                 i = rand.nextInt(10);
-                tileColorStr = COLORS[i % 5];
+                tileColorStr = COLORS.get(i % 5);
                 tileColor = Color.parseColor(tileColorStr);
                 clickedTile.setBackgroundColor(tileColor);
                 clickedTile.setClickable(false);
@@ -460,12 +455,12 @@ public class Japan extends GameActivity {
 
                 Random rand = new Random();
                 int i = rand.nextInt(10);
-                String tileColorStr = COLORS[i % 5];
+                String tileColorStr = COLORS.get(i % 5);
                 int tileColor = Color.parseColor(tileColorStr);
                 prevTile.setBackgroundColor(tileColor);
 
                 i = rand.nextInt(10);
-                tileColorStr = COLORS[i % 5];
+                tileColorStr = COLORS.get(i % 5);
                 tileColor = Color.parseColor(tileColorStr);
                 clickedTile.setBackgroundColor(tileColor);
                 clickedTile.setClickable(false);
@@ -505,12 +500,12 @@ public class Japan extends GameActivity {
 
                 Random rand = new Random();
                 int i = rand.nextInt(10);
-                String tileColorStr = COLORS[i % 5];
+                String tileColorStr = COLORS.get(i % 5);
                 int tileColor = Color.parseColor(tileColorStr);
                 prevTile.setBackgroundColor(tileColor);
 
                 i = rand.nextInt(10);
-                tileColorStr = COLORS[i % 5];
+                tileColorStr = COLORS.get(i % 5);
                 tileColor = Color.parseColor(tileColorStr);
                 clickedTile.setBackgroundColor(tileColor);
                 clickedTile.setClickable(false);
@@ -552,12 +547,12 @@ public class Japan extends GameActivity {
 
                     rand = new Random();
                     i = rand.nextInt(10);
-                    tileColorStr = COLORS[i % 5];
+                    tileColorStr = COLORS.get(i % 5);
                     tileColor = Color.parseColor(tileColorStr);
                     nextTile.setBackgroundColor(tileColor);
 
                     i = rand.nextInt(10);
-                    tileColorStr = COLORS[i % 5];
+                    tileColorStr = COLORS.get(i % 5);
                     tileColor = Color.parseColor(tileColorStr);
                     clickedTile.setBackgroundColor(tileColor);
                     clickedTile.setClickable(false);
@@ -599,12 +594,12 @@ public class Japan extends GameActivity {
 
                 Random rand = new Random();
                 int i = rand.nextInt(10);
-                String tileColorStr = COLORS[i % 5];
+                String tileColorStr = COLORS.get(i % 5);
                 int tileColor = Color.parseColor(tileColorStr);
                 nextTile.setBackgroundColor(tileColor);
 
                 i = rand.nextInt(10);
-                tileColorStr = COLORS[i % 5];
+                tileColorStr = COLORS.get(i % 5);
                 tileColor = Color.parseColor(tileColorStr);
                 clickedTile.setBackgroundColor(tileColor);
                 clickedTile.setClickable(false);

@@ -1,7 +1,9 @@
 package org.alphatilesapps.alphatiles;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -147,48 +149,37 @@ public class Earth extends AppCompatActivity {
                         } else if (trackerCount < 12) {
                             ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
                         } else { // >= 12
-                            // LATER: REPLACE THESE COLORS
                             String textColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
-                            if (textColor.equals("0")){
-                                ((TextView) child).setTextColor(Color.parseColor("#9C27B0")); // purple;
-                            } else if (textColor.equals("1")){
-                                ((TextView) child).setTextColor(Color.parseColor("#2196F3")); // blue;
-                            }else if (textColor.equals("2")){
-                                ((TextView) child).setTextColor(Color.parseColor("#F44336")); // orange;
-                            }else if (textColor.equals("3")){
-                                ((TextView) child).setTextColor(Color.parseColor("#4CAF50")); // green;
-                            }else if (textColor.equals("4")){
-                                ((TextView) child).setTextColor(Color.parseColor("#E91E63")); // red;
-                            }else{
-                                ((TextView) child).setTextColor(Color.parseColor("#3700B3")); // colorPrimaryDark;
-                                // should never happen
-                            }
+                            ((TextView) child).setTextColor(Color.parseColor(COLORS.get(Integer.parseInt(textColor))));
                         }
 
-                        String color = "";
+                        boolean changeColor = true;
                         String doorStyle = "";
                         if (country.equals("Sudan")||country.equals("Romania")){
-                            doorStyle = "_mastery";
-                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
+                            doorStyle = "_inprocess";
                         }
                         else if (trackerCount > 0 && trackerCount < 12) {
                             doorStyle = "_inprocess";
-                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
                         } else if (trackerCount >= 12){
                             doorStyle = "_mastery";
-                            color = "6";
+                            changeColor = false;
                         } else{ // 0
                             doorStyle = "";
-                            color = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
                         }
 
-                        String drawableBase = "zz_door_color" + color;
+                        String drawableBase = "zz_door";
 
                         String drawableEntryName = drawableBase + doorStyle;
 
                         int resId = getResources().getIdentifier(drawableEntryName, "drawable", getPackageName());
-                        Drawable doorDrawable = getResources().getDrawable(resId);
-                        ((TextView) child).setBackground(doorDrawable);
+                        Drawable unwrappedDrawable = AppCompatResources.getDrawable(context, resId);
+                        Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
+                        if (changeColor){
+                            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(COLORS.get(
+                                    Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage)
+                                            + doorIndex).gameColor))));
+                        }
+                        ((TextView) child).setBackground(wrappedDrawable);
                         ((TextView) child).setVisibility(View.VISIBLE);
 
                     }

@@ -23,9 +23,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import static org.alphatilesapps.alphatiles.Start.TONES;
-import static org.alphatilesapps.alphatiles.Start.VOWELS;
-import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
+import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Peru extends GameActivity {
 
@@ -75,8 +73,6 @@ public class Peru extends GameActivity {
         constraintSet.applyTo(constraintLayout);
 
     }
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger( Peru.class.getName() );
 
@@ -199,7 +195,7 @@ public class Peru extends GameActivity {
         // Set thematic colors for four word choice TextViews, also make clickable
         for (int i = 0; i < TILE_BUTTONS.length; i++) {
             TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
-            String wordColorStr = COLORS[i];
+            String wordColorStr = COLORS.get(i);
             int wordColorNo = Color.parseColor(wordColorStr);
             nextWord.setBackgroundColor(wordColorNo);
             nextWord.setTextColor(Color.parseColor("#FFFFFF")); // white
