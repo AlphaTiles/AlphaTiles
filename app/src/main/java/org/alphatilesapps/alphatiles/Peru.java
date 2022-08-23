@@ -33,8 +33,6 @@ public class Peru extends GameActivity {
     String thirdToLastWord = "";
     int peruPoints;
     boolean peruHasChecked12Trackers;
-    static List<String> VOWELS = new ArrayList<>();
-    static List<String> CONSONANTS = new ArrayList<>();
     static List<String> OTHERS = new ArrayList<>();
 
     protected static final int[] TILE_BUTTONS = {
@@ -131,29 +129,14 @@ public class Peru extends GameActivity {
 
         if (challengeLevel == 2) {
 
-            if (VOWELS.isEmpty()) {  //makes sure VOWELS is populated only once when the app is running
-                for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (Start.tileList.get(d).tileType.equals("V")) {
-                        VOWELS.add(Start.tileList.get(d).baseTile);
-                    }
-                }
-            }
-
-            Collections.shuffle(VOWELS); // AH
-
-            if (CONSONANTS.isEmpty()) {  //makes sure CONSONANTS is populated only once when the app is running
-                for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (Start.tileList.get(d).tileType.equals("C")) {
-                        CONSONANTS.add(Start.tileList.get(d).baseTile);
-                    }
-                }
-            }
-
+            Collections.shuffle(VOWELS);
             Collections.shuffle(CONSONANTS);
+            Collections.shuffle(TONES);
 
             if (OTHERS.isEmpty()) {  //makes sure OTHERS is populated only once when the app is running
                 for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (!Start.tileList.get(d).tileType.equals("C") && !Start.tileList.get(d).tileType.equals("V")) {
+                    if (!Start.tileList.get(d).tileType.equals("C") && !Start.tileList.get(d).tileType.equals("V")
+                            && !Start.tileList.get(d).tileType.equals("T")) {
                         OTHERS.add(Start.tileList.get(d).baseTile);
                     }
                 }
@@ -262,7 +245,7 @@ public class Peru extends GameActivity {
                     case 2:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
                         // REPLACEMENT IS ANY GAME TILE FROM THE WHOLE ARRAY
-                        // JP changed: REPLACEMENT IS NOW ANY TILE OF THE SAME TYPE (C OR V) FROM THE WHOLE ARRAY
+                        // JP changed: REPLACEMENT IS NOW ANY TILE OF THE SAME TYPE (C OR V OR T) FROM THE WHOLE ARRAY
 
                         //fix: some accidental duplicates
                         while(isDuplicateAnswerChoice) {
@@ -275,7 +258,11 @@ public class Peru extends GameActivity {
                             }else if (CONSONANTS.contains(tempArray2.get(randomNum3))){
                                 randomNum4 = rand.nextInt(CONSONANTS.size());
                                 tempArray2.set(randomNum3, CONSONANTS.get(randomNum4)); // JP
-                            }else{
+                            }else if(TONES.contains(tempArray2.get(randomNum3))){
+                                randomNum4 = rand.nextInt(TONES.size());
+                                tempArray2.set(randomNum3, TONES.get(randomNum4)); // JP
+                            }
+                            else{
                                 randomNum4 = rand.nextInt(OTHERS.size());
                                 tempArray2.set(randomNum3, OTHERS.get(randomNum4)); // JP
                             }
