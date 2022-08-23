@@ -328,6 +328,15 @@ public class Romania extends GameActivity {
         else {
             activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
         }
+        while (returnGroupOneCountRomania(activeTile) == 0){
+            oldTile = activeTile;
+            if(differentiateTypes){
+                activeTile = Start.tileListWithMultipleTypes.returnNextAlphabetTileDifferentiateTypes(oldTile);
+            }
+            else {
+                activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
+            }
+        }
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
         wordTokenNoGroupThree = 0;
@@ -355,6 +364,64 @@ public class Romania extends GameActivity {
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
         editor.apply();
         setUpBasedOnGameTile(activeTile);
+    }
+
+    // JP copied this function into here because of
+    // "non-static method cannot be accessed in static context" issue
+    public int returnGroupOneCountRomania(String someGameTile) {
+        // Group One = words that START with the active tile
+
+        ArrayList<String> parsedWordArrayFinal;
+        String wordInitialTile;
+        String wordInitialTileType;
+        String someGameTileType;
+        String someGameTileWithoutSuffix;
+
+        someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
+        if (someGameTileType.compareTo("B") == 0) {
+            someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
+        } else if (someGameTileType.compareTo("C") == 0) {
+            someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
+        } else {
+            someGameTileWithoutSuffix = someGameTile;
+            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
+        }
+
+        int tilesCount = 0;
+
+        for (int i = 0; i < wordList.size(); i++) {
+            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordList.get(i).localWord);
+
+            wordInitialTile = parsedWordArrayFinal.get(0);
+
+            if (wordInitialTile != null) {
+
+                if(differentiateTypes){//checking if both tile and type match
+                    if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
+                        wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, wordList.get(i).localWord);
+                    }
+                    else{//not dealing with a multifunction symbol
+                        wordInitialTileType = tileHashMap.find(wordInitialTile).tileType;
+                    }
+
+                    if(wordInitialTile.equals(someGameTileWithoutSuffix) && someGameTileType.equals(wordInitialTileType)){
+                        tilesCount++;
+                    }
+
+                }
+                else {//Not differentiating types, only matching tile to tile
+                    if (parsedWordArrayFinal.get(0).equals(someGameTile)) {
+                        tilesCount++;
+                    }
+                }
+
+            }
+        }
+
+        return tilesCount;
+
     }
 
     public void repeatGame(View View) {
