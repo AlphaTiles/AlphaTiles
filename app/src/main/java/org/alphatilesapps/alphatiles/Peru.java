@@ -130,25 +130,9 @@ public class Peru extends GameActivity {
 
         if (challengeLevel == 2) {
 
-            if (VOWELS.isEmpty()) {  //makes sure VOWELS is populated only once when the app is running
-                for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (Start.tileList.get(d).tileType.equals("V")) {
-                        VOWELS.add(Start.tileList.get(d).baseTile);
-                    }
-                }
-            }
-
-            Collections.shuffle(VOWELS); // AH
-
-            if (CONSONANTS.isEmpty()) {  //makes sure CONSONANTS is populated only once when the app is running
-                for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (Start.tileList.get(d).tileType.equals("C")) {
-                        CONSONANTS.add(Start.tileList.get(d).baseTile);
-                    }
-                }
-            }
-
+            Collections.shuffle(VOWELS);
             Collections.shuffle(CONSONANTS);
+            Collections.shuffle(TONES);
 
         }
 
@@ -251,7 +235,7 @@ public class Peru extends GameActivity {
                     case 2:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
                         // REPLACEMENT IS ANY GAME TILE FROM THE WHOLE ARRAY
-                        // JP changed: REPLACEMENT IS NOW ANY TILE OF THE SAME TYPE (C OR V) FROM THE WHOLE ARRAY
+                        // JP changed: REPLACEMENT IS NOW ANY TILE OF THE SAME TYPE (C OR V OR T) FROM THE WHOLE ARRAY
 
                         //fix: some accidental duplicates
                         while(isDuplicateAnswerChoice) {
@@ -264,6 +248,9 @@ public class Peru extends GameActivity {
                             }else if (CONSONANTS.contains(tempArray2.get(randomNum3))){
                                 randomNum4 = rand.nextInt(CONSONANTS.size());
                                 tempArray2.set(randomNum3, CONSONANTS.get(randomNum4)); // JP
+                            }else if(TONES.contains(tempArray2.get(randomNum3))){
+                                randomNum4 = rand.nextInt(TONES.size());
+                                tempArray2.set(randomNum3, TONES.get(randomNum4)); // JP
                             }
 
                             StringBuilder builder2 = new StringBuilder("");
