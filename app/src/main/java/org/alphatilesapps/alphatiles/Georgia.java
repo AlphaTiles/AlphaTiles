@@ -19,6 +19,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
+import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
+import static org.alphatilesapps.alphatiles.Start.VOWELS;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.CorV;
@@ -252,7 +255,7 @@ public class Georgia extends GameActivity {
                     parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
                     initialTile = parsedWordArrayFinal.get(0);
 
-                    if (CorV.contains(initialTile)){
+                    if (CorV.contains(initialTile)){ // makes sure chosen word begins with C or V
                         freshWord = true;
                         thirdToLastWord = secondToLastWord;
                         secondToLastWord = lastWord;
