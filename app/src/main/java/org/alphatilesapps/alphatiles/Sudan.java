@@ -15,15 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.widget.TextViewCompat;
 
-import static org.alphatilesapps.alphatiles.Start.gameSounds;
-import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
-import static org.alphatilesapps.alphatiles.Start.settingsList;
-import static org.alphatilesapps.alphatiles.Start.syllableAudioIDs;
-import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
-import static org.alphatilesapps.alphatiles.Start.tileHashMap;
-import static org.alphatilesapps.alphatiles.Start.syllableList;
-import static org.alphatilesapps.alphatiles.Start.tileList;
-import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +30,6 @@ import java.util.List;
 //look at Romania for an example
 
 public class Sudan extends GameActivity {
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63", "#6200EE"};
 
     // will contain, for example:
     // List page 1 (which will contain <= 35 tiles or syllables)
@@ -275,16 +265,16 @@ public class Sudan extends GameActivity {
             visibleTiles++;
 
             String type = t.tileType;
-            String typeColor = COLORS[1];
+            String typeColor = COLORS.get(1);
             switch(type){
                 case "C":
-                    typeColor = COLORS[1];
+                    typeColor = COLORS.get(1);
                     break;
                 case "V":
-                    typeColor = COLORS[4];
+                    typeColor = COLORS.get(4);
                     break;
                 case "X":
-                    typeColor = COLORS[3];
+                    typeColor = COLORS.get(3);
                     break;
                 default:
             }
@@ -297,16 +287,16 @@ public class Sudan extends GameActivity {
                 visibleTiles++;
 
                 String typeB = t.tileTypeB;
-                String typeColorB = COLORS[1];
+                String typeColorB = COLORS.get(1);
                 switch(typeB){
                     case "C":
-                        typeColorB = COLORS[1];
+                        typeColorB = COLORS.get(1);
                         break;
                     case "V":
-                        typeColorB = COLORS[4];
+                        typeColorB = COLORS.get(4);
                         break;
                     case "X":
-                        typeColorB = COLORS[3];
+                        typeColorB = COLORS.get(3);
                         break;
                     default:
                 }
@@ -322,16 +312,16 @@ public class Sudan extends GameActivity {
                 visibleTiles++;
 
                 String typeC = t.tileTypeC;
-                String typeColorC = COLORS[1];
+                String typeColorC = COLORS.get(1);
                 switch(typeC){
                     case "C":
-                        typeColorC = COLORS[1];
+                        typeColorC = COLORS.get(1);
                         break;
                     case "V":
-                        typeColorC = COLORS[4];
+                        typeColorC = COLORS.get(4);
                         break;
                     case "X":
-                        typeColorC = COLORS[3];
+                        typeColorC = COLORS.get(3);
                         break;
                     default:
                 }
@@ -366,16 +356,16 @@ public class Sudan extends GameActivity {
             TextView tile = findViewById(TILE_BUTTONS[k]);
             tile.setText(pagesList.get(page).get(k));
             String type = tileHashMap.find(pagesList.get(page).get(k)).tileType;
-            String typeColor = COLORS[1];
+            String typeColor = COLORS.get(1);
             switch(type){
                 case "C":
-                    typeColor = COLORS[1];
+                    typeColor = COLORS.get(1);
                     break;
                 case "V":
-                    typeColor = COLORS[4];
+                    typeColor = COLORS.get(4);
                     break;
                 case "X":
-                    typeColor = COLORS[3];
+                    typeColor = COLORS.get(3);
                     break;
                 default:
             }
@@ -458,7 +448,7 @@ public class Sudan extends GameActivity {
             TextView tile = findViewById(SYLL_BUTTONS[i]);
             tile.setText(pagesList.get(page).get(i));
             String color = syllableHashMap.find(pagesList.get(page).get(i)).color;
-            String typeColor = COLORS[Integer.parseInt(color)];
+            String typeColor = COLORS.get(Integer.parseInt(color));
             int tileColor = Color.parseColor(typeColor);
             tile.setBackgroundColor(tileColor);
         }

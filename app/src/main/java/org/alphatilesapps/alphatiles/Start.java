@@ -73,6 +73,7 @@ public class Start extends AppCompatActivity
     public static HashMap<String, Integer> wordDurations;
     public static HashMap<String, Integer> tileDurations;
     public static HashMap<String, Integer> syllableDurations;
+    public static final ArrayList<String> COLORS = new ArrayList<>();
     public static int totalAudio; //JP: the total number of audio files to be loaded into the soundpool
 //    public static HashMap<String, Integer> instructionDurations;
 
@@ -89,6 +90,7 @@ public class Start extends AppCompatActivity
     public static List<String> CONSONANTS = new ArrayList<>();
     public static List<String> VOWELS = new ArrayList<>();
     public static List<String> CorV = new ArrayList<>();
+    public static List<String> TONES = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +110,9 @@ public class Start extends AppCompatActivity
 
         buildSettingsArray();
         LOGGER.info("Remember: completed buildSettingsArray()");
+
+        buildColorsArray();
+        LOGGER.info("Remember: completed buildColorsArray()");
 
         String hasAudioSetting = settingsList.find("Has tile audio");
         if(hasAudioSetting.compareTo("")!=0){
@@ -172,10 +177,14 @@ public class Start extends AppCompatActivity
                 VOWELS.add(Start.tileList.get(d).baseTile);
                 CorV.add(Start.tileList.get(d).baseTile);
             }
+            else if (Start.tileList.get(d).tileType.equals("T")) {
+                TONES.add(Start.tileList.get(d).baseTile);
+            }
         }
         Collections.shuffle(CONSONANTS);
         Collections.shuffle(VOWELS);
         Collections.shuffle(CorV);
+        Collections.shuffle(TONES);
         if (hasTileAudio){
             totalAudio = totalAudio + tileList.size();
         }
@@ -216,6 +225,22 @@ public class Start extends AppCompatActivity
 
         startActivity(intent);
 
+    }
+
+    private void buildColorsArray() {
+        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_colors));
+
+        boolean header = true;
+
+        while (scanner.hasNext()) {
+            String thisLine = scanner.nextLine();
+            String[] thisLineArray = thisLine.split("\t",3);
+            if (header) {
+                header = false;
+            } else {
+                COLORS.add(thisLineArray[2]);
+            }
+        }
     }
 
     //memory leak fix

@@ -21,18 +21,8 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
-import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
-import static org.alphatilesapps.alphatiles.Start.settingsList;
-import static org.alphatilesapps.alphatiles.Start.syllableAudioIDs;
-import static org.alphatilesapps.alphatiles.Start.syllableDurations;
-import static org.alphatilesapps.alphatiles.Start.syllableList;
-import static org.alphatilesapps.alphatiles.Start.tileDurations;
-import static org.alphatilesapps.alphatiles.Start.wordList;
+import static org.alphatilesapps.alphatiles.Start.*;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
-import static org.alphatilesapps.alphatiles.Start.correctSoundID;
-import static org.alphatilesapps.alphatiles.Start.gameSounds;
-import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
-import static org.alphatilesapps.alphatiles.Start.tileList;
 
 public class Thailand extends GameActivity {
 
@@ -44,6 +34,8 @@ public class Thailand extends GameActivity {
 
     private static final String[] TYPES = {"TILE_LOWER", "TILE_UPPER", "TILE_AUDIO","WORD_TEXT",
             "WORD_IMAGE","WORD_AUDIO","SYLL_TEXT","SYLL_AUDIO"};
+
+    // 11, 12, 21, 31, 32, 14, 41, 24, 42, 45, 54, 51, 15,
 
     String refType;
     String refTile;
@@ -107,8 +99,6 @@ public class Thailand extends GameActivity {
         constraintSet.applyTo(constraintLayout);
 
     }
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger( Thailand.class.getName() );
 
@@ -219,8 +209,8 @@ public class Thailand extends GameActivity {
 
         LOGGER.info("Remember: I");
         Random rand = new Random();
-        int randomNum = rand.nextInt(COLORS.length - 1);
-        String refColorStr = COLORS[randomNum];
+        int randomNum = rand.nextInt(4); // 5 colors
+        String refColorStr = COLORS.get(randomNum);
         refColor = Color.parseColor(refColorStr);
 
         LOGGER.info("Remember: J");
