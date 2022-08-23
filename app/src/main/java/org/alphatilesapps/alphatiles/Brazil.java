@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.syllableList;
+import static org.alphatilesapps.alphatiles.Start.COLORS;
 import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
 import static org.alphatilesapps.alphatiles.Start.VOWELS;
 import static org.alphatilesapps.alphatiles.Start.TONES;
@@ -105,8 +106,8 @@ public class Brazil extends GameActivity {
 
     }
 
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#4CAF50", "#E91E63"};
-
+    static List<String> VOWELS = new ArrayList<>();
+    static List<String> CONSONANTS = new ArrayList<>();
     static List<String> SYLLABLES = new ArrayList<>();
     static List<String> MULTIFUNCTIONS = new ArrayList<>();
 
@@ -156,14 +157,38 @@ public class Brazil extends GameActivity {
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
         syllableGame = getIntent().getStringExtra("syllableGame");
 
-        if (syllableGame.equals("S")){
+        if (challengeLevel < 4 && !syllableGame.equals("S")) {
+
+            if (VOWELS.isEmpty()) {  //makes sure VOWELS is populated only once when the app is running
+                for (int d = 0; d < Start.tileList.size(); d++) {
+                    if (Start.tileList.get(d).tileType.equals("V")) {
+                        VOWELS.add(Start.tileList.get(d).baseTile);
+                    }
+                }
+            }
+
+            Collections.shuffle(VOWELS); // AH
+
+        }else if (syllableGame.equals("S")){
             if (SYLLABLES.isEmpty()) {
                 for (int d = 0; d < syllableList.size(); d++) {
                     SYLLABLES.add(syllableList.get(d).toString());
                 }
             }
-
             Collections.shuffle(SYLLABLES);
+        }
+        else {
+
+            if (CONSONANTS.isEmpty()) {  //makes sure CONSONANTS is populated only once when the app is running
+                for (int d = 0; d < Start.tileList.size(); d++) {
+                    if (Start.tileList.get(d).tileType.equals("C")) {
+                        CONSONANTS.add(Start.tileList.get(d).baseTile);
+                    }
+                }
+            }
+
+            Collections.shuffle(CONSONANTS);
+
         }
 
 //        LOGGER.info("Remember APR 21 21 # 2");
@@ -505,7 +530,7 @@ public class Brazil extends GameActivity {
                 correctSyllRepresented = true;
             }
 
-            String tileColorStr = COLORS[t % 5];
+            String tileColorStr = COLORS.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
             if (challengeLevel == 1){
@@ -580,7 +605,7 @@ public class Brazil extends GameActivity {
                     }
                 }
 
-                String tileColorStr = COLORS[t % 5];
+                String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setBackgroundColor(tileColor);
@@ -603,7 +628,7 @@ public class Brazil extends GameActivity {
                     correctTileRepresented = true;
                 }
 
-                String tileColorStr = COLORS[t % 5];
+                String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setText(VOWELS.get(t));
@@ -623,7 +648,7 @@ public class Brazil extends GameActivity {
                     correctTileRepresented = true;
                 }
 
-                String tileColorStr = COLORS[t % 5];
+                String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setText(CONSONANTS.get(t));
@@ -674,7 +699,7 @@ public class Brazil extends GameActivity {
             for (int t = 0; t < visibleTiles; t++) {
                 TextView gameTile = findViewById(TILE_BUTTONS[t]);
 
-                String tileColorStr = COLORS[t % 5];
+                String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setBackgroundColor(tileColor);

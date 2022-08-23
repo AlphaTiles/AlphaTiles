@@ -26,6 +26,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.Intent;
 
+import static org.alphatilesapps.alphatiles.Start.*;
+
 public class Mexico extends GameActivity {
 
     ArrayList<String[]> memoryCollection = new ArrayList(); // KP
@@ -91,8 +93,6 @@ public class Mexico extends GameActivity {
         constraintSet.applyTo(constraintLayout);
 
     }
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger( Mexico.class.getName() );
 
@@ -387,7 +387,7 @@ public class Mexico extends GameActivity {
             cardA.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitA)[1]));
             cardB.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitB)[1]));
 
-            String tileColorStr = COLORS[cardHitA % 5];
+            String tileColorStr = COLORS.get(cardHitA % 5);
             int tileColor = Color.parseColor(tileColorStr);
             cardA.setTextColor(tileColor); // theme color
             cardB.setTextColor(tileColor); // theme color

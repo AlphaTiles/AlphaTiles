@@ -24,6 +24,7 @@ import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
 import static org.alphatilesapps.alphatiles.Start.VOWELS;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
+import static org.alphatilesapps.alphatiles.Start.COLORS;
 import static org.alphatilesapps.alphatiles.Start.CorV;
 
 //level 1: 6 visible tiles, random wrong choices
@@ -100,7 +101,6 @@ public class Georgia extends GameActivity {
         return audioInstructionsResID;
     }
 
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -326,7 +326,7 @@ public class Georgia extends GameActivity {
                 correctSyllRepresented = true;
             }
 
-            String tileColorStr = COLORS[t % 5];
+            String tileColorStr = COLORS.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
             if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3){
@@ -436,7 +436,7 @@ public class Georgia extends GameActivity {
                 correctTileRepresented = true;
             }
 
-            String tileColorStr = COLORS[t % 5];
+            String tileColorStr = COLORS.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
             if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3){ //random wrong

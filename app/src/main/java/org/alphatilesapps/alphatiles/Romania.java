@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static org.alphatilesapps.alphatiles.Start.settingsList;
+import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Romania extends GameActivity {
 
@@ -71,8 +71,6 @@ public class Romania extends GameActivity {
         constraintSet.applyTo(constraintLayout);
 
     }
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger( Romania.class.getName() );
 
@@ -296,7 +294,7 @@ public class Romania extends GameActivity {
             }
 
             int alphabetPosition = Start.tileList.returnPositionInAlphabet(activeTileString);
-            String tileColorStr = COLORS[alphabetPosition % 5];
+            String tileColorStr = COLORS.get(alphabetPosition % 5);
             int tileColor = Color.parseColor(tileColorStr);
             gameTile.setBackgroundColor(tileColor);
             activeWord.setBackgroundColor(tileColor);

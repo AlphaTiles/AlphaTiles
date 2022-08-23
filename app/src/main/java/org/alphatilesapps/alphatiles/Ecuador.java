@@ -31,6 +31,8 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+import static org.alphatilesapps.alphatiles.Start.*;
+
 // JP TO DO:
 // 1. FIX SETBOXES() FUNCTION
 // 2. FILTER DUPLICATE ANSWER CHOICES
@@ -90,8 +92,6 @@ public class Ecuador extends GameActivity {
         }
         return audioInstructionsResID;
     }
-
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
     private static final Logger LOGGER = Logger.getLogger(Ecuador.class.getName());
 
@@ -216,8 +216,6 @@ public class Ecuador extends GameActivity {
         int minStartX = minX1;
         int maxStartX = (int) (usableWidth * 0.65);
 
-
-
         int minWidth = (int) (usableWidth * 0.25);      // Height will be equal to (width / hwRatio)
         int maxWidth = (int) (usableWidth * 0.5);
 
@@ -280,7 +278,6 @@ public class Ecuador extends GameActivity {
             for (int definedBoxIndex = 0; definedBoxIndex < currentBoxIndex; definedBoxIndex++) {
                 // So, the very first pass (with currentBoxIndex = 0 and definedBoxIndex = 0), it will skip this loop
                 // But this is wrong, because even in the very first pass, you need to check that it is inside bounds
-                // ONE THING TO FIX?? - ABOVE
 
                 // Check for overlap of previous boxes
                 verticalOverlap = true;
@@ -345,6 +342,7 @@ public class Ecuador extends GameActivity {
                 }
             });
         }
+
     }
 
     // new approach:
@@ -402,7 +400,7 @@ public class Ecuador extends GameActivity {
         for (int w = 0; w < TILE_BUTTONS.length; w++) {
 
             TextView wordTile = findViewById(TILE_BUTTONS[w]);
-            String tileColorStr = COLORS[w % 5];
+            String tileColorStr = COLORS.get(w % 5);
             int tileColor = Color.parseColor(tileColorStr);
             wordTile.setBackgroundColor(tileColor);
             wordTile.setTextColor(Color.parseColor("#FFFFFF")); // white
