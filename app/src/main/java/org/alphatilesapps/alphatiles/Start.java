@@ -668,7 +668,7 @@ public class Start extends AppCompatActivity
 
                     if(differentiateTypes){//checking if both tile and type match
                         if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                            wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, get(i).localWord);
+                            wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, get(i).nationalWord);
                         }
                         else{//not dealing with a multifunction symbol
                             wordInitialTileType = tileHashMap.find(wordInitialTile).tileType;
@@ -788,7 +788,7 @@ public class Start extends AppCompatActivity
 
                         if(differentiateTypes){//checking if both tile and type match
                             if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).localWord);
+                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
                             }
                             else{//not dealing with a multifunction symbol
                                 tileInFocusType = tileHashMap.find(tileInFocus).tileType;
@@ -909,7 +909,7 @@ public class Start extends AppCompatActivity
 
                         if(differentiateTypes){//checking if both tile and type match
                             if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).localWord);
+                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
                             }
                             else{//not dealing with a multifunction symbol
                                 tileInFocusType = tileHashMap.find(tileInFocus).tileType;
@@ -969,7 +969,7 @@ public class Start extends AppCompatActivity
 
                         if(differentiateTypes){//checking if both tile and type match
                             if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).localWord);
+                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
                             }
                             else{//not dealing with a multifunction symbol
                                 tileInFocusType = tileHashMap.find(tileInFocus).tileType;
@@ -1782,13 +1782,24 @@ public class Start extends AppCompatActivity
 
         public String getInstanceTypeForMixedTile(int index, String wordInLWC) {
 
+            // need to rethink this function for tone, SAD,
+
             String instanceType = null;
 
             String mixedDefinitionInfo = Start.wordHashMap.find(wordInLWC).mixedDefs;
+            // wordInLWC: "a ceu "
+            // find, finds the key and returns the value
 
-            // if mixedDefinitionInfo is not C or V or X or dash, then we assume it has two elements to disambiguate, e.g. niwan', where...
+            // if mixedDefinitionInfo is not C or V or X or dash, then we assume it has two elements
+            // to disambiguate, e.g. niwan', where...
             // first n is a C and second n is a X (nasality indicator), and we would code as C234X6
-            if (!mixedDefinitionInfo.equals("C") && !mixedDefinitionInfo.equals("V") && !mixedDefinitionInfo.equals("X") && !mixedDefinitionInfo.equals("-")) {
+
+            // JP: these types come from the wordlist
+            // in the wordlist, "-" does not mean "dash", it means "no multifunction symbols in this word"
+            // but the types in the wordlist come from the same set of choices as from the gametiles
+            if (!mixedDefinitionInfo.equals("C") && !mixedDefinitionInfo.equals("V")
+                    && !mixedDefinitionInfo.equals("X") && !mixedDefinitionInfo.equals("T")
+                    && !mixedDefinitionInfo.equals("-") && !mixedDefinitionInfo.equals("SAD")) {
                 instanceType = String.valueOf(mixedDefinitionInfo.charAt(index));
             } else {
                 instanceType = mixedDefinitionInfo;

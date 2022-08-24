@@ -193,6 +193,7 @@ public class Sudan extends GameActivity {
     }
 
     public void determineNumPages(){
+
         pagesList.add(page);
         if (syllableGame.equals("S")){
             int total = syllableList.size() - SYLL_BUTTONS.length; // 1 page is accounted for in numPages init
@@ -203,7 +204,12 @@ public class Sudan extends GameActivity {
                 total = total - SYLL_BUTTONS.length;
             }
         }else{
-            int total = tileList.size() - TILE_BUTTONS.length; // 1 page is accounted for in numPages init
+            int total = 0;
+            if (differentiateTypes){
+                total = tileListWithMultipleTypes.size() - TILE_BUTTONS.length;
+            }else{
+                total = tileList.size() - TILE_BUTTONS.length; // 1 page is accounted for in numPages init
+            }
             while (total >= 0){
                 numPages++;
                 List<String> page = new ArrayList<>();
@@ -214,14 +220,28 @@ public class Sudan extends GameActivity {
     }
 
     public void splitTileListAcrossPages(){
-        int numTiles = tileList.size();
-        int cont = 0;
-        for (int i = 0; i < numPages + 1; i++){
-            for (int j = 0; j < TILE_BUTTONS.length; j++){
-                if (cont < numTiles){
-                    pagesList.get(i).add(tileList.get(cont).baseTile);
+
+        if (differentiateTypes){
+            int numTiles = tileListWithMultipleTypes.size();
+            int cont = 0;
+            for (int i = 0; i < numPages + 1; i++){
+                for (int j = 0; j < TILE_BUTTONS.length; j++){
+                    if (cont < numTiles){
+                        pagesList.get(i).add(tileListWithMultipleTypes.get(cont));
+                    }
+                    cont++;
                 }
-                cont++;
+            }
+        }else{
+            int numTiles = tileList.size();
+            int cont = 0;
+            for (int i = 0; i < numPages + 1; i++){
+                for (int j = 0; j < TILE_BUTTONS.length; j++){
+                    if (cont < numTiles){
+                        pagesList.get(i).add(tileList.get(cont).baseTile);
+                    }
+                    cont++;
+                }
             }
         }
     }
@@ -253,30 +273,36 @@ public class Sudan extends GameActivity {
     public void showCorrectNumTiles1PerSymbolAndType(int page){
         // visibleTiles must now be <= 63
         // if tileList.size() > 63, the rest will go on next page
-        //visibleTiles = pagesList.get(page).size();
+
+        int limit = pagesList.get(page).size();
         visibleTiles = 0;
 
-        for(int tileListLine = 0; tileListLine < tileList.size();  tileListLine++){
+        for(int tileListLine = 0; tileListLine < limit;  tileListLine++){
 
             Start.Tile t = tileList.get(tileListLine);
-
-            TextView tileView = findViewById(TILE_BUTTONS[visibleTiles]);
-            tileView.setText(t.baseTile);
-            visibleTiles++;
-
             String type = t.tileType;
-            String typeColor = COLORS.get(1);
+            TextView tileView = findViewById(TILE_BUTTONS[visibleTiles]);
+            if (!type.equals("SAD")){
+                tileView.setText(t.baseTile);
+                visibleTiles++;
+            }else{
+                continue;
+            }
+
+            String typeColor;
             switch(type){
                 case "C":
                     typeColor = COLORS.get(1);
                     break;
                 case "V":
-                    typeColor = COLORS.get(4);
+                    typeColor = COLORS.get(2);
                     break;
-                case "X":
+                case "T":
                     typeColor = COLORS.get(3);
                     break;
                 default:
+                    typeColor = COLORS.get(4);
+                    break;
             }
             int tileColor = Color.parseColor(typeColor);
             tileView.setBackgroundColor(tileColor);
@@ -287,22 +313,23 @@ public class Sudan extends GameActivity {
                 visibleTiles++;
 
                 String typeB = t.tileTypeB;
-                String typeColorB = COLORS.get(1);
+                String typeColorB;
                 switch(typeB){
                     case "C":
                         typeColorB = COLORS.get(1);
                         break;
                     case "V":
-                        typeColorB = COLORS.get(4);
+                        typeColorB = COLORS.get(2);
                         break;
-                    case "X":
+                    case "T":
                         typeColorB = COLORS.get(3);
                         break;
                     default:
+                        typeColorB = COLORS.get(4);
+                        break;
                 }
                 int tileColorB = Color.parseColor(typeColorB);
                 tileView.setBackgroundColor(tileColorB);
-
             }
 
             if(t.tileTypeC.compareTo("none") != 0){
@@ -318,16 +345,17 @@ public class Sudan extends GameActivity {
                         typeColorC = COLORS.get(1);
                         break;
                     case "V":
-                        typeColorC = COLORS.get(4);
+                        typeColorC = COLORS.get(2);
                         break;
-                    case "X":
+                    case "T":
                         typeColorC = COLORS.get(3);
                         break;
                     default:
+                        typeColorC = COLORS.get(4);
+                        break;
                 }
                 int tileColorC = Color.parseColor(typeColorC);
                 tileView.setBackgroundColor(tileColorC);
-
             }
 
         }
@@ -386,61 +414,7 @@ public class Sudan extends GameActivity {
         }
     }
 
-    /*
-    public void setTextSizes() {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
-        int pixelHeight = 0;
-        double scaling = 0.45;
-        int bottomToTopId;
-        int topToTopId;
-        float percentBottomToTop;
-        float percentTopToTop;
-        float percentHeight;
-
-        if (syllableGame.equals("S")){
-            for (int t = 0; t < SYLL_BUTTONS.length; t++) {
-
-                TextView gameTile = findViewById(SYLL_BUTTONS[t]);
-                if (t == 0) {
-                    ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) gameTile.getLayoutParams();
-                    bottomToTopId = lp1.bottomToTop;
-                    topToTopId = lp1.topToTop;
-                    percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                    percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                    percentHeight = percentBottomToTop - percentTopToTop;
-                    pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-                }
-                gameTile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-            }
-        }else{
-            for (int t = 0; t < TILE_BUTTONS.length; t++) {
-
-                TextView gameTile = findViewById(TILE_BUTTONS[t]);
-                if (t == 0) {
-                    ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) gameTile.getLayoutParams();
-                    bottomToTopId = lp1.bottomToTop;
-                    topToTopId = lp1.topToTop;
-                    percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                    percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                    percentHeight = percentBottomToTop - percentTopToTop;
-                    pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-                }
-                gameTile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
-
-            }
-        }
-
-    }
-
-     */
-
     public void showCorrectNumSyllables(int page) {
-
-
 
         visibleTiles = pagesList.get(page).size();
 

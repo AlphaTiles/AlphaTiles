@@ -458,7 +458,8 @@ public class Romania extends GameActivity {
 
                 if(differentiateTypes){//checking if both tile and type match
                     if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                        wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, wordList.get(i).localWord);
+                        wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, wordList.get(i).nationalWord);
+                        // why are we getting local word when getInstanceTypeForMixedTile needs LWC?
                     }
                     else{//not dealing with a multifunction symbol
                         wordInitialTileType = tileHashMap.find(wordInitialTile).tileType;
@@ -515,7 +516,7 @@ public class Romania extends GameActivity {
 
                     if(differentiateTypes){//checking if both tile and type match
                         if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                            tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, wordList.get(i).localWord);
+                            tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, wordList.get(i).nationalWord);
                         }
                         else{//not dealing with a multifunction symbol
                             tileInFocusType = tileHashMap.find(tileInFocus).tileType;
@@ -572,7 +573,7 @@ public class Romania extends GameActivity {
 
                     if(differentiateTypes){//checking if both tile and type match
                         if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                            tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, wordList.get(i).localWord);
+                            tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, wordList.get(i).nationalWord);
                         }
                         else{//not dealing with a multifunction symbol
                             tileInFocusType = tileHashMap.find(tileInFocus).tileType;
