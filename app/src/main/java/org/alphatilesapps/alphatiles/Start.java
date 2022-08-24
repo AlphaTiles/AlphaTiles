@@ -34,6 +34,7 @@ public class Start extends AppCompatActivity
     public static TileList tileList; // KP // from aa_gametiles.txt
 
     public static TileListWithMultipleTypes tileListWithMultipleTypes;
+    public static TileHashMapWithMultipleTypes tileHashMapWithMultipleTypes;
 
     public static WordList wordList;     // KP  // from aa_wordlist.txt
 
@@ -311,6 +312,19 @@ public class Start extends AppCompatActivity
                 }
                 if (tile.tileTypeC.compareTo("none") != 0) {
                     tileListWithMultipleTypes.add(tile.baseTile + "C");
+                }
+            }
+
+            tileHashMapWithMultipleTypes = new TileHashMapWithMultipleTypes();
+
+            for (Tile tile : tileList) {
+                tileHashMapWithMultipleTypes.put(tile.baseTile, tile.tileType);
+
+                if (tile.tileTypeB.compareTo("none") != 0) {
+                    tileHashMapWithMultipleTypes.put(tile.baseTile + "B", tile.tileTypeB);
+                }
+                if (tile.tileTypeC.compareTo("none") != 0) {
+                    tileHashMapWithMultipleTypes.put(tile.baseTile + "C", tile.tileTypeC);
                 }
             }
         }
@@ -1901,6 +1915,11 @@ public class Start extends AppCompatActivity
 
         public String title;
 
+    }
+
+    public class TileHashMapWithMultipleTypes extends HashMap<String,String>{
+        public String text;
+        public String type;
     }
 
     public class TileListWithMultipleTypes extends ArrayList<String> {

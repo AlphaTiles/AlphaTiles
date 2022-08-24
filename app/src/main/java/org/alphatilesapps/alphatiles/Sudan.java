@@ -259,25 +259,15 @@ public class Sudan extends GameActivity {
         }
     }
 
-    public void showCorrectNumTiles(int page){
-
-        if(differentiateTypes){
-            showCorrectNumTiles1PerSymbolAndType(page);
-        }
-        else {
-            showCorrectNumTiles1PerSymbol(page);
-        }
-
-    }
-
     public void showCorrectNumTiles1PerSymbolAndType(int page){
         // visibleTiles must now be <= 63
         // if tileList.size() > 63, the rest will go on next page
 
-        int limit = pagesList.get(page).size();
+        // this function works fine for one page, not for multiple pages
+
         visibleTiles = 0;
 
-        for(int tileListLine = 0; tileListLine < limit;  tileListLine++){
+        for(int tileListLine = 0; tileListLine < tileList.size();  tileListLine++){
 
             Start.Tile t = tileList.get(tileListLine);
             String type = t.tileType;
@@ -375,27 +365,39 @@ public class Sudan extends GameActivity {
 
     }
 
-    public void showCorrectNumTiles1PerSymbol(int page){
+    public void showCorrectNumTiles(int page){
 
         visibleTiles = pagesList.get(page).size();
 
         for (int k = 0; k < visibleTiles; k++)
         {
             TextView tile = findViewById(TILE_BUTTONS[k]);
-            tile.setText(pagesList.get(page).get(k));
-            String type = tileHashMap.find(pagesList.get(page).get(k)).tileType;
-            String typeColor = COLORS.get(1);
+            if(pagesList.get(page).get(k).endsWith("B") || pagesList.get(page).get(k).endsWith("C")){
+                tile.setText(pagesList.get(page).get(k).substring(0, pagesList.get(page).get(k).length() -1));
+            }else{
+                tile.setText(pagesList.get(page).get(k));
+            }
+            String type;
+            if (differentiateTypes){
+                // JP: what I need is a way to access the type of a tile in the tileListWithMultipleTypes
+                type = tileHashMapWithMultipleTypes.get(pagesList.get(page).get(k));
+            }else{
+                type = tileHashMap.find(pagesList.get(page).get(k)).tileType;
+            }
+            String typeColor;
             switch(type){
                 case "C":
                     typeColor = COLORS.get(1);
                     break;
                 case "V":
-                    typeColor = COLORS.get(4);
+                    typeColor = COLORS.get(2);
                     break;
-                case "X":
+                case "T":
                     typeColor = COLORS.get(3);
                     break;
                 default:
+                    typeColor = COLORS.get(4);
+                    break;
             }
             int tileColor = Color.parseColor(typeColor);
             tile.setBackgroundColor(tileColor);
@@ -495,7 +497,7 @@ public class Sudan extends GameActivity {
                 tileText = tileList.get(justClickedKey-1).baseTile;
             }
             else{ //differentiateMultipleTypes ==2,we ARE differentiating the uses of multifunction tiles
-                tileText = Start.tileListWithMultipleTypes.get(justClickedKey-1);
+                tileText = tileListWithMultipleTypes.get(justClickedKey-1);
             }
 
             gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
