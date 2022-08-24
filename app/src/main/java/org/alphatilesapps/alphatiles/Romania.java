@@ -328,7 +328,8 @@ public class Romania extends GameActivity {
         else {
             activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
         }
-        while (returnGroupOneCountRomania(activeTile) == 0){
+        while (returnGroupOneCountRomania(activeTile) == 0){ // JP: prevents user from having to click
+            // the arrow multiple times to skip irrelevant tiles that are never word-initial
             oldTile = activeTile;
             if(differentiateTypes){
                 activeTile = Start.tileListWithMultipleTypes.returnNextAlphabetTileDifferentiateTypes(oldTile);
@@ -355,6 +356,17 @@ public class Romania extends GameActivity {
         }
         else {
             activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
+        }
+        while (returnGroupOneCountRomania(activeTile) == 0){
+            // JP: prevents user from having to click
+            // the arrow multiple times to skip irrelevant tiles that are never word-initial
+            oldTile = activeTile;
+            if(differentiateTypes){
+                activeTile = Start.tileListWithMultipleTypes.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
+            }
+            else {
+                activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
+            }
         }
         wordTokenNoGroupOne = 0;
         wordTokenNoGroupTwo = 0;
