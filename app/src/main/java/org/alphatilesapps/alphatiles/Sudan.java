@@ -60,10 +60,10 @@ public class Sudan extends GameActivity {
             R.id.tile61, R.id.tile62, R.id.tile63
     };
 
-    Start.TileListWithMultipleTypes tileListMultiCopy = (Start.TileListWithMultipleTypes) tileListWithMultipleTypes.clone();
-    Start.TileList tileListCopy = (Start.TileList) tileList.clone();
-    Start.TileHashMapWithMultipleTypes tileHashMultiCopy = (Start.TileHashMapWithMultipleTypes) tileHashMapWithMultipleTypes.clone();
-    Start.TileHashMap tileHashCopy = (Start.TileHashMap) tileHashMap.clone();
+    Start.TileListWithMultipleTypes tileListMultiCopy;
+    Start.TileHashMapWithMultipleTypes tileHashMultiCopy;
+    Start.TileList tileListCopy;
+    Start.TileHashMap tileHashCopy;
 
     @Override
     protected int[] getTileButtons() {
@@ -141,6 +141,8 @@ public class Sudan extends GameActivity {
 
         // remove SAD from the set
         if (differentiateTypes){
+            tileListMultiCopy = (Start.TileListWithMultipleTypes) tileListWithMultipleTypes.clone();
+            tileHashMultiCopy = (Start.TileHashMapWithMultipleTypes) tileHashMapWithMultipleTypes.clone();
             for (String tile : tileListWithMultipleTypes){
                 if (Objects.equals(tileHashMapWithMultipleTypes.get(tile), "SAD")){
                     tileHashMultiCopy.remove(tile);
@@ -148,6 +150,8 @@ public class Sudan extends GameActivity {
                 }
             }
         }else{
+            tileListCopy = (Start.TileList) tileList.clone();
+            tileHashCopy = (Start.TileHashMap) tileHashMap.clone();
             for (int i = 0; i < tileList.size(); i++){
                 if (tileList.get(i).tileType.equals("SAD")){
                     tileListCopy.remove(tileList.get(i));
