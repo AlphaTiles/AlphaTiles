@@ -19,6 +19,7 @@ import static org.alphatilesapps.alphatiles.Start.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 //To work on:
 //Do any languages have more than 49 tiles? - now can scroll through multiple pages of 35 each (JP)
@@ -227,7 +228,10 @@ public class Sudan extends GameActivity {
             for (int i = 0; i < numPages + 1; i++){
                 for (int j = 0; j < TILE_BUTTONS.length; j++){
                     if (cont < numTiles){
-                        pagesList.get(i).add(tileListWithMultipleTypes.get(cont));
+                        if (!(Objects.equals(tileHashMapWithMultipleTypes.get(tileListWithMultipleTypes
+                                .get(cont)), "SAD"))){ // prevent SAD from being displayed
+                            pagesList.get(i).add(tileListWithMultipleTypes.get(cont));
+                        }
                     }
                     cont++;
                 }
@@ -238,7 +242,9 @@ public class Sudan extends GameActivity {
             for (int i = 0; i < numPages + 1; i++){
                 for (int j = 0; j < TILE_BUTTONS.length; j++){
                     if (cont < numTiles){
-                        pagesList.get(i).add(tileList.get(cont).baseTile);
+                        if (!tileList.get(cont).tileType.equals("SAD")){
+                            pagesList.get(i).add(tileList.get(cont).baseTile);
+                        }
                     }
                     cont++;
                 }
