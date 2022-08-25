@@ -33,8 +33,11 @@ public class Start extends AppCompatActivity
 
     public static TileList tileList; // KP // from aa_gametiles.txt
 
+    public static TileList tileListNoSAD; // JP // from aa_gametiles.txt minus SAD types
+
     public static TileListWithMultipleTypes tileListWithMultipleTypes;
-    public static TileHashMapWithMultipleTypes tileHashMapWithMultipleTypes;
+
+    public static TileListWithMultipleTypes tileListWithMultiTypesNoSAD;
 
     public static WordList wordList;     // KP  // from aa_wordlist.txt
 
@@ -52,6 +55,12 @@ public class Start extends AppCompatActivity
 
     // LM / allows us to find() a Tile object using its name
     public static TileHashMap tileHashMap;
+
+    public static TileHashMap tileHashMapNoSAD;
+
+    public static TileHashMapWithMultipleTypes tileHashMapWithMultipleTypes;
+
+    public static TileHashMapWithMultipleTypes tileHashMapWithMultiTypesNoSAD;
 
     public static WordHashMap wordHashMap;
 
@@ -272,6 +281,7 @@ public class Start extends AppCompatActivity
         Scanner scanner = new 	Scanner(getResources().openRawResource(R.raw.aa_gametiles));
         boolean header = true;
         tileList = new TileList();
+        tileListNoSAD = new TileList();
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
@@ -296,6 +306,9 @@ public class Start extends AppCompatActivity
                 Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], Integer.parseInt(thisLineArray[11]), Integer.parseInt(thisLineArray[12]), Integer.parseInt(thisLineArray[13]));
                 if (!tile.hasNull()) {
                     tileList.add(tile);
+                    if (!tile.tileType.equals("SAD")){
+                        tileListNoSAD.add(tile);
+                    }
                 }
             }
         }
@@ -303,27 +316,24 @@ public class Start extends AppCompatActivity
         if(differentiateTypes) {
 
             tileListWithMultipleTypes = new TileListWithMultipleTypes();
+            tileListWithMultiTypesNoSAD = new TileListWithMultipleTypes();
+            tileHashMapWithMultipleTypes = new TileHashMapWithMultipleTypes();
+            tileHashMapWithMultiTypesNoSAD = new TileHashMapWithMultipleTypes();
 
             for (Tile tile : tileList) {
                 tileListWithMultipleTypes.add(tile.baseTile);
-
+                tileHashMapWithMultipleTypes.put(tile.baseTile, tile.tileType);
+                if (!tile.tileType.equals("SAD")){
+                    tileListWithMultiTypesNoSAD.add(tile.baseTile);
+                    tileHashMapWithMultiTypesNoSAD.put(tile.baseTile, tile.tileType);
+                }
+                // SAD should never have a 2nd or 3rd type other than "none"
                 if (tile.tileTypeB.compareTo("none") != 0) {
                     tileListWithMultipleTypes.add(tile.baseTile + "B");
-                }
-                if (tile.tileTypeC.compareTo("none") != 0) {
-                    tileListWithMultipleTypes.add(tile.baseTile + "C");
-                }
-            }
-
-            tileHashMapWithMultipleTypes = new TileHashMapWithMultipleTypes();
-
-            for (Tile tile : tileList) {
-                tileHashMapWithMultipleTypes.put(tile.baseTile, tile.tileType);
-
-                if (tile.tileTypeB.compareTo("none") != 0) {
                     tileHashMapWithMultipleTypes.put(tile.baseTile + "B", tile.tileTypeB);
                 }
                 if (tile.tileTypeC.compareTo("none") != 0) {
+                    tileListWithMultipleTypes.add(tile.baseTile + "C");
                     tileHashMapWithMultipleTypes.put(tile.baseTile + "C", tile.tileTypeC);
                 }
             }
@@ -532,8 +542,12 @@ public class Start extends AppCompatActivity
 
     public void buildTileHashMap(){
         tileHashMap = new TileHashMap();
+        tileHashMapNoSAD = new TileHashMap();
         for(int i = 0; i < tileList.size(); i++){
             tileHashMap.put(tileList.get(i).baseTile, tileList.get(i));
+            if (!tileList.get(i).tileType.equals("SAD")){
+                tileHashMapNoSAD.put(tileList.get(i).baseTile, tileList.get(i));
+            }
         }
     }
 
@@ -1630,7 +1644,8 @@ public class Start extends AppCompatActivity
 
         }
 
-        public ArrayList<String[]> returnFourTiles(String correctTile, int challengeLevelX, String choiceType) {
+        public ArrayList<String[]> returnFourTiles(String correctTile, int challengeLevelX,
+                                                   String choiceType, String refTileType) {
 
 //            LOGGER.info("Remember: M");
             ArrayList<String[]> fourChoices = new ArrayList();
@@ -1665,64 +1680,72 @@ public class Start extends AppCompatActivity
                 String altTile = "";
 
                 while (rand1 == 0) {
-                    rand1 = rand.nextInt(tileList.size());
-                    altTile = Start.tileList.get(rand1).baseTile;
-                    if (correctRow == rand1 || Character.toLowerCase(correctTile.charAt(0)) == Character.toLowerCase(altTile.charAt(0))) {
-                        //think through why this is always false
-                        //and fix condition to deal with upper and lower (convert test to lower)
+                    rand1 = rand.nextInt(tileListNoSAD.size());
+                    altTile = Start.tileListNoSAD.get(rand1).baseTile;
+                    // JP: added logic so that if refTileType is C or V, four choices must also be C or V
+                    if (correctRow == rand1 || Character.toLowerCase(correctTile.charAt(0)) == Character
+                            .toLowerCase(altTile.charAt(0)) || (!Start.tileListNoSAD.get(rand1)
+                            .tileType.equals("C") && !Start.tileListNoSAD.get(rand1).tileType.equals("V")
+                            && (refTileType.equals("C") || refTileType.equals("V")))) {
                         rand1 = 0;
                     } else {
-                        altTile = Start.tileList.get(rand1).baseTile;
+                        altTile = Start.tileListNoSAD.get(rand1).baseTile;
                     }
                 }
                 if (choiceType.equals("TILE_LOWER")) {
                     partB = altTile;
                 }
                 if (choiceType.equals("TILE_UPPER")) {
-                    partB = Start.tileList.get(rand1).upperTile;
+                    partB = Start.tileListNoSAD.get(rand1).upperTile;
                 }
-                partA = Start.tileList.get(returnPositionInAlphabet(altTile)).audioForTile;
+                partA = Start.tileListNoSAD.get(returnPositionInAlphabet(altTile)).audioForTile;
                 tileEntry = new String [] {partA, partB};
 //                LOGGER.info("Remember: O2: tileEntry = " + Arrays.toString(tileEntry));
                 fourChoices.add(tileEntry);
 
                 while (rand2 == 0) {
-                    rand2 = rand.nextInt(tileList.size());
-                    altTile = Start.tileList.get(rand2).baseTile;
-                    if (correctRow == rand2 || rand1 == rand2 || Character.toLowerCase(correctTile.charAt(0)) == Character.toLowerCase(altTile.charAt(0))) {
+                    rand2 = rand.nextInt(tileListNoSAD.size());
+                    altTile = Start.tileListNoSAD.get(rand2).baseTile;
+                    if (correctRow == rand2 || rand1 == rand2 || Character.toLowerCase(correctTile
+                            .charAt(0)) == Character.toLowerCase(altTile.charAt(0)) || (!Start.tileListNoSAD.get(rand2)
+                            .tileType.equals("C") && !Start.tileListNoSAD.get(rand2).tileType.equals("V")
+                            && (refTileType.equals("C") || refTileType.equals("V")))) {
                         rand2 = 0;
                     } else {
-                        altTile = Start.tileList.get(rand2).baseTile;
+                        altTile = Start.tileListNoSAD.get(rand2).baseTile;
                     }
                 }
                 if (choiceType.equals("TILE_LOWER")) {
                     partB = altTile;
                 }
                 if (choiceType.equals("TILE_UPPER")) {
-                    partB = Start.tileList.get(rand2).upperTile;
+                    partB = Start.tileListNoSAD.get(rand2).upperTile;
                 }
-                partA = Start.tileList.get(returnPositionInAlphabet(altTile)).audioForTile;
+                partA = Start.tileListNoSAD.get(returnPositionInAlphabet(altTile)).audioForTile;
                 tileEntry = new String [] {partA, partB};
 //                LOGGER.info("Remember: O3: tileEntry = " + Arrays.toString(tileEntry));
                 fourChoices.add(tileEntry);
 
                 while (rand3 == 0) {
-                    rand3 = rand.nextInt(tileList.size());
-                    altTile = Start.tileList.get(rand3).baseTile;
+                    rand3 = rand.nextInt(tileListNoSAD.size());
+                    altTile = Start.tileListNoSAD.get(rand3).baseTile;
                     if (correctRow == rand3 || rand1 == rand2 || rand1 == rand3 || rand2 == rand3
-                            || Character.toLowerCase(correctTile.charAt(0)) == Character.toLowerCase(altTile.charAt(0))) {
+                            || Character.toLowerCase(correctTile.charAt(0)) == Character.toLowerCase(altTile.charAt(0))
+                            || (!Start.tileListNoSAD.get(rand3)
+                            .tileType.equals("C") && !Start.tileListNoSAD.get(rand3).tileType.equals("V")
+                            && (refTileType.equals("C") || refTileType.equals("V")))) {
                         rand3 = 0;
                     } else {
-                        altTile = Start.tileList.get(rand3).baseTile;
+                        altTile = Start.tileListNoSAD.get(rand3).baseTile;
                     }
                 }
                 if (choiceType.equals("TILE_LOWER")) {
                     partB = altTile;
                 }
                 if (choiceType.equals("TILE_UPPER")) {
-                    partB = Start.tileList.get(rand3).upperTile;
+                    partB = Start.tileListNoSAD.get(rand3).upperTile;
                 }
-                partA = Start.tileList.get(returnPositionInAlphabet(altTile)).audioForTile;
+                partA = Start.tileListNoSAD.get(returnPositionInAlphabet(altTile)).audioForTile;
                 tileEntry = new String [] {partA, partB};
 //                LOGGER.info("Remember: O4: tileEntry = " + Arrays.toString(tileEntry));
                 fourChoices.add(tileEntry);
@@ -1737,12 +1760,12 @@ public class Start extends AppCompatActivity
 
 //                    LOGGER.info("Remember: P2");
                     if (choiceType.equals("TILE_LOWER")) {
-                        partB = Start.tileList.get(correctRow).altTiles[i - 1];
+                        partB = Start.tileListNoSAD.get(correctRow).altTiles[i - 1];
 
                     }
 //                    LOGGER.info("Remember: P3");
                     if (choiceType.equals("TILE_UPPER")) {
-                        partB = Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[i - 1])).upperTile;
+                        partB = Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[i - 1])).upperTile;
                     }
 
                     //JP approach 2:
@@ -1752,24 +1775,31 @@ public class Start extends AppCompatActivity
                         if (partB.charAt(0) == correctTile.charAt(0)) {
                             if (partB.length() <= correctTile.length()) {
                                 Random rand = new Random();
-                                int rand5 = rand.nextInt(tileList.size());
+                                int rand5 = rand.nextInt(tileListNoSAD.size());
                                 if (choiceType.equals("TILE_UPPER")) {
-                                    partB = Start.tileList.get(rand5).upperTile;
+                                    partB = Start.tileListNoSAD.get(rand5).upperTile;
+                                    // JP: PICK UP HERE TO LET LEVEL 2 JUST DO SIMPLE DISTRACTORS
                                     while ((Character.toLowerCase(partB.charAt(0)) == Character.toLowerCase(correctTile.charAt(0))) ||
-                                            partB.equals(Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[0])).upperTile) ||
-                                            partB.equals(Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[0])).upperTile) ||
-                                            partB.equals(Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[0])).upperTile)) {
-                                        rand5 = rand.nextInt(tileList.size());
-                                        partB = Start.tileList.get(rand5).upperTile;
+                                            partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[0])).upperTile) ||
+                                            partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[1])).upperTile) ||
+                                            partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[2])).upperTile)
+                                            || ((refTileType.equals("C") || refTileType.equals("V"))
+                                            && (!Start.tileListNoSAD.get(rand5).tileType.equals("C")
+                                            && !Start.tileListNoSAD.get(rand5).tileType.equals("V")))) {
+                                        rand5 = rand.nextInt(tileListNoSAD.size());
+                                        partB = Start.tileListNoSAD.get(rand5).upperTile;
                                     }
                                 } else if (choiceType.equals("TILE_LOWER")) {
-                                    partB = Start.tileList.get(rand5).baseTile;
+                                    partB = Start.tileListNoSAD.get(rand5).baseTile;
                                     while ((Character.toLowerCase(partB.charAt(0)) == Character.toLowerCase(correctTile.charAt(0))) ||
-                                        partB.equals(Start.tileList.get(correctRow).altTiles[0]) ||
-                                        partB.equals(Start.tileList.get(correctRow).altTiles[1]) ||
-                                        partB.equals(Start.tileList.get(correctRow).altTiles[2])) {
-                                            rand5 = rand.nextInt(tileList.size());
-                                            partB = Start.tileList.get(rand5).baseTile;
+                                        partB.equals(Start.tileListNoSAD.get(correctRow).altTiles[0]) ||
+                                        partB.equals(Start.tileListNoSAD.get(correctRow).altTiles[1]) ||
+                                        partB.equals(Start.tileListNoSAD.get(correctRow).altTiles[2]) ||
+                                        ((refTileType.equals("C") || refTileType.equals("V"))
+                                        && (!Start.tileListNoSAD.get(rand5).tileType.equals("C")
+                                        && !Start.tileListNoSAD.get(rand5).tileType.equals("V")))) {
+                                            rand5 = rand.nextInt(tileListNoSAD.size());
+                                            partB = Start.tileListNoSAD.get(rand5).baseTile;
                                     }
                                 }
 
@@ -1778,7 +1808,7 @@ public class Start extends AppCompatActivity
                     //}
                     //
 //                    LOGGER.info("Remember: P4");
-                    partA = Start.tileList.get(returnPositionInAlphabet(partB)).audioForTile;
+                    partA = Start.tileListNoSAD.get(returnPositionInAlphabet(partB)).audioForTile;
 //                    LOGGER.info("Remember: P5");
                     tileEntry = new String [] {partA, partB};
 //                    LOGGER.info("Remember: P6");
