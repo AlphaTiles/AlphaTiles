@@ -18,6 +18,7 @@ import androidx.core.widget.TextViewCompat;
 import static org.alphatilesapps.alphatiles.Start.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,6 +60,10 @@ public class Sudan extends GameActivity {
             R.id.tile61, R.id.tile62, R.id.tile63
     };
 
+    Start.TileListWithMultipleTypes tileListMultiCopy = (Start.TileListWithMultipleTypes) tileListWithMultipleTypes.clone();
+    Start.TileList tileListCopy = (Start.TileList) tileList.clone();
+    Start.TileHashMapWithMultipleTypes tileHashMultiCopy = (Start.TileHashMapWithMultipleTypes) tileHashMapWithMultipleTypes.clone();
+    Start.TileHashMap tileHashCopy = (Start.TileHashMap) tileHashMap.clone();
 
     @Override
     protected int[] getTileButtons() {
@@ -105,8 +110,6 @@ public class Sudan extends GameActivity {
         constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
         constraintSet.applyTo(constraintLayout);
     }
-
-    Boolean differentiateTypes;
   
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -123,7 +126,6 @@ public class Sudan extends GameActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
-
         if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
@@ -137,7 +139,22 @@ public class Sudan extends GameActivity {
             fixConstraintsRTLSudan(gameID);
         }
 
-
+        // remove SAD from the set
+        if (differentiateTypes){
+            for (String tile : tileListWithMultipleTypes){
+                if (Objects.equals(tileHashMapWithMultipleTypes.get(tile), "SAD")){
+                    tileHashMultiCopy.remove(tile);
+                    tileListMultiCopy.remove(tile);
+                }
+            }
+        }else{
+            for (int i = 0; i < tileList.size(); i++){
+                if (tileList.get(i).tileType.equals("SAD")){
+                    tileListCopy.remove(tileList.get(i));
+                    tileHashCopy.remove(tileList.get(i).baseTile);
+                }
+            }
+        }
 
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
@@ -151,14 +168,6 @@ public class Sudan extends GameActivity {
 
         //View repeatArrow = findViewById(R.id.repeatImage);
         //repeatArrow.setVisibility(View.INVISIBLE);
-
-        String differentiateTypesSetting = settingsList.find("Differentiates types of multitype symbols");
-        if(differentiateTypesSetting.compareTo("") != 0){
-            differentiateTypes = Boolean.parseBoolean(differentiateTypesSetting);
-        }
-        else{
-            differentiateTypes = false;
-        }
 
         determineNumPages(); //JP
 
@@ -207,9 +216,9 @@ public class Sudan extends GameActivity {
         }else{
             int total = 0;
             if (differentiateTypes){
-                total = tileListWithMultipleTypes.size() - TILE_BUTTONS.length;
+                total = tileListMultiCopy.size() - TILE_BUTTONS.length;
             }else{
-                total = tileList.size() - TILE_BUTTONS.length; // 1 page is accounted for in numPages init
+                total = tileListCopy.size() - TILE_BUTTONS.length; // 1 page is accounted for in numPages init
             }
             while (total >= 0){
                 numPages++;
@@ -223,28 +232,23 @@ public class Sudan extends GameActivity {
     public void splitTileListAcrossPages(){
 
         if (differentiateTypes){
-            int numTiles = tileListWithMultipleTypes.size();
+            int numTiles = tileListMultiCopy.size();
             int cont = 0;
             for (int i = 0; i < numPages + 1; i++){
                 for (int j = 0; j < TILE_BUTTONS.length; j++){
                     if (cont < numTiles){
-                        if (!(Objects.equals(tileHashMapWithMultipleTypes.get(tileListWithMultipleTypes
-                                .get(cont)), "SAD"))){ // prevent SAD from being displayed
-                            pagesList.get(i).add(tileListWithMultipleTypes.get(cont));
-                        }
+                            pagesList.get(i).add(tileListMultiCopy.get(cont));
                     }
                     cont++;
                 }
             }
         }else{
-            int numTiles = tileList.size();
+            int numTiles = tileListCopy.size();
             int cont = 0;
             for (int i = 0; i < numPages + 1; i++){
                 for (int j = 0; j < TILE_BUTTONS.length; j++){
                     if (cont < numTiles){
-                        if (!tileList.get(cont).tileType.equals("SAD")){
-                            pagesList.get(i).add(tileList.get(cont).baseTile);
-                        }
+                            pagesList.get(i).add(tileListCopy.get(cont).baseTile);
                     }
                     cont++;
                 }
@@ -273,17 +277,13 @@ public class Sudan extends GameActivity {
 
         visibleTiles = 0;
 
-        for(int tileListLine = 0; tileListLine < tileList.size();  tileListLine++){
+        for(int tileListLine = 0; tileListLine < tileListCopy.size();  tileListLine++){
 
-            Start.Tile t = tileList.get(tileListLine);
+            Start.Tile t = tileListCopy.get(tileListLine);
             String type = t.tileType;
             TextView tileView = findViewById(TILE_BUTTONS[visibleTiles]);
-            if (!type.equals("SAD")){
-                tileView.setText(t.baseTile);
-                visibleTiles++;
-            }else{
-                continue;
-            }
+            tileView.setText(t.baseTile);
+            visibleTiles++;
 
             String typeColor;
             switch(type){
@@ -386,9 +386,9 @@ public class Sudan extends GameActivity {
             String type;
             if (differentiateTypes){
                 // JP: what I need is a way to access the type of a tile in the tileListWithMultipleTypes
-                type = tileHashMapWithMultipleTypes.get(pagesList.get(page).get(k));
+                type = tileHashMultiCopy.get(pagesList.get(page).get(k));
             }else{
-                type = tileHashMap.find(pagesList.get(page).get(k)).tileType;
+                type = tileHashCopy.find(pagesList.get(page).get(k)).tileType;
             }
             String typeColor;
             switch(type){
@@ -500,10 +500,10 @@ public class Sudan extends GameActivity {
 
         }else{
             if(!differentiateTypes){//Not differentiating the uses of multifunction tiles
-                tileText = tileList.get(justClickedKey-1).baseTile;
+                tileText = tileListCopy.get(justClickedKey-1).baseTile;
             }
             else{ //differentiateMultipleTypes ==2,we ARE differentiating the uses of multifunction tiles
-                tileText = tileListWithMultipleTypes.get(justClickedKey-1);
+                tileText = tileListMultiCopy.get(justClickedKey-1);
             }
 
             gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);

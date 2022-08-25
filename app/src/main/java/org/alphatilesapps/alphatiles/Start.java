@@ -85,7 +85,7 @@ public class Start extends AppCompatActivity
     public static Boolean hasSyllableAudio;
     public static Boolean hasSyllableGames = false;
     public static int after12checkedTrackers;
-    Boolean differentiateTypes;
+    public static Boolean differentiateTypes;
 
     public static int numberOfAvatars = 12; //default
 
