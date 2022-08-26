@@ -95,6 +95,7 @@ public class Start extends AppCompatActivity
     public static Boolean hasSyllableGames = false;
     public static int after12checkedTrackers;
     public static Boolean differentiateTypes;
+    public static Boolean hasSAD = false;
 
     public static int numberOfAvatars = 12; //default
 
@@ -102,6 +103,7 @@ public class Start extends AppCompatActivity
     public static List<String> VOWELS = new ArrayList<>();
     public static List<String> CorV = new ArrayList<>();
     public static List<String> TONES = new ArrayList<>();
+    public static List<String> SAD = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +192,9 @@ public class Start extends AppCompatActivity
             }
             else if (Start.tileList.get(d).tileType.equals("T")) {
                 TONES.add(Start.tileList.get(d).baseTile);
+            } else if (Start.tileList.get(d).tileType.equals("SAD")) {
+                hasSAD = true;
+                SAD.add(Start.tileList.get(d).baseTile);
             }
         }
         Collections.shuffle(CONSONANTS);
@@ -1296,8 +1301,12 @@ public class Start extends AppCompatActivity
         public String colorTitle;
 
         public ArrayList<String> parseWordIntoSyllables(String parseMe) {
-            String[] parsedWordArrayTemp = parseMe.split("[\\s.-]"); //period, dash, space
-            return new ArrayList<String>(Arrays.asList(parsedWordArrayTemp));
+            ArrayList<String> parsedWordArrayTemp = new ArrayList();
+            StringTokenizer st = new StringTokenizer(parseMe, ".");
+            while (st.hasMoreTokens()) {
+                parsedWordArrayTemp.add(st.nextToken());
+            }
+            return parsedWordArrayTemp;
         }
 
         public String returnRandomCorrespondingSyllable(String correctSyll) {
