@@ -1654,13 +1654,13 @@ public class Start extends AppCompatActivity
             int correctRow = returnPositionInAlphabet(correctTile);
 
 //            LOGGER.info("Remember: N");
-            String partA = Start.tileList.get(correctRow).audioForTile;
+            String partA = Start.tileListNoSAD.get(correctRow).audioForTile;
             String partB = null;
             if (choiceType.equals("TILE_LOWER")) {
-                partB = Start.tileList.get(correctRow).baseTile;
+                partB = Start.tileListNoSAD.get(correctRow).baseTile;
             }
             if (choiceType.equals("TILE_UPPER")) {
-                partB = Start.tileList.get(correctRow).upperTile;
+                partB = Start.tileListNoSAD.get(correctRow).upperTile;
             }
 //            LOGGER.info("Remember: N2: partB = " + partB);
             String[] tileEntry = new String [] {partA, partB};
