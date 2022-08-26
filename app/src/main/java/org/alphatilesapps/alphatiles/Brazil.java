@@ -106,8 +106,6 @@ public class Brazil extends GameActivity {
 
     }
 
-    static List<String> VOWELS = new ArrayList<>();
-    static List<String> CONSONANTS = new ArrayList<>();
     static List<String> SYLLABLES = new ArrayList<>();
     static List<String> MULTIFUNCTIONS = new ArrayList<>();
 
@@ -157,38 +155,13 @@ public class Brazil extends GameActivity {
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
         syllableGame = getIntent().getStringExtra("syllableGame");
 
-        if (challengeLevel < 4 && !syllableGame.equals("S")) {
-
-            if (VOWELS.isEmpty()) {  //makes sure VOWELS is populated only once when the app is running
-                for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (Start.tileList.get(d).tileType.equals("V")) {
-                        VOWELS.add(Start.tileList.get(d).baseTile);
-                    }
-                }
-            }
-
-            Collections.shuffle(VOWELS); // AH
-
-        }else if (syllableGame.equals("S")){
+       if (syllableGame.equals("S")){
             if (SYLLABLES.isEmpty()) {
                 for (int d = 0; d < syllableList.size(); d++) {
                     SYLLABLES.add(syllableList.get(d).toString());
                 }
             }
             Collections.shuffle(SYLLABLES);
-        }
-        else {
-
-            if (CONSONANTS.isEmpty()) {  //makes sure CONSONANTS is populated only once when the app is running
-                for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (Start.tileList.get(d).tileType.equals("C")) {
-                        CONSONANTS.add(Start.tileList.get(d).baseTile);
-                    }
-                }
-            }
-
-            Collections.shuffle(CONSONANTS);
-
         }
 
 //        LOGGER.info("Remember APR 21 21 # 2");
