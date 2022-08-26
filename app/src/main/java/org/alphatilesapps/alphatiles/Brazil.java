@@ -21,12 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
-import static org.alphatilesapps.alphatiles.Start.syllableList;
-import static org.alphatilesapps.alphatiles.Start.COLORS;
-import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
-import static org.alphatilesapps.alphatiles.Start.VOWELS;
-import static org.alphatilesapps.alphatiles.Start.TONES;
+import static org.alphatilesapps.alphatiles.Start.*;
 
 // RR
 //Game idea: Find the vowel missing from the word
@@ -106,9 +101,6 @@ public class Brazil extends GameActivity {
 
     }
 
-    static List<String> SYLLABLES = new ArrayList<>();
-    static List<String> MULTIFUNCTIONS = new ArrayList<>();
-
     private static final Logger LOGGER = Logger.getLogger(Brazil.class.getName());
 
     @Override
@@ -139,8 +131,6 @@ public class Brazil extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-//        LOGGER.info("Remember APR 21 21 # 1");
-
         points = getIntent().getIntExtra("points", 0); // KP
         brazilPoints = getIntent().getIntExtra("brazilPoints", 0); // KP
         brazilHasChecked12Trackers = getIntent().getBooleanExtra("brazilHasChecked12Trackers", false); //LM
@@ -154,37 +144,6 @@ public class Brazil extends GameActivity {
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
         syllableGame = getIntent().getStringExtra("syllableGame");
-
-       if (syllableGame.equals("S")){
-            if (SYLLABLES.isEmpty()) {
-                for (int d = 0; d < syllableList.size(); d++) {
-                    SYLLABLES.add(syllableList.get(d).toString());
-                }
-            }
-            Collections.shuffle(SYLLABLES);
-        }
-
-//        LOGGER.info("Remember APR 21 21 # 2");
-
-        if (MULTIFUNCTIONS.isEmpty()) {  //makes sure MULTIFUNCTIONS is populated only once when the app is running
-            for (int d = 0; d < Start.tileList.size(); d++) {
-//                LOGGER.info("Remember Start.tileList.get(" + d + ").tileType = " + Start.tileList.get(d).tileType);
-//                LOGGER.info("Remember Start.tileList.get(" + d + ").tileType2 = " + Start.tileList.get(d).tileTypeB);
-//                LOGGER.info("Remember Start.tileList.get(" + d + ").tileType3 = " + Start.tileList.get(d).tileTypeC);
-//                LOGGER.info("Remember Start.tileList.get(" + d + ").audioForTile = " + Start.tileList.get(d).audioForTile);
-//                LOGGER.info("Remember Start.tileList.get(" + d + ").audioForTile2 = " + Start.tileList.get(d).audioForTileB);
-//                LOGGER.info("Remember Start.tileList.get(" + d + ").audioForTile3 = " + Start.tileList.get(d).audioForTileC);
-                if (!Start.tileList.get(d).tileTypeB.equals("none")) {
-                    MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
-                }
-            }
-        }
-
-//        LOGGER.info("Remember MULTIFUNCTIONS.size() = " + MULTIFUNCTIONS.size());
-//
-//        LOGGER.info("Remember APR 21 21 # 3");
-
-        Collections.shuffle(MULTIFUNCTIONS);
 
         String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel  + syllableGame;
 

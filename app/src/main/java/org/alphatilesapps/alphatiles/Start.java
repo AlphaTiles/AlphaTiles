@@ -66,8 +66,6 @@ public class Start extends AppCompatActivity
 
     public static SyllableHashMap syllableHashMap; //JP
 
-    public static List<String> MULTIFUNCTIONS = new ArrayList<>();
-
     public static ArrayList<Integer> avatarIdList;
     public static ArrayList<Drawable> avatarJpgList;
     public static SoundPool gameSounds;
@@ -104,6 +102,8 @@ public class Start extends AppCompatActivity
     public static List<String> CorV = new ArrayList<>();
     public static List<String> TONES = new ArrayList<>();
     public static List<String> SAD = new ArrayList<>();
+    public static List<String> SYLLABLES = new ArrayList<>();
+    public static List<String> MULTIFUNCTIONS = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,12 +195,18 @@ public class Start extends AppCompatActivity
             } else if (Start.tileList.get(d).tileType.equals("SAD")) {
                 hasSAD = true;
                 SAD.add(Start.tileList.get(d).baseTile);
+            }else if (!Start.tileList.get(d).tileTypeB.equals("none")) {
+                MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
             }
         }
+
         Collections.shuffle(CONSONANTS);
         Collections.shuffle(VOWELS);
         Collections.shuffle(CorV);
         Collections.shuffle(TONES);
+        Collections.shuffle(SYLLABLES);
+        Collections.shuffle(MULTIFUNCTIONS);
+
         if (hasTileAudio){
             totalAudio = totalAudio + tileList.size();
         }
@@ -220,6 +226,10 @@ public class Start extends AppCompatActivity
         if (hasSyllableGames){
             buildSyllablesArray();
             LOGGER.info("Remember: completed buildSyllablesArray()");
+            for (int d = 0; d < syllableList.size(); d++) {
+                SYLLABLES.add(syllableList.get(d).toString());
+            }
+            Collections.shuffle(SYLLABLES);
         }
 
         if(hasSyllableAudio){
