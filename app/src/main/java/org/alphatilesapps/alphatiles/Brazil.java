@@ -145,6 +145,9 @@ public class Brazil extends GameActivity {
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
         syllableGame = getIntent().getStringExtra("syllableGame");
 
+        // JP: OPEN ISSUE - just realized that Brazil's syllableGame setting remains whatever it was
+        // before when it transitions to the next level via celebration screen, but it is fine via Earth
+
         String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel  + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
@@ -377,8 +380,11 @@ public class Brazil extends GameActivity {
         if (!syllableGame.equals("S")){
             while (repeat && counter < 200) {
                 counter++;
-                index = rand.nextInt((max - min) + 1) + min; // 200 chances to randomly draw a functional letter (e.g. a "V" if looking for "V"
-                correctTile = parsedWordArrayFinal.get(index);
+                correctTile = SAD.get(0);
+                while (SAD.contains(correctTile)){ // JP: makes sure that SAD is never chosen as missing tile
+                    correctTile = parsedWordArrayFinal.get(index);
+                    index = rand.nextInt((max - min) + 1) + min; // 200 chances to randomly draw a functional letter (e.g. a "V" if looking for "V"
+                }
                 if (MULTIFUNCTIONS.contains(correctTile)) {
                     instanceType = Start.tileList.getInstanceTypeForMixedTile(index, wordInLWC);
                     LOGGER.info("Remember MIXED: wordInLOP / correctTile / instanceType = " + wordInLOP + " / " + correctTile + " / " + instanceType);
@@ -416,8 +422,11 @@ public class Brazil extends GameActivity {
 
             }
         }else{ //syllable game
-            index = rand.nextInt((max - min) + 1) + min;
-            correctTile = parsedWordArrayFinal.get(index);
+            correctTile = SAD.get(0);
+            while (SAD.contains(correctTile)){ // JP: makes sure that SAD is never chosen as missing syllable
+                index = rand.nextInt((max - min) + 1) + min;
+                correctTile = parsedWordArrayFinal.get(index);
+            }
         }
 
 
