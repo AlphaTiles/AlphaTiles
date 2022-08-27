@@ -215,10 +215,12 @@ public abstract class GameActivity extends AppCompatActivity {
 						gameNumber = gameNumber + 1;
 						if (gameNumber - 1 < gameList.size()){
 							challengeLevel = Integer.valueOf(gameList.get(gameNumber-1).gameLevel); //challengeLevel of next game
+							syllableGame = gameList.get(gameNumber-1).gameMode; // S or T
 							country = gameList.get(gameNumber-1).gameCountry; //country of next game
 						} else{
 							gameNumber = 1;
 							challengeLevel = Integer.valueOf(gameList.get(0).gameLevel); //challengeLevel of next game
+							syllableGame = gameList.get(0).gameMode; // S or T
 							country = gameList.get(0).gameCountry; //country of next game
 						}
 						String activityClass = project + country;
@@ -236,6 +238,7 @@ public abstract class GameActivity extends AppCompatActivity {
                         if (!hasChecked12Trackers) {
                             foundNextUncompletedGame = true;
                             intent.putExtra("challengeLevel", challengeLevel);
+							intent.putExtra("syllableGame", syllableGame);
                             intent.putExtra("points", points);
                             intent.putExtra("gameNumber", gameNumber);
                             intent.putExtra("country", country);
