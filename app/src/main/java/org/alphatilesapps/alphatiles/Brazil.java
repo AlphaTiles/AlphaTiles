@@ -363,27 +363,33 @@ public class Brazil extends GameActivity {
 
     private void removeTile() {
 
-        int min = 0;
-        int max = parsedWordArrayFinal.size() - 1;
         Random rand = new Random();
         int index = 0;
+        int index_to_remove = 0;
         correctTile = "";
 
         boolean repeat = true;
         String instanceType = null;
         int counter = 0;
 
-
-
-//        LOGGER.info("Remember APR 21 21 # 5.2.1");
-        // JP: this section doesn't apply to syllable games, right?
         if (!syllableGame.equals("S")){
-            while (repeat && counter < 200) {
-                counter++;
-                correctTile = SAD.get(0);
+            ArrayList<Integer> possibleIndices = new ArrayList<>();
+            for (int i = 0; i < parsedWordArrayFinal.size(); i++){
+                possibleIndices.add(i);
+            }
+            while (repeat) { // JP: changed from 200 chances to keeping track of
+                // already tried indices and not allowing those again
+
+                // JP: index is no longer corresponding to the index we remove from the word
+                index = rand.nextInt(possibleIndices.size());
+                correctTile = parsedWordArrayFinal.get(possibleIndices.get(index));
+                index_to_remove = possibleIndices.get(index);
+                possibleIndices.remove(possibleIndices.get(index)); // remove by Object
                 while (SAD.contains(correctTile)){ // JP: makes sure that SAD is never chosen as missing tile
-                    correctTile = parsedWordArrayFinal.get(index);
-                    index = rand.nextInt((max - min) + 1) + min; // 200 chances to randomly draw a functional letter (e.g. a "V" if looking for "V"
+                    index = rand.nextInt(possibleIndices.size());
+                    correctTile = parsedWordArrayFinal.get(possibleIndices.get(index));
+                    index_to_remove = possibleIndices.get(index);
+                    possibleIndices.remove(possibleIndices.get(index)); // remove by Object
                 }
                 if (MULTIFUNCTIONS.contains(correctTile)) {
                     instanceType = Start.tileList.getInstanceTypeForMixedTile(index, wordInLWC);
@@ -422,16 +428,17 @@ public class Brazil extends GameActivity {
 
             }
         }else{ //syllable game
-            correctTile = SAD.get(0);
+            index_to_remove = rand.nextInt(parsedWordArrayFinal.size());
+            correctTile = parsedWordArrayFinal.get(index_to_remove);
             while (SAD.contains(correctTile)){ // JP: makes sure that SAD is never chosen as missing syllable
-                index = rand.nextInt((max - min) + 1) + min;
-                correctTile = parsedWordArrayFinal.get(index);
+                index_to_remove = rand.nextInt(parsedWordArrayFinal.size());
+                correctTile = parsedWordArrayFinal.get(index_to_remove);
             }
         }
 
 
 //        LOGGER.info("Remember APR 21 21 # 5.2.6");
-        parsedWordArrayFinal.set(index, "__");
+        parsedWordArrayFinal.set(index_to_remove, "__");
         TextView constructedWord = findViewById(R.id.activeWordTextView);
         StringBuilder word = new StringBuilder();
         for (String s : parsedWordArrayFinal) {
