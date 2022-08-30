@@ -118,8 +118,10 @@ public class Ecuador extends GameActivity {
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        ecuadorPoints = prefs.getInt("storedEcuadorPoints_level" + challengeLevel + "_player" + playerString, 0);
-        ecuadorHasChecked12Trackers = prefs.getBoolean("storedEcuadorHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, false);
+        ecuadorPoints = prefs.getInt("storedEcuadorPoints_level" + challengeLevel + "_player"
+                + playerString + "_" + syllableGame, 0);
+        ecuadorHasChecked12Trackers = prefs.getBoolean("storedEcuadorHasChecked12Trackers_level"
+                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
 
@@ -127,7 +129,7 @@ public class Ecuador extends GameActivity {
 
         visibleTiles = TILE_BUTTONS.length;
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
@@ -540,10 +542,13 @@ public class Ecuador extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedEcuadorPoints_level" + challengeLevel + "_player" + playerString, ecuadorPoints);
-            editor.putBoolean("storedEcuadorHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, ecuadorHasChecked12Trackers);
+            editor.putInt("storedEcuadorPoints_level" + challengeLevel + "_player" + playerString
+                    + "_" + syllableGame, ecuadorPoints);
+            editor.putBoolean("storedEcuadorHasChecked12Trackers_level" + challengeLevel + "_player"
+                    + playerString + "_" + syllableGame, ecuadorHasChecked12Trackers);
             editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
+                    + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 

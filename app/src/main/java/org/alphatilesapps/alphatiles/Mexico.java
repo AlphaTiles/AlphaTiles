@@ -119,15 +119,18 @@ public class Mexico extends GameActivity {
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        mexicoPoints = prefs.getInt("storedMexicoPoints_level" + challengeLevel + "_player" + playerString, 0);
-        mexicoHasChecked12Trackers = prefs.getBoolean("storedMexicoHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, false);
+        mexicoPoints = prefs.getInt("storedMexicoPoints_level" + challengeLevel + "_player"
+                + playerString + "_" + syllableGame, 0);
+        mexicoHasChecked12Trackers = prefs.getBoolean("storedMexicoHasChecked12Trackers_level"
+                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
+        syllableGame = getIntent().getStringExtra("syllableGame");
 
         wordListArray = new ArrayList(); // KP
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
@@ -159,7 +162,7 @@ public class Mexico extends GameActivity {
 
         /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
         if(trackerCount >= 12){
@@ -405,8 +408,10 @@ public class Mexico extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedMexicoPoints_level" + challengeLevel + "_player" + playerString, mexicoPoints);
-            editor.putBoolean("storedMexicoHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, mexicoHasChecked12Trackers);
+            editor.putInt("storedMexicoPoints_level" + challengeLevel + "_player" + playerString
+                    + "_" + syllableGame, mexicoPoints);
+            editor.putBoolean("storedMexicoHasChecked12Trackers_level" + challengeLevel + "_player"
+                    + playerString + "_" + syllableGame, mexicoHasChecked12Trackers);
             editor.apply();
 
             wordInLWC = memoryCollection.get(cardHitA)[0];

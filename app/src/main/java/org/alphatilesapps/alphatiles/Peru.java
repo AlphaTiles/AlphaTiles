@@ -99,14 +99,16 @@ public class Peru extends GameActivity {
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        peruPoints = prefs.getInt("storedPeruPoints_level" + challengeLevel + "_player" + playerString, 0);
-        peruHasChecked12Trackers = prefs.getBoolean("storedPeruHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, false);
+        peruPoints = prefs.getInt("storedPeruPoints_level" + challengeLevel + "_player"
+                + playerString + "_" + syllableGame, 0);
+        peruHasChecked12Trackers = prefs.getBoolean("storedPeruHasChecked12Trackers_level"
+                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         visibleTiles = TILE_BUTTONS.length;
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
@@ -115,7 +117,7 @@ public class Peru extends GameActivity {
 
         /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
         if(trackerCount >= 12){
             peruHasChecked12Trackers = true;
@@ -354,10 +356,12 @@ public class Peru extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedPeruPoints_level" + challengeLevel + "_player" + playerString, peruPoints);
-            editor.putBoolean("storedPeruHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, peruHasChecked12Trackers);
+            editor.putInt("storedPeruPoints_level" + challengeLevel + "_player" + playerString
+                    + "_" + syllableGame, peruPoints);
+            editor.putBoolean("storedPeruHasChecked12Trackers_level" + challengeLevel + "_player"
+                    + playerString + "_" + syllableGame, peruHasChecked12Trackers);
             editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 

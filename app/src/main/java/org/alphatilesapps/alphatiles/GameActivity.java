@@ -185,7 +185,6 @@ public abstract class GameActivity extends AppCompatActivity {
         if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 3) {
             trackerCount++;
 
-
             soundSequencer.postDelayed(new Runnable() {
                 public void run() {
                     //show celebration screen
@@ -233,7 +232,9 @@ public abstract class GameActivity extends AppCompatActivity {
 
                         String playerString = Util.returnPlayerStringToAppend(playerNumber);
                         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-                        hasChecked12Trackers = prefs.getBoolean("stored" + country + "HasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, false);
+                        hasChecked12Trackers = prefs.getBoolean("stored" + country +
+								"HasChecked12Trackers_level" + String.valueOf(challengeLevel) +
+								"_player" + playerString + "_" + syllableGame, false);
 
                         if (!hasChecked12Trackers) {
                             foundNextUncompletedGame = true;
@@ -365,7 +366,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     repeatLocked = false;
                     SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();
                     String playerString = Util.returnPlayerStringToAppend(playerNumber);
-                    String uniqueGameLevelPlayerID = className + challengeLevel + playerString;
+                    String uniqueGameLevelPlayerID = className + challengeLevel + playerString + syllableGame;
                     editor.putInt(uniqueGameLevelPlayerID, trackerCount);
                     editor.apply();
                     playCorrectFinalSound();
@@ -543,7 +544,7 @@ public abstract class GameActivity extends AppCompatActivity {
 			repeatLocked = false;	
 			SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();	
 			String playerString = Util.returnPlayerStringToAppend(playerNumber);	
-			String uniqueGameLevelPlayerID = className + challengeLevel + playerString;	
+			String uniqueGameLevelPlayerID = className + challengeLevel + playerString + syllableGame;
 			editor.putInt(uniqueGameLevelPlayerID, trackerCount);	
 			editor.apply();	
 			playCorrectFinalSound();	

@@ -116,9 +116,9 @@ public class Thailand extends GameActivity {
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         thailandPoints = prefs.getInt("storedThailandPoints_level" + challengeLevel + "_player"
-                + playerString, 0);
+                + playerString + "_" + syllableGame, 0);
         thailandHasChecked12Trackers = prefs.getBoolean("storedThailandHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString, false);
+                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
@@ -168,7 +168,7 @@ public class Thailand extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(thailandPoints));
 
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
         updateTrackers();
@@ -642,10 +642,13 @@ public class Thailand extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedThailandPoints_level" + challengeLevel + "_player" + playerString, thailandPoints);
-            editor.putBoolean("storedThailandHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, thailandHasChecked12Trackers);
+            editor.putInt("storedThailandPoints_level" + challengeLevel + "_player" + playerString + "_"
+                    + syllableGame, thailandPoints);
+            editor.putBoolean("storedThailandHasChecked12Trackers_level" + challengeLevel + "_player"
+                    + playerString + "_" + syllableGame, thailandHasChecked12Trackers);
             editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
+                    + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
