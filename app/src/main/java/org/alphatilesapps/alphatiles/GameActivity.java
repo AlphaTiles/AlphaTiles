@@ -101,6 +101,10 @@ public abstract class GameActivity extends AppCompatActivity {
         syllableGame = getIntent().getStringExtra("syllableGame");
         gameNumber = getIntent().getIntExtra("gameNumber", 0);
         country = getIntent().getStringExtra("country");
+		String playerString = Util.returnPlayerStringToAppend(playerNumber);
+		SharedPreferences access = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+		trackerCount = access.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player"
+				+ playerString + "_" + syllableGame, 0);
         brazilHasChecked12Trackers = getIntent().getBooleanExtra("brazilHasChecked12Trackers", false);
         colombiaHasChecked12Trackers = getIntent().getBooleanExtra("columbiaHasChecked12Trackers", false);
         ecuadorHasChecked12Trackers = getIntent().getBooleanExtra("ecuadorHasChecked12Trackers", false);

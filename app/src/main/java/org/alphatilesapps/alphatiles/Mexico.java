@@ -408,10 +408,14 @@ public class Mexico extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.apply();
             editor.putInt("storedMexicoPoints_level" + challengeLevel + "_player" + playerString
                     + "_" + syllableGame, mexicoPoints);
+            editor.apply();
             editor.putBoolean("storedMexicoHasChecked12Trackers_level" + challengeLevel + "_player"
                     + playerString + "_" + syllableGame, mexicoHasChecked12Trackers);
+            editor.apply();
+            editor.putInt(getClass().getName() + challengeLevel + playerString + syllableGame, trackerCount);
             editor.apply();
 
             wordInLWC = memoryCollection.get(cardHitA)[0];
