@@ -143,19 +143,23 @@ public class Brazil extends GameActivity {
 
 //        LOGGER.info("Remember APR 21 21 # 1");
 
+
+        // JP what's the difference between brazilPoints = getIntent vs brazilPoints prefs.getInt?
+
         points = getIntent().getIntExtra("points", 0); // KP
         brazilPoints = getIntent().getIntExtra("brazilPoints", 0); // KP
         brazilHasChecked12Trackers = getIntent().getBooleanExtra("brazilHasChecked12Trackers", false); //LM
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        brazilPoints = prefs.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, 0);
-        brazilHasChecked12Trackers = prefs.getBoolean("storedBrazilHasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, false); //LM
+        brazilPoints = prefs.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel)
+                + "_player" + playerString + "_" + syllableGame, 0);
+        brazilHasChecked12Trackers = prefs.getBoolean("storedBrazilHasChecked12Trackers_level"
+                + String.valueOf(challengeLevel) + "_player" + playerString + "_" + syllableGame, false); //LM
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
-        syllableGame = getIntent().getStringExtra("syllableGame");
 
         if (challengeLevel < 4 && !syllableGame.equals("S")) {
 
@@ -256,7 +260,7 @@ public class Brazil extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(brazilPoints));
 
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
 
         updateTrackers();
@@ -776,11 +780,15 @@ public class Brazil extends GameActivity {
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
-            editor.putInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, brazilPoints);
+            editor.putInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player"
+                    + playerString + "_" + syllableGame, brazilPoints);
             editor.apply();
-            editor.putBoolean("storedBrazilHasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, brazilHasChecked12Trackers);
+            editor.putBoolean("storedBrazilHasChecked12Trackers_level" +
+                    String.valueOf(challengeLevel) + "_player" + playerString + "_" + syllableGame,
+                    brazilHasChecked12Trackers);
             editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
+                    + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
