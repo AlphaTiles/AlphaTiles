@@ -172,7 +172,7 @@ public class Japan extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(japanPoints));
 
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
 
         updateTrackers();
@@ -649,7 +649,7 @@ public class Japan extends GameActivity {
             editor.apply();
             editor.putBoolean("storedJapanHasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, japanHasChecked12Trackers);
             editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 

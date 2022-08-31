@@ -137,16 +137,71 @@ public class Brazil extends GameActivity {
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        brazilPoints = prefs.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, 0);
-        brazilHasChecked12Trackers = prefs.getBoolean("storedBrazilHasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, false); //LM
+        brazilPoints = prefs.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel)
+                + "_player" + playerString + "_" + syllableGame, 0);
+        brazilHasChecked12Trackers = prefs.getBoolean("storedBrazilHasChecked12Trackers_level"
+                + String.valueOf(challengeLevel) + "_player" + playerString + "_" + syllableGame, false); //LM
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
         syllableGame = getIntent().getStringExtra("syllableGame");
 
-        // JP: OPEN ISSUE - just realized that Brazil's syllableGame setting remains whatever it was
-        // before when it transitions to the next level via celebration screen, but it is fine via Earth
+        if (challengeLevel < 4 && !syllableGame.equals("S")) {
+
+            if (VOWELS.isEmpty()) {  //makes sure VOWELS is populated only once when the app is running
+                for (int d = 0; d < Start.tileList.size(); d++) {
+                    if (Start.tileList.get(d).tileType.equals("V")) {
+                        VOWELS.add(Start.tileList.get(d).baseTile);
+                    }
+                }
+            }
+
+            Collections.shuffle(VOWELS); // AH
+
+        }else if (syllableGame.equals("S")){
+            if (SYLLABLES.isEmpty()) {
+                for (int d = 0; d < syllableList.size(); d++) {
+                    SYLLABLES.add(syllableList.get(d).toString());
+                }
+            }
+            Collections.shuffle(SYLLABLES);
+        }
+        else {
+
+            if (CONSONANTS.isEmpty()) {  //makes sure CONSONANTS is populated only once when the app is running
+                for (int d = 0; d < Start.tileList.size(); d++) {
+                    if (Start.tileList.get(d).tileType.equals("C")) {
+                        CONSONANTS.add(Start.tileList.get(d).baseTile);
+                    }
+                }
+            }
+
+            Collections.shuffle(CONSONANTS);
+
+        }
+
+//        LOGGER.info("Remember APR 21 21 # 2");
+
+        if (MULTIFUNCTIONS.isEmpty()) {  //makes sure MULTIFUNCTIONS is populated only once when the app is running
+            for (int d = 0; d < Start.tileList.size(); d++) {
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").tileType = " + Start.tileList.get(d).tileType);
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").tileType2 = " + Start.tileList.get(d).tileTypeB);
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").tileType3 = " + Start.tileList.get(d).tileTypeC);
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").audioForTile = " + Start.tileList.get(d).audioForTile);
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").audioForTile2 = " + Start.tileList.get(d).audioForTileB);
+//                LOGGER.info("Remember Start.tileList.get(" + d + ").audioForTile3 = " + Start.tileList.get(d).audioForTileC);
+                if (!Start.tileList.get(d).tileTypeB.equals("none")) {
+                    MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
+                }
+            }
+        }
+
+//        LOGGER.info("Remember MULTIFUNCTIONS.size() = " + MULTIFUNCTIONS.size());
+//
+//        LOGGER.info("Remember APR 21 21 # 3");
+
+        Collections.shuffle(MULTIFUNCTIONS);
 
         String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel  + syllableGame;
 
@@ -191,7 +246,7 @@ public class Brazil extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(brazilPoints));
 
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
 
         updateTrackers();
@@ -724,11 +779,15 @@ public class Brazil extends GameActivity {
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
-            editor.putInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, brazilPoints);
+            editor.putInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player"
+                    + playerString + "_" + syllableGame, brazilPoints);
             editor.apply();
-            editor.putBoolean("storedBrazilHasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, brazilHasChecked12Trackers);
+            editor.putBoolean("storedBrazilHasChecked12Trackers_level" +
+                    String.valueOf(challengeLevel) + "_player" + playerString + "_" + syllableGame,
+                    brazilHasChecked12Trackers);
             editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
+                    + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
