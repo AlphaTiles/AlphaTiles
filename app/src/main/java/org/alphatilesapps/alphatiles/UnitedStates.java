@@ -100,7 +100,7 @@ public class UnitedStates extends GameActivity {
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        unitedStatesPoints = prefs.getInt("storedUnitedStatesPoints_level" + challengeLevel
+        unitedStatesPoints = prefs.getInt("storedUnitedStatesPoints_level" + String.valueOf(challengeLevel)
                 + "_player" + playerString + "_" + syllableGame, 0);
         unitedStatesHasChecked12Trackers = prefs.getBoolean("storedUnitedStatesHasChecked12Trackers_level"
                 + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
@@ -374,8 +374,9 @@ public class UnitedStates extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.apply();
             editor.putInt("storedUnitedStatesPoints_level" + challengeLevel + "_player"
-                    + playerString + "_" + syllableGame, points);
+                    + playerString + "_" + syllableGame, unitedStatesPoints);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
