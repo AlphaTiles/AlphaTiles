@@ -1690,7 +1690,6 @@ public class Start extends AppCompatActivity
 //            LOGGER.info("Remember: challengeLevelX = " + challengeLevelX);
             if (challengeLevelX == 1) {
                 // use random tiles
-                //JP TO-DO: NEED TO CHECK THAT RANDOM TILE IS NOT AN ISSUE
 
                 Random rand = new Random();
                 int rand1 = 0; // forces into while loop
@@ -1797,7 +1796,6 @@ public class Start extends AppCompatActivity
                                 int rand5 = rand.nextInt(tileListNoSAD.size());
                                 if (choiceType.equals("TILE_UPPER")) {
                                     partB = Start.tileListNoSAD.get(rand5).upperTile;
-                                    // JP: PICK UP HERE TO LET LEVEL 2 JUST DO SIMPLE DISTRACTORS
                                     while ((Character.toLowerCase(partB.charAt(0)) == Character.toLowerCase(correctTile.charAt(0))) ||
                                             partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[0])).upperTile) ||
                                             partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[1])).upperTile) ||

@@ -226,6 +226,11 @@ public class Thailand extends GameActivity {
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                     refTile = parsedWordArrayFinal.get(0);
                     refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    while (challengeLevel == 1 && refTileType.equals("T")){
+                        // JP: disallow tone marker from being reference in level 1
+                        refTile = parsedWordArrayFinal.get(0);
+                        refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    }
                     if(refTile.compareTo(refTileLast)!=0
                             && refTile.compareTo(refTileSecondToLast)!=0
                             && refTile.compareTo(refTileThirdToLast)!=0){
@@ -245,6 +250,11 @@ public class Thailand extends GameActivity {
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                     refTile = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).upperTile;
                     refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    while (challengeLevel == 1 && refTileType.equals("T")){
+                        // JP: disallow tone marker from being reference in level 1
+                        refTile = parsedWordArrayFinal.get(0);
+                        refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    }
                     // SAD should never be first tile linguistically, so no need to programatically filter out
                     if(refTile.compareTo(refTileLast)!=0
                             && refTile.compareTo(refTileSecondToLast)!=0
@@ -265,6 +275,11 @@ public class Thailand extends GameActivity {
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                     refTile = parsedWordArrayFinal.get(0);
                     refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    while (challengeLevel == 1 && refTileType.equals("T")){
+                        // JP: disallow tone marker from being reference in level 1
+                        refTile = parsedWordArrayFinal.get(0);
+                        refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    }
                     if(refTile.compareTo(refTileLast)!=0
                             && refTile.compareTo(refTileSecondToLast)!=0
                             && refTile.compareTo(refTileThirdToLast)!=0){
@@ -322,6 +337,11 @@ public class Thailand extends GameActivity {
                     refCVX = sortableTilesArray.get(randomNum2).tileType;
                     refTile = sortableTilesArray.get(randomNum2).baseTile;
                     refTileType = sortableTilesArray.get(randomNum2).tileType;
+                    while (challengeLevel == 1 && refTileType.equals("T")){
+                        // JP: disallow tone marker from being reference in level 1
+                        refTile = parsedWordArrayFinal.get(0);
+                        refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    }
                     if(refTile.compareTo(refTileLast)!=0
                             && refTile.compareTo(refTileSecondToLast)!=0
                             && refTile.compareTo(refTileThirdToLast)!=0){
@@ -340,6 +360,11 @@ public class Thailand extends GameActivity {
                     refCVX = sortableTilesArray.get(randomNum2).tileType;
                     refTile = sortableTilesArray.get(randomNum2).upperTile;
                     refTileType = sortableTilesArray.get(randomNum2).tileType;
+                    while (challengeLevel == 1 && refTileType.equals("T")){
+                        // JP: disallow tone marker from being reference in level 1
+                        refTile = parsedWordArrayFinal.get(0);
+                        refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    }
                     if(refTile.compareTo(refTileLast)!=0
                             && refTile.compareTo(refTileSecondToLast)!=0
                             && refTile.compareTo(refTileThirdToLast)!=0){
