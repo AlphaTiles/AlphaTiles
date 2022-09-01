@@ -217,16 +217,10 @@ public class Japan extends GameActivity {
             wordInLOP = Start.wordList.get(randomNum).localWord;
 
             parsedWordIntoTiles = tileList.parseWordIntoTiles(wordInLOP);
+            parsedWordIntoTiles.removeAll(SAD);
             parsedWordIntoSyllables = syllableList.parseWordIntoSyllables(wordInLOP);
+            parsedWordIntoSyllables.removeAll(SAD);
 
-            /*
-            for (String syll : parsedWordIntoSyllables){
-                correctSyllabification.add(syll);
-                correctSyllabification.add("*");
-            }
-            // other option -- every time you change joinedTracker, convert it into a string and
-            check if that string is equal to wordInLOP with the periods in it still
-             */
             if (parsedWordIntoTiles.size() <= MAX_TILES){ //JP: choose word w/ <= 12 tiles
                 //If this word isn't one of the 3 previously tested words, we're good // LM
                 if(wordInLWC.compareTo(lastWord)!=0
@@ -251,7 +245,6 @@ public class Japan extends GameActivity {
     }
 
     private void displayTileChoices(){
-        parsedWordIntoTiles.removeAll(SAD);
         visibleViews = parsedWordIntoTiles.size()*2 - 1; // accounts for both buttons and tiles
         visibleViewsImm = parsedWordIntoTiles.size()*2 - 1;
 
@@ -633,7 +626,7 @@ public class Japan extends GameActivity {
         // MUST BE IN CORRECT POSITION TOO
         StringBuilder config = new StringBuilder();
         // that one in-progress syll in partialConfig
-        for (int i = 0; i < visibleViews; i++){ //why was this size 20?
+        for (int i = 0; i < visibleViews; i++){
             TextView view = joinedTracker.get(i);
             config.append(view.getText());
         }
@@ -681,7 +674,6 @@ public class Japan extends GameActivity {
 
             // find number of tiles per correct syllable
             ArrayList<Integer> numTilesPerSyll = new ArrayList<>();
-            parsedWordIntoSyllables.removeAll(SAD);
             for (String syll: parsedWordIntoSyllables){
                 ArrayList<String> parsedSyllIntoTiles = tileList.parseWordIntoTiles(syll);
                 numTilesPerSyll.add(parsedSyllIntoTiles.size());
@@ -721,7 +713,8 @@ public class Japan extends GameActivity {
                     }else if (correctButtons.contains(view.getId()) && buildingIntermediate){
                         // is a correct button and its 2nd in sequence
                         // that one syllable is correct so turn them all green
-                        if (intermediateTiles.size() != sum){
+                        if (intermediateTiles.size() != sum){ // JP: this also needs to check that
+                            // it didn't skip a correct button?
                             // this prevents all tiles from turning green if all buttons have been clicked
                             // but in wrong order
                             for (TextView tile : intermediateTiles){
