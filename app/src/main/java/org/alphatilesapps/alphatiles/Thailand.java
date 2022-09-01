@@ -228,6 +228,8 @@ public class Thailand extends GameActivity {
                     refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     while (challengeLevelThai == 1 && refTileType.equals("T")){
                         // JP: disallow tone marker from being reference in level 1
+                        chooseWord();
+                        parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                         refTile = parsedWordArrayFinal.get(0);
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
@@ -252,6 +254,8 @@ public class Thailand extends GameActivity {
                     refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     while (challengeLevelThai == 1 && refTileType.equals("T")){
                         // JP: disallow tone marker from being reference in level 1
+                        chooseWord();
+                        parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                         refTile = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).upperTile;
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
@@ -277,6 +281,8 @@ public class Thailand extends GameActivity {
                     refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     while (challengeLevelThai == 1 && refTileType.equals("T")){
                         // JP: disallow tone marker from being reference in level 1
+                        chooseWord();
+                        parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                         refTile = parsedWordArrayFinal.get(0);
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
@@ -339,6 +345,8 @@ public class Thailand extends GameActivity {
                     refTileType = sortableTilesArray.get(randomNum2).tileType;
                     while (challengeLevelThai == 1 && refTileType.equals("T")){
                         // JP: disallow tone marker from being reference in level 1
+                        randomNum2 = rand.nextInt(sortableTilesArray.size());
+                        refCVX = sortableTilesArray.get(randomNum2).tileType;
                         refTile = sortableTilesArray.get(randomNum2).baseTile;
                         refTileType = sortableTilesArray.get(randomNum2).tileType;
                     }
@@ -362,6 +370,8 @@ public class Thailand extends GameActivity {
                     refTileType = sortableTilesArray.get(randomNum2).tileType;
                     while (challengeLevelThai == 1 && refTileType.equals("T")){
                         // JP: disallow tone marker from being reference in level 1
+                        randomNum2 = rand.nextInt(sortableTilesArray.size());
+                        refCVX = sortableTilesArray.get(randomNum2).tileType;
                         refTile = sortableTilesArray.get(randomNum2).upperTile;
                         refTileType = sortableTilesArray.get(randomNum2).tileType;
                     }
