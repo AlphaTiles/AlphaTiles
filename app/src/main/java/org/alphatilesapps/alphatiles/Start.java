@@ -241,6 +241,8 @@ public class Start extends AppCompatActivity
                 COLORS.add(thisLineArray[2]);
             }
         }
+
+        scanner.close();
     }
 
     //memory leak fix
@@ -315,6 +317,7 @@ public class Start extends AppCompatActivity
         }
 
         buildTileHashMap();
+        scanner.close();
     }
 
     public void buildSyllablesArray() {
@@ -343,6 +346,7 @@ public class Start extends AppCompatActivity
         }
 
         buildSyllableHashMap();
+        scanner.close();
     }
 
     private void buildSyllableHashMap() {
@@ -377,6 +381,7 @@ public class Start extends AppCompatActivity
         }
 
         buildWordHashMap();
+        scanner.close();
     }
 
     public void buildKeysArray() {
@@ -401,6 +406,7 @@ public class Start extends AppCompatActivity
                 }
             }
         }
+        scanner.close();
     }
 
     public void buildGamesArray() {
@@ -430,6 +436,8 @@ public class Start extends AppCompatActivity
                 }
             }
         }
+
+        scanner.close();
     }
 
     public void buildSettingsArray() {
@@ -450,6 +458,8 @@ public class Start extends AppCompatActivity
                 }
             }
         }
+
+        scanner.close();
 
     }
 
@@ -484,6 +494,8 @@ public class Start extends AppCompatActivity
             buildNamesArray();
         }
 
+        scanner.close();
+
     }
 
     public void buildNamesArray() {
@@ -512,6 +524,7 @@ public class Start extends AppCompatActivity
         }
 
         localAppName = langInfoList.find("Game Name");
+        scanner.close();
 
     }
 
