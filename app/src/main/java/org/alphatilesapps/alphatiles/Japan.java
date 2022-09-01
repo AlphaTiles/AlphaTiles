@@ -251,6 +251,7 @@ public class Japan extends GameActivity {
     }
 
     private void displayTileChoices(){
+        parsedWordIntoTiles.removeAll(SAD);
         visibleViews = parsedWordIntoTiles.size()*2 - 1; // accounts for both buttons and tiles
         visibleViewsImm = parsedWordIntoTiles.size()*2 - 1;
 
@@ -612,6 +613,17 @@ public class Japan extends GameActivity {
         }
     }
 
+    private String removeSADFromWordInLOP(String wordInLOP){
+        // JP: not working how I want
+        String finalStr = wordInLOP;
+        for (String ch : SAD){
+            finalStr = finalStr.replaceAll("." + ch, ""); // only remove one period
+            // so that there is still a syllable break after the SAD is removed
+        }
+
+        return finalStr;
+    }
+
     private void respondToSelection() {
         // check if correct and change color
         // if correct, set those Tiles unclickable to help the user
@@ -620,15 +632,13 @@ public class Japan extends GameActivity {
         // ISSUE TO FIX: NOT ONLY IF SYLL IN INPROGRESSSYLLABIFICATION BUT
         // MUST BE IN CORRECT POSITION TOO
         StringBuilder config = new StringBuilder();
-        StringBuilder partialConfig = new StringBuilder(); // hold one in-progress syll at a time
-        ArrayList<TextView> listOfIds = new ArrayList<>(); // list of ids that corresponds to
         // that one in-progress syll in partialConfig
         for (int i = 0; i < visibleViews; i++){ //why was this size 20?
             TextView view = joinedTracker.get(i);
             config.append(view.getText());
         }
-
-        if (config.toString().equals(wordInLOP)){ // completely correct
+        String wordInLOPNoSAD = removeSADFromWordInLOP(wordInLOP);
+        if (config.toString().equals(wordInLOPNoSAD)){ // completely correct
             //great job!
             repeatLocked = false;
             playCorrectSoundThenActiveWordClip(false); //JP not sure what this bool is for
@@ -671,6 +681,7 @@ public class Japan extends GameActivity {
 
             // find number of tiles per correct syllable
             ArrayList<Integer> numTilesPerSyll = new ArrayList<>();
+            parsedWordIntoSyllables.removeAll(SAD);
             for (String syll: parsedWordIntoSyllables){
                 ArrayList<String> parsedSyllIntoTiles = tileList.parseWordIntoTiles(syll);
                 numTilesPerSyll.add(parsedSyllIntoTiles.size());
