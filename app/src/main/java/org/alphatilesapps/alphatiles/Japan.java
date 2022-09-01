@@ -713,8 +713,16 @@ public class Japan extends GameActivity {
                     }else if (correctButtons.contains(view.getId()) && buildingIntermediate){
                         // is a correct button and its 2nd in sequence
                         // that one syllable is correct so turn them all green
-                        if (intermediateTiles.size() != sum){ // JP: this also needs to check that
-                            // it didn't skip a correct button?
+
+                        int secondButtonIndex = correctButtons.indexOf(view.getId());
+                        // JP: this also needs to check that it didn't skip a correct button?
+                        boolean buttonPairComplete = true;
+                        if (secondButtonIndex > 0){
+                            buttonPairComplete = correctButtons.get(secondButtonIndex-1)
+                                    .equals(firstButton.getId());
+                        }
+                        if (intermediateTiles.size() != sum
+                                && buttonPairComplete){
                             // this prevents all tiles from turning green if all buttons have been clicked
                             // but in wrong order
                             for (TextView tile : intermediateTiles){
@@ -727,7 +735,7 @@ public class Japan extends GameActivity {
                         }
                     } else if(correctButtons.contains(view.getId())){
                         buildingIntermediate = true;
-                        firstButton = view;
+                        firstButton = view; // maybe use firstButton to indicate whether two syllables are incorrectly put together?
                     }
                 }
                 else{ //must be tile
