@@ -106,14 +106,16 @@ public class Myanmar extends GameActivity {
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        myanmarPoints = prefs.getInt("storedMyanmarPoints_level" + challengeLevel + "_player" + playerString, 0);
-        myanmarHasChecked12Trackers = prefs.getBoolean("storedMyanmarHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, false);
+        myanmarPoints = prefs.getInt("storedMyanmarPoints_level" + challengeLevel + "_player"
+                + playerString + syllableGame, 0);
+        myanmarHasChecked12Trackers = prefs.getBoolean("storedMyanmarHasChecked12Trackers_level"
+                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         visibleTiles = TILE_BUTTONS.length;
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
+        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
@@ -122,7 +124,7 @@ public class Myanmar extends GameActivity {
 
         /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
         if(trackerCount>= 12){
             myanmarHasChecked12Trackers = true;
@@ -734,10 +736,13 @@ public class Myanmar extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedMyanmarPoints_level" + challengeLevel + "_player" + playerString, myanmarPoints);
-            editor.putBoolean("storedMyanmarHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, myanmarHasChecked12Trackers);
+            editor.putInt("storedMyanmarPoints_level" + challengeLevel + "_player"
+                    + playerString + "_" + syllableGame, myanmarPoints);
+            editor.putBoolean("storedMyanmarHasChecked12Trackers_level" + challengeLevel
+                    + "_player" + playerString + "_" + syllableGame, myanmarHasChecked12Trackers);
             editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
+                    + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 

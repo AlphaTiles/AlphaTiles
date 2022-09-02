@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +33,11 @@ public class Start extends AppCompatActivity
 
     public static TileList tileList; // KP // from aa_gametiles.txt
 
+    public static TileList tileListNoSAD; // JP // from aa_gametiles.txt minus SAD types
+
     public static TileListWithMultipleTypes tileListWithMultipleTypes;
+
+    public static TileListWithMultipleTypes tileListWithMultiTypesNoSAD;
 
     public static WordList wordList;     // KP  // from aa_wordlist.txt
 
@@ -51,11 +56,15 @@ public class Start extends AppCompatActivity
     // LM / allows us to find() a Tile object using its name
     public static TileHashMap tileHashMap;
 
+    public static TileHashMap tileHashMapNoSAD;
+
+    public static TileHashMapWithMultipleTypes tileHashMapWithMultipleTypes;
+
+    public static TileHashMapWithMultipleTypes tileHashMapWithMultiTypesNoSAD;
+
     public static WordHashMap wordHashMap;
 
     public static SyllableHashMap syllableHashMap; //JP
-
-    public static List<String> MULTIFUNCTIONS = new ArrayList<>();
 
     public static ArrayList<Integer> avatarIdList;
     public static ArrayList<Drawable> avatarJpgList;
@@ -83,7 +92,8 @@ public class Start extends AppCompatActivity
     public static Boolean hasSyllableAudio;
     public static Boolean hasSyllableGames = false;
     public static int after12checkedTrackers;
-    Boolean differentiateTypes;
+    public static Boolean differentiateTypes;
+    public static Boolean hasSAD = false;
 
     public static int numberOfAvatars = 12; //default
 
@@ -91,6 +101,9 @@ public class Start extends AppCompatActivity
     public static List<String> VOWELS = new ArrayList<>();
     public static List<String> CorV = new ArrayList<>();
     public static List<String> TONES = new ArrayList<>();
+    public static List<String> SAD = new ArrayList<>();
+    public static List<String> SYLLABLES = new ArrayList<>();
+    public static List<String> MULTIFUNCTIONS = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,12 +192,21 @@ public class Start extends AppCompatActivity
             }
             else if (Start.tileList.get(d).tileType.equals("T")) {
                 TONES.add(Start.tileList.get(d).baseTile);
+            } else if (Start.tileList.get(d).tileType.equals("SAD")) {
+                hasSAD = true;
+                SAD.add(Start.tileList.get(d).baseTile);
+            }else if (!Start.tileList.get(d).tileTypeB.equals("none")) {
+                MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
             }
         }
+
         Collections.shuffle(CONSONANTS);
         Collections.shuffle(VOWELS);
         Collections.shuffle(CorV);
         Collections.shuffle(TONES);
+        Collections.shuffle(SYLLABLES);
+        Collections.shuffle(MULTIFUNCTIONS);
+
         if (hasTileAudio){
             totalAudio = totalAudio + tileList.size();
         }
@@ -204,6 +226,10 @@ public class Start extends AppCompatActivity
         if (hasSyllableGames){
             buildSyllablesArray();
             LOGGER.info("Remember: completed buildSyllablesArray()");
+            for (int d = 0; d < syllableList.size(); d++) {
+                SYLLABLES.add(syllableList.get(d).toString());
+            }
+            Collections.shuffle(SYLLABLES);
         }
 
         if(hasSyllableAudio){
@@ -272,6 +298,7 @@ public class Start extends AppCompatActivity
         Scanner scanner = new 	Scanner(getResources().openRawResource(R.raw.aa_gametiles));
         boolean header = true;
         tileList = new TileList();
+        tileListNoSAD = new TileList();
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
@@ -296,6 +323,9 @@ public class Start extends AppCompatActivity
                 Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], Integer.parseInt(thisLineArray[11]), Integer.parseInt(thisLineArray[12]), Integer.parseInt(thisLineArray[13]));
                 if (!tile.hasNull()) {
                     tileList.add(tile);
+                    if (!tile.tileType.equals("SAD")){
+                        tileListNoSAD.add(tile);
+                    }
                 }
             }
         }
@@ -303,15 +333,25 @@ public class Start extends AppCompatActivity
         if(differentiateTypes) {
 
             tileListWithMultipleTypes = new TileListWithMultipleTypes();
+            tileListWithMultiTypesNoSAD = new TileListWithMultipleTypes();
+            tileHashMapWithMultipleTypes = new TileHashMapWithMultipleTypes();
+            tileHashMapWithMultiTypesNoSAD = new TileHashMapWithMultipleTypes();
 
             for (Tile tile : tileList) {
                 tileListWithMultipleTypes.add(tile.baseTile);
-
+                tileHashMapWithMultipleTypes.put(tile.baseTile, tile.tileType);
+                if (!tile.tileType.equals("SAD")){
+                    tileListWithMultiTypesNoSAD.add(tile.baseTile);
+                    tileHashMapWithMultiTypesNoSAD.put(tile.baseTile, tile.tileType);
+                }
+                // SAD should never have a 2nd or 3rd type other than "none"
                 if (tile.tileTypeB.compareTo("none") != 0) {
                     tileListWithMultipleTypes.add(tile.baseTile + "B");
+                    tileHashMapWithMultipleTypes.put(tile.baseTile + "B", tile.tileTypeB);
                 }
                 if (tile.tileTypeC.compareTo("none") != 0) {
                     tileListWithMultipleTypes.add(tile.baseTile + "C");
+                    tileHashMapWithMultipleTypes.put(tile.baseTile + "C", tile.tileTypeC);
                 }
             }
         }
@@ -530,8 +570,12 @@ public class Start extends AppCompatActivity
 
     public void buildTileHashMap(){
         tileHashMap = new TileHashMap();
+        tileHashMapNoSAD = new TileHashMap();
         for(int i = 0; i < tileList.size(); i++){
             tileHashMap.put(tileList.get(i).baseTile, tileList.get(i));
+            if (!tileList.get(i).tileType.equals("SAD")){
+                tileHashMapNoSAD.put(tileList.get(i).baseTile, tileList.get(i));
+            }
         }
     }
 
@@ -680,7 +724,7 @@ public class Start extends AppCompatActivity
 
                     if(differentiateTypes){//checking if both tile and type match
                         if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                            wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, get(i).localWord);
+                            wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, get(i).nationalWord);
                         }
                         else{//not dealing with a multifunction symbol
                             wordInitialTileType = tileHashMap.find(wordInitialTile).tileType;
@@ -800,7 +844,7 @@ public class Start extends AppCompatActivity
 
                         if(differentiateTypes){//checking if both tile and type match
                             if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).localWord);
+                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
                             }
                             else{//not dealing with a multifunction symbol
                                 tileInFocusType = tileHashMap.find(tileInFocus).tileType;
@@ -921,7 +965,7 @@ public class Start extends AppCompatActivity
 
                         if(differentiateTypes){//checking if both tile and type match
                             if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).localWord);
+                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
                             }
                             else{//not dealing with a multifunction symbol
                                 tileInFocusType = tileHashMap.find(tileInFocus).tileType;
@@ -981,7 +1025,7 @@ public class Start extends AppCompatActivity
 
                         if(differentiateTypes){//checking if both tile and type match
                             if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).localWord);
+                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
                             }
                             else{//not dealing with a multifunction symbol
                                 tileInFocusType = tileHashMap.find(tileInFocus).tileType;
@@ -1285,7 +1329,6 @@ public class Start extends AppCompatActivity
             while (st.hasMoreTokens()) {
                 parsedWordArrayTemp.add(st.nextToken());
             }
-
             return parsedWordArrayTemp;
         }
 
@@ -1633,7 +1676,8 @@ public class Start extends AppCompatActivity
 
         }
 
-        public ArrayList<String[]> returnFourTiles(String correctTile, int challengeLevelX, String choiceType) {
+        public ArrayList<String[]> returnFourTiles(String correctTile, int challengeLevelX,
+                                                   String choiceType, String refTileType) {
 
 //            LOGGER.info("Remember: M");
             ArrayList<String[]> fourChoices = new ArrayList();
@@ -1642,13 +1686,13 @@ public class Start extends AppCompatActivity
             int correctRow = returnPositionInAlphabet(correctTile);
 
 //            LOGGER.info("Remember: N");
-            String partA = Start.tileList.get(correctRow).audioForTile;
+            String partA = Start.tileListNoSAD.get(correctRow).audioForTile;
             String partB = null;
             if (choiceType.equals("TILE_LOWER")) {
-                partB = Start.tileList.get(correctRow).baseTile;
+                partB = Start.tileListNoSAD.get(correctRow).baseTile;
             }
             if (choiceType.equals("TILE_UPPER")) {
-                partB = Start.tileList.get(correctRow).upperTile;
+                partB = Start.tileListNoSAD.get(correctRow).upperTile;
             }
 //            LOGGER.info("Remember: N2: partB = " + partB);
             String[] tileEntry = new String [] {partA, partB};
@@ -1659,7 +1703,6 @@ public class Start extends AppCompatActivity
 //            LOGGER.info("Remember: challengeLevelX = " + challengeLevelX);
             if (challengeLevelX == 1) {
                 // use random tiles
-                //JP TO-DO: NEED TO CHECK THAT RANDOM TILE IS NOT AN ISSUE
 
                 Random rand = new Random();
                 int rand1 = 0; // forces into while loop
@@ -1668,64 +1711,72 @@ public class Start extends AppCompatActivity
                 String altTile = "";
 
                 while (rand1 == 0) {
-                    rand1 = rand.nextInt(tileList.size());
-                    altTile = Start.tileList.get(rand1).baseTile;
-                    if (correctRow == rand1 || Character.toLowerCase(correctTile.charAt(0)) == Character.toLowerCase(altTile.charAt(0))) {
-                        //think through why this is always false
-                        //and fix condition to deal with upper and lower (convert test to lower)
+                    rand1 = rand.nextInt(tileListNoSAD.size());
+                    altTile = Start.tileListNoSAD.get(rand1).baseTile;
+                    // JP: added logic so that if refTileType is C or V, four choices must also be C or V
+                    if (correctRow == rand1 || Character.toLowerCase(correctTile.charAt(0)) == Character
+                            .toLowerCase(altTile.charAt(0)) || (!Start.tileListNoSAD.get(rand1)
+                            .tileType.equals("C") && !Start.tileListNoSAD.get(rand1).tileType.equals("V")
+                            && (refTileType.equals("C") || refTileType.equals("V")))) {
                         rand1 = 0;
                     } else {
-                        altTile = Start.tileList.get(rand1).baseTile;
+                        altTile = Start.tileListNoSAD.get(rand1).baseTile;
                     }
                 }
                 if (choiceType.equals("TILE_LOWER")) {
                     partB = altTile;
                 }
                 if (choiceType.equals("TILE_UPPER")) {
-                    partB = Start.tileList.get(rand1).upperTile;
+                    partB = Start.tileListNoSAD.get(rand1).upperTile;
                 }
-                partA = Start.tileList.get(returnPositionInAlphabet(altTile)).audioForTile;
+                partA = Start.tileListNoSAD.get(returnPositionInAlphabet(altTile)).audioForTile;
                 tileEntry = new String [] {partA, partB};
 //                LOGGER.info("Remember: O2: tileEntry = " + Arrays.toString(tileEntry));
                 fourChoices.add(tileEntry);
 
                 while (rand2 == 0) {
-                    rand2 = rand.nextInt(tileList.size());
-                    altTile = Start.tileList.get(rand2).baseTile;
-                    if (correctRow == rand2 || rand1 == rand2 || Character.toLowerCase(correctTile.charAt(0)) == Character.toLowerCase(altTile.charAt(0))) {
+                    rand2 = rand.nextInt(tileListNoSAD.size());
+                    altTile = Start.tileListNoSAD.get(rand2).baseTile;
+                    if (correctRow == rand2 || rand1 == rand2 || Character.toLowerCase(correctTile
+                            .charAt(0)) == Character.toLowerCase(altTile.charAt(0)) || (!Start.tileListNoSAD.get(rand2)
+                            .tileType.equals("C") && !Start.tileListNoSAD.get(rand2).tileType.equals("V")
+                            && (refTileType.equals("C") || refTileType.equals("V")))) {
                         rand2 = 0;
                     } else {
-                        altTile = Start.tileList.get(rand2).baseTile;
+                        altTile = Start.tileListNoSAD.get(rand2).baseTile;
                     }
                 }
                 if (choiceType.equals("TILE_LOWER")) {
                     partB = altTile;
                 }
                 if (choiceType.equals("TILE_UPPER")) {
-                    partB = Start.tileList.get(rand2).upperTile;
+                    partB = Start.tileListNoSAD.get(rand2).upperTile;
                 }
-                partA = Start.tileList.get(returnPositionInAlphabet(altTile)).audioForTile;
+                partA = Start.tileListNoSAD.get(returnPositionInAlphabet(altTile)).audioForTile;
                 tileEntry = new String [] {partA, partB};
 //                LOGGER.info("Remember: O3: tileEntry = " + Arrays.toString(tileEntry));
                 fourChoices.add(tileEntry);
 
                 while (rand3 == 0) {
-                    rand3 = rand.nextInt(tileList.size());
-                    altTile = Start.tileList.get(rand3).baseTile;
+                    rand3 = rand.nextInt(tileListNoSAD.size());
+                    altTile = Start.tileListNoSAD.get(rand3).baseTile;
                     if (correctRow == rand3 || rand1 == rand2 || rand1 == rand3 || rand2 == rand3
-                            || Character.toLowerCase(correctTile.charAt(0)) == Character.toLowerCase(altTile.charAt(0))) {
+                            || Character.toLowerCase(correctTile.charAt(0)) == Character.toLowerCase(altTile.charAt(0))
+                            || (!Start.tileListNoSAD.get(rand3)
+                            .tileType.equals("C") && !Start.tileListNoSAD.get(rand3).tileType.equals("V")
+                            && (refTileType.equals("C") || refTileType.equals("V")))) {
                         rand3 = 0;
                     } else {
-                        altTile = Start.tileList.get(rand3).baseTile;
+                        altTile = Start.tileListNoSAD.get(rand3).baseTile;
                     }
                 }
                 if (choiceType.equals("TILE_LOWER")) {
                     partB = altTile;
                 }
                 if (choiceType.equals("TILE_UPPER")) {
-                    partB = Start.tileList.get(rand3).upperTile;
+                    partB = Start.tileListNoSAD.get(rand3).upperTile;
                 }
-                partA = Start.tileList.get(returnPositionInAlphabet(altTile)).audioForTile;
+                partA = Start.tileListNoSAD.get(returnPositionInAlphabet(altTile)).audioForTile;
                 tileEntry = new String [] {partA, partB};
 //                LOGGER.info("Remember: O4: tileEntry = " + Arrays.toString(tileEntry));
                 fourChoices.add(tileEntry);
@@ -1740,12 +1791,12 @@ public class Start extends AppCompatActivity
 
 //                    LOGGER.info("Remember: P2");
                     if (choiceType.equals("TILE_LOWER")) {
-                        partB = Start.tileList.get(correctRow).altTiles[i - 1];
+                        partB = Start.tileListNoSAD.get(correctRow).altTiles[i - 1];
 
                     }
 //                    LOGGER.info("Remember: P3");
                     if (choiceType.equals("TILE_UPPER")) {
-                        partB = Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[i - 1])).upperTile;
+                        partB = Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[i - 1])).upperTile;
                     }
 
                     //JP approach 2:
@@ -1755,24 +1806,30 @@ public class Start extends AppCompatActivity
                         if (partB.charAt(0) == correctTile.charAt(0)) {
                             if (partB.length() <= correctTile.length()) {
                                 Random rand = new Random();
-                                int rand5 = rand.nextInt(tileList.size());
+                                int rand5 = rand.nextInt(tileListNoSAD.size());
                                 if (choiceType.equals("TILE_UPPER")) {
-                                    partB = Start.tileList.get(rand5).upperTile;
+                                    partB = Start.tileListNoSAD.get(rand5).upperTile;
                                     while ((Character.toLowerCase(partB.charAt(0)) == Character.toLowerCase(correctTile.charAt(0))) ||
-                                            partB.equals(Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[0])).upperTile) ||
-                                            partB.equals(Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[0])).upperTile) ||
-                                            partB.equals(Start.tileList.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[0])).upperTile)) {
-                                        rand5 = rand.nextInt(tileList.size());
-                                        partB = Start.tileList.get(rand5).upperTile;
+                                            partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[0])).upperTile) ||
+                                            partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[1])).upperTile) ||
+                                            partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[2])).upperTile)
+                                            || ((refTileType.equals("C") || refTileType.equals("V"))
+                                            && (!Start.tileListNoSAD.get(rand5).tileType.equals("C")
+                                            && !Start.tileListNoSAD.get(rand5).tileType.equals("V")))) {
+                                        rand5 = rand.nextInt(tileListNoSAD.size());
+                                        partB = Start.tileListNoSAD.get(rand5).upperTile;
                                     }
                                 } else if (choiceType.equals("TILE_LOWER")) {
-                                    partB = Start.tileList.get(rand5).baseTile;
+                                    partB = Start.tileListNoSAD.get(rand5).baseTile;
                                     while ((Character.toLowerCase(partB.charAt(0)) == Character.toLowerCase(correctTile.charAt(0))) ||
-                                        partB.equals(Start.tileList.get(correctRow).altTiles[0]) ||
-                                        partB.equals(Start.tileList.get(correctRow).altTiles[1]) ||
-                                        partB.equals(Start.tileList.get(correctRow).altTiles[2])) {
-                                            rand5 = rand.nextInt(tileList.size());
-                                            partB = Start.tileList.get(rand5).baseTile;
+                                        partB.equals(Start.tileListNoSAD.get(correctRow).altTiles[0]) ||
+                                        partB.equals(Start.tileListNoSAD.get(correctRow).altTiles[1]) ||
+                                        partB.equals(Start.tileListNoSAD.get(correctRow).altTiles[2]) ||
+                                        ((refTileType.equals("C") || refTileType.equals("V"))
+                                        && (!Start.tileListNoSAD.get(rand5).tileType.equals("C")
+                                        && !Start.tileListNoSAD.get(rand5).tileType.equals("V")))) {
+                                            rand5 = rand.nextInt(tileListNoSAD.size());
+                                            partB = Start.tileListNoSAD.get(rand5).baseTile;
                                     }
                                 }
 
@@ -1781,7 +1838,7 @@ public class Start extends AppCompatActivity
                     //}
                     //
 //                    LOGGER.info("Remember: P4");
-                    partA = Start.tileList.get(returnPositionInAlphabet(partB)).audioForTile;
+                    partA = Start.tileListNoSAD.get(returnPositionInAlphabet(partB)).audioForTile;
 //                    LOGGER.info("Remember: P5");
                     tileEntry = new String [] {partA, partB};
 //                    LOGGER.info("Remember: P6");
@@ -1799,13 +1856,24 @@ public class Start extends AppCompatActivity
 
         public String getInstanceTypeForMixedTile(int index, String wordInLWC) {
 
+            // need to rethink this function for tone, SAD,
+
             String instanceType = null;
 
             String mixedDefinitionInfo = Start.wordHashMap.find(wordInLWC).mixedDefs;
+            // wordInLWC: "a ceu "
+            // find, finds the key and returns the value
 
-            // if mixedDefinitionInfo is not C or V or X or dash, then we assume it has two elements to disambiguate, e.g. niwan', where...
+            // if mixedDefinitionInfo is not C or V or X or dash, then we assume it has two elements
+            // to disambiguate, e.g. niwan', where...
             // first n is a C and second n is a X (nasality indicator), and we would code as C234X6
-            if (!mixedDefinitionInfo.equals("C") && !mixedDefinitionInfo.equals("V") && !mixedDefinitionInfo.equals("X") && !mixedDefinitionInfo.equals("-")) {
+
+            // JP: these types come from the wordlist
+            // in the wordlist, "-" does not mean "dash", it means "no multifunction symbols in this word"
+            // but the types in the wordlist come from the same set of choices as from the gametiles
+            if (!mixedDefinitionInfo.equals("C") && !mixedDefinitionInfo.equals("V")
+                    && !mixedDefinitionInfo.equals("X") && !mixedDefinitionInfo.equals("T")
+                    && !mixedDefinitionInfo.equals("-") && !mixedDefinitionInfo.equals("SAD")) {
                 instanceType = String.valueOf(mixedDefinitionInfo.charAt(index));
             } else {
                 instanceType = mixedDefinitionInfo;
@@ -1907,6 +1975,11 @@ public class Start extends AppCompatActivity
 
         public String title;
 
+    }
+
+    public class TileHashMapWithMultipleTypes extends HashMap<String,String>{
+        public String text;
+        public String type;
     }
 
     public class TileListWithMultipleTypes extends ArrayList<String> {

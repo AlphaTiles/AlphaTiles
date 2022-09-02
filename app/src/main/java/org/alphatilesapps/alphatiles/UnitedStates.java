@@ -100,8 +100,10 @@ public class UnitedStates extends GameActivity {
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        unitedStatesPoints = prefs.getInt("storedUnitedStatesPoints_level" + challengeLevel + "_player" + playerString, 0);
-        unitedStatesHasChecked12Trackers = prefs.getBoolean("storedUnitedStatesHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, false);
+        unitedStatesPoints = prefs.getInt("storedUnitedStatesPoints_level" + String.valueOf(challengeLevel)
+                + "_player" + playerString + "_" + syllableGame, 0);
+        unitedStatesHasChecked12Trackers = prefs.getBoolean("storedUnitedStatesHasChecked12Trackers_level"
+                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
@@ -136,7 +138,7 @@ public class UnitedStates extends GameActivity {
 
         /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
         if(trackerCount>=12){
             unitedStatesHasChecked12Trackers = true;
@@ -263,7 +265,11 @@ public class UnitedStates extends GameActivity {
                 } else {
                     if (syllableGame.equals("S")){
                         for (int d = 0; d < Start.syllableList.size(); d++) {
-                            if (Start.syllableList.get(d).syllable.equals(parsedWordArrayFinal.get(c))) {
+                            if (SAD.contains(parsedWordArrayFinal.get(c))){
+                                correspondingRow = tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(c));
+                                break;
+                            }
+                            else if (Start.syllableList.get(d).syllable.equals(parsedWordArrayFinal.get(c))) {
                                 correspondingRow = d;
                                 break;
                             }
@@ -283,13 +289,13 @@ public class UnitedStates extends GameActivity {
                 randomNum2 = rand.nextInt(Start.ALT_COUNT); // KP // choosing between 2nd and 4th item of game tiles array
                 if (randomNum == 0) {
                     tileButtonA.setText(parsedWordArrayFinal.get(c));   // the correct tile
-                    if (syllableGame.equals("S")){
+                    if (syllableGame.equals("S") && !SAD.contains(parsedWordArrayFinal.get(c))){
                         tileButtonB.setText(Start.syllableList.get(correspondingRow).distractors[randomNum2]);   // the (incorrect) suggested alternative
-                    }else{
+                    } else{
                         tileButtonB.setText(Start.tileList.get(correspondingRow).altTiles[randomNum2]);   // the (incorrect) suggested alternative
                     }
                 } else {
-                    if (syllableGame.equals("S")){
+                    if (syllableGame.equals("S")  && !SAD.contains(parsedWordArrayFinal.get(c))){
                         tileButtonA.setText(Start.syllableList.get(correspondingRow).distractors[randomNum2]);   // the (incorrect) suggested alternative
                     }else{
                         tileButtonA.setText(Start.tileList.get(correspondingRow).altTiles[randomNum2]);   // the (incorrect) suggested alternative
@@ -368,9 +374,11 @@ public class UnitedStates extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedUnitedStatesPoints_level" + challengeLevel + "_player" + playerString, points);
             editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            editor.putInt("storedUnitedStatesPoints_level" + challengeLevel + "_player"
+                    + playerString + "_" + syllableGame, unitedStatesPoints);
+            editor.apply();
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply(); // requires API 9 as per https://developer.android.com/reference/android/content/SharedPreferences.Editor
 

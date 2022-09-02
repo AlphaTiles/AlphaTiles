@@ -39,6 +39,7 @@ public class Thailand extends GameActivity {
 
     String refType;
     String refTile;
+    String refTileType;
     String refTileLast = "";
     String refTileSecondToLast = "";
     String refTileThirdToLast = "";
@@ -116,9 +117,9 @@ public class Thailand extends GameActivity {
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         thailandPoints = prefs.getInt("storedThailandPoints_level" + challengeLevel + "_player"
-                + playerString, 0);
+                + playerString + "_" + syllableGame, 0);
         thailandHasChecked12Trackers = prefs.getBoolean("storedThailandHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString, false);
+                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
@@ -161,14 +162,14 @@ public class Thailand extends GameActivity {
             sortableSyllArray = (Start.SyllableList) syllableList.clone();
             Collections.shuffle(sortableSyllArray);
         }else{
-            sortableTilesArray = (Start.TileList) tileList.clone();
+            sortableTilesArray = (Start.TileList) tileListNoSAD.clone();
             Collections.shuffle(sortableTilesArray);
         }
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(thailandPoints));
 
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
         updateTrackers();
@@ -224,6 +225,14 @@ public class Thailand extends GameActivity {
                     chooseWord();
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                     refTile = parsedWordArrayFinal.get(0);
+                    refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    while (challengeLevelThai == 1 && refTileType.equals("T")){
+                        // JP: disallow tone marker from being reference in level 1
+                        chooseWord();
+                        parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
+                        refTile = parsedWordArrayFinal.get(0);
+                        refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    }
                     if(refTile.compareTo(refTileLast)!=0
                             && refTile.compareTo(refTileSecondToLast)!=0
                             && refTile.compareTo(refTileThirdToLast)!=0){
@@ -241,7 +250,16 @@ public class Thailand extends GameActivity {
                 while (!freshTile){
                     chooseWord();
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
-                    refTile = tileList.get(tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).upperTile;
+                    refTile = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).upperTile;
+                    refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    while (challengeLevelThai == 1 && refTileType.equals("T")){
+                        // JP: disallow tone marker from being reference in level 1
+                        chooseWord();
+                        parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
+                        refTile = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).upperTile;
+                        refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    }
+                    // SAD should never be first tile linguistically, so no need to programatically filter out
                     if(refTile.compareTo(refTileLast)!=0
                             && refTile.compareTo(refTileSecondToLast)!=0
                             && refTile.compareTo(refTileThirdToLast)!=0){
@@ -260,6 +278,14 @@ public class Thailand extends GameActivity {
                     chooseWord();
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                     refTile = parsedWordArrayFinal.get(0);
+                    refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    while (challengeLevelThai == 1 && refTileType.equals("T")){
+                        // JP: disallow tone marker from being reference in level 1
+                        chooseWord();
+                        parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
+                        refTile = parsedWordArrayFinal.get(0);
+                        refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
+                    }
                     if(refTile.compareTo(refTileLast)!=0
                             && refTile.compareTo(refTileSecondToLast)!=0
                             && refTile.compareTo(refTileThirdToLast)!=0){
@@ -316,6 +342,14 @@ public class Thailand extends GameActivity {
                     int randomNum2 = rand.nextInt(sortableTilesArray.size());
                     refCVX = sortableTilesArray.get(randomNum2).tileType;
                     refTile = sortableTilesArray.get(randomNum2).baseTile;
+                    refTileType = sortableTilesArray.get(randomNum2).tileType;
+                    while (challengeLevelThai == 1 && refTileType.equals("T")){
+                        // JP: disallow tone marker from being reference in level 1
+                        randomNum2 = rand.nextInt(sortableTilesArray.size());
+                        refCVX = sortableTilesArray.get(randomNum2).tileType;
+                        refTile = sortableTilesArray.get(randomNum2).baseTile;
+                        refTileType = sortableTilesArray.get(randomNum2).tileType;
+                    }
                     if(refTile.compareTo(refTileLast)!=0
                             && refTile.compareTo(refTileSecondToLast)!=0
                             && refTile.compareTo(refTileThirdToLast)!=0){
@@ -333,6 +367,14 @@ public class Thailand extends GameActivity {
                     int randomNum2 = rand.nextInt(sortableTilesArray.size());
                     refCVX = sortableTilesArray.get(randomNum2).tileType;
                     refTile = sortableTilesArray.get(randomNum2).upperTile;
+                    refTileType = sortableTilesArray.get(randomNum2).tileType;
+                    while (challengeLevelThai == 1 && refTileType.equals("T")){
+                        // JP: disallow tone marker from being reference in level 1
+                        randomNum2 = rand.nextInt(sortableTilesArray.size());
+                        refCVX = sortableTilesArray.get(randomNum2).tileType;
+                        refTile = sortableTilesArray.get(randomNum2).upperTile;
+                        refTileType = sortableTilesArray.get(randomNum2).tileType;
+                    }
                     if(refTile.compareTo(refTileLast)!=0
                             && refTile.compareTo(refTileSecondToLast)!=0
                             && refTile.compareTo(refTileThirdToLast)!=0){
@@ -378,7 +420,7 @@ public class Thailand extends GameActivity {
         LOGGER.info("Remember: K");
 
         if (choiceType.equals("TILE_LOWER") || choiceType.equals("TILE_UPPER")) {
-                fourChoices = tileList.returnFourTiles(refTile, challengeLevelThai, choiceType);
+                fourChoices = tileListNoSAD.returnFourTiles(refTile, challengeLevelThai, choiceType, refTileType);
                 // challengeLevelThai 1 = pull random tiles for wrong choices
                 // challengeLevelThai 2 = pull distractor tiles for wrong choices
         } else if ((choiceType.equals("WORD_TEXT") || choiceType.equals("WORD_IMAGE")) && (!refType.contains("SYLL"))) {
@@ -537,7 +579,8 @@ public class Thailand extends GameActivity {
                         }
                         break;
                     case "TILE_UPPER":
-                        if (refItemText != null && refItemText.equals(tileList.get(tileList.returnPositionInAlphabet(chosenItemText)).upperTile)) {
+                        if (refItemText != null && refItemText.equals(tileListNoSAD
+                                .get(tileListNoSAD.returnPositionInAlphabet(chosenItemText)).upperTile)) {
                             goodMatch = true;
                         }
                         break;
@@ -556,7 +599,8 @@ public class Thailand extends GameActivity {
                 switch (refType) {
                     case "TILE_LOWER":
                     case "TILE_AUDIO":
-                        if (chosenItemText.equals(tileList.get(tileList.returnPositionInAlphabet(refItemText)).upperTile)) {
+                        if (chosenItemText.equals(tileListNoSAD.get(tileListNoSAD
+                                .returnPositionInAlphabet(refItemText)).upperTile)) {
                             goodMatch = true;
                         }
                         break;
@@ -568,7 +612,8 @@ public class Thailand extends GameActivity {
                     case "WORD_TEXT":
                     case "WORD_IMAGE":
                     case "WORD_AUDIO":
-                        if (chosenItemText.equals(tileList.get(tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).upperTile)) {
+                        if (chosenItemText.equals(tileListNoSAD.get(tileListNoSAD
+                                .returnPositionInAlphabet(parsedWordArrayFinal.get(0))).upperTile)) {
                             goodMatch = true;
                         }
                         break;
@@ -597,7 +642,8 @@ public class Thailand extends GameActivity {
                         break;
                     case "TILE_UPPER":
                         parsedChosenWordArrayFinal = tileList.parseWordIntoTiles(chosenItemText);
-                        if (refItemText != null && refItemText.equals(tileList.get(tileList.returnPositionInAlphabet(parsedChosenWordArrayFinal.get(0))).upperTile)) {
+                        if (refItemText != null && refItemText.equals(tileListNoSAD.get(tileListNoSAD
+                                .returnPositionInAlphabet(parsedChosenWordArrayFinal.get(0))).upperTile)) {
                             goodMatch = true;
                         }
                         break;
@@ -642,10 +688,13 @@ public class Thailand extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedThailandPoints_level" + challengeLevel + "_player" + playerString, thailandPoints);
-            editor.putBoolean("storedThailandHasChecked12Trackers_level" + challengeLevel + "_player" + playerString, thailandHasChecked12Trackers);
+            editor.putInt("storedThailandPoints_level" + challengeLevel + "_player" + playerString + "_"
+                    + syllableGame, thailandPoints);
+            editor.putBoolean("storedThailandHasChecked12Trackers_level" + challengeLevel + "_player"
+                    + playerString + "_" + syllableGame, thailandHasChecked12Trackers);
             editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
+                    + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 

@@ -135,7 +135,8 @@ public class Earth extends AppCompatActivity {
                     } else {
                         country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
                         String challengeLevel = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel;
-                        String uniqueGameLevelPlayerID = String.format("%s%s%s%s", project, country, challengeLevel, playerString);
+                        String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameMode;
+                        String uniqueGameLevelPlayerID = String.format("%s%s%s%s%s", project, country, challengeLevel, playerString, syllableGame);
 
                         trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
 
