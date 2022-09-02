@@ -217,16 +217,10 @@ public class Japan extends GameActivity {
             wordInLOP = Start.wordList.get(randomNum).localWord;
 
             parsedWordIntoTiles = tileList.parseWordIntoTiles(wordInLOP);
+            parsedWordIntoTiles.removeAll(SAD);
             parsedWordIntoSyllables = syllableList.parseWordIntoSyllables(wordInLOP);
+            parsedWordIntoSyllables.removeAll(SAD);
 
-            /*
-            for (String syll : parsedWordIntoSyllables){
-                correctSyllabification.add(syll);
-                correctSyllabification.add("*");
-            }
-            // other option -- every time you change joinedTracker, convert it into a string and
-            check if that string is equal to wordInLOP with the periods in it still
-             */
             if (parsedWordIntoTiles.size() <= MAX_TILES){ //JP: choose word w/ <= 12 tiles
                 //If this word isn't one of the 3 previously tested words, we're good // LM
                 if(wordInLWC.compareTo(lastWord)!=0
@@ -612,6 +606,17 @@ public class Japan extends GameActivity {
         }
     }
 
+    private String removeSADFromWordInLOP(String wordInLOP){
+        // JP: not working how I want
+        String finalStr = wordInLOP;
+        for (String ch : SAD){
+            finalStr = finalStr.replaceAll("." + ch, ""); // only remove one period
+            // so that there is still a syllable break after the SAD is removed
+        }
+
+        return finalStr;
+    }
+
     private void respondToSelection() {
         // check if correct and change color
         // if correct, set those Tiles unclickable to help the user
@@ -620,15 +625,13 @@ public class Japan extends GameActivity {
         // ISSUE TO FIX: NOT ONLY IF SYLL IN INPROGRESSSYLLABIFICATION BUT
         // MUST BE IN CORRECT POSITION TOO
         StringBuilder config = new StringBuilder();
-        StringBuilder partialConfig = new StringBuilder(); // hold one in-progress syll at a time
-        ArrayList<TextView> listOfIds = new ArrayList<>(); // list of ids that corresponds to
         // that one in-progress syll in partialConfig
-        for (int i = 0; i < visibleViews; i++){ //why was this size 20?
+        for (int i = 0; i < visibleViews; i++){
             TextView view = joinedTracker.get(i);
             config.append(view.getText());
         }
-
-        if (config.toString().equals(wordInLOP)){ // completely correct
+        String wordInLOPNoSAD = removeSADFromWordInLOP(wordInLOP);
+        if (config.toString().equals(wordInLOPNoSAD)){ // completely correct
             //great job!
             repeatLocked = false;
             playCorrectSoundThenActiveWordClip(false); //JP not sure what this bool is for
@@ -710,7 +713,16 @@ public class Japan extends GameActivity {
                     }else if (correctButtons.contains(view.getId()) && buildingIntermediate){
                         // is a correct button and its 2nd in sequence
                         // that one syllable is correct so turn them all green
-                        if (intermediateTiles.size() != sum){
+
+                        int secondButtonIndex = correctButtons.indexOf(view.getId());
+                        // JP: this also needs to check that it didn't skip a correct button?
+                        boolean buttonPairComplete = true;
+                        if (secondButtonIndex > 0){
+                            buttonPairComplete = correctButtons.get(secondButtonIndex-1)
+                                    .equals(firstButton.getId());
+                        }
+                        if (intermediateTiles.size() != sum
+                                && buttonPairComplete){
                             // this prevents all tiles from turning green if all buttons have been clicked
                             // but in wrong order
                             for (TextView tile : intermediateTiles){
@@ -723,7 +735,7 @@ public class Japan extends GameActivity {
                         }
                     } else if(correctButtons.contains(view.getId())){
                         buildingIntermediate = true;
-                        firstButton = view;
+                        firstButton = view; // maybe use firstButton to indicate whether two syllables are incorrectly put together?
                     }
                 }
                 else{ //must be tile

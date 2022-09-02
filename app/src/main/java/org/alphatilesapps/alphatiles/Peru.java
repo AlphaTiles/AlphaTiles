@@ -33,7 +33,6 @@ public class Peru extends GameActivity {
     String thirdToLastWord = "";
     int peruPoints;
     boolean peruHasChecked12Trackers;
-    static List<String> OTHERS = new ArrayList<>();
 
     protected static final int[] TILE_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
@@ -134,17 +133,6 @@ public class Peru extends GameActivity {
             Collections.shuffle(VOWELS);
             Collections.shuffle(CONSONANTS);
             Collections.shuffle(TONES);
-
-            if (OTHERS.isEmpty()) {  //makes sure OTHERS is populated only once when the app is running
-                for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (!Start.tileList.get(d).tileType.equals("C") && !Start.tileList.get(d).tileType.equals("V")
-                            && !Start.tileList.get(d).tileType.equals("T")) {
-                        OTHERS.add(Start.tileList.get(d).baseTile);
-                    }
-                }
-            }
-
-            Collections.shuffle(OTHERS);
 
         }
 
@@ -263,10 +251,6 @@ public class Peru extends GameActivity {
                             }else if(TONES.contains(tempArray2.get(randomNum3))){
                                 randomNum4 = rand.nextInt(TONES.size());
                                 tempArray2.set(randomNum3, TONES.get(randomNum4)); // JP
-                            }
-                            else{
-                                randomNum4 = rand.nextInt(OTHERS.size());
-                                tempArray2.set(randomNum3, OTHERS.get(randomNum4)); // JP
                             }
 
                             StringBuilder builder2 = new StringBuilder("");

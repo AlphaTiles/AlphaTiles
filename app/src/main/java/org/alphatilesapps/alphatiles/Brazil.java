@@ -21,12 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
-import static org.alphatilesapps.alphatiles.Start.syllableList;
-import static org.alphatilesapps.alphatiles.Start.COLORS;
-import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
-import static org.alphatilesapps.alphatiles.Start.VOWELS;
-import static org.alphatilesapps.alphatiles.Start.TONES;
+import static org.alphatilesapps.alphatiles.Start.*;
 
 // RR
 //Game idea: Find the vowel missing from the word
@@ -106,11 +101,6 @@ public class Brazil extends GameActivity {
 
     }
 
-    static List<String> VOWELS = new ArrayList<>();
-    static List<String> CONSONANTS = new ArrayList<>();
-    static List<String> SYLLABLES = new ArrayList<>();
-    static List<String> MULTIFUNCTIONS = new ArrayList<>();
-
     private static final Logger LOGGER = Logger.getLogger(Brazil.class.getName());
 
     @Override
@@ -141,11 +131,6 @@ public class Brazil extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-//        LOGGER.info("Remember APR 21 21 # 1");
-
-
-        // JP what's the difference between brazilPoints = getIntent vs brazilPoints prefs.getInt?
-
         points = getIntent().getIntExtra("points", 0); // KP
         brazilPoints = getIntent().getIntExtra("brazilPoints", 0); // KP
         brazilHasChecked12Trackers = getIntent().getBooleanExtra("brazilHasChecked12Trackers", false); //LM
@@ -160,6 +145,7 @@ public class Brazil extends GameActivity {
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
+        syllableGame = getIntent().getStringExtra("syllableGame");
 
         if (challengeLevel < 4 && !syllableGame.equals("S")) {
 
@@ -432,25 +418,34 @@ public class Brazil extends GameActivity {
 
     private void removeTile() {
 
-        int min = 0;
-        int max = parsedWordArrayFinal.size() - 1;
         Random rand = new Random();
         int index = 0;
+        int index_to_remove = 0;
         correctTile = "";
 
         boolean repeat = true;
         String instanceType = null;
         int counter = 0;
 
-
-
-//        LOGGER.info("Remember APR 21 21 # 5.2.1");
-        // JP: this section doesn't apply to syllable games, right?
         if (!syllableGame.equals("S")){
-            while (repeat && counter < 200) {
-                counter++;
-                index = rand.nextInt((max - min) + 1) + min; // 200 chances to randomly draw a functional letter (e.g. a "V" if looking for "V"
-                correctTile = parsedWordArrayFinal.get(index);
+            ArrayList<Integer> possibleIndices = new ArrayList<>();
+            for (int i = 0; i < parsedWordArrayFinal.size(); i++){
+                possibleIndices.add(i);
+            }
+            while (repeat) { // JP: changed from 200 chances to keeping track of
+                // already tried indices and not allowing those again
+
+                // JP: index is no longer corresponding to the index we remove from the word
+                index = rand.nextInt(possibleIndices.size());
+                correctTile = parsedWordArrayFinal.get(possibleIndices.get(index));
+                index_to_remove = possibleIndices.get(index);
+                possibleIndices.remove(possibleIndices.get(index)); // remove by Object
+                while (SAD.contains(correctTile)){ // JP: makes sure that SAD is never chosen as missing tile
+                    index = rand.nextInt(possibleIndices.size());
+                    correctTile = parsedWordArrayFinal.get(possibleIndices.get(index));
+                    index_to_remove = possibleIndices.get(index);
+                    possibleIndices.remove(possibleIndices.get(index)); // remove by Object
+                }
                 if (MULTIFUNCTIONS.contains(correctTile)) {
                     instanceType = Start.tileList.getInstanceTypeForMixedTile(index, wordInLWC);
                     LOGGER.info("Remember MIXED: wordInLOP / correctTile / instanceType = " + wordInLOP + " / " + correctTile + " / " + instanceType);
@@ -488,13 +483,17 @@ public class Brazil extends GameActivity {
 
             }
         }else{ //syllable game
-            index = rand.nextInt((max - min) + 1) + min;
-            correctTile = parsedWordArrayFinal.get(index);
+            index_to_remove = rand.nextInt(parsedWordArrayFinal.size());
+            correctTile = parsedWordArrayFinal.get(index_to_remove);
+            while (SAD.contains(correctTile)){ // JP: makes sure that SAD is never chosen as missing syllable
+                index_to_remove = rand.nextInt(parsedWordArrayFinal.size());
+                correctTile = parsedWordArrayFinal.get(index_to_remove);
+            }
         }
 
 
 //        LOGGER.info("Remember APR 21 21 # 5.2.6");
-        parsedWordArrayFinal.set(index, "__");
+        parsedWordArrayFinal.set(index_to_remove, "__");
         TextView constructedWord = findViewById(R.id.activeWordTextView);
         StringBuilder word = new StringBuilder();
         for (String s : parsedWordArrayFinal) {

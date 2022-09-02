@@ -257,9 +257,14 @@ public class Colombia extends GameActivity {
                 // Will it list <a> twice if <a> is needed twice? Yes, that's what it does
                 // The limited set keyboard is built with GAME TILES not with KEYS
 
-                for (String key : parsedWordArrayFinal){
-                    keys.add(key);
+                keys.addAll(parsedWordArrayFinal);
+
+                /*
+                if (hasSAD && syllableGame.equals("S")){
+                    keys.addAll(SAD);
                 }
+                 */
+
                 keysList = new ArrayList<>(keys);
                 Collections.shuffle(keysList); // KRP
                 visibleTiles = keysList.size();
@@ -269,11 +274,11 @@ public class Colombia extends GameActivity {
                     if (syllableGame.equals("S")){
                         key = findViewById(SYLL_BUTTONS[k]);
                         key.setText(keysList.get(k));
-                        String tileColorStr = COLORS.get(Integer.parseInt(syllableHashMap.find(keysList.get(k)).color));
-                        int tileColor = Color.parseColor(tileColorStr);
+                        Random rand = new Random();
+                        int index = rand.nextInt(4);
+                        int tileColor = Color.parseColor(COLORS.get(index));
                         key.setBackgroundColor(tileColor);
                     }else{
-                        key = findViewById(TILE_BUTTONS[k]);
                         key = findViewById(TILE_BUTTONS[k]);
                         key.setText(keysList.get(k));
                         Random rand = new Random();
@@ -290,15 +295,19 @@ public class Colombia extends GameActivity {
                 // So, for a five tile word, there will be 10 tiles
                 // The limited-set keyboard is built with GAME TILES not with KEYS
 
-                for (String key : parsedWordArrayFinal){
-                    keys.add(key);
+                keys.addAll(parsedWordArrayFinal);
+
+                /*
+                if (hasSAD && syllableGame.equals("S")){
+                    keys.addAll(SAD);
                 }
+                 */
 
                 int unique_keys = keys.size();
                 int a = 0;
                 int a_mod = 0;
                 while (keys.size() < unique_keys*2) {
-                    if (syllableGame.equals("S")){
+                    if (syllableGame.equals("S") && !SAD.contains(parsedWordArrayFinal.get(a_mod))){
                         keys.add(syllableList.returnRandomCorrespondingSyllable(parsedWordArrayFinal.get(a_mod))); // JP
                     }else{
                         keys.add(tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(a_mod))); // KRP
@@ -316,8 +325,9 @@ public class Colombia extends GameActivity {
                     if (syllableGame.equals("S")){
                         key = findViewById(SYLL_BUTTONS[k]);
                         key.setText(keysList.get(k));
-                        String tileColorStr = COLORS.get(Integer.parseInt(syllableHashMap.find(keysList.get(k)).color));
-                        int tileColor = Color.parseColor(tileColorStr);
+                        Random rand = new Random();
+                        int index = rand.nextInt(4);
+                        int tileColor = Color.parseColor(COLORS.get(index));
                         key.setBackgroundColor(tileColor);
                     }else{
                         key = findViewById(TILE_BUTTONS[k]);
@@ -336,19 +346,37 @@ public class Colombia extends GameActivity {
 
                 if (syllableGame.equals("S")){ //all distractor syllables up to 18
 
+                    /*
+                    if (hasSAD){
+                        keys.addAll(SAD);
+                    }
+                     */
+
                     Start.SyllableList sortableSyllArray = (Start.SyllableList)Start.syllableList.clone();
                     Collections.shuffle(sortableSyllArray);
 
                     for (String syll : parsedWordArrayFinal){
                         keys.add(syll);
                         if (keys.size() < 18){
-                            keys.add(syllableHashMap.find(syll).distractors[0]);
+                            if (SAD.contains(syll)){
+                                keys.add(tileHashMap.find(syll).altTiles[0]);
+                            }else{
+                                keys.add(syllableHashMap.find(syll).distractors[0]);
+                            }
                         }
                         if (keys.size() < 18){
-                            keys.add(syllableHashMap.find(syll).distractors[1]);
+                            if (SAD.contains(syll)){
+                                keys.add(tileHashMap.find(syll).altTiles[1]);
+                            }else{
+                                keys.add(syllableHashMap.find(syll).distractors[1]);
+                            }
                         }
                         if (keys.size() < 18){
-                            keys.add(syllableHashMap.find(syll).distractors[2]);
+                            if (SAD.contains(syll)){
+                                keys.add(tileHashMap.find(syll).altTiles[1]);
+                            }else{
+                                keys.add(syllableHashMap.find(syll).distractors[1]);
+                            }
                         }
                     }
 
@@ -361,8 +389,9 @@ public class Colombia extends GameActivity {
                         String syllKey = keysList.get(k);
                         TextView key = findViewById(SYLL_BUTTONS[k]);
                         key.setText(syllKey); // JP
-                        String tileColorStr = COLORS.get(Integer.parseInt(syllableHashMap.find(syllKey).color));
-                        int tileColor = Color.parseColor(tileColorStr);
+                        Random rand = new Random();
+                        int index = rand.nextInt(4);
+                        int tileColor = Color.parseColor(COLORS.get(index));
                         key.setBackgroundColor(tileColor);
                     }
                 }else{
@@ -541,7 +570,7 @@ public class Colombia extends GameActivity {
             wordToBuild.setBackgroundColor(Color.parseColor("#A9A9A9")); // gray for wrong
             wordToBuild.setTextColor(Color.parseColor("#000000")); // black
 
-            if (wordInLOP.length() > wordToBuild.getText().length()) {
+            if (Start.wordList.stripInstructionCharacters(wordInLOP).length() > wordToBuild.getText().length()) {
 
                 //orange if there is no tile/key option that would allow you to continue correctly
 
@@ -600,6 +629,7 @@ public class Colombia extends GameActivity {
                      */
                     if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP)
                             .substring(0, wordToBuild.getText().length()))) {
+                        // yes this is still an issue:
                         // problem when what's in textbox is longer than the correct word??
                         // doesn't prev if statement take care of that?
                         // specifically on level 3 syllables ??

@@ -19,6 +19,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
+import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
+import static org.alphatilesapps.alphatiles.Start.VOWELS;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.COLORS;
@@ -254,7 +257,7 @@ public class Georgia extends GameActivity {
                     parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
                     initialTile = parsedWordArrayFinal.get(0);
 
-                    if (CorV.contains(initialTile)){
+                    if (CorV.contains(initialTile)){ // makes sure chosen word begins with C or V
                         freshWord = true;
                         thirdToLastWord = secondToLastWord;
                         secondToLastWord = lastWord;
@@ -400,7 +403,9 @@ public class Georgia extends GameActivity {
         while (answerChoices.size() < visibleTiles && i < CorV.size()){
             // and does so while skipping repeats because it is a set
             // and a set has no order so it will be randomized anyways
-            String option = CorV.get(i);
+            Random rand = new Random();
+            int index = rand.nextInt(CorV.size() - 1);
+            String option = CorV.get(index);
             if (option.length() >= 2 && initialTile.length() >= 2){
                 if (option.charAt(0) == initialTile.charAt(0)
                         && option.charAt(1) == initialTile.charAt(1)){
@@ -421,7 +426,9 @@ public class Georgia extends GameActivity {
 
         int j = 0;
         while (answerChoices.size() < visibleTiles){
-            answerChoices.add(CorV.get(j));
+            Random rand = new Random();
+            int index = rand.nextInt(CorV.size() - 1);
+            answerChoices.add(CorV.get(index));
             j++;
         }
 
