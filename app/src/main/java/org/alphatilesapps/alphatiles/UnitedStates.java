@@ -378,6 +378,9 @@ public class UnitedStates extends GameActivity {
             editor.putInt("storedUnitedStatesPoints_level" + challengeLevel + "_player"
                     + playerString + "_" + syllableGame, unitedStatesPoints);
             editor.apply();
+            editor.putBoolean("storedUnitedStatesHasChecked12Trackers_level" + challengeLevel +"_player"
+                    + playerString + "_" + syllableGame, unitedStatesHasChecked12Trackers);
+            editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply(); // requires API 9 as per https://developer.android.com/reference/android/content/SharedPreferences.Editor

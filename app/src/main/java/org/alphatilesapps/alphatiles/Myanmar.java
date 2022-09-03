@@ -107,7 +107,7 @@ public class Myanmar extends GameActivity {
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         myanmarPoints = prefs.getInt("storedMyanmarPoints_level" + challengeLevel + "_player"
-                + playerString + syllableGame, 0);
+                + playerString + "_" + syllableGame, 0);
         myanmarHasChecked12Trackers = prefs.getBoolean("storedMyanmarHasChecked12Trackers_level"
                 + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
 
@@ -741,8 +741,8 @@ public class Myanmar extends GameActivity {
             editor.putBoolean("storedMyanmarHasChecked12Trackers_level" + challengeLevel
                     + "_player" + playerString + "_" + syllableGame, myanmarHasChecked12Trackers);
             editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
-                    + syllableGame;
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + "_" +
+                    syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 

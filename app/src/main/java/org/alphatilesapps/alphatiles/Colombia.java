@@ -136,6 +136,8 @@ public class Colombia extends GameActivity {
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         colombiaPoints = prefs.getInt("storedColombiaPoints_level" + challengeLevel + "_player"
                 + playerString + "_" + syllableGame, 0);
+        colombiaHasChecked12Trackers = prefs.getBoolean("storedColombiaHasChecked12Trackers_level"
+                + String.valueOf(challengeLevel) + "_player" + playerString + "_" + syllableGame, false); //JP
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
