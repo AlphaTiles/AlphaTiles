@@ -162,8 +162,10 @@ public class Japan extends GameActivity {
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        japanPoints = prefs.getInt("storedJapanPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, 0);
-        japanHasChecked12Trackers = prefs.getBoolean("storedJapanHasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, false); //LM
+        japanPoints = prefs.getInt("storedJapanPoints_level" + String.valueOf(challengeLevel)
+                + "_player" + playerString + "_" + syllableGame, 0);
+        japanHasChecked12Trackers = prefs.getBoolean("storedJapanHasChecked12Trackers_level"
+                + String.valueOf(challengeLevel) + "_player" + playerString + "_" + syllableGame, false); //LM
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
@@ -648,9 +650,11 @@ public class Japan extends GameActivity {
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
-            editor.putInt("storedJapanPoints_level" + String.valueOf(challengeLevel) + "_player" + playerString, japanPoints);
+            editor.putInt("storedJapanPoints_level" + String.valueOf(challengeLevel)
+                    + "_player" + playerString + "_" + syllableGame, japanPoints);
             editor.apply();
-            editor.putBoolean("storedJapanHasChecked12Trackers_level" + String.valueOf(challengeLevel) + "_player" + playerString, japanHasChecked12Trackers);
+            editor.putBoolean("storedJapanHasChecked12Trackers_level" + String.valueOf(challengeLevel)
+                    + "_player" + playerString + "_" + syllableGame, japanHasChecked12Trackers);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);

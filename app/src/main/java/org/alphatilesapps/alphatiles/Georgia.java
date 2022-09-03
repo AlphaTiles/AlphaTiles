@@ -134,7 +134,7 @@ public class Georgia extends GameActivity {
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         georgiaPoints = prefs.getInt("storedGeorgiaPoints_level" + challengeLevel + "_player"
-                + playerString + syllableGame, 0);
+                + playerString + "_" + syllableGame, 0);
         georgiaHasChecked12Trackers = prefs.getBoolean("storedGeorgiaHasChecked12Trackers_level"
                 + challengeLevel + "_player" + playerString + syllableGame, false);
 
@@ -539,8 +539,10 @@ public class Georgia extends GameActivity {
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.apply();
             editor.putInt("storedGeorgiaPoints_level" + challengeLevel + "_player" + playerString
                    + "_" + syllableGame, georgiaPoints);
+            editor.apply();
             editor.putBoolean("storedGeorgiaHasChecked12Trackers_level" + challengeLevel +"_player"
                     + playerString + "_" + syllableGame, georgiaHasChecked12Trackers);
             editor.apply();
