@@ -189,14 +189,13 @@ public class Romania extends GameActivity {
     }
 
     private void setUpBasedOnGameTile(String activeTileString) {
-        //Want to keep everything in here that is related to creating the list of words associated with the active tile; everything related to the count of words for an active tile
         //This method should be called every time a player starts the Romania game, and every time they click the arrows to go to a new tile
 
         LOGGER.info("Remember: activeTileString = " + activeTileString);
 
         skipThisTile = false;
 
-        //Based on the settings, finds the group of words for the active tile and sets the "wordInLWC" and "wordInLOP" to the first one, then increments, so next time it will be the next word
+        //build the groupOfWordsForActiveTile and configure settings based on the setting for Romania in aa_settings.txt
         switch (scanSetting) {
             case 2:
                 // CASE 2: check Group One, if count is zero, then check Group Two
@@ -213,8 +212,6 @@ public class Romania extends GameActivity {
                     if (groupCount > 0) {
                         groupOfWordsForActiveTile = Start.wordList.returnGroupTwoWords(activeTileString, groupCount); // Group Two = words that contain the active tile non-initially (but excluding initially)
                     }
-
-                    //***Should we do something here so that if a tile is not found in any word, it doesn't crash? or just trust the validator to do its job? If not, why the if-block?
                 }
                 break;
             case 3:
@@ -252,14 +249,14 @@ public class Romania extends GameActivity {
         wordInLWC = groupOfWordsForActiveTile[indexWithinGroup][0];
         wordInLOP = groupOfWordsForActiveTile[indexWithinGroup][1];
 
-        //Group 3 has all words containing the letter. This checks whether the current word is active-tile-initial or not
+        //Group 3 has all words containing the tile anywhere. This checks whether the current word is active-tile-initial or not
         if (scanSetting == 3) {
             parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
             failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
         }
 
-        //if we have words in the group for this setting + active tile
-        if (!skipThisTile) {
+
+        if (!skipThisTile) { //if we DO have words in the group for this tile given the scan setting, then...
 
             TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
             activeWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
