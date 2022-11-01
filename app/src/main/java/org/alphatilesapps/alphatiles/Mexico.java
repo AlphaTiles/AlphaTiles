@@ -18,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import static android.graphics.Color.BLACK;
@@ -37,6 +38,8 @@ public class Mexico extends GameActivity {
         // # 4 [state: "SELECTED" or "UNSELECTED" or "PAIRED"]
         // # 5 duration in ms
         // # 6 font adjustment for longer words
+
+    String delaySetting = Start.settingsList.find("View memory cards for _ milliseconds");
 
     ArrayList<String[]> wordListArray; // KP
 
@@ -423,6 +426,14 @@ public class Mexico extends GameActivity {
 
         } else {
             // The two cards do NOT match
+            if(delaySetting.compareTo("") != 0) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(Long.valueOf(delaySetting));
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
             TextView cardA = findViewById(TILE_BUTTONS[cardHitA]); // RR
             TextView cardB = findViewById(TILE_BUTTONS[cardHitB]); // RR
             cardA.setText("");
