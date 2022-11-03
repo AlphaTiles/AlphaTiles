@@ -45,7 +45,7 @@ public abstract class GameActivity extends AppCompatActivity {
     String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
 	int points;
-	int brazilPoints, colombiaPoints, ecuadorPoints, georgiaPoints, japanPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
+	int brazilPoints, colombiaPoints, ecuadorPoints, georgiaPoints, italyPoints, japanPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
 	int challengeLevel = -1;
 	Boolean brazilHasChecked12Trackers, colombiaHasChecked12Trackers, ecuadorHasChecked12Trackers, georgiaHasChecked12Trackers, japanHasChecked12Trackers, mexicoHasChecked12Trackers, myanmarHasChecked12Trackers, peruHasChecked12Trackers, thailandHasChecked12Trackers, unitedStatesHasChecked12Trackers;
 	int playerNumber = -1;
@@ -90,12 +90,13 @@ public abstract class GameActivity extends AppCompatActivity {
         colombiaPoints = getIntent().getIntExtra("colombiaPoints", 0);
         ecuadorPoints = getIntent().getIntExtra("ecuadorPoints", 0);
         georgiaPoints = getIntent().getIntExtra("georgiaPoints", 0);
+		italyPoints = getIntent().getIntExtra("italyPoints", 0);
 		japanPoints = getIntent().getIntExtra("japanPoints", 0);
         mexicoPoints = getIntent().getIntExtra("mexicoPoints", 0);
         myanmarPoints = getIntent().getIntExtra("myanmarPoints", 0);
         peruPoints = getIntent().getIntExtra("peruPoints", 0);
-        thailandPoints = getIntent().getIntExtra("brazilPoints", 0);
-        unitedStatesPoints = getIntent().getIntExtra("brazilPoints", 0);
+        thailandPoints = getIntent().getIntExtra("thailandPoints", 0);
+        unitedStatesPoints = getIntent().getIntExtra("thailandPoints", 0);
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         syllableGame = getIntent().getStringExtra("syllableGame");
