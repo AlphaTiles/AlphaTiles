@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.Collections;
+import java.util.logging.Logger;
 
 public class Italy extends GameActivity {
 
@@ -27,8 +28,10 @@ public class Italy extends GameActivity {
     Start.TileList sortableTilesArray;
     Start.SyllableList sortableSyllArray;
     WordList gameCards = new WordList();
-    boolean [] cardsFound = new boolean[54];
+    boolean [] boardCardsFound = new boolean[16];
     int deckIndex = 0;
+
+    private static final Logger LOGGER = Logger.getLogger( Italy.class.getName() );
 
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04, R.id.choice05, R.id.choice06,
@@ -220,10 +223,10 @@ public class Italy extends GameActivity {
 
     public void playAgain(){
         repeatLocked = true;
-        int deckIndex = -1;
+        deckIndex = -1;
         gameCards.removeAll(gameCards);
         for (int card=0; card<16; card++){
-            cardsFound[card] = false;
+            boardCardsFound[card] = false;
         }
         WordList wordListShuffle = wordList;
         Collections.shuffle(wordListShuffle);
@@ -260,24 +263,38 @@ public class Italy extends GameActivity {
 
     public void nextWordFromGameSet(){
 
-        deckIndex++;
-        if (deckIndex == 54){
+        try{
+            deckIndex++;
+            if (deckIndex == 54){
 
-            //The player went through all the cards without getting a loteria. Reset the game
-            playAgain();
-        }
-        else{ //"Call out" the next word
+                //The player went through all the cards without getting a loteria. Set up a new board
+                playIncorrectSound();
+                playIncorrectSound();
+                playAgain();
+            }
+            else{ //"Call out" the next word
 
-            wordInLOP = wordList.stripInstructionCharacters(gameCards.get(deckIndex).localWord);
-            wordInLWC = gameCards.get(deckIndex).nationalWord;
-            playActiveWordClip(false);
+                wordInLOP = wordList.stripInstructionCharacters(gameCards.get(deckIndex).localWord);
+                wordInLWC = gameCards.get(deckIndex).nationalWord;
+                playActiveWordClip(false);
+            }
         }
+        catch(Exception e){
+            LOGGER.info("Italy encountered an exception in nextWordFromGameSet: \n" + e.getMessage());
+        }
+
 
     }
 
     public void onSelection(View view){
 
-        respondToSelection(Integer.parseInt((String)view.getTag()));
+        try {
+
+            respondToSelection(Integer.parseInt((String) view.getTag()));
+        }
+        catch(Exception e){
+            LOGGER.info("Italy encountered an exception in onSelection: \n" + e.getMessage());
+        }
     }
 
     public void respondToSelection(int indexOfTileJustSelected){
@@ -294,22 +311,15 @@ public class Italy extends GameActivity {
     }
 
     public void respondToCorrectSelection(int indexOfTileJustSelected){
-        cardsFound[deckIndex] = true;
+        boardCardsFound[indexOfTileJustSelected - 1] = true;
+
+        ImageView imageJustSelected = findViewById(TILE_IMAGES[indexOfTileJustSelected - 1]);
+        imageJustSelected.setImageResource(R.drawable.zz_bean);
 
         if (loteria()){
             respondToLoteria();
         }
         else{
-            //Mark the view as correctly identified
-            ConstraintLayout constraintLayout = findViewById(R.id.italyCL);
-            ImageView imageJustSelected = findViewById(TILE_IMAGES[indexOfTileJustSelected - 1]);
-            ImageView putABeanOnTop = new ImageView(this);
-            putABeanOnTop.setLayoutParams(imageJustSelected.getLayoutParams());
-            putABeanOnTop.setImageResource(R.drawable.zz_bean);
-            putABeanOnTop.bringToFront();
-            putABeanOnTop.requestLayout();
-            constraintLayout.addView(putABeanOnTop);
-
             //Play sounds, then advance to the next word
             playCorrectSoundThenActiveWordClip(false);
             nextWordFromGameSet();
@@ -327,7 +337,7 @@ public class Italy extends GameActivity {
         //for each sequence in possibleLoteriaSequences[][], check if all the indeces inside have been marked as correctly selected
 
         for (int[] sequence : LOTERIA_SEQUENCES){
-            if (cardsFound[sequence[0]] && cardsFound[sequence[1]] && cardsFound[sequence[2]] && cardsFound[sequence[3]]){
+            if (boardCardsFound[sequence[0]-1] && boardCardsFound[sequence[1]-1] && boardCardsFound[sequence[2]-1] && boardCardsFound[sequence[3]-1]){
                 return true;
             }
         }
@@ -336,7 +346,7 @@ public class Italy extends GameActivity {
     }
 
     public void respondToLoteria(){
-        //play finalCorrectSound
+        //play finalCorrectSound with final sound, which also updates the trackers
         playCorrectSoundThenActiveWordClip(true);
 
         //draw a thin/transparent line across the loteria?
@@ -361,7 +371,6 @@ public class Italy extends GameActivity {
         editor.apply();
 
         //update trackers
-        trackerCount++;
         if(trackerCount>=12){
             italyHasChecked12Trackers = true;
         }
