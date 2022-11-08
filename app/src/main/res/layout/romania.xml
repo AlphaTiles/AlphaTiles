@@ -81,8 +81,8 @@
         android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHMagBottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVMagRight"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVMagLeft"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVMagTileLeft"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV2andAHalf"
         app:layout_constraintTop_toTopOf="@+id/guidelineHMagTop"
         app:srcCompat="@drawable/zz_plus_sign" />
 
@@ -100,8 +100,8 @@
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="@+id/guidelineHMagTileBottom"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineVMagTileRight"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVMagTileLeft"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineVMagTileLeft"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV2andAHalf"
         app:layout_constraintTop_toTopOf="@+id/guidelineHMagTileTop" />
 
     <TextView
@@ -122,6 +122,32 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "7dp"
         android:maxLines="1"/>
+
+    <ImageView
+        android:id="@+id/scrollBack"
+        android:layout_width="54dp"
+        android:layout_height="50dp"
+        android:onClick="scrollBack"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineHMagTileBottom"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineVMagTileLeft"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHMagTileTop"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/zz_scroll_back" />
+
+    <ImageView
+        android:id="@+id/scrollForward"
+        android:layout_width="57dp"
+        android:layout_height="50dp"
+        android:onClick="scrollForward"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineHMagTileBottom"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVMagTileRight"
+        app:layout_constraintHorizontal_bias="0.91"
+        app:layout_constraintStart_toStartOf="@+id/tileInMagnifyingGlass"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHMagTileTop"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/zz_scroll_forward" />
 
     <ImageView
         android:id="@+id/toggleInitialOnly"
@@ -406,5 +432,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.11" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,10 +31,10 @@ public class Romania extends GameActivity {
     String scriptDirection; //lang info value for Script Direction (LTR or RTL)
     boolean forceRTL; //true if lang info has RTL for script direction; false if lang info has LTR for script direction
 
-    boolean skipThisWord = false; // Set to true when it's a gray word (a word that demonstrates the tile with a medial instance not a word-initial instance)
-    int wordTokenNoGroupOne = 0; // // Group One = words that START with the active tile
-    int wordTokenNoGroupTwo = 0; // Group Two = words that contain the active tile non-initially (but excluding initially)
-    int wordTokenNoGroupThree = 0; // Group Three = words containing the active tile anywhere (initial and/or non-initial)
+    int groupCount; // Set to the number of words selected for an active tile, based on settings
+    int indexWithinGroup = 0; // Set to the index of the word being viewed within the group of all words for the tile
+    boolean skipThisTile = false; // Set to true when it's a gray word (a word that demonstrates the tile with a medial instance not a word-initial instance)
+    String [][] groupOfWordsForActiveTile;
     String firstAlphabetTile;
 
     Boolean differentiateTypes;
@@ -189,43 +189,28 @@ public class Romania extends GameActivity {
     }
 
     private void setUpBasedOnGameTile(String activeTileString) {
-
+        //This method should be called every time a player starts the Romania game, and every time they click the arrows to go to a new tile
 
         LOGGER.info("Remember: activeTileString = " + activeTileString);
 
-        skipThisWord = false;
+        skipThisTile = false;
 
-        int myMagCount = 0;
-        int groupCount;
-
+        //build the groupOfWordsForActiveTile and configure settings based on the setting for Romania in aa_settings.txt
         switch (scanSetting) {
             case 2:
                 // CASE 2: check Group One, if count is zero, then check Group Two
                 // Group One = words that START with the active tile
                 groupCount = Start.wordList.returnGroupOneCount(activeTileString);
                 if (groupCount > 0) {
-                    String[][] tempGroupOneWords = Start.wordList.returnGroupOneWords(activeTileString, groupCount);
-                    wordInLWC = tempGroupOneWords[wordTokenNoGroupOne][0];
-                    wordInLOP = tempGroupOneWords[wordTokenNoGroupOne][1];
-                    wordTokenNoGroupOne++;
-                    if (wordTokenNoGroupOne == groupCount) {
-                        wordTokenNoGroupOne = 0;
-                    }
-                    myMagCount = groupCount;
+                    groupOfWordsForActiveTile = Start.wordList.returnGroupOneWords(activeTileString, groupCount);
                     failedToMatchInitialTile = false;
                 } else {
                     // Group Two = words that contain the active tile non-initially (but excluding initially)
+                    failedToMatchInitialTile = true;
                     groupCount = Start.wordList.returnGroupTwoCount(activeTileString);
+
                     if (groupCount > 0) {
-                        String[][] tempGroupTwoWords = Start.wordList.returnGroupTwoWords(activeTileString, groupCount); // Group Two = words that contain the active tile non-initially (but excluding initially)
-                        wordInLWC = tempGroupTwoWords[wordTokenNoGroupTwo][0];
-                        wordInLOP = tempGroupTwoWords[wordTokenNoGroupTwo][1];
-                        wordTokenNoGroupTwo++;
-                        if (wordTokenNoGroupTwo == groupCount) {
-                            wordTokenNoGroupTwo = 0;
-                        }
-                        myMagCount = groupCount;
-                        failedToMatchInitialTile = true;
+                        groupOfWordsForActiveTile = Start.wordList.returnGroupTwoWords(activeTileString, groupCount); // Group Two = words that contain the active tile non-initially (but excluding initially)
                     }
                 }
                 break;
@@ -234,17 +219,7 @@ public class Romania extends GameActivity {
                 // Group Three = words containing the active tile anywhere (initial and/or non-initial)
                 groupCount = Start.wordList.returnGroupThreeCount(activeTileString);
                 if (groupCount > 0) {
-
-                    String[][] tempGroupThreeWords = Start.wordList.returnGroupThreeWords(activeTileString, groupCount); // Group Three = words containing the active tile anywhere (initial and/or non-initial)
-                    wordInLWC = tempGroupThreeWords[wordTokenNoGroupThree][0];
-                    wordInLOP = tempGroupThreeWords[wordTokenNoGroupThree][1];
-                    wordTokenNoGroupThree++;
-                    if (wordTokenNoGroupThree == groupCount) {
-                        wordTokenNoGroupThree = 0;
-                    }
-                    myMagCount = groupCount;
-                    parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
-                    failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
+                    groupOfWordsForActiveTile = Start.wordList.returnGroupThreeWords(activeTileString, groupCount); // Group Three = words containing the active tile anywhere (initial and/or non-initial)
                 }
                 break;
             default:
@@ -252,31 +227,36 @@ public class Romania extends GameActivity {
                 // Group One = words that START with the active tile
                 groupCount = Start.wordList.returnGroupOneCount(activeTileString);
                 if (groupCount > 0) {
-                    String[][] tempGroupOneWords = Start.wordList.returnGroupOneWords(activeTileString, groupCount);
-                    wordInLWC = tempGroupOneWords[wordTokenNoGroupOne][0];
-                    wordInLOP = tempGroupOneWords[wordTokenNoGroupOne][1];
-                    wordTokenNoGroupOne++;
-                    if (wordTokenNoGroupOne == groupCount) {
-                        wordTokenNoGroupOne = 0;
-                    }
-                    myMagCount = groupCount;
+                    groupOfWordsForActiveTile = Start.wordList.returnGroupOneWords(activeTileString, groupCount);
                     failedToMatchInitialTile = false;
-                } else {
-                    skipThisWord = true;
+                } else { //there are no words at begin with the active tile
+                    failedToMatchInitialTile = true;
+                    skipThisTile = true;
                 }
         }
 
+        //put the tile text in the view, as well as the count for the words for that tile
         TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
         String tileText = activeTileString;
         if(activeTileString.endsWith("B") || activeTileString.endsWith("C")){
             tileText = activeTileString.substring(0, activeTileString.length() -1);
         }
         gameTile.setText(tileText);
-
         TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
-        magTile.setText(String.valueOf(myMagCount));
+        magTile.setText(String.valueOf(String.valueOf(groupCount)));
 
-        if (!skipThisWord) {
+        //display a word (should normally be the first word) from the group of words for the active tile
+        wordInLWC = groupOfWordsForActiveTile[indexWithinGroup][0];
+        wordInLOP = groupOfWordsForActiveTile[indexWithinGroup][1];
+
+        //Group 3 has all words containing the tile anywhere. This checks whether the current word is active-tile-initial or not
+        if (scanSetting == 3) {
+            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
+            failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
+        }
+
+
+        if (!skipThisTile) { //if we DO have words in the group for this tile given the scan setting, then...
 
             TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
             activeWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
@@ -296,8 +276,10 @@ public class Romania extends GameActivity {
             int alphabetPosition = Start.tileList.returnPositionInAlphabet(activeTileString);
             String tileColorStr = COLORS.get(alphabetPosition % 5);
             int tileColor = Color.parseColor(tileColorStr);
+            gameTile = (TextView) findViewById(R.id.tileBoxTextView);
             gameTile.setBackgroundColor(tileColor);
             activeWord.setBackgroundColor(tileColor);
+            magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
             magTile.setTextColor(tileColor);
             if (failedToMatchInitialTile) {
                 tileColorStr = "#A9A9A9"; // dark gray
@@ -309,7 +291,7 @@ public class Romania extends GameActivity {
                 playActiveWordClip(false);
             }
 
-        } else {
+        } else { //Goes to next tile
             LOGGER.info("Remember: failed to find anything (skipWord = true) so advancing one more");
             if (directionIsForward) {
                 goToNextTile(null);
@@ -317,7 +299,135 @@ public class Romania extends GameActivity {
                 goToPreviousTile(null);
             }
         }
+
     }
+
+    public void goToNextWord(String activeTileString){
+
+        indexWithinGroup++;
+        if (indexWithinGroup == groupCount) {
+            indexWithinGroup = 0;
+        }
+        wordInLWC = groupOfWordsForActiveTile[indexWithinGroup][0];
+        wordInLOP = groupOfWordsForActiveTile[indexWithinGroup][1];
+
+
+        if (scanSetting == 3) {
+            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
+            failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
+        }
+
+        //display the next word in groupOfWordsForActiveTile[][]
+        if (!skipThisTile) {
+
+            TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
+            activeWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
+
+            LOGGER.info("Remember: groupCount = " + groupCount);
+
+            ImageView image = (ImageView) findViewById(R.id.wordImage);
+            if (groupCount > 0) {
+                int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+                image.setImageResource(resID);
+            } else {
+                int resID2 = getResources().getIdentifier("zz_no_image_found", "drawable", getPackageName());
+                image.setImageResource(resID2);
+                activeWord.setText("");
+            }
+
+            int alphabetPosition = Start.tileList.returnPositionInAlphabet(activeTileString);
+            String tileColorStr = COLORS.get(alphabetPosition % 5);
+            int tileColor = Color.parseColor(tileColorStr);
+            TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
+            gameTile.setBackgroundColor(tileColor);
+            activeWord.setBackgroundColor(tileColor);
+            TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
+            magTile.setTextColor(tileColor);
+            magTile.setText(String.valueOf(groupCount));
+            if (failedToMatchInitialTile) {
+                tileColorStr = "#A9A9A9"; // dark gray
+                tileColor = Color.parseColor(tileColorStr);
+                activeWord.setBackgroundColor(tileColor);
+                magTile.setTextColor(tileColor);
+            }
+            if (groupCount > 0) {
+                playActiveWordClip(false);
+            }
+
+        } else { //Goes to next tile
+            LOGGER.info("Remember: failed to find anything (skipWord = true) so advancing one more");
+            if (directionIsForward) {
+                goToNextTile(null);
+            } else {
+                goToPreviousTile(null);
+            }
+        }
+
+    }
+
+    public void goToPreviousWord(String activeTileString){
+        indexWithinGroup--;
+        if (indexWithinGroup == -1) { //got to the beginning of the word group list
+            indexWithinGroup = groupCount-1; //wrap back to the end of the list
+        }
+        wordInLWC = groupOfWordsForActiveTile[indexWithinGroup][0];
+        wordInLOP = groupOfWordsForActiveTile[indexWithinGroup][1];
+
+
+        if (scanSetting == 3) {
+            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
+            failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
+        }
+
+        //display the previous word in groupOfWordsForActiveTile[][]
+        if (!skipThisTile) {
+
+            TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
+            activeWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
+
+            LOGGER.info("Remember: groupCount = " + groupCount);
+
+            ImageView image = (ImageView) findViewById(R.id.wordImage);
+            if (groupCount > 0) {
+                int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+                image.setImageResource(resID);
+            } else {
+                int resID2 = getResources().getIdentifier("zz_no_image_found", "drawable", getPackageName());
+                image.setImageResource(resID2);
+                activeWord.setText("");
+            }
+
+            int alphabetPosition = Start.tileList.returnPositionInAlphabet(activeTileString);
+            String tileColorStr = COLORS.get(alphabetPosition % 5);
+            int tileColor = Color.parseColor(tileColorStr);
+            TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
+            gameTile.setBackgroundColor(tileColor);
+            activeWord.setBackgroundColor(tileColor);
+            TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
+            magTile.setTextColor(tileColor);
+            magTile.setText(String.valueOf(groupCount));
+            if (failedToMatchInitialTile) {
+                tileColorStr = "#A9A9A9"; // dark gray
+                tileColor = Color.parseColor(tileColorStr);
+                activeWord.setBackgroundColor(tileColor);
+                magTile.setTextColor(tileColor);
+            }
+            if (groupCount > 0) {
+                playActiveWordClip(false);
+            }
+
+        } else { //Goes to next tile
+            LOGGER.info("Remember: failed to find anything (skipWord = true) so advancing one more");
+            if (directionIsForward) {
+                goToNextTile(null);
+            } else {
+                goToPreviousTile(null);
+            }
+        }
+
+
+    }
+
 
     public void goToNextTile(View View) {
         directionIsForward = true;
@@ -361,9 +471,8 @@ public class Romania extends GameActivity {
                 }
             }
         }
-        wordTokenNoGroupOne = 0;
-        wordTokenNoGroupTwo = 0;
-        wordTokenNoGroupThree = 0;
+
+        indexWithinGroup = 0;
         SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
@@ -414,9 +523,8 @@ public class Romania extends GameActivity {
                 }
             }
         }
-        wordTokenNoGroupOne = 0;
-        wordTokenNoGroupTwo = 0;
-        wordTokenNoGroupThree = 0;
+
+        indexWithinGroup = 0;
         SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
@@ -600,6 +708,16 @@ public class Romania extends GameActivity {
 
         setUpBasedOnGameTile(activeTile);
 
+    }
+
+    public void scrollForward(View view) {
+
+        goToNextWord(activeTile);
+    }
+
+    public void scrollBack(View view) {
+
+        goToPreviousWord(activeTile);
     }
 
     public void setToggleToInitialOnly (View view) {
