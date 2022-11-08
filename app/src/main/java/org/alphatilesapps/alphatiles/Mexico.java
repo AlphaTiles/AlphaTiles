@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
 import java.util.logging.Logger;
 
 import org.alphatilesapps.alphatiles.Start.WordList;
@@ -36,6 +37,8 @@ public class Mexico extends GameActivity {
         // # 6 font adjustment for longer words
 
     WordList wordListExcludingTheLongestWords; // KP
+    
+    String delaySetting = Start.settingsList.find("View memory cards for _ milliseconds");
 
     int justClickedCard;
     int priorClickedCard;
@@ -413,6 +416,14 @@ public class Mexico extends GameActivity {
 
         } else {
             // The two cards do NOT match
+            if(delaySetting.compareTo("") != 0) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(Long.valueOf(delaySetting));
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
             TextView cardA = findViewById(TILE_BUTTONS[cardHitA]); // RR
             TextView cardB = findViewById(TILE_BUTTONS[cardHitB]); // RR
             cardA.setText("");

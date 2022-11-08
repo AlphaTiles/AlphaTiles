@@ -1307,7 +1307,7 @@ public class Start extends AppCompatActivity
         }
     }
 
-    public class SyllableList extends ArrayList<Syllable>{
+    public static class SyllableList extends ArrayList<Syllable>{
         public String syllableTitle;
         public String[] distractorsTitles;
         public String syllableAudioNameTitle;
@@ -1485,7 +1485,7 @@ public class Start extends AppCompatActivity
 
     }
 
-    public class TileList extends ArrayList<Tile> {
+    public static class TileList extends ArrayList<Tile> {
         public String baseTitle;
         public String alt1Title;
         public String alt2Title;

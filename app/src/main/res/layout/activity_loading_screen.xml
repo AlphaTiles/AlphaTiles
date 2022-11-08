@@ -71,4 +71,18 @@
         app:layout_constraintTop_toTopOf="@+id/guideline2"
         app:srcCompat="@drawable/zz_splash" />
 
+    <TextView
+        android:id="@+id/versionNumber"
+        android:text="@string/alphaTilesVersionInfo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        tools:layout_editor_absoluteX="173dp"
+        tools:layout_editor_absoluteY="797dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

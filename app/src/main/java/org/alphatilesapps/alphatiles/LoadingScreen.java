@@ -33,6 +33,8 @@ import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -58,6 +60,11 @@ public class LoadingScreen extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
         context = this;
+
+        String verName = BuildConfig.VERSION_NAME;
+        TextView versionNumberView = (TextView) findViewById(R.id.versionNumber);
+        versionNumberView.setText(getString(R.string.ver_info, verName));
+
 
         int num_of_words = wordList.size();
 
