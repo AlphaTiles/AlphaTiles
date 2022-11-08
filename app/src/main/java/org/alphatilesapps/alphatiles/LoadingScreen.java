@@ -13,6 +13,7 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
@@ -30,6 +31,8 @@ import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
+
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Timer;
@@ -55,6 +58,11 @@ public class LoadingScreen extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
         context = this;
+
+        String verName = BuildConfig.VERSION_NAME;
+        TextView versionNumberView = (TextView) findViewById(R.id.versionNumber);
+        versionNumberView.setText(getString(R.string.ver_info, verName));
+
 
         int num_of_words = wordList.size();
 
