@@ -13,6 +13,7 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
@@ -45,6 +46,7 @@ public class LoadingScreen extends AppCompatActivity {
     private Handler mHandler = new Handler();
     Context context;
     ProgressBar progressBar;
+    int maxWordWidthInPixels = 39;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,6 +232,23 @@ public class LoadingScreen extends AppCompatActivity {
         mmr.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
         return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
+
+    private float getPixelWidthAdjustment(String word){
+        TextView wordView = new TextView(this);
+        wordView.setText(word);
+        wordView.setTextSize(11);
+        wordView.measure(0,0);import static org.alphatilesapps.alphatiles.Start.wordList;
+        int wordWidthInPixels = wordView.getMeasuredWidth();
+        if (wordWidthInPixels <= maxWordWidthInPixels){
+            return 1;
+        }
+        else{
+            return Math.round((maxWordWidthInPixels *100.0) /(wordWidthInPixels*100.0));
+        }
+
+    }
+
+
 }
 
 
