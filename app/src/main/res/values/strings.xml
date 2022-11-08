@@ -60,6 +60,7 @@
     <string name="playerAvatar">Change Players</string>
     <string name="clickLogoGoToAbout">About This App</string>
     <string name="playAgain">Play Again</string>
+    <string name="playAudioInstructions">PlayAudioInstructions</string>
     <string name="celebrate">Great job! You found correct answers to 12 questions on this game!</string>
     <string name="gametile01">01</string>
     <string name="gametile02">02</string>
@@ -221,10 +222,38 @@
     <string name="gameTile9b">Game Tile 9B</string>
     <string name="resourcePromo">Other Resources In This Language</string>
     <string name="resourceText">A Resource In This Language</string>
+    <string name="wordImage01">Word Image 1</string>
+    <string name="wordImage02">Word Image 2</string>
+    <string name="wordImage03">Word Image 3</string>
+    <string name="wordImage04">Word Image 4</string>
+    <string name="wordImage05">Word Image 5</string>
+    <string name="wordImage06">Word Image 6</string>
+    <string name="wordImage07">Word Image 7</string>
+    <string name="wordImage08">Word Image 8</string>
+    <string name="wordImage09">Word Image 9</string>
+    <string name="wordImage10">Word Image 10</string>
+    <string name="wordImage11">Word Image 11</string>
+    <string name="wordImage12">Word Image 12</string>
+    <string name="wordImage13">Word Image 13</string>
+    <string name="wordImage14">Word Image 14</string>
+    <string name="wordImage15">Word Image 15</string>
+    <string name="wordImage16">Word Image 16</string>
     <string name="choice01">Choice 1</string>
     <string name="choice02">Choice 2</string>
     <string name="choice03">Choice 3</string>
     <string name="choice04">Choice 4</string>
+    <string name="choice05">Choice 5</string>
+    <string name="choice06">Choice 6</string>
+    <string name="choice07">Choice 7</string>
+    <string name="choice08">Choice 8</string>
+    <string name="choice09">Choice 9</string>
+    <string name="choice10">Choice 10</string>
+    <string name="choice11">Choice 11</string>
+    <string name="choice12">Choice 12</string>
+    <string name="choice13">Choice 13</string>
+    <string name="choice14">Choice 14</string>
+    <string name="choice15">Choice 15</string>
+    <string name="choice16">Choice 16</string>
 
     <!--Note from Robert: The %[number]$[letter] expressions are placeholders for variables
     The number indicates which variable to reference while the letter says what formant it should be (in this case, strings)-->

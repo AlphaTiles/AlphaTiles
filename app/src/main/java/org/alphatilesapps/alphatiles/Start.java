@@ -672,7 +672,7 @@ public class Start extends AppCompatActivity
         }
     }
 
-    public class WordList extends ArrayList<Word> {
+    public static class WordList extends ArrayList<Word> {
         public String nationalTitle;	// e.g. languages like English or Spanish (LWCs = Languages of Wider Communication)
         public String localTitle;	// e.g. LOPS (language of play) like Me'phaa, Kayan or Romani Gabor
         public String durationTitle;	// the length of the clip in ms, relevant only if set to use SoundPool
@@ -1303,7 +1303,7 @@ public class Start extends AppCompatActivity
         }
     }
 
-    public class SyllableList extends ArrayList<Syllable>{
+    public static class SyllableList extends ArrayList<Syllable>{
         public String syllableTitle;
         public String[] distractorsTitles;
         public String syllableAudioNameTitle;
@@ -1481,7 +1481,7 @@ public class Start extends AppCompatActivity
 
     }
 
-    public class TileList extends ArrayList<Tile> {
+    public static class TileList extends ArrayList<Tile> {
         public String baseTitle;
         public String alt1Title;
         public String alt2Title;
