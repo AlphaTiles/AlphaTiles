@@ -7,8 +7,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,14 +15,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 import java.util.logging.Logger;
 
-import static android.graphics.Color.BLACK;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
+import org.alphatilesapps.alphatiles.Start.WordList;
 
-import android.content.Intent;
+import static android.graphics.Color.BLACK;
+
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -38,7 +35,7 @@ public class Mexico extends GameActivity {
         // # 5 duration in ms
         // # 6 font adjustment for longer words
 
-    ArrayList<String[]> wordListArray; // KP
+    WordList wordListExcludingTheLongestWords; // KP
 
     int justClickedCard;
     int priorClickedCard;
@@ -128,7 +125,7 @@ public class Mexico extends GameActivity {
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         syllableGame = getIntent().getStringExtra("syllableGame");
 
-        wordListArray = new ArrayList(); // KP
+        wordListExcludingTheLongestWords = new WordList(); // KP
 
         String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
 
@@ -203,7 +200,7 @@ public class Mexico extends GameActivity {
 
         setCardTextToEmpty();
         buildWordsArray();
-        Collections.shuffle(wordListArray); // KP
+        Collections.shuffle(wordListExcludingTheLongestWords); // KP
         chooseMemoryWords();
         Collections.shuffle(memoryCollection); // KP
         pairsCompleted = 0;
@@ -240,18 +237,11 @@ public class Mexico extends GameActivity {
         // KP, Oct 2020
         // AH, Nov 2020, revised to allow for spaces in words
 
-        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_wordlist));
-        if (scanner.hasNextLine()) {
-            scanner.nextLine();
-        }     // skip the header row
-
-        while (scanner.hasNextLine()) {
-            String thisLine = scanner.nextLine();
-            String[] thisLineArray = thisLine.split("\t");
-            double activeAdjustment = Double.parseDouble(thisLineArray[4]);
-            if (activeAdjustment >= lowestAdjustment) {
+        for(int i = 0; i<wordList.size(); i++) {
+            double adjustment = Double.valueOf(wordList.get(i).adjustment);
+            if (adjustment >= lowestAdjustment) {
 //                LOGGER.info("Remember: thisLineArray[4] = " + thisLineArray[4]);
-                wordListArray.add(thisLineArray);
+                wordListExcludingTheLongestWords.add(wordList.get(i));
             }
         }
     }
@@ -267,12 +257,12 @@ public class Mexico extends GameActivity {
             int index = i < cardsToSetUp ? i : i - cardsToSetUp;
             String[] content = new String[]
                     {
-                            wordListArray.get(index)[0],
-                            wordListArray.get(index)[1],
+                            wordListExcludingTheLongestWords.get(index).nationalWord,
+                            wordListExcludingTheLongestWords.get(index).localWord,
                             i < cardsToSetUp ? "TEXT" : "IMAGE",
                             "UNSELECTED",
-                            wordListArray.get(index)[2],    // audio clip duration in seconds
-                            wordListArray.get(index)[4],    // font adjustment
+                            String.valueOf(wordListExcludingTheLongestWords.get(index).duration),    // audio clip duration in seconds
+                            wordListExcludingTheLongestWords.get(index).adjustment,    // font adjustment
 
 
                     };

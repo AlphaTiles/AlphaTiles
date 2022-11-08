@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.wordDurations;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.totalAudio;
@@ -75,7 +76,7 @@ public class LoadingScreen extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                loadWordAudio(0, num_of_words);
+                loadWordAudio();
                 LOGGER.info("Remember: initiated loadWordAudio()");
             }
         }).start();
@@ -99,6 +100,14 @@ public class LoadingScreen extends AppCompatActivity {
                 }
             }).start();
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                loadPixelWidthAdjustments();
+                LOGGER.info("Remember: initiated fillInPixelWidthAdjustments()");
+            }
+        }).start();
 
         //JP: alpha tiles colors separated into r,g,b
         //ex: the first color 6200EE corresponds to 98, 0, 1 in the 0 index of each array
@@ -161,15 +170,19 @@ public class LoadingScreen extends AppCompatActivity {
            }});
     }
 
-    public void loadWordAudio(int start, int end) {
+    public void loadWordAudio() {
         // load speech sounds
         Resources res = context.getResources();
         wordAudioIDs = new HashMap();
+        wordDurations = new HashMap();
 
-        for (int i = start; i < end; i++)
+        for (Start.Word word : wordList)
         {
-            int resId = res.getIdentifier(wordList.get(i).nationalWord, "raw", context.getPackageName());
-            wordAudioIDs.put(wordList.get(i).nationalWord, gameSounds.load(context, resId, 1));
+            int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
+            int duration = getAssetDuration(resId)+100;
+            wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 1));
+            wordDurations.put(word.nationalWord, duration);
+            word.duration = duration;
         }
     }
 
@@ -181,8 +194,10 @@ public class LoadingScreen extends AppCompatActivity {
         for (Start.Syllable syll : syllableList)
         {
             int resId = res.getIdentifier(syll.syllableAudioName, "raw", context.getPackageName());
+            int duration = getAssetDuration(resId)+100;
             syllableAudioIDs.put(syll.syllable, gameSounds.load(context, resId, 2));
-            syllableDurations.put(syll.syllable, syll.syllableDuration + 100);
+            syllableDurations.put(syll.syllable, duration);
+            syll.syllableDuration = duration;
         }
     }
 
@@ -193,20 +208,28 @@ public class LoadingScreen extends AppCompatActivity {
 
         for (Start.Tile tile : tileList) {
             int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
+            int duration = getAssetDuration(resId)+100;
             tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
-            tileDurations.put(tile.baseTile, tile.tileDuration1 + 100);
+            tileDurations.put(tile.baseTile, duration);
+            tile.tileDuration1 = duration;
 
             if (tile.tileTypeB.compareTo("none")!= 0) {
                 if (tile.audioForTileB.compareTo("X") != 0) {
                     resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
+                    duration = getAssetDuration(resId)+100;
                     tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
+                    tileDurations.put(tile.baseTile + "B", duration);
+                    tile.tileDuration2 = duration;
                     totalAudio++;
                 }
             }
             if(tile.tileTypeC.compareTo("none")!= 0) {
                 if (tile.audioForTileC.compareTo("X") != 0) {
                     resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
+                    duration = getAssetDuration(resId)+100;
                     tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
+                    tileDurations.put(tile.baseTile + "C", duration);
+                    tile.tileDuration3 = duration;
                     totalAudio++;
                 }
             }
@@ -225,6 +248,7 @@ public class LoadingScreen extends AppCompatActivity {
         //		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
     }
 
+
     private int getAssetDuration(int assetID)
     {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -233,17 +257,26 @@ public class LoadingScreen extends AppCompatActivity {
         return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
 
-    private float getPixelWidthAdjustment(String word){
+    public void loadPixelWidthAdjustments(){
+
+        for (Start.Word word : wordList)
+        {
+            word.adjustment = String.valueOf(calculatedPixelWidthAdjustment(word.localWord));
+        }
+    }
+
+    private double calculatedPixelWidthAdjustment(String word){
         TextView wordView = new TextView(this);
         wordView.setText(word);
         wordView.setTextSize(11);
-        wordView.measure(0,0);import static org.alphatilesapps.alphatiles.Start.wordList;
+        wordView.measure(0,0);
         int wordWidthInPixels = wordView.getMeasuredWidth();
+
         if (wordWidthInPixels <= maxWordWidthInPixels){
             return 1;
         }
         else{
-            return Math.round((maxWordWidthInPixels *100.0) /(wordWidthInPixels*100.0));
+            return Math.round((maxWordWidthInPixels *100.0) /(wordWidthInPixels*100));
         }
 
     }

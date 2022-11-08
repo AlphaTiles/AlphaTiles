@@ -2,9 +2,11 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
@@ -217,7 +219,7 @@ public class Start extends AppCompatActivity
 
         buildWordsArray();
         totalAudio = totalAudio + wordList.size();
-        populateWordDurations(); /* JP separated from the loop where we populate wordAudioIDs for
+        /*populateWordDurations(); /* JP separated from the loop where we populate wordAudioIDs for
         the purpose of making sure durations hashmap will be done even if loading the audio isn't;
         makes null checking simpler
         */
@@ -280,12 +282,14 @@ public class Start extends AppCompatActivity
 
 
 
-    public void populateWordDurations(){
-        wordDurations = new HashMap();
-        for (Word word: wordList)
-        {
-            wordDurations.put(word.nationalWord, word.duration + 100);
-        }
+
+
+    private int getAssetDuration(int assetID)
+    {
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        AssetFileDescriptor afd = context.getResources().openRawResourceFd(assetID);
+        mmr.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+        return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
 
     public void buildTilesArray() {
@@ -313,12 +317,12 @@ public class Start extends AppCompatActivity
                 tileList.audioForTileBTitle = thisLineArray[8];
                 tileList.tileTypeCTitle = thisLineArray[9];
                 tileList.audioForTileCTitle = thisLineArray[10];
-                tileList.tileDuration1 = thisLineArray[11];
-                tileList.tileDuration2 = thisLineArray[12];
-                tileList.tileDuration3 = thisLineArray[13];
+                tileList.tileDuration1 = "";
+                tileList.tileDuration2 = "";
+                tileList.tileDuration3 = "";
                 header = false;
             } else {
-                Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], Integer.parseInt(thisLineArray[11]), Integer.parseInt(thisLineArray[12]), Integer.parseInt(thisLineArray[13]));
+                Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0);
                 if (!tile.hasNull()) {
                     tileList.add(tile);
                     if (!tile.tileType.equals("SAD")){
@@ -406,10 +410,10 @@ public class Start extends AppCompatActivity
                 wordList.localTitle = thisLineArray[1];
                 wordList.durationTitle = thisLineArray[2];
                 wordList.mixedDefsTitle = thisLineArray[3];
-                wordList.adjustment = thisLineArray[4];
+                wordList.adjustment = ""; //set during LoadingScreen activity
                 header = false;
             } else {
-                Word word = new Word(thisLineArray[0], thisLineArray[1], Integer.parseInt(thisLineArray[2]), thisLineArray[3], thisLineArray[4]);
+                Word word = new Word(thisLineArray[0], thisLineArray[1], Integer.parseInt(thisLineArray[2]), thisLineArray[3], "");
                 if (!word.hasNull()) {
                     wordList.add(word);
                 }
@@ -672,7 +676,7 @@ public class Start extends AppCompatActivity
         }
     }
 
-    public class WordList extends ArrayList<Word> {
+    public static class WordList extends ArrayList<Word> {
         public String nationalTitle;	// e.g. languages like English or Spanish (LWCs = Languages of Wider Communication)
         public String localTitle;	// e.g. LOPS (language of play) like Me'phaa, Kayan or Romani Gabor
         public String durationTitle;	// the length of the clip in ms, relevant only if set to use SoundPool
