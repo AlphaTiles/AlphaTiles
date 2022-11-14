@@ -163,13 +163,13 @@ public class Romania extends GameActivity {
         if (forceRTL){ //LM: flips images for RTL layouts. LTR is default
             ImageView backwardArrowImage = (ImageView) findViewById(R.id.backwardArrowImage);
             ImageView forwardArrowImage = (ImageView) findViewById(R.id.forwardArrowImage);
-            ImageView findMoreOfSameTileImage = (ImageView) findViewById(R.id.findMoreOfSameTile);
+//            ImageView findMoreOfSameTileImage = (ImageView) findViewById(R.id.findMoreOfSameTile);
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
             backwardArrowImage.setRotationY(180);
             forwardArrowImage.setRotationY(180);
-            findMoreOfSameTileImage.setRotationY(180);
+//            findMoreOfSameTileImage.setRotationY(180);
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
         }
@@ -243,7 +243,7 @@ public class Romania extends GameActivity {
         }
         gameTile.setText(tileText);
         TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
-        magTile.setText(String.valueOf(String.valueOf(groupCount)));
+        magTile.setText(indexWithinGroup + 1 + " / " + String.valueOf(String.valueOf(groupCount)));
 
         //display a word (should normally be the first word) from the group of words for the active tile
         wordInLWC = groupOfWordsForActiveTile[indexWithinGroup][0];
@@ -280,12 +280,12 @@ public class Romania extends GameActivity {
             gameTile.setBackgroundColor(tileColor);
             activeWord.setBackgroundColor(tileColor);
             magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
-            magTile.setTextColor(tileColor);
+//            magTile.setTextColor(tileColor); // AH only needed when imposed on image, otherwise default white
             if (failedToMatchInitialTile) {
                 tileColorStr = "#A9A9A9"; // dark gray
                 tileColor = Color.parseColor(tileColorStr);
                 activeWord.setBackgroundColor(tileColor);
-                magTile.setTextColor(tileColor);
+//            magTile.setTextColor(tileColor); // AH only needed when imposed on image, otherwise default white
             }
             if (groupCount > 0) {
                 playActiveWordClip(false);
@@ -342,13 +342,13 @@ public class Romania extends GameActivity {
             gameTile.setBackgroundColor(tileColor);
             activeWord.setBackgroundColor(tileColor);
             TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
-            magTile.setTextColor(tileColor);
-            magTile.setText(String.valueOf(groupCount));
+//            magTile.setTextColor(tileColor); // AH only needed when imposed on image, otherwise default white
+            magTile.setText(indexWithinGroup + 1 + " / " + String.valueOf(groupCount));
             if (failedToMatchInitialTile) {
                 tileColorStr = "#A9A9A9"; // dark gray
                 tileColor = Color.parseColor(tileColorStr);
                 activeWord.setBackgroundColor(tileColor);
-                magTile.setTextColor(tileColor);
+//            magTile.setTextColor(tileColor); // AH only needed when imposed on image, otherwise default white
             }
             if (groupCount > 0) {
                 playActiveWordClip(false);
@@ -404,13 +404,13 @@ public class Romania extends GameActivity {
             gameTile.setBackgroundColor(tileColor);
             activeWord.setBackgroundColor(tileColor);
             TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
-            magTile.setTextColor(tileColor);
-            magTile.setText(String.valueOf(groupCount));
+//            magTile.setTextColor(tileColor); // AH only needed when imposed on image, otherwise default white
+            magTile.setText(indexWithinGroup + 1 + " / " + String.valueOf(groupCount));
             if (failedToMatchInitialTile) {
                 tileColorStr = "#A9A9A9"; // dark gray
                 tileColor = Color.parseColor(tileColorStr);
                 activeWord.setBackgroundColor(tileColor);
-                magTile.setTextColor(tileColor);
+//            magTile.setTextColor(tileColor); // AH only needed when imposed on image, otherwise default white
             }
             if (groupCount > 0) {
                 playActiveWordClip(false);
@@ -812,8 +812,8 @@ public class Romania extends GameActivity {
         TextView magTile = findViewById(R.id.tileInMagnifyingGlass);
         magTile.setClickable(false);
 
-        ImageView magGlass = findViewById(R.id.findMoreOfSameTile);
-        magGlass.setClickable(false);
+//        ImageView magGlass = findViewById(R.id.findMoreOfSameTile);
+//        magGlass.setClickable(false);
 
     }
 
@@ -840,8 +840,8 @@ public class Romania extends GameActivity {
         TextView magTile = findViewById(R.id.tileInMagnifyingGlass);
         magTile.setClickable(true);
 
-        ImageView magGlass = findViewById(R.id.findMoreOfSameTile);
-        magGlass.setClickable(true);
+//        ImageView magGlass = findViewById(R.id.findMoreOfSameTile);
+//        magGlass.setClickable(true);
 
     }
 
