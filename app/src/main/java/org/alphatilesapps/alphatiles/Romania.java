@@ -245,18 +245,21 @@ public class Romania extends GameActivity {
         TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
         magTile.setText(indexWithinGroup + 1 + " / " + String.valueOf(String.valueOf(groupCount)));
 
-        //display a word (should normally be the first word) from the group of words for the active tile
-        wordInLWC = groupOfWordsForActiveTile[indexWithinGroup][0];
-        wordInLOP = groupOfWordsForActiveTile[indexWithinGroup][1];
-
-        //Group 3 has all words containing the tile anywhere. This checks whether the current word is active-tile-initial or not
-        if (scanSetting == 3) {
-            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
-            failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
-        }
-
-
         if (!skipThisTile) { //if we DO have words in the group for this tile given the scan setting, then...
+
+            //display a word (should normally be the first word) from the group of words for the active tile
+            wordInLWC = groupOfWordsForActiveTile[indexWithinGroup][0];
+            // the above line was crashing for apps (e.g. gsl) where their first game tile listed has no words
+            // that start with that tile (and Romania settings filter is 1)
+            // To solve this, the above line and below line and the Group 3 if/then (3 lines) moved inside the
+            // if (!skipThisTile) conditional
+            wordInLOP = groupOfWordsForActiveTile[indexWithinGroup][1];
+
+            //Group 3 has all words containing the tile anywhere. This checks whether the current word is active-tile-initial or not
+            if (scanSetting == 3) {
+                parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
+                failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
+            }
 
             TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
             activeWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
