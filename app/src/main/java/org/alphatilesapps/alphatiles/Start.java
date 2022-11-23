@@ -317,6 +317,7 @@ public class Start extends AppCompatActivity
                     gameList.add(game);
                 }
             }
+            LOGGER.info("gameNumber = " + thisLineArray[0]);
         }
     }
 

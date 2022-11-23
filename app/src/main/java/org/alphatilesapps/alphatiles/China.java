@@ -1,8 +1,8 @@
-/*
 package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Logger;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 //Game of 15
 public class China extends GameActivity {
@@ -33,6 +34,10 @@ public class China extends GameActivity {
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16
     };
 
+    protected int[] getTileButtons() {return TILE_BUTTONS;}
+
+    protected int[] getWordImages() {return null;}
+
     private static final int[] WORD_IMAGES = {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04
     };
@@ -41,15 +46,51 @@ public class China extends GameActivity {
     private static final Logger LOGGER = Logger.getLogger(China.class.getName());
 
     @Override
+    protected void centerGamesHomeImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = R.id.georgiaCL;
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
+        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+    }
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+//          audioInstructionsResID = res.getIdentifier("georgia_" + challengeLevel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+
+        }
+        catch (Exception e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LOGGER.info("Remember: A: pre super.onCreate");
         super.onCreate(savedInstanceState);
+        LOGGER.info("Remember: B: post super.onCreate");
         context = this;
         setContentView(R.layout.china);
+        LOGGER.info("Remember: C: setContentView complete");
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
+
+        LOGGER.info("Remember: D: three intents gotten");
 
         String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel;
 
@@ -58,7 +99,7 @@ public class China extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        SharedPreferences prefs = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
@@ -280,7 +321,7 @@ public class China extends GameActivity {
             trackerCount++;
             updateTrackers();
 
-            SharedPreferences.Editor editor = getSharedPreferences(Start.SHARED_PREFS, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
@@ -352,83 +393,82 @@ public class China extends GameActivity {
         return sildable;
     }
 
-    private void setAllTilesUnclickable() {
-
-        for (int t = 0; t < visibleTiles; t++ ) {
-            TextView gameTile = findViewById(TILE_BUTTONS[t]);
-            gameTile.setClickable(false);
-        }
-
-    }
-    private void setAllTilesClickable() {
-
-        for (int t = 0; t < visibleTiles; t++ ) {
-            TextView gameTile = findViewById(TILE_BUTTONS[t]);
-            gameTile.setClickable(true);
-        }
-
-    }
-    private void setOptionsRowUnclickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-        ImageView wordImage;
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-
-        repeatImage.setClickable(false);
-        gamesHomeImage.setClickable(false);
-
-        for (int i = 0; i < 4; i++){
-            wordImage = findViewById(WORD_IMAGES[i]);
-            wordImage.setClickable(false);
-        }
-    }
-    private void setOptionsRowClickable() {
-
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-        ImageView wordImage;
-
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-
-        repeatImage.setClickable(true);
-        gamesHomeImage.setClickable(true);
-
-        for (int i = 0; i < 4; i++){
-            wordImage = findViewById(WORD_IMAGES[i]);
-            wordImage.setClickable(true);
-        }
-
-    }
+//    private void setAllTilesUnclickable() {
+//
+//        for (int t = 0; t < visibleTiles; t++ ) {
+//            TextView gameTile = findViewById(TILE_BUTTONS[t]);
+//            gameTile.setClickable(false);
+//        }
+//
+//    }
+//    private void setAllTilesClickable() {
+//
+//        for (int t = 0; t < visibleTiles; t++ ) {
+//            TextView gameTile = findViewById(TILE_BUTTONS[t]);
+//            gameTile.setClickable(true);
+//        }
+//
+//    }
+//    private void setOptionsRowUnclickable() {
+//
+//        ImageView repeatImage = findViewById(R.id.repeatImage);
+//        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
+//        ImageView wordImage;
+//
+//        repeatImage.setBackgroundResource(0);
+//        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
+//
+//        repeatImage.setClickable(false);
+//        gamesHomeImage.setClickable(false);
+//
+//        for (int i = 0; i < 4; i++){
+//            wordImage = findViewById(WORD_IMAGES[i]);
+//            wordImage.setClickable(false);
+//        }
+//    }
+//    private void setOptionsRowClickable() {
+//
+//        ImageView repeatImage = findViewById(R.id.repeatImage);
+//        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
+//        ImageView wordImage;
+//
+//        repeatImage.setBackgroundResource(0);
+//        repeatImage.setImageResource(R.drawable.zz_forward);
+//
+//        repeatImage.setClickable(true);
+//        gamesHomeImage.setClickable(true);
+//
+//        for (int i = 0; i < 4; i++){
+//            wordImage = findViewById(WORD_IMAGES[i]);
+//            wordImage.setClickable(true);
+//        }
+//
+//    }
 
     public void clickPicHearAudio (View view) {
 
-        playActiveWordClip();
+        playActiveWordClip(false);
 
     }
 
-    public void playActiveWordClip() {
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mediaPlayerIsPlaying = false;
-                if (repeatLocked) {
-                    setAllTilesClickable();
-                }
-                setOptionsRowClickable();
-                mp1.release();
-
-            }
-        });
-    }
+//    public void playActiveWordClip() {
+//        setAllTilesUnclickable();
+//        setOptionsRowUnclickable();
+//        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
+//        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
+//        mediaPlayerIsPlaying = true;
+//        mp1.start();
+//        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp1) {
+//                mediaPlayerIsPlaying = false;
+//                if (repeatLocked) {
+//                    setAllTilesClickable();
+//                }
+//                setOptionsRowClickable();
+//                mp1.release();
+//
+//            }
+//        });
+//    }
 }
-*/
