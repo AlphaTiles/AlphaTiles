@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ImageView;
@@ -49,6 +51,14 @@ public class About extends AppCompatActivity {
         TextView photoAudioCredits = findViewById(R.id.photoAudioCredits);
         photoAudioCredits.setText(Start.langInfoList.find("Audio and image credits"));
         photoAudioCredits.setMovementMethod(new ScrollingMovementMethod());
+
+        TextView privacyPolicy = findViewById(R.id.privacyPolicy);
+
+        String httpText = "https://alphatilesapps.org/privacypolicy.html";
+        String displayText = "Alpha Tiles Privacy Policy";
+        String linkText = "<a href=\"" + httpText + "\">" + displayText + "</a>";
+        privacyPolicy.setText(Html.fromHtml(linkText));
+        privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
         String verName = BuildConfig.VERSION_NAME;
         TextView verInfo = findViewById(R.id.appVersionInEnglish);
