@@ -2,6 +2,7 @@
     <string name="localAppName">To be overwritten w/localAppName as set in Earth.java</string>
     <string name="langsAndCountry">To be overwritten with name of lang (in lang) then inside parentheses: lang name in Eng plus country</string>
     <string name="audioAndPhoto">To be overwritten with audio and photo credits</string>
+    <string name="privacyPolicy">To be overwritten with privacy policy</string>
     <string name="alphaTilesVersionInfo">To be overwritten with Alpha Tiles name + app color (the model) + the version info</string>
     <string name="home">Home</string>
     <string name="alphaTilesLogo">Alpha Tiles Logo</string>
