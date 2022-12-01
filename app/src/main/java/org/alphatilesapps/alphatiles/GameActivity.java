@@ -45,9 +45,9 @@ public abstract class GameActivity extends AppCompatActivity {
     String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
 	int points;
-	int brazilPoints, colombiaPoints, ecuadorPoints, georgiaPoints, italyPoints, japanPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
+	int brazilPoints, chinaPoints, colombiaPoints, ecuadorPoints, georgiaPoints, italyPoints, japanPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
 	int challengeLevel = -1;
-	Boolean brazilHasChecked12Trackers, colombiaHasChecked12Trackers, ecuadorHasChecked12Trackers, georgiaHasChecked12Trackers, japanHasChecked12Trackers, mexicoHasChecked12Trackers, myanmarHasChecked12Trackers, peruHasChecked12Trackers, thailandHasChecked12Trackers, unitedStatesHasChecked12Trackers;
+	Boolean brazilHasChecked12Trackers, chinaHasChecked12Trackers, colombiaHasChecked12Trackers, ecuadorHasChecked12Trackers, georgiaHasChecked12Trackers, japanHasChecked12Trackers, mexicoHasChecked12Trackers, myanmarHasChecked12Trackers, peruHasChecked12Trackers, thailandHasChecked12Trackers, unitedStatesHasChecked12Trackers;
 	int playerNumber = -1;
 	int gameNumber = 0;
 	String syllableGame;
@@ -87,6 +87,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
         points = getIntent().getIntExtra("points", 0);
         brazilPoints = getIntent().getIntExtra("brazilPoints", 0);
+		chinaPoints = getIntent().getIntExtra("chinaPoints", 0);
         colombiaPoints = getIntent().getIntExtra("colombiaPoints", 0);
         ecuadorPoints = getIntent().getIntExtra("ecuadorPoints", 0);
         georgiaPoints = getIntent().getIntExtra("georgiaPoints", 0);
@@ -107,6 +108,7 @@ public abstract class GameActivity extends AppCompatActivity {
 		trackerCount = access.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player"
 				+ playerString + "_" + syllableGame, 0);
         brazilHasChecked12Trackers = getIntent().getBooleanExtra("brazilHasChecked12Trackers", false);
+		chinaHasChecked12Trackers = getIntent().getBooleanExtra("chinaHasChecked12Trackers", false);
         colombiaHasChecked12Trackers = getIntent().getBooleanExtra("columbiaHasChecked12Trackers", false);
         ecuadorHasChecked12Trackers = getIntent().getBooleanExtra("ecuadorHasChecked12Trackers", false);
         georgiaHasChecked12Trackers = getIntent().getBooleanExtra("georgiaHasChecked12Trackers", false);
