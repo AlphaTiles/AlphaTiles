@@ -308,7 +308,7 @@ public class China extends GameActivity {
             repeatLocked = false;
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points++;
+            points+=4;
             pointsEarned.setText(String.valueOf(points));
 
             trackerCount++;
@@ -330,6 +330,8 @@ public class China extends GameActivity {
 //                    gameTile.setBackgroundColor(wordColorNo);
 //                }
 //            }
+            playCorrectFinalSound();
+            setAllTilesUnclickable();
             setOptionsRowClickable();
         }
         else {
