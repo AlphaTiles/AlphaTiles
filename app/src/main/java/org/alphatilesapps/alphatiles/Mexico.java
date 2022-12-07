@@ -39,8 +39,6 @@ public class Mexico extends GameActivity {
         // # 5 duration in ms
         // # 6 font adjustment for longer words
 
-    String delaySetting = Start.settingsList.find("View memory cards for _ milliseconds");
-
     ArrayList<String[]> wordListArray; // KP
 
     int justClickedCard;
@@ -417,8 +415,13 @@ public class Mexico extends GameActivity {
 
         } else {
             // The two cards do NOT match
+            long delay = 0;
+            String delaySetting = Start.settingsList.find("View memory cards for _ milliseconds");
+            if(delaySetting.compareTo("")!=0) {
+                delay = Long.valueOf(delaySetting);
+            }
             handler = new Handler();
-            handler.postDelayed(flipCardsBackOver, Long.valueOf(delaySetting));
+            handler.postDelayed(flipCardsBackOver, delay);
 
         }
 
