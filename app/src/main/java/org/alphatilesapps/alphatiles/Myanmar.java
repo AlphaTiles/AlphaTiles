@@ -630,8 +630,14 @@ public class Myanmar extends GameActivity {
 
             for (int t = 0; t < selectionLength; t++) {
 
-                tileX = (lowerClick % 7) + (t * incrementF[0]);
-                tileY = (lowerClick / 7) + (t * incrementF[1]);
+                if(selectionDirection == 19){ // Direction 19 is special, because the forward direction starts from the higher index
+                    tileX = (higherClick % 7) + (t * incrementF[0]);
+                    tileY = (higherClick / 7) + (t * incrementF[1]);
+                }
+                else {
+                    tileX = (lowerClick % 7) + (t * incrementF[0]);
+                    tileY = (lowerClick / 7) + (t * incrementF[1]);
+                }
 
                 LOGGER.info("Remember: builtWord1 tile(X, Y) = (" + tileX + ", " + tileY + ") = " + tilesBoard[tileX][tileY]);
 
@@ -650,7 +656,7 @@ public class Myanmar extends GameActivity {
                 incrementB[0] = 0;
                 incrementB[1] = -1;
             }
-            if (selectionDirection == 19) {
+            if (selectionDirection == 19) { // this is the 1 word direction
                 incrementB[0] = -1;
                 incrementB[1] = 1;
             }
@@ -663,8 +669,15 @@ public class Myanmar extends GameActivity {
 
             for (int t = 0; t < selectionLength; t++) {
 
-                tileX = (higherClick % 7) + (t * incrementB[0]);
-                tileY = (higherClick / 7) + (t * incrementB[1]);
+                if (selectionDirection == 19){ // Direction 19 is special, because the backward direction starts from the lower index
+                    tileX = (lowerClick % 7) + (t * incrementB[0]);
+                    tileY = (lowerClick / 7) + (t * incrementB[1]);
+                }
+                else {
+                    tileX = (higherClick % 7) + (t * incrementB[0]);
+                    tileY = (higherClick / 7) + (t * incrementB[1]);
+                }
+
 
                 LOGGER.info("Remember: builtWord2 tile(X, Y) = (" + tileX + ", " + tileY + ") = " + tilesBoard[tileX][tileY]);
 
@@ -702,8 +715,14 @@ public class Myanmar extends GameActivity {
 
             for (int t = 0; t < selectionLength; t++) {
 
-                tileX = (lowerClick % 7) + (t * incrementF[0]);
-                tileY = (lowerClick / 7) + (t * incrementF[1]);
+                if (selectionDirection == 19){
+                    tileX = (higherClick % 7) + (t * incrementF[0]);
+                    tileY = (higherClick / 7) + (t * incrementF[1]);
+                }
+                else{
+                    tileX = (lowerClick % 7) + (t * incrementF[0]);
+                    tileY = (lowerClick / 7) + (t * incrementF[1]);
+                }
 
                 LOGGER.info("Remember: builtWord1 tile(X, Y) = (" + tileX + ", " + tileY + ")");
 
@@ -760,7 +779,7 @@ public class Myanmar extends GameActivity {
 
             playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
 
-        } else {
+        } else { // word not found
 
             TextView tileA = findViewById(TILE_BUTTONS[firstClickIndex]);
             tileA.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
