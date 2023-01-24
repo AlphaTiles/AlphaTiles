@@ -8,10 +8,10 @@ android {
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "org.alphatilesapps.alphatiles"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 32
-        versionCode 70
-        versionName "1.0.4"
+        versionCode 77
+        versionName "1.1.0"
 
         // API 14 = Ice Cream (4.0)
         // API 16 = Jelly Bean (4.1) - required for Firebase

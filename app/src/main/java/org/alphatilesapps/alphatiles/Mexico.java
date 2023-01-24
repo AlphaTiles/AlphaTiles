@@ -35,11 +35,9 @@ public class Mexico extends GameActivity {
         // # 4 [state: "SELECTED" or "UNSELECTED" or "PAIRED"]
         // # 5 duration in ms
         // # 6 font adjustment for longer words
-
+  
     WordList wordListExcludingTheLongestWords; // KP
-    
     String delaySetting = Start.settingsList.find("View memory cards for _ milliseconds");
-
     int justClickedCard;
     int priorClickedCard;
     int activeSelections = 0;
@@ -277,18 +275,9 @@ public class Mexico extends GameActivity {
 
     public void respondToCardSelection() {
 
-        setAllTilesUnclickable();
-        setOptionsRowUnclickable();
-
         int t = justClickedCard - 1; //  justClickedCard uses 1 to 12/16/20 (dep. on challengeLevel), t uses the array ID: between [0] and [11] / [15] / [19]
 
         if (memoryCollection.get(t)[3].equals("PAIRED")) {
-            setAllTilesUnclickable();
-            setOptionsRowClickable();
-            return;
-        }
-
-        if (activeSelections == 2) {
             setAllTilesClickable();
             setOptionsRowClickable();
             return;
@@ -325,22 +314,22 @@ public class Mexico extends GameActivity {
 //        card.getBackground().setAlpha(255);
 
         if (activeSelections == 2) {
+            setOptionsRowUnclickable();
+            setAllTilesUnclickable();
 
             handler = new Handler();
-            handler.postDelayed(quickViewDelay, 800);
+            handler.postDelayed(quickViewDelay, Long.valueOf(800));
             // Will run respondToTwoActiveCards() after delay...
             // https://www.youtube.com/watch?v=3pgGVBmSVq0
             // https://codinginflow.com/tutorials/android/handler-postdelayed-runnable
         }
-
-        setAllTilesClickable();
-        setOptionsRowClickable();
 
     }
 
     
 
     public void respondToTwoActiveCards() {
+
 
         // Two cards have been selected (which may or may not match)
         activeSelections = 0;       // (a reset)
@@ -416,31 +405,15 @@ public class Mexico extends GameActivity {
 
         } else {
             // The two cards do NOT match
-            if(delaySetting.compareTo("") != 0) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(Long.valueOf(delaySetting));
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                }
+            long delay = 0;
+            String delaySetting = Start.settingsList.find("View memory cards for _ milliseconds");
+            if(delaySetting.compareTo("")!=0) {
+                delay = Long.valueOf(delaySetting);
             }
+            handler = new Handler();
+            handler.postDelayed(flipCardsBackOver, delay);
 
-            TextView cardA = findViewById(TILE_BUTTONS[cardHitA]); // RR
-            TextView cardB = findViewById(TILE_BUTTONS[cardHitB]); // RR
-            cardA.setText("");
-            cardB.setText("");
-            cardA.setBackgroundResource(R.drawable.zz_alphatileslogo2);
-            cardB.setBackgroundResource(R.drawable.zz_alphatileslogo2);
-            memoryCollection.get(cardHitA)[3] = "UNSELECTED"; // KP
-            memoryCollection.get(cardHitB)[3] = "UNSELECTED"; // KP
         }
-
-    }
-
-    public void onBtnClick(View view) {
-
-        priorClickedCard = justClickedCard;
-        justClickedCard = Integer.parseInt((String)view.getTag());
-        respondToCardSelection();
 
     }
 
@@ -450,6 +423,34 @@ public class Mexico extends GameActivity {
             respondToTwoActiveCards();
         }
     };
+
+    private Runnable flipCardsBackOver = new Runnable() {
+        @Override
+        public void run() {
+            resetAfterIncorrectGuess();
+        }
+    };
+
+    public void resetAfterIncorrectGuess(){
+        TextView cardA = findViewById(TILE_BUTTONS[cardHitA]); // RR
+        TextView cardB = findViewById(TILE_BUTTONS[cardHitB]); // RR
+        cardA.setText("");
+        cardB.setText("");
+        cardA.setBackgroundResource(R.drawable.zz_alphatileslogo2);
+        cardB.setBackgroundResource(R.drawable.zz_alphatileslogo2);
+        memoryCollection.get(cardHitA)[3] = "UNSELECTED"; // KP
+        memoryCollection.get(cardHitB)[3] = "UNSELECTED"; // KP
+        setAllTilesClickable();
+        setOptionsRowClickable();
+    }
+
+    public void onBtnClick(View view) {
+
+        priorClickedCard = justClickedCard;
+        justClickedCard = Integer.parseInt((String)view.getTag());
+        respondToCardSelection();
+
+    }
 
     public void clickPicHearAudio(View view)
     {

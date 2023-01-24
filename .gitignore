@@ -24,3 +24,6 @@
 !app/src/main
 !app/src/androidTest
 !app/test
+*output-metadata.json
+/.idea/.name
+/.idea/.gitignore

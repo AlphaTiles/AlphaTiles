@@ -190,8 +190,6 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         app:srcCompat="@drawable/zz_pointsscoredthisgame" />
 
-
-
     <TextView
         android:id="@+id/pointsTextView"
         android:layout_width="0dp"
@@ -264,6 +262,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV2"
         app:layout_constraintStart_toEndOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -279,6 +278,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
         app:layout_constraintStart_toEndOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -294,6 +294,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV4"
         app:layout_constraintStart_toEndOf="@+id/guidelineV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -309,6 +310,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
         app:layout_constraintStart_toEndOf="@+id/guidelineV4"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -324,6 +326,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV2"
         app:layout_constraintStart_toEndOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -339,6 +342,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
         app:layout_constraintStart_toEndOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -354,6 +358,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV4"
         app:layout_constraintStart_toEndOf="@+id/guidelineV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -369,6 +374,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
         app:layout_constraintStart_toEndOf="@+id/guidelineV4"
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -384,6 +390,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV2"
         app:layout_constraintStart_toEndOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -399,6 +406,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
         app:layout_constraintStart_toEndOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -414,6 +422,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV4"
         app:layout_constraintStart_toEndOf="@+id/guidelineV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -429,6 +438,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
         app:layout_constraintStart_toEndOf="@+id/guidelineV4"
         app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -444,6 +454,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV2"
         app:layout_constraintStart_toEndOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -459,6 +470,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
         app:layout_constraintStart_toEndOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -474,6 +486,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV4"
         app:layout_constraintStart_toEndOf="@+id/guidelineV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -489,43 +502,43 @@
         app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
         app:layout_constraintStart_toEndOf="@+id/guidelineV4"
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
+        android:padding = "8dp"
         app:srcCompat="@drawable/zz_sil" />
-
 
     <TextView
         android:id="@+id/choice01"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#9C27B0"
         android:gravity="bottom|center_horizontal"
+        android:maxLines="1"
         android:onClick="onSelection"
+        android:padding="1dp"
         android:tag="1"
         android:text="@string/choice01"
-        android:textColor="#FFFFFF"
+        android:textColor="#9C27B0"
         android:textSize="25sp"
+        app:autoSizeMaxTextSize="25sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="25sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
-        android:maxLines="1"/>
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/choice02"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2196F3"
         android:gravity="bottom|center_horizontal"
         android:maxLines="1"
         android:onClick="onSelection"
-        android:padding="2dp"
+        android:padding="1dp"
         android:tag="2"
         android:text="@string/choice02"
-        android:textColor="#FFFFFF"
+        android:textColor="#2196F3"
         android:textSize="25sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeMinTextSize="5sp"
@@ -540,12 +553,11 @@
         android:id="@+id/choice03"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#9C27B0"
         android:gravity="bottom|center_horizontal"
         android:onClick="onSelection"
         android:tag="3"
         android:text="@string/choice03"
-        android:textColor="#FFFFFF"
+        android:textColor="#F44336"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
@@ -555,21 +567,20 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
+        android:padding = "1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice04"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2196F3"
         android:gravity="bottom|center_horizontal"
         android:maxLines="1"
         android:onClick="onSelection"
-        android:padding="2dp"
+        android:padding="1dp"
         android:tag="4"
         android:text="@string/choice04"
-        android:textColor="#FFFFFF"
+        android:textColor="#4CAF50"
         android:textSize="25sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeMinTextSize="5sp"
@@ -584,12 +595,11 @@
         android:id="@+id/choice05"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F44336"
         android:gravity="bottom|center_horizontal"
         android:onClick="onSelection"
         android:tag="5"
         android:text="@string/choice05"
-        android:textColor="#FFFFFF"
+        android:textColor="#E91E63"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
@@ -599,19 +609,18 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
+        android:padding = "1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice06"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#4CAF50"
         android:gravity="bottom|center_horizontal"
         android:onClick="onSelection"
         android:tag="6"
         android:text="@string/choice06"
-        android:textColor="#FFFFFF"
+        android:textColor="#9C27B0"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
@@ -621,19 +630,18 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
+        android:padding = "1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice07"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F44336"
         android:gravity="bottom|center_horizontal"
         android:onClick="onSelection"
         android:tag="7"
         android:text="@string/choice07"
-        android:textColor="#FFFFFF"
+        android:textColor="#2196F3"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
@@ -643,19 +651,18 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
+        android:padding = "1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice08"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#4CAF50"
         android:gravity="bottom|center_horizontal"
         android:onClick="onSelection"
         android:tag="8"
         android:text="@string/choice08"
-        android:textColor="#FFFFFF"
+        android:textColor="#F44336"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
@@ -665,19 +672,18 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
+        android:padding = "1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice09"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#9C27B0"
         android:gravity="bottom|center_horizontal"
         android:onClick="onSelection"
         android:tag="9"
         android:text="@string/choice09"
-        android:textColor="#FFFFFF"
+        android:textColor="#4CAF50"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
@@ -687,21 +693,20 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
+        android:padding = "1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice10"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2196F3"
         android:gravity="bottom|center_horizontal"
         android:maxLines="1"
         android:onClick="onSelection"
-        android:padding="2dp"
+        android:padding="1dp"
         android:tag="10"
         android:text="@string/choice10"
-        android:textColor="#FFFFFF"
+        android:textColor="#E91E63"
         android:textSize="25sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeMinTextSize="5sp"
@@ -716,12 +721,11 @@
         android:id="@+id/choice11"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#9C27B0"
         android:gravity="bottom|center_horizontal"
         android:onClick="onSelection"
         android:tag="11"
         android:text="@string/choice11"
-        android:textColor="#FFFFFF"
+        android:textColor="#9C27B0"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
@@ -731,21 +735,20 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
+        android:padding = "1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice12"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2196F3"
         android:gravity="bottom|center_horizontal"
         android:maxLines="1"
         android:onClick="onSelection"
-        android:padding="2dp"
+        android:padding="1dp"
         android:tag="12"
         android:text="@string/choice12"
-        android:textColor="#FFFFFF"
+        android:textColor="#2196F3"
         android:textSize="25sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeMinTextSize="5sp"
@@ -761,12 +764,11 @@
         android:id="@+id/choice13"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F44336"
         android:gravity="bottom|center_horizontal"
         android:onClick="onSelection"
         android:tag="13"
         android:text="@string/choice13"
-        android:textColor="#FFFFFF"
+        android:textColor="#F44336"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
@@ -776,19 +778,18 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
+        android:padding = "1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice14"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#4CAF50"
         android:gravity="bottom|center_horizontal"
         android:onClick="onSelection"
         android:tag="14"
         android:text="@string/choice14"
-        android:textColor="#FFFFFF"
+        android:textColor="#4CAF50"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
@@ -798,19 +799,18 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
+        android:padding = "1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice15"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F44336"
         android:gravity="bottom|center_horizontal"
         android:onClick="onSelection"
         android:tag="15"
         android:text="@string/choice15"
-        android:textColor="#FFFFFF"
+        android:textColor="#E91E63"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
@@ -820,19 +820,18 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
+        android:padding = "1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice16"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#4CAF50"
         android:gravity="bottom|center_horizontal"
         android:onClick="onSelection"
         android:tag="16"
         android:text="@string/choice16"
-        android:textColor="#FFFFFF"
+        android:textColor="#9C27B0"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
@@ -842,7 +841,7 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
+        android:padding = "1dp"
         android:maxLines="1"/>
 
     <androidx.constraintlayout.widget.Guideline
@@ -962,7 +961,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.25" />
+        app:layout_constraintGuide_percent="0.26" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV3"
@@ -976,7 +975,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75" />
+        app:layout_constraintGuide_percent="0.74" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV5"
@@ -984,8 +983,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.98" />
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
