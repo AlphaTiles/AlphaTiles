@@ -163,13 +163,15 @@ public class Romania extends GameActivity {
         if (forceRTL){ //LM: flips images for RTL layouts. LTR is default
             ImageView backwardArrowImage = (ImageView) findViewById(R.id.backwardArrowImage);
             ImageView forwardArrowImage = (ImageView) findViewById(R.id.forwardArrowImage);
-//            ImageView findMoreOfSameTileImage = (ImageView) findViewById(R.id.findMoreOfSameTile);
+            ImageView scrollForwardImage = (ImageView) findViewById(R.id.scrollForward);
+            ImageView scrollBackImage = (ImageView) findViewById(R.id.scrollBack);
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
             backwardArrowImage.setRotationY(180);
             forwardArrowImage.setRotationY(180);
-//            findMoreOfSameTileImage.setRotationY(180);
+            scrollForwardImage.setRotationY(180);
+            scrollBackImage.setRotationY(180);
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
         }

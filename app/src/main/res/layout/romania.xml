@@ -121,7 +121,8 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
         app:layout_constraintStart_toStartOf="@+id/tileBoxTextView"
         app:layout_constraintTop_toTopOf="@+id/guidelineHMagTop"
-        app:srcCompat="@drawable/zz_backward_white" />
+        app:srcCompat="@drawable/zz_backward_white"
+        android:rotationY="0"/>
 
     <ImageView
         android:id="@+id/scrollForward"
@@ -133,7 +134,8 @@
         app:layout_constraintEnd_toEndOf="@+id/tileBoxTextView"
         app:layout_constraintStart_toStartOf="@+id/guidelineV4"
         app:layout_constraintTop_toTopOf="@+id/guidelineHMagTop"
-        app:srcCompat="@drawable/zz_forward_white" />
+        app:srcCompat="@drawable/zz_forward_white"
+        android:rotationY="0"/>
 
     <ImageView
         android:id="@+id/toggleInitialOnly"
