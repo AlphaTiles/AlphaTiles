@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
@@ -42,6 +43,7 @@ public class ChoosePlayer extends AppCompatActivity
 {
 	Context context;
 	String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+	String singleColorHex = Start.settingsList.find("Single hex color on avatar screen");
 
 	public static final int ALT_COUNT = 3;  // KRP
 /*
@@ -181,7 +183,11 @@ public class ChoosePlayer extends AppCompatActivity
 
 			TextView name = findViewById(AVATAR_NAMES[n]);
 			name.setText(playerName);
-
+			if(singleColorHex.compareTo("")!=0) {
+				LOGGER.info("Remember: about to apply single color");
+				name.setBackgroundColor(Color.parseColor(singleColorHex));
+				LOGGER.info("Remember: just finished applying single color");
+			}
 		}
 
 		if(scriptDirection.compareTo("RTL") == 0){

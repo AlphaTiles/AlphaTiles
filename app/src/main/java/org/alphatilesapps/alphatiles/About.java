@@ -21,7 +21,9 @@ public class About extends AppCompatActivity {
     Context context;
     String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
     String hideSILlogoSetting = Start.settingsList.find("Hide SIL logo");
+    String hidePrivacyPolicySetting = Start.settingsList.find("Hide privacy policy");
     Boolean hideSILlogo;
+    Boolean hidePrivacyPolicy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,11 @@ public class About extends AppCompatActivity {
         String linkText = "<a href=\"" + httpText + "\">" + displayText + "</a>";
         privacyPolicy.setText(Html.fromHtml(linkText));
         privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
+
+        hidePrivacyPolicy = Boolean.parseBoolean(hidePrivacyPolicySetting);
+        if(hidePrivacyPolicy) {
+            privacyPolicy.setVisibility(View.GONE);
+        }
 
         String verName = BuildConfig.VERSION_NAME;
         TextView verInfo = findViewById(R.id.appVersionInEnglish);

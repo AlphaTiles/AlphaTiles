@@ -644,6 +644,9 @@ public class Japan extends GameActivity {
             pointsEarned.setText(String.valueOf(japanPoints));
 
             trackerCount++;
+            if(trackerCount>=12){
+                japanHasChecked12Trackers = true;
+            }
             updateTrackers();
 
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
