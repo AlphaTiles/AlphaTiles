@@ -38,15 +38,15 @@ public class About extends AppCompatActivity {
         TextView localName = findViewById(R.id.gameNameInLOP);
         localName.setText(Start.localAppName);
         TextView lgNamesPlusCountry = findViewById(R.id.langNamesPlusCountry);
-        if (Start.langInfoList.find("(In Local Lang)").equals(Start.langInfoList.find("(In English)"))) {
+        if (Start.langInfoList.find("Lang Name (In Local Lang)").equals(Start.langInfoList.find("Lang Name (In English)"))) {
             lgNamesPlusCountry.setText(context.getString(R.string.names_plus_countryB,
-                    Start.langInfoList.find("(In Local Lang)"),
-                    Start.langInfoList.find("(In English)"),
+                    Start.langInfoList.find("Lang Name (In Local Lang)"),
+                    Start.langInfoList.find("Lang Name (In English)"),
                     Start.langInfoList.find("Country"))); // RR, KP
         } else {
             lgNamesPlusCountry.setText(context.getString(R.string.names_plus_countryA,
-                    Start.langInfoList.find("(In Local Lang)"),
-                    Start.langInfoList.find("(In English)"),
+                    Start.langInfoList.find("Lang Name (In Local Lang)"),
+                    Start.langInfoList.find("Lang Name (In English)"),
                     Start.langInfoList.find("Country"))); // RR, KP
         }
 
