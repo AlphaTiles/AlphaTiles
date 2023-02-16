@@ -47,7 +47,7 @@ public abstract class GameActivity extends AppCompatActivity {
 	int points;
 	int brazilPoints, chinaPoints, colombiaPoints, ecuadorPoints, georgiaPoints, italyPoints, japanPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
 	int challengeLevel = -1;
-	Boolean brazilHasChecked12Trackers, chinaHasChecked12Trackers, colombiaHasChecked12Trackers, ecuadorHasChecked12Trackers, georgiaHasChecked12Trackers, japanHasChecked12Trackers, mexicoHasChecked12Trackers, myanmarHasChecked12Trackers, peruHasChecked12Trackers, thailandHasChecked12Trackers, unitedStatesHasChecked12Trackers;
+	Boolean brazilHasChecked12Trackers, chinaHasChecked12Trackers, colombiaHasChecked12Trackers, ecuadorHasChecked12Trackers, georgiaHasChecked12Trackers, italyHasChecked12Trackers, japanHasChecked12Trackers, mexicoHasChecked12Trackers, myanmarHasChecked12Trackers, peruHasChecked12Trackers, thailandHasChecked12Trackers, unitedStatesHasChecked12Trackers;
 	int playerNumber = -1;
 	int gameNumber = 0;
 	String syllableGame;
@@ -112,6 +112,8 @@ public abstract class GameActivity extends AppCompatActivity {
         colombiaHasChecked12Trackers = getIntent().getBooleanExtra("columbiaHasChecked12Trackers", false);
         ecuadorHasChecked12Trackers = getIntent().getBooleanExtra("ecuadorHasChecked12Trackers", false);
         georgiaHasChecked12Trackers = getIntent().getBooleanExtra("georgiaHasChecked12Trackers", false);
+		italyHasChecked12Trackers = getIntent().getBooleanExtra("italyHasChecked12Trackers", false);
+		japanHasChecked12Trackers = getIntent().getBooleanExtra("japanHasChecked12Trackers", false);
         mexicoHasChecked12Trackers = getIntent().getBooleanExtra("mexicoHasChecked12Trackers", false);
         myanmarHasChecked12Trackers = getIntent().getBooleanExtra("myanmarHasChecked12Trackers", false);
         peruHasChecked12Trackers = getIntent().getBooleanExtra("peruHasChecked12Trackers", false);

@@ -23,6 +23,8 @@ public class China extends GameActivity {
     Boolean[] solvedLines = new Boolean[4];
     TextView blankTile;
     int moves;
+    int chinaPoints;
+    boolean chinaHasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -87,9 +89,9 @@ public class China extends GameActivity {
 
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        chinaPoints = prefs.getInt("storedchinaPoints_level" + challengeLevel + "_player"
+        chinaPoints = prefs.getInt("storedChinaPoints_level" + challengeLevel + "_player"
                 + playerString + "_" + syllableGame, 0);
-        chinaHasChecked12Trackers = prefs.getBoolean("storedchinaHasChecked12Trackers_level"
+        chinaHasChecked12Trackers = prefs.getBoolean("storedChinaHasChecked12Trackers_level"
                 + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
@@ -116,10 +118,13 @@ public class China extends GameActivity {
 
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(chinaPoints));
 
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
+        if(trackerCount >= 12){
+            chinaHasChecked12Trackers = true;
+        }
 
         updateTrackers();
 
@@ -165,6 +170,7 @@ public class China extends GameActivity {
         repeatLocked = true;
         chooseWords();
         setUpTiles();
+        setAllTilesClickable();
         //wip
     }
 
@@ -309,16 +315,25 @@ public class China extends GameActivity {
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points+=4;
-            pointsEarned.setText(String.valueOf(points));
+            chinaPoints+=4;
+            pointsEarned.setText(String.valueOf(chinaPoints));
 
             trackerCount++;
+
+            if(trackerCount>=12){
+                chinaHasChecked12Trackers = true;
+            }
             updateTrackers();
 
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
             editor.putInt("storedPoints_player" + playerString, points);
+            editor.putInt("storedChinaPoints_level" + challengeLevel + "_player" + playerString
+                    + "_" + syllableGame, chinaPoints);
+            editor.putBoolean("storedChinaHasChecked12Trackers_level" + challengeLevel + "_player"
+                    + playerString + "_" + syllableGame, chinaHasChecked12Trackers);
             editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString;
+            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
