@@ -15,12 +15,8 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
-import java.util.logging.Logger;
-
 import static org.alphatilesapps.alphatiles.Start.keyList;
 
 public class SetPlayerName extends AppCompatActivity {
@@ -44,7 +40,6 @@ public class SetPlayerName extends AppCompatActivity {
 
     private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
 
-    private static final Logger LOGGER = Logger.getLogger(SetPlayerName.class.getName());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +49,9 @@ public class SetPlayerName extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_player_name);
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.compareTo("RTL") == 0){ // LM: flips images for RTL layouts. LTR is default
             ImageView deleteImage = (ImageView) findViewById(R.id.deleteImage);
             ImageView avatarImage = (ImageView) findViewById(R.id.avatar);
 
@@ -76,9 +71,7 @@ public class SetPlayerName extends AppCompatActivity {
 
         String defaultName;
         String playerName;
-        // defaultName = Start.localWordForName + " " + playerNumber;
 
-        // nameID = n + 1;
         String localWordForName = Start.langInfoList.find("NAME in local language");
         if (localWordForName.equals("custom")) {
             defaultName = Start.nameList.get(playerNumber);
@@ -304,19 +297,13 @@ public class SetPlayerName extends AppCompatActivity {
 
         String playerName;
 
-        LOGGER.info("Remember: about to set redID" );
-
         EditText name = findViewById(R.id.avatarName);
         playerName = name.getText().toString();
-
-        LOGGER.info("Remember: playerName = " + playerName);
 
         SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("storedName" + playerString, playerName);
         editor.apply();
-
-        LOGGER.info("Remember: editor.apply() complete");
 
         Intent intent = getIntent();
         intent.setClass(context, Earth.class);

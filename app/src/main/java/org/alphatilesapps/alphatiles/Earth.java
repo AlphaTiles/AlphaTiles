@@ -14,14 +14,9 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.logging.Logger;
-
-import static android.view.View.VISIBLE;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -46,8 +41,6 @@ public class Earth extends AppCompatActivity {
 
     ConstraintLayout earthCL;
 
-    private static final Logger LOGGER = Logger.getLogger(Earth.class.getName());
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -61,7 +54,7 @@ public class Earth extends AppCompatActivity {
 
         earthCL = findViewById(R.id.earthCL);
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
             ImageView goForwardImage = (ImageView) findViewById(R.id.goForward);
@@ -271,9 +264,7 @@ public class Earth extends AppCompatActivity {
         if (pageNumber > 0) {
             pageNumber--;
         }
-        LOGGER.info("Remember: pre updateDoors (Backward): pageNumber = " + pageNumber);
         updateDoors();
-        LOGGER.info("Remember: post updateDoors (Backward): pageNumber = " + pageNumber);
 
     }
 
@@ -282,9 +273,7 @@ public class Earth extends AppCompatActivity {
         if (((pageNumber + 1) * doorsPerPage) < Start.gameList.size()) {
             pageNumber++;
         }
-        LOGGER.info("Remember: pre updateDoors (Forward): pageNumber = " + pageNumber);
         updateDoors();
-        LOGGER.info("Remember: post updateDoors (Forward): pageNumber = " + pageNumber);
 
     }
 

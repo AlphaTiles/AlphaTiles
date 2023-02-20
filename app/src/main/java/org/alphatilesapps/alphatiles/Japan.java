@@ -2,11 +2,9 @@ package org.alphatilesapps.alphatiles;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-
 import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
-
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
@@ -15,7 +13,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;

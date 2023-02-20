@@ -1,14 +1,10 @@
 package org.alphatilesapps.alphatiles;
 
-import static org.alphatilesapps.alphatiles.Start.syllableList;
-
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +17,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -73,14 +68,12 @@ public class Peru extends GameActivity {
 
     }
 
-    private static final Logger LOGGER = Logger.getLogger( Peru.class.getName() );
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.peru);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -114,8 +107,6 @@ public class Peru extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(peruPoints));
 
-        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
         if(trackerCount >= 12){

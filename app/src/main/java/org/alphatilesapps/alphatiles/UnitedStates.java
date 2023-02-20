@@ -5,13 +5,10 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.Random;
-import java.util.logging.Logger;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -24,7 +21,6 @@ public class UnitedStates extends GameActivity {
 
     int upperTileLimit = 5;
     int neutralFontSize;
-    String scriptLR;
     String[] selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
     String lastWord = "";
     String secondToLastWord = "";
@@ -46,7 +42,6 @@ public class UnitedStates extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try{
-//          audioInstructionsResID = res.getIdentifier("united_states_" + challengeLevel, "raw", context.getPackageName());
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         }
         catch (NullPointerException e){
@@ -57,7 +52,6 @@ public class UnitedStates extends GameActivity {
 
     @Override
     protected void centerGamesHomeImage() {
-
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
@@ -85,14 +79,12 @@ public class UnitedStates extends GameActivity {
 
     }
 
-    private static final Logger LOGGER = Logger.getLogger(UnitedStates.class.getName());
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         points = getIntent().getIntExtra("points", 0); // KP
         unitedStatesPoints = getIntent().getIntExtra("unitedStatesPoints", 0); // KP
@@ -136,8 +128,6 @@ public class UnitedStates extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(unitedStatesPoints));
 
-        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
         if(trackerCount>=12){
@@ -146,7 +136,7 @@ public class UnitedStates extends GameActivity {
 
         updateTrackers();
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.compareTo("RTL") == 0){ // LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -179,17 +169,13 @@ public class UnitedStates extends GameActivity {
     public void playAgain () {
 
         repeatLocked = true;
-
         selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
-
-
         int lengthOfLOPWord = Integer.MAX_VALUE;  // KP // Arbitrarily high number to force into the loop
 
-        while (lengthOfLOPWord > upperTileLimit) {
-            // Ensure that the selected word is not too long for a 5/7/9-tile max game
+        while (lengthOfLOPWord > upperTileLimit) { // Ensure that the selected word is not too long for a 5/7/9-tile max game
             boolean freshWord = false;
 
-            while(!freshWord) {
+            while(!freshWord) { // Generates a new word if it got one of the last three tested words // LM
                 Random rand = new Random();
                 int randomNum = rand.nextInt(Start.wordList.size()); // KP
 
@@ -206,7 +192,7 @@ public class UnitedStates extends GameActivity {
                     lastWord = wordInLWC;
                 }
 
-            }//generates a new word if it got one of the last three tested words // LM
+            }
 
             if (syllableGame.equals("S")){
                 parsedWordArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); // JP
@@ -232,7 +218,7 @@ public class UnitedStates extends GameActivity {
                 visibleTiles = 10;   // RR
         }
 
-        int c = 0;      // iterate through the parsedWordArray2
+        int c = 0;      // Iterate through the parsedWordArray2
         int randomNum2;
         int correspondingRow = 0;
 
@@ -285,7 +271,7 @@ public class UnitedStates extends GameActivity {
                 }
 
                 Random rand = new Random();
-                int randomNum = rand.nextInt(2); // choosing whether correct tile goes above ( =0 ) or below ( =1 )
+                int randomNum = rand.nextInt(2); // Choosing whether correct tile goes above ( =0 ) or below ( =1 )
                 randomNum2 = rand.nextInt(Start.ALT_COUNT); // KP // choosing between 2nd and 4th item of game tiles array
                 if (randomNum == 0) {
                     tileButtonA.setText(parsedWordArrayFinal.get(c));   // the correct tile
@@ -323,13 +309,9 @@ public class UnitedStates extends GameActivity {
 
     public void buildWord (String tileNumber, String tileString) {
 
-        LOGGER.info("Remember: 38");
         TextView constructedWord = findViewById(R.id.activeWordTextView);
-        LOGGER.info("Remember: 39");
 
         StringBuilder displayedWord = new StringBuilder(); // KP
-
-        LOGGER.info("Remember: 45");
 
         // KP
         if(scriptDirection.compareTo("RTL") == 0) {
@@ -351,8 +333,6 @@ public class UnitedStates extends GameActivity {
                 }
             }
         }
-
-        LOGGER.info("Remember: 55");
 
         constructedWord.setText(displayedWord);
 
@@ -399,7 +379,6 @@ public class UnitedStates extends GameActivity {
     }
 
     public void onBtnClick(View view) {
-
         int justClickedTile = Integer.parseInt((String)view.getTag());
         int tileIndex = justClickedTile - 1; //  justClickedTile uses 1 to 10 (or 14 or 18), tileNo uses the array ID (between [0] and [9] (or [13] or [17])
         int otherTileIndex; // the corresponding tile that is above or below the justClickedTile
@@ -429,16 +408,15 @@ public class UnitedStates extends GameActivity {
 
     }
 
-    protected void setAllTilesUnclickable()
-    {
+    protected void setAllTilesUnclickable() {
         for (int t = 0; t < upperTileLimit; t++)
         {
             TextView gameTile = findViewById(getTileButtons()[t]);
             gameTile.setClickable(false);
         }
     }
-    protected void setAllTilesClickable()
-    {
+
+    protected void setAllTilesClickable() {
 
         for (int t = 0; t < upperTileLimit; t++)
         {
@@ -447,8 +425,7 @@ public class UnitedStates extends GameActivity {
         }
     }
 
-    public void clickPicHearAudio(View view)
-    {
+    public void clickPicHearAudio(View view) {
         super.clickPicHearAudio(view);
     }
 

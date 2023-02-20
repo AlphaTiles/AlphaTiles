@@ -1,7 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.wordDurations;
@@ -32,20 +30,15 @@ import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
-
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 public class LoadingScreen extends AppCompatActivity {
 
     //JP June 2022: moved loading of all SoundPool audio into this activity
     //note: audio instructions use MediaPlayer, not SoundPool
 
-    private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
     private Handler mHandler = new Handler();
     Context context;
     ProgressBar progressBar;
@@ -56,7 +49,7 @@ public class LoadingScreen extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         progressBar = findViewById(R.id.progressBar);
         context = this;
@@ -76,7 +69,6 @@ public class LoadingScreen extends AppCompatActivity {
             @Override
             public void run() {
                 loadGameAudio();
-                LOGGER.info("Remember: initiated loadGameAudio()");
             }
         }).start();
 
@@ -84,7 +76,6 @@ public class LoadingScreen extends AppCompatActivity {
             @Override
             public void run() {
                 loadWordAudio();
-                LOGGER.info("Remember: initiated loadWordAudio()");
             }
         }).start();
 
@@ -93,7 +84,6 @@ public class LoadingScreen extends AppCompatActivity {
                 @Override
                 public void run() {
                     loadTileAudio();
-                    LOGGER.info("Remember: initiated loadTileAudio()");
                 }
             }).start();
         }
@@ -103,7 +93,6 @@ public class LoadingScreen extends AppCompatActivity {
                 @Override
                 public void run() {
                     loadSyllableAudio();
-                    LOGGER.info("Remember: initiated loadSyllableAudio()");
                 }
             }).start();
         }
@@ -112,7 +101,6 @@ public class LoadingScreen extends AppCompatActivity {
             @Override
             public void run() {
                 loadPixelWidthAdjustments();
-                LOGGER.info("Remember: initiated fillInPixelWidthAdjustments()");
             }
         }).start();
 
@@ -169,9 +157,7 @@ public class LoadingScreen extends AppCompatActivity {
 
                //once all audio files have finished loading, launch ChoosePlayer
                if (audio_loaded[0] == totalAudio){
-                   LOGGER.info("Remember: all audio loading complete");
                    startActivity(intent);
-
                    finish();
                }
            }});

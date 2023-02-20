@@ -20,12 +20,9 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
-import static org.alphatilesapps.alphatiles.Start.correctFinalSoundDuration;
 import static org.alphatilesapps.alphatiles.Start.gameList;
-import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
@@ -76,8 +73,6 @@ public abstract class GameActivity extends AppCompatActivity {
 	protected abstract int[] getWordImages();
 	protected abstract int getAudioInstructionsResID();
 	protected abstract void centerGamesHomeImage();
-
-	private static final Logger LOGGER = Logger.getLogger( GameActivity.class.getName() );
 
 	@Override
 	protected void onCreate(Bundle state) {
@@ -300,18 +295,8 @@ public abstract class GameActivity extends AppCompatActivity {
             TextView gameTile = findViewById(getTileButtons()[t]);
             gameTile.setClickable(true);
         }
+	}
 
-		/*for (int word : getTileButtons()) {
-			TextView nextWord = findViewById(word);
-			nextWord.setClickable(true);
-		}*/
-
-		/*for (int t = 0; t < getTileButtons().length; t++)
-		{
-			TextView gameTile = findViewById(getTileButtons()[t]);
-			gameTile.setClickable(true);
-		}*/
-	}	
 	protected void setOptionsRowUnclickable()	
 	{	
 		ImageView repeatImage = findViewById(R.id.repeatImage);
@@ -327,7 +312,8 @@ public abstract class GameActivity extends AppCompatActivity {
 				wordImage = findViewById(getWordImages()[i]);	
 				wordImage.setClickable(false);	
 			}	
-	}	
+	}
+
 	protected void setOptionsRowClickable()	
 	{	
 		ImageView repeatImage = findViewById(R.id.repeatImage);
@@ -518,13 +504,6 @@ public abstract class GameActivity extends AppCompatActivity {
 		});	
 	}
 	public void playAudioInstructions(View view){
-		/*setAllTilesUnclickable();
-		setOptionsRowUnclickable();
-		int instructionsSoundID = gameSounds.load(context, getAudioInstructionsResID(), 2);
-		gameSounds.play(instructionsSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
-		setAllTilesClickable();
-		setOptionsRowClickable();*/
-
 		setAllTilesUnclickable();
 		setOptionsRowUnclickable();
 		mediaPlayerIsPlaying = true;

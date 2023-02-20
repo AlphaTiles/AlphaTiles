@@ -10,31 +10,16 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import java.util.ArrayList;
 import java.util.Collections;
-
-import java.util.logging.Logger;
-
 import org.alphatilesapps.alphatiles.Start.WordList;
-
 import static android.graphics.Color.BLACK;
-
 import androidx.constraintlayout.widget.ConstraintSet;
-
 import static org.alphatilesapps.alphatiles.Start.*;
-
 public class Mexico extends GameActivity {
 
     ArrayList<String[]> memoryCollection = new ArrayList(); // KP
-        // # 1 memoryCollection[LWC word, e.g. Spanish]
-        // # 2 [LOP word, e.g. Me'phaa]
-        // # 3 [state: "TEXT" or "IMAGE"]
-        // # 4 [state: "SELECTED" or "UNSELECTED" or "PAIRED"]
-        // # 5 duration in ms
-        // # 6 font adjustment for longer words
   
     WordList wordListExcludingTheLongestWords; // KP
     String delaySetting = Start.settingsList.find("View memory cards for _ milliseconds");
@@ -66,7 +51,6 @@ public class Mexico extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try{
-//          audioInstructionsResID = res.getIdentifier("mexico_" + challengeLevel, "raw", context.getPackageName());
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         }
         catch (NullPointerException e){
@@ -91,8 +75,6 @@ public class Mexico extends GameActivity {
         constraintSet.applyTo(constraintLayout);
 
     }
-
-    private static final Logger LOGGER = Logger.getLogger( Mexico.class.getName() );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,8 +140,6 @@ public class Mexico extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(mexicoPoints));
 
-        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
@@ -186,9 +166,6 @@ public class Mexico extends GameActivity {
         if (mediaPlayerIsPlaying) {
             return;
         }
-
-        // playAgain();
-
         // Closing and restarting the activity for each round is not ideal, but it seemed to be helping with memory issues...
         Intent intent = getIntent();
         intent.setClass(this, Mexico.class);    // so we retain the Extras
@@ -216,15 +193,12 @@ public class Mexico extends GameActivity {
         for (int i = 0; i < TILE_BUTTONS.length; i++) {    // RR
             TextView card = findViewById(TILE_BUTTONS[i]); // RR
 
-//            card.getBackground().setAlpha(255);
-
             if (i < visibleTiles) {
                 card.setText("");
                 card.setTextColor(BLACK); // KP
                 card.setBackgroundResource(R.drawable.zz_alphatileslogo2);
                 card.setVisibility(View.VISIBLE);
                 card.setClickable(true);
-//                card.setTypeface(card.getTypeface(), Typeface.NORMAL);
             } else {
                 card.setVisibility(View.INVISIBLE);
             }
@@ -241,16 +215,13 @@ public class Mexico extends GameActivity {
         for(int i = 0; i<wordList.size(); i++) {
             double adjustment = Double.valueOf(wordList.get(i).adjustment);
             if (adjustment >= lowestAdjustment) {
-//                LOGGER.info("Remember: thisLineArray[4] = " + thisLineArray[4]);
                 wordListExcludingTheLongestWords.add(wordList.get(i));
             }
         }
     }
 
     public void chooseMemoryWords() {
-
         // KP, Oct 2020
-
         int cardsToSetUp = visibleTiles / 2 ;   // this is half the number of cards
 
         for (int i = 0; i < visibleTiles; i++) {
@@ -268,9 +239,7 @@ public class Mexico extends GameActivity {
 
                     };
             memoryCollection.add(content);
-
         }
-
     }
 
     public void respondToCardSelection() {
@@ -311,17 +280,12 @@ public class Mexico extends GameActivity {
             card.setBackgroundResource(resID);
         }
 
-//        card.getBackground().setAlpha(255);
-
         if (activeSelections == 2) {
             setOptionsRowUnclickable();
             setAllTilesUnclickable();
 
             handler = new Handler();
             handler.postDelayed(quickViewDelay, Long.valueOf(800));
-            // Will run respondToTwoActiveCards() after delay...
-            // https://www.youtube.com/watch?v=3pgGVBmSVq0
-            // https://codinginflow.com/tutorials/android/handler-postdelayed-runnable
         }
 
     }
@@ -329,7 +293,6 @@ public class Mexico extends GameActivity {
     
 
     public void respondToTwoActiveCards() {
-
 
         // Two cards have been selected (which may or may not match)
         activeSelections = 0;       // (a reset)
@@ -353,8 +316,7 @@ public class Mexico extends GameActivity {
             }
         }
 
-        if (memoryCollection.get(cardHitA)[0].equals(memoryCollection.get(cardHitB)[0])) {
-            // Note: this is comparing the unstripped versions (e.g. with periods, etc.)
+        if (memoryCollection.get(cardHitA)[0].equals(memoryCollection.get(cardHitB)[0])) { // Note: this is comparing the unstripped versions (e.g. with periods, etc.)
 
             // A match has been found!!
             memoryCollection.get(cardHitA)[3] = "PAIRED";
@@ -365,9 +327,6 @@ public class Mexico extends GameActivity {
             final TextView cardB = findViewById(TILE_BUTTONS[cardHitB]); // RR
             cardA.setBackgroundResource(0);
             cardB.setBackgroundResource(0);
-
-//            cardA.getBackground().setAlpha(100);
-//            cardB.getBackground().setAlpha(100);
 
             cardA.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitA)[1]));
             cardB.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitB)[1]));

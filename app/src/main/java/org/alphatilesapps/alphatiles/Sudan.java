@@ -5,31 +5,14 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.widget.TextViewCompat;
-
 import static org.alphatilesapps.alphatiles.Start.*;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-
-//To work on:
-//Do any languages have more than 49 tiles? - now can scroll through multiple pages of 35 each (JP)
-//Should the repeat image be hidden? - need it to scroll through pages now (JP)
-//How should we color tiles that are multi-type?
-
-//every time user clicks right arrow, go to next item in pagesList and display it
-//every time user clicks left arrow, go to previous item in pagesList and display it
-//look at Romania for an example
 
 public class Sudan extends GameActivity {
 
@@ -40,8 +23,8 @@ public class Sudan extends GameActivity {
     List<String> page = new ArrayList<>();
 
     int numPages = 0;
-    int currentPageNumber = 0; //increment whenever user clicks right arrow; decrement whenever user clicks left arrow
-    //use as index for pagesList
+    int currentPageNumber = 0; // Index for pagesList. Increment whenever user clicks right arrow; decrement whenever user clicks left arrow.
+
 
     protected static final int[] SYLL_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -75,7 +58,6 @@ public class Sudan extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try{
-//          audioInstructionsResID = res.getIdentifier("sudan_" + challengeLevel, "raw", context.getPackageName());
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         }
         catch (NullPointerException e){
@@ -119,9 +101,9 @@ public class Sudan extends GameActivity {
             gameID = R.id.sudanCL;
         }
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.compareTo("RTL") == 0){ // LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -144,9 +126,6 @@ public class Sudan extends GameActivity {
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
 
-        //View repeatArrow = findViewById(R.id.repeatImage);
-        //repeatArrow.setVisibility(View.INVISIBLE);
-
         determineNumPages(); //JP
 
         if(syllableGame.equals("S")){
@@ -157,13 +136,9 @@ public class Sudan extends GameActivity {
             showCorrectNumTiles(0);
         }
 
-        //setTextSizes();
-
         if(getAudioInstructionsResID()==0){
             centerGamesHomeImage();
         }
-
-
 
     }
 
@@ -251,7 +226,7 @@ public class Sudan extends GameActivity {
         // visibleTiles must now be <= 63
         // if tileList.size() > 63, the rest will go on next page
 
-        // this function works fine for one page, not for multiple pages
+        // This function works fine for one page, not for multiple pages
 
         visibleTiles = 0;
 
@@ -477,10 +452,10 @@ public class Sudan extends GameActivity {
                 }, 925);
 
         }else{
-            if(!differentiateTypes){//Not differentiating the uses of multifunction tiles
+            if(!differentiateTypes){// Not differentiating the uses of multifunction tiles
                 tileText = tileListNoSAD.get(justClickedKey-1).baseTile;
             }
-            else{ //differentiateMultipleTypes ==2,we ARE differentiating the uses of multifunction tiles
+            else{ // differentiateMultipleTypes ==2. We ARE differentiating the uses of multifunction tiles
                 tileText = tileListWithMultiTypesNoSAD.get(justClickedKey-1);
             }
 

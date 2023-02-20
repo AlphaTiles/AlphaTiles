@@ -5,8 +5,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,8 +18,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
-import static org.alphatilesapps.alphatiles.Start.VOWELS;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.COLORS;
@@ -167,8 +163,6 @@ public class Georgia extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(georgiaPoints));
 
-        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
@@ -373,9 +367,7 @@ public class Georgia extends GameActivity {
 
         }
 
-        if (!correctSyllRepresented) {
-
-            // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
+        if (!correctSyllRepresented) { // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
 
             Random rand = new Random();
             int randomNum = rand.nextInt(visibleTiles - 1); // KP
@@ -489,9 +481,7 @@ public class Georgia extends GameActivity {
         }
 
         if (!correctTileRepresented) {
-
             // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
-
             Random rand = new Random();
             int randomNum = rand.nextInt(visibleTiles - 1); // KP
             TextView gameTile = findViewById(TILE_BUTTONS[randomNum]);
@@ -517,7 +507,7 @@ public class Georgia extends GameActivity {
             correct = initialTile;
         }
 
-        int tileNo = justClickedTile - 1; //  justClickedTile uses 1 to 18, t uses the array ID (between [0] and [17]
+        int tileNo = justClickedTile - 1; // justClickedTile uses 1 to 18, t uses the array ID (between [0] and [17]
         TextView tile = findViewById(TILE_BUTTONS[tileNo]);
         String selectedTile = tile.getText().toString();
 

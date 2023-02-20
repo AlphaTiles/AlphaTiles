@@ -3,23 +3,17 @@ package org.alphatilesapps.alphatiles;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileListNoSAD;
-import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import org.alphatilesapps.alphatiles.Start.WordList;
-
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-
 import java.util.Collections;
-import java.util.logging.Logger;
 
 public class Italy extends GameActivity {
 
@@ -30,8 +24,6 @@ public class Italy extends GameActivity {
     WordList gameCards = new WordList();
     boolean [] boardCardsFound = new boolean[16];
     int deckIndex = 0;
-
-    private static final Logger LOGGER = Logger.getLogger( Italy.class.getName() );
 
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04, R.id.choice05, R.id.choice06,
@@ -262,39 +254,24 @@ public class Italy extends GameActivity {
     }
 
     public void nextWordFromGameSet(){
+        deckIndex++;
+        if (deckIndex == 54){
 
-        try{
-            deckIndex++;
-            if (deckIndex == 54){
-
-                //The player went through all the cards without getting a loteria. Set up a new board
-                playIncorrectSound();
-                playIncorrectSound();
-                playAgain();
-            }
-            else{ //"Call out" the next word
-
-                wordInLOP = wordList.stripInstructionCharacters(gameCards.get(deckIndex).localWord);
-                wordInLWC = gameCards.get(deckIndex).nationalWord;
-                playActiveWordClip(false);
-            }
+            //The player went through all the cards without getting a loteria. Set up a new board
+            playIncorrectSound();
+            playIncorrectSound();
+            playAgain();
         }
-        catch(Exception e){
-            LOGGER.info("Italy encountered an exception in nextWordFromGameSet: \n" + e.getMessage());
+        else{ //"Call out" the next word
+
+            wordInLOP = wordList.stripInstructionCharacters(gameCards.get(deckIndex).localWord);
+            wordInLWC = gameCards.get(deckIndex).nationalWord;
+            playActiveWordClip(false);
         }
-
-
     }
 
     public void onSelection(View view){
-
-        try {
-
-            respondToSelection(Integer.parseInt((String) view.getTag()));
-        }
-        catch(Exception e){
-            LOGGER.info("Italy encountered an exception in onSelection: \n" + e.getMessage());
-        }
+        respondToSelection(Integer.parseInt((String) view.getTag()));
     }
 
     public void respondToSelection(int indexOfTileJustSelected){

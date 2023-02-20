@@ -5,21 +5,17 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -33,17 +29,16 @@ public class Colombia extends GameActivity {
 
     String initial = "";
     Set<String> keys = new HashSet<String>();
-    int keysInUse; // number of keys in the language's total keyboard
-    int keyboardScreenNo; // for languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
-    int totalScreens; // the total number of screens required to show all keys
-    int partial; // the number of visible keys on final partial screen
+    int keysInUse; // Number of keys in the language's total keyboard
+    int keyboardScreenNo; // For languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
+    int totalScreens; // Total number of screens required to show all keys
+    int partial; // Number of visible keys on final partial screen
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
     int colombiaPoints;
     static List<String> keysList = new ArrayList<>();
-    static List<String> keysClicked = new ArrayList<>(); // will be used to keep track of the order
-    // that the user clicked keys so that we can backtrack in deleteLastKeyedSyllable, and used in evaluateStatus for orange color
+    static List<String> keysClicked = new ArrayList<>(); // Keys clicked, in order
 
     protected static final int[] TILE_BUTTONS = {
             R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
@@ -65,7 +60,6 @@ public class Colombia extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try{
-//          audioInstructionsResID = res.getIdentifier("colombia_" + challengeLevel, "raw", context.getPackageName());
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
 
         }
@@ -77,7 +71,6 @@ public class Colombia extends GameActivity {
 
     @Override
     protected void centerGamesHomeImage() {
-
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
@@ -98,9 +91,6 @@ public class Colombia extends GameActivity {
 
     }
 
-
-    private static final Logger LOGGER = Logger.getLogger(Colombia.class.getName());
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,9 +104,9 @@ public class Colombia extends GameActivity {
             gameID = R.id.colombiaCL;
         }
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.compareTo("RTL") == 0){ // LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
             ImageView deleteImage = (ImageView) findViewById(R.id.deleteImage);
@@ -149,18 +139,10 @@ public class Colombia extends GameActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(colombiaPoints));
 
-        LOGGER.info("Remember: oC2");
-
-        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
 
         updateTrackers();
-
-        LOGGER.info("Remember: oC3");
-
-        LOGGER.info("Remember: oC4");
 
         if(getAudioInstructionsResID()==0){
             centerGamesHomeImage();
@@ -193,15 +175,11 @@ public class Colombia extends GameActivity {
         wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
         wordToBuild.setTextColor(Color.parseColor("#000000")); // black
 
-        LOGGER.info("Remember: pA1");
-
         chooseWord();
 
-        LOGGER.info("Remember: pA2");
         ImageView deleteArrow = (ImageView) findViewById(R.id.deleteImage);
         deleteArrow.setClickable(true);
 
-        LOGGER.info("Remember: pA3");
         loadKeyboard();
 
     }
@@ -211,14 +189,14 @@ public class Colombia extends GameActivity {
         boolean freshWord = false;
         keysClicked.clear();
 
-        while(!freshWord) {
+        while(!freshWord) { // Generates a new word if it got one of the last three tested words // LM
             Random rand = new Random();
             int randomNum = rand.nextInt(Start.wordList.size()); // KP
 
             wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
             wordInLOP = Start.wordList.get(randomNum).localWord; // KP
 
-            //If this word isn't one of the 3 previously tested words, we're good // LM
+            // If this word isn't one of the 3 previously tested words, we're good // LM
             if(wordInLWC.compareTo(lastWord)!=0
                     && wordInLWC.compareTo(secondToLastWord)!=0
                     && wordInLWC.compareTo(thirdToLastWord)!=0){
@@ -228,7 +206,7 @@ public class Colombia extends GameActivity {
                 lastWord = wordInLWC;
             }
 
-        }//generates a new word if it got one of the last three tested words // LM
+        }
 
         ImageView image = (ImageView) findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
@@ -346,7 +324,7 @@ public class Colombia extends GameActivity {
                 break;
             case 3:
 
-                if (syllableGame.equals("S")){ //all distractor syllables up to 18
+                if (syllableGame.equals("S")){ // All distractor syllables up to 18
 
                     /*
                     if (hasSAD){
@@ -401,13 +379,10 @@ public class Colombia extends GameActivity {
                     partial = keysInUse % (TILE_BUTTONS.length - 2);
                     totalScreens = keysInUse / (TILE_BUTTONS.length - 2);
 
-                    LOGGER.info("Remember: partial = " + partial);
-                    LOGGER.info("Remember: totalScreens = " + totalScreens);
                     if (partial != 0) {
                         totalScreens++;
                     }
 
-                    LOGGER.info("Remember: April 22 2021 A1");
                     if (keysInUse > TILE_BUTTONS.length) {
                         visibleTiles = TILE_BUTTONS.length;
                     } else {
@@ -421,27 +396,20 @@ public class Colombia extends GameActivity {
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
-                    LOGGER.info("Remember: April 22 2021 A2");
                     if (keysInUse > TILE_BUTTONS.length) {
-                        LOGGER.info("Remember: keysInUse = " + keysInUse);
-                        LOGGER.info("Remember: KEYS.length = " + TILE_BUTTONS.length);
-                        LOGGER.info("Remember: April 22 2021 A2");
                         TextView key34 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 2]);
                         key34.setBackgroundResource(R.drawable.zz_backward_green);
                         if(scriptDirection.compareTo("RTL")==0) { //LTR is default
                             key34.setRotationY(180);
                         }
                         key34.setText("");
-                        LOGGER.info("key34's text: " + key34.getText());
                         TextView key35 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 1]);
                         key35.setBackgroundResource(R.drawable.zz_forward_green);
                         if(scriptDirection.compareTo("RTL")==0) { //LTR is default
                             key35.setRotationY(180);
                         }
                         key35.setText("");
-                        LOGGER.info("key35's text: " + key35.getText());
                     }
-                    LOGGER.info("Remember: April 22 2021 A3");
 
                 }
                 break;
@@ -517,8 +485,7 @@ public class Colombia extends GameActivity {
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
 
-        if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
-            // Word spelled correctly!
+        if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP))) { // Word spelled correctly!
             wordToBuild.setBackgroundColor(Color.parseColor("#4CAF50"));      // theme green
             wordToBuild.setTextColor(Color.parseColor("#FFFFFF")); // white
 
@@ -566,104 +533,45 @@ public class Colombia extends GameActivity {
 
             repeatLocked = false;
 
-        } else {
-
-            // Word is partial and, for the moment, assumed to be incorrect
+        } else { // Word is partial and, for the moment, assumed to be incorrect
             wordToBuild.setBackgroundColor(Color.parseColor("#A9A9A9")); // gray for wrong
             wordToBuild.setTextColor(Color.parseColor("#000000")); // black
 
             if (Start.wordList.stripInstructionCharacters(wordInLOP).length() > wordToBuild.getText().length()) {
+                if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP)
+                        .substring(0, wordToBuild.getText().length()))) {
+                    // yes this is still an issue:
+                    // problem when what's in textbox is longer than the correct word??
+                    // doesn't prev if statement take care of that?
+                    // specifically on level 3 syllables ??
 
-                //orange if there is no tile/key option that would allow you to continue correctly
+                    // Word, so far, spelled correctly, but a less than complete match
+                    // orange=true if there is no tile/key option that would allow you to continue correctly
+                    if (challengeLevel == 1 || challengeLevel == 2 || syllableGame.equals("S")){
+                        boolean orange = false;
+                        for (int i = 0; i < keysClicked.size(); i++){
 
-                //use keysClicked and parsedWordArrayFinal
-
-                /*
-                if (scriptDirection.compareTo("RTL") == 0){
-                    // think of parsedWordArrayFinal as always storing the tiles from LTR
-                    // but if user is clicking keys in RTL, must reverse keysClicked?
-                    // ex: ed - cb - a is parsedWordArrayFinal
-                    // users clicked keys in this order: a - cb - ed
-                    // reverse keysClicked to get ed - cb - a
-
-                    List<String> keysClickedRTL = new ArrayList<String>(keysClicked);
-                    Collections.reverse(keysClickedRTL);
-
-                    // also need to get substring of wordInLOP beginning from the end of it
-                    String word = Start.wordList.stripInstructionCharacters(wordInLOP);
-                    StringBuilder RTLword = new StringBuilder();
-                    for (int i = word.length() - 1; i >= 0; i--) {
-                        RTLword.append(word.charAt(i));
-                    }
-
-                    String test = wordToBuild.getText().toString();
-                    if (wordToBuild.getText().toString().equals(RTLword.toString().substring(0, wordToBuild.getText().length()))) {
-                        // problem when what's in textbox is longer than the correct word??
-                        // doesn't prev if statement take care of that?
-                        // specifically on level 3 syllables ??
-
-                        // Word, so far, spelled correctly, but a less than complete match
-                        if (challengeLevel == 1 || challengeLevel == 2 || syllableGame.equals("S")){
-                            boolean orange = false;
-                            for (int i = 0; i < keysClicked.size(); i++){
-
-                                if (!keysClicked.get(i).equals(parsedWordArrayFinal.get(i))){
-                                    orange = true;
-                                    break;
-                                }
+                            if (!keysClicked.get(i).equals(parsedWordArrayFinal.get(i))){
+                                orange = true;
+                                break;
                             }
-
-                            if (orange){
-                                // indicates that there is no key available to continue correctly; ex: you typed i but need í
-                                wordToBuild.setBackgroundColor(Color.parseColor("#F44336")); // orange
-                            }else{
-                                wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
-                            }
-                            wordToBuild.setTextColor(Color.parseColor("#000000")); // black
-                        }else {
-                            wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B"));
-                            wordToBuild.setTextColor(Color.parseColor("#000000")); // black
                         }
 
-                    }
-                }else{
-
-                     */
-                    if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP)
-                            .substring(0, wordToBuild.getText().length()))) {
-                        // yes this is still an issue:
-                        // problem when what's in textbox is longer than the correct word??
-                        // doesn't prev if statement take care of that?
-                        // specifically on level 3 syllables ??
-
-                        // Word, so far, spelled correctly, but a less than complete match
-                        if (challengeLevel == 1 || challengeLevel == 2 || syllableGame.equals("S")){
-                            boolean orange = false;
-                            for (int i = 0; i < keysClicked.size(); i++){
-
-                                if (!keysClicked.get(i).equals(parsedWordArrayFinal.get(i))){
-                                    orange = true;
-                                    break;
-                                }
-                            }
-
-                            if (orange){
-                                // indicates that there is no key available to continue correctly; ex: you typed i but need í
-                                wordToBuild.setBackgroundColor(Color.parseColor("#F44336")); // orange
-                            }else{
-                                wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
-                            }
-                            wordToBuild.setTextColor(Color.parseColor("#000000")); // black
-                        }else {
-                            wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B"));
-                            wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+                        if (orange){
+                            wordToBuild.setBackgroundColor(Color.parseColor("#F44336")); // orange
+                        }else{
+                            wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
                         }
-
+                        wordToBuild.setTextColor(Color.parseColor("#000000")); // black
+                    }else {
+                        wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B"));
+                        wordToBuild.setTextColor(Color.parseColor("#000000")); // black
                     }
                 }
-
             }
+
         }
+    }
 
     public void deleteLastKeyedLetter (View view) {
 
@@ -682,10 +590,9 @@ public class Colombia extends GameActivity {
 
     }
 
-    public void deleteLastKeyed (View view) { //JP
+    public void deleteLastKeyed (View view) { // JP
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-
 
         String typedLettersSoFar = wordToBuild.getText().toString();
         String nowWithOneLessSyll = "";

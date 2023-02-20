@@ -10,11 +10,9 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.Scanner;
-import java.util.logging.Logger;
+
 
 public class Resources extends AppCompatActivity {
 
@@ -37,8 +35,6 @@ public class Resources extends AppCompatActivity {
             R.id.resourceText01, R.id.resourceText02, R.id.resourceText03, R.id.resourceText04, R.id.resourceText05, R.id.resourceText06
     };
 
-    private static final Logger LOGGER = Logger.getLogger( Resources.class.getName() );
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -50,9 +46,7 @@ public class Resources extends AppCompatActivity {
         setTitle(Start.localAppName);
 
         buildResourcesArray();
-        LOGGER.info("Remember: resources array built");
         loadResources();
-        LOGGER.info("Remember: resources loaded");
 
         if(scriptDirection.compareTo("RTL") == 0){
             forceRTLIfSupported();
@@ -71,7 +65,7 @@ public class Resources extends AppCompatActivity {
     public void buildResourcesArray() {
 
         boolean header = true;
-        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_resources)); // prep scan of aa_resources.txt
+        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_resources));
 
         String[][] tempResourcesList = new String[8][3];      // 7 = hard-coded at six until you make a scrollable window for more links
 
@@ -178,9 +172,8 @@ public class Resources extends AppCompatActivity {
 
     }
 
-    private void updateResources() {
+    private void updateResources() { // This routine will only be called when there are seven or more resources (the layout has space for six)
 
-// This routine will only be called when there are seven or more resources (the layout has space for six)
         int resourcesLimit;
         if(totalScreens == resourcesScreenNo) {
             resourcesLimit = partial;

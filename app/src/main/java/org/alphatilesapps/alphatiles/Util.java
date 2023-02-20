@@ -1,11 +1,10 @@
 package org.alphatilesapps.alphatiles;
 
-import java.util.Random;
 import java.util.logging.Logger;
 
 public class Util {
 
-    static int parsedWordTileLength = 0;  // this is an exact requirement, no more, no less; each word in the LOP (language of play) has an exact length in game tiles
+    static int parsedWordTileLength = 0;  // This is an exact requirement, no more, no less; each word in the LOP (language of play) has an exact length in game tiles
     
     private static final Logger LOGGER = Logger.getLogger( Util.class.getName() );
 
@@ -17,9 +16,7 @@ public class Util {
                 count++;
             }
         }
-
         return count;
-
     }
 
     public static String returnPlayerStringToAppend(int playerNumber) {

@@ -7,12 +7,10 @@ import android.graphics.Color;
 import android.graphics.Insets;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowMetrics;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.os.Build;
 import android.content.Context;
@@ -26,10 +24,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -92,8 +88,6 @@ public class Ecuador extends GameActivity {
         }
         return audioInstructionsResID;
     }
-
-    private static final Logger LOGGER = Logger.getLogger(Ecuador.class.getName());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,14 +195,8 @@ public class Ecuador extends GameActivity {
             usableHeight = heightDisplay - getNavigationBarSize(this).y;
         }
 
-        LOGGER.info("Remember: heightDisplay = " + heightDisplay);
-        LOGGER.info("Remember: widthDisplay = " + widthDisplay);
-
 //        Point xyz = getNavigationBarSize(this);
         int usableWidth = widthDisplay;
-        LOGGER.info("Remember: usableHeight = " + usableHeight);
-        LOGGER.info("Remember: usableWidth = " + usableWidth);
-        LOGGER.info("Remember: NavigationBarHeight = " + (heightDisplay - usableHeight));
 
         int minX1 = 0;
         int minY1 = (int) (usableHeight * 0.22);    // This is taken from the gridline H2 (20%) plus 2% margin
@@ -223,11 +211,6 @@ public class Ecuador extends GameActivity {
 
         int bufferX = (int) (usableWidth * 0.05);
         int bufferY = (int) (usableHeight * 0.05);
-
-        LOGGER.info("Remember: minX1 = " + minX1);
-        LOGGER.info("Remember: maxX2 = " + maxX2);
-        LOGGER.info("Remember: minY1 = " + minY1);
-        LOGGER.info("Remember: maxY2 = " + maxY2);
 
         final int hwRatio = 4;
 
@@ -271,8 +254,6 @@ public class Ecuador extends GameActivity {
                 if (coordX2 > maxX2) {outOfBounds = true;}
                 if (coordY2 > maxY2) {outOfBounds = true;}
 
-//                LOGGER.info("Remember: overlap = " + overlap + " and outOfBounds = " + outOfBounds);
-
                 if (overlap || outOfBounds) {
                     setValues = false;
                 }
@@ -293,8 +274,6 @@ public class Ecuador extends GameActivity {
                 outOfBounds = false;
                 if (coordX2 > maxX2) {outOfBounds = true;}
                 if (coordY2 > maxY2) {outOfBounds = true;}
-
-//                LOGGER.info("Remember: overlap = " + overlap + " and outOfBounds = " + outOfBounds);
 
                 if (overlap || outOfBounds) {
                     setValues = false;
@@ -318,7 +297,6 @@ public class Ecuador extends GameActivity {
                     extraLoops = 0;
                 }
             }
-//            LOGGER.info("Remember: currentBoxIndex =" + currentBoxIndex + " and extraLoops = " + extraLoops);
         }
 
         for (int c = 0; c < TILE_BUTTONS.length; c++) {
@@ -330,7 +308,6 @@ public class Ecuador extends GameActivity {
                 @Override
                 public void run() {
 
-                    //RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) wordTile.getLayoutParams();
                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) wordTile.getLayoutParams();
 
                     // X1, Y1, X2, Y2
@@ -340,7 +317,6 @@ public class Ecuador extends GameActivity {
 
                     wordTile.setX(boxCoordinates[finalC][0]);
                     wordTile.setY(boxCoordinates[finalC][1]);
-                    LOGGER.info("Remember: " + wordTile.getText() + ": X = (" + boxCoordinates[finalC][0] + "-" + boxCoordinates[finalC][2] + "), Y = (" + boxCoordinates[finalC][1] + "-" + boxCoordinates[finalC][3] + ")");
                 }
             });
         }

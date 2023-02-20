@@ -8,11 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.logging.Logger;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -39,8 +37,6 @@ public class China extends GameActivity {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04
     };
 
-    private static final Logger LOGGER = Logger.getLogger(China.class.getName());
-
     @Override
     protected void centerGamesHomeImage() {
 
@@ -62,7 +58,6 @@ public class China extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try{
-//          audioInstructionsResID = res.getIdentifier("georgia_" + challengeLevel, "raw", context.getPackageName());
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
 
         }
@@ -74,14 +69,11 @@ public class China extends GameActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        LOGGER.info("Remember: A: pre super.onCreate");
         super.onCreate(savedInstanceState);
-        LOGGER.info("Remember: B: post super.onCreate");
         context = this;
         setContentView(R.layout.china);
         int gameID = R.id.chinaCL;
-        LOGGER.info("Remember: C: setContentView complete");
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         points = getIntent().getIntExtra("points", 0); // KP
         chinaPoints = getIntent().getIntExtra("chinaPoints", 0); // LM
@@ -96,8 +88,6 @@ public class China extends GameActivity {
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
-
-        LOGGER.info("Remember: D: three intents gotten");
 
         String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
@@ -188,16 +178,14 @@ public class China extends GameActivity {
             tileLength = tilesInArray(Start.tileList.parseWordIntoTiles(threeFourWordInLopLwc[i][1]));
             for (int j = 0; j < i; j++) {
                 if (threeFourWordInLopLwc[i][0].equals(threeFourWordInLopLwc[j][0])) {
-                    LOGGER.info("Remember: word rejected for repeating already selected word");
                     i--;
                 } else if (tileLength != 4) {
-                    LOGGER.info("Remember: word rejected for not being 4 tiles long");
                     i--;
                 }
             }
         }
 
-        //For the last word
+        // For the last word
         boolean cont = true;
         while (cont) {
             randomNum = rand.nextInt(Start.wordList.size());
@@ -206,7 +194,6 @@ public class China extends GameActivity {
             oneThreeWordInLopLwc[1] = Start.wordList.get(randomNum).localWord;
             tileLength = tilesInArray(Start.tileList.parseWordIntoTiles(oneThreeWordInLopLwc[1]));
             if (tileLength == 3) {
-                LOGGER.info("Remember: word is 3 tiles long");
                 cont = false;
             }
         }
@@ -231,7 +218,6 @@ public class China extends GameActivity {
         image.setVisibility(View.VISIBLE);
 
         if (tiles.size() != 15){
-            LOGGER.info("Remember: Words not long enough.  Trying again.");
             chooseWords();
             setUpTiles();
             return;
@@ -287,22 +273,15 @@ public class China extends GameActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
-        LOGGER.info("Remember: about to create tileOfTargetRow");
-
         String blankTag = String.valueOf(blankTile.getTag());
 
-        LOGGER.info("Remember: blankTag = " + blankTag);
-
         int tileOfTargetRow = Integer.parseInt(blankTag);
-
-        LOGGER.info("Remember: tileOfTargetRow = " + tileOfTargetRow);
 
         int tileNo = justClickedTile - 1; //  justClickedTile uses 1 to 16, tileNo uses the array ID (between [0] and [15]
         TextView tileSelected = findViewById(TILE_BUTTONS[tileNo]);
 
         if (isSlideable(tileNo)){
             swapTiles(tileSelected, blankTile);
-            LOGGER.info("Remember: pre checkLineForSolve ... tileOfTargetRow = " + tileOfTargetRow);
         }
 
         checkLineForSolve(1);
@@ -337,14 +316,6 @@ public class China extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-//            for (int tileButton : TILE_BUTTONS) {
-//                TextView gameTile = findViewById(tileButton);
-//                if (gameTile != blankTile) {
-//                    String wordColorStr = "#4CAF50"; // theme green
-//                    int wordColorNo = Color.parseColor(wordColorStr);
-//                    gameTile.setBackgroundColor(wordColorNo);
-//                }
-//            }
             playCorrectFinalSound();
             setAllTilesUnclickable();
             setOptionsRowClickable();
@@ -362,22 +333,15 @@ public class China extends GameActivity {
 
     private void checkLineForSolve(int tileInRowToCheck){
 
-        LOGGER.info("Remember: just started private void checkLineForSolve(int tileInRowToCheck) ");
-        LOGGER.info("Remember: checkLineForSolve tileInRowToCheck = " + tileInRowToCheck);
-
         int row = ((tileInRowToCheck - 1) / 4) + 1;
-        LOGGER.info("Remember: row = " + row);
         int leftMostTile = (row - 1) * 4;
-        LOGGER.info("Remember: leftMostTile = " + leftMostTile);
 
         String gridWord = "";
         String correctWord = "";
         if (row < 4) {
             correctWord = Start.wordList.stripInstructionCharacters(threeFourWordInLopLwc[row - 1][1]);
-            LOGGER.info("Remember: correctWord = " + correctWord);
         } else {
             correctWord = Start.wordList.stripInstructionCharacters(oneThreeWordInLopLwc[1]);
-            LOGGER.info("Remember: correctWord = " + correctWord);
         }
         TextView gameTile1 = findViewById(TILE_BUTTONS[leftMostTile]);
         TextView gameTile2 = findViewById(TILE_BUTTONS[leftMostTile + 1]);
@@ -391,44 +355,32 @@ public class China extends GameActivity {
             }
         }
 
-        LOGGER.info("Remember: gridWord = " + gridWord);
         if (gridWord.equals(correctWord)) {
-            LOGGER.info("Remember: gridWord matches correctWord");
             solvedLines[row - 1] = true;
-            LOGGER.info("Remember: solvedLines set to true");
             for (int i = leftMostTile; i <= (leftMostTile + 3); i++) {
-                LOGGER.info("Remember: i = " + i);
                 TextView gameTile = findViewById(TILE_BUTTONS[i]);
                 if (gameTile == blankTile) {
                     String wordColorStr = "#FFFFFF"; //white
                     int wordColorNo = Color.parseColor(wordColorStr);
                     gameTile.setBackgroundColor(wordColorNo);
-                    LOGGER.info("Remember: background color changed");
                 } else {
                     String wordColorStr = "#4CAF50"; //theme green
                     int wordColorNo = Color.parseColor(wordColorStr);
                     gameTile.setBackgroundColor(wordColorNo);
-                    LOGGER.info("Remember: background color changed");
                 }
             }
         } else {
-            LOGGER.info("Remember: gridWord does NOT match correctWord");
-            LOGGER.info("Remember: row = " + row);
             solvedLines[row - 1] = false;
-            LOGGER.info("Remember: solvedLines set to false");
             for (int i = leftMostTile; i <= (leftMostTile + 3); i++) {
-                LOGGER.info("Remember: i = " + i);
                 TextView gameTile = findViewById(TILE_BUTTONS[i]);
                 if (gameTile == blankTile) {
                     String wordColorStr = "#FFFFFF"; //white
                     int wordColorNo = Color.parseColor(wordColorStr);
                     gameTile.setBackgroundColor(wordColorNo);
-                    LOGGER.info("Remember: background color changed");
                 } else {
                     String wordColorStr = "#000000"; //black
                     int wordColorNo = Color.parseColor(wordColorStr);
                     gameTile.setBackgroundColor(wordColorNo);
-                    LOGGER.info("Remember: background color changed");
                 }
             }
         }
@@ -469,7 +421,6 @@ public class China extends GameActivity {
             slideable = (tileToCheck == blankTile);
         }
 
-        LOGGER.info("Remember: slideable " + slideable);
         return slideable;
     }
 
