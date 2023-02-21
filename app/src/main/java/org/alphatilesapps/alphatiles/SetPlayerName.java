@@ -19,8 +19,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import java.util.logging.Logger;
-
 import static org.alphatilesapps.alphatiles.Start.keyList;
 
 public class SetPlayerName extends AppCompatActivity {
@@ -42,9 +40,8 @@ public class SetPlayerName extends AppCompatActivity {
             R.id.key31, R.id.key32, R.id.key33, R.id.key34, R.id.key35
     };
 
-    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336","#4CAF50","#E91E63"};
+    private static final String[] COLORS = {"#9C27B0", "#2196F3", "#F44336", "#4CAF50", "#E91E63"};
 
-    private static final Logger LOGGER = Logger.getLogger(SetPlayerName.class.getName());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +51,9 @@ public class SetPlayerName extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_player_name);
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.compareTo("RTL") == 0) { // LM: flips images for RTL layouts. LTR is default
             ImageView deleteImage = (ImageView) findViewById(R.id.deleteImage);
             ImageView avatarImage = (ImageView) findViewById(R.id.avatar);
 
@@ -76,9 +73,7 @@ public class SetPlayerName extends AppCompatActivity {
 
         String defaultName;
         String playerName;
-        // defaultName = Start.localWordForName + " " + playerNumber;
 
-        // nameID = n + 1;
         String localWordForName = Start.langInfoList.find("NAME in local language");
         if (localWordForName.equals("custom")) {
             defaultName = Start.nameList.get(playerNumber);
@@ -98,14 +93,13 @@ public class SetPlayerName extends AppCompatActivity {
 
         setTextSizes();
 
-        if (name.getText().length() > 0 ) {
+        if (name.getText().length() > 0) {
             name.setSelection(name.getText().length());
         }
 
-        if(scriptDirection.compareTo("RTL")==0){
+        if (scriptDirection.compareTo("RTL") == 0) {
             forceRTLIfSupported();
-        }
-        else{
+        } else {
             forceLTRIfSupported();
         }
 
@@ -185,12 +179,12 @@ public class SetPlayerName extends AppCompatActivity {
         if (keysInUse > KEYS.length) {
             TextView key34 = findViewById(KEYS[KEYS.length - 2]);
             key34.setBackgroundResource(R.drawable.zz_backward_green);
-            if(scriptDirection.compareTo("RTL")==0){ //LM: LTR is default
+            if (scriptDirection.compareTo("RTL") == 0) { //LM: LTR is default
                 key34.setRotationY(180);
             }
             key34.setText("");
             TextView key35 = findViewById(KEYS[KEYS.length - 1]);
-            if(scriptDirection.compareTo("RTL")==0){ //LM: LTR is default
+            if (scriptDirection.compareTo("RTL") == 0) { //LM: LTR is default
                 key35.setRotationY(180);
             }
             key35.setBackgroundResource(R.drawable.zz_forward_green);
@@ -220,13 +214,13 @@ public class SetPlayerName extends AppCompatActivity {
         String currentName = avatarName.getText() + tileToAdd;
         avatarName.setText(currentName);
 
-        if (avatarName.getText().length() > 0 ) {
+        if (avatarName.getText().length() > 0) {
             avatarName.setSelection(avatarName.getText().length());
         }
 
     }
 
-    public void deleteLastKeyedLetter (View view) {
+    public void deleteLastKeyedLetter(View view) {
 
         EditText avatarName = (EditText) findViewById(R.id.avatarName);
 
@@ -241,7 +235,7 @@ public class SetPlayerName extends AppCompatActivity {
 
         avatarName.setText(nowWithOneLessChar);
 
-        if (avatarName.getText().length() > 0 ) {
+        if (avatarName.getText().length() > 0) {
             avatarName.setSelection(avatarName.getText().length());
         }
 
@@ -249,7 +243,7 @@ public class SetPlayerName extends AppCompatActivity {
 
     public void onBtnClick(View view) {
 
-        int justClickedKey = Integer.parseInt((String)view.getTag());
+        int justClickedKey = Integer.parseInt((String) view.getTag());
         // Next line says ... if a basic keyboard (which all fits on one screen) or (even when on a complex keyboard) if something other than the last two buttons (the two arrows) are tapped...
         if (keysInUse <= KEYS.length || justClickedKey <= (KEYS.length - 2)) {
             int keyIndex = (33 * (keyboardScreenNo - 1)) + justClickedKey - 1;
@@ -277,7 +271,7 @@ public class SetPlayerName extends AppCompatActivity {
         // This routine will only be called from complex keyboards (more keys than will fit on the basic 35-key layout)
 
         int keysLimit;
-        if(totalScreens == keyboardScreenNo) {
+        if (totalScreens == keyboardScreenNo) {
             keysLimit = partial;
             for (int k = keysLimit; k < (KEYS.length - 2); k++) {
                 TextView key = findViewById(KEYS[k]);
@@ -300,23 +294,17 @@ public class SetPlayerName extends AppCompatActivity {
 
     }
 
-    public void acceptName (View view) {
+    public void acceptName(View view) {
 
         String playerName;
 
-        LOGGER.info("Remember: about to set redID" );
-
         EditText name = findViewById(R.id.avatarName);
         playerName = name.getText().toString();
-
-        LOGGER.info("Remember: playerName = " + playerName);
 
         SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("storedName" + playerString, playerName);
         editor.apply();
-
-        LOGGER.info("Remember: editor.apply() complete");
 
         Intent intent = getIntent();
         intent.setClass(context, Earth.class);
@@ -326,17 +314,15 @@ public class SetPlayerName extends AppCompatActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void forceRTLIfSupported()
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+    private void forceRTLIfSupported() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void forceLTRIfSupported()
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+    private void forceLTRIfSupported() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
     }

@@ -20,12 +20,9 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.ChoosePlayer.SHARED_PREFS;
-import static org.alphatilesapps.alphatiles.Start.correctFinalSoundDuration;
 import static org.alphatilesapps.alphatiles.Start.gameList;
-import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
@@ -44,55 +41,56 @@ public abstract class GameActivity extends AppCompatActivity {
     Context context;
     String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
-	int points;
-	int brazilPoints, chinaPoints, colombiaPoints, ecuadorPoints, georgiaPoints, italyPoints, japanPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
-	int challengeLevel = -1;
-	Boolean brazilHasChecked12Trackers, chinaHasChecked12Trackers, colombiaHasChecked12Trackers, ecuadorHasChecked12Trackers, georgiaHasChecked12Trackers, italyHasChecked12Trackers, japanHasChecked12Trackers, mexicoHasChecked12Trackers, myanmarHasChecked12Trackers, peruHasChecked12Trackers, thailandHasChecked12Trackers, unitedStatesHasChecked12Trackers;
-	int playerNumber = -1;
-	int gameNumber = 0;
-	String syllableGame;
-	String country;
-	int visibleTiles;	
-	String className;
-	boolean hasChecked12Trackers;
+    int points;
+    int brazilPoints, chinaPoints, colombiaPoints, ecuadorPoints, georgiaPoints, italyPoints, japanPoints, mexicoPoints, myanmarPoints, peruPoints, thailandPoints, unitedStatesPoints;
+    int challengeLevel = -1;
+    Boolean brazilHasChecked12Trackers, chinaHasChecked12Trackers, colombiaHasChecked12Trackers, ecuadorHasChecked12Trackers, georgiaHasChecked12Trackers, italyHasChecked12Trackers, japanHasChecked12Trackers, mexicoHasChecked12Trackers, myanmarHasChecked12Trackers, peruHasChecked12Trackers, thailandHasChecked12Trackers, unitedStatesHasChecked12Trackers;
+    int playerNumber = -1;
+    int gameNumber = 0;
+    String syllableGame;
+    String country;
+    int visibleTiles;
+    String className;
+    boolean hasChecked12Trackers;
 
-	ArrayList<String> parsedWordArrayFinal;
-	ArrayList<String> parsedWordSyllArrayFinal;
+    ArrayList<String> parsedWordArrayFinal;
+    ArrayList<String> parsedWordSyllArrayFinal;
 
-	String wordInLWC = "";    // the lWC word (e.g. Spanish), which exactly matches the image and audio file names
-	String wordInLOP = "";    // the corresponding word in the language of play (e.g. Me'phaa)
-	int trackerCount = 0;
-	boolean mediaPlayerIsPlaying = false;
-	boolean repeatLocked = true;
-	Handler soundSequencer;
+    String wordInLWC = "";    // the lWC word (e.g. Spanish), which exactly matches the image and audio file names
+    String wordInLOP = "";    // the corresponding word in the language of play (e.g. Me'phaa)
+    int trackerCount = 0;
+    boolean mediaPlayerIsPlaying = false;
+    boolean repeatLocked = true;
+    Handler soundSequencer;
 
-	protected static final int[] TRACKERS = {
-			R.id.tracker01, R.id.tracker02, R.id.tracker03, R.id.tracker04, R.id.tracker05, R.id.tracker06, R.id.tracker07, R.id.tracker08, R.id.tracker09, R.id.tracker10,
-			R.id.tracker11, R.id.tracker12
+    protected static final int[] TRACKERS = {
+            R.id.tracker01, R.id.tracker02, R.id.tracker03, R.id.tracker04, R.id.tracker05, R.id.tracker06, R.id.tracker07, R.id.tracker08, R.id.tracker09, R.id.tracker10,
+            R.id.tracker11, R.id.tracker12
 
-	};
-	
-	protected abstract int[] getTileButtons();	
-	protected abstract int[] getWordImages();
-	protected abstract int getAudioInstructionsResID();
-	protected abstract void centerGamesHomeImage();
+    };
 
-	private static final Logger LOGGER = Logger.getLogger( GameActivity.class.getName() );
+    protected abstract int[] getTileButtons();
 
-	@Override
-	protected void onCreate(Bundle state) {
-		context = this;
-		
-		soundSequencer = new Handler(Looper.getMainLooper());	
+    protected abstract int[] getWordImages();
+
+    protected abstract int getAudioInstructionsResID();
+
+    protected abstract void centerGamesHomeImage();
+
+    @Override
+    protected void onCreate(Bundle state) {
+        context = this;
+
+        soundSequencer = new Handler(Looper.getMainLooper());
 
         points = getIntent().getIntExtra("points", 0);
         brazilPoints = getIntent().getIntExtra("brazilPoints", 0);
-		chinaPoints = getIntent().getIntExtra("chinaPoints", 0);
+        chinaPoints = getIntent().getIntExtra("chinaPoints", 0);
         colombiaPoints = getIntent().getIntExtra("colombiaPoints", 0);
         ecuadorPoints = getIntent().getIntExtra("ecuadorPoints", 0);
         georgiaPoints = getIntent().getIntExtra("georgiaPoints", 0);
-		italyPoints = getIntent().getIntExtra("italyPoints", 0);
-		japanPoints = getIntent().getIntExtra("japanPoints", 0);
+        italyPoints = getIntent().getIntExtra("italyPoints", 0);
+        japanPoints = getIntent().getIntExtra("japanPoints", 0);
         mexicoPoints = getIntent().getIntExtra("mexicoPoints", 0);
         myanmarPoints = getIntent().getIntExtra("myanmarPoints", 0);
         peruPoints = getIntent().getIntExtra("peruPoints", 0);
@@ -103,67 +101,64 @@ public abstract class GameActivity extends AppCompatActivity {
         syllableGame = getIntent().getStringExtra("syllableGame");
         gameNumber = getIntent().getIntExtra("gameNumber", 0);
         country = getIntent().getStringExtra("country");
-		String playerString = Util.returnPlayerStringToAppend(playerNumber);
-		SharedPreferences access = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-		trackerCount = access.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player"
-				+ playerString + "_" + syllableGame, 0);
+        String playerString = Util.returnPlayerStringToAppend(playerNumber);
+        SharedPreferences access = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        trackerCount = access.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player"
+                + playerString + "_" + syllableGame, 0);
         brazilHasChecked12Trackers = getIntent().getBooleanExtra("brazilHasChecked12Trackers", false);
-		chinaHasChecked12Trackers = getIntent().getBooleanExtra("chinaHasChecked12Trackers", false);
+        chinaHasChecked12Trackers = getIntent().getBooleanExtra("chinaHasChecked12Trackers", false);
         colombiaHasChecked12Trackers = getIntent().getBooleanExtra("columbiaHasChecked12Trackers", false);
         ecuadorHasChecked12Trackers = getIntent().getBooleanExtra("ecuadorHasChecked12Trackers", false);
         georgiaHasChecked12Trackers = getIntent().getBooleanExtra("georgiaHasChecked12Trackers", false);
-		italyHasChecked12Trackers = getIntent().getBooleanExtra("italyHasChecked12Trackers", false);
-		japanHasChecked12Trackers = getIntent().getBooleanExtra("japanHasChecked12Trackers", false);
+        italyHasChecked12Trackers = getIntent().getBooleanExtra("italyHasChecked12Trackers", false);
+        japanHasChecked12Trackers = getIntent().getBooleanExtra("japanHasChecked12Trackers", false);
         mexicoHasChecked12Trackers = getIntent().getBooleanExtra("mexicoHasChecked12Trackers", false);
         myanmarHasChecked12Trackers = getIntent().getBooleanExtra("myanmarHasChecked12Trackers", false);
         peruHasChecked12Trackers = getIntent().getBooleanExtra("peruHasChecked12Trackers", false);
         thailandHasChecked12Trackers = getIntent().getBooleanExtra("thailandHasChecked12Trackers", false);
         unitedStatesHasChecked12Trackers = getIntent().getBooleanExtra("unitedStatesHasChecked12Trackers", false);
 
-		className = getClass().getName();
+        className = getClass().getName();
 
-		if(scriptDirection.compareTo("RTL") == 0){
-			forceRTLIfSupported();
-		}
-		else{
-			forceLTRIfSupported();
-		}
+        if (scriptDirection.compareTo("RTL") == 0) {
+            forceRTLIfSupported();
+        } else {
+            forceLTRIfSupported();
+        }
 
-		super.onCreate(state);
+        super.onCreate(state);
 
-	}
+    }
 
-	public void goBackToEarth(View view) {
-		Intent intent = getIntent();
-		intent.setClass(context, Earth.class);	// so we retain the Extras
-		startActivity(intent);
-		finish();
+    public void goBackToEarth(View view) {
+        Intent intent = getIntent();
+        intent.setClass(context, Earth.class);    // so we retain the Extras
+        startActivity(intent);
+        finish();
 
-	}
+    }
 
-	public void goBackToChoosePlayer(View view) {
+    public void goBackToChoosePlayer(View view) {
 
-		if (mediaPlayerIsPlaying)
-		{
-			return;
-		}
-		startActivity(new Intent(context, ChoosePlayer.class));
-		finish();
+        if (mediaPlayerIsPlaying) {
+            return;
+        }
+        startActivity(new Intent(context, ChoosePlayer.class));
+        finish();
 
-	}
+    }
 
-	public void goToAboutPage(View view) {
+    public void goToAboutPage(View view) {
 
-		Intent intent = getIntent();
-		intent.setClass(context, About.class);
-		startActivity(intent);
+        Intent intent = getIntent();
+        intent.setClass(context, About.class);
+        startActivity(intent);
 
-	}
+    }
 
-	protected void updateTrackers() {
+    protected void updateTrackers() {
 
-		for (int t = 0; t < TRACKERS.length; t++)
-		{
+        for (int t = 0; t < TRACKERS.length; t++) {
 
             ImageView tracker = findViewById(TRACKERS[t]);
             if (t < trackerCount) {
@@ -215,25 +210,25 @@ public abstract class GameActivity extends AppCompatActivity {
                     Intent intent = getIntent(); //gets intent that launched the current activity
                     String project = "org.alphatilesapps.alphatiles.";
                     boolean foundNextUncompletedGame = false;
-					int repeat = 0;
+                    int repeat = 0;
 
                     while (foundNextUncompletedGame == false && repeat < gameList.size()) {
 
-						String country;
-						gameNumber = gameNumber + 1;
-						if (gameNumber - 1 < gameList.size()){
-							challengeLevel = Integer.valueOf(gameList.get(gameNumber-1).gameLevel); //challengeLevel of next game
-							syllableGame = gameList.get(gameNumber-1).gameMode; // S or T
-							country = gameList.get(gameNumber-1).gameCountry; //country of next game
-						} else{
-							gameNumber = 1;
-							challengeLevel = Integer.valueOf(gameList.get(0).gameLevel); //challengeLevel of next game
-							syllableGame = gameList.get(0).gameMode; // S or T
-							country = gameList.get(0).gameCountry; //country of next game
-						}
-						String activityClass = project + country;
+                        String country;
+                        gameNumber = gameNumber + 1;
+                        if (gameNumber - 1 < gameList.size()) {
+                            challengeLevel = Integer.valueOf(gameList.get(gameNumber - 1).gameLevel); //challengeLevel of next game
+                            syllableGame = gameList.get(gameNumber - 1).gameMode; // S or T
+                            country = gameList.get(gameNumber - 1).gameCountry; //country of next game
+                        } else {
+                            gameNumber = 1;
+                            challengeLevel = Integer.valueOf(gameList.get(0).gameLevel); //challengeLevel of next game
+                            syllableGame = gameList.get(0).gameMode; // S or T
+                            country = gameList.get(0).gameCountry; //country of next game
+                        }
+                        String activityClass = project + country;
 
-						try {
+                        try {
                             intent.setClass(context, Class.forName(activityClass));
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
@@ -242,13 +237,13 @@ public abstract class GameActivity extends AppCompatActivity {
                         String playerString = Util.returnPlayerStringToAppend(playerNumber);
                         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
                         hasChecked12Trackers = prefs.getBoolean("stored" + country +
-								"HasChecked12Trackers_level" + String.valueOf(challengeLevel) +
-								"_player" + playerString + "_" + syllableGame, false);
+                                "HasChecked12Trackers_level" + String.valueOf(challengeLevel) +
+                                "_player" + playerString + "_" + syllableGame, false);
 
                         if (!hasChecked12Trackers) {
                             foundNextUncompletedGame = true;
                             intent.putExtra("challengeLevel", challengeLevel);
-							intent.putExtra("syllableGame", syllableGame);
+                            intent.putExtra("syllableGame", syllableGame);
                             intent.putExtra("points", points);
                             intent.putExtra("gameNumber", gameNumber);
                             intent.putExtra("country", country);
@@ -257,7 +252,7 @@ public abstract class GameActivity extends AppCompatActivity {
                         } else {
                             //keep looping
                         }
-						repeat++;
+                        repeat++;
                     }
 
                     //If it's looped through all of the games and they're all complete, return to Earth
@@ -300,69 +295,54 @@ public abstract class GameActivity extends AppCompatActivity {
             TextView gameTile = findViewById(getTileButtons()[t]);
             gameTile.setClickable(true);
         }
+    }
 
-		/*for (int word : getTileButtons()) {
-			TextView nextWord = findViewById(word);
-			nextWord.setClickable(true);
-		}*/
+    protected void setOptionsRowUnclickable() {
+        ImageView repeatImage = findViewById(R.id.repeatImage);
+        ImageView wordImage = findViewById(R.id.wordImage);
+        repeatImage.setBackgroundResource(0);
+        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
+        repeatImage.setClickable(false);
+        if (wordImage != null)
+            wordImage.setClickable(false);
+        if (getWordImages() != null)
+            for (int i = 0; i < 4; i++) {
+                wordImage = findViewById(getWordImages()[i]);
+                wordImage.setClickable(false);
+            }
+    }
 
-		/*for (int t = 0; t < getTileButtons().length; t++)
-		{
-			TextView gameTile = findViewById(getTileButtons()[t]);
-			gameTile.setClickable(true);
-		}*/
-	}	
-	protected void setOptionsRowUnclickable()	
-	{	
-		ImageView repeatImage = findViewById(R.id.repeatImage);
-		ImageView wordImage = findViewById(R.id.wordImage);	
-		repeatImage.setBackgroundResource(0);	
-		repeatImage.setImageResource(R.drawable.zz_forward_inactive);	
-		repeatImage.setClickable(false);	
-		if (wordImage != null)	
-			wordImage.setClickable(false);	
-		if (getWordImages() != null)	
-			for (int i = 0; i < 4; i++)	
-			{	
-				wordImage = findViewById(getWordImages()[i]);	
-				wordImage.setClickable(false);	
-			}	
-	}	
-	protected void setOptionsRowClickable()	
-	{	
-		ImageView repeatImage = findViewById(R.id.repeatImage);
-		ImageView wordImage = findViewById(R.id.wordImage);	
-		ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);	
-		repeatImage.setBackgroundResource(0);	
-		repeatImage.setImageResource(R.drawable.zz_forward);	
-		repeatImage.setClickable(true);	
-		gamesHomeImage.setClickable(true);	
-		if (wordImage != null)	
-			wordImage.setClickable(true);	
-		if (getWordImages() != null)	
-			for (int i = 0; i < 4; i++)	
-			{	
-				wordImage = findViewById(getWordImages()[i]);	
-				wordImage.setClickable(true);	
-			}	
-	}	
-	public void clickPicHearAudio(View view)	
-	{	
-		playActiveWordClip(false);	
-	}	
-	protected void playActiveWordClip(final boolean playFinalSound)	
-	{	
-		if (tempSoundPoolSwitch){
-			playActiveWordClip1(playFinalSound);	//SoundPool
-		}
+    protected void setOptionsRowClickable() {
+        ImageView repeatImage = findViewById(R.id.repeatImage);
+        ImageView wordImage = findViewById(R.id.wordImage);
+        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
+        repeatImage.setBackgroundResource(0);
+        repeatImage.setImageResource(R.drawable.zz_forward);
+        repeatImage.setClickable(true);
+        gamesHomeImage.setClickable(true);
+        if (wordImage != null)
+            wordImage.setClickable(true);
+        if (getWordImages() != null)
+            for (int i = 0; i < 4; i++) {
+                wordImage = findViewById(getWordImages()[i]);
+                wordImage.setClickable(true);
+            }
+    }
 
-		else	
-			playActiveWordClip0(playFinalSound);	//MediaPlayer
-	}	
-	protected void playActiveWordClip1(final boolean playFinalSound)	
-	{	
-		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();
+    public void clickPicHearAudio(View view) {
+        playActiveWordClip(false);
+    }
+
+    protected void playActiveWordClip(final boolean playFinalSound) {
+        if (tempSoundPoolSwitch) {
+            playActiveWordClip1(playFinalSound);    //SoundPool
+        } else
+            playActiveWordClip0(playFinalSound);    //MediaPlayer
+    }
+
+    protected void playActiveWordClip1(final boolean playFinalSound) {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
 
         if (wordAudioIDs.containsKey(wordInLWC)) {
             gameSounds.play(wordAudioIDs.get(wordInLWC), 1.0f, 1.0f, 2, 0, 1.0f);
@@ -388,7 +368,6 @@ public abstract class GameActivity extends AppCompatActivity {
             }
         }, wordDurations.get(wordInLWC));
     }
-
 
     protected void playActiveWordClip0(final boolean playFinalSound) {
         setAllTilesUnclickable();
@@ -417,188 +396,168 @@ public abstract class GameActivity extends AppCompatActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
-		gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
 
-		soundSequencer.postDelayed(new Runnable()
-		{
-			public void run()
-			{
-				setAllTilesClickable();
-				setOptionsRowClickable();
-				playActiveWordClip(playFinalSound);
-			}
-		}, correctSoundDuration);
-	}
-	protected void playCorrectSoundThenActiveWordClip0(final boolean playFinalSound)	
-	{	
-		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();	
-		MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);	
-		mediaPlayerIsPlaying = true;	
-		mp2.start();	
-		mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener()	
-		{	
-			@Override	
-			public void onCompletion(MediaPlayer mp2)	
-			{
-				mp2.reset(); //JP: fixed "mediaplayer went away with unhandled events" issue
-				mp2.release();	
-				playActiveWordClip(playFinalSound);	
-			}	
-		});	
-	}	
-	protected void playIncorrectSound()	
-	{	
-		if (tempSoundPoolSwitch)	
-			playIncorrectSound1();	
-		else	
-			playIncorrectSound0();	
-	}	
-	protected void playIncorrectSound1()	
-	{	
-		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();
-		gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
-		setAllTilesClickable();	
-		setOptionsRowClickable();	
-	}	
-	protected void playIncorrectSound0()	
-	{	
-		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();	
-		MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);	
-		mediaPlayerIsPlaying = true;	
-		mp3.start();	
-		mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener()	
-		{	
-			@Override	
-			public void onCompletion(MediaPlayer mp3)	
-			{	
-				mediaPlayerIsPlaying = false;	
-				setAllTilesClickable();	
-				setOptionsRowClickable();
-				mp3.reset(); //JP
-				mp3.release();	
-			}	
-		});	
-	}	
-	protected void playCorrectFinalSound()	
-	{	
-		if (tempSoundPoolSwitch)	
-			playCorrectFinalSound1();	
-		else	
-			playCorrectFinalSound0();	
-	}	
-	protected void playCorrectFinalSound1()	
-	{	
-		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();
-		gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
-		setAllTilesClickable();	
-		setOptionsRowClickable();	
-	}	
-	protected void playCorrectFinalSound0()	
-	{	
-		setAllTilesUnclickable();	
-		setOptionsRowUnclickable();	
-		mediaPlayerIsPlaying = true;	
-		MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_correct_final);	
-		mp3.start();	
-		mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener()	
-		{	
-			@Override	
-			public void onCompletion(MediaPlayer mp3)	
-			{	
-				mediaPlayerIsPlaying = false;	
-				setAllTilesClickable();	
-				setOptionsRowClickable();
-				mp3.reset(); //JP
-				mp3.release();	
-			}	
-		});	
-	}
-	public void playAudioInstructions(View view){
-		/*setAllTilesUnclickable();
-		setOptionsRowUnclickable();
-		int instructionsSoundID = gameSounds.load(context, getAudioInstructionsResID(), 2);
-		gameSounds.play(instructionsSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
-		setAllTilesClickable();
-		setOptionsRowClickable();*/
+        soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                setAllTilesClickable();
+                setOptionsRowClickable();
+                playActiveWordClip(playFinalSound);
+            }
+        }, correctSoundDuration);
+    }
 
-		setAllTilesUnclickable();
-		setOptionsRowUnclickable();
-		mediaPlayerIsPlaying = true;
-		MediaPlayer mp3 = MediaPlayer.create(this, getAudioInstructionsResID());
-		mp3.start();
-		mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
-		{
-			@Override
-			public void onCompletion(MediaPlayer mp3)
-			{
-				mediaPlayerIsPlaying = false;
-				setAllTilesClickable();
-				setOptionsRowClickable();
-				mp3.release();
-			}
-		});
 
-	}
+    protected void playCorrectSoundThenActiveWordClip0(final boolean playFinalSound) {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
+        mediaPlayerIsPlaying = true;
+        mp2.start();
+        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp2) {
+                mp2.reset(); //JP: fixed "mediaplayer went away with unhandled events" issue
+                mp2.release();
+                playActiveWordClip(playFinalSound);
+            }
+        });
+    }
 
-	protected void mpCompletion(MediaPlayer mp, boolean isFinal)	
-	{	
-		if (isFinal)	
-		{	
-			trackerCount++;	
-			updateTrackers();	
-			repeatLocked = false;	
-			SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();	
-			String playerString = Util.returnPlayerStringToAppend(playerNumber);	
-			String uniqueGameLevelPlayerID = className + challengeLevel + playerString + syllableGame;
-			editor.putInt(uniqueGameLevelPlayerID, trackerCount);	
-			editor.apply();	
-			playCorrectFinalSound();	
-		}	
-		else	
-		{	
-			mediaPlayerIsPlaying = false;	
-			if (repeatLocked)	
-			{	
-				setAllTilesClickable();	
-			}	
-			setOptionsRowClickable();
-			mp.reset(); //JP
-			mp.release();	
-		}
+    protected void playIncorrectSound() {
+        if (tempSoundPoolSwitch)
+            playIncorrectSound1();
+        else
+            playIncorrectSound0();
+    }
 
-	}
+    protected void playIncorrectSound1() {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+        gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        setAllTilesClickable();
+        setOptionsRowClickable();
+    }
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-	private void forceRTLIfSupported()
-	{
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
-			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-		}
-	}
+    protected void playIncorrectSound0() {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
+        mediaPlayerIsPlaying = true;
+        mp3.start();
+        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp3) {
+                mediaPlayerIsPlaying = false;
+                setAllTilesClickable();
+                setOptionsRowClickable();
+                mp3.reset(); //JP
+                mp3.release();
+            }
+        });
+    }
 
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-	private void forceLTRIfSupported()
-	{
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
-			getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-		}
-	}
+    protected void playCorrectFinalSound() {
+        if (tempSoundPoolSwitch)
+            playCorrectFinalSound1();
+        else
+            playCorrectFinalSound0();
+    }
 
-	protected void fixConstraintsRTL(int gameID){
-		ConstraintLayout constraintLayout = findViewById(gameID);
-		ConstraintSet constraintSet = new ConstraintSet();
-		constraintSet.clone(constraintLayout);
-		constraintSet.connect(R.id.pointsImage,ConstraintSet.END,R.id.gamesHomeImage,ConstraintSet.START,0);
-		constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.START,R.id.pointsImage,ConstraintSet.END,0);
-		constraintSet.connect(R.id.instructions,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
-		constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.instructions,ConstraintSet.START,0);
-		constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.instructions,ConstraintSet.END,0);
-		constraintSet.connect(R.id.instructions,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
-		constraintSet.applyTo(constraintLayout);
-	}
+    protected void playCorrectFinalSound1() {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+        gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+        setAllTilesClickable();
+        setOptionsRowClickable();
+    }
+
+    protected void playCorrectFinalSound0() {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+        mediaPlayerIsPlaying = true;
+        MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_correct_final);
+        mp3.start();
+        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp3) {
+                mediaPlayerIsPlaying = false;
+                setAllTilesClickable();
+                setOptionsRowClickable();
+                mp3.reset(); //JP
+                mp3.release();
+            }
+        });
+    }
+
+    public void playAudioInstructions(View view) {
+        setAllTilesUnclickable();
+        setOptionsRowUnclickable();
+        mediaPlayerIsPlaying = true;
+        MediaPlayer mp3 = MediaPlayer.create(this, getAudioInstructionsResID());
+        mp3.start();
+        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp3) {
+                mediaPlayerIsPlaying = false;
+                setAllTilesClickable();
+                setOptionsRowClickable();
+                mp3.release();
+            }
+        });
+
+    }
+
+    protected void mpCompletion(MediaPlayer mp, boolean isFinal) {
+        if (isFinal) {
+            trackerCount++;
+            updateTrackers();
+            repeatLocked = false;
+            SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();
+            String playerString = Util.returnPlayerStringToAppend(playerNumber);
+            String uniqueGameLevelPlayerID = className + challengeLevel + playerString + syllableGame;
+            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
+            editor.apply();
+            playCorrectFinalSound();
+        } else {
+            mediaPlayerIsPlaying = false;
+            if (repeatLocked) {
+                setAllTilesClickable();
+            }
+            setOptionsRowClickable();
+            mp.reset(); //JP
+            mp.release();
+        }
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceRTLIfSupported() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceLTRIfSupported() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
+    }
+
+    protected void fixConstraintsRTL(int gameID) {
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.pointsImage, ConstraintSet.END, R.id.gamesHomeImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.START, R.id.pointsImage, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.instructions, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.instructions, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.instructions, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.instructions, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
+        constraintSet.applyTo(constraintLayout);
+    }
 
 }

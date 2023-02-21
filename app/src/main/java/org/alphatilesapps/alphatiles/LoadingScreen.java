@@ -33,19 +33,15 @@ import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 public class LoadingScreen extends AppCompatActivity {
 
     //JP June 2022: moved loading of all SoundPool audio into this activity
     //note: audio instructions use MediaPlayer, not SoundPool
 
-    private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
     private Handler mHandler = new Handler();
     Context context;
     ProgressBar progressBar;
@@ -56,7 +52,7 @@ public class LoadingScreen extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         progressBar = findViewById(R.id.progressBar);
         context = this;
@@ -76,7 +72,6 @@ public class LoadingScreen extends AppCompatActivity {
             @Override
             public void run() {
                 loadGameAudio();
-                LOGGER.info("Remember: initiated loadGameAudio()");
             }
         }).start();
 
@@ -84,26 +79,23 @@ public class LoadingScreen extends AppCompatActivity {
             @Override
             public void run() {
                 loadWordAudio();
-                LOGGER.info("Remember: initiated loadWordAudio()");
             }
         }).start();
 
-        if (hasTileAudio){
+        if (hasTileAudio) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     loadTileAudio();
-                    LOGGER.info("Remember: initiated loadTileAudio()");
                 }
             }).start();
         }
 
-        if (hasSyllableAudio){
+        if (hasSyllableAudio) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     loadSyllableAudio();
-                    LOGGER.info("Remember: initiated loadSyllableAudio()");
                 }
             }).start();
         }
@@ -112,16 +104,15 @@ public class LoadingScreen extends AppCompatActivity {
             @Override
             public void run() {
                 loadPixelWidthAdjustments();
-                LOGGER.info("Remember: initiated fillInPixelWidthAdjustments()");
             }
         }).start();
 
         //JP: alpha tiles colors separated into r,g,b
         //ex: the first color 6200EE corresponds to 98, 0, 1 in the 0 index of each array
         //for the progress bar
-        int[] reds = {98,55,3,0,156,33,244,76,233};
-        int[] greens = {0,0,218,255,39,150,67,175,30};
-        int[] blues = {238, 179,197,0,176,243,54,80,99};
+        int[] reds = {98, 55, 3, 0, 156, 33, 244, 76, 233};
+        int[] greens = {0, 0, 218, 255, 39, 150, 67, 175, 30};
+        int[] blues = {238, 179, 197, 0, 176, 243, 54, 80, 99};
 
         final int[] color_index = {0};
         final int[] mod_color = {0};
@@ -138,7 +129,7 @@ public class LoadingScreen extends AppCompatActivity {
                     @Override
                     public void run() {
                         progressBar.getProgressDrawable().setColorFilter(
-                                Color.rgb(reds[mod_color[0]],greens[mod_color[0]],blues[mod_color[0]]),
+                                Color.rgb(reds[mod_color[0]], greens[mod_color[0]], blues[mod_color[0]]),
                                 android.graphics.PorterDuff.Mode.SRC_IN);
                     }
                 });
@@ -146,35 +137,33 @@ public class LoadingScreen extends AppCompatActivity {
         }, 0, 1500);//wait 0 ms before doing the action and do it every 1500ms (1.5 sec)
 
         final int[] audio_loaded = {0}; //JP: tracks how many audio files have already been loaded
-        gameSounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener(){
+        gameSounds.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
 
-           float percentage = 0.0F;
+            float percentage = 0.0F;
 
-           @Override
-           public void onLoadComplete(SoundPool soundPool, int sampleId, int status)
-           {
-               //JP: this function is called when ANY audio file in the gameSounds SoundPool
-               //has finished loading, regardless of what activity that sound was loaded in
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                //JP: this function is called when ANY audio file in the gameSounds SoundPool
+                //has finished loading, regardless of what activity that sound was loaded in
 
-               audio_loaded[0]++; //JP: tracks how many audio files have been loaded so far
+                audio_loaded[0]++; //JP: tracks how many audio files have been loaded so far
 
-               percentage = ((float) audio_loaded[0] / (float) totalAudio) * 100;
+                percentage = ((float) audio_loaded[0] / (float) totalAudio) * 100;
 
-               mHandler.post(new Runnable() {
-                   @Override
-                   public void run() {
-                       progressBar.setProgress((int) percentage);
-                   }
-               });
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setProgress((int) percentage);
+                    }
+                });
 
-               //once all audio files have finished loading, launch ChoosePlayer
-               if (audio_loaded[0] == totalAudio){
-                   LOGGER.info("Remember: all audio loading complete");
-                   startActivity(intent);
-
-                   finish();
-               }
-           }});
+                //once all audio files have finished loading, launch ChoosePlayer
+                if (audio_loaded[0] == totalAudio) {
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
     }
 
     public void loadWordAudio() {
@@ -183,57 +172,55 @@ public class LoadingScreen extends AppCompatActivity {
         wordAudioIDs = new HashMap();
         wordDurations = new HashMap();
 
-        for (Start.Word word : wordList)
-        {
+        for (Start.Word word : wordList) {
             int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
-            int duration = getAssetDuration(resId)+100;
+            int duration = getAssetDuration(resId) + 100;
             wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 1));
             wordDurations.put(word.nationalWord, duration);
             word.duration = duration;
         }
     }
 
-    public void loadSyllableAudio(){
+    public void loadSyllableAudio() {
         Resources res = context.getResources();
         syllableAudioIDs = new HashMap();
         syllableDurations = new HashMap();
 
-        for (Start.Syllable syll : syllableList)
-        {
+        for (Start.Syllable syll : syllableList) {
             int resId = res.getIdentifier(syll.syllableAudioName, "raw", context.getPackageName());
-            int duration = getAssetDuration(resId)+100;
+            int duration = getAssetDuration(resId) + 100;
             syllableAudioIDs.put(syll.syllable, gameSounds.load(context, resId, 2));
             syllableDurations.put(syll.syllable, duration);
             syll.syllableDuration = duration;
         }
     }
 
-    public void loadTileAudio(){
+    public void loadTileAudio() {
         Resources res = context.getResources();
         tileAudioIDs = new HashMap(0);
         tileDurations = new HashMap();
 
         for (Start.Tile tile : tileList) {
             int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
-            int duration = getAssetDuration(resId)+100;
+            int duration = getAssetDuration(resId) + 100;
             tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
             tileDurations.put(tile.baseTile, duration);
             tile.tileDuration1 = duration;
 
-            if (tile.tileTypeB.compareTo("none")!= 0) {
+            if (tile.tileTypeB.compareTo("none") != 0) {
                 if (tile.audioForTileB.compareTo("X") != 0) {
                     resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
-                    duration = getAssetDuration(resId)+100;
+                    duration = getAssetDuration(resId) + 100;
                     tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
                     tileDurations.put(tile.baseTile + "B", duration);
                     tile.tileDuration2 = duration;
                     totalAudio++;
                 }
             }
-            if(tile.tileTypeC.compareTo("none")!= 0) {
+            if (tile.tileTypeC.compareTo("none") != 0) {
                 if (tile.audioForTileC.compareTo("X") != 0) {
                     resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
-                    duration = getAssetDuration(resId)+100;
+                    duration = getAssetDuration(resId) + 100;
                     tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
                     tileDurations.put(tile.baseTile + "C", duration);
                     tile.tileDuration3 = duration;
@@ -256,34 +243,31 @@ public class LoadingScreen extends AppCompatActivity {
     }
 
 
-    private int getAssetDuration(int assetID)
-    {
+    private int getAssetDuration(int assetID) {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         AssetFileDescriptor afd = context.getResources().openRawResourceFd(assetID);
         mmr.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
         return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
 
-    public void loadPixelWidthAdjustments(){
+    public void loadPixelWidthAdjustments() {
 
-        for (Start.Word word : wordList)
-        {
+        for (Start.Word word : wordList) {
             word.adjustment = String.valueOf(calculatedPixelWidthAdjustment(word.localWord));
         }
     }
 
-    private double calculatedPixelWidthAdjustment(String word){
+    private double calculatedPixelWidthAdjustment(String word) {
         TextView wordView = new TextView(this);
         wordView.setText(word);
         wordView.setTextSize(11);
-        wordView.measure(0,0);
+        wordView.measure(0, 0);
         int wordWidthInPixels = wordView.getMeasuredWidth();
 
-        if (wordWidthInPixels <= maxWordWidthInPixels){
+        if (wordWidthInPixels <= maxWordWidthInPixels) {
             return 1;
-        }
-        else{
-            return Math.round((maxWordWidthInPixels *100.0) /(wordWidthInPixels*100));
+        } else {
+            return Math.round((maxWordWidthInPixels * 100.0) / (wordWidthInPixels * 100));
         }
 
     }

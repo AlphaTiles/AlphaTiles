@@ -7,12 +7,10 @@ import android.graphics.Color;
 import android.graphics.Insets;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowMetrics;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.os.Build;
 import android.content.Context;
@@ -26,10 +24,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -58,9 +54,13 @@ public class Ecuador extends GameActivity {
             R.id.word01, R.id.word02, R.id.word03, R.id.word04, R.id.word05, R.id.word06, R.id.word07, R.id.word08
     };
 
-    protected int[] getTileButtons() {return TILE_BUTTONS;}
+    protected int[] getTileButtons() {
+        return TILE_BUTTONS;
+    }
 
-    protected int[] getWordImages() {return null;}
+    protected int[] getWordImages() {
+        return null;
+    }
 
     @Override
     protected void centerGamesHomeImage() {
@@ -72,8 +72,8 @@ public class Ecuador extends GameActivity {
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
-        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
         constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
         constraintSet.applyTo(constraintLayout);
 
@@ -83,17 +83,14 @@ public class Ecuador extends GameActivity {
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
         int audioInstructionsResID;
-        try{
+        try {
 //          audioInstructionsResID = res.getIdentifier("ecuador_" + challengeLevel, "raw", context.getPackageName());
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
         return audioInstructionsResID;
     }
-
-    private static final Logger LOGGER = Logger.getLogger(Ecuador.class.getName());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +99,7 @@ public class Ecuador extends GameActivity {
         setContentView(R.layout.ecuador);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -129,21 +126,19 @@ public class Ecuador extends GameActivity {
 
         visibleTiles = TILE_BUTTONS.length;
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
+        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(ecuadorPoints));
 
-        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
+        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
 
         updateTrackers();
 
-        if(getAudioInstructionsResID()==0){
+        if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
@@ -186,14 +181,14 @@ public class Ecuador extends GameActivity {
         int heightDisplay;
         int widthDisplay;
         int usableHeight;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowMetrics displayMetrics = getWindowManager().getCurrentWindowMetrics();
             Insets insets = displayMetrics.getWindowInsets()
                     .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
             widthDisplay = displayMetrics.getBounds().width() - insets.left - insets.right;
             heightDisplay = displayMetrics.getBounds().height() - insets.top - insets.bottom;
             usableHeight = heightDisplay;
-        }else{
+        } else {
             DisplayMetrics displayMetrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
             heightDisplay = displayMetrics.heightPixels;
@@ -201,20 +196,14 @@ public class Ecuador extends GameActivity {
             usableHeight = heightDisplay - getNavigationBarSize(this).y;
         }
 
-        LOGGER.info("Remember: heightDisplay = " + heightDisplay);
-        LOGGER.info("Remember: widthDisplay = " + widthDisplay);
-
 //        Point xyz = getNavigationBarSize(this);
         int usableWidth = widthDisplay;
-        LOGGER.info("Remember: usableHeight = " + usableHeight);
-        LOGGER.info("Remember: usableWidth = " + usableWidth);
-        LOGGER.info("Remember: NavigationBarHeight = " + (heightDisplay - usableHeight));
 
         int minX1 = 0;
         int minY1 = (int) (usableHeight * 0.22);    // This is taken from the gridline H2 (20%) plus 2% margin
         int maxX2 = usableWidth;
         int maxY2 = (int) (usableHeight * 0.85);    // This is taken from the gridline H8 (89%) which already has the 2% margin with an extra 4% added in
-        
+
         int minStartX = minX1;
         int maxStartX = (int) (usableWidth * 0.65);
 
@@ -223,11 +212,6 @@ public class Ecuador extends GameActivity {
 
         int bufferX = (int) (usableWidth * 0.05);
         int bufferY = (int) (usableHeight * 0.05);
-
-        LOGGER.info("Remember: minX1 = " + minX1);
-        LOGGER.info("Remember: maxX2 = " + maxX2);
-        LOGGER.info("Remember: minY1 = " + minY1);
-        LOGGER.info("Remember: maxY2 = " + maxY2);
 
         final int hwRatio = 4;
 
@@ -258,20 +242,28 @@ public class Ecuador extends GameActivity {
 
             // Check to see if current box overlaps previous boxes or if current box goes out of bounds
             boolean setValues = true;
-            if (currentBoxIndex == 0){
+            if (currentBoxIndex == 0) {
                 verticalOverlap = true;
                 horizontalOverlap = true;
                 overlap = true;
-                if ((coordX2 + bufferX) < boxCoordinates[0][0] || (coordX1 - bufferX) > boxCoordinates[0][2]) {horizontalOverlap = false;}
-                if ((coordY2 + bufferY) < boxCoordinates[0][1] || (coordY1 - bufferY) > boxCoordinates[0][3]) {verticalOverlap = false;}
-                if (!horizontalOverlap || !verticalOverlap) {overlap = false;}
+                if ((coordX2 + bufferX) < boxCoordinates[0][0] || (coordX1 - bufferX) > boxCoordinates[0][2]) {
+                    horizontalOverlap = false;
+                }
+                if ((coordY2 + bufferY) < boxCoordinates[0][1] || (coordY1 - bufferY) > boxCoordinates[0][3]) {
+                    verticalOverlap = false;
+                }
+                if (!horizontalOverlap || !verticalOverlap) {
+                    overlap = false;
+                }
 
                 // Check if current box goes out of bounds
                 outOfBounds = false;
-                if (coordX2 > maxX2) {outOfBounds = true;}
-                if (coordY2 > maxY2) {outOfBounds = true;}
-
-//                LOGGER.info("Remember: overlap = " + overlap + " and outOfBounds = " + outOfBounds);
+                if (coordX2 > maxX2) {
+                    outOfBounds = true;
+                }
+                if (coordY2 > maxY2) {
+                    outOfBounds = true;
+                }
 
                 if (overlap || outOfBounds) {
                     setValues = false;
@@ -285,22 +277,30 @@ public class Ecuador extends GameActivity {
                 verticalOverlap = true;
                 horizontalOverlap = true;
                 overlap = true;
-                if ((coordX2 + bufferX) < boxCoordinates[definedBoxIndex][0] || (coordX1 - bufferX) > boxCoordinates[definedBoxIndex][2]) {horizontalOverlap = false;}
-                if ((coordY2 + bufferY) < boxCoordinates[definedBoxIndex][1] || (coordY1 - bufferY) > boxCoordinates[definedBoxIndex][3]) {verticalOverlap = false;}
-                if (!horizontalOverlap || !verticalOverlap) {overlap = false;}
+                if ((coordX2 + bufferX) < boxCoordinates[definedBoxIndex][0] || (coordX1 - bufferX) > boxCoordinates[definedBoxIndex][2]) {
+                    horizontalOverlap = false;
+                }
+                if ((coordY2 + bufferY) < boxCoordinates[definedBoxIndex][1] || (coordY1 - bufferY) > boxCoordinates[definedBoxIndex][3]) {
+                    verticalOverlap = false;
+                }
+                if (!horizontalOverlap || !verticalOverlap) {
+                    overlap = false;
+                }
 
                 // Check if current box goes out of bounds
                 outOfBounds = false;
-                if (coordX2 > maxX2) {outOfBounds = true;}
-                if (coordY2 > maxY2) {outOfBounds = true;}
-
-//                LOGGER.info("Remember: overlap = " + overlap + " and outOfBounds = " + outOfBounds);
+                if (coordX2 > maxX2) {
+                    outOfBounds = true;
+                }
+                if (coordY2 > maxY2) {
+                    outOfBounds = true;
+                }
 
                 if (overlap || outOfBounds) {
                     setValues = false;
                 }
             }
-            if(setValues) {
+            if (setValues) {
                 boxCoordinates[currentBoxIndex][0] = coordX1;
                 boxCoordinates[currentBoxIndex][1] = coordY1;
                 boxCoordinates[currentBoxIndex][2] = coordX2;
@@ -310,15 +310,13 @@ public class Ecuador extends GameActivity {
                 if (extraLoops < 10000) {
                     currentBoxIndex = currentBoxIndex - 1;              // force repeat of setting parameters for current box
                     extraLoops++;
-                }
-                else{
+                } else {
                     // something has gone horribly wrong and I have no idea how to fix it
                     // other than to start over until we find a config that works
                     currentBoxIndex = 0;
                     extraLoops = 0;
                 }
             }
-//            LOGGER.info("Remember: currentBoxIndex =" + currentBoxIndex + " and extraLoops = " + extraLoops);
         }
 
         for (int c = 0; c < TILE_BUTTONS.length; c++) {
@@ -330,7 +328,6 @@ public class Ecuador extends GameActivity {
                 @Override
                 public void run() {
 
-                    //RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) wordTile.getLayoutParams();
                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) wordTile.getLayoutParams();
 
                     // X1, Y1, X2, Y2
@@ -340,7 +337,6 @@ public class Ecuador extends GameActivity {
 
                     wordTile.setX(boxCoordinates[finalC][0]);
                     wordTile.setY(boxCoordinates[finalC][1]);
-                    LOGGER.info("Remember: " + wordTile.getText() + ": X = (" + boxCoordinates[finalC][0] + "-" + boxCoordinates[finalC][2] + "), Y = (" + boxCoordinates[finalC][1] + "-" + boxCoordinates[finalC][3] + ")");
                 }
             });
         }
@@ -350,7 +346,7 @@ public class Ecuador extends GameActivity {
     // new approach:
     // set constraints dynamically with random start and end margins to parent
     // top and bottom constrained to previous and next words with random margins as well
-    public void setBoxesJP(){
+    public void setBoxesJP() {
         int gameID = R.id.ecuadorCL;
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
@@ -359,37 +355,37 @@ public class Ecuador extends GameActivity {
         int randInt = 0;
         for (int c = 0; c < TILE_BUTTONS.length; c++) {
             int wordTile = TILE_BUTTONS[c];
-            if (c == 0){ // first word tile
+            if (c == 0) { // first word tile
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.END,R.id.parent,ConstraintSet.END,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.END, R.id.parent, ConstraintSet.END, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.START,R.id.parent,ConstraintSet.START,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.START, R.id.parent, ConstraintSet.START, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.TOP,R.id.activeWordTextView,ConstraintSet.BOTTOM,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.TOP, R.id.activeWordTextView, ConstraintSet.BOTTOM, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.BOTTOM,R.id.word02,ConstraintSet.TOP,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.BOTTOM, R.id.word02, ConstraintSet.TOP, randInt);
                 constraintSet.centerHorizontally(wordTile, gameID);
                 constraintSet.applyTo(constraintLayout);
-            }else if (c == TILE_BUTTONS.length - 1){ // last word tile
+            } else if (c == TILE_BUTTONS.length - 1) { // last word tile
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.END,R.id.parent,ConstraintSet.END,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.END, R.id.parent, ConstraintSet.END, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.START,R.id.parent,ConstraintSet.START,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.START, R.id.parent, ConstraintSet.START, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.TOP,TILE_BUTTONS[c-1],ConstraintSet.BOTTOM,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.TOP, TILE_BUTTONS[c - 1], ConstraintSet.BOTTOM, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.BOTTOM,R.id.guidelineHSys1,ConstraintSet.TOP,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.BOTTOM, R.id.guidelineHSys1, ConstraintSet.TOP, randInt);
                 constraintSet.centerHorizontally(wordTile, gameID);
                 constraintSet.applyTo(constraintLayout);
-            }else{
+            } else {
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.END,R.id.parent,ConstraintSet.END,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.END, R.id.parent, ConstraintSet.END, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.START,R.id.parent,ConstraintSet.START,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.START, R.id.parent, ConstraintSet.START, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.TOP,TILE_BUTTONS[c-1],ConstraintSet.BOTTOM,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.TOP, TILE_BUTTONS[c - 1], ConstraintSet.BOTTOM, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile,ConstraintSet.BOTTOM,TILE_BUTTONS[c+1],ConstraintSet.TOP,randInt);
+                constraintSet.connect(wordTile, ConstraintSet.BOTTOM, TILE_BUTTONS[c + 1], ConstraintSet.TOP, randInt);
                 constraintSet.centerHorizontally(wordTile, gameID);
                 constraintSet.applyTo(constraintLayout);
             }
@@ -435,7 +431,7 @@ public class Ecuador extends GameActivity {
         Boolean freshWord = false;
         int rightWordIndex = -1;
 
-        while(!freshWord) {
+        while (!freshWord) {
             Random rand = new Random();
             int min = 0;
             int max = TILE_BUTTONS.length - 1;
@@ -445,9 +441,9 @@ public class Ecuador extends GameActivity {
             wordInLWC = wordListArray.get(rightWordIndex)[0];
 
             //If this word isn't one of the 3 previously tested words, we're good // LM
-            if(wordInLWC.compareTo(lastWord)!=0
-                    && wordInLWC.compareTo(secondToLastWord)!=0
-                    && wordInLWC.compareTo(thirdToLastWord)!=0){
+            if (wordInLWC.compareTo(lastWord) != 0
+                    && wordInLWC.compareTo(secondToLastWord) != 0
+                    && wordInLWC.compareTo(thirdToLastWord) != 0) {
                 freshWord = true;
                 thirdToLastWord = secondToLastWord;
                 secondToLastWord = lastWord;
@@ -463,11 +459,10 @@ public class Ecuador extends GameActivity {
         int resID = getResources().getIdentifier(wordListArray.get(rightWordIndex)[0] + "2", "drawable", getPackageName());
         image.setImageResource(resID);
 
-        for (int w = 0; w < TILE_BUTTONS.length; w++ ) {
+        for (int w = 0; w < TILE_BUTTONS.length; w++) {
             TextView wordTile = findViewById(TILE_BUTTONS[w]);
             wordTile.setText(Start.wordList.stripInstructionCharacters(wordListArray.get(w)[1]));
             if (w != rightWordIndex) {
-//                wordTile.setText(w + " " + wordListArray[w][1]);  // for testing purposes, make right answer clear on screen
                 wordTile.setText(Start.wordList.stripInstructionCharacters(wordListArray.get(w)[1]));
             }
         }
@@ -512,7 +507,10 @@ public class Ecuador extends GameActivity {
             try {
                 size.x = (Integer) Display.class.getMethod("getRawWidth").invoke(display);
                 size.y = (Integer) Display.class.getMethod("getRawHeight").invoke(display);
-            } catch (IllegalAccessException e) {} catch (InvocationTargetException e) {} catch (NoSuchMethodException e) {}
+            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
+            } catch (NoSuchMethodException e) {
+            }
         }
 
         return size;
@@ -529,12 +527,12 @@ public class Ecuador extends GameActivity {
             repeatLocked = false;
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points+=2;
-            ecuadorPoints+=2;
+            points += 2;
+            ecuadorPoints += 2;
             pointsEarned.setText(String.valueOf(ecuadorPoints));
 
             trackerCount++;
-            if(trackerCount>=12){
+            if (trackerCount >= 12) {
                 ecuadorHasChecked12Trackers = true;
             }
             updateTrackers();
@@ -552,7 +550,7 @@ public class Ecuador extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-            for (int w = 0; w < TILE_BUTTONS.length; w++ ) {
+            for (int w = 0; w < TILE_BUTTONS.length; w++) {
                 TextView nextWord = findViewById(TILE_BUTTONS[w]);
                 nextWord.setClickable(false);
                 if (w != t) {
@@ -570,13 +568,12 @@ public class Ecuador extends GameActivity {
         }
     }
 
-    public void onWordClick (View view) {
-        justClickedWord = Integer.parseInt((String)view.getTag());
+    public void onWordClick(View view) {
+        justClickedWord = Integer.parseInt((String) view.getTag());
         respondToWordSelection();
     }
 
-    public void clickPicHearAudio(View view)
-    {
+    public void clickPicHearAudio(View view) {
         super.clickPicHearAudio(view);
     }
 
@@ -584,8 +581,8 @@ public class Ecuador extends GameActivity {
         super.goBackToEarth(view);
     }
 
-    public void playAudioInstructions(View view){
-        if(getAudioInstructionsResID() > 0) {
+    public void playAudioInstructions(View view) {
+        if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
     }

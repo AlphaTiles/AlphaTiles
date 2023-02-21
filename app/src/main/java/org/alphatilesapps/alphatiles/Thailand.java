@@ -6,8 +6,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,7 +16,6 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
 import static org.alphatilesapps.alphatiles.Start.*;
@@ -29,11 +26,11 @@ public class Thailand extends GameActivity {
     Start.TileList sortableTilesArray;
     Start.SyllableList sortableSyllArray;
 
-    ArrayList<String[]> fourChoices = new ArrayList<>();  // will store LWC and LOP word or will store tile audio name and tile (lower or upper)
-    // or syllable audio name and syllable
+    ArrayList<String[]> fourChoices = new ArrayList<>();  // Will store LWC and LOP word or will store tile audio name and tile (lower or upper)
+    // Or syllable audio name and syllable
 
-    private static final String[] TYPES = {"TILE_LOWER", "TILE_UPPER", "TILE_AUDIO","WORD_TEXT",
-            "WORD_IMAGE","WORD_AUDIO","SYLL_TEXT","SYLL_AUDIO"};
+    private static final String[] TYPES = {"TILE_LOWER", "TILE_UPPER", "TILE_AUDIO", "WORD_TEXT",
+            "WORD_IMAGE", "WORD_AUDIO", "SYLL_TEXT", "SYLL_AUDIO"};
 
     // 11, 12, 21, 31, 32, 14, 41, 24, 42, 45, 54, 51, 15,
 
@@ -47,8 +44,6 @@ public class Thailand extends GameActivity {
     String refSyll;
     int refColor;
     int challengeLevelThai;
-    int pixelHeightRef;
-    int pixelHeightChoices;
     int thailandPoints;
     boolean thailandHasChecked12Trackers;
 
@@ -58,20 +53,22 @@ public class Thailand extends GameActivity {
 
     //JP added Override
     @Override
-    protected int[] getTileButtons() {return TILE_BUTTONS;}
+    protected int[] getTileButtons() {
+        return TILE_BUTTONS;
+    }
 
-    protected int[] getWordImages() {return null;}
+    protected int[] getWordImages() {
+        return null;
+    }
 
     @Override
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
         int audioInstructionsResID;
-        try{
-//          audioInstructionsResID = res.getIdentifier("thailand_" + challengeLevel, "raw", context.getPackageName());
+        try {
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1)
                     .gameInstrLabel, "raw", context.getPackageName());
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
         return audioInstructionsResID;
@@ -86,28 +83,26 @@ public class Thailand extends GameActivity {
         int gameID;
         if (choiceType.equals("WORD_TEXT")) {
             gameID = R.id.thailand2CL;
-        }else{
+        } else {
             gameID = R.id.thailandCL;
         }
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet
-                .START,0);
-        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet
-                .END,0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet
+                .START, 0);
+        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet
+                .END, 0);
         constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
         constraintSet.applyTo(constraintLayout);
 
     }
 
-    private static final Logger LOGGER = Logger.getLogger( Thailand.class.getName() );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-
 
 
         points = getIntent().getIntExtra("points", 0);
@@ -127,16 +122,16 @@ public class Thailand extends GameActivity {
         visibleTiles = TILE_BUTTONS.length;
 
         // So, if challengeLevel is 235, then...
-            // challengeLevelThai = 2 (distractors not random)
-            // refType = "TILE_AUDIO" ... note that one is subtracted below so you refer to the array as 1 to x + 1, not 0 to x
-            // choiceType = "WORD_IMAGE"
+        // challengeLevelThai = 2 (distractors not random)
+        // refType = "TILE_AUDIO" ... note that one is subtracted below so you refer to the array as 1 to x + 1, not 0 to x
+        // choiceType = "WORD_IMAGE"
         String clString = String.valueOf(challengeLevel);
         challengeLevelThai = Integer.parseInt(clString.substring(0, 1));
         refType = TYPES[Integer.parseInt(clString.substring(1, 2)) - 1];
         choiceType = TYPES[Integer.parseInt(clString.substring(2, 3)) - 1];
 
         int gameID = 0;
-        if (choiceType.equals("WORD_TEXT")){
+        if (choiceType.equals("WORD_TEXT")) {
             setContentView(R.layout.thailand2);
             gameID = R.id.thailand2CL;
         } else {
@@ -145,8 +140,8 @@ public class Thailand extends GameActivity {
         }
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -158,10 +153,10 @@ public class Thailand extends GameActivity {
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
-        if (syllableGame.equals("S")){
+        if (syllableGame.equals("S")) {
             sortableSyllArray = (Start.SyllableList) syllableList.clone();
             Collections.shuffle(sortableSyllArray);
-        }else{
+        } else {
             sortableTilesArray = (Start.TileList) tileListNoSAD.clone();
             Collections.shuffle(sortableTilesArray);
         }
@@ -170,15 +165,14 @@ public class Thailand extends GameActivity {
         pointsEarned.setText(String.valueOf(thailandPoints));
 
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
+        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
 
         updateTrackers();
 
-        if(getAudioInstructionsResID()==0) {
+        if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
-        LOGGER.info("Remember: G");
         playAgain();
 
     }
@@ -188,54 +182,47 @@ public class Thailand extends GameActivity {
         // no action
     }
 
-    public void repeatGame (View view) {
-
-        LOGGER.info("Remember: just entered repeatGame (View view)");
-
+    public void repeatGame(View view) {
         if (!repeatLocked) {
             playAgain();
         }
 
     }
 
-    public void playAgain () {
+    public void playAgain() {
 
         repeatLocked = true;
-
-        LOGGER.info("Remember: H");
 
         TextView refItem = findViewById(R.id.referenceItem);
         refItem.setText("");
         refItem.setBackgroundResource(0);
 
-        LOGGER.info("Remember: I");
         Random rand = new Random();
         int randomNum = rand.nextInt(4); // 5 colors
         String refColorStr = COLORS.get(randomNum);
         refColor = Color.parseColor(refColorStr);
 
-        LOGGER.info("Remember: J");
-        // if either or both elements are word-based, then three IF statements, but if both elements are tile based, then WHILE LOOP
+        // If either or both elements are word-based, then three IF statements, but if both elements are tile-based, then WHILE LOOP
 
-        if (refType.contains("WORD") || (choiceType.contains("WORD") && !refType.contains("SYLL"))){
+        if (refType.contains("WORD") || (choiceType.contains("WORD") && !refType.contains("SYLL"))) {
 
             if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO") || choiceType.equals("TILE_LOWER")) {
                 boolean freshTile = false;
-                while (!freshTile){
+                while (!freshTile) {
                     chooseWord();
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                     refTile = parsedWordArrayFinal.get(0);
                     refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
-                    while (challengeLevelThai == 1 && refTileType.equals("T")){
+                    while (challengeLevelThai == 1 && refTileType.equals("T")) {
                         // JP: disallow tone marker from being reference in level 1
                         chooseWord();
                         parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                         refTile = parsedWordArrayFinal.get(0);
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
-                    if(refTile.compareTo(refTileLast)!=0
-                            && refTile.compareTo(refTileSecondToLast)!=0
-                            && refTile.compareTo(refTileThirdToLast)!=0){
+                    if (refTile.compareTo(refTileLast) != 0
+                            && refTile.compareTo(refTileSecondToLast) != 0
+                            && refTile.compareTo(refTileThirdToLast) != 0) {
                         freshTile = true;
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
@@ -243,16 +230,14 @@ public class Thailand extends GameActivity {
                     }
                 }
 
-                LOGGER.info("Remember: J2: refTile = " + refTile);
-            }
-            else if (refType.equals("TILE_UPPER")|| choiceType.equals("TILE_UPPER")) {
+            } else if (refType.equals("TILE_UPPER") || choiceType.equals("TILE_UPPER")) {
                 boolean freshTile = false;
-                while (!freshTile){
+                while (!freshTile) {
                     chooseWord();
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                     refTile = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).upperTile;
                     refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
-                    while (challengeLevelThai == 1 && refTileType.equals("T")){
+                    while (challengeLevelThai == 1 && refTileType.equals("T")) {
                         // JP: disallow tone marker from being reference in level 1
                         chooseWord();
                         parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
@@ -260,9 +245,9 @@ public class Thailand extends GameActivity {
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
                     // SAD should never be first tile linguistically, so no need to programatically filter out
-                    if(refTile.compareTo(refTileLast)!=0
-                            && refTile.compareTo(refTileSecondToLast)!=0
-                            && refTile.compareTo(refTileThirdToLast)!=0){
+                    if (refTile.compareTo(refTileLast) != 0
+                            && refTile.compareTo(refTileSecondToLast) != 0
+                            && refTile.compareTo(refTileThirdToLast) != 0) {
                         freshTile = true;
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
@@ -270,25 +255,23 @@ public class Thailand extends GameActivity {
                     }
                 }
 
-                LOGGER.info("Remember: J3: refTile = " + refTile);
-            }
-            else if (refType.contains("WORD") && choiceType.contains("WORD")) {
+            } else if (refType.contains("WORD") && choiceType.contains("WORD")) {
                 boolean freshTile = false;
-                while (!freshTile){
+                while (!freshTile) {
                     chooseWord();
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                     refTile = parsedWordArrayFinal.get(0);
                     refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
-                    while (challengeLevelThai == 1 && refTileType.equals("T")){
+                    while (challengeLevelThai == 1 && refTileType.equals("T")) {
                         // JP: disallow tone marker from being reference in level 1
                         chooseWord();
                         parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
                         refTile = parsedWordArrayFinal.get(0);
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
-                    if(refTile.compareTo(refTileLast)!=0
-                            && refTile.compareTo(refTileSecondToLast)!=0
-                            && refTile.compareTo(refTileThirdToLast)!=0){
+                    if (refTile.compareTo(refTileLast) != 0
+                            && refTile.compareTo(refTileSecondToLast) != 0
+                            && refTile.compareTo(refTileThirdToLast) != 0) {
                         freshTile = true;
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
@@ -296,17 +279,16 @@ public class Thailand extends GameActivity {
                     }
                 }
 
-                LOGGER.info("Remember: J3.5: refTile = " + refTile);
             }
 
-        } else if(choiceType.contains("SYLL") && refType.contains("SYLL")){
+        } else if (choiceType.contains("SYLL") && refType.contains("SYLL")) {
             boolean freshTile = false;
-            while (!freshTile){
+            while (!freshTile) {
                 int randomNum2 = rand.nextInt(sortableSyllArray.size());
                 refTile = sortableSyllArray.get(randomNum2).syllable;
-                if(refTile.compareTo(refTileLast)!=0
-                        && refTile.compareTo(refTileSecondToLast)!=0
-                        && refTile.compareTo(refTileThirdToLast)!=0){
+                if (refTile.compareTo(refTileLast) != 0
+                        && refTile.compareTo(refTileSecondToLast) != 0
+                        && refTile.compareTo(refTileThirdToLast) != 0) {
                     freshTile = true;
                     refTileThirdToLast = refTileSecondToLast;
                     refTileSecondToLast = refTileLast;
@@ -314,15 +296,15 @@ public class Thailand extends GameActivity {
                 }
             }
 
-        } else if(choiceType.contains("WORD") && refType.contains("SYLL")){
+        } else if (choiceType.contains("WORD") && refType.contains("SYLL")) {
             boolean freshTile = false;
-            while (!freshTile){
+            while (!freshTile) {
                 chooseWord();
                 parsedWordArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
                 refTile = parsedWordArrayFinal.get(0);
-                if(refTile.compareTo(refTileLast)!=0
-                        && refTile.compareTo(refTileSecondToLast)!=0
-                        && refTile.compareTo(refTileThirdToLast)!=0){
+                if (refTile.compareTo(refTileLast) != 0
+                        && refTile.compareTo(refTileSecondToLast) != 0
+                        && refTile.compareTo(refTileThirdToLast) != 0) {
                     freshTile = true;
                     refTileThirdToLast = refTileSecondToLast;
                     refTileSecondToLast = refTileLast;
@@ -330,61 +312,57 @@ public class Thailand extends GameActivity {
                 }
             }
 
-        }
-        else {
-            // JP: FIGURE OUT WHAT THIS DOES
-            // it makes sure that the reference tile chosen is not a glottal stop for ex;
-            // ensures that chosen tile is an actual consonant or vowel
+        } else {
+            // Makes sure that the reference tile chosen is not a glottal stop for ex;
+            // Ensures that chosen tile is an actual consonant or vowel
             String refCVX = "X";
             if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO")) {
                 boolean freshTile = false;
-                while (!freshTile || refCVX.equals("X")){
+                while (!freshTile || refCVX.equals("X")) {
                     int randomNum2 = rand.nextInt(sortableTilesArray.size());
                     refCVX = sortableTilesArray.get(randomNum2).tileType;
                     refTile = sortableTilesArray.get(randomNum2).baseTile;
                     refTileType = sortableTilesArray.get(randomNum2).tileType;
-                    while (challengeLevelThai == 1 && refTileType.equals("T")){
+                    while (challengeLevelThai == 1 && refTileType.equals("T")) {
                         // JP: disallow tone marker from being reference in level 1
                         randomNum2 = rand.nextInt(sortableTilesArray.size());
                         refCVX = sortableTilesArray.get(randomNum2).tileType;
                         refTile = sortableTilesArray.get(randomNum2).baseTile;
                         refTileType = sortableTilesArray.get(randomNum2).tileType;
                     }
-                    if(refTile.compareTo(refTileLast)!=0
-                            && refTile.compareTo(refTileSecondToLast)!=0
-                            && refTile.compareTo(refTileThirdToLast)!=0){
+                    if (refTile.compareTo(refTileLast) != 0
+                            && refTile.compareTo(refTileSecondToLast) != 0
+                            && refTile.compareTo(refTileThirdToLast) != 0) {
                         freshTile = true;
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
                         refTileLast = refTile;
                     }
                 }
-                LOGGER.info("Remember: J4: refTile = " + refTile);
             }
             if (refType.equals("TILE_UPPER")) {
                 boolean freshTile = false;
-                while (!freshTile || refCVX.equals("X")){
+                while (!freshTile || refCVX.equals("X")) {
                     int randomNum2 = rand.nextInt(sortableTilesArray.size());
                     refCVX = sortableTilesArray.get(randomNum2).tileType;
                     refTile = sortableTilesArray.get(randomNum2).upperTile;
                     refTileType = sortableTilesArray.get(randomNum2).tileType;
-                    while (challengeLevelThai == 1 && refTileType.equals("T")){
+                    while (challengeLevelThai == 1 && refTileType.equals("T")) {
                         // JP: disallow tone marker from being reference in level 1
                         randomNum2 = rand.nextInt(sortableTilesArray.size());
                         refCVX = sortableTilesArray.get(randomNum2).tileType;
                         refTile = sortableTilesArray.get(randomNum2).upperTile;
                         refTileType = sortableTilesArray.get(randomNum2).tileType;
                     }
-                    if(refTile.compareTo(refTileLast)!=0
-                            && refTile.compareTo(refTileSecondToLast)!=0
-                            && refTile.compareTo(refTileThirdToLast)!=0){
+                    if (refTile.compareTo(refTileLast) != 0
+                            && refTile.compareTo(refTileSecondToLast) != 0
+                            && refTile.compareTo(refTileThirdToLast) != 0) {
                         freshTile = true;
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
                         refTileLast = refTile;
                     }
                 }
-                LOGGER.info("Remember: J5: refTile = " + refTile);
             }
         }
         switch (refType) {
@@ -417,22 +395,21 @@ public class Thailand extends GameActivity {
             default:
                 break;
         }
-        LOGGER.info("Remember: K");
 
         if (choiceType.equals("TILE_LOWER") || choiceType.equals("TILE_UPPER")) {
-                fourChoices = tileListNoSAD.returnFourTiles(refTile, challengeLevelThai, choiceType, refTileType);
-                // challengeLevelThai 1 = pull random tiles for wrong choices
-                // challengeLevelThai 2 = pull distractor tiles for wrong choices
+            fourChoices = tileListNoSAD.returnFourTiles(refTile, challengeLevelThai, choiceType, refTileType);
+            // challengeLevelThai 1 = pull random tiles for wrong choices
+            // challengeLevelThai 2 = pull distractor tiles for wrong choices
         } else if ((choiceType.equals("WORD_TEXT") || choiceType.equals("WORD_IMAGE")) && (!refType.contains("SYLL"))) {
-                fourChoices = Start.wordList.returnFourWords(wordInLOP, wordInLWC, refTile, challengeLevelThai, refType, choiceType);
-                //, (float) 0.4);
-                //so words with less than or equal to 0.4
+            fourChoices = Start.wordList.returnFourWords(wordInLOP, wordInLWC, refTile, challengeLevelThai, refType, choiceType);
+            //, (float) 0.4);
+            //so words with less than or equal to 0.4
             // challengeLevelThai 1 = pull words that begin with random tiles (not distractor, not same) for wrong choices
             // challengeLevelThai 2 = pull words that begin with distractor tiles (or if not random) for wrong choices
             // challengeLevelThai 3 = pull words that begin with same tile (as correct word) for wrong choices
-        } else if (refType.contains("SYLL") && (choiceType.contains("WORD"))){
+        } else if (refType.contains("SYLL") && (choiceType.contains("WORD"))) {
             fourChoices = syllableList.returnFourWords(refTile, challengeLevelThai);
-        } else if (refType.contains("SYLL") && (choiceType.contains("SYLL"))){
+        } else if (refType.contains("SYLL") && (choiceType.contains("SYLL"))) {
             fourChoices = syllableList.returnFourSylls(refTile, challengeLevelThai);
         }
 
@@ -441,18 +418,17 @@ public class Thailand extends GameActivity {
         switch (choiceType) {
             case "TILE_LOWER":
             case "TILE_UPPER":
-                for (int t = 0; t < TILE_BUTTONS.length; t++ ) {
+                for (int t = 0; t < TILE_BUTTONS.length; t++) {
                     TextView choiceButton = findViewById(TILE_BUTTONS[t]);
                     String choiceColorStr = "#A9A9A9"; // dark gray
                     int choiceColorNo = Color.parseColor(choiceColorStr);
                     choiceButton.setBackgroundColor(choiceColorNo);
                     choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                    LOGGER.info("Remember: AB1: fourChoices.get(t)[1] = " + fourChoices.get(t)[1]);
                     choiceButton.setText(fourChoices.get(t)[1]);
                 }
                 break;
             case "WORD_TEXT":
-                for (int t = 0; t < TILE_BUTTONS.length; t++ ) {
+                for (int t = 0; t < TILE_BUTTONS.length; t++) {
                     TextView choiceButton = findViewById(TILE_BUTTONS[t]);
                     String choiceColorStr = "#A9A9A9"; // dark gray - JP edited
                     int choiceColorNo = Color.parseColor(choiceColorStr);
@@ -460,33 +436,32 @@ public class Thailand extends GameActivity {
                     choiceButton.setTextColor(Color.parseColor("#000000")); // black
                     //LOGGER.info("Remember: AB1: fourChoices.get(t)[1] = " + fourChoices.get(t)[1]);
                     choiceButton.setText(wordList.stripInstructionCharacters((fourChoices.get(t)[1])));
-                    LOGGER.info("Remember: AB2");
-                    if (refType.contains("SYLL") && !hasSyllableAudio){
+                    if (refType.contains("SYLL") && !hasSyllableAudio) {
                         choiceButton.setClickable(true);
                     }
                 }
                 break;
             case "WORD_IMAGE":
-                for (int t = 0; t < TILE_BUTTONS.length; t++ ) {
+                for (int t = 0; t < TILE_BUTTONS.length; t++) {
                     TextView choiceButton = findViewById(TILE_BUTTONS[t]);
                     int resID = getResources().getIdentifier(fourChoices.get(t)[0], "drawable", getPackageName());
                     choiceButton.setBackgroundResource(0);
                     choiceButton.setBackgroundResource(resID);
                     choiceButton.setText("");
-                    if (refType.contains("SYLL") && !hasSyllableAudio){
+                    if (refType.contains("SYLL") && !hasSyllableAudio) {
                         choiceButton.setClickable(true);
                     }
                 }
                 break;
             case "SYLL_TEXT":
-                for (int t = 0; t < TILE_BUTTONS.length; t++ ) {
+                for (int t = 0; t < TILE_BUTTONS.length; t++) {
                     TextView choiceButton = findViewById(TILE_BUTTONS[t]);
                     String choiceColorStr = "#A9A9A9"; // dark gray - JP edited
                     int choiceColorNo = Color.parseColor(choiceColorStr);
                     choiceButton.setBackgroundColor(choiceColorNo);
                     choiceButton.setTextColor(Color.parseColor("#000000")); // black
                     choiceButton.setText(fourChoices.get(t)[1]);
-                    if (!hasSyllableAudio){
+                    if (!hasSyllableAudio) {
                         choiceButton.setClickable(true);
                     }
                 }
@@ -497,25 +472,25 @@ public class Thailand extends GameActivity {
         switch (refType) {
             case "SYLL_AUDIO":
             case "SYLL_TEXT":
-                if (hasSyllableAudio){
+                if (hasSyllableAudio) {
                     playActiveSyllClip(); //never implemented media player for syll audio
                 }
                 break;
             case "TILE_LOWER":
             case "TILE_UPPER":
             case "TILE_AUDIO":
-                if (tempSoundPoolSwitch){
+                if (tempSoundPoolSwitch) {
                     playActiveTileClip1();
-                } else{
+                } else {
                     playActiveTileClip0();
                 }
                 break;
             case "WORD_TEXT":
             case "WORD_IMAGE":
             case "WORD_AUDIO":
-                if (tempSoundPoolSwitch){
+                if (tempSoundPoolSwitch) {
                     playActiveWordClip1(false);
-                } else{
+                } else {
                     playActiveWordClip0(false);
                 }
                 break;
@@ -523,14 +498,10 @@ public class Thailand extends GameActivity {
     }
 
 
-
     private void respondToSelection(int justClickedItem) {
-
-        LOGGER.info("Remember: Just entered respondToSelection (RTS)");
         String refItemText = null;
         TextView refItem = findViewById(R.id.referenceItem);
 
-        LOGGER.info("Remember: RTS B");
         switch (refType) {
             case "TILE_LOWER":
             case "TILE_UPPER":
@@ -550,22 +521,17 @@ public class Thailand extends GameActivity {
                 break;
         }
 
-        LOGGER.info("Remember: RTS C");
-
         int t = justClickedItem - 1; //  justClickedItem uses 1 to 4, t uses the array ID (between [0] and [3]
         TextView chosenItem = findViewById(TILE_BUTTONS[t]);
 
         String chosenItemText;
-        if (refType.contains("SYLL") && choiceType.contains("WORD")){
+        if (refType.contains("SYLL") && choiceType.contains("WORD")) {
             chosenItemText = fourChoices.get(t)[1]; // don't strip periods
-        }
-        else if (!choiceType.equals("WORD_IMAGE")) {
+        } else if (!choiceType.equals("WORD_IMAGE")) {
             chosenItemText = chosenItem.getText().toString();   // all cases except WORD_IMAGE
         } else {
             chosenItemText = wordList.stripInstructionCharacters(fourChoices.get(t)[1]);             // when WORD_IMAGE
         }
-
-        LOGGER.info("Remember: RTS D");
 
         boolean goodMatch = false;
 
@@ -659,7 +625,7 @@ public class Thailand extends GameActivity {
                 }
                 break;
             case "SYLL_TEXT":
-                if (refItemText != null && refItemText.equals(chosenItemText)){
+                if (refItemText != null && refItemText.equals(chosenItemText)) {
                     goodMatch = true;
                 }
                 break;
@@ -667,20 +633,17 @@ public class Thailand extends GameActivity {
                 break;
         }
 
-        LOGGER.info("Remember: RTS E");
-
-
         if (goodMatch) {
             // Good job!
             repeatLocked = false;
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points+=1;
-            thailandPoints+=1;
+            points += 1;
+            thailandPoints += 1;
             pointsEarned.setText(String.valueOf(thailandPoints));
 
             trackerCount++;
-            if(trackerCount>=12){
+            if (trackerCount >= 12) {
                 thailandHasChecked12Trackers = true;
             }
             updateTrackers();
@@ -698,7 +661,7 @@ public class Thailand extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-            for (int b = 0; b < TILE_BUTTONS.length; b++ ) {
+            for (int b = 0; b < TILE_BUTTONS.length; b++) {
                 TextView nextButton = findViewById(TILE_BUTTONS[b]);
                 nextButton.setClickable(false);
                 if (b == t && !choiceType.equals("WORD_IMAGE")) {
@@ -707,34 +670,30 @@ public class Thailand extends GameActivity {
                 }
                 if (b != t && choiceType.equals("WORD_IMAGE")) {
                     nextButton.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
-//                    String wordColorStr = "#A9A9A9"; // dark gray
-//                    int wordColorNo = Color.parseColor(wordColorStr);
-//                    nextButton.setBackgroundColor(wordColorNo);
-//                    nextButton.setTextColor(Color.parseColor("#000000")); // black
                 }
             }
 
-            //JP: added switch statement to determine which method to call: tile or word
+            //JP: Added switch statement to determine which method to call: tile or word
             switch (refType) {
                 case "SYLL_TEXT":
                 case "SYLL_AUDIO":
-                    if (hasSyllableAudio){
+                    if (hasSyllableAudio) {
                         playCorrectSoundThenActiveSyllClip();
-                    }else{
+                    } else {
                         playCorrectSound();
                     }
                     break;
                 case "TILE_LOWER":
                 case "TILE_UPPER":
                 case "TILE_AUDIO":
-                    playCorrectSoundThenActiveTileClip(); //includes functionality for both SoundPool and MediaPlayer
+                    playCorrectSoundThenActiveTileClip();
                     break;
                 case "WORD_TEXT":
                 case "WORD_IMAGE":
                 case "WORD_AUDIO":
-                    if (tempSoundPoolSwitch){
+                    if (tempSoundPoolSwitch) {
                         playCorrectSoundThenActiveWordClip1(false);
-                    } else{
+                    } else {
                         playCorrectSoundThenActiveWordClip0(false);
                     }
             }
@@ -745,11 +704,7 @@ public class Thailand extends GameActivity {
     }
 
 
-
     private void chooseWord() {
-
-        LOGGER.info("Remember: just entered chooseWord()");
-
         Random rand = new Random();
         int randomNum = rand.nextInt(Start.wordList.size());
 
@@ -758,62 +713,49 @@ public class Thailand extends GameActivity {
 
     }
 
-    public void onChoiceClick (View view) {
-
-        LOGGER.info("Remember: just entered onChoiceClick (View view)");
-
-        respondToSelection(Integer.parseInt((String)view.getTag())); // KP
+    public void onChoiceClick(View view) {
+        respondToSelection(Integer.parseInt((String) view.getTag())); // KP
     }
 
-    public void onRefClick (View view) {
-
-        LOGGER.info("Remember: pre playActiveClip()");
-
+    public void onRefClick(View view) {
         switch (refType) {
             case "SYLL_TEXT":
             case "SYLL_AUDIO":
-                if (hasSyllableAudio){
+                if (hasSyllableAudio) {
                     playActiveSyllClip();
                 }
                 break;
             case "TILE_LOWER":
             case "TILE_UPPER":
             case "TILE_AUDIO":
-                if (tempSoundPoolSwitch){
+                if (tempSoundPoolSwitch) {
                     playActiveTileClip1();
-                } else{
+                } else {
                     playActiveTileClip0();
                 }
                 break;
             case "WORD_TEXT":
             case "WORD_IMAGE":
             case "WORD_AUDIO":
-                if (tempSoundPoolSwitch){
-                    playActiveWordClip1(false); //for SoundPool
-                } else{
-                    playActiveWordClip0(false); //for MediaPlayer
+                if (tempSoundPoolSwitch) {
+                    playActiveWordClip1(false); // SoundPool
+                } else {
+                    playActiveWordClip0(false); // MediaPlayer
                 }
                 break;
         }
-        LOGGER.info("Remember: post playActiveClip()");
 
     }
 
     public void playActiveTileClip() {
-
-        LOGGER.info("Remember: post playActiveTileClip()");
-
-        if (tempSoundPoolSwitch){
+        if (tempSoundPoolSwitch) {
             playActiveTileClip1();
-        } else{
+        } else {
             playActiveTileClip0();
         }
     }
 
     private void playActiveSyllClip() {
-
-        LOGGER.info("Remember: just entered playActiveSyllClip()");
-
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
@@ -841,11 +783,8 @@ public class Thailand extends GameActivity {
 
     }
 
-    //JP: for SoundPool, for tile audio
-    public void playActiveTileClip1() {
 
-        LOGGER.info("Remember: just entered playActiveTileClip1()");
-
+    public void playActiveTileClip1() {     //JP: for SoundPool, for tile audio
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
@@ -872,9 +811,8 @@ public class Thailand extends GameActivity {
 
     }
 
-    //JP: for Media Player; tile audio
-    public void playActiveTileClip0(){
-        LOGGER.info("Remember: mediaplayer being used in playActiveTileClip");
+
+    public void playActiveTileClip0() {     //JP: for Media Player; tile audio
 
         String audioToPlay = null;
         audioToPlay = tileList.get(tileList.returnPositionInAlphabet(refTile)).audioForTile;
@@ -891,16 +829,13 @@ public class Thailand extends GameActivity {
                     setAllTilesClickable();
                 }
                 setOptionsRowClickable();
-                mp1.reset(); //JP: this fixes "mediaplayer went away with unhandled events" issue
+                mp1.reset(); //JP: This fixes "mediaplayer went away with unhandled events" issue
                 mp1.release();
             }
         });
     }
 
-    private void playCorrectSound(){
-
-        LOGGER.info("Remember: just entered playCorrectSound()");
-
+    private void playCorrectSound() {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
@@ -916,9 +851,6 @@ public class Thailand extends GameActivity {
     }
 
     private void playCorrectSoundThenActiveSyllClip() {
-
-        LOGGER.info("Remember: just entered playCorrectSoundThenActiveSyllClip()");
-
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
@@ -948,23 +880,19 @@ public class Thailand extends GameActivity {
     }
 
     public void playCorrectSoundThenActiveTileClip() {
-        LOGGER.info("Remember: testing");
-        if (tempSoundPoolSwitch){
+        if (tempSoundPoolSwitch) {
             playCorrectSoundThenActiveTileClip1(); //SoundPool
-        } else{
+        } else {
             playCorrectSoundThenActiveTileClip0(); //MediaPlayer
         }
     }
 
-    public void playCorrectSoundThenActiveTileClip1() { //JP: specifically for TILE audio; playCorrectSoundThenActiveWordClip is for WORDS
-
-        LOGGER.info("Remember: just entered playCorrectSoundThenActiveTileClip1()");
-
+    public void playCorrectSoundThenActiveTileClip1() { //JP: Specifically for TILE audio. playCorrectSoundThenActiveWordClip is for WORDS
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
         gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
-            //JP: this delays word audio after correct sound audio so they don't overlap
+        //JP: this delays word audio after correct sound audio so they don't overlap
 
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
@@ -989,42 +917,30 @@ public class Thailand extends GameActivity {
         // Above represents the hardcoded value of zz_correct.mp3 (876 ms) + duration of tile audio
     }
 
-    public void playCorrectSoundThenActiveTileClip0() {
-        //media player:
-        LOGGER.info("Remember: media player being used in final");
+    public void playCorrectSoundThenActiveTileClip0() { // Media player
         MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
         mediaPlayerIsPlaying = true;
         mp2.start();
         mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp2) {
-                mp2.reset(); //JP: this fixes "mediaplayer went away with unhandled events" issue
+                mp2.reset(); //JP: This fixes "mediaplayer went away with unhandled events" issue
                 mp2.release();
                 playActiveTileClip();
             }
         });
     }
 
-    public void clickPicHearAudio(View view)
-
-    {
-        LOGGER.info("Remember: just entered clickPicHearAudio(View view)");
-
+    public void clickPicHearAudio(View view) {
         super.clickPicHearAudio(view);
     }
 
     public void goBackToEarth(View view) {
-
-        LOGGER.info("Remember: just entered goBackToEarth(View view)");
-
         super.goBackToEarth(view);
     }
 
-    public void playAudioInstructions(View view){
-
-        LOGGER.info("Remember: just entered playAudioInstructions(View view)");
-
-        if(getAudioInstructionsResID() > 0) {
+    public void playAudioInstructions(View view) {
+        if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
     }

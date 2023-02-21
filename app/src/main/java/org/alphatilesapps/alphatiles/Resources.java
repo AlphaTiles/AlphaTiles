@@ -14,7 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Scanner;
-import java.util.logging.Logger;
+
 
 public class Resources extends AppCompatActivity {
 
@@ -37,8 +37,6 @@ public class Resources extends AppCompatActivity {
             R.id.resourceText01, R.id.resourceText02, R.id.resourceText03, R.id.resourceText04, R.id.resourceText05, R.id.resourceText06
     };
 
-    private static final Logger LOGGER = Logger.getLogger( Resources.class.getName() );
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -50,14 +48,11 @@ public class Resources extends AppCompatActivity {
         setTitle(Start.localAppName);
 
         buildResourcesArray();
-        LOGGER.info("Remember: resources array built");
         loadResources();
-        LOGGER.info("Remember: resources loaded");
 
-        if(scriptDirection.compareTo("RTL") == 0){
+        if (scriptDirection.compareTo("RTL") == 0) {
             forceRTLIfSupported();
-        }
-        else{
+        } else {
             forceLTRIfSupported();
         }
 
@@ -71,12 +66,12 @@ public class Resources extends AppCompatActivity {
     public void buildResourcesArray() {
 
         boolean header = true;
-        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_resources)); // prep scan of aa_resources.txt
+        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_resources));
 
         String[][] tempResourcesList = new String[8][3];      // 7 = hard-coded at six until you make a scrollable window for more links
 
         resourcesArraySize = 0;     // is this necessary?
-        while(scanner.hasNext()) {
+        while (scanner.hasNext()) {
 
             if (scanner.hasNextLine()) {
                 if (header) {
@@ -93,9 +88,9 @@ public class Resources extends AppCompatActivity {
             }
         }
 
-        resourcesList = new String [resourcesArraySize][3];
+        resourcesList = new String[resourcesArraySize][3];
 
-        for (int i = 0; i < resourcesArraySize; i++ ) {
+        for (int i = 0; i < resourcesArraySize; i++) {
 
             resourcesList[i][0] = tempResourcesList[i][0];
             resourcesList[i][1] = tempResourcesList[i][1];
@@ -163,7 +158,7 @@ public class Resources extends AppCompatActivity {
 
         for (int r = 0; r < RESOURCES.length; r++) {
 
-            TextView promotedText= findViewById(RESOURCE_TEXTS[r]);
+            TextView promotedText = findViewById(RESOURCE_TEXTS[r]);
 
             if (r < visibleResources) {
                 promotedText.setVisibility(View.VISIBLE);
@@ -178,11 +173,10 @@ public class Resources extends AppCompatActivity {
 
     }
 
-    private void updateResources() {
+    private void updateResources() { // This routine will only be called when there are seven or more resources (the layout has space for six)
 
-// This routine will only be called when there are seven or more resources (the layout has space for six)
         int resourcesLimit;
-        if(totalScreens == resourcesScreenNo) {
+        if (totalScreens == resourcesScreenNo) {
             resourcesLimit = partial;
             for (int r = resourcesLimit; r < (RESOURCES.length); r++) {
                 ImageView promotedResource = findViewById(RESOURCES[r]);
@@ -247,17 +241,15 @@ public class Resources extends AppCompatActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void forceRTLIfSupported()
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+    private void forceRTLIfSupported() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void forceLTRIfSupported()
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+    private void forceLTRIfSupported() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
     }

@@ -15,7 +15,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.Random;
-import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -42,19 +41,22 @@ public class Myanmar extends GameActivity {
             R.id.tile41, R.id.tile42, R.id.tile43, R.id.tile44, R.id.tile45, R.id.tile46, R.id.tile47, R.id.tile48, R.id.tile49
     };
 
-    protected int[] getTileButtons() {return TILE_BUTTONS;}
+    protected int[] getTileButtons() {
+        return TILE_BUTTONS;
+    }
 
-    protected int[] getWordImages() {return null;}
+    protected int[] getWordImages() {
+        return null;
+    }
 
     @Override
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
         int audioInstructionsResID;
-        try{
+        try {
 //          audioInstructionsResID = res.getIdentifier("myanmar_" + challengeLevel, "raw", context.getPackageName());
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
         return audioInstructionsResID;
@@ -70,8 +72,8 @@ public class Myanmar extends GameActivity {
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
-        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
         constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
         constraintSet.applyTo(constraintLayout);
 
@@ -81,8 +83,6 @@ public class Myanmar extends GameActivity {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04, R.id.wordImage05, R.id.wordImage06, R.id.wordImage07
     };
 
-    private static final Logger LOGGER = Logger.getLogger(Myanmar.class.getName());
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +90,7 @@ public class Myanmar extends GameActivity {
         setContentView(R.layout.myanmar);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -115,18 +115,16 @@ public class Myanmar extends GameActivity {
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         visibleTiles = TILE_BUTTONS.length;
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
+        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(myanmarPoints));
 
-        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
-        if(trackerCount>= 12){
+        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
+        if (trackerCount >= 12) {
             myanmarHasChecked12Trackers = true;
         }
 
@@ -134,7 +132,7 @@ public class Myanmar extends GameActivity {
 
         setTextSizes();
 
-        if(getAudioInstructionsResID()==0){
+        if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
@@ -199,7 +197,7 @@ public class Myanmar extends GameActivity {
         pointsEarned.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
 
     }
-    
+
     public void repeatGame(View View) {
 
         if (!repeatLocked) {
@@ -229,7 +227,6 @@ public class Myanmar extends GameActivity {
 
     private void chooseWords() {
 
-        // https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java
         Random rand = new Random();
 
         for (int i = 0; i < 7; i++) {
@@ -244,10 +241,8 @@ public class Myanmar extends GameActivity {
             for (int j = 0; j < i; j++) {
                 tileLength = tilesInArray(Start.tileList.parseWordIntoTiles(sevenWordsInLopLwc[i][1]));
                 if (sevenWordsInLopLwc[i][0].equals(sevenWordsInLopLwc[j][0])) {
-                    LOGGER.info("Remember: word rejected for repeating already selected word");
                     i--;
                 } else if (tileLength < 3 || tileLength > 7) {
-                    LOGGER.info("Remember: word rejected for being shorter than 3 tiles or longer than 7 tiles");
                     i--;
                 }
             }
@@ -297,7 +292,7 @@ public class Myanmar extends GameActivity {
             boolean wordFail = false;
             int wordLen = 0;
             // direction is based on a keyboard (e.g. 2 = south, 9 = NE, etc.) value 2 = x-movement, value 3 = y-movement
-            int[][] directions = new int[][] { {2, 0, 1}, {6, 1, 0}, {1, -1, 1}, {3, 1, 1}, {9, 1, 0}, {4, -1, 0}, {7, -1, -1}, {8, 0, -1} };
+            int[][] directions = new int[][]{{2, 0, 1}, {6, 1, 0}, {1, -1, 1}, {3, 1, 1}, {9, 1, 0}, {4, -1, 0}, {7, -1, -1}, {8, 0, -1}};
             int wordDirection;
             int loops = 0;
             int leftExitFails = 0;
@@ -392,31 +387,14 @@ public class Myanmar extends GameActivity {
 
                         tilesBoard[tileX][tileY] = parsedWordArrayFinal.get(t);
 
-//                        String tileColorStr = COLORS[w % 5];
-//                        int tileColor = Color.parseColor(tileColorStr);
-//                        TextView tile = findViewById(TILES[tileY * 7 + tileX]);
-//                        tile.setTextColor(tileColor); // theme color
-
                     }
 
-                        ImageView image = findViewById(WORD_IMAGES[w]);
-                        int resID = getResources().getIdentifier(sevenWordsInLopLwc[w][0] + "2", "drawable", getPackageName());
-                        image.setImageResource(resID);
-                        image.setVisibility(View.VISIBLE);
-
-//                    placedWords++;
+                    ImageView image = findViewById(WORD_IMAGES[w]);
+                    int resID = getResources().getIdentifier(sevenWordsInLopLwc[w][0] + "2", "drawable", getPackageName());
+                    image.setImageResource(resID);
+                    image.setVisibility(View.VISIBLE);
 
                 }
-
-//                if (placedWords != 0) {
-//
-//                    if (loops / placedWords > 50) {
-//
-//
-//
-//                    }
-//
-//                }
 
             }
 
@@ -426,9 +404,6 @@ public class Myanmar extends GameActivity {
                 image.setVisibility(View.INVISIBLE);
                 completionGoal--;
             }
-
-            LOGGER.info("Remember: loops = " + loops);
-            LOGGER.info("Remember: fails: left = " + leftExitFails + ", right = " + rightExitFails + ", top = " + topExitFails + ", bottom = " + bottomExitFails + ", overwrite = " + overwriteFails);
 
             int tileNumber;
             for (int x = 0; x < 7; x++) {
@@ -519,8 +494,6 @@ public class Myanmar extends GameActivity {
 
         if (firstClickIndex == secondClickIndex) {
 
-            LOGGER.info("Remember: same tile selected twice in a row :(");
-
             TextView tileA = findViewById(TILE_BUTTONS[firstClickIndex]);
             tileA.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tileA.setTextColor(Color.parseColor("#000000")); // black
@@ -546,9 +519,6 @@ public class Myanmar extends GameActivity {
             lowerClick = firstClickIndex;
 
         }
-
-        LOGGER.info("Remember: lowerClick = " + lowerClick);
-        LOGGER.info("Remember: higherClick = " + higherClick);
 
         int difference = higherClick - lowerClick;
 
@@ -578,8 +548,6 @@ public class Myanmar extends GameActivity {
 
         }
 
-        LOGGER.info("Remember: selectionDirection = " + selectionDirection);
-
         String builtWord1 = "";
         String builtWord2 = "";
         String displayWord = "";
@@ -602,9 +570,6 @@ public class Myanmar extends GameActivity {
                 selectionLength = selectionLengthY;
             }
 
-            LOGGER.info("Remember: tile1 = (" + tileX1 + ", " + tileY1 + "), ("  + tileX2 + ", " + tileY2 + ")");
-            LOGGER.info("Remember: selectionLength = " + selectionLength);
-
             // Check forward
             if (selectionDirection == 46) {
                 incrementF[0] = 1;
@@ -623,29 +588,22 @@ public class Myanmar extends GameActivity {
                 incrementF[1] = 1;
             }
 
-            LOGGER.info("Remember: forwards increment = {" + incrementF[0] + ", " + incrementF[1] + "}");
-
             int tileX;
             int tileY;
 
             for (int t = 0; t < selectionLength; t++) {
 
-                if(selectionDirection == 19){ // Direction 19 is special, because the forward direction starts from the higher index
+                if (selectionDirection == 19) { // Direction 19 is special, because the forward direction starts from the higher index
                     tileX = (higherClick % 7) + (t * incrementF[0]);
                     tileY = (higherClick / 7) + (t * incrementF[1]);
-                }
-                else {
+                } else {
                     tileX = (lowerClick % 7) + (t * incrementF[0]);
                     tileY = (lowerClick / 7) + (t * incrementF[1]);
                 }
 
-                LOGGER.info("Remember: builtWord1 tile(X, Y) = (" + tileX + ", " + tileY + ") = " + tilesBoard[tileX][tileY]);
-
                 builtWord1 = builtWord1 + tilesBoard[tileX][tileY];
 
             }
-
-            LOGGER.info("Remember: builtWord1 = " + builtWord1);
 
             // Check backwards
             if (selectionDirection == 46) {
@@ -665,27 +623,19 @@ public class Myanmar extends GameActivity {
                 incrementB[1] = -1;
             }
 
-            LOGGER.info("Remember: backwards increment = {" + incrementB[0] + ", " + incrementB[1] + "}");
-
             for (int t = 0; t < selectionLength; t++) {
 
-                if (selectionDirection == 19){ // Direction 19 is special, because the backward direction starts from the lower index
+                if (selectionDirection == 19) { // Direction 19 is special, because the backward direction starts from the lower index
                     tileX = (lowerClick % 7) + (t * incrementB[0]);
                     tileY = (lowerClick / 7) + (t * incrementB[1]);
-                }
-                else {
+                } else {
                     tileX = (higherClick % 7) + (t * incrementB[0]);
                     tileY = (higherClick / 7) + (t * incrementB[1]);
                 }
 
-
-                LOGGER.info("Remember: builtWord2 tile(X, Y) = (" + tileX + ", " + tileY + ") = " + tilesBoard[tileX][tileY]);
-
                 builtWord2 = builtWord2 + tilesBoard[tileX][tileY];
 
             }
-
-            LOGGER.info("Remember: builtWord2 = " + builtWord2);
 
             for (int w = 0; w < 7; w++) {
 
@@ -715,16 +665,13 @@ public class Myanmar extends GameActivity {
 
             for (int t = 0; t < selectionLength; t++) {
 
-                if (selectionDirection == 19){
+                if (selectionDirection == 19) {
                     tileX = (higherClick % 7) + (t * incrementF[0]);
                     tileY = (higherClick / 7) + (t * incrementF[1]);
-                }
-                else{
+                } else {
                     tileX = (lowerClick % 7) + (t * incrementF[0]);
                     tileY = (lowerClick / 7) + (t * incrementF[1]);
                 }
-
-                LOGGER.info("Remember: builtWord1 tile(X, Y) = (" + tileX + ", " + tileY + ")");
 
                 TextView tile = findViewById(TILE_BUTTONS[tileY * 7 + tileX]);
 
@@ -735,22 +682,10 @@ public class Myanmar extends GameActivity {
 
             }
 
-//            wordToBuild.setBackgroundColor(Color.parseColor("#4CAF50"));      // theme green
-//            wordToBuild.setTextColor(Color.parseColor("#FFFFFF")); // white
-//
-//            for (int i : TILES) {                    // RR
-//                TextView tile = findViewById(i);     // RR
-//                tile.setClickable(false);
-//            }
-
             TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points+=2;
-            myanmarPoints+=2;
+            points += 2;
+            myanmarPoints += 2;
             pointsEarned.setText(String.valueOf(myanmarPoints));
-
-//       YOU NEED TO CHANGE THIS TO BE LIKE MEXICO WHERE TRACKERS INCREMENT PER BOARD, NOT PER INDIVIDUAL SELECTION
-//            trackerCount++;
-//            updateTrackers();
 
             SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
             String playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -764,8 +699,6 @@ public class Myanmar extends GameActivity {
                     syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
-
-            LOGGER.info("Remember: prior to wordComplete sound loop setup, wordInLWC = " + wordInLWC);
 
             for (int w = 0; w < 7; w++) {
 
@@ -789,31 +722,17 @@ public class Myanmar extends GameActivity {
             tileB.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tileB.setTextColor(Color.parseColor("#000000")); // black
 
-            // Word is partial and, for the moment, assumed to be incorrect
-//            wordToBuild.setBackgroundColor(Color.parseColor("#A9A9A9")); // gray for wrong
-//            wordToBuild.setTextColor(Color.parseColor("#000000")); // black
-//
-//            if (wordInLOP.length() > wordToBuild.getText().length()) {
-//
-//                if (wordToBuild.getText().equals(wordInLOP.substring(0, wordToBuild.getText().length()))) {
-//                    // Word, so far, spelled correctly, but a less than complete match
-//                    wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
-//                    wordToBuild.setTextColor(Color.parseColor("#000000")); // black
-//                }
-//
-//            }
         }
     }
 
     public void onBtnClick(View view) {
-        respondToTileSelection(Integer.parseInt((String)view.getTag()));
+        respondToTileSelection(Integer.parseInt((String) view.getTag()));
     }
 
     @Override
-    public void clickPicHearAudio(View view)
-    {
+    public void clickPicHearAudio(View view) {
 
-        int justClickedImage = Integer.parseInt((String)view.getTag());
+        int justClickedImage = Integer.parseInt((String) view.getTag());
         TextView activeWord = findViewById(R.id.activeWordTextView);
         activeWord.setText(wordList.stripInstructionCharacters(sevenWordsInLopLwc[justClickedImage][1]));
 
@@ -826,8 +745,8 @@ public class Myanmar extends GameActivity {
         super.goBackToEarth(view);
     }
 
-    public void playAudioInstructions(View view){
-        if(getAudioInstructionsResID() > 0) {
+    public void playAudioInstructions(View view) {
+        if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
     }

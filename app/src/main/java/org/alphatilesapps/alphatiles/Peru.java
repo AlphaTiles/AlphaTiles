@@ -1,14 +1,10 @@
 package org.alphatilesapps.alphatiles;
 
-import static org.alphatilesapps.alphatiles.Start.syllableList;
-
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +17,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -38,19 +33,22 @@ public class Peru extends GameActivity {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
     };
 
-    protected int[] getTileButtons() {return TILE_BUTTONS;}
+    protected int[] getTileButtons() {
+        return TILE_BUTTONS;
+    }
 
-    protected int[] getWordImages() {return null;}
+    protected int[] getWordImages() {
+        return null;
+    }
 
     @Override
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
         int audioInstructionsResID;
-        try{
+        try {
             audioInstructionsResID = res.getIdentifier("peru_" + challengeLevel, "raw", context.getPackageName());
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
         return audioInstructionsResID;
@@ -66,23 +64,21 @@ public class Peru extends GameActivity {
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
-        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
         constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
         constraintSet.applyTo(constraintLayout);
 
     }
-
-    private static final Logger LOGGER = Logger.getLogger( Peru.class.getName() );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.peru);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -107,24 +103,22 @@ public class Peru extends GameActivity {
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         visibleTiles = TILE_BUTTONS.length;
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
+        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(peruPoints));
 
-        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
-        if(trackerCount >= 12){
+        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
+        if (trackerCount >= 12) {
             peruHasChecked12Trackers = true;
         }
 
         updateTrackers();
 
-        if(getAudioInstructionsResID()==0){
+        if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
@@ -146,7 +140,7 @@ public class Peru extends GameActivity {
     }
 
 
-    public void repeatGame (View view) {
+    public void repeatGame(View view) {
 
         if (!repeatLocked) {
             playAgain();
@@ -154,23 +148,23 @@ public class Peru extends GameActivity {
 
     }
 
-    public void playAgain () {
+    public void playAgain() {
 
         repeatLocked = true;
 
         boolean freshWord = false;
         Random rand = new Random();
 
-        while(!freshWord) {
+        while (!freshWord) {
             int randomNum = rand.nextInt(Start.wordList.size()); // KP
 
             wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
             wordInLOP = Start.wordList.get(randomNum).localWord; // KP
 
             //If this word isn't one of the 3 previously tested words, we're good // LM
-            if(wordInLWC.compareTo(lastWord)!=0
-                    && wordInLWC.compareTo(secondToLastWord)!=0
-                    && wordInLWC.compareTo(thirdToLastWord)!=0){
+            if (wordInLWC.compareTo(lastWord) != 0
+                    && wordInLWC.compareTo(secondToLastWord) != 0
+                    && wordInLWC.compareTo(thirdToLastWord) != 0) {
                 freshWord = true;
                 thirdToLastWord = secondToLastWord;
                 secondToLastWord = lastWord;
@@ -214,18 +208,18 @@ public class Peru extends GameActivity {
                     case 1:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (THE FIRST TILE) REPLACED
                         // REPLACEMENT IS FROM DISTRACTOR TRIO
-                        while(isDuplicateAnswerChoice){
+                        while (isDuplicateAnswerChoice) {
                             List<String> tempArray1 = new ArrayList<>(parsedWordArrayFinal);
-                            tempArray1.set(0, shuffledDistractorTiles.get(incorrectLapNo-1)); // KP // LM
+                            tempArray1.set(0, shuffledDistractorTiles.get(incorrectLapNo - 1)); // KP // LM
                             StringBuilder builder1 = new StringBuilder("");
-                            for(String s : tempArray1) {
+                            for (String s : tempArray1) {
                                 builder1.append(s);
                             }
                             String incorrectChoice1 = builder1.toString();
                             nextWord.setText(incorrectChoice1);
                             isDuplicateAnswerChoice = false;
-                            for(int j = 0; j< incorrectChoice1.length() -2; j++){
-                                if(incorrectChoice1.substring(j, j+3).compareTo("للہ") == 0){
+                            for (int j = 0; j < incorrectChoice1.length() - 2; j++) {
+                                if (incorrectChoice1.substring(j, j + 3).compareTo("للہ") == 0) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
@@ -238,17 +232,17 @@ public class Peru extends GameActivity {
                         // JP changed: REPLACEMENT IS NOW ANY TILE OF THE SAME TYPE (C OR V OR T) FROM THE WHOLE ARRAY
 
                         //fix: some accidental duplicates
-                        while(isDuplicateAnswerChoice) {
+                        while (isDuplicateAnswerChoice) {
                             int randomNum3 = rand.nextInt(tileLength - 1);       // KP // this represents which position in word string will be replaced
                             List<String> tempArray2 = new ArrayList<>(parsedWordArrayFinal);
                             int randomNum4;
-                            if (VOWELS.contains(tempArray2.get(randomNum3))){
+                            if (VOWELS.contains(tempArray2.get(randomNum3))) {
                                 randomNum4 = rand.nextInt(VOWELS.size());       // KP // this represents which game tile will overwrite some part of the correct wor
                                 tempArray2.set(randomNum3, VOWELS.get(randomNum4)); // JP
-                            }else if (CONSONANTS.contains(tempArray2.get(randomNum3))){
+                            } else if (CONSONANTS.contains(tempArray2.get(randomNum3))) {
                                 randomNum4 = rand.nextInt(CONSONANTS.size());
                                 tempArray2.set(randomNum3, CONSONANTS.get(randomNum4)); // JP
-                            }else if(TONES.contains(tempArray2.get(randomNum3))){
+                            } else if (TONES.contains(tempArray2.get(randomNum3))) {
                                 randomNum4 = rand.nextInt(TONES.size());
                                 tempArray2.set(randomNum3, TONES.get(randomNum4)); // JP
                             }
@@ -261,16 +255,16 @@ public class Peru extends GameActivity {
                             nextWord.setText(incorrectChoice2);
 
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
-                            for(int answerChoice = 0; answerChoice < i; answerChoice++){
-                                if(incorrectChoice2.compareTo(((TextView)findViewById(TILE_BUTTONS[answerChoice])).getText().toString()) == 0){
+                            for (int answerChoice = 0; answerChoice < i; answerChoice++) {
+                                if (incorrectChoice2.compareTo(((TextView) findViewById(TILE_BUTTONS[answerChoice])).getText().toString()) == 0) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
-                            if(incorrectChoice2.compareTo(Start.wordList.stripInstructionCharacters(wordInLOP)) == 0){
+                            if (incorrectChoice2.compareTo(Start.wordList.stripInstructionCharacters(wordInLOP)) == 0) {
                                 isDuplicateAnswerChoice = true;
                             }
-                            for(int j = 0; j< incorrectChoice2.length() -2; j++){
-                                if(incorrectChoice2.substring(j, j+3).compareTo("للہ") == 0){
+                            for (int j = 0; j < incorrectChoice2.length() - 2; j++) {
+                                if (incorrectChoice2.substring(j, j + 3).compareTo("للہ") == 0) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
@@ -284,7 +278,7 @@ public class Peru extends GameActivity {
 
                         isDuplicateAnswerChoice = true; // LM // generate answer choices until there are no duplicates
 
-                        while(isDuplicateAnswerChoice) {
+                        while (isDuplicateAnswerChoice) {
                             int randomNum5 = rand.nextInt(tileLength - 1);       // this represents which position in word string will be replaced
                             List<String> tempArray3 = new ArrayList<>(parsedWordArrayFinal);
                             tempArray3.set(randomNum5, Start.tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(randomNum5)));
@@ -296,13 +290,13 @@ public class Peru extends GameActivity {
                             nextWord.setText(incorrectChoice3);
 
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
-                            for(int answerChoice = 0; answerChoice < i; answerChoice++){
-                                if(incorrectChoice3.compareTo(((TextView)findViewById(TILE_BUTTONS[answerChoice])).getText().toString()) == 0){
+                            for (int answerChoice = 0; answerChoice < i; answerChoice++) {
+                                if (incorrectChoice3.compareTo(((TextView) findViewById(TILE_BUTTONS[answerChoice])).getText().toString()) == 0) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
-                            for(int j = 0; j< incorrectChoice3.length() -2; j++){
-                                if(incorrectChoice3.substring(j, j+3).compareTo("للہ") == 0){
+                            for (int j = 0; j < incorrectChoice3.length() - 2; j++) {
+                                if (incorrectChoice3.substring(j, j + 3).compareTo("للہ") == 0) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
@@ -326,13 +320,13 @@ public class Peru extends GameActivity {
             repeatLocked = false;
 
             TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points+=2;
-            peruPoints+=2;
+            points += 2;
+            peruPoints += 2;
             pointsEarned.setText(String.valueOf(peruPoints));
 
             trackerCount++;
 
-            if(trackerCount>=12){
+            if (trackerCount >= 12) {
                 peruHasChecked12Trackers = true;
             }
             updateTrackers();
@@ -349,7 +343,7 @@ public class Peru extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-            for (int w = 0; w < TILE_BUTTONS.length; w++ ) {
+            for (int w = 0; w < TILE_BUTTONS.length; w++) {
                 TextView nextWord = findViewById(TILE_BUTTONS[w]);
                 nextWord.setClickable(false);
                 if (w != t) {
@@ -367,13 +361,12 @@ public class Peru extends GameActivity {
         }
     }
 
-    public void onWordClick (View view) {
-        int wordNo = Integer.parseInt((String)view.getTag());
+    public void onWordClick(View view) {
+        int wordNo = Integer.parseInt((String) view.getTag());
         respondToWordSelection(wordNo);
     }
 
-    public void clickPicHearAudio(View view)
-    {
+    public void clickPicHearAudio(View view) {
         super.clickPicHearAudio(view);
     }
 
@@ -381,8 +374,8 @@ public class Peru extends GameActivity {
         super.goBackToEarth(view);
     }
 
-    public void playAudioInstructions(View view){
-        if(getAudioInstructionsResID() > 0) {
+    public void playAudioInstructions(View view) {
+        if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
     }

@@ -14,7 +14,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,10 +22,9 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.logging.Logger;
 
-public class Start extends AppCompatActivity
-{
+
+public class Start extends AppCompatActivity {
     Context context;
 
     public static final int ALT_COUNT = 3;  // KP
@@ -68,8 +66,6 @@ public class Start extends AppCompatActivity
 
     public static SyllableHashMap syllableHashMap; //JP
 
-    public static ArrayList<Integer> avatarIdList;
-    public static ArrayList<Drawable> avatarJpgList;
     public static SoundPool gameSounds;
     public static int correctSoundID;
     public static int incorrectSoundID;
@@ -77,18 +73,13 @@ public class Start extends AppCompatActivity
     public static HashMap<String, Integer> wordAudioIDs;
     public static HashMap<String, Integer> tileAudioIDs;
     public static HashMap<String, Integer> syllableAudioIDs; //JP
-//    public static HashMap<String, Integer> instructionAudioIDs;
     public static int correctSoundDuration;
-    public static int incorrectSoundDuration;
-    public static int correctFinalSoundDuration;
+
     public static HashMap<String, Integer> wordDurations;
     public static HashMap<String, Integer> tileDurations;
     public static HashMap<String, Integer> syllableDurations;
     public static final ArrayList<String> COLORS = new ArrayList<>();
     public static int totalAudio; //JP: the total number of audio files to be loaded into the soundpool
-//    public static HashMap<String, Integer> instructionDurations;
-
-    private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
     public static Boolean hasTileAudio;
     public static Boolean hasSyllableAudio;
@@ -116,32 +107,22 @@ public class Start extends AppCompatActivity
         // will be used in LoadingScreen.java to determine when all audio files have loaded -> advance to ChoosePlayer
         // initialize to 3 for correct, incorrect, and correctFinal sounds
 
-        LOGGER.info("Remember: pre-completed buildLangInfoArray()");
         buildLangInfoArray();
-        LOGGER.info("Remember: completed buildLangInfoArray() and buildNamesArray()");
-
         buildKeysArray();
-        LOGGER.info("Remember: completed buildKeysArray()");
-
         buildSettingsArray();
-        LOGGER.info("Remember: completed buildSettingsArray()");
-
         buildColorsArray();
-        LOGGER.info("Remember: completed buildColorsArray()");
 
         String hasAudioSetting = settingsList.find("Has tile audio");
-        if(hasAudioSetting.compareTo("")!=0){
+        if (hasAudioSetting.compareTo("") != 0) {
             hasTileAudio = Boolean.parseBoolean(hasAudioSetting);
-        }
-        else{
+        } else {
             hasTileAudio = false;
         }
 
         String differentiateTypesSetting = settingsList.find("Differentiates types of multitype symbols");
-        if(differentiateTypesSetting.compareTo("") != 0){
+        if (differentiateTypesSetting.compareTo("") != 0) {
             differentiateTypes = Boolean.parseBoolean(differentiateTypesSetting);
-        }
-        else{
+        } else {
             differentiateTypes = false;
         }
 
@@ -154,23 +135,19 @@ public class Start extends AppCompatActivity
 
         //to make syllable audio optional
         String hasSyllableAudioSetting = settingsList.find("Has syllable audio");
-        if(hasSyllableAudioSetting.compareTo("")!=0){
+        if (hasSyllableAudioSetting.compareTo("") != 0) {
             hasSyllableAudio = Boolean.parseBoolean(hasSyllableAudioSetting);
-        }
-        else{
+        } else {
             hasSyllableAudio = false;
         }
 
-        String customNumOfAvatars = settingsList.find("Number of avatars");
-        if (customNumOfAvatars.compareTo("")!=0){
+        String customNumOfAvatars = settingsList.find("Number of avatars"); // Default is 12
+        if (!customNumOfAvatars.equals("")) {
             numberOfAvatars = Integer.parseInt(customNumOfAvatars);
         }
-        // otherwise keep 12 default
-
-        LOGGER.info("Remember: completed hasTileAudio & differentiateTypes & hasSyllableAudio");
 
         // JP: the old constructor is deprecated after API 21, so account for both scenarios
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes attributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_GAME)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -178,7 +155,7 @@ public class Start extends AppCompatActivity
             gameSounds = new SoundPool.Builder()
                     .setAudioAttributes(attributes)
                     .build();
-        }else{
+        } else {
             gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         }
 
@@ -187,17 +164,15 @@ public class Start extends AppCompatActivity
             if (Start.tileList.get(d).tileType.equals("C")) {
                 CONSONANTS.add(Start.tileList.get(d).baseTile);
                 CorV.add(Start.tileList.get(d).baseTile);
-            }
-            else if (Start.tileList.get(d).tileType.equals("V")) {
+            } else if (Start.tileList.get(d).tileType.equals("V")) {
                 VOWELS.add(Start.tileList.get(d).baseTile);
                 CorV.add(Start.tileList.get(d).baseTile);
-            }
-            else if (Start.tileList.get(d).tileType.equals("T")) {
+            } else if (Start.tileList.get(d).tileType.equals("T")) {
                 TONES.add(Start.tileList.get(d).baseTile);
             } else if (Start.tileList.get(d).tileType.equals("SAD")) {
                 hasSAD = true;
                 SAD.add(Start.tileList.get(d).baseTile);
-            }else if (!Start.tileList.get(d).tileTypeB.equals("none")) {
+            } else if (!Start.tileList.get(d).tileTypeB.equals("none")) {
                 MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
             }
         }
@@ -209,48 +184,36 @@ public class Start extends AppCompatActivity
         Collections.shuffle(SYLLABLES);
         Collections.shuffle(MULTIFUNCTIONS);
 
-        if (hasTileAudio){
+        if (hasTileAudio) {
             totalAudio = totalAudio + tileList.size();
         }
-        LOGGER.info("Remember: completed buildTilesArray()");
 
         buildGamesArray();
-        LOGGER.info("Remember: completed buildGamesArray()");
 
         buildWordsArray();
         totalAudio = totalAudio + wordList.size();
-        /*populateWordDurations(); /* JP separated from the loop where we populate wordAudioIDs for
-        the purpose of making sure durations hashmap will be done even if loading the audio isn't;
-        makes null checking simpler
-        */
-        LOGGER.info("Remember: completed buildWordsArray()");
 
-        if (hasSyllableGames){
+        if (hasSyllableGames) {
             buildSyllablesArray();
-            LOGGER.info("Remember: completed buildSyllablesArray()");
             for (int d = 0; d < syllableList.size(); d++) {
                 SYLLABLES.add(syllableList.get(d).toString());
             }
             Collections.shuffle(SYLLABLES);
         }
 
-        if(hasSyllableAudio){
+        if (hasSyllableAudio) {
             totalAudio = totalAudio + syllableList.size();
         }
 
-        if(differentiateTypes){
-
-            if (MULTIFUNCTIONS.isEmpty()) {  //makes sure MULTIFUNCTIONS is populated only once when the app is running
-                for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (!Start.tileList.get(d).tileTypeB.equals("none")) {
-                        MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
-                    }
+        if (differentiateTypes && MULTIFUNCTIONS.isEmpty()) {
+            for (int d = 0; d < Start.tileList.size(); d++) {
+                if (!Start.tileList.get(d).tileTypeB.equals("none")) {
+                    MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
                 }
             }
         }
 
         Intent intent = new Intent(this, LoadingScreen.class);
-
         startActivity(intent);
 
     }
@@ -262,7 +225,7 @@ public class Start extends AppCompatActivity
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
-            String[] thisLineArray = thisLine.split("\t",3);
+            String[] thisLineArray = thisLine.split("\t", 3);
             if (header) {
                 header = false;
             } else {
@@ -279,13 +242,7 @@ public class Start extends AppCompatActivity
         gameSounds = null;
     }
 
-
-
-
-
-
-    private int getAssetDuration(int assetID)
-    {
+    private int getAssetDuration(int assetID) {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         AssetFileDescriptor afd = context.getResources().openRawResourceFd(assetID);
         mmr.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
@@ -297,14 +254,14 @@ public class Start extends AppCompatActivity
         // AH Nov 2020, updated by AH to allow for spaces in fields (some common nouns in some languages have spaces
         // AH Mar 2021, add new column for audio tile and for upper case tile
 
-        Scanner scanner = new 	Scanner(getResources().openRawResource(R.raw.aa_gametiles));
+        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_gametiles));
         boolean header = true;
         tileList = new TileList();
         tileListNoSAD = new TileList();
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
-            String[] thisLineArray = thisLine.split("\t",14);
+            String[] thisLineArray = thisLine.split("\t", 14);
             if (header) {
                 tileList.baseTitle = thisLineArray[0];
                 tileList.alt1Title = thisLineArray[1];
@@ -325,14 +282,14 @@ public class Start extends AppCompatActivity
                 Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0);
                 if (!tile.hasNull()) {
                     tileList.add(tile);
-                    if (!tile.tileType.equals("SAD")){
+                    if (!tile.tileType.equals("SAD")) {
                         tileListNoSAD.add(tile);
                     }
                 }
             }
         }
 
-        if(differentiateTypes) {
+        if (differentiateTypes) {
 
             tileListWithMultipleTypes = new TileListWithMultipleTypes();
             tileListWithMultiTypesNoSAD = new TileListWithMultipleTypes();
@@ -342,7 +299,7 @@ public class Start extends AppCompatActivity
             for (Tile tile : tileList) {
                 tileListWithMultipleTypes.add(tile.baseTile);
                 tileHashMapWithMultipleTypes.put(tile.baseTile, tile.tileType);
-                if (!tile.tileType.equals("SAD")){
+                if (!tile.tileType.equals("SAD")) {
                     tileListWithMultiTypesNoSAD.add(tile.baseTile);
                     tileHashMapWithMultiTypesNoSAD.put(tile.baseTile, tile.tileType);
                 }
@@ -391,7 +348,7 @@ public class Start extends AppCompatActivity
 
     private void buildSyllableHashMap() {
         syllableHashMap = new SyllableHashMap();
-        for(int i = 0; i < syllableList.size(); i++){
+        for (int i = 0; i < syllableList.size(); i++) {
             syllableHashMap.put(syllableList.get(i).syllable, syllableList.get(i));
         }
     }
@@ -465,11 +422,11 @@ public class Start extends AppCompatActivity
                 gameList.gameMode = thisLineArray[6];
                 header = false;
             } else {
-                Game game = new Game(thisLineArray[0], thisLineArray[1],thisLineArray[2], thisLineArray[3],thisLineArray[4], thisLineArray[5], thisLineArray[6]);
+                Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6]);
                 if (!game.hasNull()) {
                     gameList.add(game);
                 }
-                if (thisLineArray[6].equals("S")){ //JP
+                if (thisLineArray[6].equals("S")) { //JP
                     hasSyllableGames = true;
                 }
             }
@@ -503,17 +460,12 @@ public class Start extends AppCompatActivity
         Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_langinfo)); // prep scan of aa_langinfo.txt
 
         langInfoList = new LangInfoList();
-        while (scanner.hasNext())
-        {
-            if (scanner.hasNextLine())
-            {
-                if (header)
-                {
+        while (scanner.hasNext()) {
+            if (scanner.hasNextLine()) {
+                if (header) {
                     langInfoList.title = scanner.nextLine();
                     header = false;
-                }
-                else
-                {
+                } else {
                     String thisLine = scanner.nextLine();
                     String[] thisLineArray = thisLine.split("\t");
                     langInfoList.put(thisLineArray[0], thisLineArray[1]);
@@ -537,17 +489,12 @@ public class Start extends AppCompatActivity
         boolean header = true;
 
         nameList = new AvatarNameList();
-        while (scanner.hasNext())
-        {
-            if (scanner.hasNextLine())
-            {
-                if (header)
-                {
+        while (scanner.hasNext()) {
+            if (scanner.hasNextLine()) {
+                if (header) {
                     nameList.title = scanner.nextLine();
                     header = false;
-                }
-                else
-                {
+                } else {
                     String thisLine = scanner.nextLine();
                     String[] thisLineArray = thisLine.split("\t");
                     nameList.add(thisLineArray[1]);
@@ -559,20 +506,20 @@ public class Start extends AppCompatActivity
 
     }
 
-    public void buildTileHashMap(){
+    public void buildTileHashMap() {
         tileHashMap = new TileHashMap();
         tileHashMapNoSAD = new TileHashMap();
-        for(int i = 0; i < tileList.size(); i++){
+        for (int i = 0; i < tileList.size(); i++) {
             tileHashMap.put(tileList.get(i).baseTile, tileList.get(i));
-            if (!tileList.get(i).tileType.equals("SAD")){
+            if (!tileList.get(i).tileType.equals("SAD")) {
                 tileHashMapNoSAD.put(tileList.get(i).baseTile, tileList.get(i));
             }
         }
     }
 
-    public void buildWordHashMap(){
+    public void buildWordHashMap() {
         wordHashMap = new WordHashMap();
-        for(int i = 0; i < wordList.size(); i++){
+        for (int i = 0; i < wordList.size(); i++) {
             wordHashMap.put(wordList.get(i).nationalWord, wordList.get(i));
         }
     }
@@ -610,6 +557,7 @@ public class Start extends AppCompatActivity
         public int tileDuration1;
         public int tileDuration2;
         public int tileDuration3;
+
         public Tile(String baseTile, String alt1Tile, String alt2Tile, String alt3Tile, String tileType, String audioForTile, String upperTile, String tileTypeB, String audioForTileB, String tileTypeC, String audioForTileC, int tileDuration1, int tileDuration2, int tileDuration3) {
             this.baseTile = baseTile;
             altTiles = new String[ALT_COUNT];
@@ -672,16 +620,16 @@ public class Start extends AppCompatActivity
         }
 
         public boolean hasNull() {
-            return gameNumber == null || gameCountry == null|| gameLevel == null|| gameColor == null || gameInstrLabel == null|| gameInstrDuration == null || gameMode == null;
+            return gameNumber == null || gameCountry == null || gameLevel == null || gameColor == null || gameInstrLabel == null || gameInstrDuration == null || gameMode == null;
         }
     }
 
     public static class WordList extends ArrayList<Word> {
-        public String nationalTitle;	// e.g. languages like English or Spanish (LWCs = Languages of Wider Communication)
-        public String localTitle;	// e.g. LOPS (language of play) like Me'phaa, Kayan or Romani Gabor
-        public String durationTitle;	// the length of the clip in ms, relevant only if set to use SoundPool
-        public String mixedDefsTitle;	// for languages with multi-function symbols (e.g. in the word <niwan'>, the first |n| is a consontant and the second |n| is a nasality indicator
-        public String adjustment;	// a font-specific reduction in size for words with longer pixel width
+        public String nationalTitle;    // e.g. languages like English or Spanish (LWCs = Languages of Wider Communication)
+        public String localTitle;    // e.g. LOPS (language of play) like Me'phaa, Kayan or Romani Gabor
+        public String durationTitle;    // the length of the clip in ms, relevant only if set to use SoundPool
+        public String mixedDefsTitle;    // for languages with multi-function symbols (e.g. in the word <niwan'>, the first |n| is a consontant and the second |n| is a nasality indicator
+        public String adjustment;    // a font-specific reduction in size for words with longer pixel width
 
         public int returnGroupOneCount(String someGameTile) {
             // Group One = words that START with the active tile
@@ -694,10 +642,10 @@ public class Start extends AppCompatActivity
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
             if (someGameTileType.compareTo("B") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
             } else if (someGameTileType.compareTo("C") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
                 someGameTileWithoutSuffix = someGameTile;
@@ -713,20 +661,18 @@ public class Start extends AppCompatActivity
 
                 if (wordInitialTile != null) {
 
-                    if(differentiateTypes){//checking if both tile and type match
-                        if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
+                    if (differentiateTypes) {//checking if both tile and type match
+                        if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
                             wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, get(i).nationalWord);
-                        }
-                        else{//not dealing with a multifunction symbol
+                        } else {//not dealing with a multifunction symbol
                             wordInitialTileType = tileHashMap.find(wordInitialTile).tileType;
                         }
 
-                        if(wordInitialTile.equals(someGameTileWithoutSuffix) && someGameTileType.equals(wordInitialTileType)){
+                        if (wordInitialTile.equals(someGameTileWithoutSuffix) && someGameTileType.equals(wordInitialTileType)) {
                             tilesCount++;
                         }
 
-                    }
-                    else {//Not differentiating types, only matching tile to tile
+                    } else {//Not differentiating types, only matching tile to tile
                         if (parsedWordArrayFinal.get(0).equals(someGameTile)) {
                             tilesCount++;
                         }
@@ -745,7 +691,7 @@ public class Start extends AppCompatActivity
             ArrayList<String> parsedWordArrayFinal;
             int hitsCounter = 0;
 
-            String[][] wordsWithNonInitialTiles = new String [tilesCount][2];
+            String[][] wordsWithNonInitialTiles = new String[tilesCount][2];
 
             String wordInitialTile;
             String wordInitialTileType;
@@ -755,10 +701,10 @@ public class Start extends AppCompatActivity
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
             if (someGameTileType.compareTo("B") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
             } else if (someGameTileType.compareTo("C") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
                 someGameTileWithoutSuffix = someGameTile;
@@ -772,22 +718,20 @@ public class Start extends AppCompatActivity
 
                 if (wordInitialTile != null) {
 
-                    if(differentiateTypes){//checking if both tile and type match
-                        if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
+                    if (differentiateTypes) {//checking if both tile and type match
+                        if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
                             wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, get(i).localWord);
-                        }
-                        else{//not dealing with a multifunction symbol
+                        } else {//not dealing with a multifunction symbol
                             wordInitialTileType = tileHashMap.find(wordInitialTile).tileType;
                         }
 
-                        if(wordInitialTile.equals(someGameTileWithoutSuffix) && someGameTileType.equals(wordInitialTileType)){
+                        if (wordInitialTile.equals(someGameTileWithoutSuffix) && someGameTileType.equals(wordInitialTileType)) {
                             wordsWithNonInitialTiles[hitsCounter][0] = get(i).nationalWord;
                             wordsWithNonInitialTiles[hitsCounter][1] = get(i).localWord;
                             hitsCounter++;
                         }
 
-                    }
-                    else {//Not differentiating types, only matching tile to tile
+                    } else {//Not differentiating types, only matching tile to tile
                         if (parsedWordArrayFinal.get(0).equals(someGameTile)) {
                             wordsWithNonInitialTiles[hitsCounter][0] = get(i).nationalWord;
                             wordsWithNonInitialTiles[hitsCounter][1] = get(i).localWord;
@@ -813,10 +757,10 @@ public class Start extends AppCompatActivity
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
             if (someGameTileType.compareTo("B") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
             } else if (someGameTileType.compareTo("C") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
                 someGameTileWithoutSuffix = someGameTile;
@@ -833,20 +777,18 @@ public class Start extends AppCompatActivity
 
                     if (tileInFocus != null) {
 
-                        if(differentiateTypes){//checking if both tile and type match
-                            if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
+                        if (differentiateTypes) {//checking if both tile and type match
+                            if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
                                 tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
-                            }
-                            else{//not dealing with a multifunction symbol
+                            } else {//not dealing with a multifunction symbol
                                 tileInFocusType = tileHashMap.find(tileInFocus).tileType;
                             }
 
-                            if(tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)){
+                            if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
                                 tilesCount++;
                             }
 
-                        }
-                        else {//Not differentiating types, only matching tile to tile
+                        } else {//Not differentiating types, only matching tile to tile
                             if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
                                 tilesCount++;
                             }
@@ -865,7 +807,7 @@ public class Start extends AppCompatActivity
             ArrayList<String> parsedWordArrayFinal;
             int hitsCounter = 0;
 
-            String[][] wordsWithNonInitialTiles = new String [tilesCount][2];
+            String[][] wordsWithNonInitialTiles = new String[tilesCount][2];
 
             String tileInFocus;
             String tileInFocusType;
@@ -875,10 +817,10 @@ public class Start extends AppCompatActivity
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
             if (someGameTileType.compareTo("B") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
             } else if (someGameTileType.compareTo("C") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
                 someGameTileWithoutSuffix = someGameTile;
@@ -893,22 +835,20 @@ public class Start extends AppCompatActivity
 
                     if (tileInFocus != null) {
 
-                        if(differentiateTypes){//checking if both tile and type match
-                            if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
+                        if (differentiateTypes) {//checking if both tile and type match
+                            if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
                                 tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).localWord);
-                            }
-                            else{//not dealing with a multifunction symbol
+                            } else {//not dealing with a multifunction symbol
                                 tileInFocusType = tileHashMap.find(tileInFocus).tileType;
                             }
 
-                            if(tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)){
+                            if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
                                 wordsWithNonInitialTiles[hitsCounter][0] = get(i).nationalWord;
                                 wordsWithNonInitialTiles[hitsCounter][1] = get(i).localWord;
                                 hitsCounter++;
                             }
 
-                        }
-                        else {//Not differentiating types, only matching tile to tile
+                        } else {//Not differentiating types, only matching tile to tile
                             if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
                                 wordsWithNonInitialTiles[hitsCounter][0] = get(i).nationalWord;
                                 wordsWithNonInitialTiles[hitsCounter][1] = get(i).localWord;
@@ -934,10 +874,10 @@ public class Start extends AppCompatActivity
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
             if (someGameTileType.compareTo("B") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
             } else if (someGameTileType.compareTo("C") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
                 someGameTileWithoutSuffix = someGameTile;
@@ -954,20 +894,18 @@ public class Start extends AppCompatActivity
 
                     if (tileInFocus != null) {
 
-                        if(differentiateTypes){//checking if both tile and type match
-                            if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
+                        if (differentiateTypes) {//checking if both tile and type match
+                            if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
                                 tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
-                            }
-                            else{//not dealing with a multifunction symbol
+                            } else {//not dealing with a multifunction symbol
                                 tileInFocusType = tileHashMap.find(tileInFocus).tileType;
                             }
 
-                            if(tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)){
+                            if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
                                 tilesCount++;
                             }
 
-                        }
-                        else {//Not differentiating types, only matching tile to tile
+                        } else {//Not differentiating types, only matching tile to tile
                             if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
                                 tilesCount++;
                             }
@@ -986,7 +924,7 @@ public class Start extends AppCompatActivity
             ArrayList<String> parsedWordArrayFinal;
             int hitsCounter = 0;
 
-            String[][] wordsContainingSomeGameTile = new String [tilesCount][2];
+            String[][] wordsContainingSomeGameTile = new String[tilesCount][2];
 
             String tileInFocus;
             String tileInFocusType;
@@ -996,10 +934,10 @@ public class Start extends AppCompatActivity
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
             if (someGameTileType.compareTo("B") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
             } else if (someGameTileType.compareTo("C") == 0) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() -1);
+                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
                 someGameTileWithoutSuffix = someGameTile;
@@ -1014,22 +952,20 @@ public class Start extends AppCompatActivity
 
                     if (tileInFocus != null) {
 
-                        if(differentiateTypes){//checking if both tile and type match
-                            if(MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
+                        if (differentiateTypes) {//checking if both tile and type match
+                            if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
                                 tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
-                            }
-                            else{//not dealing with a multifunction symbol
+                            } else {//not dealing with a multifunction symbol
                                 tileInFocusType = tileHashMap.find(tileInFocus).tileType;
                             }
 
-                            if(tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)){
+                            if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
                                 wordsContainingSomeGameTile[hitsCounter][0] = get(i).nationalWord;
                                 wordsContainingSomeGameTile[hitsCounter][1] = get(i).localWord;
                                 hitsCounter++;
                             }
 
-                        }
-                        else {//Not differentiating types, only matching tile to tile
+                        } else {//Not differentiating types, only matching tile to tile
                             if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
                                 wordsContainingSomeGameTile[hitsCounter][0] = get(i).nationalWord;
                                 wordsContainingSomeGameTile[hitsCounter][1] = get(i).localWord;
@@ -1065,9 +1001,9 @@ public class Start extends AppCompatActivity
 
         }
 
-        public ArrayList<String[]> returnFourWords(String wordInLOP, String wordInLWC, String refTile, int challengeLevel, String refType, String choiceType){
+        public ArrayList<String[]> returnFourWords(String wordInLOP, String wordInLWC, String refTile, int challengeLevel, String refType, String choiceType) {
 
-        //}, float adjustmentCutoff) {
+            //}, float adjustmentCutoff) {
 
             ArrayList<String[]> fourChoices = new ArrayList();
             ArrayList<String[]> easyWords = new ArrayList();        // words that do not begin with same tile or with distractor tile
@@ -1077,16 +1013,10 @@ public class Start extends AppCompatActivity
 
             // Note that the following are four non-overlapping groups: easyWords, moderateWords, hardWords, wordInLOP
 
-            int correctRow = returnPositionInWordList(wordInLOP);
             String partA = wordInLWC;
             String partB = wordInLOP;
-            String[] wordEntry = new String [] {partA, partB};
+            String[] wordEntry = new String[]{partA, partB};
             fourChoices.add(wordEntry);
-
-//            LOGGER.info("Remember refTile = " + refTile);
-//            LOGGER.info("Remember wordInLOP / wordInLWC = " + wordInLOP + " : " + wordInLWC);
-//            LOGGER.info("Remember challengeLevel = " + challengeLevel);
-//            LOGGER.info("Remember choiceType = " + choiceType);
 
             String alt1lower = Start.tileList.get(Start.tileList.returnPositionInAlphabet(refTile)).altTiles[0];
             String alt2lower = Start.tileList.get(Start.tileList.returnPositionInAlphabet(refTile)).altTiles[1];
@@ -1097,20 +1027,16 @@ public class Start extends AppCompatActivity
             String alt3;
 
             if (refType.equals("TILE_UPPER")) {
-
                 alt1 = Start.tileList.get(Start.tileList.returnPositionInAlphabet(alt1lower)).upperTile;
                 alt2 = Start.tileList.get(Start.tileList.returnPositionInAlphabet(alt2lower)).upperTile;
                 alt3 = Start.tileList.get(Start.tileList.returnPositionInAlphabet(alt3lower)).upperTile;
 
             } else {
-
                 alt1 = alt1lower;
                 alt2 = alt2lower;
                 alt3 = alt3lower;
 
             }
-
-//            LOGGER.info("Remember alt1 / alt2 / alt3 = " + alt1 + " : " + alt2 + " : " + alt3);
 
             for (int i = 0; i < wordList.size(); i++) {
 
@@ -1142,7 +1068,7 @@ public class Start extends AppCompatActivity
                     partA = Start.wordList.get(i).nationalWord;
                     partB = Start.wordList.get(i).localWord;
                     if (!wordInLOP.equals(partB)) {
-                        wordEntry = new String [] {partA, partB};
+                        wordEntry = new String[]{partA, partB};
                         moderateWords.add(wordEntry);
                     }
                 }
@@ -1151,25 +1077,21 @@ public class Start extends AppCompatActivity
                     partA = Start.wordList.get(i).nationalWord;
                     partB = Start.wordList.get(i).localWord;
                     if (!wordInLOP.equals(partB)) {
-                        wordEntry = new String [] {partA, partB};
+                        wordEntry = new String[]{partA, partB};
                         hardWords.add(wordEntry);
                     }
                 }
 
             }
 
-//            LOGGER.info("Remember easyWords.size() = " + easyWords.size());
-//            LOGGER.info("Remember moderateWords.size() = " + moderateWords.size());
-//            LOGGER.info("Remember hardWords.size() = " + hardWords.size());
-
             Collections.shuffle(easyWords);
             Collections.shuffle(moderateWords);
             Collections.shuffle(hardWords);
 
             if (challengeLevel == 1) {
-                // use easy words
+                // Use easy words
                 // ASSUMING that there will always be three words that do not start with refTile or distractor tiles
-                // since problematic tiles may not be included in distractor tiles for certain languages, always need to check using while loop
+                // Since problematic tiles may not be included in distractor tiles for certain languages, always need to check using while loop
 
                 for (int i = 0; i < 3; i++) {
                     //JP edits to fix c vs ch issue:
@@ -1185,7 +1107,7 @@ public class Start extends AppCompatActivity
                         firstTile = parsedWordArrayFinal.get(0);
 
                         while ((Character.toLowerCase(firstTile.charAt(0)) == Character.toLowerCase(refTile.charAt(0))) && (firstTile.length() > refTile.length())
-                                || fourChoices.contains(possibleWordArr)) { //loops continues until a non-conflicting tile is chosen
+                                || fourChoices.contains(possibleWordArr)) { // Loops continues until a non-conflicting tile is chosen
                             Random rand = new Random();
                             int rand1 = rand.nextInt(easyWords.size());
 
@@ -1196,7 +1118,7 @@ public class Start extends AppCompatActivity
                         }
 
                         fourChoices.add(possibleWordArr);
-                    } else{
+                    } else {
                         fourChoices.add(easyWords.get(i));
                     }
                 }
@@ -1213,10 +1135,10 @@ public class Start extends AppCompatActivity
                         String possibleWord;
                         String firstTile;
                         if (moderateWords.size() > i) {
-                            //first try to simply get a moderate word if there are enough moderate wordds
+                            // First try to simply get a moderate word if there are enough moderate words
                             possibleWordArr = moderateWords.get(i);
-                        }else {
-                            //if there are not enough moderate words go straight to trying a random easy word
+                        } else {
+                            // If there are not enough moderate words go straight to trying a random easy word
                             Random rand = new Random();
                             int rand1 = rand.nextInt(easyWords.size());
 
@@ -1226,9 +1148,9 @@ public class Start extends AppCompatActivity
                         parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(possibleWord);
                         firstTile = parsedWordArrayFinal.get(0); //should be tile
 
-                        //then test whether this possible word is problematic, and if so, replace it with a (different) random easy word.
-                        //the random easy word also needs to be tested, since some languages may have instances where tiles "c" and "ch" both exist
-                        //but one is not listed as a distractor tile of the other
+                        // Then test whether this possible word is problematic, and if so, replace it with a (different) random easy word.
+                        // The random easy word also needs to be tested, since some languages may have instances where tiles "c" and "ch" both exist
+                        // But one is not listed as a distractor tile of the other
                         while ((Character.toLowerCase(firstTile.charAt(0)) == Character.toLowerCase(refTile.charAt(0))) && (firstTile.length() > refTile.length())) {
                             Random rand = new Random();
                             int rand1 = rand.nextInt(easyWords.size());
@@ -1239,21 +1161,20 @@ public class Start extends AppCompatActivity
                             firstTile = parsedWordArrayFinal.get(0);
                         }
 
-                        //after those tests, the possible word has been validated and can be added to the answer choices
+                        // After those tests, the possible word has been validated and can be added to the answer choices
                         fourChoices.add(possibleWordArr);
-                    } //inner if
-                    else { //when ref is a word or picture
+                    } else { // Ref is a word or picture
                         if (moderateWords.size() > i) {
                             fourChoices.add(moderateWords.get(i));
                         } else {
                             fourChoices.add(easyWords.get(i - moderateWords.size()));
                         }
                     }
-                } //for loop
-            } //level
+                }
+            }
 
             if (challengeLevel == 3) {
-                // use hard words and if the supply runs out use moderate words and if the supply runs out use easy words
+                // Use hard words and if the supply runs out use moderate words and if the supply runs out use easy words
 
                 for (int i = 0; i < 3; i++) {
                     if (hardWords.size() > i) {
@@ -1274,19 +1195,13 @@ public class Start extends AppCompatActivity
                 }
 
             }
-//            LOGGER.info("Remember fourChoices.get(0)[1] = " + fourChoices.get(0)[1]);
-//            LOGGER.info("Remember fourChoices.get(1)[1] = " + fourChoices.get(1)[1]);
-//            LOGGER.info("Remember fourChoices.get(2)[1] = " + fourChoices.get(2)[1]);
-//            LOGGER.info("Remember fourChoices.get(3)[1] = " + fourChoices.get(3)[1]);
 
             Collections.shuffle(fourChoices);
             return fourChoices;
-
         }
-
     }
 
-    public class Syllable{
+    public class Syllable {
         public String syllable;
         public String[] distractors;
         public String syllableAudioName;
@@ -1307,7 +1222,7 @@ public class Start extends AppCompatActivity
         }
     }
 
-    public static class SyllableList extends ArrayList<Syllable>{
+    public static class SyllableList extends ArrayList<Syllable> {
         public String syllableTitle;
         public String[] distractorsTitles;
         public String syllableAudioNameTitle;
@@ -1340,23 +1255,23 @@ public class Start extends AppCompatActivity
 
         }
 
-        public ArrayList<String[]> returnFourWords(String refTile, int chall){
+        public ArrayList<String[]> returnFourWords(String refTile, int chall) {
             ArrayList<String> potentialWordParsed;
             String potentialWord;
             String natWord;
             ArrayList<String[]> fourWords = new ArrayList<>();
-            Set<String> trackWords = new HashSet<>(); //used to prevent repeats
+            Set<String> trackWords = new HashSet<>(); // Prevents repeats
             Syllable refSyllable = syllableHashMap.find(refTile);
             Random rand = new Random();
             boolean correctRep = false;
 
-            // get a word that starts with the refTile (syllable)
-            while (!correctRep){
+            // Get a word that starts with the refTile (syllable)
+            while (!correctRep) {
                 int randomNum = rand.nextInt(wordList.size());
                 potentialWord = wordList.get(randomNum).localWord;
                 natWord = wordList.get(randomNum).nationalWord;
                 potentialWordParsed = syllableList.parseWordIntoSyllables(potentialWord);
-                if (potentialWordParsed.get(0).equals(refTile)){
+                if (potentialWordParsed.get(0).equals(refTile)) {
                     fourWords.add(new String[]{natWord, potentialWord});
                     trackWords.add(potentialWord);
                     correctRep = true;
@@ -1364,8 +1279,8 @@ public class Start extends AppCompatActivity
             }
 
 
-            if (chall == 1){ //easy words = not same initial syllable and no distractor syllables word-initially
-                while (fourWords.size() < 4){
+            if (chall == 1) { // Easy words = not same initial syllable and no distractor syllables word-initially
+                while (fourWords.size() < 4) {
                     int randomNum = rand.nextInt(wordList.size());
                     potentialWord = wordList.get(randomNum).localWord;
                     natWord = wordList.get(randomNum).nationalWord;
@@ -1373,7 +1288,7 @@ public class Start extends AppCompatActivity
                     if (!potentialWordParsed.get(0).equals(refTile) && !potentialWordParsed.get(0)
                             .equals(refSyllable.distractors[0]) && !potentialWordParsed.get(0)
                             .equals(refSyllable.distractors[1]) && !potentialWordParsed.get(0)
-                            .equals(refSyllable.distractors[2])){
+                            .equals(refSyllable.distractors[2])) {
                         String[] tileEntry = new String[]{natWord, potentialWord};
                         if (!trackWords.contains(potentialWord)) {
                             trackWords.add(potentialWord);
@@ -1381,9 +1296,9 @@ public class Start extends AppCompatActivity
                         }
                     }
                 }
-            }else if (chall == 2){ // medium words = start w/distractor syllables
+            } else if (chall == 2) { // Medium words = start w/distractor syllables
                 int count = 0;
-                while (fourWords.size() < 4 && count < wordList.size()){
+                while (fourWords.size() < 4 && count < wordList.size()) {
                     int randomNum = rand.nextInt(wordList.size());
                     potentialWord = wordList.get(randomNum).localWord;
                     natWord = wordList.get(randomNum).nationalWord;
@@ -1391,7 +1306,7 @@ public class Start extends AppCompatActivity
                     if (!potentialWordParsed.get(0).equals(refTile) && (potentialWordParsed.get(0)
                             .equals(refSyllable.distractors[0]) || potentialWordParsed.get(0)
                             .equals(refSyllable.distractors[1]) || potentialWordParsed.get(0)
-                            .equals(refSyllable.distractors[2]))){
+                            .equals(refSyllable.distractors[2]))) {
                         String[] tileEntry = new String[]{natWord, potentialWord};
                         if (!trackWords.contains(potentialWord)) {
                             trackWords.add(potentialWord);
@@ -1400,15 +1315,13 @@ public class Start extends AppCompatActivity
                     }
                     count++;
                 }
-                while (fourWords.size() < 4){ // maybe this is an infinite loop - change to allow
-                    // any word that doesn't begin with correct syll
+                while (fourWords.size() < 4) { // Maybe this is an infinite loop. Change to allow any word that doesn't begin with correct syll
+
                     int randomNum = rand.nextInt(wordList.size());
                     potentialWord = wordList.get(randomNum).localWord;
                     natWord = wordList.get(randomNum).nationalWord;
                     potentialWordParsed = syllableList.parseWordIntoSyllables(potentialWord);
-                    // if (!potentialWordParsed.get(0).equals(refTile) && (potentialWord.charAt(0)
-                    //                            == refTile.charAt(0)))
-                    if (!potentialWordParsed.get(0).equals(refTile)){
+                    if (!potentialWordParsed.get(0).equals(refTile)) {
                         String[] tileEntry = new String[]{natWord, potentialWord};
                         if (!trackWords.contains(potentialWord)) {
                             trackWords.add(potentialWord);
@@ -1421,46 +1334,46 @@ public class Start extends AppCompatActivity
             return fourWords;
         }
 
-        public ArrayList<String[]> returnFourSylls(String refTile, int chall){
+        public ArrayList<String[]> returnFourSylls(String refTile, int chall) {
             ArrayList<String[]> fourSylls = new ArrayList<>();
             Syllable refSyllable = syllableHashMap.find(refTile);
-            Set<String> trackSylls = new HashSet<>(); //used to prevent repeats
+            Set<String> trackSylls = new HashSet<>(); // Prevents repeats
             String potentialSyll;
             String potentialSyllAud;
             Random rand = new Random();
-            fourSylls.add(new String[] {refSyllable.syllableAudioName, refSyllable.syllable}); // correct
+            fourSylls.add(new String[]{refSyllable.syllableAudioName, refSyllable.syllable}); // Correct
             trackSylls.add(refSyllable.syllable);
-            if (chall == 1){ //random wrong syllables
-                while (fourSylls.size() < 4){
+            if (chall == 1) { // Random wrong syllables
+                while (fourSylls.size() < 4) {
                     int randomNum = rand.nextInt(syllableList.size());
                     potentialSyll = syllableList.get(randomNum).syllable;
                     potentialSyllAud = syllableList.get(randomNum).syllableAudioName;
                     if (!potentialSyll.equals(refTile) && !potentialSyll
                             .equals(refSyllable.distractors[0]) && !potentialSyll
                             .equals(refSyllable.distractors[1]) && !potentialSyll
-                            .equals(refSyllable.distractors[2]) && !trackSylls.contains(potentialSyll)){
+                            .equals(refSyllable.distractors[2]) && !trackSylls.contains(potentialSyll)) {
                         trackSylls.add(potentialSyll);
                         fourSylls.add(new String[]{potentialSyllAud, potentialSyll});
                     }
                 }
-            }else if (chall == 2){ //distractor syllables
-                if (!trackSylls.contains(refSyllable.distractors[0])){
+            } else if (chall == 2) { // Distractor syllables
+                if (!trackSylls.contains(refSyllable.distractors[0])) {
                     trackSylls.add(refSyllable.distractors[0]);
-                    fourSylls.add(new String [] {refSyllable.syllableAudioName, refSyllable.distractors[0]});
+                    fourSylls.add(new String[]{refSyllable.syllableAudioName, refSyllable.distractors[0]});
                 }
-                if (!trackSylls.contains(refSyllable.distractors[1])){
+                if (!trackSylls.contains(refSyllable.distractors[1])) {
                     trackSylls.add(refSyllable.distractors[1]);
-                    fourSylls.add(new String[] {refSyllable.syllableAudioName, refSyllable.distractors[1]});
+                    fourSylls.add(new String[]{refSyllable.syllableAudioName, refSyllable.distractors[1]});
                 }
-                if (!trackSylls.contains(refSyllable.distractors[2])){
+                if (!trackSylls.contains(refSyllable.distractors[2])) {
                     trackSylls.add(refSyllable.distractors[2]);
-                    fourSylls.add(new String[] {refSyllable.syllableAudioName, refSyllable.distractors[2]});
+                    fourSylls.add(new String[]{refSyllable.syllableAudioName, refSyllable.distractors[2]});
                 }
-                while (fourSylls.size() < 4){
+                while (fourSylls.size() < 4) {
                     int randomNum = rand.nextInt(syllableList.size());
                     potentialSyll = syllableList.get(randomNum).syllable;
                     potentialSyllAud = syllableList.get(randomNum).syllableAudioName;
-                    if (!potentialSyll.equals(refTile) && !trackSylls.contains(potentialSyll)){
+                    if (!potentialSyll.equals(refTile) && !trackSylls.contains(potentialSyll)) {
                         trackSylls.add(potentialSyll);
                         fourSylls.add(new String[]{potentialSyllAud, potentialSyll});
                     }
@@ -1470,7 +1383,6 @@ public class Start extends AppCompatActivity
         }
 
         public int returnPositionInSyllList(String someGameTile) {
-
             int alphabetPosition = 0;
             for (int i = 0; i < size(); i++) {
 
@@ -1478,9 +1390,7 @@ public class Start extends AppCompatActivity
                     alphabetPosition = i;
                 }
             }
-
             return alphabetPosition;
-
         }
 
     }
@@ -1511,7 +1421,7 @@ public class Start extends AppCompatActivity
             String next1; // the next one character from the string
             String next2; // the next two characters from the string
             String next3; // the next three characters from the string
-            String next4; // // the next four characters from the string
+            String next4; // the next four characters from the string
 
             int i; // counter to iterate through the characters of the analyzed word
             int k; // counter to scroll through all game tiles for hits on the analyzed character(s) of the word string
@@ -1544,28 +1454,23 @@ public class Start extends AppCompatActivity
                 charBlock = 0;
                 for (k = 0; k < size(); k++) {
 
-//                    LOGGER.info("Remember: tileList.get(" + k + ").baseTile = " +  tileList.get(k).baseTile);
-
                     if (next1.equals(tileList.get(k).baseTile) && charBlock == 0) {
                         // If charBlock is already assigned 2 or 3 or 4, it should not overwrite with 1
-//                        LOGGER.info("Remember: next1 = " + next1);
                         charBlock = 1;
                     }
                     if (next2.equals(tileList.get(k).baseTile) && charBlock != 3 && charBlock != 4) {
                         // The value 2 can overwrite 1 but it can't overwrite 3 or 4
-//                        LOGGER.info("Remember: next2 = " + next2);
                         charBlock = 2;
                     }
                     if (next3.equals(tileList.get(k).baseTile) && charBlock != 4) {
                         // The value 3 can overwrite 1 or 2 but it can't overwrite 4
-//                        LOGGER.info("Remember: next3 = " + next3);
                         charBlock = 3;
                     }
                     if (next4.equals(tileList.get(k).baseTile)) {
                         // The value 4 can overwrite 1 or 2 or 3
                         charBlock = 4;
                     }
-                    if ((tileList.get(k).baseTile == null && k > 0)) {
+                    if (tileList.get(k).baseTile == null && k > 0) {
                         k = tileList.size();
                     }
                 }
@@ -1592,11 +1497,6 @@ public class Start extends AppCompatActivity
                 }
 
             }
-
-//            for (int q =0; q < parsedWordArrayTemp.size(); q++) {
-//                LOGGER.info("Remember parsedWordArrayTemp.get(" + q + ") = " + parsedWordArrayTemp.get(q));
-//            }
-
             return parsedWordArrayTemp;
         }
 
@@ -1670,13 +1570,9 @@ public class Start extends AppCompatActivity
         public ArrayList<String[]> returnFourTiles(String correctTile, int challengeLevelX,
                                                    String choiceType, String refTileType) {
 
-//            LOGGER.info("Remember: M");
             ArrayList<String[]> fourChoices = new ArrayList();
-
-//            LOGGER.info("Remember: M2: correctTile = " + correctTile);
             int correctRow = returnPositionInAlphabet(correctTile);
 
-//            LOGGER.info("Remember: N");
             String partA = Start.tileListNoSAD.get(correctRow).audioForTile;
             String partB = null;
             if (choiceType.equals("TILE_LOWER")) {
@@ -1685,13 +1581,9 @@ public class Start extends AppCompatActivity
             if (choiceType.equals("TILE_UPPER")) {
                 partB = Start.tileListNoSAD.get(correctRow).upperTile;
             }
-//            LOGGER.info("Remember: N2: partB = " + partB);
-            String[] tileEntry = new String [] {partA, partB};
-//            LOGGER.info("Remember: N3:  = " + Arrays.toString(tileEntry));
+            String[] tileEntry = new String[]{partA, partB};
             fourChoices.add(tileEntry);
 
-//            LOGGER.info("Remember: O");
-//            LOGGER.info("Remember: challengeLevelX = " + challengeLevelX);
             if (challengeLevelX == 1) {
                 // use random tiles
 
@@ -1721,8 +1613,7 @@ public class Start extends AppCompatActivity
                     partB = Start.tileListNoSAD.get(rand1).upperTile;
                 }
                 partA = Start.tileListNoSAD.get(returnPositionInAlphabet(altTile)).audioForTile;
-                tileEntry = new String [] {partA, partB};
-//                LOGGER.info("Remember: O2: tileEntry = " + Arrays.toString(tileEntry));
+                tileEntry = new String[]{partA, partB};
                 fourChoices.add(tileEntry);
 
                 while (rand2 == 0) {
@@ -1744,8 +1635,7 @@ public class Start extends AppCompatActivity
                     partB = Start.tileListNoSAD.get(rand2).upperTile;
                 }
                 partA = Start.tileListNoSAD.get(returnPositionInAlphabet(altTile)).audioForTile;
-                tileEntry = new String [] {partA, partB};
-//                LOGGER.info("Remember: O3: tileEntry = " + Arrays.toString(tileEntry));
+                tileEntry = new String[]{partA, partB};
                 fourChoices.add(tileEntry);
 
                 while (rand3 == 0) {
@@ -1768,77 +1658,69 @@ public class Start extends AppCompatActivity
                     partB = Start.tileListNoSAD.get(rand3).upperTile;
                 }
                 partA = Start.tileListNoSAD.get(returnPositionInAlphabet(altTile)).audioForTile;
-                tileEntry = new String [] {partA, partB};
-//                LOGGER.info("Remember: O4: tileEntry = " + Arrays.toString(tileEntry));
+                tileEntry = new String[]{partA, partB};
                 fourChoices.add(tileEntry);
 
             }
 
 
             if (challengeLevelX == 2) {
-                // use distractor tiles
+                // Use distractor tiles
 
                 for (int i = 1; i < 4; i++) {
 
-//                    LOGGER.info("Remember: P2");
                     if (choiceType.equals("TILE_LOWER")) {
                         partB = Start.tileListNoSAD.get(correctRow).altTiles[i - 1];
 
                     }
-//                    LOGGER.info("Remember: P3");
+
                     if (choiceType.equals("TILE_UPPER")) {
                         partB = Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileList.get(correctRow).altTiles[i - 1])).upperTile;
                     }
 
                     //JP approach 2:
-
                     //while (replace) {
 
-                        if (partB.charAt(0) == correctTile.charAt(0)) {
-                            if (partB.length() <= correctTile.length()) {
-                                Random rand = new Random();
-                                int rand5 = rand.nextInt(tileListNoSAD.size());
-                                if (choiceType.equals("TILE_UPPER")) {
+                    if (partB.charAt(0) == correctTile.charAt(0)) {
+                        if (partB.length() <= correctTile.length()) {
+                            Random rand = new Random();
+                            int rand5 = rand.nextInt(tileListNoSAD.size());
+                            if (choiceType.equals("TILE_UPPER")) {
+                                partB = Start.tileListNoSAD.get(rand5).upperTile;
+                                while ((Character.toLowerCase(partB.charAt(0)) == Character.toLowerCase(correctTile.charAt(0))) ||
+                                        partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[0])).upperTile) ||
+                                        partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[1])).upperTile) ||
+                                        partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[2])).upperTile)
+                                        || ((refTileType.equals("C") || refTileType.equals("V"))
+                                        && (!Start.tileListNoSAD.get(rand5).tileType.equals("C")
+                                        && !Start.tileListNoSAD.get(rand5).tileType.equals("V")))) {
+                                    rand5 = rand.nextInt(tileListNoSAD.size());
                                     partB = Start.tileListNoSAD.get(rand5).upperTile;
-                                    while ((Character.toLowerCase(partB.charAt(0)) == Character.toLowerCase(correctTile.charAt(0))) ||
-                                            partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[0])).upperTile) ||
-                                            partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[1])).upperTile) ||
-                                            partB.equals(Start.tileListNoSAD.get(returnPositionInAlphabet(Start.tileListNoSAD.get(correctRow).altTiles[2])).upperTile)
-                                            || ((refTileType.equals("C") || refTileType.equals("V"))
-                                            && (!Start.tileListNoSAD.get(rand5).tileType.equals("C")
-                                            && !Start.tileListNoSAD.get(rand5).tileType.equals("V")))) {
-                                        rand5 = rand.nextInt(tileListNoSAD.size());
-                                        partB = Start.tileListNoSAD.get(rand5).upperTile;
-                                    }
-                                } else if (choiceType.equals("TILE_LOWER")) {
-                                    partB = Start.tileListNoSAD.get(rand5).baseTile;
-                                    while ((Character.toLowerCase(partB.charAt(0)) == Character.toLowerCase(correctTile.charAt(0))) ||
+                                }
+                            } else if (choiceType.equals("TILE_LOWER")) {
+                                partB = Start.tileListNoSAD.get(rand5).baseTile;
+                                while ((Character.toLowerCase(partB.charAt(0)) == Character.toLowerCase(correctTile.charAt(0))) ||
                                         partB.equals(Start.tileListNoSAD.get(correctRow).altTiles[0]) ||
                                         partB.equals(Start.tileListNoSAD.get(correctRow).altTiles[1]) ||
                                         partB.equals(Start.tileListNoSAD.get(correctRow).altTiles[2]) ||
                                         ((refTileType.equals("C") || refTileType.equals("V"))
-                                        && (!Start.tileListNoSAD.get(rand5).tileType.equals("C")
-                                        && !Start.tileListNoSAD.get(rand5).tileType.equals("V")))) {
-                                            rand5 = rand.nextInt(tileListNoSAD.size());
-                                            partB = Start.tileListNoSAD.get(rand5).baseTile;
-                                    }
+                                                && (!Start.tileListNoSAD.get(rand5).tileType.equals("C")
+                                                && !Start.tileListNoSAD.get(rand5).tileType.equals("V")))) {
+                                    rand5 = rand.nextInt(tileListNoSAD.size());
+                                    partB = Start.tileListNoSAD.get(rand5).baseTile;
                                 }
-
                             }
+
                         }
+                    }
                     //}
                     //
-//                    LOGGER.info("Remember: P4");
                     partA = Start.tileListNoSAD.get(returnPositionInAlphabet(partB)).audioForTile;
-//                    LOGGER.info("Remember: P5");
-                    tileEntry = new String [] {partA, partB};
-//                    LOGGER.info("Remember: P6");
+                    tileEntry = new String[]{partA, partB};
                     fourChoices.add(tileEntry);
-//                    LOGGER.info("Remember: P7");
                 }
             }
 
-//            LOGGER.info("Remember: R");
             Collections.shuffle(fourChoices);
 
             return fourChoices;
@@ -1847,13 +1729,11 @@ public class Start extends AppCompatActivity
 
         public String getInstanceTypeForMixedTile(int index, String wordInLWC) {
 
-            // need to rethink this function for tone, SAD,
+            // Need to rethink this function for tone, SAD,
 
             String instanceType = null;
 
             String mixedDefinitionInfo = Start.wordHashMap.find(wordInLWC).mixedDefs;
-            // wordInLWC: "a ceu "
-            // find, finds the key and returns the value
 
             // if mixedDefinitionInfo is not C or V or X or dash, then we assume it has two elements
             // to disambiguate, e.g. niwan', where...
@@ -1876,7 +1756,7 @@ public class Start extends AppCompatActivity
 
     }
 
-    public class TileHashMap extends HashMap<String, Tile>{
+    public class TileHashMap extends HashMap<String, Tile> {
 
         public Tile find(String key) {
             for (String k : keySet()) {
@@ -1884,12 +1764,12 @@ public class Start extends AppCompatActivity
                     return (get(k));
                 }
             }
-        return null;
+            return null;
         }
 
     }
 
-    public class SyllableHashMap extends HashMap<String, Syllable>{
+    public class SyllableHashMap extends HashMap<String, Syllable> {
 
         public Syllable find(String key) {
             for (String k : keySet()) {
@@ -1902,7 +1782,7 @@ public class Start extends AppCompatActivity
 
     }
 
-    public class WordHashMap extends HashMap<String, Word>{
+    public class WordHashMap extends HashMap<String, Word> {
 
         public Word find(String key) {
             for (String k : keySet()) {
@@ -1968,7 +1848,7 @@ public class Start extends AppCompatActivity
 
     }
 
-    public class TileHashMapWithMultipleTypes extends HashMap<String,String>{
+    public class TileHashMapWithMultipleTypes extends HashMap<String, String> {
         public String text;
         public String type;
     }

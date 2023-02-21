@@ -3,13 +3,12 @@ package org.alphatilesapps.alphatiles;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileListNoSAD;
-import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
+
 import org.alphatilesapps.alphatiles.Start.WordList;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,7 +18,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.Collections;
-import java.util.logging.Logger;
 
 public class Italy extends GameActivity {
 
@@ -28,10 +26,8 @@ public class Italy extends GameActivity {
     Start.TileList sortableTilesArray;
     Start.SyllableList sortableSyllArray;
     WordList gameCards = new WordList();
-    boolean [] boardCardsFound = new boolean[16];
+    boolean[] boardCardsFound = new boolean[16];
     int deckIndex = 0;
-
-    private static final Logger LOGGER = Logger.getLogger( Italy.class.getName() );
 
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04, R.id.choice05, R.id.choice06,
@@ -45,23 +41,26 @@ public class Italy extends GameActivity {
             R.id.wordImage13, R.id.wordImage14, R.id.wordImage15, R.id.wordImage16
     };
 
-    protected static final int[][] LOTERIA_SEQUENCES = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,16},{1,5,9,13},{2,6,10,14},{3,7,11,15},{4,8,12,16},{1,6,11,16},{4,7,10,13}};
+    protected static final int[][] LOTERIA_SEQUENCES = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}, {1, 5, 9, 13}, {2, 6, 10, 14}, {3, 7, 11, 15}, {4, 8, 12, 16}, {1, 6, 11, 16}, {4, 7, 10, 13}};
 
     @Override
-    protected int[] getTileButtons() {return TILE_BUTTONS;}
+    protected int[] getTileButtons() {
+        return TILE_BUTTONS;
+    }
 
     @Override
-    protected int[] getWordImages() {return null;}
+    protected int[] getWordImages() {
+        return null;
+    }
 
     @Override
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
         int audioInstructionsResID;
-        try{
+        try {
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1)
                     .gameInstrLabel, "raw", context.getPackageName());
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
         return audioInstructionsResID;
@@ -77,10 +76,10 @@ public class Italy extends GameActivity {
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet
-                .START,0);
-        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet
-                .END,0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet
+                .START, 0);
+        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet
+                .END, 0);
         constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
         constraintSet.applyTo(constraintLayout);
 
@@ -112,8 +111,8 @@ public class Italy extends GameActivity {
         int gameID = R.id.italyCL;
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
             ImageView playNextWordImage = (ImageView) findViewById(R.id.playNextWord);
@@ -129,10 +128,10 @@ public class Italy extends GameActivity {
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
-        if (syllableGame.equals("S")){
+        if (syllableGame.equals("S")) {
             sortableSyllArray = (Start.SyllableList) syllableList.clone();
             Collections.shuffle(sortableSyllArray);
-        }else{
+        } else {
             sortableTilesArray = (Start.TileList) tileListNoSAD.clone();
             Collections.shuffle(sortableTilesArray);
         }
@@ -141,11 +140,11 @@ public class Italy extends GameActivity {
         pointsEarned.setText(String.valueOf(italyPoints));
 
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
+        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
 
         updateTrackers();
 
-        if(getAudioInstructionsResID()==0) {
+        if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
@@ -159,7 +158,7 @@ public class Italy extends GameActivity {
     }
 
     @Override
-    public void setAllTilesUnclickable(){
+    public void setAllTilesUnclickable() {
         super.setAllTilesUnclickable();
 
         ImageView nextWordArrow = findViewById(R.id.playNextWord);
@@ -176,7 +175,7 @@ public class Italy extends GameActivity {
     }
 
     @Override
-    public void setAllTilesClickable(){
+    public void setAllTilesClickable() {
         super.setAllTilesClickable();
 
         ImageView nextWordArrow = findViewById(R.id.playNextWord);
@@ -193,15 +192,14 @@ public class Italy extends GameActivity {
     }
 
 
-
     public void goBackToEarth(View view) {
 
         super.goBackToEarth(view);
     }
 
-    public void playAudioInstructions(View view){
+    public void playAudioInstructions(View view) {
 
-        if(getAudioInstructionsResID() > 0) {
+        if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
     }
@@ -214,31 +212,31 @@ public class Italy extends GameActivity {
 
     }
 
-    public void onRefClick (View view){
+    public void onRefClick(View view) {
 
         playActiveWordClip(false);
 
     }
 
 
-    public void playAgain(){
+    public void playAgain() {
         repeatLocked = true;
         deckIndex = -1;
         gameCards.removeAll(gameCards);
-        for (int card=0; card<16; card++){
+        for (int card = 0; card < 16; card++) {
             boardCardsFound[card] = false;
         }
         WordList wordListShuffle = wordList;
         Collections.shuffle(wordListShuffle);
 
         //Add 54 of the shuffled cards to gameCards
-        for(int cardNumber=0; cardNumber<54; cardNumber++){
+        for (int cardNumber = 0; cardNumber < 54; cardNumber++) {
             gameCards.add(wordListShuffle.get(cardNumber));
         }
 
         //Add 16 of the gameCards to the board
         WordList boardCards = new WordList();
-        for(int tileNumber=0; tileNumber<16; tileNumber++){
+        for (int tileNumber = 0; tileNumber < 16; tileNumber++) {
             boardCards.add(gameCards.get(tileNumber));
             TextView thisCardText = (TextView) findViewById(TILE_BUTTONS[tileNumber]);
             thisCardText.setText(wordList.stripInstructionCharacters(gameCards.get(tileNumber).localWord));
@@ -256,70 +254,52 @@ public class Italy extends GameActivity {
 
     }
 
-    public void getAnotherWord(View view){
+    public void getAnotherWord(View view) {
 
         nextWordFromGameSet();
     }
 
-    public void nextWordFromGameSet(){
+    public void nextWordFromGameSet() {
+        deckIndex++;
+        if (deckIndex == 54) {
 
-        try{
-            deckIndex++;
-            if (deckIndex == 54){
+            //The player went through all the cards without getting a loteria. Set up a new board
+            playIncorrectSound();
+            playIncorrectSound();
+            playAgain();
+        } else { //"Call out" the next word
 
-                //The player went through all the cards without getting a loteria. Set up a new board
-                playIncorrectSound();
-                playIncorrectSound();
-                playAgain();
-            }
-            else{ //"Call out" the next word
-
-                wordInLOP = wordList.stripInstructionCharacters(gameCards.get(deckIndex).localWord);
-                wordInLWC = gameCards.get(deckIndex).nationalWord;
-                playActiveWordClip(false);
-            }
-        }
-        catch(Exception e){
-            LOGGER.info("Italy encountered an exception in nextWordFromGameSet: \n" + e.getMessage());
-        }
-
-
-    }
-
-    public void onSelection(View view){
-
-        try {
-
-            respondToSelection(Integer.parseInt((String) view.getTag()));
-        }
-        catch(Exception e){
-            LOGGER.info("Italy encountered an exception in onSelection: \n" + e.getMessage());
+            wordInLOP = wordList.stripInstructionCharacters(gameCards.get(deckIndex).localWord);
+            wordInLWC = gameCards.get(deckIndex).nationalWord;
+            playActiveWordClip(false);
         }
     }
 
-    public void respondToSelection(int indexOfTileJustSelected){
+    public void onSelection(View view) {
+        respondToSelection(Integer.parseInt((String) view.getTag()));
+    }
+
+    public void respondToSelection(int indexOfTileJustSelected) {
 
         TextView tileJustSelected = findViewById(TILE_BUTTONS[indexOfTileJustSelected - 1]);
 
-        if (((String)tileJustSelected.getText()).compareTo(wordInLOP) == 0){
+        if (((String) tileJustSelected.getText()).compareTo(wordInLOP) == 0) {
             respondToCorrectSelection(indexOfTileJustSelected);
-        }
-        else{
+        } else {
             respondToIncorrectSelection();
         }
 
     }
 
-    public void respondToCorrectSelection(int indexOfTileJustSelected){
+    public void respondToCorrectSelection(int indexOfTileJustSelected) {
         boardCardsFound[indexOfTileJustSelected - 1] = true;
 
         ImageView imageJustSelected = findViewById(TILE_IMAGES[indexOfTileJustSelected - 1]);
         imageJustSelected.setImageResource(R.drawable.zz_bean);
 
-        if (loteria()){
+        if (loteria()) {
             respondToLoteria();
-        }
-        else{
+        } else {
             //Play sounds, then advance to the next word
             playCorrectSoundThenActiveWordClip(false);
             nextWordFromGameSet();
@@ -327,17 +307,17 @@ public class Italy extends GameActivity {
 
     }
 
-    public void respondToIncorrectSelection(){
+    public void respondToIncorrectSelection() {
 
         playIncorrectSound();
     }
 
 
-    public boolean loteria(){
+    public boolean loteria() {
         //for each sequence in possibleLoteriaSequences[][], check if all the indeces inside have been marked as correctly selected
 
-        for (int[] sequence : LOTERIA_SEQUENCES){
-            if (boardCardsFound[sequence[0]-1] && boardCardsFound[sequence[1]-1] && boardCardsFound[sequence[2]-1] && boardCardsFound[sequence[3]-1]){
+        for (int[] sequence : LOTERIA_SEQUENCES) {
+            if (boardCardsFound[sequence[0] - 1] && boardCardsFound[sequence[1] - 1] && boardCardsFound[sequence[2] - 1] && boardCardsFound[sequence[3] - 1]) {
                 return true;
             }
         }
@@ -345,7 +325,7 @@ public class Italy extends GameActivity {
         return false;
     }
 
-    public void respondToLoteria(){
+    public void respondToLoteria() {
         //play finalCorrectSound with final sound, which also updates the trackers
         playCorrectSoundThenActiveWordClip(true);
 
@@ -354,8 +334,8 @@ public class Italy extends GameActivity {
 
         //update points
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        points+=4;
-        italyPoints+=4;
+        points += 4;
+        italyPoints += 4;
         pointsEarned.setText(String.valueOf(italyPoints));
         SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -371,7 +351,7 @@ public class Italy extends GameActivity {
         editor.apply();
 
         //update trackers
-        if(trackerCount>=12){
+        if (trackerCount >= 12) {
             italyHasChecked12Trackers = true;
         }
         updateTrackers();

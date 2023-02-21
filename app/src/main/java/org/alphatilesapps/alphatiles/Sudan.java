@@ -5,31 +5,17 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.widget.TextViewCompat;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-
-//To work on:
-//Do any languages have more than 49 tiles? - now can scroll through multiple pages of 35 each (JP)
-//Should the repeat image be hidden? - need it to scroll through pages now (JP)
-//How should we color tiles that are multi-type?
-
-//every time user clicks right arrow, go to next item in pagesList and display it
-//every time user clicks left arrow, go to previous item in pagesList and display it
-//look at Romania for an example
 
 public class Sudan extends GameActivity {
 
@@ -40,8 +26,8 @@ public class Sudan extends GameActivity {
     List<String> page = new ArrayList<>();
 
     int numPages = 0;
-    int currentPageNumber = 0; //increment whenever user clicks right arrow; decrement whenever user clicks left arrow
-    //use as index for pagesList
+    int currentPageNumber = 0; // Index for pagesList. Increment whenever user clicks right arrow; decrement whenever user clicks left arrow.
+
 
     protected static final int[] SYLL_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -74,11 +60,9 @@ public class Sudan extends GameActivity {
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
         int audioInstructionsResID;
-        try{
-//          audioInstructionsResID = res.getIdentifier("sudan_" + challengeLevel, "raw", context.getPackageName());
+        try {
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
         return audioInstructionsResID;
@@ -91,37 +75,37 @@ public class Sudan extends GameActivity {
         instructionsButton.setVisibility(View.GONE);
 
         int gameID;
-        if (syllableGame.equals("S")){
+        if (syllableGame.equals("S")) {
             gameID = R.id.sudansyllCL;
-        }else{
+        } else {
             gameID = R.id.sudanCL;
         }
 
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
-        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
         constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
         constraintSet.applyTo(constraintLayout);
     }
-  
+
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         int gameID = 0;
-        if (syllableGame.equals("S")){
+        if (syllableGame.equals("S")) {
             setContentView(R.layout.sudan_syll);
             gameID = R.id.sudansyllCL;
-        }else{
+        } else {
             setContentView(R.layout.sudan);
             gameID = R.id.sudanCL;
         }
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.compareTo("RTL") == 0) { // LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -137,33 +121,26 @@ public class Sudan extends GameActivity {
         points = getIntent().getIntExtra("points", 0); // KP
         playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel  + syllableGame;
+        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
 
-        //View repeatArrow = findViewById(R.id.repeatImage);
-        //repeatArrow.setVisibility(View.INVISIBLE);
-
         determineNumPages(); //JP
 
-        if(syllableGame.equals("S")){
+        if (syllableGame.equals("S")) {
             splitSyllablesListAcrossPages();
             showCorrectNumSyllables(0);
-        }else{
+        } else {
             splitTileListAcrossPages();
             showCorrectNumTiles(0);
         }
 
-        //setTextSizes();
-
-        if(getAudioInstructionsResID()==0){
+        if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
-
-
 
     }
 
@@ -171,34 +148,34 @@ public class Sudan extends GameActivity {
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.repeatImage2,ConstraintSet.END,R.id.gamesHomeImage,ConstraintSet.START,0);
-        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.START,R.id.repeatImage2,ConstraintSet.END,0);
-        constraintSet.connect(R.id.instructions,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
-        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.instructions,ConstraintSet.START,0);
-        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.instructions,ConstraintSet.END,0);
-        constraintSet.connect(R.id.instructions,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
+        constraintSet.connect(R.id.repeatImage2, ConstraintSet.END, R.id.gamesHomeImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.START, R.id.repeatImage2, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.instructions, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.instructions, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.instructions, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.instructions, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
         constraintSet.applyTo(constraintLayout);
     }
 
-    public void determineNumPages(){
+    public void determineNumPages() {
 
         pagesList.add(page);
-        if (syllableGame.equals("S")){
+        if (syllableGame.equals("S")) {
             int total = syllableList.size() - SYLL_BUTTONS.length; // 1 page is accounted for in numPages init
-            while (total >= 0){
+            while (total >= 0) {
                 numPages++;
                 List<String> page = new ArrayList<>();
                 pagesList.add(page); //add another page(list of syllables) to list
                 total = total - SYLL_BUTTONS.length;
             }
-        }else{
+        } else {
             int total = 0;
-            if (differentiateTypes){
+            if (differentiateTypes) {
                 total = tileListWithMultiTypesNoSAD.size() - TILE_BUTTONS.length;
-            }else{
+            } else {
                 total = tileListNoSAD.size() - TILE_BUTTONS.length; // 1 page is accounted for in numPages init
             }
-            while (total >= 0){
+            while (total >= 0) {
                 numPages++;
                 List<String> page = new ArrayList<>();
                 pagesList.add(page); //add another page(list of tiles) to list
@@ -207,26 +184,26 @@ public class Sudan extends GameActivity {
         }
     }
 
-    public void splitTileListAcrossPages(){
+    public void splitTileListAcrossPages() {
 
-        if (differentiateTypes){
+        if (differentiateTypes) {
             int numTiles = tileListWithMultiTypesNoSAD.size();
             int cont = 0;
-            for (int i = 0; i < numPages + 1; i++){
-                for (int j = 0; j < TILE_BUTTONS.length; j++){
-                    if (cont < numTiles){
-                            pagesList.get(i).add(tileListWithMultiTypesNoSAD.get(cont));
+            for (int i = 0; i < numPages + 1; i++) {
+                for (int j = 0; j < TILE_BUTTONS.length; j++) {
+                    if (cont < numTiles) {
+                        pagesList.get(i).add(tileListWithMultiTypesNoSAD.get(cont));
                     }
                     cont++;
                 }
             }
-        }else{
+        } else {
             int numTiles = tileListNoSAD.size();
             int cont = 0;
-            for (int i = 0; i < numPages + 1; i++){
-                for (int j = 0; j < TILE_BUTTONS.length; j++){
-                    if (cont < numTiles){
-                            pagesList.get(i).add(tileListNoSAD.get(cont).baseTile);
+            for (int i = 0; i < numPages + 1; i++) {
+                for (int j = 0; j < TILE_BUTTONS.length; j++) {
+                    if (cont < numTiles) {
+                        pagesList.get(i).add(tileListNoSAD.get(cont).baseTile);
                     }
                     cont++;
                 }
@@ -234,12 +211,12 @@ public class Sudan extends GameActivity {
         }
     }
 
-    public void splitSyllablesListAcrossPages(){
+    public void splitSyllablesListAcrossPages() {
         int numSylls = syllableList.size();
         int cont = 0;
-        for (int i = 0; i < numPages + 1; i++){
-            for (int j = 0; j < SYLL_BUTTONS.length; j++){
-                if (cont < numSylls){
+        for (int i = 0; i < numPages + 1; i++) {
+            for (int j = 0; j < SYLL_BUTTONS.length; j++) {
+                if (cont < numSylls) {
                     pagesList.get(i).add(syllableList.get(cont).syllable);
                 }
                 cont++;
@@ -247,15 +224,15 @@ public class Sudan extends GameActivity {
         }
     }
 
-    public void showCorrectNumTiles1PerSymbolAndType(int page){
+    public void showCorrectNumTiles1PerSymbolAndType(int page) {
         // visibleTiles must now be <= 63
         // if tileList.size() > 63, the rest will go on next page
 
-        // this function works fine for one page, not for multiple pages
+        // This function works fine for one page, not for multiple pages
 
         visibleTiles = 0;
 
-        for(int tileListLine = 0; tileListLine < tileListNoSAD.size();  tileListLine++){
+        for (int tileListLine = 0; tileListLine < tileListNoSAD.size(); tileListLine++) {
 
             Start.Tile t = tileListNoSAD.get(tileListLine);
             String type = t.tileType;
@@ -264,7 +241,7 @@ public class Sudan extends GameActivity {
             visibleTiles++;
 
             String typeColor;
-            switch(type){
+            switch (type) {
                 case "C":
                     typeColor = COLORS.get(1);
                     break;
@@ -281,14 +258,14 @@ public class Sudan extends GameActivity {
             int tileColor = Color.parseColor(typeColor);
             tileView.setBackgroundColor(tileColor);
 
-            if(t.tileTypeB.compareTo("none") != 0){
+            if (t.tileTypeB.compareTo("none") != 0) {
                 tileView = findViewById(TILE_BUTTONS[visibleTiles]);
                 tileView.setText(t.baseTile);
                 visibleTiles++;
 
                 String typeB = t.tileTypeB;
                 String typeColorB;
-                switch(typeB){
+                switch (typeB) {
                     case "C":
                         typeColorB = COLORS.get(1);
                         break;
@@ -306,7 +283,7 @@ public class Sudan extends GameActivity {
                 tileView.setBackgroundColor(tileColorB);
             }
 
-            if(t.tileTypeC.compareTo("none") != 0){
+            if (t.tileTypeC.compareTo("none") != 0) {
 
                 tileView = findViewById(TILE_BUTTONS[visibleTiles]);
                 tileView.setText(t.baseTile);
@@ -314,7 +291,7 @@ public class Sudan extends GameActivity {
 
                 String typeC = t.tileTypeC;
                 String typeColorC = COLORS.get(1);
-                switch(typeC){
+                switch (typeC) {
                     case "C":
                         typeColorC = COLORS.get(1);
                         break;
@@ -349,27 +326,26 @@ public class Sudan extends GameActivity {
 
     }
 
-    public void showCorrectNumTiles(int page){
+    public void showCorrectNumTiles(int page) {
 
         visibleTiles = pagesList.get(page).size();
 
-        for (int k = 0; k < visibleTiles; k++)
-        {
+        for (int k = 0; k < visibleTiles; k++) {
             TextView tile = findViewById(TILE_BUTTONS[k]);
-            if(pagesList.get(page).get(k).endsWith("B") || pagesList.get(page).get(k).endsWith("C")){
-                tile.setText(pagesList.get(page).get(k).substring(0, pagesList.get(page).get(k).length() -1));
-            }else{
+            if (pagesList.get(page).get(k).endsWith("B") || pagesList.get(page).get(k).endsWith("C")) {
+                tile.setText(pagesList.get(page).get(k).substring(0, pagesList.get(page).get(k).length() - 1));
+            } else {
                 tile.setText(pagesList.get(page).get(k));
             }
             String type;
-            if (differentiateTypes){
+            if (differentiateTypes) {
                 // JP: what I need is a way to access the type of a tile in the tileListWithMultipleTypes
                 type = tileHashMapWithMultiTypesNoSAD.get(pagesList.get(page).get(k));
-            }else{
+            } else {
                 type = tileHashMapNoSAD.find(pagesList.get(page).get(k)).tileType;
             }
             String typeColor;
-            switch(type){
+            switch (type) {
                 case "C":
                     typeColor = COLORS.get(1);
                     break;
@@ -404,7 +380,7 @@ public class Sudan extends GameActivity {
 
         visibleTiles = pagesList.get(page).size();
 
-        for (int i = 0; i < visibleTiles; i++){
+        for (int i = 0; i < visibleTiles; i++) {
             TextView tile = findViewById(SYLL_BUTTONS[i]);
             tile.setText(pagesList.get(page).get(i));
             String color = syllableHashMap.find(pagesList.get(page).get(i)).color;
@@ -418,9 +394,9 @@ public class Sudan extends GameActivity {
             TextView key = findViewById(SYLL_BUTTONS[k]);
             if (k < visibleTiles) {
                 key.setVisibility(View.VISIBLE);
-                if (hasSyllableAudio){
+                if (hasSyllableAudio) {
                     key.setClickable(true);
-                }else{
+                } else {
                     key.setClickable(false);
                 }
             } else {
@@ -430,23 +406,23 @@ public class Sudan extends GameActivity {
         }
     }
 
-    public void nextPageArrow(View view){
-        if (currentPageNumber < numPages){
+    public void nextPageArrow(View view) {
+        if (currentPageNumber < numPages) {
             currentPageNumber++;
-            if (syllableGame.equals("S")){
+            if (syllableGame.equals("S")) {
                 showCorrectNumSyllables(currentPageNumber);
-            }else{
+            } else {
                 showCorrectNumTiles(currentPageNumber);
             }
         }
     }
 
-    public void prevPageArrow(View view){
-        if (currentPageNumber > 0){
+    public void prevPageArrow(View view) {
+        if (currentPageNumber > 0) {
             currentPageNumber--;
-            if (syllableGame.equals("S")){
+            if (syllableGame.equals("S")) {
                 showCorrectNumSyllables(currentPageNumber);
-            }else{
+            } else {
                 showCorrectNumTiles(currentPageNumber);
             }
         }
@@ -457,40 +433,33 @@ public class Sudan extends GameActivity {
         setOptionsRowUnclickable();
 
         String tileText = "";
-        int justClickedKey = Integer.parseInt((String)view.getTag()) + (currentPageNumber * 35);
-        if (syllableGame.equals("S")){
-            tileText = Start.syllableList.get(justClickedKey-1).syllable;
+        int justClickedKey = Integer.parseInt((String) view.getTag()) + (currentPageNumber * 35);
+        if (syllableGame.equals("S")) {
+            tileText = Start.syllableList.get(justClickedKey - 1).syllable;
 
 
-                gameSounds.play(syllableAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
-                soundSequencer.postDelayed(new Runnable()
-                {
-                    public void run()
-                    {
-                        if (repeatLocked)
-                        {
-                            setAllTilesClickable();
-                        }
-                        setOptionsRowClickable();
+            gameSounds.play(syllableAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+            soundSequencer.postDelayed(new Runnable() {
+                public void run() {
+                    if (repeatLocked) {
+                        setAllTilesClickable();
                     }
+                    setOptionsRowClickable();
+                }
 
-                }, 925);
+            }, 925);
 
-        }else{
-            if(!differentiateTypes){//Not differentiating the uses of multifunction tiles
-                tileText = tileListNoSAD.get(justClickedKey-1).baseTile;
-            }
-            else{ //differentiateMultipleTypes ==2,we ARE differentiating the uses of multifunction tiles
-                tileText = tileListWithMultiTypesNoSAD.get(justClickedKey-1);
+        } else {
+            if (!differentiateTypes) {// Not differentiating the uses of multifunction tiles
+                tileText = tileListNoSAD.get(justClickedKey - 1).baseTile;
+            } else { // differentiateMultipleTypes ==2. We ARE differentiating the uses of multifunction tiles
+                tileText = tileListWithMultiTypesNoSAD.get(justClickedKey - 1);
             }
 
             gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
-            soundSequencer.postDelayed(new Runnable()
-            {
-                public void run()
-                {
-                    if (repeatLocked)
-                    {
+            soundSequencer.postDelayed(new Runnable() {
+                public void run() {
+                    if (repeatLocked) {
                         setAllTilesClickable();
                     }
                     setOptionsRowClickable();
@@ -500,8 +469,7 @@ public class Sudan extends GameActivity {
         }
     }
 
-    public void clickPicHearAudio(View view)
-    {
+    public void clickPicHearAudio(View view) {
         super.clickPicHearAudio(view);
     }
 

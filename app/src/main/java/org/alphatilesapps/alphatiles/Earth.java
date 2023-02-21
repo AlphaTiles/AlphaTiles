@@ -14,14 +14,9 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.logging.Logger;
-
-import static android.view.View.VISIBLE;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -46,24 +41,17 @@ public class Earth extends AppCompatActivity {
 
     ConstraintLayout earthCL;
 
-    private static final Logger LOGGER = Logger.getLogger(Earth.class.getName());
-
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         context = this;
-
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
-
         setContentView(R.layout.earth);
-
         earthCL = findViewById(R.id.earthCL);
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
             ImageView goForwardImage = (ImageView) findViewById(R.id.goForward);
             ImageView goBackImage = (ImageView) findViewById(R.id.goBack);
             ImageView activePlayerImage = (ImageView) findViewById(R.id.activePlayerImage);
@@ -102,10 +90,9 @@ public class Earth extends AppCompatActivity {
 
         updateDoors();
 
-        if(scriptDirection.compareTo("RTL") == 0){
+        if (scriptDirection.compareTo("RTL") == 0) {
             forceRTLIfSupported();
-        }
-        else{
+        } else {
             forceLTRIfSupported();
         }
     }
@@ -130,7 +117,7 @@ public class Earth extends AppCompatActivity {
                     int doorIndex = Integer.parseInt((String) earthCL.getChildAt(j).getTag()) - 1;
                     String doorText = String.valueOf((pageNumber * doorsPerPage) + doorIndex + 1);
                     ((TextView) child).setText(doorText);
-                    if (((pageNumber * doorsPerPage) + doorIndex) >= Start.gameList.size() ) {
+                    if (((pageNumber * doorsPerPage) + doorIndex) >= Start.gameList.size()) {
                         ((TextView) child).setVisibility(View.INVISIBLE);
                     } else {
                         country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
@@ -144,7 +131,7 @@ public class Earth extends AppCompatActivity {
                         // So we are forcing this game's door to initialize with a start
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                        if (country.equals("Romania")||country.equals("Sudan")) {
+                        if (country.equals("Romania") || country.equals("Sudan")) {
                             trackerCount = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
                         } else if (trackerCount < 12) {
@@ -156,15 +143,14 @@ public class Earth extends AppCompatActivity {
 
                         boolean changeColor = true;
                         String doorStyle = "";
-                        if (country.equals("Sudan")||country.equals("Romania")){
+                        if (country.equals("Sudan") || country.equals("Romania")) {
                             doorStyle = "_inprocess";
-                        }
-                        else if (trackerCount > 0 && trackerCount < 12) {
+                        } else if (trackerCount > 0 && trackerCount < 12) {
                             doorStyle = "_inprocess";
-                        } else if (trackerCount >= 12){
+                        } else if (trackerCount >= 12) {
                             doorStyle = "_mastery";
                             changeColor = false;
-                        } else{ // 0
+                        } else { // 0
                             doorStyle = "";
                         }
 
@@ -175,7 +161,7 @@ public class Earth extends AppCompatActivity {
                         int resId = getResources().getIdentifier(drawableEntryName, "drawable", getPackageName());
                         Drawable unwrappedDrawable = AppCompatResources.getDrawable(context, resId);
                         Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
-                        if (changeColor){
+                        if (changeColor) {
                             DrawableCompat.setTint(wrappedDrawable, Color.parseColor(COLORS.get(
                                     Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage)
                                             + doorIndex).gameColor))));
@@ -184,8 +170,7 @@ public class Earth extends AppCompatActivity {
                         ((TextView) child).setVisibility(View.VISIBLE);
 
                     }
-                }
-                catch (Throwable ex)	// never reached if tags are well formed!
+                } catch (Throwable ex)    // Never reached if tags are well formed!
                 {
                     ex.printStackTrace();
                     continue;
@@ -195,52 +180,47 @@ public class Earth extends AppCompatActivity {
 
         ImageView backArrow = findViewById(R.id.goBack);
         if (pageNumber == 0) {
-
             backArrow.setVisibility(View.INVISIBLE);
-
         } else {
-
             backArrow.setVisibility(View.VISIBLE);
-
         }
 
         ImageView forwardArrow = findViewById(R.id.goForward);
         if (((pageNumber + 1) * doorsPerPage) < Start.gameList.size()) {
-
             forwardArrow.setVisibility(View.VISIBLE);
-
         } else {
-
             forwardArrow.setVisibility(View.INVISIBLE);
-
         }
 
     }
 
-    public void goToAboutPage(View view)
-    {
+    public void goToAboutPage(View view) {
+
         Intent intent = getIntent();
         intent.setClass(context, About.class);
         startActivity(intent);
+
     }
 
-    public void goBackToChoosePlayer(View view)
-    {
+    public void goBackToChoosePlayer(View view) {
+
         startActivity(new Intent(context, ChoosePlayer.class));
         finish();
+
     }
 
-    public void goToResources(View view)
-    {
+    public void goToResources(View view) {
+
         Intent intent = getIntent();
         intent.setClass(context, Resources.class);
         startActivity(intent);
+
     }
 
     public void goToDoor(View view) {
 
         finish();
-        int doorIndex = Integer.parseInt((String)view.getTag()) - 1;
+        int doorIndex = Integer.parseInt((String) view.getTag()) - 1;
         String project = "org.alphatilesapps.alphatiles.";  // how to call this with code? It seemed to produce variable results
         String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
         String activityClass = project + country;
@@ -249,9 +229,9 @@ public class Earth extends AppCompatActivity {
         gameNumber = (pageNumber * doorsPerPage) + doorIndex + 1;
         String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameMode;
 
-        Intent intent = getIntent();	// preserve Extras
+        Intent intent = getIntent();    // preserve Extras
         try {
-            intent.setClass(context, Class.forName(activityClass));	// so we retain the Extras
+            intent.setClass(context, Class.forName(activityClass));    // so we retain the Extras
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -271,9 +251,7 @@ public class Earth extends AppCompatActivity {
         if (pageNumber > 0) {
             pageNumber--;
         }
-        LOGGER.info("Remember: pre updateDoors (Backward): pageNumber = " + pageNumber);
         updateDoors();
-        LOGGER.info("Remember: post updateDoors (Backward): pageNumber = " + pageNumber);
 
     }
 
@@ -282,24 +260,20 @@ public class Earth extends AppCompatActivity {
         if (((pageNumber + 1) * doorsPerPage) < Start.gameList.size()) {
             pageNumber++;
         }
-        LOGGER.info("Remember: pre updateDoors (Forward): pageNumber = " + pageNumber);
         updateDoors();
-        LOGGER.info("Remember: post updateDoors (Forward): pageNumber = " + pageNumber);
 
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void forceRTLIfSupported()
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+    private void forceRTLIfSupported() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void forceLTRIfSupported()
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+    private void forceLTRIfSupported() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
     }

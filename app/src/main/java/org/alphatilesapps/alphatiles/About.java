@@ -63,7 +63,7 @@ public class About extends AppCompatActivity {
         privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
         hidePrivacyPolicy = Boolean.parseBoolean(hidePrivacyPolicySetting);
-        if(hidePrivacyPolicy) {
+        if (hidePrivacyPolicy) {
             privacyPolicy.setVisibility(View.GONE);
         }
 
@@ -71,17 +71,16 @@ public class About extends AppCompatActivity {
         TextView verInfo = findViewById(R.id.appVersionInEnglish);
         verInfo.setText(getString(R.string.ver_info, verName));
 
-        if(scriptDirection.compareTo("RTL") == 0){
+        if (scriptDirection.compareTo("RTL") == 0) {
             forceRTLIfSupported();
-        }
-        else{
+        } else {
             forceLTRIfSupported();
         }
 
-        if(hideSILlogoSetting.compareTo("")!=0){
+        if (hideSILlogoSetting.compareTo("") != 0) {
             hideSILlogo = Boolean.parseBoolean(hideSILlogoSetting);
 
-            if(hideSILlogo){
+            if (hideSILlogo) {
 
                 ImageView SILlogoImage = (ImageView) findViewById(R.id.logoSILImage);
                 SILlogoImage.setVisibility(View.GONE);
@@ -92,15 +91,13 @@ public class About extends AppCompatActivity {
                 constraintSet.centerHorizontally(R.id.gamesHomeImage, R.id.aboutCL);
                 constraintSet.applyTo(constraintLayout);
             }
-        }
-        else{//default
+        } else {//default
             hideSILlogo = false;
         }
 
     }
 
-    public void goBackToEarth(View view)
-    {
+    public void goBackToEarth(View view) {
         Intent intent = getIntent();
         intent.setClass(context, Earth.class);
         startActivity(intent);
@@ -108,17 +105,15 @@ public class About extends AppCompatActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void forceRTLIfSupported()
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+    private void forceRTLIfSupported() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void forceLTRIfSupported()
-    {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+    private void forceLTRIfSupported() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
     }

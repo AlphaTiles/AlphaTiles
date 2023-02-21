@@ -5,11 +5,10 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -20,8 +19,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
-import static org.alphatilesapps.alphatiles.Start.VOWELS;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.COLORS;
@@ -62,40 +59,43 @@ public class Georgia extends GameActivity {
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16, R.id.tile17, R.id.tile18
     };
 
-    protected int[] getTileButtons() { return TILE_BUTTONS;}
+    protected int[] getTileButtons() {
+        return TILE_BUTTONS;
+    }
 
-    protected int[] getWordImages() {return null;}
+    protected int[] getWordImages() {
+        return null;
+    }
 
     @Override
     protected void centerGamesHomeImage() {
 
-            ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-            instructionsButton.setVisibility(View.GONE);
-            int gameID = 0;
-            if (syllableGame.equals("S")){
-                gameID = R.id.georgiaCL_syll;
-            }else{
-                gameID = R.id.georgiaCL;
-            }
-            ConstraintLayout constraintLayout = findViewById(gameID);
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(constraintLayout);
-            constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
-            constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
-            constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-            constraintSet.applyTo(constraintLayout);
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+        int gameID = 0;
+        if (syllableGame.equals("S")) {
+            gameID = R.id.georgiaCL_syll;
+        } else {
+            gameID = R.id.georgiaCL;
+        }
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
     }
 
     @Override
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
         int audioInstructionsResID;
-        try{
+        try {
 //          audioInstructionsResID = res.getIdentifier("georgia_" + challengeLevel, "raw", context.getPackageName());
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             audioInstructionsResID = -1;
         }
         return audioInstructionsResID;
@@ -107,17 +107,17 @@ public class Georgia extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         int gameID = 0;
-        if (syllableGame.equals("S")){
+        if (syllableGame.equals("S")) {
             setContentView(R.layout.georgia_syll);
             gameID = R.id.georgiaCL_syll;
-        }else{
+        } else {
             setContentView(R.layout.georgia);
             gameID = R.id.georgiaCL;
         }
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
-        if (scriptDirection.compareTo("RTL") == 0){ //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -142,7 +142,7 @@ public class Georgia extends GameActivity {
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
         syllableGame = getIntent().getStringExtra("syllableGame");
 
-        String gameUniqueID = country.toLowerCase().substring(0,2) + challengeLevel + syllableGame;
+        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
@@ -160,21 +160,19 @@ public class Georgia extends GameActivity {
                 visibleTiles = 6;
         }
 
-        if (syllableGame.equals("S")){
-            sortableSyllArray = (Start.SyllableList)Start.syllableList.clone();
+        if (syllableGame.equals("S")) {
+            sortableSyllArray = (Start.SyllableList) Start.syllableList.clone();
         }
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(georgiaPoints));
 
-        /*SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);*/
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
+        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
 
         updateTrackers();
 
-        if(getAudioInstructionsResID()==0){
+        if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
@@ -202,16 +200,16 @@ public class Georgia extends GameActivity {
         }
 
         repeatLocked = true;
-        if (syllableGame.equals("S")){
+        if (syllableGame.equals("S")) {
             Collections.shuffle(sortableSyllArray); //JP
         }
 
         chooseWord();
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
-        if (syllableGame.equals("S")){
+        if (syllableGame.equals("S")) {
             setUpSyllables();
-        }else{
+        } else {
             setUpTiles();
         }
         playActiveWordClip(false);
@@ -228,7 +226,7 @@ public class Georgia extends GameActivity {
     private void chooseWord() {
         boolean freshWord = false;
 
-        while(!freshWord) {
+        while (!freshWord) {
             Random rand = new Random();
             int randomNum = rand.nextInt(Start.wordList.size()); // KP
 
@@ -236,12 +234,12 @@ public class Georgia extends GameActivity {
             wordInLOP = Start.wordList.get(randomNum).localWord; // KP
 
             //If this word isn't one of the 3 previously tested words, we're good // LM
-            if(wordInLWC.compareTo(lastWord)!=0
-                    && wordInLWC.compareTo(secondToLastWord)!=0
-                    && wordInLWC.compareTo(thirdToLastWord)!=0){
+            if (wordInLWC.compareTo(lastWord) != 0
+                    && wordInLWC.compareTo(secondToLastWord) != 0
+                    && wordInLWC.compareTo(thirdToLastWord) != 0) {
                 // this next section was moved by JP to help make sure that whatever word is chosen
                 // actually begins with a C or V
-                if (syllableGame.equals("S")){
+                if (syllableGame.equals("S")) {
                     parsedWordSyllArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); //JP
                     initialSyll = parsedWordSyllArrayFinal.get(0);
 
@@ -253,11 +251,11 @@ public class Georgia extends GameActivity {
                     ImageView image = (ImageView) findViewById(R.id.wordImage);
                     int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
                     image.setImageResource(resID);
-                }else{
+                } else {
                     parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
                     initialTile = parsedWordArrayFinal.get(0);
 
-                    if (CorV.contains(initialTile)){ // makes sure chosen word begins with C or V
+                    if (CorV.contains(initialTile)) { // makes sure chosen word begins with C or V
                         freshWord = true;
                         thirdToLastWord = secondToLastWord;
                         secondToLastWord = lastWord;
@@ -290,21 +288,21 @@ public class Georgia extends GameActivity {
         // then with same last letter, then random
 
         int i = 0;
-        while (answerChoices.size() < visibleTiles && i < sortableSyllArray.size()){
+        while (answerChoices.size() < visibleTiles && i < sortableSyllArray.size()) {
             // and does so while skipping repeats because it is a set
             // and a set has no order so it will be randomized anyways
             String option = sortableSyllArray.get(i).syllable;
-            if (option.length() >= 2 && initialSyll.length() >= 2){
+            if (option.length() >= 2 && initialSyll.length() >= 2) {
                 if (option.charAt(0) == initialSyll.charAt(0)
-                        && option.charAt(1) == initialSyll.charAt(1)){
+                        && option.charAt(1) == initialSyll.charAt(1)) {
                     answerChoices.add(option);
-                }else if(option.charAt(0) == initialSyll.charAt(0)){
+                } else if (option.charAt(0) == initialSyll.charAt(0)) {
                     answerChoices.add(option);
                 }
-            }else{
-                if(option.charAt(0) == initialSyll.charAt(0)){
+            } else {
+                if (option.charAt(0) == initialSyll.charAt(0)) {
                     answerChoices.add(option);
-                }else if(option.charAt(option.length()-1) == initialSyll.charAt(initialSyll.length()-1)){
+                } else if (option.charAt(option.length() - 1) == initialSyll.charAt(initialSyll.length() - 1)) {
                     answerChoices.add(option);
                 }
             }
@@ -313,7 +311,7 @@ public class Georgia extends GameActivity {
         }
 
         int j = 0;
-        while (answerChoices.size() < visibleTiles){
+        while (answerChoices.size() < visibleTiles) {
             //this will probably never happen
             answerChoices.add(sortableSyllArray.get(j).syllable);
             j++;
@@ -321,7 +319,7 @@ public class Georgia extends GameActivity {
 
         List<String> answerChoicesList = new ArrayList<>(answerChoices); //so we can index into answer choices now
 
-        for (int t = 0; t < TILE_BUTTONS.length; t++){
+        for (int t = 0; t < TILE_BUTTONS.length; t++) {
             TextView gameTile = findViewById(TILE_BUTTONS[t]);
 
             if (sortableSyllArray.get(t).syllable.equals(initialSyll) && t < visibleTiles) {
@@ -331,7 +329,7 @@ public class Georgia extends GameActivity {
             String tileColorStr = COLORS.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
-            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3){
+            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) {
                 if (t < visibleTiles) {
                     gameTile.setText(sortableSyllArray.get(t).syllable); // KP
                     gameTile.setBackgroundColor(tileColor);
@@ -344,7 +342,7 @@ public class Georgia extends GameActivity {
                     gameTile.setClickable(false);
                     gameTile.setVisibility(View.INVISIBLE);
                 }
-            }else{
+            } else {
                 if (t < visibleTiles) {
                     // think through this logic more -- how to get distractor syllables in there but
                     // also fill other syllables beyond the 3 distractors
@@ -354,14 +352,14 @@ public class Georgia extends GameActivity {
                     // filter out repeats
 
                     // then iterate through TILE_BUTTONS and fill them in using the other array, shuffled
-                    if (answerChoicesList.get(t) == initialSyll){
+                    if (answerChoicesList.get(t) == initialSyll) {
                         correctSyllRepresented = true;
                     }
                     gameTile.setText(answerChoicesList.get(t)); // KP
                     gameTile.setBackgroundColor(tileColor);
                     gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                     gameTile.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     gameTile.setText(String.valueOf(t + 1));
                     gameTile.setBackgroundResource(R.drawable.textview_border);
                     gameTile.setTextColor(Color.parseColor("#000000")); // black
@@ -373,9 +371,7 @@ public class Georgia extends GameActivity {
 
         }
 
-        if (!correctSyllRepresented) {
-
-            // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
+        if (!correctSyllRepresented) { // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
 
             Random rand = new Random();
             int randomNum = rand.nextInt(visibleTiles - 1); // KP
@@ -400,23 +396,23 @@ public class Georgia extends GameActivity {
         answerChoices.add(answer.altTiles[2]);
 
         int i = 0;
-        while (answerChoices.size() < visibleTiles && i < CorV.size()){
+        while (answerChoices.size() < visibleTiles && i < CorV.size()) {
             // and does so while skipping repeats because it is a set
             // and a set has no order so it will be randomized anyways
             Random rand = new Random();
             int index = rand.nextInt(CorV.size() - 1);
             String option = CorV.get(index);
-            if (option.length() >= 2 && initialTile.length() >= 2){
+            if (option.length() >= 2 && initialTile.length() >= 2) {
                 if (option.charAt(0) == initialTile.charAt(0)
-                        && option.charAt(1) == initialTile.charAt(1)){
+                        && option.charAt(1) == initialTile.charAt(1)) {
                     answerChoices.add(option);
-                }else if(option.charAt(0) == initialTile.charAt(0)){
+                } else if (option.charAt(0) == initialTile.charAt(0)) {
                     answerChoices.add(option);
                 }
-            }else{
-                if(option.charAt(0) == initialTile.charAt(0)){
+            } else {
+                if (option.charAt(0) == initialTile.charAt(0)) {
                     answerChoices.add(option);
-                }else if(option.charAt(option.length()-1) == initialTile.charAt(initialTile.length()-1)){
+                } else if (option.charAt(option.length() - 1) == initialTile.charAt(initialTile.length() - 1)) {
                     answerChoices.add(option);
                 }
             }
@@ -425,7 +421,7 @@ public class Georgia extends GameActivity {
         }
 
         int j = 0;
-        while (answerChoices.size() < visibleTiles){
+        while (answerChoices.size() < visibleTiles) {
             Random rand = new Random();
             int index = rand.nextInt(CorV.size() - 1);
             answerChoices.add(CorV.get(index));
@@ -434,7 +430,7 @@ public class Georgia extends GameActivity {
 
         List<String> answerChoicesList = new ArrayList<>(answerChoices); //so we can index into answer choices now
 
-        for (int t = 0; t < TILE_BUTTONS.length; t++ ) {
+        for (int t = 0; t < TILE_BUTTONS.length; t++) {
 
             TextView gameTile = findViewById(TILE_BUTTONS[t]);
 
@@ -445,13 +441,13 @@ public class Georgia extends GameActivity {
             String tileColorStr = COLORS.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
-            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3){ //random wrong
-            if (t < visibleTiles) {
-                gameTile.setText(CorV.get(t)); // KP
-                gameTile.setBackgroundColor(tileColor);
-                gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
-                gameTile.setVisibility(View.VISIBLE);
-                gameTile.setClickable(true);
+            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { //random wrong
+                if (t < visibleTiles) {
+                    gameTile.setText(CorV.get(t)); // KP
+                    gameTile.setBackgroundColor(tileColor);
+                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                    gameTile.setVisibility(View.VISIBLE);
+                    gameTile.setClickable(true);
                 } else {
                     gameTile.setText(String.valueOf(t + 1));
                     gameTile.setBackgroundResource(R.drawable.textview_border);
@@ -459,7 +455,7 @@ public class Georgia extends GameActivity {
                     gameTile.setClickable(false);
                     gameTile.setVisibility(View.INVISIBLE);
                 }
-            }else{ //distractors
+            } else { //distractors
                 if (t < visibleTiles) {
                     // think through this logic more -- how to get distractor syllables in there but
                     // also fill other syllables beyond the 3 distractors
@@ -469,14 +465,14 @@ public class Georgia extends GameActivity {
                     // filter out repeats
 
                     // then iterate through TILE_BUTTONS and fill them in using the other array, shuffled
-                    if (answerChoicesList.get(t) == initialTile){
+                    if (answerChoicesList.get(t) == initialTile) {
                         correctTileRepresented = true;
                     }
                     gameTile.setText(answerChoicesList.get(t)); // KP
                     gameTile.setBackgroundColor(tileColor);
                     gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                     gameTile.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     gameTile.setText(String.valueOf(t + 1));
                     gameTile.setBackgroundResource(R.drawable.textview_border);
                     gameTile.setTextColor(Color.parseColor("#000000")); // black
@@ -489,9 +485,7 @@ public class Georgia extends GameActivity {
         }
 
         if (!correctTileRepresented) {
-
             // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
-
             Random rand = new Random();
             int randomNum = rand.nextInt(visibleTiles - 1); // KP
             TextView gameTile = findViewById(TILE_BUTTONS[randomNum]);
@@ -511,13 +505,13 @@ public class Georgia extends GameActivity {
         setOptionsRowUnclickable();
 
         String correct = "";
-        if (syllableGame.equals("S")){
+        if (syllableGame.equals("S")) {
             correct = initialSyll;
-        }else{
+        } else {
             correct = initialTile;
         }
 
-        int tileNo = justClickedTile - 1; //  justClickedTile uses 1 to 18, t uses the array ID (between [0] and [17]
+        int tileNo = justClickedTile - 1; // justClickedTile uses 1 to 18, t uses the array ID (between [0] and [17]
         TextView tile = findViewById(TILE_BUTTONS[tileNo]);
         String selectedTile = tile.getText().toString();
 
@@ -531,7 +525,7 @@ public class Georgia extends GameActivity {
             pointsEarned.setText(String.valueOf(georgiaPoints));
 
             trackerCount++;
-            if(trackerCount>=12){
+            if (trackerCount >= 12) {
                 georgiaHasChecked12Trackers = true;
             }
             updateTrackers();
@@ -541,16 +535,16 @@ public class Georgia extends GameActivity {
             editor.putInt("storedPoints_player" + playerString, points);
             editor.apply();
             editor.putInt("storedGeorgiaPoints_level" + challengeLevel + "_player" + playerString
-                   + "_" + syllableGame, georgiaPoints);
+                    + "_" + syllableGame, georgiaPoints);
             editor.apply();
-            editor.putBoolean("storedGeorgiaHasChecked12Trackers_level" + challengeLevel +"_player"
+            editor.putBoolean("storedGeorgiaHasChecked12Trackers_level" + challengeLevel + "_player"
                     + playerString + "_" + syllableGame, georgiaHasChecked12Trackers);
             editor.apply();
             String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-            for (int t = 0; t < TILE_BUTTONS.length; t++ ) {
+            for (int t = 0; t < TILE_BUTTONS.length; t++) {
                 TextView gameTile = findViewById(TILE_BUTTONS[t]);
                 gameTile.setClickable(false);
                 if (t != (tileNo)) {
@@ -572,13 +566,12 @@ public class Georgia extends GameActivity {
     }
 
 
-    public void onBtnClick (View view) {
-        respondToTileSelection(Integer.parseInt((String)view.getTag())); // KP
+    public void onBtnClick(View view) {
+        respondToTileSelection(Integer.parseInt((String) view.getTag())); // KP
     }
 
 
-    public void clickPicHearAudio(View view)
-    {
+    public void clickPicHearAudio(View view) {
         super.clickPicHearAudio(view);
     }
 
@@ -586,8 +579,8 @@ public class Georgia extends GameActivity {
         super.goBackToEarth(view);
     }
 
-    public void playAudioInstructions(View view){
-        if(getAudioInstructionsResID() > 0) {
+    public void playAudioInstructions(View view) {
+        if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
     }

@@ -1,14 +1,12 @@
 package org.alphatilesapps.alphatiles;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import static org.alphatilesapps.alphatiles.Start.langInfoList;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 
@@ -29,14 +27,12 @@ public class Celebration extends AppCompatActivity {
     }
 
 
-    public void goBackToEarth(View view)
-    {
+    public void goBackToEarth(View view) {
         Intent intent = getIntent();
         intent.setClass(context, Earth.class);
         startActivity(intent);
         finish();
     }
-
 
 
 }
