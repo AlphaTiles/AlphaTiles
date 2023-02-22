@@ -228,15 +228,8 @@ public class UnitedStates extends GameActivity {
 
         for (int b = 0; b < visibleTiles; b += 2) {
 
-            int bLRRL;
-            if (scriptDirection.compareTo("RTL") == 0) {
-                bLRRL = visibleTiles - 2 - b;
-            } else {
-                bLRRL = b;
-            }
-
-            Button tileButtonA = (Button) findViewById(TILE_BUTTONS[bLRRL]);
-            Button tileButtonB = (Button) findViewById(TILE_BUTTONS[bLRRL + 1]);
+            Button tileButtonA = (Button) findViewById(TILE_BUTTONS[b]);
+            Button tileButtonB = (Button) findViewById(TILE_BUTTONS[b + 1]);
 
             String tileColorStr = COLORS.get((b % 5) / 2);
             int tileColor = Color.parseColor(tileColorStr);
@@ -316,24 +309,9 @@ public class UnitedStates extends GameActivity {
 
         StringBuilder displayedWord = new StringBuilder(); // KP
 
-        // KP
-        if (scriptDirection.compareTo("RTL") == 0) {
-            for (int j = selections.length - 1; j >= 0; j--) {
-
-                if (!selections[j].equals("")) {
-
-                    displayedWord.append(selections[j]);
-
-                }
-            }
-        } else {
-            for (int j = 0; j < selections.length; j++) {
-
-                if (!selections[j].equals("")) {
-
-                    displayedWord.append(selections[j]);
-
-                }
+        for (int j = 0; j < selections.length; j++) {
+            if (!selections[j].equals("")) {
+                displayedWord.append(selections[j]);
             }
         }
 
