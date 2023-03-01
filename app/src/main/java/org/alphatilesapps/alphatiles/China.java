@@ -97,7 +97,7 @@ public class China extends GameActivity {
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
-        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
             ImageView playNextWordImage = (ImageView) findViewById(R.id.playNextWord);

@@ -51,7 +51,7 @@ public class Earth extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.equals("RTL")) {
             ImageView goForwardImage = (ImageView) findViewById(R.id.goForward);
             ImageView goBackImage = (ImageView) findViewById(R.id.goBack);
             ImageView activePlayerImage = (ImageView) findViewById(R.id.activePlayerImage);
@@ -90,7 +90,7 @@ public class Earth extends AppCompatActivity {
 
         updateDoors();
 
-        if (scriptDirection.compareTo("RTL") == 0) {
+        if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
         } else {
             forceLTRIfSupported();

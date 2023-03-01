@@ -71,13 +71,13 @@ public class About extends AppCompatActivity {
         TextView verInfo = findViewById(R.id.appVersionInEnglish);
         verInfo.setText(getString(R.string.ver_info, verName));
 
-        if (scriptDirection.compareTo("RTL") == 0) {
+        if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
         } else {
             forceLTRIfSupported();
         }
 
-        if (hideSILlogoSetting.compareTo("") != 0) {
+        if (!hideSILlogoSetting.equals("")) {
             hideSILlogo = Boolean.parseBoolean(hideSILlogoSetting);
 
             if (hideSILlogo) {

@@ -105,7 +105,7 @@ public class Sudan extends GameActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0) { // LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -258,7 +258,7 @@ public class Sudan extends GameActivity {
             int tileColor = Color.parseColor(typeColor);
             tileView.setBackgroundColor(tileColor);
 
-            if (t.tileTypeB.compareTo("none") != 0) {
+            if (!t.tileTypeB.equals("none")) {
                 tileView = findViewById(TILE_BUTTONS[visibleTiles]);
                 tileView.setText(t.baseTile);
                 visibleTiles++;
@@ -283,7 +283,7 @@ public class Sudan extends GameActivity {
                 tileView.setBackgroundColor(tileColorB);
             }
 
-            if (t.tileTypeC.compareTo("none") != 0) {
+            if (!t.tileTypeC.equals("none")) {
 
                 tileView = findViewById(TILE_BUTTONS[visibleTiles]);
                 tileView.setText(t.baseTile);
