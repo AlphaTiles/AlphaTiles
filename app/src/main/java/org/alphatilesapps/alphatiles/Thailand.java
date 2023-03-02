@@ -141,7 +141,7 @@ public class Thailand extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -220,9 +220,9 @@ public class Thailand extends GameActivity {
                         refTile = parsedWordArrayFinal.get(0);
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
-                    if (refTile.compareTo(refTileLast) != 0
-                            && refTile.compareTo(refTileSecondToLast) != 0
-                            && refTile.compareTo(refTileThirdToLast) != 0) {
+                    if (!refTile.equals(refTileLast)
+                            && !refTile.equals(refTileSecondToLast)
+                            && !refTile.equals(refTileThirdToLast)) {
                         freshTile = true;
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
@@ -245,9 +245,9 @@ public class Thailand extends GameActivity {
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
                     // SAD should never be first tile linguistically, so no need to programatically filter out
-                    if (refTile.compareTo(refTileLast) != 0
-                            && refTile.compareTo(refTileSecondToLast) != 0
-                            && refTile.compareTo(refTileThirdToLast) != 0) {
+                    if (!refTile.equals(refTileLast)
+                            && !refTile.equals(refTileSecondToLast)
+                            && !refTile.equals(refTileThirdToLast)) {
                         freshTile = true;
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
@@ -269,9 +269,9 @@ public class Thailand extends GameActivity {
                         refTile = parsedWordArrayFinal.get(0);
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
-                    if (refTile.compareTo(refTileLast) != 0
-                            && refTile.compareTo(refTileSecondToLast) != 0
-                            && refTile.compareTo(refTileThirdToLast) != 0) {
+                    if (!refTile.equals(refTileLast)
+                            && !refTile.equals(refTileSecondToLast)
+                            && !refTile.equals(refTileThirdToLast)) {
                         freshTile = true;
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
@@ -286,9 +286,9 @@ public class Thailand extends GameActivity {
             while (!freshTile) {
                 int randomNum2 = rand.nextInt(sortableSyllArray.size());
                 refTile = sortableSyllArray.get(randomNum2).syllable;
-                if (refTile.compareTo(refTileLast) != 0
-                        && refTile.compareTo(refTileSecondToLast) != 0
-                        && refTile.compareTo(refTileThirdToLast) != 0) {
+                if (!refTile.equals(refTileLast)
+                        && !refTile.equals(refTileSecondToLast)
+                        && !refTile.equals(refTileThirdToLast)) {
                     freshTile = true;
                     refTileThirdToLast = refTileSecondToLast;
                     refTileSecondToLast = refTileLast;
@@ -302,9 +302,9 @@ public class Thailand extends GameActivity {
                 chooseWord();
                 parsedWordArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
                 refTile = parsedWordArrayFinal.get(0);
-                if (refTile.compareTo(refTileLast) != 0
-                        && refTile.compareTo(refTileSecondToLast) != 0
-                        && refTile.compareTo(refTileThirdToLast) != 0) {
+                if (!refTile.equals(refTileLast)
+                        && !refTile.equals(refTileSecondToLast)
+                        && !refTile.equals(refTileThirdToLast)) {
                     freshTile = true;
                     refTileThirdToLast = refTileSecondToLast;
                     refTileSecondToLast = refTileLast;
@@ -330,9 +330,9 @@ public class Thailand extends GameActivity {
                         refTile = sortableTilesArray.get(randomNum2).baseTile;
                         refTileType = sortableTilesArray.get(randomNum2).tileType;
                     }
-                    if (refTile.compareTo(refTileLast) != 0
-                            && refTile.compareTo(refTileSecondToLast) != 0
-                            && refTile.compareTo(refTileThirdToLast) != 0) {
+                    if (!refTile.equals(refTileLast)
+                            && !refTile.equals(refTileSecondToLast)
+                            && !refTile.equals(refTileThirdToLast)) {
                         freshTile = true;
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
@@ -354,9 +354,9 @@ public class Thailand extends GameActivity {
                         refTile = sortableTilesArray.get(randomNum2).upperTile;
                         refTileType = sortableTilesArray.get(randomNum2).tileType;
                     }
-                    if (refTile.compareTo(refTileLast) != 0
-                            && refTile.compareTo(refTileSecondToLast) != 0
-                            && refTile.compareTo(refTileThirdToLast) != 0) {
+                    if (!refTile.equals(refTileLast)
+                            && !refTile.equals(refTileSecondToLast)
+                            && !refTile.equals(refTileThirdToLast)) {
                         freshTile = true;
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;

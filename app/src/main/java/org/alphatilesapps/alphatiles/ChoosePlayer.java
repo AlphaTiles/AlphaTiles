@@ -83,7 +83,7 @@ public class ChoosePlayer extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0) { // LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.equals("RTL")) {
             ImageView avatar01Image = (ImageView) findViewById(R.id.avatar01);
             ImageView avatar02Image = (ImageView) findViewById(R.id.avatar02);
             ImageView avatar03Image = (ImageView) findViewById(R.id.avatar03);
@@ -145,12 +145,12 @@ public class ChoosePlayer extends AppCompatActivity {
 
             TextView name = findViewById(AVATAR_NAMES[n]);
             name.setText(playerName);
-            if (singleColorHex.compareTo("") != 0) {
+            if (!singleColorHex.equals("")) {
                 name.setBackgroundColor(Color.parseColor(singleColorHex));
             }
         }
 
-        if (scriptDirection.compareTo("RTL") == 0) {
+        if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
         } else {
             forceLTRIfSupported();
@@ -179,7 +179,7 @@ public class ChoosePlayer extends AppCompatActivity {
 
         String daysUntilExpirationSetting = settingsList.find("Days until expiration");
 
-        if (daysUntilExpirationSetting.compareTo("") != 0) {
+        if (!daysUntilExpirationSetting.equals("")) {
             int daysUntilExpiration = Integer.valueOf(daysUntilExpirationSetting);
             String installDate = prefs.getString("InstallDate", null);
             if (installDate == null) {

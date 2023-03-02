@@ -113,7 +113,7 @@ public class Brazil extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
-        if (scriptDirection.compareTo("RTL") == 0) { // LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -296,9 +296,9 @@ public class Brazil extends GameActivity {
             wordInLOP = Start.wordList.get(randomNum).localWord; // KP
 
             // If this word isn't one of the 3 previously tested words, we're good // LM
-            if (wordInLWC.compareTo(lastWord) != 0
-                    && wordInLWC.compareTo(secondToLastWord) != 0
-                    && wordInLWC.compareTo(thirdToLastWord) != 0) {
+            if (!wordInLWC.equals(lastWord)
+                    && !wordInLWC.equals(secondToLastWord)
+                    && !wordInLWC.equals(thirdToLastWord)) {
                 freshWord = true;
                 thirdToLastWord = secondToLastWord;
                 secondToLastWord = lastWord;

@@ -112,7 +112,7 @@ public class Italy extends GameActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
             ImageView playNextWordImage = (ImageView) findViewById(R.id.playNextWord);
@@ -283,7 +283,7 @@ public class Italy extends GameActivity {
 
         TextView tileJustSelected = findViewById(TILE_BUTTONS[indexOfTileJustSelected - 1]);
 
-        if (((String) tileJustSelected.getText()).compareTo(wordInLOP) == 0) {
+        if (((String) tileJustSelected.getText()).equals(wordInLOP)) {
             respondToCorrectSelection(indexOfTileJustSelected);
         } else {
             respondToIncorrectSelection();

@@ -53,7 +53,7 @@ public class SetPlayerName extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0) { // LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.equals("RTL")) {
             ImageView deleteImage = (ImageView) findViewById(R.id.deleteImage);
             ImageView avatarImage = (ImageView) findViewById(R.id.avatar);
 
@@ -97,7 +97,7 @@ public class SetPlayerName extends AppCompatActivity {
             name.setSelection(name.getText().length());
         }
 
-        if (scriptDirection.compareTo("RTL") == 0) {
+        if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
         } else {
             forceLTRIfSupported();
@@ -179,12 +179,12 @@ public class SetPlayerName extends AppCompatActivity {
         if (keysInUse > KEYS.length) {
             TextView key34 = findViewById(KEYS[KEYS.length - 2]);
             key34.setBackgroundResource(R.drawable.zz_backward_green);
-            if (scriptDirection.compareTo("RTL") == 0) { //LM: LTR is default
+            if (scriptDirection.equals("RTL")) {
                 key34.setRotationY(180);
             }
             key34.setText("");
             TextView key35 = findViewById(KEYS[KEYS.length - 1]);
-            if (scriptDirection.compareTo("RTL") == 0) { //LM: LTR is default
+            if (scriptDirection.equals("RTL")) {
                 key35.setRotationY(180);
             }
             key35.setBackgroundResource(R.drawable.zz_forward_green);
