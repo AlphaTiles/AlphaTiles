@@ -132,14 +132,14 @@ public class Romania extends GameActivity {
         pointsEarned.setText(String.valueOf(points));
 
         String differentiateTypesSetting = Start.settingsList.find("Differentiates types of multitype symbols");
+        
+        differentiateTypes = false;
         if (!differentiateTypesSetting.equals("")) {
             differentiateTypes = Boolean.parseBoolean(differentiateTypesSetting);
-
-            if (differentiateTypes) {
-                firstAlphabetTile = Start.tileListWithMultipleTypes.get(0); // LM
-            }
+        }
+        if (differentiateTypes) {
+            firstAlphabetTile = Start.tileListWithMultipleTypes.get(0); // LM
         } else {
-            differentiateTypes = false;
             firstAlphabetTile = Start.tileList.get(0).baseTile; // KP
         }
 
