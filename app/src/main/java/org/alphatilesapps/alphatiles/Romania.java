@@ -94,7 +94,7 @@ public class Romania extends GameActivity {
         // Display or show the three filter options based on value in aa_settings.txt
         Boolean showFilterOptions;
         String hasFilterSetting = settingsList.find("Show filter options for Game 001");
-        if (hasFilterSetting.compareTo("") != 0) {
+        if (!hasFilterSetting.equals("")) {
             showFilterOptions = Boolean.parseBoolean(hasFilterSetting);
         } else {
             showFilterOptions = false;
@@ -132,7 +132,7 @@ public class Romania extends GameActivity {
         pointsEarned.setText(String.valueOf(points));
 
         String differentiateTypesSetting = Start.settingsList.find("Differentiates types of multitype symbols");
-        if (differentiateTypesSetting.compareTo("") != 0) {
+        if (!differentiateTypesSetting.equals("")) {
             differentiateTypes = Boolean.parseBoolean(differentiateTypesSetting);
 
             if (differentiateTypes) {
@@ -148,7 +148,7 @@ public class Romania extends GameActivity {
         String startingAlphabetTile = prefs.getString("lastActiveTileGame001_player" + playerString, firstAlphabetTile);
 
         scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
-        if (scriptDirection.compareTo("RTL") == 0) {
+        if (scriptDirection.equals("RTL")) {
             forceRTL = true;
         } else {
             forceRTL = false;
@@ -515,10 +515,10 @@ public class Romania extends GameActivity {
         String someGameTileWithoutSuffix;
 
         someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-        if (someGameTileType.compareTo("B") == 0) {
+        if (someGameTileType.equals("B")) {
             someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
             someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-        } else if (someGameTileType.compareTo("C") == 0) {
+        } else if (someGameTileType.equals("C")) {
             someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
             someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
         } else {
@@ -569,10 +569,10 @@ public class Romania extends GameActivity {
         String someGameTileWithoutSuffix;
 
         someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-        if (someGameTileType.compareTo("B") == 0) {
+        if (someGameTileType.equals("B")) {
             someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
             someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-        } else if (someGameTileType.compareTo("C") == 0) {
+        } else if (someGameTileType.equals("C")) {
             someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
             someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
         } else {
@@ -624,10 +624,10 @@ public class Romania extends GameActivity {
         String someGameTileWithoutSuffix;
 
         someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-        if (someGameTileType.compareTo("B") == 0) {
+        if (someGameTileType.equals("B")) {
             someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
             someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-        } else if (someGameTileType.compareTo("C") == 0) {
+        } else if (someGameTileType.equals("C")) {
             someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
             someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
         } else {

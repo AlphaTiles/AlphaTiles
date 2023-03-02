@@ -50,7 +50,7 @@ public class Resources extends AppCompatActivity {
         buildResourcesArray();
         loadResources();
 
-        if (scriptDirection.compareTo("RTL") == 0) {
+        if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
         } else {
             forceLTRIfSupported();

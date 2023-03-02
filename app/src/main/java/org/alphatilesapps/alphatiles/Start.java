@@ -113,21 +113,21 @@ public class Start extends AppCompatActivity {
         buildColorsArray();
 
         String hasAudioSetting = settingsList.find("Has tile audio");
-        if (hasAudioSetting.compareTo("") != 0) {
+        if (!hasAudioSetting.equals("")) {
             hasTileAudio = Boolean.parseBoolean(hasAudioSetting);
         } else {
             hasTileAudio = false;
         }
 
         String differentiateTypesSetting = settingsList.find("Differentiates types of multitype symbols");
-        if (differentiateTypesSetting.compareTo("") != 0) {
+        if (!differentiateTypesSetting.equals("")) {
             differentiateTypes = Boolean.parseBoolean(differentiateTypesSetting);
         } else {
             differentiateTypes = false;
         }
 
         String after12checkedTrackersSetting = settingsList.find("After 12 checked trackers");
-        if (after12checkedTrackersSetting.compareTo("") != 0) {
+        if (!after12checkedTrackersSetting.equals("")) {
             after12checkedTrackers = Integer.valueOf(after12checkedTrackersSetting);
         } else {
             after12checkedTrackers = 3;
@@ -135,7 +135,7 @@ public class Start extends AppCompatActivity {
 
         //to make syllable audio optional
         String hasSyllableAudioSetting = settingsList.find("Has syllable audio");
-        if (hasSyllableAudioSetting.compareTo("") != 0) {
+        if (!hasSyllableAudioSetting.equals("")) {
             hasSyllableAudio = Boolean.parseBoolean(hasSyllableAudioSetting);
         } else {
             hasSyllableAudio = false;
@@ -304,11 +304,11 @@ public class Start extends AppCompatActivity {
                     tileHashMapWithMultiTypesNoSAD.put(tile.baseTile, tile.tileType);
                 }
                 // SAD should never have a 2nd or 3rd type other than "none"
-                if (tile.tileTypeB.compareTo("none") != 0) {
+                if (!tile.tileTypeB.equals("none")) {
                     tileListWithMultipleTypes.add(tile.baseTile + "B");
                     tileHashMapWithMultipleTypes.put(tile.baseTile + "B", tile.tileTypeB);
                 }
-                if (tile.tileTypeC.compareTo("none") != 0) {
+                if (!tile.tileTypeC.equals("none")) {
                     tileListWithMultipleTypes.add(tile.baseTile + "C");
                     tileHashMapWithMultipleTypes.put(tile.baseTile + "C", tile.tileTypeC);
                 }
@@ -641,10 +641,10 @@ public class Start extends AppCompatActivity {
             String someGameTileWithoutSuffix;
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.compareTo("B") == 0) {
+            if (someGameTileType.equals("B")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.compareTo("C") == 0) {
+            } else if (someGameTileType.equals("C")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
@@ -700,10 +700,10 @@ public class Start extends AppCompatActivity {
 
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.compareTo("B") == 0) {
+            if (someGameTileType.equals("B")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.compareTo("C") == 0) {
+            } else if (someGameTileType.equals("C")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
@@ -756,10 +756,10 @@ public class Start extends AppCompatActivity {
             String someGameTileWithoutSuffix;
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.compareTo("B") == 0) {
+            if (someGameTileType.equals("B")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.compareTo("C") == 0) {
+            } else if (someGameTileType.equals("C")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
@@ -816,10 +816,10 @@ public class Start extends AppCompatActivity {
 
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.compareTo("B") == 0) {
+            if (someGameTileType.equals("B")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.compareTo("C") == 0) {
+            } else if (someGameTileType.equals("C")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
@@ -873,10 +873,10 @@ public class Start extends AppCompatActivity {
             String someGameTileWithoutSuffix;
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.compareTo("B") == 0) {
+            if (someGameTileType.equals("B")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.compareTo("C") == 0) {
+            } else if (someGameTileType.equals("C")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
@@ -933,10 +933,10 @@ public class Start extends AppCompatActivity {
 
 
             someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.compareTo("B") == 0) {
+            if (someGameTileType.equals("B")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.compareTo("C") == 0) {
+            } else if (someGameTileType.equals("C")) {
                 someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
             } else {
@@ -1760,7 +1760,7 @@ public class Start extends AppCompatActivity {
 
         public Tile find(String key) {
             for (String k : keySet()) {
-                if (k.compareTo(key) == 0) {
+                if (k.equals(key)) {
                     return (get(k));
                 }
             }
@@ -1773,7 +1773,7 @@ public class Start extends AppCompatActivity {
 
         public Syllable find(String key) {
             for (String k : keySet()) {
-                if (k.compareTo(key) == 0) {
+                if (k.equals(key)) {
                     return (get(k));
                 }
             }
@@ -1786,7 +1786,7 @@ public class Start extends AppCompatActivity {
 
         public Word find(String key) {
             for (String k : keySet()) {
-                if (k.compareTo(key) == 0) {
+                if (k.equals(key)) {
                     return (get(k));
                 }
             }

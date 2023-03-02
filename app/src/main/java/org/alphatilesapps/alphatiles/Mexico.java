@@ -93,7 +93,7 @@ public class Mexico extends GameActivity {
         setContentView(R.layout.mexico);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
-        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -375,7 +375,7 @@ public class Mexico extends GameActivity {
             // The two cards do NOT match
             long delay = 0;
             String delaySetting = Start.settingsList.find("View memory cards for _ milliseconds");
-            if (delaySetting.compareTo("") != 0) {
+            if (!delaySetting.equals("")) {
                 delay = Long.valueOf(delaySetting);
             }
             handler = new Handler();

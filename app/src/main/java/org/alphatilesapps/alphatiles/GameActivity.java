@@ -120,7 +120,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
         className = getClass().getName();
 
-        if (scriptDirection.compareTo("RTL") == 0) {
+        if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
         } else {
             forceLTRIfSupported();

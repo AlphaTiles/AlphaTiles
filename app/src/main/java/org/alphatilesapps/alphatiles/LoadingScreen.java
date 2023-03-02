@@ -207,8 +207,8 @@ public class LoadingScreen extends AppCompatActivity {
             tileDurations.put(tile.baseTile, duration);
             tile.tileDuration1 = duration;
 
-            if (tile.tileTypeB.compareTo("none") != 0) {
-                if (tile.audioForTileB.compareTo("X") != 0) {
+            if (!tile.tileTypeB.equals("none")) {
+                if (!tile.audioForTileB.equals("X")) {
                     resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
                     duration = getAssetDuration(resId) + 100;
                     tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));

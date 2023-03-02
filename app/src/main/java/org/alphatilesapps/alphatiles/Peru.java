@@ -78,7 +78,7 @@ public class Peru extends GameActivity {
         setContentView(R.layout.peru);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0) { //LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
@@ -162,9 +162,9 @@ public class Peru extends GameActivity {
             wordInLOP = Start.wordList.get(randomNum).localWord; // KP
 
             //If this word isn't one of the 3 previously tested words, we're good // LM
-            if (wordInLWC.compareTo(lastWord) != 0
-                    && wordInLWC.compareTo(secondToLastWord) != 0
-                    && wordInLWC.compareTo(thirdToLastWord) != 0) {
+            if (!wordInLWC.equals(lastWord)
+                    && !wordInLWC.equals(secondToLastWord)
+                    && !wordInLWC.equals(thirdToLastWord)) {
                 freshWord = true;
                 thirdToLastWord = secondToLastWord;
                 secondToLastWord = lastWord;
@@ -219,7 +219,7 @@ public class Peru extends GameActivity {
                             nextWord.setText(incorrectChoice1);
                             isDuplicateAnswerChoice = false;
                             for (int j = 0; j < incorrectChoice1.length() - 2; j++) {
-                                if (incorrectChoice1.substring(j, j + 3).compareTo("للہ") == 0) {
+                                if (incorrectChoice1.substring(j, j + 3).equals("للہ")) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
@@ -256,15 +256,15 @@ public class Peru extends GameActivity {
 
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
                             for (int answerChoice = 0; answerChoice < i; answerChoice++) {
-                                if (incorrectChoice2.compareTo(((TextView) findViewById(TILE_BUTTONS[answerChoice])).getText().toString()) == 0) {
+                                if (incorrectChoice2.equals(((TextView) findViewById(TILE_BUTTONS[answerChoice])).getText().toString())) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
-                            if (incorrectChoice2.compareTo(Start.wordList.stripInstructionCharacters(wordInLOP)) == 0) {
+                            if (incorrectChoice2.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
                                 isDuplicateAnswerChoice = true;
                             }
                             for (int j = 0; j < incorrectChoice2.length() - 2; j++) {
-                                if (incorrectChoice2.substring(j, j + 3).compareTo("للہ") == 0) {
+                                if (incorrectChoice2.substring(j, j + 3).equals("للہ")) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
@@ -291,12 +291,12 @@ public class Peru extends GameActivity {
 
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
                             for (int answerChoice = 0; answerChoice < i; answerChoice++) {
-                                if (incorrectChoice3.compareTo(((TextView) findViewById(TILE_BUTTONS[answerChoice])).getText().toString()) == 0) {
+                                if (incorrectChoice3.equals(((TextView) findViewById(TILE_BUTTONS[answerChoice])).getText().toString())) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
                             for (int j = 0; j < incorrectChoice3.length() - 2; j++) {
-                                if (incorrectChoice3.substring(j, j + 3).compareTo("للہ") == 0) {
+                                if (incorrectChoice3.substring(j, j + 3).equals("للہ")) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }

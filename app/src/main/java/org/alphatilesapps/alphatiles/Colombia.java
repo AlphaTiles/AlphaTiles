@@ -111,7 +111,7 @@ public class Colombia extends GameActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (scriptDirection.compareTo("RTL") == 0) { // LM: flips images for RTL layouts. LTR is default
+        if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
             ImageView deleteImage = (ImageView) findViewById(R.id.deleteImage);
@@ -202,9 +202,9 @@ public class Colombia extends GameActivity {
             wordInLOP = Start.wordList.get(randomNum).localWord; // KP
 
             // If this word isn't one of the 3 previously tested words, we're good // LM
-            if (wordInLWC.compareTo(lastWord) != 0
-                    && wordInLWC.compareTo(secondToLastWord) != 0
-                    && wordInLWC.compareTo(thirdToLastWord) != 0) {
+            if (!wordInLWC.equals(lastWord)
+                    && !wordInLWC.equals(secondToLastWord)
+                    && !wordInLWC.equals(thirdToLastWord)) {
                 freshWord = true;
                 thirdToLastWord = secondToLastWord;
                 secondToLastWord = lastWord;
@@ -387,13 +387,13 @@ public class Colombia extends GameActivity {
                     if (keysInUse > TILE_BUTTONS.length) {
                         TextView key34 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 2]);
                         key34.setBackgroundResource(R.drawable.zz_backward_green);
-                        if (scriptDirection.compareTo("RTL") == 0) { //LTR is default
+                        if (scriptDirection.equals("RTL")) {
                             key34.setRotationY(180);
                         }
                         key34.setText("");
                         TextView key35 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 1]);
                         key35.setBackgroundResource(R.drawable.zz_forward_green);
-                        if (scriptDirection.compareTo("RTL") == 0) { //LTR is default
+                        if (scriptDirection.equals("RTL")) {
                             key35.setRotationY(180);
                         }
                         key35.setText("");
