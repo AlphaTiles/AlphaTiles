@@ -652,46 +652,47 @@ public class Start extends AppCompatActivity {
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
             }
 
-            int tilesCount = 0;
+            int wordCount = 0;
 
             for (int i = 0; i < size(); i++) {
+                boolean wordFound = false;
                 parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
-
                 wordInitialTile = parsedWordArrayFinal.get(0);
 
                 if (wordInitialTile != null) {
 
-                    if (differentiateTypes) {//checking if both tile and type match
+                    if (differentiateTypes) {// checking if both tile and type match
                         if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
                             wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, get(i).nationalWord);
-                        } else {//not dealing with a multifunction symbol
+                        } else {// not dealing with a multifunction symbol
                             wordInitialTileType = tileHashMap.find(wordInitialTile).tileType;
                         }
 
                         if (wordInitialTile.equals(someGameTileWithoutSuffix) && someGameTileType.equals(wordInitialTileType)) {
-                            tilesCount++;
+                            wordFound = true;
                         }
 
-                    } else {//Not differentiating types, only matching tile to tile
+                    } else {// Not differentiating types, only matching tile to tile
                         if (parsedWordArrayFinal.get(0).equals(someGameTile)) {
-                            tilesCount++;
+                            wordFound = true;
                         }
                     }
 
                 }
+                if (wordFound) {
+                    wordCount++;
+                }
             }
-
-            return tilesCount;
-
+            return wordCount;
         }
 
-        public String[][] returnGroupOneWords(String someGameTile, int tilesCount) {
+        public String[][] returnGroupOneWords(String someGameTile, int wordCount) {
             // Group One = words that START with the active tile
 
             ArrayList<String> parsedWordArrayFinal;
             int hitsCounter = 0;
 
-            String[][] wordsWithNonInitialTiles = new String[tilesCount][2];
+            String[][] wordsWithNonInitialTiles = new String[wordCount][2];
 
             String wordInitialTile;
             String wordInitialTileType;
@@ -767,9 +768,10 @@ public class Start extends AppCompatActivity {
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
             }
 
-            int tilesCount = 0;
+            int wordCount = 0;
 
             for (int i = 0; i < size(); i++) {
+                boolean wordFound = false;
                 parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
 
                 for (int k = 1; k < parsedWordArrayFinal.size(); k++) {
@@ -785,29 +787,31 @@ public class Start extends AppCompatActivity {
                             }
 
                             if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
-                                tilesCount++;
+                                wordFound = true;
                             }
 
                         } else {//Not differentiating types, only matching tile to tile
                             if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
-                                tilesCount++;
+                                wordFound = true;
                             }
                         }
                     }
                 }
+                if (wordFound) {
+                    wordCount++;
+                }
             }
-
-            return tilesCount;
-
+            return wordCount;
         }
 
-        public String[][] returnGroupTwoWords(String someGameTile, int tilesCount) {
+
+        public String[][] returnGroupTwoWords(String someGameTile, int wordCount) {
             // Group Two = words that contain the active tile non-initially (but excluding initially)
 
             ArrayList<String> parsedWordArrayFinal;
             int hitsCounter = 0;
 
-            String[][] wordsWithNonInitialTiles = new String[tilesCount][2];
+            String[][] wordsWithNonInitialTiles = new String[wordCount][2];
 
             String tileInFocus;
             String tileInFocusType;
@@ -884,9 +888,10 @@ public class Start extends AppCompatActivity {
                 someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
             }
 
-            int tilesCount = 0;
+            int wordCount = 0;
 
             for (int i = 0; i < size(); i++) {
+                boolean wordFound = false;
                 parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
 
                 for (int k = 0; k < parsedWordArrayFinal.size(); k++) {
@@ -902,29 +907,31 @@ public class Start extends AppCompatActivity {
                             }
 
                             if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
-                                tilesCount++;
+                                wordFound = true;
                             }
 
                         } else {//Not differentiating types, only matching tile to tile
                             if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
-                                tilesCount++;
+                                wordFound = true;
                             }
                         }
                     }
                 }
+                if (wordFound) {
+                    wordCount++;
+                }
             }
-
-            return tilesCount;
-
+            return wordCount;
         }
 
-        public String[][] returnGroupThreeWords(String someGameTile, int tilesCount) {
+
+        public String[][] returnGroupThreeWords(String someGameTile, int wordCount) {
             // Group Three = words containing the active tile anywhere (initial and/or non-initial)
 
             ArrayList<String> parsedWordArrayFinal;
             int hitsCounter = 0;
 
-            String[][] wordsContainingSomeGameTile = new String[tilesCount][2];
+            String[][] wordsContainingSomeGameTile = new String[wordCount][2];
 
             String tileInFocus;
             String tileInFocusType;
@@ -975,17 +982,16 @@ public class Start extends AppCompatActivity {
                     }
                 }
             }
-
             return wordsContainingSomeGameTile;
-
-
         }
+
 
         public String stripInstructionCharacters(String localWord) {
             // The period instructs the parseWord method to force a tile break
             String newString = localWord.replaceAll("[.]", "");
             return newString;
         }
+
 
         public int returnPositionInWordList(String someLWCWord) {
 
@@ -1000,6 +1006,7 @@ public class Start extends AppCompatActivity {
             return wordPosition;
 
         }
+
 
         public ArrayList<String[]> returnFourWords(String wordInLOP, String wordInLWC, String refTile, int challengeLevel, String refType, String choiceType) {
 
