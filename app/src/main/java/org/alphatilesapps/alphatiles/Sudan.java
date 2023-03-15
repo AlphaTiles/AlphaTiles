@@ -171,7 +171,7 @@ public class Sudan extends GameActivity {
         } else {
             int total = 0;
             if (differentiateTypes) {
-                total = tileListWithMultiTypesNoSAD.size() - TILE_BUTTONS.length;
+                total = tileListWithMultipleTypesNoSAD.size() - TILE_BUTTONS.length;
             } else {
                 total = tileListNoSAD.size() - TILE_BUTTONS.length; // 1 page is accounted for in numPages init
             }
@@ -187,12 +187,12 @@ public class Sudan extends GameActivity {
     public void splitTileListAcrossPages() {
 
         if (differentiateTypes) {
-            int numTiles = tileListWithMultiTypesNoSAD.size();
+            int numTiles = tileListWithMultipleTypesNoSAD.size();
             int cont = 0;
             for (int i = 0; i < numPages + 1; i++) {
                 for (int j = 0; j < TILE_BUTTONS.length; j++) {
                     if (cont < numTiles) {
-                        pagesList.get(i).add(tileListWithMultiTypesNoSAD.get(cont));
+                        pagesList.get(i).add(tileListWithMultipleTypesNoSAD.get(cont));
                     }
                     cont++;
                 }
@@ -340,7 +340,7 @@ public class Sudan extends GameActivity {
             String type;
             if (differentiateTypes) {
                 // JP: what I need is a way to access the type of a tile in the tileListWithMultipleTypes
-                type = tileHashMapWithMultiTypesNoSAD.get(pagesList.get(page).get(k));
+                type = tileTypeHashMapWithMultipleTypesNoSAD.get(pagesList.get(page).get(k));
             } else {
                 type = tileHashMapNoSAD.find(pagesList.get(page).get(k)).tileType;
             }
@@ -453,7 +453,7 @@ public class Sudan extends GameActivity {
             if (!differentiateTypes) {// Not differentiating the uses of multifunction tiles
                 tileText = tileListNoSAD.get(justClickedKey - 1).baseTile;
             } else { // differentiateMultipleTypes ==2. We ARE differentiating the uses of multifunction tiles
-                tileText = tileListWithMultiTypesNoSAD.get(justClickedKey - 1);
+                tileText = tileListWithMultipleTypesNoSAD.get(justClickedKey - 1);
             }
 
             gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);

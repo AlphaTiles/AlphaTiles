@@ -36,7 +36,7 @@ public class Start extends AppCompatActivity {
 
     public static TileListWithMultipleTypes tileListWithMultipleTypes;
 
-    public static TileListWithMultipleTypes tileListWithMultiTypesNoSAD;
+    public static TileListWithMultipleTypes tileListWithMultipleTypesNoSAD;
 
     public static WordList wordList;     // KP  // from aa_wordlist.txt
 
@@ -57,9 +57,9 @@ public class Start extends AppCompatActivity {
 
     public static TileHashMap tileHashMapNoSAD;
 
-    public static TileHashMapWithMultipleTypes tileHashMapWithMultipleTypes;
+    public static TileTypeHashMapWithMultipleTypes tileTypeHashMapWithMultipleTypes;
 
-    public static TileHashMapWithMultipleTypes tileHashMapWithMultiTypesNoSAD;
+    public static TileTypeHashMapWithMultipleTypes tileTypeHashMapWithMultipleTypesNoSAD;
 
     public static WordHashMap wordHashMap;
 
@@ -291,25 +291,29 @@ public class Start extends AppCompatActivity {
         if (differentiateTypes) {
 
             tileListWithMultipleTypes = new TileListWithMultipleTypes();
-            tileListWithMultiTypesNoSAD = new TileListWithMultipleTypes();
-            tileHashMapWithMultipleTypes = new TileHashMapWithMultipleTypes();
-            tileHashMapWithMultiTypesNoSAD = new TileHashMapWithMultipleTypes();
+            tileListWithMultipleTypesNoSAD = new TileListWithMultipleTypes();
+            tileTypeHashMapWithMultipleTypes = new TileTypeHashMapWithMultipleTypes();
+            tileTypeHashMapWithMultipleTypesNoSAD = new TileTypeHashMapWithMultipleTypes();
 
             for (Tile tile : tileList) {
                 tileListWithMultipleTypes.add(tile.baseTile);
-                tileHashMapWithMultipleTypes.put(tile.baseTile, tile.tileType);
+                tileTypeHashMapWithMultipleTypes.put(tile.baseTile, tile.tileType);
                 if (!tile.tileType.equals("SAD")) {
-                    tileListWithMultiTypesNoSAD.add(tile.baseTile);
-                    tileHashMapWithMultiTypesNoSAD.put(tile.baseTile, tile.tileType);
+                    tileListWithMultipleTypesNoSAD.add(tile.baseTile);
+                    tileTypeHashMapWithMultipleTypesNoSAD.put(tile.baseTile, tile.tileType);
                 }
                 // SAD should never have a 2nd or 3rd type other than "none"
                 if (!tile.tileTypeB.equals("none")) {
                     tileListWithMultipleTypes.add(tile.baseTile + "B");
-                    tileHashMapWithMultipleTypes.put(tile.baseTile + "B", tile.tileTypeB);
+                    tileTypeHashMapWithMultipleTypes.put(tile.baseTile + "B", tile.tileTypeB);
+                    tileListWithMultipleTypesNoSAD.add(tile.baseTile + "B");
+                    tileTypeHashMapWithMultipleTypesNoSAD.put(tile.baseTile + "B", tile.tileTypeB);
                 }
                 if (!tile.tileTypeC.equals("none")) {
                     tileListWithMultipleTypes.add(tile.baseTile + "C");
-                    tileHashMapWithMultipleTypes.put(tile.baseTile + "C", tile.tileTypeC);
+                    tileTypeHashMapWithMultipleTypes.put(tile.baseTile + "C", tile.tileTypeC);
+                    tileListWithMultipleTypesNoSAD.add(tile.baseTile + "C");
+                    tileTypeHashMapWithMultipleTypesNoSAD.put(tile.baseTile + "C", tile.tileTypeC);
                 }
             }
         }
@@ -1641,7 +1645,7 @@ public class Start extends AppCompatActivity {
 
     }
 
-    public class TileHashMapWithMultipleTypes extends HashMap<String, String> {
+    public class TileTypeHashMapWithMultipleTypes extends HashMap<String, String> {
         public String text;
         public String type;
     }
