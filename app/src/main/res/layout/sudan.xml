@@ -1273,7 +1273,7 @@
         android:background="#F44336"
         android:gravity="center_horizontal|center_vertical"
         android:onClick="onBtnClick"
-        android:tag="54"
+        android:tag="53"
         android:text="@string/gametile39"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
