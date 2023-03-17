@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
-import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
@@ -37,7 +36,7 @@ public class Start extends AppCompatActivity {
 
     public static TileListWithMultipleTypes tileListWithMultipleTypes;
 
-    public static TileListWithMultipleTypes tileListWithMultiTypesNoSAD;
+    public static TileListWithMultipleTypes tileListWithMultipleTypesNoSAD;
 
     public static WordList wordList;     // KP  // from aa_wordlist.txt
 
@@ -58,9 +57,9 @@ public class Start extends AppCompatActivity {
 
     public static TileHashMap tileHashMapNoSAD;
 
-    public static TileHashMapWithMultipleTypes tileHashMapWithMultipleTypes;
+    public static TileTypeHashMapWithMultipleTypes tileTypeHashMapWithMultipleTypes;
 
-    public static TileHashMapWithMultipleTypes tileHashMapWithMultiTypesNoSAD;
+    public static TileTypeHashMapWithMultipleTypes tileTypeHashMapWithMultipleTypesNoSAD;
 
     public static WordHashMap wordHashMap;
 
@@ -292,25 +291,29 @@ public class Start extends AppCompatActivity {
         if (differentiateTypes) {
 
             tileListWithMultipleTypes = new TileListWithMultipleTypes();
-            tileListWithMultiTypesNoSAD = new TileListWithMultipleTypes();
-            tileHashMapWithMultipleTypes = new TileHashMapWithMultipleTypes();
-            tileHashMapWithMultiTypesNoSAD = new TileHashMapWithMultipleTypes();
+            tileListWithMultipleTypesNoSAD = new TileListWithMultipleTypes();
+            tileTypeHashMapWithMultipleTypes = new TileTypeHashMapWithMultipleTypes();
+            tileTypeHashMapWithMultipleTypesNoSAD = new TileTypeHashMapWithMultipleTypes();
 
             for (Tile tile : tileList) {
                 tileListWithMultipleTypes.add(tile.baseTile);
-                tileHashMapWithMultipleTypes.put(tile.baseTile, tile.tileType);
+                tileTypeHashMapWithMultipleTypes.put(tile.baseTile, tile.tileType);
                 if (!tile.tileType.equals("SAD")) {
-                    tileListWithMultiTypesNoSAD.add(tile.baseTile);
-                    tileHashMapWithMultiTypesNoSAD.put(tile.baseTile, tile.tileType);
+                    tileListWithMultipleTypesNoSAD.add(tile.baseTile);
+                    tileTypeHashMapWithMultipleTypesNoSAD.put(tile.baseTile, tile.tileType);
                 }
                 // SAD should never have a 2nd or 3rd type other than "none"
                 if (!tile.tileTypeB.equals("none")) {
                     tileListWithMultipleTypes.add(tile.baseTile + "B");
-                    tileHashMapWithMultipleTypes.put(tile.baseTile + "B", tile.tileTypeB);
+                    tileTypeHashMapWithMultipleTypes.put(tile.baseTile + "B", tile.tileTypeB);
+                    tileListWithMultipleTypesNoSAD.add(tile.baseTile + "B");
+                    tileTypeHashMapWithMultipleTypesNoSAD.put(tile.baseTile + "B", tile.tileTypeB);
                 }
                 if (!tile.tileTypeC.equals("none")) {
                     tileListWithMultipleTypes.add(tile.baseTile + "C");
-                    tileHashMapWithMultipleTypes.put(tile.baseTile + "C", tile.tileTypeC);
+                    tileTypeHashMapWithMultipleTypes.put(tile.baseTile + "C", tile.tileTypeC);
+                    tileListWithMultipleTypesNoSAD.add(tile.baseTile + "C");
+                    tileTypeHashMapWithMultipleTypesNoSAD.put(tile.baseTile + "C", tile.tileTypeC);
                 }
             }
         }
@@ -631,354 +634,146 @@ public class Start extends AppCompatActivity {
         public String mixedDefsTitle;    // for languages with multi-function symbols (e.g. in the word <niwan'>, the first |n| is a consontant and the second |n| is a nasality indicator
         public String adjustment;    // a font-specific reduction in size for words with longer pixel width
 
-        public int returnGroupOneCount(String someGameTile) {
-            // Group One = words that START with the active tile
+        public int numberOfWordsForActiveTile(String activeTile, int scanSetting) {
+            // Scan setting 1: Words that start with the active tile
+            // Scan setting 2: Part of getting word groups in scan setting 2 is getting words that contain the active tile, but not in starting position
+            // Scan setting 3: Words that contain the active tile anywhere
 
             ArrayList<String> parsedWordArrayFinal;
-            String wordInitialTile;
-            String wordInitialTileType;
-            String someGameTileType;
-            String someGameTileWithoutSuffix;
+            String tileInFocus;
+            String tileInFocusType;
+            String activeTileTypeSuffix;
+            String activeTileType;
+            String activeTileWithoutSuffix;
 
-            someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.equals("B")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.equals("C")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
+            activeTileTypeSuffix = Character.toString(activeTile.charAt(activeTile.length() - 1));
+            if (activeTileTypeSuffix.equals("B")) {
+                activeTileWithoutSuffix = activeTile.substring(0, activeTile.length() - 1);
+                activeTileType = tileHashMap.find(activeTileWithoutSuffix).tileTypeB;
+            } else if (activeTileTypeSuffix.equals("C")) {
+                activeTileWithoutSuffix = activeTile.substring(0, activeTile.length() - 1);
+                activeTileType = tileHashMap.find(activeTileWithoutSuffix).tileTypeC;
             } else {
-                someGameTileWithoutSuffix = someGameTile;
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
+                activeTileWithoutSuffix = activeTile;
+                activeTileType = tileHashMap.find(activeTileWithoutSuffix).tileType;
             }
 
-            int tilesCount = 0;
-
+            int wordCount = 0;
             for (int i = 0; i < size(); i++) {
                 parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
+                int startingScanIndex;
+                int endingScanIndex;
+                switch (scanSetting) {
+                    case 1:
+                        startingScanIndex = 0;
+                        endingScanIndex = 1;
+                        break;
+                    case 2:
+                        startingScanIndex = 1;
+                        endingScanIndex = parsedWordArrayFinal.size();
+                        break;
+                    default:
+                        startingScanIndex = 0;
+                        endingScanIndex = parsedWordArrayFinal.size();
+                }
 
-                wordInitialTile = parsedWordArrayFinal.get(0);
+                for (int k = startingScanIndex; k < endingScanIndex; k++) {
+                    tileInFocus = parsedWordArrayFinal.get(k);
+                    if (differentiateTypes) { // Check if both tile and type match
+                        if (tileInFocus.equals(activeTileWithoutSuffix)) {
+                            if (MULTIFUNCTIONS.contains(activeTileWithoutSuffix)) {
+                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
+                            } else {
+                                tileInFocusType = tileHashMap.find(tileInFocus).tileType;
+                            }
 
-                if (wordInitialTile != null) {
-
-                    if (differentiateTypes) {//checking if both tile and type match
-                        if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                            wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, get(i).nationalWord);
-                        } else {//not dealing with a multifunction symbol
-                            wordInitialTileType = tileHashMap.find(wordInitialTile).tileType;
+                            if (tileInFocusType.equals(activeTileType)) {
+                                wordCount++;
+                                break; // Add each word only once, even if it contains the active tile more than once
+                            }
                         }
-
-                        if (wordInitialTile.equals(someGameTileWithoutSuffix) && someGameTileType.equals(wordInitialTileType)) {
-                            tilesCount++;
-                        }
-
-                    } else {//Not differentiating types, only matching tile to tile
-                        if (parsedWordArrayFinal.get(0).equals(someGameTile)) {
-                            tilesCount++;
+                    } else { // Don't differentiate types; simply match tile to tile
+                        if (tileInFocus.equals(activeTileWithoutSuffix)) {
+                            wordCount++;
+                            break; // Add each word only once, even if it contains the active tile more than once
                         }
                     }
-
                 }
             }
-
-            return tilesCount;
-
+            return wordCount;
         }
 
-        public String[][] returnGroupOneWords(String someGameTile, int tilesCount) {
-            // Group One = words that START with the active tile
+        public String[][] wordsForActiveTile(String activeTile, int wordCount, int scanSetting) {
+            // Scan setting 1: Words that start with the active tile
+            // Scan setting 2: Part of getting word groups in scan setting 2 is getting words that contain the active tile, but not in starting position
+            // Scan setting 3: Words that contain the active tile anywhere
+            String[][] wordsForActiveTile = new String[wordCount][2];
 
             ArrayList<String> parsedWordArrayFinal;
-            int hitsCounter = 0;
+            String tileInFocus;
+            String tileInFocusType;
+            String activeTileTypeSuffix;
+            String activeTileType;
+            String activeTileWithoutSuffix;
 
-            String[][] wordsWithNonInitialTiles = new String[tilesCount][2];
-
-            String wordInitialTile;
-            String wordInitialTileType;
-            String someGameTileType;
-            String someGameTileWithoutSuffix;
-
-
-            someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.equals("B")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.equals("C")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
+            activeTileTypeSuffix = Character.toString(activeTile.charAt(activeTile.length() - 1));
+            if (activeTileTypeSuffix.equals("B")) {
+                activeTileWithoutSuffix = activeTile.substring(0, activeTile.length() - 1);
+                activeTileType = tileHashMap.find(activeTileWithoutSuffix).tileTypeB;
+            } else if (activeTileTypeSuffix.equals("C")) {
+                activeTileWithoutSuffix = activeTile.substring(0, activeTile.length() - 1);
+                activeTileType = tileHashMap.find(activeTileWithoutSuffix).tileTypeC;
             } else {
-                someGameTileWithoutSuffix = someGameTile;
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
+                activeTileWithoutSuffix = activeTile;
+                activeTileType = tileHashMap.find(activeTileWithoutSuffix).tileType;
             }
 
+            int hitsCounter = 0;
             for (int i = 0; i < size(); i++) {
                 parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
+                int startingScanIndex;
+                int endingScanIndex;
+                switch (scanSetting) {
+                    case 1: // Scan the initial tiles of words
+                        startingScanIndex = 0;
+                        endingScanIndex = 1;
+                        break;
+                    case 2: // Scan the non-initial tiles of words
+                        startingScanIndex = 1;
+                        endingScanIndex = parsedWordArrayFinal.size();
+                        break;
+                    default: // Scan all the tiles in words
+                        startingScanIndex = 0;
+                        endingScanIndex = parsedWordArrayFinal.size();
+                }
 
-                wordInitialTile = parsedWordArrayFinal.get(0);
-
-                if (wordInitialTile != null) {
-
-                    if (differentiateTypes) {//checking if both tile and type match
-                        if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                            wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, get(i).localWord);
-                        } else {//not dealing with a multifunction symbol
-                            wordInitialTileType = tileHashMap.find(wordInitialTile).tileType;
+                for (int k = startingScanIndex; k < endingScanIndex; k++) {
+                    tileInFocus = parsedWordArrayFinal.get(k);
+                    if (differentiateTypes) { // Check if both tile and type match
+                        if (tileInFocus.equals(activeTileWithoutSuffix)) {
+                            if (MULTIFUNCTIONS.contains(activeTileWithoutSuffix)) {
+                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
+                            } else {
+                                tileInFocusType = tileHashMap.find(tileInFocus).tileType;
+                            }
+                            if (tileInFocusType.equals(activeTileType)) {
+                                wordsForActiveTile[hitsCounter][0] = get(i).nationalWord;
+                                wordsForActiveTile[hitsCounter][1] = get(i).localWord;
+                                hitsCounter++;
+                                break; // Add each word only once, even if it contains the active tile more than once
+                            }
                         }
-
-                        if (wordInitialTile.equals(someGameTileWithoutSuffix) && someGameTileType.equals(wordInitialTileType)) {
-                            wordsWithNonInitialTiles[hitsCounter][0] = get(i).nationalWord;
-                            wordsWithNonInitialTiles[hitsCounter][1] = get(i).localWord;
+                    } else { // Don't differentiate types; simply match tile to tile
+                        if (tileInFocus.equals(activeTileWithoutSuffix)) {
+                            wordsForActiveTile[hitsCounter][0] = get(i).nationalWord;
+                            wordsForActiveTile[hitsCounter][1] = get(i).localWord;
                             hitsCounter++;
-                        }
-
-                    } else {//Not differentiating types, only matching tile to tile
-                        if (parsedWordArrayFinal.get(0).equals(someGameTile)) {
-                            wordsWithNonInitialTiles[hitsCounter][0] = get(i).nationalWord;
-                            wordsWithNonInitialTiles[hitsCounter][1] = get(i).localWord;
-                            hitsCounter++;
-                        }
-
-                    }
-                }
-            }
-
-            return wordsWithNonInitialTiles;
-
-        }
-
-        public int returnGroupTwoCount(String someGameTile) {
-            // Group Two = words that contain the active tile non-initially (but excluding initially)
-
-            ArrayList<String> parsedWordArrayFinal;
-            String tileInFocus;
-            String tileInFocusType;
-            String someGameTileType;
-            String someGameTileWithoutSuffix;
-
-            someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.equals("B")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.equals("C")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
-            } else {
-                someGameTileWithoutSuffix = someGameTile;
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
-            }
-
-            int tilesCount = 0;
-
-            for (int i = 0; i < size(); i++) {
-                parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
-
-                for (int k = 1; k < parsedWordArrayFinal.size(); k++) {
-                    tileInFocus = parsedWordArrayFinal.get(k);
-
-                    if (tileInFocus != null) {
-
-                        if (differentiateTypes) {//checking if both tile and type match
-                            if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
-                            } else {//not dealing with a multifunction symbol
-                                tileInFocusType = tileHashMap.find(tileInFocus).tileType;
-                            }
-
-                            if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
-                                tilesCount++;
-                            }
-
-                        } else {//Not differentiating types, only matching tile to tile
-                            if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
-                                tilesCount++;
-                            }
+                            break; // Add each word only once, even if it contains the active tile more than once
                         }
                     }
                 }
             }
-
-            return tilesCount;
-
-        }
-
-        public String[][] returnGroupTwoWords(String someGameTile, int tilesCount) {
-            // Group Two = words that contain the active tile non-initially (but excluding initially)
-
-            ArrayList<String> parsedWordArrayFinal;
-            int hitsCounter = 0;
-
-            String[][] wordsWithNonInitialTiles = new String[tilesCount][2];
-
-            String tileInFocus;
-            String tileInFocusType;
-            String someGameTileType;
-            String someGameTileWithoutSuffix;
-
-
-            someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.equals("B")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.equals("C")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
-            } else {
-                someGameTileWithoutSuffix = someGameTile;
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
-            }
-
-            for (int i = 0; i < size(); i++) {
-                parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
-
-                for (int k = 1; k < parsedWordArrayFinal.size(); k++) {
-                    tileInFocus = parsedWordArrayFinal.get(k);
-
-                    if (tileInFocus != null) {
-
-                        if (differentiateTypes) {//checking if both tile and type match
-                            if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).localWord);
-                            } else {//not dealing with a multifunction symbol
-                                tileInFocusType = tileHashMap.find(tileInFocus).tileType;
-                            }
-
-                            if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
-                                wordsWithNonInitialTiles[hitsCounter][0] = get(i).nationalWord;
-                                wordsWithNonInitialTiles[hitsCounter][1] = get(i).localWord;
-                                hitsCounter++;
-                            }
-
-                        } else {//Not differentiating types, only matching tile to tile
-                            if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
-                                wordsWithNonInitialTiles[hitsCounter][0] = get(i).nationalWord;
-                                wordsWithNonInitialTiles[hitsCounter][1] = get(i).localWord;
-                                hitsCounter++;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return wordsWithNonInitialTiles;
-
-        }
-
-        public int returnGroupThreeCount(String someGameTile) {
-            // Group Three = words containing the active tile anywhere (initial and/or non-initial)
-
-            ArrayList<String> parsedWordArrayFinal;
-            String tileInFocus;
-            String tileInFocusType;
-            String someGameTileType;
-            String someGameTileWithoutSuffix;
-
-            someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.equals("B")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.equals("C")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
-            } else {
-                someGameTileWithoutSuffix = someGameTile;
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
-            }
-
-            int tilesCount = 0;
-
-            for (int i = 0; i < size(); i++) {
-                parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
-
-                for (int k = 0; k < parsedWordArrayFinal.size(); k++) {
-                    tileInFocus = parsedWordArrayFinal.get(k);
-
-                    if (tileInFocus != null) {
-
-                        if (differentiateTypes) {//checking if both tile and type match
-                            if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
-                            } else {//not dealing with a multifunction symbol
-                                tileInFocusType = tileHashMap.find(tileInFocus).tileType;
-                            }
-
-                            if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
-                                tilesCount++;
-                            }
-
-                        } else {//Not differentiating types, only matching tile to tile
-                            if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
-                                tilesCount++;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return tilesCount;
-
-        }
-
-        public String[][] returnGroupThreeWords(String someGameTile, int tilesCount) {
-            // Group Three = words containing the active tile anywhere (initial and/or non-initial)
-
-            ArrayList<String> parsedWordArrayFinal;
-            int hitsCounter = 0;
-
-            String[][] wordsContainingSomeGameTile = new String[tilesCount][2];
-
-            String tileInFocus;
-            String tileInFocusType;
-            String someGameTileType;
-            String someGameTileWithoutSuffix;
-
-
-            someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-            if (someGameTileType.equals("B")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-            } else if (someGameTileType.equals("C")) {
-                someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
-            } else {
-                someGameTileWithoutSuffix = someGameTile;
-                someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
-            }
-
-            for (int i = 0; i < size(); i++) {
-                parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).localWord);
-
-                for (int k = 0; k < parsedWordArrayFinal.size(); k++) {
-                    tileInFocus = parsedWordArrayFinal.get(k);
-
-                    if (tileInFocus != null) {
-
-                        if (differentiateTypes) {//checking if both tile and type match
-                            if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                                tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, get(i).nationalWord);
-                            } else {//not dealing with a multifunction symbol
-                                tileInFocusType = tileHashMap.find(tileInFocus).tileType;
-                            }
-
-                            if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
-                                wordsContainingSomeGameTile[hitsCounter][0] = get(i).nationalWord;
-                                wordsContainingSomeGameTile[hitsCounter][1] = get(i).localWord;
-                                hitsCounter++;
-                            }
-
-                        } else {//Not differentiating types, only matching tile to tile
-                            if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
-                                wordsContainingSomeGameTile[hitsCounter][0] = get(i).nationalWord;
-                                wordsContainingSomeGameTile[hitsCounter][1] = get(i).localWord;
-                                hitsCounter++;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return wordsContainingSomeGameTile;
-
-
+            return wordsForActiveTile;
         }
 
         public String stripInstructionCharacters(String localWord) {
@@ -986,6 +781,7 @@ public class Start extends AppCompatActivity {
             String newString = localWord.replaceAll("[.]", "");
             return newString;
         }
+
 
         public int returnPositionInWordList(String someLWCWord) {
 
@@ -1000,6 +796,7 @@ public class Start extends AppCompatActivity {
             return wordPosition;
 
         }
+
 
         public ArrayList<String[]> returnFourWords(String wordInLOP, String wordInLWC, String refTile, int challengeLevel, String refType, String choiceType) {
 
@@ -1848,7 +1645,7 @@ public class Start extends AppCompatActivity {
 
     }
 
-    public class TileHashMapWithMultipleTypes extends HashMap<String, String> {
+    public class TileTypeHashMapWithMultipleTypes extends HashMap<String, String> {
         public String text;
         public String type;
     }

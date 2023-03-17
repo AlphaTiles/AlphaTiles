@@ -12,8 +12,6 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
-import java.util.ArrayList;
-
 import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Romania extends GameActivity {
@@ -193,36 +191,40 @@ public class Romania extends GameActivity {
             case 2:
                 // CASE 2: check Group One, if count is zero, then check Group Two
                 // Group One = words that START with the active tile
-                groupCount = Start.wordList.returnGroupOneCount(activeTileString);
+                groupCount = Start.wordList.numberOfWordsForActiveTile(activeTileString, 1);
                 if (groupCount > 0) {
-                    groupOfWordsForActiveTile = Start.wordList.returnGroupOneWords(activeTileString, groupCount);
+                    groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTileString, groupCount, 1);
                     failedToMatchInitialTile = false;
                 } else {
                     // Group Two = words that contain the active tile non-initially (but excluding initially)
                     failedToMatchInitialTile = true;
-                    groupCount = Start.wordList.returnGroupTwoCount(activeTileString);
+                    groupCount = Start.wordList.numberOfWordsForActiveTile(activeTileString, 2);
 
                     if (groupCount > 0) {
-                        groupOfWordsForActiveTile = Start.wordList.returnGroupTwoWords(activeTileString, groupCount); // Group Two = words that contain the active tile non-initially (but excluding initially)
+                        groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTileString, groupCount, 2); // Group Two = words that contain the active tile non-initially (but excluding initially)
+                    } else {
+                        skipThisTile = true;
                     }
                 }
                 break;
             case 3:
                 // CASE 3: check Group Three
                 // Group Three = words containing the active tile anywhere (initial and/or non-initial)
-                groupCount = Start.wordList.returnGroupThreeCount(activeTileString);
+                groupCount = Start.wordList.numberOfWordsForActiveTile(activeTileString, 3);
                 if (groupCount > 0) {
-                    groupOfWordsForActiveTile = Start.wordList.returnGroupThreeWords(activeTileString, groupCount); // Group Three = words containing the active tile anywhere (initial and/or non-initial)
+                    groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTileString, groupCount, 3); // Group Three = words containing the active tile anywhere (initial and/or non-initial)
+                } else {
+                    skipThisTile = true;
                 }
                 break;
             default:
                 // CASE 1: check Group One
                 // Group One = words that START with the active tile
-                groupCount = Start.wordList.returnGroupOneCount(activeTileString);
+                groupCount = Start.wordList.numberOfWordsForActiveTile(activeTileString, 1);
                 if (groupCount > 0) {
-                    groupOfWordsForActiveTile = Start.wordList.returnGroupOneWords(activeTileString, groupCount);
+                    groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTileString, groupCount, 1);
                     failedToMatchInitialTile = false;
-                } else { //there are no words at begin with the active tile
+                } else { // There are no words at begin with the active tile
                     failedToMatchInitialTile = true;
                     skipThisTile = true;
                 }
@@ -240,11 +242,11 @@ public class Romania extends GameActivity {
 
         if (!skipThisTile) { // If we DO have words in the group for this tile given the scan setting, then...
 
-            //display a word (should normally be the first word) from the group of words for the active tile
+            // Display a word (should normally be the first word) from the group of words for the active tile
             wordInLWC = groupOfWordsForActiveTile[indexWithinGroup][0];
             wordInLOP = groupOfWordsForActiveTile[indexWithinGroup][1];
 
-            //Group 3 has all words containing the tile anywhere. This checks whether the current word is active-tile-initial or not
+            // Group 3 has all words containing the tile anywhere. This checks whether the current word is active-tile-initial or not
             if (scanSetting == 3) {
                 parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
                 failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
@@ -305,7 +307,7 @@ public class Romania extends GameActivity {
             failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
         }
 
-        //display the next word in groupOfWordsForActiveTile[][]
+        // Display the next word in groupOfWordsForActiveTile[][]
         if (!skipThisTile) {
 
             TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
@@ -417,7 +419,7 @@ public class Romania extends GameActivity {
             activeTile = Start.tileList.returnNextAlphabetTile(oldTile); // KP
         }
         if (scanSetting == 1) {
-            while (returnGroupOneCountRomania(activeTile) == 0) { // JP: prevents user from having to click
+            while (Start.wordList.numberOfWordsForActiveTile(activeTile, 1) == 0) { // JP: prevents user from having to click
                 // the arrow multiple times to skip irrelevant tiles that are never word-initial
                 oldTile = activeTile;
                 if (differentiateTypes) {
@@ -427,7 +429,7 @@ public class Romania extends GameActivity {
                 }
             }
         } else if (scanSetting == 2) {
-            while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) || returnGroupTwoCountRomania(activeTile) == 0) {
+            while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 2) == 0) {
                 oldTile = activeTile;
                 if (differentiateTypes) {
                     activeTile = Start.tileListWithMultipleTypes.returnNextAlphabetTileDifferentiateTypes(oldTile);
@@ -437,7 +439,7 @@ public class Romania extends GameActivity {
             }
         } else { // scanSetting 3
             while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) ||
-                    returnGroupThreeCountRomania(activeTile) == 0) {
+                    Start.wordList.numberOfWordsForActiveTile(activeTile, 3) == 0) {
                 oldTile = activeTile;
                 if (differentiateTypes) {
                     activeTile = Start.tileListWithMultipleTypes.returnNextAlphabetTileDifferentiateTypes(oldTile);
@@ -464,7 +466,7 @@ public class Romania extends GameActivity {
             activeTile = Start.tileList.returnPreviousAlphabetTile(oldTile); // KP
         }
         if (scanSetting == 1) {
-            while (returnGroupOneCountRomania(activeTile) == 0) {
+            while (Start.wordList.numberOfWordsForActiveTile(activeTile, 1) == 0) {
                 // JP: prevents user from having to click
                 // the arrow multiple times to skip irrelevant tiles that are never word-initial
                 oldTile = activeTile;
@@ -475,7 +477,7 @@ public class Romania extends GameActivity {
                 }
             }
         } else if (scanSetting == 2) {
-            while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) || returnGroupTwoCountRomania(activeTile) == 0) {
+            while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 2) == 0) {
                 oldTile = activeTile;
                 if (differentiateTypes) {
                     activeTile = Start.tileListWithMultipleTypes.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
@@ -484,8 +486,7 @@ public class Romania extends GameActivity {
                 }
             }
         } else { // scanSetting 3
-            while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) ||
-                    returnGroupThreeCountRomania(activeTile) == 0) {
+            while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 3) == 0) {
                 oldTile = activeTile;
                 if (differentiateTypes) {
                     activeTile = Start.tileListWithMultipleTypes.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
@@ -501,171 +502,6 @@ public class Romania extends GameActivity {
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
         editor.apply();
         setUpBasedOnGameTile(activeTile);
-    }
-
-    // JP copied this function into here because of
-    // "non-static method cannot be accessed in static context" issue
-    public int returnGroupOneCountRomania(String someGameTile) {
-        // Group One = words that START with the active tile
-
-        ArrayList<String> parsedWordArrayFinal;
-        String wordInitialTile;
-        String wordInitialTileType;
-        String someGameTileType;
-        String someGameTileWithoutSuffix;
-
-        someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-        if (someGameTileType.equals("B")) {
-            someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-        } else if (someGameTileType.equals("C")) {
-            someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
-        } else {
-            someGameTileWithoutSuffix = someGameTile;
-            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
-        }
-
-        int tilesCount = 0;
-
-        for (int i = 0; i < wordList.size(); i++) {
-            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordList.get(i).localWord);
-
-            wordInitialTile = parsedWordArrayFinal.get(0);
-
-            if (wordInitialTile != null) {
-
-                if (differentiateTypes) {// Checking if both tile and type match
-                    if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                        wordInitialTileType = Start.tileList.getInstanceTypeForMixedTile(0, wordList.get(i).nationalWord);
-                    } else {// Not dealing with a multifunction symbol
-                        wordInitialTileType = tileHashMap.find(wordInitialTile).tileType;
-                    }
-
-                    if (wordInitialTile.equals(someGameTileWithoutSuffix) && someGameTileType.equals(wordInitialTileType)) {
-                        tilesCount++;
-                    }
-
-                } else {// Not differentiating types, only matching tile to tile
-                    if (parsedWordArrayFinal.get(0).equals(someGameTile)) {
-                        tilesCount++;
-                    }
-                }
-
-            }
-        }
-
-        return tilesCount;
-
-    }
-
-    public int returnGroupTwoCountRomania(String someGameTile) {
-        // Group Two = words that contain the active tile non-initially (but excluding initially)
-
-        ArrayList<String> parsedWordArrayFinal;
-        String tileInFocus;
-        String tileInFocusType;
-        String someGameTileType;
-        String someGameTileWithoutSuffix;
-
-        someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-        if (someGameTileType.equals("B")) {
-            someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-        } else if (someGameTileType.equals("C")) {
-            someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
-        } else {
-            someGameTileWithoutSuffix = someGameTile;
-            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
-        }
-
-        int tilesCount = 0;
-
-        for (int i = 0; i < wordList.size(); i++) {
-            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordList.get(i).localWord);
-
-            for (int k = 1; k < parsedWordArrayFinal.size(); k++) {
-                tileInFocus = parsedWordArrayFinal.get(k);
-
-                if (tileInFocus != null) {
-
-                    if (differentiateTypes) {// Checking if both tile and type match
-                        if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                            tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, wordList.get(i).nationalWord);
-                        } else {// Not dealing with a multifunction symbol
-                            tileInFocusType = tileHashMap.find(tileInFocus).tileType;
-                        }
-
-                        if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
-                            tilesCount++;
-                        }
-
-                    } else {// Not differentiating types, only matching tile to tile
-                        if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
-                            tilesCount++;
-                        }
-                    }
-                }
-            }
-        }
-
-        return tilesCount;
-
-    }
-
-    public int returnGroupThreeCountRomania(String someGameTile) {
-        // Group Three = words containing the active tile anywhere (initial and/or non-initial)
-
-        ArrayList<String> parsedWordArrayFinal;
-        String tileInFocus;
-        String tileInFocusType;
-        String someGameTileType;
-        String someGameTileWithoutSuffix;
-
-        someGameTileType = Character.toString(someGameTile.charAt(someGameTile.length() - 1));
-        if (someGameTileType.equals("B")) {
-            someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeB;
-        } else if (someGameTileType.equals("C")) {
-            someGameTileWithoutSuffix = someGameTile.substring(0, someGameTile.length() - 1);
-            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileTypeC;
-        } else {
-            someGameTileWithoutSuffix = someGameTile;
-            someGameTileType = tileHashMap.find(someGameTileWithoutSuffix).tileType;
-        }
-
-        int tilesCount = 0;
-
-        for (int i = 0; i < wordList.size(); i++) {
-            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordList.get(i).localWord);
-
-            for (int k = 0; k < parsedWordArrayFinal.size(); k++) {
-                tileInFocus = parsedWordArrayFinal.get(k);
-
-                if (tileInFocus != null) {
-
-                    if (differentiateTypes) {// Checking if both tile and type match
-                        if (MULTIFUNCTIONS.contains(someGameTileWithoutSuffix)) {
-                            tileInFocusType = Start.tileList.getInstanceTypeForMixedTile(k, wordList.get(i).nationalWord);
-                        } else {// Not dealing with a multifunction symbol
-                            tileInFocusType = tileHashMap.find(tileInFocus).tileType;
-                        }
-
-                        if (tileInFocus.equals(someGameTileWithoutSuffix) && someGameTileType.equals(tileInFocusType)) {
-                            tilesCount++;
-                        }
-                    } else {// Not differentiating types, only matching tile to tile
-                        if (parsedWordArrayFinal.get(k).equals(someGameTile)) {
-                            tilesCount++;
-                        }
-                    }
-                }
-            }
-        }
-
-        return tilesCount;
-
     }
 
     public void repeatGame(View View) {
