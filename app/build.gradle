@@ -44,7 +44,7 @@ android {
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
-            resValue "string", "app_name", 'Mu′tsíin (me′phaa Xma′íín)'
+            resValue "string", "app_name", 'Mu̱ꞌtsíin meꞌphaa'
         }
     }
 }
