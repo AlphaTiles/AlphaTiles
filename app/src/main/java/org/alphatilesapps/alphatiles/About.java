@@ -84,8 +84,6 @@ public class About extends AppCompatActivity {
 
         String httpText = "https://alphatilesapps.org/privacypolicy.html";
         String displayText = "Alpha Tiles Privacy Policy";
-//        String httpText = "https://www.webonary.org/kayan/help/english-privacy-policy-for-alpha-tiles-app/?lang=en";
-//        String displayText = "Privacy Policy";
         String linkText = "<a href=\"" + httpText + "\">" + displayText + "</a>";
         privacyPolicy.setText(Html.fromHtml(linkText));
         privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
