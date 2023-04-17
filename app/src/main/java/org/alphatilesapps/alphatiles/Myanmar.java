@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -27,6 +28,10 @@ public class Myanmar extends GameActivity {
     int tilesInUse;
     int firstClickIndex = 0;
     int secondClickIndex = 0;
+    int firstClickPreviousBackgroundColor = 0;
+    int secondClickPreviousBackgroundColor = 0;
+    int firstClickPreviousTextColor = 0;
+    int secondClickPreviousTextColor = 0;
     int lowerClick = 0;
     int higherClick = 0;
     int wordsCompleted = 0;
@@ -396,6 +401,7 @@ public class Myanmar extends GameActivity {
                     int resID = getResources().getIdentifier(sevenWordsInLopLwc[w][0] + "2", "drawable", getPackageName());
                     image.setImageResource(resID);
                     image.setVisibility(View.VISIBLE);
+                    image.setClickable(true);
 
                 }
 
@@ -405,6 +411,7 @@ public class Myanmar extends GameActivity {
                 ImageView image = findViewById(WORD_IMAGES[w]);
                 image.setImageResource(0);
                 image.setVisibility(View.INVISIBLE);
+                image.setClickable(false);
                 completionGoal--;
             }
 
@@ -452,41 +459,28 @@ public class Myanmar extends GameActivity {
     }
 
     private void respondToTileSelection(int justClickedTile) {
-
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
         TextView tile = findViewById(TILE_BUTTONS[justClickedTile - 1]);
-
+        int tileColor = ((ColorDrawable) tile.getBackground()).getColor();
         int textColor = tile.getCurrentTextColor();
 
-        boolean alreadyCompletedTile = false;
-        if (textColor == -1) {
-            alreadyCompletedTile = true;
-            // only the completed tiles switch to white (-1) font
+        tile.setBackgroundColor(Color.parseColor("#FFEB3B")); // Color the clicked tile yellow
+
+        clickCount++;
+        if (clickCount == 1) {
+            firstClickIndex = justClickedTile - 1;
+            firstClickPreviousBackgroundColor = tileColor;
+            firstClickPreviousTextColor = textColor;
+        } else if (clickCount == 2) {
+            secondClickIndex = justClickedTile - 1;
+            secondClickPreviousBackgroundColor = tileColor;
+            secondClickPreviousTextColor = textColor;
+            evaluateTwoClicks();
         }
-
-        if (!alreadyCompletedTile) {
-            tile.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
-            clickCount++;
-
-            if (clickCount == 1) {
-
-                firstClickIndex = justClickedTile - 1;
-
-            }
-
-            if (clickCount == 2) {
-
-                secondClickIndex = justClickedTile - 1;
-                evaluateTwoClicks();
-
-            }
-        }
-
         setAllTilesClickable();
         setOptionsRowClickable();
-
     }
 
     private void evaluateTwoClicks() {
@@ -496,32 +490,27 @@ public class Myanmar extends GameActivity {
         boolean wordFound = false;
         int indexOfFoundWord = -1;
 
-        if (firstClickIndex == secondClickIndex) {
-
+        if (firstClickIndex == secondClickIndex) { // Clear
             TextView tileA = findViewById(TILE_BUTTONS[firstClickIndex]);
-            tileA.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
-            tileA.setTextColor(Color.parseColor("#000000")); // black
+            tileA.setBackgroundColor(firstClickPreviousBackgroundColor);
+            tileA.setTextColor(firstClickPreviousTextColor);
 
             TextView tileB = findViewById(TILE_BUTTONS[secondClickIndex]);
-            tileB.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
-            tileB.setTextColor(Color.parseColor("#000000")); // black
+            tileB.setBackgroundColor(secondClickPreviousBackgroundColor);
+            tileB.setTextColor(secondClickPreviousTextColor);
 
             setAllTilesClickable();
             setOptionsRowClickable();
             return;
-
         }
 
+        
         if (firstClickIndex > secondClickIndex) {
-
             lowerClick = secondClickIndex;
             higherClick = firstClickIndex;
-
         } else {
-
             higherClick = secondClickIndex;
             lowerClick = firstClickIndex;
-
         }
 
         int difference = higherClick - lowerClick;
@@ -529,27 +518,19 @@ public class Myanmar extends GameActivity {
         int selectionDirection = 0;     // 0 = invalid, 46 = horizontal, 82 = vertical, 19 = SW to NE diagonal, 73 = NW to SE diagonal
 
         if ((lowerClick / 7) == (higherClick / 7)) {
-
             selectionDirection = 46; // horizontal
-
         }
 
         if (difference % 7 == 0) {
-
             selectionDirection = 82; // vertical
-
         }
 
         if (((higherClick / 7) - (lowerClick / 7)) == -1 * ((higherClick % 7) - (lowerClick % 7))) {
-
             selectionDirection = 19; // SW to NE diagonal
-
         }
 
         if (((higherClick / 7) - (lowerClick / 7)) == ((higherClick % 7) - (lowerClick % 7))) {
-
             selectionDirection = 73; // NW to SE diagonal
-
         }
 
         String builtWord1 = "";
@@ -596,7 +577,6 @@ public class Myanmar extends GameActivity {
             int tileY;
 
             for (int t = 0; t < selectionLength; t++) {
-
                 if (selectionDirection == 19) { // Direction 19 is special, because the forward direction starts from the higher index
                     tileX = (higherClick % 7) + (t * incrementF[0]);
                     tileY = (higherClick / 7) + (t * incrementF[1]);
@@ -606,7 +586,6 @@ public class Myanmar extends GameActivity {
                 }
 
                 builtWord1 = builtWord1 + tilesBoard[tileX][tileY];
-
             }
 
             // Check backwards
@@ -628,7 +607,6 @@ public class Myanmar extends GameActivity {
             }
 
             for (int t = 0; t < selectionLength; t++) {
-
                 if (selectionDirection == 19) { // Direction 19 is special, because the backward direction starts from the lower index
                     tileX = (lowerClick % 7) + (t * incrementB[0]);
                     tileY = (lowerClick / 7) + (t * incrementB[1]);
@@ -638,11 +616,9 @@ public class Myanmar extends GameActivity {
                 }
 
                 builtWord2 = builtWord2 + tilesBoard[tileX][tileY];
-
             }
 
             for (int w = 0; w < 7; w++) {
-
                 if (Start.wordList.stripInstructionCharacters(builtWord1).equals(Start.wordList.stripInstructionCharacters(sevenWordsInLopLwc[w][1]))) {
                     wordFound = true;
                     indexOfFoundWord = w;
@@ -653,7 +629,6 @@ public class Myanmar extends GameActivity {
                     indexOfFoundWord = w;
                     displayWord = builtWord2;
                 }
-
             }
 
         }
@@ -707,11 +682,9 @@ public class Myanmar extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-            // Play the "correct" sound and then the audio for this word
+            // Play word and "correct" sounds and then clear the image from word bank
             wordInLWC = sevenWordsInLopLwc[indexOfFoundWord][0];
             playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
-
-            // Remove this image from the image bank
             handler = new Handler();
             handler.postDelayed(clearImageFromImageBank(indexOfFoundWord), Long.valueOf(wordDurations.get(wordInLWC) + correctSoundDuration));
 
@@ -719,12 +692,12 @@ public class Myanmar extends GameActivity {
 
             // Reset the tiles that were clicked to their previous color
             TextView tileA = findViewById(TILE_BUTTONS[firstClickIndex]);
-            tileA.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
-            tileA.setTextColor(Color.parseColor("#000000")); // black
+            tileA.setBackgroundColor(firstClickPreviousBackgroundColor);
+            tileA.setTextColor(firstClickPreviousTextColor);
 
             TextView tileB = findViewById(TILE_BUTTONS[secondClickIndex]);
-            tileB.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
-            tileB.setTextColor(Color.parseColor("#000000")); // black
+            tileB.setBackgroundColor(secondClickPreviousBackgroundColor);
+            tileB.setTextColor(secondClickPreviousTextColor);
 
         }
     }
