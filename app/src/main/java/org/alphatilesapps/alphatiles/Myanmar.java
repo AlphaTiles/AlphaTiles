@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -32,6 +33,8 @@ public class Myanmar extends GameActivity {
     int completionGoal = 0;
     int myanmarPoints;
     boolean myanmarHasChecked12Trackers;
+
+    Handler handler;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -491,6 +494,7 @@ public class Myanmar extends GameActivity {
         clickCount = 0;
 
         boolean wordFound = false;
+        int indexOfFoundWord = -1;
 
         if (firstClickIndex == secondClickIndex) {
 
@@ -641,10 +645,12 @@ public class Myanmar extends GameActivity {
 
                 if (Start.wordList.stripInstructionCharacters(builtWord1).equals(Start.wordList.stripInstructionCharacters(sevenWordsInLopLwc[w][1]))) {
                     wordFound = true;
+                    indexOfFoundWord = w;
                     displayWord = builtWord1;
                 }
                 if (Start.wordList.stripInstructionCharacters(builtWord2).equals(Start.wordList.stripInstructionCharacters(sevenWordsInLopLwc[w][1]))) {
                     wordFound = true;
+                    indexOfFoundWord = w;
                     displayWord = builtWord2;
                 }
 
@@ -652,14 +658,14 @@ public class Myanmar extends GameActivity {
 
         }
 
-        if (wordFound) {
-//            // Word spelled correctly!
+        if (wordFound) { // Word spelled correctly!
 
             wordsCompleted++;
 
             TextView activeWord = findViewById(R.id.activeWordTextView);
             activeWord.setText(Start.wordList.stripInstructionCharacters(displayWord));
 
+            // Color the tiles in the found word
             int tileX;
             int tileY;
 
@@ -682,6 +688,7 @@ public class Myanmar extends GameActivity {
 
             }
 
+            // Update the points
             TextView pointsEarned = findViewById(R.id.pointsTextView);
             points += 2;
             myanmarPoints += 2;
@@ -700,20 +707,17 @@ public class Myanmar extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
-            for (int w = 0; w < 7; w++) {
-
-                if (displayWord.equals(wordList.stripInstructionCharacters(sevenWordsInLopLwc[w][1]))) {
-
-                    wordInLWC = sevenWordsInLopLwc[w][0];
-
-                }
-
-            }
-
+            // Play the "correct" sound and then the audio for this word
+            wordInLWC = sevenWordsInLopLwc[indexOfFoundWord][0];
             playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
 
-        } else { // word not found
+            // Remove this image from the image bank
+            handler = new Handler();
+            handler.postDelayed(clearImageFromImageBank(indexOfFoundWord), Long.valueOf(wordDurations.get(wordInLWC) + correctSoundDuration));
 
+        } else { // Word not found
+
+            // Reset the tiles that were clicked to their previous color
             TextView tileA = findViewById(TILE_BUTTONS[firstClickIndex]);
             tileA.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tileA.setTextColor(Color.parseColor("#000000")); // black
@@ -723,6 +727,17 @@ public class Myanmar extends GameActivity {
             tileB.setTextColor(Color.parseColor("#000000")); // black
 
         }
+    }
+
+    private Runnable clearImageFromImageBank(int w) {
+        Runnable clearImg = new Runnable() {
+            public void run() {
+                ImageView image = findViewById(WORD_IMAGES[w]);
+                image.setVisibility(View.INVISIBLE);
+                image.setClickable(false);
+            }
+        };
+        return clearImg;
     }
 
     public void onBtnClick(View view) {
