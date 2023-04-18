@@ -682,6 +682,7 @@ public class Myanmar extends GameActivity {
             editor.putInt(uniqueGameLevelPlayerID, trackerCount);
             editor.apply();
 
+
             // Play word and "correct" sounds and then clear the image from word bank
             wordInLWC = sevenWordsInLopLwc[indexOfFoundWord][0];
             playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
