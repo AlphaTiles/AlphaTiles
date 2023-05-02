@@ -1,8 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -27,22 +25,14 @@ import static org.alphatilesapps.alphatiles.Start.*;
 public class Mexico extends GameActivity {
 
     ArrayList<String[]> memoryCollection = new ArrayList(); // KP
-
-    WordList wordListExcludingTheLongestWords; // KP
-    String delaySetting = Start.settingsList.find("View memory cards for _ milliseconds");
     int justClickedCard;
     int priorClickedCard;
     int activeSelections = 0;
     int pairsCompleted = 0;
     int cardHitA = 0;
     int cardHitB = 0;
-    int pixelHeight = 0;
     double lowestAdjustment = 0.7;
-
     Handler handler; // KP
-
-    int mexicoPoints;
-    boolean mexicoHasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.card01, R.id.card02, R.id.card03, R.id.card04, R.id.card05, R.id.card06, R.id.card07, R.id.card08, R.id.card09, R.id.card10,
@@ -91,7 +81,6 @@ public class Mexico extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.mexico);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -103,25 +92,7 @@ public class Mexico extends GameActivity {
             fixConstraintsRTL(R.id.mexicoCL);
         }
 
-        points = getIntent().getIntExtra("points", 0); // KP
-        mexicoPoints = getIntent().getIntExtra("mexicoPoints", 0); // LM
-        mexicoHasChecked12Trackers = getIntent().getBooleanExtra("mexicoHasChecked12Trackers", false);
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        mexicoPoints = prefs.getInt("storedMexicoPoints_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, 0);
-        mexicoHasChecked12Trackers = prefs.getBoolean("storedMexicoHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
-        syllableGame = getIntent().getStringExtra("syllableGame");
-
-        wordListExcludingTheLongestWords = new WordList(); // KP
-
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         // new levels
@@ -147,23 +118,13 @@ public class Mexico extends GameActivity {
                 visibleTiles = 6;
         }
 
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(mexicoPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-
-        if (trackerCount >= 12) {
-            mexicoHasChecked12Trackers = true;
-        }
-        updateTrackers();
 
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
+        updatePointsAndTrackers(0);
         playAgain();
-
     }
 
     @Override
@@ -173,22 +134,21 @@ public class Mexico extends GameActivity {
 
     public void repeatGame(View View) {
 
-        if (mediaPlayerIsPlaying) {
-            return;
-        }
-        // Closing and restarting the activity for each round is not ideal, but it seemed to be helping with memory issues...
-        Intent intent = getIntent();
-        intent.setClass(this, Mexico.class);    // so we retain the Extras
-        startActivity(intent);
-        finish();
+//        if (mediaPlayerIsPlaying) {
+//            return;
+//        }
+//        // Closing and restarting the activity for each round is not ideal, but it seemed to be helping with memory issues...
+//        Intent intent = getIntent();
+//        intent.setClass(this, Mexico.class);    // so we retain the Extras
+//        startActivity(intent);
+//        finish();
+        playAgain();
 
     }
 
     public void playAgain() {
 
         setCardTextToEmpty();
-        buildWordsArray();
-        Collections.shuffle(wordListExcludingTheLongestWords); // KP
         chooseMemoryWords();
         Collections.shuffle(memoryCollection); // KP
         pairsCompleted = 0;
@@ -215,37 +175,20 @@ public class Mexico extends GameActivity {
         }
     }
 
-    public void buildWordsArray() {
-
-        // This array will store every word available in wordlist.txt
-        // Subsequently, this will be narrowed down to 10 words for use in the memory game
-        // KP, Oct 2020
-        // AH, Nov 2020, revised to allow for spaces in words
-
-        for (int i = 0; i < wordList.size(); i++) {
-            double adjustment = Double.valueOf(wordList.get(i).adjustment);
-            if (adjustment >= lowestAdjustment) {
-                wordListExcludingTheLongestWords.add(wordList.get(i));
-            }
-        }
-    }
-
     public void chooseMemoryWords() {
         // KP, Oct 2020
         int cardsToSetUp = visibleTiles / 2;   // this is half the number of cards
 
         for (int i = 0; i < visibleTiles; i++) {
-
-            int index = i < cardsToSetUp ? i : i - cardsToSetUp;
+            chooseWord();
             String[] content = new String[]
                     {
-                            wordListExcludingTheLongestWords.get(index).nationalWord,
-                            wordListExcludingTheLongestWords.get(index).localWord,
+                            wordInLWC,
+                            wordInLOP,
                             i < cardsToSetUp ? "TEXT" : "IMAGE",
                             "UNSELECTED",
-                            String.valueOf(wordListExcludingTheLongestWords.get(index).duration),    // audio clip duration in seconds
-                            wordListExcludingTheLongestWords.get(index).adjustment,    // font adjustment
-
+                            String.valueOf(wordHashMap.get(wordInLWC).duration),    // audio clip duration in seconds
+                            wordHashMap.get(wordInLWC).adjustment,    // font adjustment
 
                     };
             memoryCollection.add(content);
@@ -345,28 +288,7 @@ public class Mexico extends GameActivity {
             cardA.setTextColor(tileColor); // theme color
             cardB.setTextColor(tileColor); // theme color
 
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points++;
-            mexicoPoints++;
-            pointsEarned.setText(String.valueOf(mexicoPoints));
-
-            if (trackerCount >= 12) {
-                mexicoHasChecked12Trackers = true;
-            }
-            updateTrackers();
-
-            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.apply();
-            editor.putInt("storedMexicoPoints_level" + challengeLevel + "_player" + playerString
-                    + "_" + syllableGame, mexicoPoints);
-            editor.apply();
-            editor.putBoolean("storedMexicoHasChecked12Trackers_level" + challengeLevel + "_player"
-                    + playerString + "_" + syllableGame, mexicoHasChecked12Trackers);
-            editor.apply();
-            editor.putInt(getClass().getName() + challengeLevel + playerString + syllableGame, trackerCount);
-            editor.apply();
+            updatePointsAndTrackers(1);
 
             wordInLWC = memoryCollection.get(cardHitA)[0];
             playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleTiles / 2));

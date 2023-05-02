@@ -1,7 +1,5 @@
 package org.alphatilesapps.alphatiles;
 
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -51,8 +49,6 @@ public class Georgia extends GameActivity {
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
-    int georgiaPoints;
-    boolean georgiaHasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -115,8 +111,6 @@ public class Georgia extends GameActivity {
             gameID = R.id.georgiaCL;
         }
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
-
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
@@ -127,25 +121,8 @@ public class Georgia extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-        points = getIntent().getIntExtra("points", 0); // KP
-        georgiaPoints = getIntent().getIntExtra("georgiaPoints", 0); // LM
-        georgiaHasChecked12Trackers = getIntent().getBooleanExtra("georgiaHasChecked12Trackers", false);
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        georgiaPoints = prefs.getInt("storedGeorgiaPoints_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, 0);
-        georgiaHasChecked12Trackers = prefs.getBoolean("storedGeorgiaHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString + syllableGame, false);
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
-        syllableGame = getIntent().getStringExtra("syllableGame");
-
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
 
         switch (challengeLevel) {
             case 5:
@@ -164,20 +141,13 @@ public class Georgia extends GameActivity {
             sortableSyllArray = (Start.SyllableList) Start.syllableList.clone();
         }
 
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(georgiaPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-
-        updateTrackers();
-
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
+        visibleTiles = TILE_BUTTONS.length;
+        updatePointsAndTrackers(0);
         playAgain();
-
     }
 
     @Override
@@ -204,7 +174,7 @@ public class Georgia extends GameActivity {
             Collections.shuffle(sortableSyllArray); //JP
         }
 
-        chooseWord();
+        setWord();
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
         if (syllableGame.equals("S")) {
@@ -223,53 +193,22 @@ public class Georgia extends GameActivity {
 
     }
 
-    private void chooseWord() {
-        boolean freshWord = false;
-
-        while (!freshWord) {
-            Random rand = new Random();
-            int randomNum = rand.nextInt(Start.wordList.size()); // KP
-
-            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
-
-            //If this word isn't one of the 3 previously tested words, we're good // LM
-            if (!wordInLWC.equals(lastWord)
-                    && !wordInLWC.equals(secondToLastWord)
-                    && !wordInLWC.equals(thirdToLastWord)) {
-                // this next section was moved by JP to help make sure that whatever word is chosen
-                // actually begins with a C or V
-                if (syllableGame.equals("S")) {
-                    parsedWordSyllArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); //JP
-                    initialSyll = parsedWordSyllArrayFinal.get(0);
-
-                    freshWord = true;
-                    thirdToLastWord = secondToLastWord;
-                    secondToLastWord = lastWord;
-                    lastWord = wordInLWC;
-
-                    ImageView image = (ImageView) findViewById(R.id.wordImage);
-                    int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
-                    image.setImageResource(resID);
-                } else {
-                    parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
-                    initialTile = parsedWordArrayFinal.get(0);
-
-                    if (CorV.contains(initialTile)) { // makes sure chosen word begins with C or V
-                        freshWord = true;
-                        thirdToLastWord = secondToLastWord;
-                        secondToLastWord = lastWord;
-                        lastWord = wordInLWC;
-
-                        ImageView image = (ImageView) findViewById(R.id.wordImage);
-                        int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
-                        image.setImageResource(resID);
-                    }
-                }
+    private void setWord() {
+        chooseWord();
+        if (syllableGame.equals("T")) {
+            if (!CorV.contains(initialTile)) { // Make sure chosen word begins with C or V
+                chooseWord();
             }
+            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
+            initialTile = parsedWordArrayFinal.get(0);
+        } else {
+            parsedWordSyllArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); // JP
+            initialSyll = parsedWordSyllArrayFinal.get(0);
+        }
 
-        }//generates a new word if it got one of the last three tested words // LM
-
+        ImageView image = (ImageView) findViewById(R.id.wordImage);
+        int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+        image.setImageResource(resID);
     }
 
     private void setUpSyllables() {
@@ -518,31 +457,7 @@ public class Georgia extends GameActivity {
         if (correct.equals(selectedTile)) {
             // Good job! You chose the right tile
             repeatLocked = false;
-
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points++;
-            georgiaPoints++;
-            pointsEarned.setText(String.valueOf(georgiaPoints));
-
-            trackerCount++;
-            if (trackerCount >= 12) {
-                georgiaHasChecked12Trackers = true;
-            }
-            updateTrackers();
-
-            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.apply();
-            editor.putInt("storedGeorgiaPoints_level" + challengeLevel + "_player" + playerString
-                    + "_" + syllableGame, georgiaPoints);
-            editor.apply();
-            editor.putBoolean("storedGeorgiaHasChecked12Trackers_level" + challengeLevel + "_player"
-                    + playerString + "_" + syllableGame, georgiaHasChecked12Trackers);
-            editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-            editor.apply();
+            updatePointsAndTrackers(1);
 
             for (int t = 0; t < TILE_BUTTONS.length; t++) {
                 TextView gameTile = findViewById(TILE_BUTTONS[t]);

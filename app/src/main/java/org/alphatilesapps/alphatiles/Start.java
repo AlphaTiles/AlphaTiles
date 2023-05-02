@@ -31,14 +31,15 @@ public class Start extends AppCompatActivity {
     public static String localAppName; // KP add "public"
 
     public static TileList tileList; // KP // from aa_gametiles.txt
+    public static ArrayList<ArrayList<String>> tileStagesLists; // LM // For staged introduction of tiles
 
     public static TileList tileListNoSAD; // JP // from aa_gametiles.txt minus SAD types
 
     public static TileListWithMultipleTypes tileListWithMultipleTypes;
-
     public static TileListWithMultipleTypes tileListWithMultipleTypesNoSAD;
 
     public static WordList wordList;     // KP  // from aa_wordlist.txt
+    public static ArrayList<WordList> wordStagesLists; // LM // For staged introduction of tiles/words
 
     public static SyllableList syllableList; // JP // from aa_syllables.txt
 
@@ -86,8 +87,9 @@ public class Start extends AppCompatActivity {
     public static int after12checkedTrackers;
     public static Boolean differentiateTypes;
     public static Boolean hasSAD = false;
+    public static double stageCorrespondenceRatio;
 
-    public static int numberOfAvatars = 12; //default
+    public static int numberOfAvatars = 12;
 
     public static List<String> CONSONANTS = new ArrayList<>();
     public static List<String> VOWELS = new ArrayList<>();
@@ -145,6 +147,13 @@ public class Start extends AppCompatActivity {
             numberOfAvatars = Integer.parseInt(customNumOfAvatars);
         }
 
+        String stageCorrespondenceRatioSetting = settingsList.find("Stage correspondence ratio");
+        if (!stageCorrespondenceRatioSetting.equals("")) {
+            stageCorrespondenceRatio = Double.parseDouble(stageCorrespondenceRatioSetting);
+        } else {
+            stageCorrespondenceRatio = 0.5;
+        }
+
         // JP: the old constructor is deprecated after API 21, so account for both scenarios
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes attributes = new AudioAttributes.Builder()
@@ -187,9 +196,10 @@ public class Start extends AppCompatActivity {
             totalAudio = totalAudio + tileList.size();
         }
 
-        buildGamesArray();
-
         buildWordsArray();
+        buildTileStagesLists();
+        buildWordStagesLists();
+        buildGamesArray();
         totalAudio = totalAudio + wordList.size();
 
         if (hasSyllableGames) {
@@ -260,7 +270,7 @@ public class Start extends AppCompatActivity {
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
-            String[] thisLineArray = thisLine.split("\t", 14);
+            String[] thisLineArray = thisLine.split("\t");
             if (header) {
                 tileList.baseTitle = thisLineArray[0];
                 tileList.alt1Title = thisLineArray[1];
@@ -273,12 +283,34 @@ public class Start extends AppCompatActivity {
                 tileList.audioForTileBTitle = thisLineArray[8];
                 tileList.tileTypeCTitle = thisLineArray[9];
                 tileList.audioForTileCTitle = thisLineArray[10];
-                tileList.tileDuration1 = "";
-                tileList.tileDuration2 = "";
-                tileList.tileDuration3 = "";
+                tileList.tileDuration1Title = "";
+                tileList.tileDuration2Title = "";
+                tileList.tileDuration3Title = "";
+                tileList.stageOfFirstAppearanceTitle = thisLineArray[14];
+                tileList.stageOfFirstAppearanceTitleType2 = thisLineArray[15];
+                tileList.stageOfFirstAppearanceTitleType3 = thisLineArray[16];
+
                 header = false;
             } else {
-                Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0);
+                // Sort information for staged introduction, including among potential second or third types of a tile
+                int stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3;
+                if(thisLineArray[14].equals("-")) {
+                    stageOfFirstAppearance = -1;
+                } else {
+                    stageOfFirstAppearance = Integer.parseInt(thisLineArray[14]);
+                }
+                if(thisLineArray[15].equals("-")) {
+                    stageOfFirstAppearanceType2 = -1;
+                } else {
+                    stageOfFirstAppearanceType2 = Integer.parseInt(thisLineArray[15]);
+                }
+                if(thisLineArray[16].equals("-")) {
+                    stageOfFirstAppearanceType3 = -1;
+                } else {
+                    stageOfFirstAppearanceType3 = Integer.parseInt(thisLineArray[16]);
+                }
+                // Create tile and add to list
+                Tile tile = new Tile(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3);
                 if (!tile.hasNull()) {
                     tileList.add(tile);
                     if (!tile.tileType.equals("SAD")) {
@@ -319,6 +351,49 @@ public class Start extends AppCompatActivity {
         }
 
         buildTileHashMap();
+    }
+
+
+    public void buildTileStagesLists(){
+        // LM, Apr 2023
+        // Tile stages lists do NOT include SAD characters
+        tileStagesLists = new ArrayList<ArrayList<String>>();
+        ArrayList<String> tileListStage1 = new TileListWithMultipleTypes();
+        tileStagesLists.add(tileListStage1);
+        ArrayList<String> tileListStage2 =  new TileListWithMultipleTypes();
+        tileStagesLists.add(tileListStage2);
+        ArrayList<String> tileListStage3 =  new TileListWithMultipleTypes();
+        tileStagesLists.add(tileListStage3);
+        ArrayList<String> tileListStage4 =  new TileListWithMultipleTypes();
+        tileStagesLists.add(tileListStage4);
+        ArrayList<String> tileListStage5 =  new TileListWithMultipleTypes();
+        tileStagesLists.add(tileListStage5);
+        ArrayList<String> tileListStage6 =  new TileListWithMultipleTypes();
+        tileStagesLists.add(tileListStage6);
+        ArrayList<String> tileListStage7 =  new TileListWithMultipleTypes();
+        tileStagesLists.add(tileListStage7);
+
+        for(int i=0; i<7; i++){
+            if(differentiateTypes){
+                for (Tile tile : tileList) {
+                    if (tile.stageOfFirstAppearance==(i+1) && !tile.tileType.equals("SAD")) {
+                        tileStagesLists.get(i).add(tile.baseTile);
+                    }
+                    if (!tile.tileTypeB.equals("none") && tile.stageOfFirstAppearanceType2==(i+1) && !tile.tileTypeB.equals("SAD")) {
+                        tileStagesLists.get(i).add(tile.baseTile + "B");
+                    }
+                    if (!tile.tileTypeC.equals("none") && tile.stageOfFirstAppearanceType3==(i+1) && !tile.tileTypeC.equals("SAD")) {
+                        tileStagesLists.get(i).add(tile.baseTile + "C");
+                    }
+                }
+            } else {
+                for (Tile tile : tileList){
+                    if(!tile.tileType.equals("SAD") && (tile.stageOfFirstAppearance==(i+1) || tile.stageOfFirstAppearanceType2==(i+1) || tile.stageOfFirstAppearanceType3==(i+1))){
+                        tileStagesLists.get(i).add(tile.baseTile);
+                    }
+                }
+            }
+        }
     }
 
     public void buildSyllablesArray() {
@@ -370,10 +445,11 @@ public class Start extends AppCompatActivity {
                 wordList.localTitle = thisLineArray[1];
                 wordList.durationTitle = thisLineArray[2];
                 wordList.mixedDefsTitle = thisLineArray[3];
-                wordList.adjustment = ""; //set during LoadingScreen activity
+                wordList.adjustmentTitle = ""; //set during LoadingScreen activity
+                wordList.stageOfFirstAppearanceTitle = thisLineArray[5];
                 header = false;
             } else {
-                Word word = new Word(thisLineArray[0], thisLineArray[1], Integer.parseInt(thisLineArray[2]), thisLineArray[3], "");
+                Word word = new Word(thisLineArray[0], thisLineArray[1], Integer.parseInt(thisLineArray[2]), thisLineArray[3], "", thisLineArray[5]);
                 if (!word.hasNull()) {
                     wordList.add(word);
                 }
@@ -381,6 +457,102 @@ public class Start extends AppCompatActivity {
         }
 
         buildWordHashMap();
+    }
+
+    public void buildWordStagesLists() {
+        // LM, Apr 2023
+
+        wordStagesLists = new ArrayList<WordList>();
+        HashMap<Word, Integer> stagesOfFirstAppearance = new HashMap<Word, Integer>();
+        WordList wordListStage1 = new WordList();
+        wordStagesLists.add(wordListStage1);
+        WordList wordListStage2 = new WordList();
+        wordStagesLists.add(wordListStage2);
+        WordList wordListStage3 = new WordList();
+        wordStagesLists.add(wordListStage3);
+        WordList wordListStage4 = new WordList();
+        wordStagesLists.add(wordListStage4);
+        WordList wordListStage5 = new WordList();
+        wordStagesLists.add(wordListStage5);
+        WordList wordListStage6 = new WordList();
+        wordStagesLists.add(wordListStage6);
+        WordList wordListStage7 = new WordList();
+        wordStagesLists.add(wordListStage7);
+
+        // Find default first stage correspondences
+        // Start all off at the last possible stage to introduce the word
+        int lastStage = 0;
+        for(Tile tile : tileList){
+            if (tile.stageOfFirstAppearance > lastStage){
+                lastStage = tile.stageOfFirstAppearance;
+            }
+            if (tile.stageOfFirstAppearanceType2 > lastStage){
+                lastStage = tile.stageOfFirstAppearanceType2;
+            }
+            if (tile.stageOfFirstAppearanceType3 > lastStage){
+                lastStage = tile.stageOfFirstAppearanceType3;
+            }
+        }
+        for(Word word : wordList){
+            stagesOfFirstAppearance.put(word, lastStage);
+        }
+        // Keep trying to find an earlier stage that it corresponds with until knowing the earliest stage that it corresponds with.
+        for(int i=5;i>-1; i--){
+            ArrayList<String> cumulativeCorrespondingTiles = new ArrayList<String>();
+            for(int s=0; s<=i; s++){
+                cumulativeCorrespondingTiles.addAll(tileStagesLists.get(s));
+            }
+            for(Word word: wordList) {
+                ArrayList<String> tilesInThisWord = tileList.parseWordIntoTiles(word.localWord);
+                int correspondingTiles = 0;
+                for(int t=0; t<tilesInThisWord.size(); t++){
+                    for(int a=0; a<cumulativeCorrespondingTiles.size(); a++) {
+                        String aTileInTheStage = cumulativeCorrespondingTiles.get(a);
+                        String aTileInTheStageSuffix = Character.toString(aTileInTheStage.charAt(aTileInTheStage.length() -1));
+                        String aTileInTheStageWithoutSuffix = aTileInTheStage;
+                        if(aTileInTheStageSuffix.equals("B") || aTileInTheStageSuffix.equals("C")){
+                            aTileInTheStageWithoutSuffix = aTileInTheStageWithoutSuffix.substring(0, aTileInTheStageWithoutSuffix.length()-1);
+                        }
+                        if(tilesInThisWord.get(t).equals(aTileInTheStageWithoutSuffix)){
+                            if(differentiateTypes){
+                                String aTileInTheStageType = tileTypeHashMapWithMultipleTypes.get(aTileInTheStage);
+                                String tileInThisWordType;
+                                if (MULTIFUNCTIONS.contains(tilesInThisWord.get(t))){
+                                    tileInThisWordType = tileList.getInstanceTypeForMixedTile(t, word.localWord);
+                                } else {
+                                    tileInThisWordType = tileTypeHashMapWithMultipleTypes.get(tilesInThisWord.get(t));
+                                }
+
+                                if(aTileInTheStageType.equals(tileInThisWordType)){
+                                    correspondingTiles++;
+                                    break;
+                                }
+                            } else {
+                                correspondingTiles++;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if((double)correspondingTiles/tilesInThisWord.size() > stageCorrespondenceRatio){
+                    stagesOfFirstAppearance.put(word, i+1);
+                }
+            }
+        }
+
+        // Then override for any words that have explicit first stage info in the wordlist
+        for (Word word : wordList){
+            if(!word.stageOfFirstAppearance.equals("-")){
+                stagesOfFirstAppearance.put(word, Integer.parseInt(word.stageOfFirstAppearance));
+            }
+        }
+
+        // Then use the stage info found to make the sub-wordlists
+        for(Word word : wordList){
+            int stageOfFirstAppearance = stagesOfFirstAppearance.get(word);
+            wordStagesLists.get(stageOfFirstAppearance-1).add(word);
+        }
+
     }
 
     public void buildKeysArray() {
@@ -416,16 +588,17 @@ public class Start extends AppCompatActivity {
             String thisLine = scanner.nextLine();
             String[] thisLineArray = thisLine.split("\t");
             if (header) {
-                gameList.gameNumber = thisLineArray[0];
-                gameList.gameCountry = thisLineArray[1];
-                gameList.gameLevel = thisLineArray[2];
-                gameList.gameColor = thisLineArray[3];
-                gameList.gameInstrLabel = thisLineArray[4];
-                gameList.gameInstrDuration = thisLineArray[5];
-                gameList.gameMode = thisLineArray[6];
+                gameList.gameNumberTitle = thisLineArray[0];
+                gameList.gameCountryTitle = thisLineArray[1];
+                gameList.gameLevelTitle = thisLineArray[2];
+                gameList.gameColorTitle = thisLineArray[3];
+                gameList.gameInstrLabelTitle = thisLineArray[4];
+                gameList.gameInstrDurationTitle = thisLineArray[5];
+                gameList.gameModeTitle = thisLineArray[6];
+                gameList.gameStageTitle = thisLineArray[7];
                 header = false;
             } else {
-                Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6]);
+                Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7]);
                 if (!game.hasNull()) {
                     gameList.add(game);
                 }
@@ -533,13 +706,15 @@ public class Start extends AppCompatActivity {
         public int duration;
         public String mixedDefs;
         public String adjustment;
+        public String stageOfFirstAppearance;
 
-        public Word(String nationalWord, String localWord, int duration, String mixedDefs, String adjustment) {
+        public Word(String nationalWord, String localWord, int duration, String mixedDefs, String adjustment, String stageOfFirstAppearance) {
             this.nationalWord = nationalWord;
             this.localWord = localWord;
             this.duration = duration;
             this.mixedDefs = mixedDefs;
             this.adjustment = adjustment;
+            this.stageOfFirstAppearance = stageOfFirstAppearance;
         }
 
         public boolean hasNull() {
@@ -560,8 +735,11 @@ public class Start extends AppCompatActivity {
         public int tileDuration1;
         public int tileDuration2;
         public int tileDuration3;
+        public int stageOfFirstAppearance;
+        public int stageOfFirstAppearanceType2;
+        public int stageOfFirstAppearanceType3;
 
-        public Tile(String baseTile, String alt1Tile, String alt2Tile, String alt3Tile, String tileType, String audioForTile, String upperTile, String tileTypeB, String audioForTileB, String tileTypeC, String audioForTileC, int tileDuration1, int tileDuration2, int tileDuration3) {
+        public Tile(String baseTile, String alt1Tile, String alt2Tile, String alt3Tile, String tileType, String audioForTile, String upperTile, String tileTypeB, String audioForTileB, String tileTypeC, String audioForTileC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceType2, int stageOfFirstAppearanceType3) {
             this.baseTile = baseTile;
             altTiles = new String[ALT_COUNT];
             altTiles[0] = alt1Tile;
@@ -577,6 +755,9 @@ public class Start extends AppCompatActivity {
             this.tileDuration1 = tileDuration1;
             this.tileDuration2 = tileDuration2;
             this.tileDuration3 = tileDuration3;
+            this.stageOfFirstAppearance = stageOfFirstAppearance;
+            this.stageOfFirstAppearanceType2 = stageOfFirstAppearanceType2;
+            this.stageOfFirstAppearanceType3 = stageOfFirstAppearanceType3;
         }
 
         public boolean hasNull() {
@@ -611,8 +792,9 @@ public class Start extends AppCompatActivity {
         public String gameInstrLabel;
         public String gameInstrDuration;
         public String gameMode; //JP : for syllable or tile mode
+        public String stage; // LM The game will include tiles/words from all the stages up to and including the stage indicated in the row of aa_games.txt
 
-        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration, String gameMode) {
+        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration, String gameMode, String stage) {
             this.gameNumber = gameNumber;
             this.gameCountry = gameCountry;
             this.gameLevel = gameLevel;
@@ -620,6 +802,7 @@ public class Start extends AppCompatActivity {
             this.gameInstrLabel = gameInstrLabel;
             this.gameInstrDuration = gameInstrDuration;
             this.gameMode = gameMode;
+            this.stage = stage;
         }
 
         public boolean hasNull() {
@@ -632,7 +815,8 @@ public class Start extends AppCompatActivity {
         public String localTitle;    // e.g. LOPS (language of play) like Me'phaa, Kayan or Romani Gabor
         public String durationTitle;    // the length of the clip in ms, relevant only if set to use SoundPool
         public String mixedDefsTitle;    // for languages with multi-function symbols (e.g. in the word <niwan'>, the first |n| is a consontant and the second |n| is a nasality indicator
-        public String adjustment;    // a font-specific reduction in size for words with longer pixel width
+        public String adjustmentTitle;    // a font-specific reduction in size for words with longer pixel width
+        public String stageOfFirstAppearanceTitle; // an option indicator to override the default tile-based staging and assign this word to first appear in a certain stage
 
         public int numberOfWordsForActiveTile(String activeTile, int scanSetting) {
             // Scan setting 1: Words that start with the active tile
@@ -1204,9 +1388,13 @@ public class Start extends AppCompatActivity {
         public String audioForTileBTitle;
         public String tileTypeCTitle;
         public String audioForTileCTitle;
-        public String tileDuration1;
-        public String tileDuration2;
-        public String tileDuration3;
+        public String tileDuration1Title;
+        public String tileDuration2Title;
+        public String tileDuration3Title;
+
+        public String stageOfFirstAppearanceTitle;
+        public String stageOfFirstAppearanceTitleType2;
+        public String stageOfFirstAppearanceTitleType3;
 
         public ArrayList<String> parseWordIntoTiles(String parseMe) {
             // Updates by KP, Oct 2020
@@ -1601,13 +1789,14 @@ public class Start extends AppCompatActivity {
 
     public class GameList extends ArrayList<Game> {
 
-        public String gameNumber;
-        public String gameCountry;
-        public String gameLevel;
-        public String gameColor;
-        public String gameInstrLabel;
-        public String gameInstrDuration;
-        public String gameMode;
+        public String gameNumberTitle;
+        public String gameCountryTitle;
+        public String gameLevelTitle;
+        public String gameColorTitle;
+        public String gameInstrLabelTitle;
+        public String gameInstrDurationTitle;
+        public String gameModeTitle;
+        public String gameStageTitle;
 
     }
 
@@ -1650,17 +1839,17 @@ public class Start extends AppCompatActivity {
         public String type;
     }
 
-    public class TileListWithMultipleTypes extends ArrayList<String> {
+    public static class TileListWithMultipleTypes extends ArrayList<String> {
 
         public String returnNextAlphabetTileDifferentiateTypes(String oldTile) {
 
             String nextTile = "";
-            for (int i = 0; i < tileListWithMultipleTypes.size(); i++) {
-                if (tileListWithMultipleTypes.get(i).equals(oldTile)) {
-                    if (i < (tileListWithMultipleTypes.size() - 1)) {
-                        nextTile = tileListWithMultipleTypes.get(i + 1);
+            for (int i = 0; i < size(); i++) {
+                if (get(i).equals(oldTile)) {
+                    if (i < (size() - 1)) {
+                        nextTile = get(i + 1);
                     } else// if (i == size() - 1) {
-                        nextTile = tileListWithMultipleTypes.get(0);
+                        nextTile = get(0);
                 }
             }
 

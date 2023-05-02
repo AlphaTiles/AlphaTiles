@@ -6,8 +6,6 @@ import static org.alphatilesapps.alphatiles.Start.tileListNoSAD;
 
 import org.alphatilesapps.alphatiles.Start.WordList;
 
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
@@ -20,9 +18,6 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import java.util.Collections;
 
 public class Italy extends GameActivity {
-
-    int italyPoints;
-    boolean italyHasChecked12Trackers;
     Start.TileList sortableTilesArray;
     Start.SyllableList sortableSyllArray;
     WordList gameCards = new WordList();
@@ -90,26 +85,8 @@ public class Italy extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
 
-
-        points = getIntent().getIntExtra("points", 0);
-        italyPoints = getIntent().getIntExtra("italyPoints", 0);
-        italyHasChecked12Trackers = getIntent().getBooleanExtra("italyHasChecked12Trackers", false);
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        italyPoints = prefs.getInt("storedItalyPoints_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, 0);
-        italyHasChecked12Trackers = prefs.getBoolean("storedItalyHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1);
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
-        syllableGame = getIntent().getStringExtra("syllableGame");
-        visibleTiles = TILE_BUTTONS.length;
-
         setContentView(R.layout.italy);
         int gameID = R.id.italyCL;
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
         if (scriptDirection.equals("RTL")) {
@@ -136,20 +113,12 @@ public class Italy extends GameActivity {
             Collections.shuffle(sortableTilesArray);
         }
 
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(italyPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-
-        updateTrackers();
-
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
+        updatePointsAndTrackers(0);
         playAgain();
-
     }
 
     @Override
@@ -218,7 +187,6 @@ public class Italy extends GameActivity {
 
     }
 
-
     public void playAgain() {
         repeatLocked = true;
         deckIndex = -1;
@@ -226,15 +194,15 @@ public class Italy extends GameActivity {
         for (int card = 0; card < 16; card++) {
             boardCardsFound[card] = false;
         }
-        WordList wordListShuffle = wordList;
+        WordList wordListShuffle = cumulativeStageBasedWordList;
         Collections.shuffle(wordListShuffle);
 
-        //Add 54 of the shuffled cards to gameCards
+        // Add 54 of the shuffled cards to gameCards
         for (int cardNumber = 0; cardNumber < 54; cardNumber++) {
             gameCards.add(wordListShuffle.get(cardNumber));
         }
 
-        //Add 16 of the gameCards to the board
+        // Add 16 of the gameCards to the board
         WordList boardCards = new WordList();
         for (int tileNumber = 0; tileNumber < 16; tileNumber++) {
             boardCards.add(gameCards.get(tileNumber));
@@ -246,10 +214,10 @@ public class Italy extends GameActivity {
             thisCardImage.setImageResource(resID);
         }
 
-        //Shuffle the gameCards again; they will be "called" in order from here on out
+        // Shuffle the gameCards again; they will be "called" in order from here on out
         Collections.shuffle(gameCards);
 
-        //Display the first word
+        // Display the first word
         nextWordFromGameSet();
 
     }
@@ -263,11 +231,11 @@ public class Italy extends GameActivity {
         deckIndex++;
         if (deckIndex == 54) {
 
-            //The player went through all the cards without getting a loteria. Set up a new board
+            // The player went through all the cards without getting a loteria. Set up a new board
             playIncorrectSound();
             playIncorrectSound();
             playAgain();
-        } else { //"Call out" the next word
+        } else { // "Call out" the next word
 
             wordInLOP = wordList.stripInstructionCharacters(gameCards.get(deckIndex).localWord);
             wordInLWC = gameCards.get(deckIndex).nationalWord;
@@ -300,7 +268,7 @@ public class Italy extends GameActivity {
         if (loteria()) {
             respondToLoteria();
         } else {
-            //Play sounds, then advance to the next word
+            // Play sounds, then advance to the next word
             playCorrectSoundThenActiveWordClip(false);
             nextWordFromGameSet();
         }
@@ -314,7 +282,7 @@ public class Italy extends GameActivity {
 
 
     public boolean loteria() {
-        //for each sequence in possibleLoteriaSequences[][], check if all the indeces inside have been marked as correctly selected
+        // For each sequence in possibleLoteriaSequences[][], check if all the indeces inside have been marked as correctly selected
 
         for (int[] sequence : LOTERIA_SEQUENCES) {
             if (boardCardsFound[sequence[0] - 1] && boardCardsFound[sequence[1] - 1] && boardCardsFound[sequence[2] - 1] && boardCardsFound[sequence[3] - 1]) {
@@ -326,36 +294,10 @@ public class Italy extends GameActivity {
     }
 
     public void respondToLoteria() {
-        //play finalCorrectSound with final sound, which also updates the trackers
         playCorrectSoundThenActiveWordClip(true);
+        updatePointsAndTrackers(4);
 
-        //draw a thin/transparent line across the loteria?
-
-
-        //update points
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        points += 4;
-        italyPoints += 4;
-        pointsEarned.setText(String.valueOf(italyPoints));
-        SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        editor.putInt("storedPoints_player" + playerString, points);
-        editor.putInt("storedItalyPoints_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, italyPoints);
-        editor.putBoolean("storedItalyHasChecked12Trackers_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, italyHasChecked12Trackers);
-        editor.apply();
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
-                + syllableGame;
-        editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-        editor.apply();
-
-        //update trackers
-        if (trackerCount >= 12) {
-            italyHasChecked12Trackers = true;
-        }
-        updateTrackers();
-
+        // TODO: Draw a thin/transparent line across the loteria?
     }
 
 

@@ -1,7 +1,5 @@
 package org.alphatilesapps.alphatiles;
 
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -41,11 +39,8 @@ public class Thailand extends GameActivity {
     String refTileSecondToLast = "";
     String refTileThirdToLast = "";
     String choiceType;
-    String refSyll;
     int refColor;
     int challengeLevelThai;
-    int thailandPoints;
-    boolean thailandHasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
@@ -104,23 +99,6 @@ public class Thailand extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
 
-
-        points = getIntent().getIntExtra("points", 0);
-        thailandPoints = getIntent().getIntExtra("thailandPoints", 0);
-        thailandHasChecked12Trackers = getIntent().getBooleanExtra("thailandHasChecked12Trackers", false);
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        thailandPoints = prefs.getInt("storedThailandPoints_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, 0);
-        thailandHasChecked12Trackers = prefs.getBoolean("storedThailandHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1);
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
-        syllableGame = getIntent().getStringExtra("syllableGame");
-        visibleTiles = TILE_BUTTONS.length;
-
         // So, if challengeLevel is 235, then...
         // challengeLevelThai = 2 (distractors not random)
         // refType = "TILE_AUDIO" ... note that one is subtracted below so you refer to the array as 1 to x + 1, not 0 to x
@@ -138,7 +116,6 @@ public class Thailand extends GameActivity {
             setContentView(R.layout.thailand);
             gameID = R.id.thailandCL;
         }
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
         if (scriptDirection.equals("RTL")) {
@@ -161,18 +138,12 @@ public class Thailand extends GameActivity {
             Collections.shuffle(sortableTilesArray);
         }
 
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(thailandPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-
-        updateTrackers();
-
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
+        visibleTiles = TILE_BUTTONS.length;
+        updatePointsAndTrackers(0);
         playAgain();
 
     }
@@ -401,7 +372,7 @@ public class Thailand extends GameActivity {
             // challengeLevelThai 1 = pull random tiles for wrong choices
             // challengeLevelThai 2 = pull distractor tiles for wrong choices
         } else if ((choiceType.equals("WORD_TEXT") || choiceType.equals("WORD_IMAGE")) && (!refType.contains("SYLL"))) {
-            fourChoices = Start.wordList.returnFourWords(wordInLOP, wordInLWC, refTile, challengeLevelThai, refType, choiceType);
+            fourChoices = wordList.returnFourWords(wordInLOP, wordInLWC, refTile, challengeLevelThai, refType, choiceType);
             //, (float) 0.4);
             //so words with less than or equal to 0.4
             // challengeLevelThai 1 = pull words that begin with random tiles (not distractor, not same) for wrong choices
@@ -636,30 +607,7 @@ public class Thailand extends GameActivity {
         if (goodMatch) {
             // Good job!
             repeatLocked = false;
-
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points += 1;
-            thailandPoints += 1;
-            pointsEarned.setText(String.valueOf(thailandPoints));
-
-            trackerCount++;
-            if (trackerCount >= 12) {
-                thailandHasChecked12Trackers = true;
-            }
-            updateTrackers();
-
-            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedThailandPoints_level" + challengeLevel + "_player" + playerString + "_"
-                    + syllableGame, thailandPoints);
-            editor.putBoolean("storedThailandHasChecked12Trackers_level" + challengeLevel + "_player"
-                    + playerString + "_" + syllableGame, thailandHasChecked12Trackers);
-            editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
-                    + syllableGame;
-            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-            editor.apply();
+            updatePointsAndTrackers(1);
 
             for (int b = 0; b < TILE_BUTTONS.length; b++) {
                 TextView nextButton = findViewById(TILE_BUTTONS[b]);
@@ -701,16 +649,6 @@ public class Thailand extends GameActivity {
         } else {
             playIncorrectSound();
         }
-    }
-
-
-    private void chooseWord() {
-        Random rand = new Random();
-        int randomNum = rand.nextInt(Start.wordList.size());
-
-        wordInLWC = Start.wordList.get(randomNum).nationalWord;
-        wordInLOP = Start.wordList.get(randomNum).localWord;
-
     }
 
     public void onChoiceClick(View view) {
