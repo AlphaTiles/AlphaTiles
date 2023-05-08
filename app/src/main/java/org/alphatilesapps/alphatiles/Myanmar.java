@@ -477,6 +477,10 @@ public class Myanmar extends GameActivity {
             secondClickIndex = justClickedTile - 1;
             secondClickPreviousBackgroundColor = tileColor;
             secondClickPreviousTextColor = textColor;
+            if (tileColor == Color.parseColor("#FFEB3B")) { // For a second click to a yellow tile, reset to white with black text
+                secondClickPreviousBackgroundColor = Color.parseColor("#FFFFFF");
+                secondClickPreviousTextColor = Color.parseColor("#000000");
+            }
             evaluateTwoClicks();
         }
         setAllTilesClickable();
