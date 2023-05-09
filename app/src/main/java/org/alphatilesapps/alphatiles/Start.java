@@ -479,6 +479,15 @@ public class Start extends AppCompatActivity {
         WordList wordListStage7 = new WordList();
         wordStagesLists.add(wordListStage7);
 
+        Boolean firstLetterStageCorrespondence = false;
+        int stage1and2MaxWordLength = Integer.MAX_VALUE;
+        if(!settingsList.find("First letter stage correspondence").equals("")){
+           firstLetterStageCorrespondence = Boolean.parseBoolean(settingsList.find("First letter stage correspondence"));
+        }
+        if(!settingsList.find("Stage 1-2 max word length").equals("")){
+            stage1and2MaxWordLength = Integer.parseInt(settingsList.find("Stage 1-2 max word length"));
+        }
+
         // Find default first stage correspondences
         // Start all off at the last possible stage to introduce the word
         int lastStage = 0;
@@ -535,10 +544,37 @@ public class Start extends AppCompatActivity {
                     }
                 }
                 if((double)correspondingTiles/tilesInThisWord.size() > stageCorrespondenceRatio){
-                    stagesOfFirstAppearance.put(word, i+1);
+                    if ((i==0 || i==1) && (tilesInThisWord.size()>stage1and2MaxWordLength)){
+                        stagesOfFirstAppearance.put(word, i+2); // Bump words that are too long for stage 1 or 2 to the next stage
+                    } else {
+                        stagesOfFirstAppearance.put(word, i+1);
+                    }
                 }
             }
         }
+
+        // Then override for first letter correspondence, if set, to bring words to an earlier stage based on corresponding in first tile
+        if(firstLetterStageCorrespondence){
+            for (Word word : wordList) {
+                ArrayList<String> tilesInThisWord = tileList.parseWordIntoTiles(word.localWord);
+                Tile firstTile = tileHashMap.get(tilesInThisWord.get(0));
+                String firstTileType = "";
+                int stageFirstTileBelongsTo = firstTile.stageOfFirstAppearance;
+                if(MULTIFUNCTIONS.contains(firstTile)) { // Check if we need to get stageOfFirstAppearance2 or stageOfFirstAppearance3 instead
+                    firstTileType = tileList.getInstanceTypeForMixedTile(0, word.localWord);
+                    if(firstTile.tileTypeB.equals(firstTileType)){
+                        stageFirstTileBelongsTo = firstTile.stageOfFirstAppearanceType2;
+                    } else if (firstTile.tileTypeC.equals(firstTileType)) {
+                        stageFirstTileBelongsTo = firstTile.stageOfFirstAppearanceType3;
+                    }
+                }
+
+                if (stageFirstTileBelongsTo < stagesOfFirstAppearance.get(word)){ // Bump words to an earlier stage if their first tile matches a tile that's introduced in that stage
+                    stagesOfFirstAppearance.put(word, stageFirstTileBelongsTo);
+                }
+            }
+        }
+
 
         // Then override for any words that have explicit first stage info in the wordlist
         for (Word word : wordList){
