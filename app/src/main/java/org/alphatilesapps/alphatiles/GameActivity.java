@@ -108,13 +108,13 @@ public abstract class GameActivity extends AppCompatActivity {
         gameNumber = getIntent().getIntExtra("gameNumber", 0);
         country = getIntent().getStringExtra("country");
         playerString = Util.returnPlayerStringToAppend(playerNumber);
+        globalPoints = getIntent().getIntExtra("globalPoints", 0);
 
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         className = getClass().getName();
         uniqueGameLevelPlayerModeStageID = className + challengeLevel + playerString + syllableGame + stage;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
         hasChecked12Trackers = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
-        globalPoints = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_globalPoints", 0);
         points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
 
         for(int s=0; s<stage; s++){
@@ -171,13 +171,24 @@ public abstract class GameActivity extends AppCompatActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        trackerCount++;
+        if (pointsIncrease > 0){
+            trackerCount++;
+        }
+
         if (trackerCount >= 12) {
             hasChecked12Trackers = true;
         }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
+        editor.apply();
+        editor.putBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers",
+                hasChecked12Trackers);
+        editor.apply();
+        editor.putInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", trackerCount);
+        editor.apply();
+        getIntent().putExtra("globalPoints", globalPoints);
 
         for (int t = 0; t < TRACKERS.length; t++) {
-
             ImageView tracker = findViewById(TRACKERS[t]);
             if (t < trackerCount) {
                 int resID = getResources().getIdentifier("zz_complete", "drawable", getPackageName());
@@ -192,7 +203,6 @@ public abstract class GameActivity extends AppCompatActivity {
         // after12CheckedTrackers option 2: app returns players to Earth after checking all 12 trackers. They can get back in. Will return to Earth again after another 12 correct answers.
         if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 2) {
             trackerCount++;
-
             soundSequencer.postDelayed(new Runnable() {
                 public void run() {
                     Intent intent = getIntent();
@@ -251,13 +261,15 @@ public abstract class GameActivity extends AppCompatActivity {
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }
-                        hasChecked12Trackers = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
+                        String nextUniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + syllableGame + stage;
+                        hasChecked12Trackers = prefs.getBoolean(nextUniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
 
                         if (!hasChecked12Trackers) {
                             foundNextUncompletedGame = true;
                             intent.putExtra("challengeLevel", challengeLevel);
                             intent.putExtra("stage", stage);
                             intent.putExtra("syllableGame", syllableGame);
+                            intent.putExtra("globalPoints", globalPoints);
                             intent.putExtra("gameNumber", gameNumber);
                             intent.putExtra("country", country);
                             startActivity(intent);
@@ -277,16 +289,6 @@ public abstract class GameActivity extends AppCompatActivity {
                 }
             }, 4500);
         }
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(uniqueGameLevelPlayerModeStageID + "_globalPoints", globalPoints);
-        editor.apply();
-        editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
-        editor.apply();
-        editor.putBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers",
-                hasChecked12Trackers);
-        editor.apply();
-        editor.putInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", trackerCount);
-        editor.apply();
     }
 
     protected void chooseWord() {
@@ -344,7 +346,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 }
 
                 int randomNumberForWeightingTowardHighCorrespondence = rand.nextInt(wordStagesLists.get(0).size());
-                if (randomNumberForWeightingTowardHighCorrespondence < wordStagesLists.get(0).size() * 0.5) { // Select a word with higher correspondence to stage 1 tiles (only tiles introduced so far)
+                if (randomNumberForWeightingTowardHighCorrespondence < wordStagesLists.get(0).size() * 0.5 || lowerCorrespondenceWords.size()==0) { // Select a word with higher correspondence to stage 1 tiles (only tiles introduced so far)
                     int randomNumberForChoosingAHighCorrespondenceWord = rand.nextInt(higherCorrespondenceWords.size());
                     wordInLWC = higherCorrespondenceWords.get(randomNumberForChoosingAHighCorrespondenceWord).nationalWord;
                     wordInLOP = higherCorrespondenceWords.get(randomNumberForChoosingAHighCorrespondenceWord).localWord;
@@ -352,6 +354,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     int randomNumberForChoosingALowCorrespondenceWord = rand.nextInt(lowerCorrespondenceWords.size());
                     wordInLWC = lowerCorrespondenceWords.get(randomNumberForChoosingALowCorrespondenceWord).nationalWord;
                     wordInLOP = lowerCorrespondenceWords.get(randomNumberForChoosingALowCorrespondenceWord).localWord;
+
                 }
             } else { // If stage > 1, weight toward words that are new in this stage
                 int randomNumberForWeightingTowardNewWords = rand.nextInt(cumulativeStageBasedWordList.size());

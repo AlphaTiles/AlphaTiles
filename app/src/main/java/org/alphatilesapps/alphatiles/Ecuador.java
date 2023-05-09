@@ -394,6 +394,7 @@ public class Ecuador extends GameActivity {
                     String randomOtherWordInLOP = cumulativeStageBasedWordList.get(randomIndexOfOtherWord).localWord;
                     if (!randomOtherWordInLOP.equals(wordInLOP)){
                         wordTile.setText(wordList.stripInstructionCharacters(randomOtherWordInLOP));
+                        duplicate = false;
                     }
                 }
             }
