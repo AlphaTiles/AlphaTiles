@@ -26,7 +26,7 @@ public class Sudan extends GameActivity {
     List<String> page = new ArrayList<>();
 
     int numPages = 0;
-    int currentPageNumber = 0; // Index for pagesList. Increment whenever user clicks right arrow; decrement whenever user clicks left arrow.
+    int currentPageNumber = 0;
 
 
     protected static final int[] SYLL_BUTTONS = {
@@ -95,15 +95,21 @@ public class Sudan extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         int gameID = 0;
+        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
+        determineNumPages(); // JP
+
         if (syllableGame.equals("S")) {
             setContentView(R.layout.sudan_syll);
             gameID = R.id.sudansyllCL;
+            splitSyllablesListAcrossPages();
+            showCorrectNumSyllables(0);
         } else {
             setContentView(R.layout.sudan);
             gameID = R.id.sudanCL;
+            splitTileListAcrossPages();
+            showCorrectNumTiles(0);
         }
-
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -118,30 +124,9 @@ public class Sudan extends GameActivity {
             fixConstraintsRTLSudan(gameID);
         }
 
-        points = getIntent().getIntExtra("points", 0); // KP
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-
-        determineNumPages(); //JP
-
-        if (syllableGame.equals("S")) {
-            splitSyllablesListAcrossPages();
-            showCorrectNumSyllables(0);
-        } else {
-            splitTileListAcrossPages();
-            showCorrectNumTiles(0);
-        }
-
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
-
     }
 
     private void fixConstraintsRTLSudan(int gameID) {
@@ -170,11 +155,7 @@ public class Sudan extends GameActivity {
             }
         } else {
             int total = 0;
-            if (differentiateTypes) {
-                total = tileListWithMultipleTypesNoSAD.size() - TILE_BUTTONS.length;
-            } else {
-                total = tileListNoSAD.size() - TILE_BUTTONS.length; // 1 page is accounted for in numPages init
-            }
+            total = cumulativeStageBasedTileList.size() - TILE_BUTTONS.length;
             while (total >= 0) {
                 numPages++;
                 List<String> page = new ArrayList<>();
@@ -186,29 +167,17 @@ public class Sudan extends GameActivity {
 
     public void splitTileListAcrossPages() {
 
-        if (differentiateTypes) {
-            int numTiles = tileListWithMultipleTypesNoSAD.size();
-            int cont = 0;
-            for (int i = 0; i < numPages + 1; i++) {
-                for (int j = 0; j < TILE_BUTTONS.length; j++) {
-                    if (cont < numTiles) {
-                        pagesList.get(i).add(tileListWithMultipleTypesNoSAD.get(cont));
-                    }
-                    cont++;
+        int numTiles = cumulativeStageBasedTileList.size() - SAD.size();
+        int cont = 0;
+        for (int i = 0; i < numPages + 1; i++) {
+            for (int j = 0; j < TILE_BUTTONS.length; j++) {
+                if (cont < numTiles && !SAD.contains(cumulativeStageBasedTileList.get(cont))) {
+                    pagesList.get(i).add(cumulativeStageBasedTileList.get(cont));
                 }
-            }
-        } else {
-            int numTiles = tileListNoSAD.size();
-            int cont = 0;
-            for (int i = 0; i < numPages + 1; i++) {
-                for (int j = 0; j < TILE_BUTTONS.length; j++) {
-                    if (cont < numTiles) {
-                        pagesList.get(i).add(tileListNoSAD.get(cont).baseTile);
-                    }
-                    cont++;
-                }
+                cont++;
             }
         }
+
     }
 
     public void splitSyllablesListAcrossPages() {
@@ -223,123 +192,19 @@ public class Sudan extends GameActivity {
             }
         }
     }
-
-    public void showCorrectNumTiles1PerSymbolAndType(int page) {
-        // visibleTiles must now be <= 63
-        // if tileList.size() > 63, the rest will go on next page
-
-        // This function works fine for one page, not for multiple pages
-
-        visibleTiles = 0;
-
-        for (int tileListLine = 0; tileListLine < tileListNoSAD.size(); tileListLine++) {
-
-            Start.Tile t = tileListNoSAD.get(tileListLine);
-            String type = t.tileType;
-            TextView tileView = findViewById(TILE_BUTTONS[visibleTiles]);
-            tileView.setText(t.baseTile);
-            visibleTiles++;
-
-            String typeColor;
-            switch (type) {
-                case "C":
-                    typeColor = COLORS.get(1);
-                    break;
-                case "V":
-                    typeColor = COLORS.get(2);
-                    break;
-                case "T":
-                    typeColor = COLORS.get(3);
-                    break;
-                default:
-                    typeColor = COLORS.get(4);
-                    break;
-            }
-            int tileColor = Color.parseColor(typeColor);
-            tileView.setBackgroundColor(tileColor);
-
-            if (!t.tileTypeB.equals("none")) {
-                tileView = findViewById(TILE_BUTTONS[visibleTiles]);
-                tileView.setText(t.baseTile);
-                visibleTiles++;
-
-                String typeB = t.tileTypeB;
-                String typeColorB;
-                switch (typeB) {
-                    case "C":
-                        typeColorB = COLORS.get(1);
-                        break;
-                    case "V":
-                        typeColorB = COLORS.get(2);
-                        break;
-                    case "T":
-                        typeColorB = COLORS.get(3);
-                        break;
-                    default:
-                        typeColorB = COLORS.get(4);
-                        break;
-                }
-                int tileColorB = Color.parseColor(typeColorB);
-                tileView.setBackgroundColor(tileColorB);
-            }
-
-            if (!t.tileTypeC.equals("none")) {
-
-                tileView = findViewById(TILE_BUTTONS[visibleTiles]);
-                tileView.setText(t.baseTile);
-                visibleTiles++;
-
-                String typeC = t.tileTypeC;
-                String typeColorC = COLORS.get(1);
-                switch (typeC) {
-                    case "C":
-                        typeColorC = COLORS.get(1);
-                        break;
-                    case "V":
-                        typeColorC = COLORS.get(2);
-                        break;
-                    case "T":
-                        typeColorC = COLORS.get(3);
-                        break;
-                    default:
-                        typeColorC = COLORS.get(4);
-                        break;
-                }
-                int tileColorC = Color.parseColor(typeColorC);
-                tileView.setBackgroundColor(tileColorC);
-            }
-
-        }
-
-
-        for (int k = 0; k < TILE_BUTTONS.length; k++) {
-
-            TextView key = findViewById(TILE_BUTTONS[k]);
-            if (k < visibleTiles) {
-                key.setVisibility(View.VISIBLE);
-                key.setClickable(true);
-            } else {
-                key.setVisibility(View.INVISIBLE);
-                key.setClickable(false);
-            }
-        }
-
-    }
-
     public void showCorrectNumTiles(int page) {
 
         visibleTiles = pagesList.get(page).size();
 
         for (int k = 0; k < visibleTiles; k++) {
-            TextView tile = findViewById(TILE_BUTTONS[k]);
+            TextView tileView = findViewById(TILE_BUTTONS[k]);
             if (pagesList.get(page).get(k).endsWith("B") || pagesList.get(page).get(k).endsWith("C")) {
-                tile.setText(pagesList.get(page).get(k).substring(0, pagesList.get(page).get(k).length() - 1));
+                tileView.setText(pagesList.get(page).get(k).substring(0, pagesList.get(page).get(k).length() - 1));
             } else {
-                tile.setText(pagesList.get(page).get(k));
+                tileView.setText(pagesList.get(page).get(k));
             }
             String type;
             if (differentiateTypes) {
-                // JP: what I need is a way to access the type of a tile in the tileListWithMultipleTypes
                 type = tileTypeHashMapWithMultipleTypesNoSAD.get(pagesList.get(page).get(k));
             } else {
                 type = tileHashMapNoSAD.find(pagesList.get(page).get(k)).tileType;
@@ -360,7 +225,7 @@ public class Sudan extends GameActivity {
                     break;
             }
             int tileColor = Color.parseColor(typeColor);
-            tile.setBackgroundColor(tileColor);
+            tileView.setBackgroundColor(tileColor);
         }
 
         for (int k = 0; k < TILE_BUTTONS.length; k++) {
@@ -432,13 +297,13 @@ public class Sudan extends GameActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
-        String tileText = "";
+        String viewText = "";
         int justClickedKey = Integer.parseInt((String) view.getTag()) + (currentPageNumber * 35);
         if (syllableGame.equals("S")) {
-            tileText = Start.syllableList.get(justClickedKey - 1).syllable;
+            viewText = Start.syllableList.get(justClickedKey - 1).syllable;
 
 
-            gameSounds.play(syllableAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+            gameSounds.play(syllableAudioIDs.get(viewText), 1.0f, 1.0f, 2, 0, 1.0f);
             soundSequencer.postDelayed(new Runnable() {
                 public void run() {
                     if (repeatLocked) {
@@ -450,13 +315,8 @@ public class Sudan extends GameActivity {
             }, 925);
 
         } else {
-            if (!differentiateTypes) {// Not differentiating the uses of multifunction tiles
-                tileText = tileListNoSAD.get(justClickedKey - 1).baseTile;
-            } else { // differentiateMultipleTypes ==2. We ARE differentiating the uses of multifunction tiles
-                tileText = tileListWithMultipleTypesNoSAD.get(justClickedKey - 1);
-            }
-
-            gameSounds.play(tileAudioIDs.get(tileText), 1.0f, 1.0f, 2, 0, 1.0f);
+            viewText = cumulativeStageBasedTileList.get(justClickedKey - 1);
+            gameSounds.play(tileAudioIDs.get(viewText), 1.0f, 1.0f, 2, 0, 1.0f);
             soundSequencer.postDelayed(new Runnable() {
                 public void run() {
                     if (repeatLocked) {

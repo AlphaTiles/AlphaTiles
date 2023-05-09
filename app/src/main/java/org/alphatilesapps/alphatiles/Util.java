@@ -8,17 +8,6 @@ public class Util {
 
     private static final Logger LOGGER = Logger.getLogger(Util.class.getName());
 
-    public static int tilesInArray(String[] array) {
-
-        int count = 0;
-        for (String s : array) {    // RR
-            if (s != null) {        // RR
-                count++;
-            }
-        }
-        return count;
-    }
-
     public static String returnPlayerStringToAppend(int playerNumber) {
 
         String appendedPlayerNumber;

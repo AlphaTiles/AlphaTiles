@@ -7,7 +7,6 @@ import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -45,8 +44,6 @@ public class Japan extends GameActivity {
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
-    ArrayList<String> parsedWordIntoTiles;
-    ArrayList<String> parsedWordIntoSyllables;
     ArrayList<TextView> joinedTracker = new ArrayList<>();
     ArrayList<TextView> originalLayout = new ArrayList<>();
     ArrayList<Integer> buttonIDs = new ArrayList<>();
@@ -118,7 +115,6 @@ public class Japan extends GameActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
 
         int gameID = 0;
         if (challengeLevel == 1) {
@@ -155,29 +151,6 @@ public class Japan extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-        points = getIntent().getIntExtra("points", 0); // KP
-        japanPoints = getIntent().getIntExtra("japanPoints", 0); // KP
-        japanHasChecked12Trackers = getIntent().getBooleanExtra("japanHasChecked12Trackers", false); //LM
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        japanPoints = prefs.getInt("storedJapanPoints_level" + String.valueOf(challengeLevel)
-                + "_player" + playerString + "_" + syllableGame, 0);
-        japanHasChecked12Trackers = prefs.getBoolean("storedJapanHasChecked12Trackers_level"
-                + String.valueOf(challengeLevel) + "_player" + playerString + "_" + syllableGame, false); //LM
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
-        syllableGame = getIntent().getStringExtra("syllableGame");
-
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(japanPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-
-        updateTrackers();
-
         int j = 1;
         for (int i = 0; i < TILES_AND_BUTTONS.length; i++) {
             joinedTracker.add(findViewById(TILES_AND_BUTTONS[i]));
@@ -194,47 +167,31 @@ public class Japan extends GameActivity {
             centerGamesHomeImage();
         }
 
+        updatePointsAndTrackers(0);
         play();
     }
 
     private void play() {
         repeatLocked = true;
-        chooseWord();
+        setWord();
         displayWordRef();
         displayTileChoices();
         setVisButtonsClickable();
         setTilesUnclickable();
     }
 
-    private void chooseWord() {
+    private void setWord() {
 
-        boolean freshWord = false;
+        chooseWord();
 
-        while (!freshWord) {
-            Random rand = new Random();
-            int randomNum = rand.nextInt(Start.wordList.size());
+        while(tileList.parseWordIntoTiles(wordInLOP).size() > MAX_TILES) { //JP: choose word w/ <= 12 tiles
+            chooseWord();
+        }
 
-            wordInLWC = Start.wordList.get(randomNum).nationalWord;
-            wordInLOP = Start.wordList.get(randomNum).localWord;
-
-            parsedWordIntoTiles = tileList.parseWordIntoTiles(wordInLOP);
-            parsedWordIntoTiles.removeAll(SAD);
-            parsedWordIntoSyllables = syllableList.parseWordIntoSyllables(wordInLOP);
-            parsedWordIntoSyllables.removeAll(SAD);
-
-            if (parsedWordIntoTiles.size() <= MAX_TILES) { //JP: choose word w/ <= 12 tiles
-                //If this word isn't one of the 3 previously tested words, we're good // LM
-                if (!wordInLWC.equals(lastWord)
-                        && !wordInLWC.equals(secondToLastWord)
-                        && !wordInLWC.equals(thirdToLastWord)) {
-                    freshWord = true;
-                    thirdToLastWord = secondToLastWord;
-                    secondToLastWord = lastWord;
-                    lastWord = wordInLWC;
-                }
-            }
-
-        }//generates a new word if it got one of the last three tested words // LM
+        parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
+        parsedWordArrayFinal.removeAll(SAD);
+        parsedWordSyllArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
+        parsedWordSyllArrayFinal.removeAll(SAD);
     }
 
     private void displayWordRef() {
@@ -246,15 +203,15 @@ public class Japan extends GameActivity {
     }
 
     private void displayTileChoices() {
-        visibleViews = parsedWordIntoTiles.size() * 2 - 1; // accounts for both buttons and tiles
-        visibleViewsImm = parsedWordIntoTiles.size() * 2 - 1;
+        visibleViews = parsedWordArrayFinal.size() * 2 - 1; // accounts for both buttons and tiles
+        visibleViewsImm = parsedWordArrayFinal.size() * 2 - 1;
 
         int j = 0;
         for (int i = 0; i < visibleViews; i = i + 2) {
             String tileColorStr = COLORS.get(i % 5);
             int tileColor = Color.parseColor(tileColorStr);
             TextView tile = findViewById(TILES_AND_BUTTONS[i]);
-            tile.setText(parsedWordIntoTiles.get(j));
+            tile.setText(parsedWordArrayFinal.get(j));
             tile.setClickable(false);
             tile.setVisibility(View.VISIBLE);
             tile.setBackgroundColor(tileColor);
@@ -636,31 +593,7 @@ public class Japan extends GameActivity {
             //great job!
             repeatLocked = false;
             playCorrectSoundThenActiveWordClip(false); //JP not sure what this bool is for
-
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points += 1;
-            japanPoints += 1;
-            pointsEarned.setText(String.valueOf(japanPoints));
-
-            trackerCount++;
-            if (trackerCount >= 12) {
-                japanHasChecked12Trackers = true;
-            }
-            updateTrackers();
-
-            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.apply();
-            editor.putInt("storedJapanPoints_level" + String.valueOf(challengeLevel)
-                    + "_player" + playerString + "_" + syllableGame, japanPoints);
-            editor.apply();
-            editor.putBoolean("storedJapanHasChecked12Trackers_level" + String.valueOf(challengeLevel)
-                    + "_player" + playerString + "_" + syllableGame, japanHasChecked12Trackers);
-            editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-            editor.apply();
+            updatePointsAndTrackers(1);
 
             for (int i = 0; i < visibleViewsImm; i++) {
                 if (i % 2 == 0) {
@@ -679,7 +612,7 @@ public class Japan extends GameActivity {
 
             // find number of tiles per correct syllable
             ArrayList<Integer> numTilesPerSyll = new ArrayList<>();
-            for (String syll : parsedWordIntoSyllables) {
+            for (String syll : parsedWordSyllArrayFinal) {
                 ArrayList<String> parsedSyllIntoTiles = tileList.parseWordIntoTiles(syll);
                 numTilesPerSyll.add(parsedSyllIntoTiles.size());
                 parsedSyllIntoTiles.clear();

@@ -1,7 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -36,7 +35,6 @@ public class Myanmar extends GameActivity {
     int higherClick = 0;
     int wordsCompleted = 0;
     int completionGoal = 0;
-    int myanmarPoints;
     boolean myanmarHasChecked12Trackers;
 
     Handler handler;
@@ -96,7 +94,6 @@ public class Myanmar extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.myanmar);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -108,44 +105,13 @@ public class Myanmar extends GameActivity {
             fixConstraintsRTL(R.id.myanmarCL);
         }
 
-        points = getIntent().getIntExtra("points", 0); // KP
-        myanmarPoints = getIntent().getIntExtra("myanmarPoints", 0); // LM
-        myanmarHasChecked12Trackers = getIntent().getBooleanExtra("myanmarHasChecked12Trackers", false);
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        myanmarPoints = prefs.getInt("storedMyanmarPoints_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, 0);
-        myanmarHasChecked12Trackers = prefs.getBoolean("storedMyanmarHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
-        visibleTiles = TILE_BUTTONS.length;
-
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(myanmarPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-        if (trackerCount >= 12) {
-            myanmarHasChecked12Trackers = true;
-        }
-
-        updateTrackers();
-
-        setTextSizes();
-
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
+        setTextSizes();
+        updatePointsAndTrackers(0);
         playAgain();
-
     }
 
     @Override
@@ -235,19 +201,16 @@ public class Myanmar extends GameActivity {
 
     private void chooseWords() {
 
-        Random rand = new Random();
-
         for (int i = 0; i < 7; i++) {
 
-            int randomNum = rand.nextInt(Start.wordList.size()); // KP
-
-            sevenWordsInLopLwc[i][0] = Start.wordList.get(randomNum).nationalWord;
-            sevenWordsInLopLwc[i][1] = Start.wordList.get(randomNum).localWord;
+            chooseWord();
+            sevenWordsInLopLwc[i][0] = wordInLWC;
+            sevenWordsInLopLwc[i][1] = wordInLOP;
 
             int tileLength = 0;
 
-            for (int j = 0; j < i; j++) {
-                tileLength = tilesInArray(Start.tileList.parseWordIntoTiles(sevenWordsInLopLwc[i][1]));
+            for (int j = 0; j < i; j++) { // Prevent duplicates
+                tileLength = tileList.parseWordIntoTiles(sevenWordsInLopLwc[i][1]).size();
                 if (sevenWordsInLopLwc[i][0].equals(sevenWordsInLopLwc[j][0])) {
                     i--;
                 } else if (tileLength < 3 || tileLength > 7) {
@@ -322,7 +285,7 @@ public class Myanmar extends GameActivity {
 
                 wordDirection = directions[wordD][0];
                 wordFail = false;
-                wordLen = tilesInArray(Start.tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]));
+                wordLen = tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]).size();
 
                 // four checks to ensure that the word will not leave the board
                 if (wordDirection == 1 || wordDirection == 2 || wordDirection == 3) {
@@ -385,7 +348,7 @@ public class Myanmar extends GameActivity {
 
                     wordPlaced = true;
 
-                    parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]);
+                    parsedWordArrayFinal = tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]);
                     int tileX = 0;
                     int tileY = 0;
                     for (int t = 0; t < wordLen; t++) {
@@ -437,13 +400,11 @@ public class Myanmar extends GameActivity {
 
         int tileNumber;
         for (int x = 0; x < 7; x++) {
-
             for (int y = 0; y < 7; y++) {
-
                 if (tilesBoard[x][y].isEmpty()) {
 
-                    int randomNum = rand.nextInt(Start.tileList.size()); // KP
-                    randomTile = Start.tileList.get(randomNum).baseTile;
+                    int randomNum = rand.nextInt(tileList.size()); // KP
+                    randomTile = tileList.get(randomNum).baseTile;
 
                     tilesBoard[x][y] = randomTile;
 
@@ -453,9 +414,7 @@ public class Myanmar extends GameActivity {
 
                 }
             }
-
         }
-
     }
 
     private void respondToTileSelection(int justClickedTile) {
@@ -667,25 +626,7 @@ public class Myanmar extends GameActivity {
 
             }
 
-            // Update the points
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points += 2;
-            myanmarPoints += 2;
-            pointsEarned.setText(String.valueOf(myanmarPoints));
-
-            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedMyanmarPoints_level" + challengeLevel + "_player"
-                    + playerString + "_" + syllableGame, myanmarPoints);
-            editor.putBoolean("storedMyanmarHasChecked12Trackers_level" + challengeLevel
-                    + "_player" + playerString + "_" + syllableGame, myanmarHasChecked12Trackers);
-            editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + "_" +
-                    syllableGame;
-            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-            editor.apply();
-
+            updatePointsAndTrackers(2);
 
             // Play word and "correct" sounds and then clear the image from word bank
             wordInLWC = sevenWordsInLopLwc[indexOfFoundWord][0];

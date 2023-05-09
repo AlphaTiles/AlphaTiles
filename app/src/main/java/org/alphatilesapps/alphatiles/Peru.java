@@ -1,7 +1,5 @@
 package org.alphatilesapps.alphatiles;
 
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,12 +19,9 @@ import java.util.Random;
 import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Peru extends GameActivity {
-
-    String gameIDString;
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
-    int peruPoints;
     boolean peruHasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
@@ -76,7 +71,6 @@ public class Peru extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.peru);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -88,35 +82,9 @@ public class Peru extends GameActivity {
             fixConstraintsRTL(R.id.peruCL);
         }
 
-        points = getIntent().getIntExtra("points", 0); // KP
-        peruPoints = getIntent().getIntExtra("peruPoints", 0); // LM
-        peruHasChecked12Trackers = getIntent().getBooleanExtra("peruHasChecked12Trackers", false);
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        peruPoints = prefs.getInt("storedPeruPoints_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, 0);
-        peruHasChecked12Trackers = prefs.getBoolean("storedPeruHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
-        visibleTiles = TILE_BUTTONS.length;
-
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(peruPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-        if (trackerCount >= 12) {
-            peruHasChecked12Trackers = true;
-        }
-
-        updateTrackers();
 
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
@@ -129,9 +97,9 @@ public class Peru extends GameActivity {
             Collections.shuffle(TONES);
 
         }
-
+        visibleTiles = TILE_BUTTONS.length;
+        updatePointsAndTrackers(0);
         playAgain();
-
     }
 
     @Override
@@ -149,32 +117,10 @@ public class Peru extends GameActivity {
     }
 
     public void playAgain() {
-
         repeatLocked = true;
-
-        boolean freshWord = false;
-        Random rand = new Random();
-
-        while (!freshWord) {
-            int randomNum = rand.nextInt(Start.wordList.size()); // KP
-
-            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
-
-            //If this word isn't one of the 3 previously tested words, we're good // LM
-            if (!wordInLWC.equals(lastWord)
-                    && !wordInLWC.equals(secondToLastWord)
-                    && !wordInLWC.equals(thirdToLastWord)) {
-                freshWord = true;
-                thirdToLastWord = secondToLastWord;
-                secondToLastWord = lastWord;
-                lastWord = wordInLWC;
-            }
-
-        }//generates a new word if it got one of the last three tested words // LM
-
+        chooseWord();
         parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
-        int tileLength = tilesInArray(parsedWordArrayFinal);
+        int tileLength = parsedWordArrayFinal.size();
 
         // Set thematic colors for four word choice TextViews, also make clickable
         for (int i = 0; i < TILE_BUTTONS.length; i++) {
@@ -190,14 +136,15 @@ public class Peru extends GameActivity {
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
-        int randomNum2 = rand.nextInt(4);    // need to choose which of four words will be spelled correctly (and other three will be modified to become incorrect
+        Random rand = new Random();
+        int indexOfCorrectAnswerAmongChoices = rand.nextInt(4);
         List<String> shuffledDistractorTiles = Arrays.asList(Start.tileList.get(Start.tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).altTiles);
         Collections.shuffle(shuffledDistractorTiles);
 
         int incorrectLapNo = 0;
         for (int i = 0; i < TILE_BUTTONS.length; i++) {
             TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
-            if (i == randomNum2) {
+            if (i == indexOfCorrectAnswerAmongChoices) {
                 nextWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP)); // the correct answer (the unmodified version of the word)
             } else {
 
@@ -319,29 +266,7 @@ public class Peru extends GameActivity {
             // Good job!
             repeatLocked = false;
 
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points += 2;
-            peruPoints += 2;
-            pointsEarned.setText(String.valueOf(peruPoints));
-
-            trackerCount++;
-
-            if (trackerCount >= 12) {
-                peruHasChecked12Trackers = true;
-            }
-            updateTrackers();
-
-            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedPeruPoints_level" + challengeLevel + "_player" + playerString
-                    + "_" + syllableGame, peruPoints);
-            editor.putBoolean("storedPeruHasChecked12Trackers_level" + challengeLevel + "_player"
-                    + playerString + "_" + syllableGame, peruHasChecked12Trackers);
-            editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-            editor.apply();
+           updatePointsAndTrackers(2);
 
             for (int w = 0; w < TILE_BUTTONS.length; w++) {
                 TextView nextWord = findViewById(TILE_BUTTONS[w]);
