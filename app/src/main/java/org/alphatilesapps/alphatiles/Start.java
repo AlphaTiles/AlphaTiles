@@ -866,7 +866,12 @@ public class Start extends AppCompatActivity {
             String activeTileType;
             String activeTileWithoutSuffix;
 
-            activeTileTypeSuffix = Character.toString(activeTile.charAt(activeTile.length() - 1));
+            if (activeTile.length() > 0){
+                activeTileTypeSuffix = Character.toString(activeTile.charAt(activeTile.length() - 1));
+            } else {
+                activeTileTypeSuffix = ""; // Prevents issues with recognizing "zero-width" characters such as saltillo
+            }
+
             if (activeTileTypeSuffix.equals("B")) {
                 activeTileWithoutSuffix = activeTile.substring(0, activeTile.length() - 1);
                 activeTileType = tileHashMap.find(activeTileWithoutSuffix).tileTypeB;
@@ -936,7 +941,11 @@ public class Start extends AppCompatActivity {
             String activeTileType;
             String activeTileWithoutSuffix;
 
-            activeTileTypeSuffix = Character.toString(activeTile.charAt(activeTile.length() - 1));
+            if (activeTile.length() > 0) {
+                activeTileTypeSuffix = Character.toString(activeTile.charAt(activeTile.length() - 1));
+            } else { // Prevent mysterious issues with "zero-width" characters like saltillo
+                activeTileTypeSuffix = "";
+            }
             if (activeTileTypeSuffix.equals("B")) {
                 activeTileWithoutSuffix = activeTile.substring(0, activeTile.length() - 1);
                 activeTileType = tileHashMap.find(activeTileWithoutSuffix).tileTypeB;
