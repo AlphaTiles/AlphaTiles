@@ -409,23 +409,23 @@ public class Romania extends GameActivity {
     public void goToPreviousTile(View View) {
         directionIsForward = false;
         String oldTile = activeTile;
-        activeTile = cumulativeStageBasedTileList.returnNextAlphabetTileDifferentiateTypes(oldTile);
+        activeTile = cumulativeStageBasedTileList.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
         if (scanSetting == 1) {
             while (Start.wordList.numberOfWordsForActiveTile(activeTile, 1) == 0) {
                 // JP: prevents user from having to click
                 // the arrow multiple times to skip irrelevant tiles that are never word-initial
                 oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnNextAlphabetTileDifferentiateTypes(oldTile);
+                activeTile = cumulativeStageBasedTileList.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
             }
         } else if (scanSetting == 2) {
             while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 2) == 0) {
                 oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnNextAlphabetTileDifferentiateTypes(oldTile);
+                activeTile = cumulativeStageBasedTileList.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
             }
         } else { // scanSetting 3
             while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 3) == 0) {
                 oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnNextAlphabetTileDifferentiateTypes(oldTile);
+                activeTile = cumulativeStageBasedTileList.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
             }
         }
 

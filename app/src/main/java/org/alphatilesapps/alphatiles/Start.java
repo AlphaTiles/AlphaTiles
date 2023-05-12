@@ -1905,13 +1905,13 @@ public class Start extends AppCompatActivity {
         public String returnPreviousAlphabetTileDifferentiateTypes(String oldTile) {
 
             String previousTile = "";
-            for (int i = tileListWithMultipleTypes.size() - 1; i >= 0; i--) {
+            for (int i = size() - 1; i >= 0; i--) {
 
-                if (tileListWithMultipleTypes.get(i).equals(oldTile)) {
+                if (get(i).equals(oldTile)) {
                     if (i > 0) {
-                        previousTile = tileListWithMultipleTypes.get(i - 1);
+                        previousTile = get(i - 1);
                     } else// if (i == 0) {
-                        previousTile = tileListWithMultipleTypes.get(tileListWithMultipleTypes.size() - 1);
+                        previousTile = get(size() - 1);
                 }
             }
 
