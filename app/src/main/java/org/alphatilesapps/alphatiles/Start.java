@@ -294,17 +294,17 @@ public class Start extends AppCompatActivity {
             } else {
                 // Sort information for staged introduction, including among potential second or third types of a tile
                 int stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3;
-                if(thisLineArray[14].equals("-")) {
-                    stageOfFirstAppearance = -1;
+                if(thisLineArray[14].equals("-")) { // Add all first types of tiles to "stage 1" if stages aren't being used
+                    stageOfFirstAppearance = 1;
                 } else {
                     stageOfFirstAppearance = Integer.parseInt(thisLineArray[14]);
                 }
-                if(thisLineArray[15].equals("-")) {
+                if(thisLineArray[15].equals("-")) { // If no second type stage is given, assume there is no second type
                     stageOfFirstAppearanceType2 = -1;
                 } else {
                     stageOfFirstAppearanceType2 = Integer.parseInt(thisLineArray[15]);
                 }
-                if(thisLineArray[16].equals("-")) {
+                if(thisLineArray[16].equals("-")) { // If no third type stage is given, assume there is no third type
                     stageOfFirstAppearanceType3 = -1;
                 } else {
                     stageOfFirstAppearanceType3 = Integer.parseInt(thisLineArray[16]);

@@ -244,13 +244,21 @@ public abstract class GameActivity extends AppCompatActivity {
                         gameNumber = gameNumber + 1;
                         if (gameNumber - 1 < gameList.size()) {
                             challengeLevel = Integer.valueOf(gameList.get(gameNumber - 1).gameLevel);
-                            stage = Integer.valueOf(gameList.get(gameNumber - 1).stage);
+                            if (gameList.get(gameNumber-1).stage.equals("-")) {
+                                stage = 7;
+                            } else {
+                                stage = Integer.valueOf(gameList.get(gameNumber - 1).stage);
+                            }
                             syllableGame = gameList.get(gameNumber - 1).gameMode;
                             country = gameList.get(gameNumber - 1).gameCountry;
                         } else {
                             gameNumber = 1;
                             challengeLevel = Integer.valueOf(gameList.get(0).gameLevel);
-                            stage = Integer.valueOf(gameList.get(0).stage);
+                            if (gameList.get(0).stage.equals("-")) {
+                                stage = 7;
+                            } else {
+                                stage = Integer.valueOf(gameList.get(0).stage);
+                            }
                             syllableGame = gameList.get(0).gameMode;
                             country = gameList.get(0).gameCountry;
                         }
