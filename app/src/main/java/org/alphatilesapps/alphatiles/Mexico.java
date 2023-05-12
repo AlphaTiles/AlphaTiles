@@ -179,13 +179,24 @@ public class Mexico extends GameActivity {
         // KP, Oct 2020
         int cardsToSetUp = visibleTiles / 2;   // this is half the number of cards
 
-        for (int i = 0; i < visibleTiles; i++) {
+        for (int i = 0; i < cardsToSetUp; i++) {
             chooseWord();
             String[] content = new String[]
                     {
                             wordInLWC,
                             wordInLOP,
-                            i < cardsToSetUp ? "TEXT" : "IMAGE",
+                            "TEXT",
+                            "UNSELECTED",
+                            String.valueOf(wordHashMap.get(wordInLWC).duration),    // audio clip duration in seconds
+                            wordHashMap.get(wordInLWC).adjustment,    // font adjustment
+
+                    };
+            memoryCollection.add(content);
+            content = new String[]
+                    {
+                            wordInLWC,
+                            wordInLOP,
+                            "IMAGE",
                             "UNSELECTED",
                             String.valueOf(wordHashMap.get(wordInLWC).duration),    // audio clip duration in seconds
                             wordHashMap.get(wordInLWC).adjustment,    // font adjustment
