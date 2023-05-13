@@ -256,7 +256,7 @@ public abstract class GameActivity extends AppCompatActivity {
                             if (gameNumber - 1 < gameList.size()) {
                                 challengeLevel = Integer.valueOf(gameList.get(gameNumber - 1).gameLevel);
                                 if (gameList.get(gameNumber-1).stage.equals("-")) {
-                                    stage = 7;
+                                    stage = 1;
                                 } else {
                                     stage = Integer.valueOf(gameList.get(gameNumber - 1).stage);
                                 }

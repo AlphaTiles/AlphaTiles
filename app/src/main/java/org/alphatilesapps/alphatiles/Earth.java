@@ -112,7 +112,12 @@ public class Earth extends AppCompatActivity {
                         String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
                         String challengeLevel = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel;
                         String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameMode;
-                        String stage = gameList.get((pageNumber * doorsPerPage) + doorIndex).stage;
+                        String stage;
+                        if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
+                            stage = "1";
+                        } else {
+                            stage = gameList.get((pageNumber * doorsPerPage) + doorIndex).stage;
+                        }
                         String uniqueGameLevelPlayerModeStageID = project + country + challengeLevel + playerString + syllableGame + stage;
 
                         trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
@@ -217,7 +222,12 @@ public class Earth extends AppCompatActivity {
         int challengeLevel = Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel);
         int gameNumber = (pageNumber * doorsPerPage) + doorIndex + 1;
         String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameMode;
-        int stage = Integer.parseInt(gameList.get((pageNumber * doorsPerPage) + doorIndex).stage);
+        int stage;
+        if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
+            stage = 1;
+        } else {
+            stage = Integer.parseInt(gameList.get((pageNumber * doorsPerPage) + doorIndex).stage);
+        }
 
         Intent intent = getIntent();    // preserve Extras
         try {
