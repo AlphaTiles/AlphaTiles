@@ -166,28 +166,13 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void updatePointsAndTrackers(int pointsIncrease) {
+        // Update global points and game points gem
         globalPoints+=pointsIncrease;
         points+=pointsIncrease;
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        if (pointsIncrease > 0){
-            trackerCount++;
-        }
-
-        if (trackerCount >= 12) {
-            hasChecked12Trackers = true;
-        }
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
-        editor.apply();
-        editor.putBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers",
-                hasChecked12Trackers);
-        editor.apply();
-        editor.putInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", trackerCount);
-        editor.apply();
-        getIntent().putExtra("globalPoints", globalPoints);
-
+        // Update tracker icons
         for (int t = 0; t < TRACKERS.length; t++) {
             ImageView tracker = findViewById(TRACKERS[t]);
             if (t < trackerCount) {
@@ -198,104 +183,131 @@ public abstract class GameActivity extends AppCompatActivity {
                 tracker.setImageResource(resID2);
             }
         }
-        // LM
-        // after12CheckedTrackers option 1: nothing happens; players keep playing even after checking all 12 trackers
-        // after12CheckedTrackers option 2: app returns players to Earth after checking all 12 trackers. They can get back in. Will return to Earth again after another 12 correct answers.
-        if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 2) {
-            trackerCount++;
-            soundSequencer.postDelayed(new Runnable() {
-                public void run() {
-                    Intent intent = getIntent();
-                    intent.setClass(context, Earth.class); // so we retain the Extras
-                    startActivity(intent);
-                    finish();
-                }
-            }, correctSoundDuration);
 
-        }
-        // after12CheckedTrackers option 3: app displays celebration screen and moves on to the next unchecked game after checking all 12 trackers.
-        if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 3) {
+        if (pointsIncrease > 0){ // Check whether 12 trackers were checked and how to proceed based on settings
             trackerCount++;
 
-            soundSequencer.postDelayed(new Runnable() {
-                public void run() {
-                    // Show celebration screen
-                    Intent intent = getIntent();
-                    intent.setClass(context, Celebration.class);
-                    startActivity(intent);
-                    finish();
+            if (trackerCount >= 12) {
+                hasChecked12Trackers = true;
+            }
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
+            editor.apply();
+            editor.putBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers",
+                    hasChecked12Trackers);
+            editor.apply();
+            editor.putInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", trackerCount);
+            editor.apply();
+            getIntent().putExtra("globalPoints", globalPoints);
+
+            // Update tracker icons
+            for (int t = 0; t < TRACKERS.length; t++) {
+                ImageView tracker = findViewById(TRACKERS[t]);
+                if (t < trackerCount) {
+                    int resID = getResources().getIdentifier("zz_complete", "drawable", getPackageName());
+                    tracker.setImageResource(resID);
+                } else {
+                    int resID2 = getResources().getIdentifier("zz_incomplete", "drawable", getPackageName());
+                    tracker.setImageResource(resID2);
                 }
-            }, correctSoundDuration + 1800);
-
-            // Then switch to next uncompleted game after 4 seconds
-            Timer nextScreenTimer = new Timer();
-            nextScreenTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    // Select and go to the next unfinished game to play
-                    // If the game with gameNumber (gameNumber+1) has not checked all 12 trackers, go to it. If not, keep looking for one like this.
-                    Intent intent = getIntent(); //gets intent that launched the current activity
-                    String project = "org.alphatilesapps.alphatiles.";
-                    boolean foundNextUncompletedGame = false;
-                    int repeat = 0;
-
-                    while (foundNextUncompletedGame == false && repeat < gameList.size()) {
-                        // Get the info about the next game
-                        gameNumber = gameNumber + 1;
-                        if (gameNumber - 1 < gameList.size()) {
-                            challengeLevel = Integer.valueOf(gameList.get(gameNumber - 1).gameLevel);
-                            if (gameList.get(gameNumber-1).stage.equals("-")) {
-                                stage = 7;
-                            } else {
-                                stage = Integer.valueOf(gameList.get(gameNumber - 1).stage);
-                            }
-                            syllableGame = gameList.get(gameNumber - 1).gameMode;
-                            country = gameList.get(gameNumber - 1).gameCountry;
-                        } else {
-                            gameNumber = 1;
-                            challengeLevel = Integer.valueOf(gameList.get(0).gameLevel);
-                            if (gameList.get(0).stage.equals("-")) {
-                                stage = 7;
-                            } else {
-                                stage = Integer.valueOf(gameList.get(0).stage);
-                            }
-                            syllableGame = gameList.get(0).gameMode;
-                            country = gameList.get(0).gameCountry;
-                        }
-                        String activityClass = project + country;
-
-                        try {
-                            intent.setClass(context, Class.forName(activityClass));
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        String nextUniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + syllableGame + stage;
-                        hasChecked12Trackers = prefs.getBoolean(nextUniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
-
-                        if (!hasChecked12Trackers) {
-                            foundNextUncompletedGame = true;
-                            intent.putExtra("challengeLevel", challengeLevel);
-                            intent.putExtra("stage", stage);
-                            intent.putExtra("syllableGame", syllableGame);
-                            intent.putExtra("globalPoints", globalPoints);
-                            intent.putExtra("gameNumber", gameNumber);
-                            intent.putExtra("country", country);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            //keep looping
-                        }
-                        repeat++;
-                    }
-
-                    //If it's looped through all of the games and they're all complete, return to Earth
-                    if (!foundNextUncompletedGame) {
+            }
+            // LM
+            // after12CheckedTrackers option 1: nothing happens; players keep playing even after checking all 12 trackers
+            // after12CheckedTrackers option 2: app returns players to Earth after checking all 12 trackers. They can get back in. Will return to Earth again after another 12 correct answers.
+            if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 2) {
+                soundSequencer.postDelayed(new Runnable() {
+                    public void run() {
+                        Intent intent = getIntent();
                         intent.setClass(context, Earth.class); // so we retain the Extras
                         startActivity(intent);
                         finish();
                     }
-                }
-            }, 4500);
+                }, correctSoundDuration);
+
+            }
+            // after12CheckedTrackers option 3: app displays celebration screen and moves on to the next unchecked game after checking all 12 trackers.
+            if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 3) {
+                soundSequencer.postDelayed(new Runnable() {
+                    public void run() {
+                        // Show celebration screen
+                        Intent intent = getIntent();
+                        intent.setClass(context, Celebration.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, correctSoundDuration + 1800);
+
+                // Then switch to next uncompleted game after 4 seconds
+                Timer nextScreenTimer = new Timer();
+                nextScreenTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        // Select and go to the next unfinished game to play
+                        // If the game with gameNumber (gameNumber+1) has not checked all 12 trackers, go to it. If not, keep looking for one like this.
+                        Intent intent = getIntent(); //gets intent that launched the current activity
+                        String project = "org.alphatilesapps.alphatiles.";
+                        boolean foundNextUncompletedGame = false;
+                        int repeat = 0;
+
+                        while (foundNextUncompletedGame == false && repeat < gameList.size()) {
+                            // Get the info about the next game
+                            gameNumber = gameNumber + 1;
+                            if (gameNumber - 1 < gameList.size()) {
+                                challengeLevel = Integer.valueOf(gameList.get(gameNumber - 1).gameLevel);
+                                if (gameList.get(gameNumber-1).stage.equals("-")) {
+                                    stage = 7;
+                                } else {
+                                    stage = Integer.valueOf(gameList.get(gameNumber - 1).stage);
+                                }
+                                syllableGame = gameList.get(gameNumber - 1).gameMode;
+                                country = gameList.get(gameNumber - 1).gameCountry;
+                            } else {
+                                gameNumber = 1;
+                                challengeLevel = Integer.valueOf(gameList.get(0).gameLevel);
+                                if (gameList.get(0).stage.equals("-")) {
+                                    stage = 1;
+                                } else {
+                                    stage = Integer.valueOf(gameList.get(0).stage);
+                                }
+                                syllableGame = gameList.get(0).gameMode;
+                                country = gameList.get(0).gameCountry;
+                            }
+                            String activityClass = project + country;
+
+                            try {
+                                intent.setClass(context, Class.forName(activityClass));
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            String nextUniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + syllableGame + stage;
+                            hasChecked12Trackers = prefs.getBoolean(nextUniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
+
+                            if (!hasChecked12Trackers) {
+                                foundNextUncompletedGame = true;
+                                intent.putExtra("challengeLevel", challengeLevel);
+                                intent.putExtra("stage", stage);
+                                intent.putExtra("syllableGame", syllableGame);
+                                intent.putExtra("globalPoints", globalPoints);
+                                intent.putExtra("gameNumber", gameNumber);
+                                intent.putExtra("country", country);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                //keep looping
+                            }
+                            repeat++;
+                        }
+
+                        // If it's looped through all of the games and they're all complete, return to Earth
+                        if (!foundNextUncompletedGame) {
+                            intent.setClass(context, Earth.class); // so we retain the Extras
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                }, 4500);
+            }
         }
     }
 
