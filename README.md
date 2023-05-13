@@ -21,16 +21,16 @@ The Alpha Tiles build gradle requires Android Studio Flamingo and Java JDK 17. [
 Here is the recommended route for interacting with Alpha Tiles code and build assets through Git.
 1. Have [Git installed](https://git-scm.com/download/win) on your machine.
 2. In Android Studio, select `File`>`New`> `Project from version control...`, paste in `https://github.com/AlphaTiles/AlphaTiles.git` for `URL`, and click `Clone`.
-3. For sample build assets, repeat step 3, pasting in `https://github.com/AlphaTiles/PublicLanguageAssets.git`.
+3. For sample build assets, repeat step 2, pasting in `https://github.com/AlphaTiles/PublicLanguageAssets.git`.
 4. Going forward, click the blue down arrow in Android Studio to `Update Project...` for the latest code and/or asset changes in these repositories.
 
 
 ## Build your Alpha Tiles app
 ### Insert the language-specific assets
-Click the `Project` tab in the side menu of Android Studio. Select `Project` from the dropdown at the top of the Project panel, as well. This will show the file structure of the Alpha Tiles source code.
+Click the `Project` tab in the side menu of Android Studio. Then select `Project` from the dropdown at the top of the Project panel. This will show the file structure of the Alpha Tiles source code.
 
 To try Alpha Tiles with sample build assets, use a folder of build assets, such as `tpxTeocuitlapa`, from the [PublicLanguageAssets](https://github.com/AlphaTiles/PublicLanguageAssets) repository. If cloned using [the instructions above](#clone-the-source-code-and-sample-build-assets), the tpxTeocuitlapa folder will be at `C:\Users\(Your user)\StudioProjects\PublicLanguageAssets\tpxTeocuitlapa` on your machine.
-Or, put together a build assets folder for a new app, following the [instructions above](#preparing-the-build-files-for-your-app).
+Alternatively, put together a build assets folder for a new app, following the [instructions above](#preparing-the-build-files-for-your-app).
 
 Place the build assets folder into the [src](app/src) folder in the Android Studio Alpha Tiles project as a sister to [main](app/src/main).
 
