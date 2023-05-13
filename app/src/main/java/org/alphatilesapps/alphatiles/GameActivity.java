@@ -19,17 +19,22 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.alphatilesapps.alphatiles.Start.MULTIFUNCTIONS;
-import static org.alphatilesapps.alphatiles.Start.differentiateTypes;
+import static org.alphatilesapps.alphatiles.Start.MULTI_TYPE_TILES;
+import static org.alphatilesapps.alphatiles.Start.SAD;
+import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
+import static org.alphatilesapps.alphatiles.Start.langInfoList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
+import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
 import static org.alphatilesapps.alphatiles.Start.tileTypeHashMapWithMultipleTypes;
+import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.wordStagesLists;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
@@ -41,6 +46,8 @@ import static org.alphatilesapps.alphatiles.Start.wordDurations;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.after12checkedTrackers;
 
+import java.util.logging.Logger;
+
 
 public abstract class GameActivity extends AppCompatActivity {
 
@@ -48,7 +55,7 @@ public abstract class GameActivity extends AppCompatActivity {
     Context context;
     String className;
     String country;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
     int gameNumber = 0;
     int playerNumber = -1;
     String playerString;
@@ -94,6 +101,26 @@ public abstract class GameActivity extends AppCompatActivity {
     protected abstract int getAudioInstructionsResID();
 
     protected abstract void centerGamesHomeImage();
+    private static final Logger LOGGER = Logger.getLogger(GameActivity.class.getName());
+
+    /*
+    This testing method can be run from onCreate() to make sure each word is parsed correctly into tiles
+    and recombined correctly from those tiles.
+    Uncomment the LOGGER.info(data) line to log this info for all of the words in the wordlist.
+    REMOVE calls to this testing method before building an app.
+     */
+    protected void testParsingAndCombining() {
+
+        String data = "Word\tTiles Parsed\tTiles recombined\n";
+        for(Start.Word w : wordList){
+            ArrayList<String> thisParsedTileArray = tileList.parseWordIntoTiles(w.localWord, w.localWord);
+            data += w.localWord + "\t" + thisParsedTileArray.toString() + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisParsedTileArray, -1, w.localWord) + "\n";
+            if(!wordInLOPWithStandardizedSequenceOfCharacters(w.localWord).equals(combineTilesToMakeWord(thisParsedTileArray, thisParsedTileArray, -1, w.localWord))){
+                LOGGER.info("Parsing/combining error: " + w.localWord + "\t" + thisParsedTileArray.toString() + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisParsedTileArray, -1, w.localWord) + "\n");
+            }
+        }
+        //LOGGER.info(data);
+    }
 
     @Override
     protected void onCreate(Bundle state) {
@@ -118,13 +145,13 @@ public abstract class GameActivity extends AppCompatActivity {
         points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
 
         for(int s=0; s<stage; s++){
-            cumulativeStageBasedTileList.addAll(Start.SAD);
+            cumulativeStageBasedTileList.addAll(SAD);
             cumulativeStageBasedTileList.addAll(tileStagesLists.get(s));
             cumulativeStageBasedWordList.addAll(wordStagesLists.get(s));
         }
 
         for(int s=0; s<(stage-1); s++){
-            previousStagesTileList.addAll(Start.SAD);
+            previousStagesTileList.addAll(SAD);
             previousStagesTileList.addAll(tileStagesLists.get(s));
             previousStagesWordList.addAll(wordStagesLists.get(s));
         }
@@ -135,11 +162,13 @@ public abstract class GameActivity extends AppCompatActivity {
             forceLTRIfSupported();
         }
 
+        testParsingAndCombining();
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(state);
     }
 
     public void goBackToEarth(View view) {
+        gameSounds.stop(getAudioInstructionsResID());
         Intent intent = getIntent();
         intent.setClass(context, Earth.class);    // so we retain the Extras
         startActivity(intent);
@@ -323,7 +352,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 Start.WordList lowerCorrespondenceWords = new Start.WordList();
 
                 for (Start.Word word : wordStagesLists.get(0)) {
-                    ArrayList<String> tilesInThisWord = tileList.parseWordIntoTiles(word.localWord);
+                    ArrayList<String> tilesInThisWord = tileList.parseWordIntoTiles(word.localWord, word.localWord);
                     int nonSADtilesInThisWord = tilesInThisWord.size();
                     int correspondingTiles = 0;
                     for (int t = 0; t < tilesInThisWord.size(); t++) {
@@ -335,11 +364,11 @@ public abstract class GameActivity extends AppCompatActivity {
                                 aTileInTheStageWithoutSuffix = aTileInTheStageWithoutSuffix.substring(0, aTileInTheStageWithoutSuffix.length() - 1);
                             }
                             if (tilesInThisWord.get(t).equals(aTileInTheStageWithoutSuffix)) {
-                                if (differentiateTypes) {
+                                if (differentiatesTileTypes) {
                                     String aTileInTheStageType = tileTypeHashMapWithMultipleTypes.get(aTileInTheStage);
                                     String tileInThisWordType;
-                                    if (MULTIFUNCTIONS.contains(tilesInThisWord.get(t))) {
-                                        tileInThisWordType = tileList.getInstanceTypeForMixedTile(t, word.nationalWord);
+                                    if (MULTI_TYPE_TILES.contains(tilesInThisWord.get(t))) {
+                                        tileInThisWordType = tileList.getInstanceTypeForMixedTile(t, tilesInThisWord, word.localWord);
                                     } else {
                                         tileInThisWordType = tileTypeHashMapWithMultipleTypes.get(tilesInThisWord.get(t));
                                     }
@@ -663,6 +692,207 @@ public abstract class GameActivity extends AppCompatActivity {
         constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.instructions, ConstraintSet.END, 0);
         constraintSet.connect(R.id.instructions, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
         constraintSet.applyTo(constraintLayout);
+    }
+
+    /*
+    Sometimes, the assembled version of words differs slightly from what's in the wordlist, because of invisible character stacking differences.
+    This method takes a String, word, and returns the assembled version so that when compared to other assembled tile lists, it will match up.
+
+    word: The word you would like to represent in standardized assembled form
+     */
+    protected String wordInLOPWithStandardizedSequenceOfCharacters(String wordInLOPFromWordList) {
+
+        ArrayList<String> tilesInWordSpelledCorrectly = tileList.parseWordIntoTiles(wordInLOPFromWordList, wordInLOPFromWordList);
+        return combineTilesToMakeWord(tilesInWordSpelledCorrectly, tilesInWordSpelledCorrectly, -1, wordInLOPFromWordList);
+    }
+
+    /*
+    This method takes the List of tiles that make up a word (or pseudoword) and assembles them into a String in the correct order.
+    It supports assembly of complex vowels, which have components before and after/above/below the consonant pronounced before them
+    When comparing words that have complex vowels, simple concatenation of tiles will not produce the correct string.
+    Therefore, use this method rather than concatenating tiles.
+
+    tilesInThisWordOption: The tile array being combined. It could be a wordlist word or an alternate word option
+    tilesInWordListWord: The tile array for the target word list word. The word option tiles could be the same as this or one tile different.
+    indexOfReplacedTile: default -1; If building a pseudoword, this is the index of the tile that has been replaced from the target word
+    wordInLOP: The target word string, in the language of play
+     */
+    public static String combineTilesToMakeWord(List<String> tilesInThisWordOption, List<String> tilesInWordlistWord, int indexOfReplacedTile, String wordInLOP) {
+        StringBuilder builder = new StringBuilder("");
+        String previousConsonant = "";
+        String previousDiacritics = "";
+        String previousAboveOrBelowVowel = "";
+        String previousString = "";
+        String replacedTile = "";
+        if (indexOfReplacedTile>-1){
+            replacedTile = tilesInWordlistWord.get(indexOfReplacedTile);
+        }
+        if(indexOfReplacedTile>0){
+            previousString = tilesInThisWordOption.get(indexOfReplacedTile-1);
+        }
+
+        int index = 0;
+        for (String tileString : tilesInThisWordOption) {
+            if (tileString != null) {
+                String stringToAppend = tileString;
+                Start.Tile tile = tileHashMap.get(tileString);
+                if(tile != null){
+                    if (tile.tileType.equals("C")){
+                        previousConsonant = tileString;
+                        previousAboveOrBelowVowel = ""; // Reset; new syllable
+                        previousDiacritics = ""; // Reset; new syllable
+                    }
+                    if(tile.tileType.equals("AD")){
+                        previousDiacritics = tileString;
+                    }
+                    if(tile.tileType.equals("AV") || tile.tileType.equals("BV")){
+                        previousAboveOrBelowVowel = tileString;
+                    }
+                }
+                boolean replacingLVwithOtherV;
+                if(!tileHashMap.containsKey(replacedTile)){
+                    replacingLVwithOtherV = false;
+                } else {
+                    replacingLVwithOtherV = !replacedTile.equals("") && tileHashMap.get(replacedTile).tileType.equals("LV");
+                }
+
+                if (replacingLVwithOtherV && index == indexOfReplacedTile && (tileHashMap.get(stringToAppend).tileType.equals("AV") || tileHashMap.get(stringToAppend).tileType.equals("BV")|| tileHashMap.get(stringToAppend).tileType.equals("FV") || tileHashMap.get(stringToAppend).tileType.equals("V"))) {
+                    previousString = stringToAppend;
+                    // Don't append this string. (That would put AV, FV, or V[LV+◌+FV] in LV position.)
+                } else if (replacingLVwithOtherV && index == (indexOfReplacedTile + 1) && (tileHashMap.get(previousString).tileType.equals("AV") || tileHashMap.get(stringToAppend).tileType.equals("BV") || tileHashMap.get(previousString).tileType.equals("FV"))) { // Combine unappended AV/BV/FV now and append
+                    stringToAppend = stringToAppend + previousString.replace("◌", ""); // previousString = AV, BV, FV
+                    // ^Now it's in the right place.
+                    builder.append(stringToAppend);
+                    previousString = stringToAppend;
+                } else if (replacingLVwithOtherV && index == (indexOfReplacedTile + 1) && tileHashMap.get(previousString).tileType.equals("V")){
+                    stringToAppend = previousString.replace("◌", stringToAppend); // [LV+◌+FV], replace the ◌ with the consonant tile you are adding now
+                    builder.append(stringToAppend);
+                    previousString = stringToAppend;
+                }else {
+                    if (stringToAppend.contains("◌")) {
+                        // Put the previous consonant and (optional) above/below vowel as the base of diacritics
+                        // Or consonant and diacritics as the base of a vowel with a placeholder
+                        // The stackInProperSequence() method will make some more fixes later if necessary
+                        String base = "";
+                        if(tileHashMap.get(stringToAppend).tileType.equals("AD")){
+                            base = previousConsonant + previousAboveOrBelowVowel.replace("◌", "");
+                        } else if (tileHashMap.get(stringToAppend).tileType.contains("V")){
+                            base = previousConsonant + previousDiacritics.replace("◌", "");
+                        }
+                        stringToAppend = stringToAppend.replace("◌", base);
+                        builder.delete(builder.length() - base.length(), builder.length());
+                    }
+                    builder.append(stringToAppend);
+                    previousString = stringToAppend;
+                }
+            }
+            index++;
+        }
+        String processedString = builder.toString();
+        return stackInProperSequence(processedString, wordInLOP);
+    }
+
+    /*
+    ADs (Above/Following Diacritics) should be placed above AVs (Above Vowels).
+    If a gametiles list stores C+AD tiles, assembling these C+AD tiles with AV tiles or complex vowels
+    will put ADs and AVS in the reverse order.
+    This method fixes that.
+
+    s: String to check and fix the stacking in, if necessary
+     */
+    public static String stackInProperSequence(String assembledWordInProgress, String wordInLOP) {
+
+        if (assembledWordInProgress.length() > 0) {
+
+            String correctlyStackedString = assembledWordInProgress;
+            ArrayList<String> parsedWordArrayPreliminary = tileList.parseWordIntoTilesPreliminary(wordInLOP); // Might not be a full word
+            ArrayList<String> prohibitedCharSequences = generateProhibitedCharSequences(parsedWordArrayPreliminary, wordInLOP); // Check on the bad combinations in the target word
+
+            if (prohibitedCharSequences.size() > 0) {
+                for (int c1 = assembledWordInProgress.length()-2; c1 > -1; c1--) { // Start with the second to last char and last char, work backwards
+                    int c2 = c1 + 1;
+                    String this2CharSequence = String.valueOf(correctlyStackedString.charAt(c1)) + String.valueOf(correctlyStackedString.charAt(c2));
+                    if (prohibitedCharSequences.contains(this2CharSequence)) {
+                        String fixed2CharSequence = String.valueOf(correctlyStackedString.charAt(c2)) + String.valueOf(correctlyStackedString.charAt(c1));
+                        correctlyStackedString = correctlyStackedString.replace(this2CharSequence, fixed2CharSequence);
+                    }
+                }
+            }
+            return correctlyStackedString;
+        }
+        return assembledWordInProgress;
+    }
+
+    /*
+    AVs should be stacked before ADs, not the other way around.
+    ADs should not be placed on top of FVs, but only on top of a C+(AV)+(AD) base.
+    This initializes the prohibitedCharSequences ArrayList with the prohibited stacking combinations in this word.
+     */
+    public static ArrayList<String> generateProhibitedCharSequences(ArrayList<String> parsedWordArrayPreliminary, String wordInLOP) {
+        ArrayList<String> prohibitedCharSequences = new ArrayList<String>();
+        ArrayList<String> AVs = new ArrayList<String>();
+        ArrayList<String> ADs = new ArrayList<String>();
+        ArrayList<String> FVs = new ArrayList<String>();
+
+        // Since we're going char by char, it's important that teams store their ADs by themselves (single chars) in the gametiles list, even if they also store them
+        // attached to consonants.
+        for (int i = 0; i < wordInLOP.length(); i++) {
+            Start.Tile thisTile = tileHashMap.get(String.valueOf(wordInLOP.charAt(i)));
+            if(!(thisTile == null)){
+                String thisTileChar = thisTile.baseTile;
+                String typeOfThisInstanceOfThisTile = "";
+                if(MULTI_TYPE_TILES.contains(thisTileChar)){
+                    int indexInPreliminaryArray = -1; // Figure out which instance in the word of this char from the tile list we are looking at
+                    String theStringUpToThisPoint = wordInLOP.substring(0, i);
+                    int lastIndexOfThisMultifunctionTile = 0;
+                    int instancesBeforeTheOneWeWant = 0;
+
+                    while (lastIndexOfThisMultifunctionTile != -1) {
+                        lastIndexOfThisMultifunctionTile = theStringUpToThisPoint.indexOf(thisTileChar, lastIndexOfThisMultifunctionTile);
+                        if (lastIndexOfThisMultifunctionTile != -1) {
+                            instancesBeforeTheOneWeWant++;
+                            lastIndexOfThisMultifunctionTile += 1; // Start looking again after the instance we just found
+                        }
+                    }
+                    // Figure out its instance type using the index of that instance in the preliminary parsed array
+                    for(int t = 0; t<parsedWordArrayPreliminary.size(); t++){
+                        if(parsedWordArrayPreliminary.get(t).contains(thisTileChar)){
+                            if(instancesBeforeTheOneWeWant == 0){
+                                indexInPreliminaryArray = t;
+                            }
+                            instancesBeforeTheOneWeWant--;
+                        }
+                    }
+                    typeOfThisInstanceOfThisTile = tileList.getInstanceTypeForMixedTilePreliminary(indexInPreliminaryArray, parsedWordArrayPreliminary, wordInLOP);
+                } else {
+                    typeOfThisInstanceOfThisTile = thisTile.tileType;
+                }
+                if (typeOfThisInstanceOfThisTile.equals("AV")) {
+                    AVs.add(thisTileChar);
+                } else if (typeOfThisInstanceOfThisTile.equals("AD")) {
+                    ADs.add(thisTileChar);
+                } else if (typeOfThisInstanceOfThisTile.equals("FV")) {
+                    FVs.add(thisTileChar);
+                }
+            }
+        }
+        // Create and add the prohibited two-char sequences from this word
+        for (int d = 0; d < ADs.size(); d++) {
+            for (int v = 0; v < AVs.size(); v++) {
+                prohibitedCharSequences.add(ADs.get(d) + AVs.get(v));
+            }
+        }
+        for (int f = 0; f < FVs.size(); f++) {
+            for (int d = 0; d < ADs.size(); d++) {
+                if(!tileHashMap.keySet().contains(FVs.get(f) + ADs.get(d))){
+                    prohibitedCharSequences.add(FVs.get(f) + ADs.get(d));
+                }
+            }
+        }
+        for(int d = 0; d<ADs.size(); d++){
+            prohibitedCharSequences.add("_" + ADs.get(d));
+        }
+        return prohibitedCharSequences;
     }
 
 }

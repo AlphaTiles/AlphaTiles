@@ -78,7 +78,7 @@ public class Ecuador extends GameActivity {
         int audioInstructionsResID;
         try {
 //          audioInstructionsResID = res.getIdentifier("ecuador_" + challengeLevel, "raw", context.getPackageName());
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -456,7 +456,7 @@ public class Ecuador extends GameActivity {
         TextView chosenWord = findViewById(TILE_BUTTONS[t]);
         String chosenWordText = chosenWord.getText().toString();
 
-        if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
+        if (chosenWordText.equals(wordList.stripInstructionCharacters(wordInLOP))) {
             // Good job!
             repeatLocked = false;
 

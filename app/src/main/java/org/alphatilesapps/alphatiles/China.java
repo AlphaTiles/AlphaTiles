@@ -1,9 +1,9 @@
 package org.alphatilesapps.alphatiles;
 
+import static org.alphatilesapps.alphatiles.Start.gameList;
+import static org.alphatilesapps.alphatiles.Start.localAppName;
 import static org.alphatilesapps.alphatiles.Start.tileList;
-import static org.alphatilesapps.alphatiles.Start.wordList;
 
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -65,7 +65,7 @@ public class China extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
 
         } catch (Exception e) {
             audioInstructionsResID = -1;
@@ -80,7 +80,7 @@ public class China extends GameActivity {
         setContentView(R.layout.china);
         int gameID = R.id.chinaCL;
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
+        setTitle(localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -147,8 +147,8 @@ public class China extends GameActivity {
             threeFourWordInLopLwc[i][0] = wordInLWC;
             threeFourWordInLopLwc[i][1] = wordInLOP;
 
-            tileLength = tileList.parseWordIntoTiles(threeFourWordInLopLwc[i][1]).size();
-            for (int j = 0; j < i; j++) { // Find a word that's 4 tiles long and not a duplicate
+            tileLength = tileList.parseWordIntoTilesPreliminary(threeFourWordInLopLwc[i][1]).size();
+            for (int j = 0; j < i; j++) {
                 if (threeFourWordInLopLwc[i][0].equals(threeFourWordInLopLwc[j][0])) {
                     i--;
                 } else if (tileLength != 4) {
@@ -157,27 +157,26 @@ public class China extends GameActivity {
             }
         }
 
-        // Find one three-tile word
         tileLength = -1;
         while (!(tileLength==3)) {
             chooseWord();
             oneThreeWordInLopLwc[0] = wordInLWC;
             oneThreeWordInLopLwc[1] = wordInLOP;
-            tileLength = tileList.parseWordIntoTiles(oneThreeWordInLopLwc[1]).size();
+            tileLength = tileList.parseWordIntoTilesPreliminary(oneThreeWordInLopLwc[1]).size();
         }
     }
 
     private void setUpTiles() {
         ArrayList<String> tiles = new ArrayList<>();
         for (int t = 0; t < 3; t++) {
-            tiles.addAll(tileList.parseWordIntoTiles(threeFourWordInLopLwc[t][1]));
+            tiles.addAll(tileList.parseWordIntoTilesPreliminary(threeFourWordInLopLwc[t][1]));
 
             ImageView image = findViewById(WORD_IMAGES[t]);
             int resID = getResources().getIdentifier(threeFourWordInLopLwc[t][0] + "2", "drawable", getPackageName());
             image.setImageResource(resID);
             image.setVisibility(View.VISIBLE);
         }
-        tiles.addAll(tileList.parseWordIntoTiles(oneThreeWordInLopLwc[1]));
+        tiles.addAll(tileList.parseWordIntoTilesPreliminary(oneThreeWordInLopLwc[1]));
         Collections.shuffle(tiles);
 
         ImageView image = findViewById(WORD_IMAGES[3]);
@@ -282,16 +281,22 @@ public class China extends GameActivity {
 
         String gridWord = "";
         String correctWord = "";
+        String correctWordAsItAppearsInTheWordlist = "";
         if (row < 4) {
-            correctWord = wordList.stripInstructionCharacters(threeFourWordInLopLwc[row - 1][1]);
+            correctWordAsItAppearsInTheWordlist = threeFourWordInLopLwc[row - 1][1];
+            correctWord = wordInLOPWithStandardizedSequenceOfCharacters(threeFourWordInLopLwc[row - 1][1]);
         } else {
-            correctWord = wordList.stripInstructionCharacters(oneThreeWordInLopLwc[1]);
+            correctWordAsItAppearsInTheWordlist = oneThreeWordInLopLwc[1];
+            correctWord = wordInLOPWithStandardizedSequenceOfCharacters(oneThreeWordInLopLwc[1]);
         }
-        TextView gameTile1 = findViewById(TILE_BUTTONS[leftMostTile]);
-        TextView gameTile2 = findViewById(TILE_BUTTONS[leftMostTile + 1]);
-        TextView gameTile3 = findViewById(TILE_BUTTONS[leftMostTile + 2]);
-        TextView gameTile4 = findViewById(TILE_BUTTONS[leftMostTile + 3]);
-        gridWord = gameTile1.getText().toString() + gameTile2.getText().toString() + gameTile3.getText().toString() + gameTile4.getText().toString();
+        ArrayList<String> tilesInGridWord = new ArrayList<String>();
+        for (int i = 0; i < 4; i++) {
+            TextView gameTile = findViewById(TILE_BUTTONS[leftMostTile + i]);
+            tilesInGridWord.add(gameTile.getText().toString());
+        }
+        ArrayList<String> tilesInTargetWord = tileList.parseWordIntoTilesPreliminary(correctWordAsItAppearsInTheWordlist);
+        gridWord = combineTilesToMakeWord(tilesInGridWord, tilesInTargetWord, -1, correctWordAsItAppearsInTheWordlist);
+
 
         if (row == 4) {
             if (blankTile.getTag().equals("14") || blankTile.getTag().equals("15")) {

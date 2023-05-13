@@ -1,7 +1,5 @@
 package org.alphatilesapps.alphatiles;
 
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -61,7 +59,7 @@ public class Sudan extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -96,7 +94,7 @@ public class Sudan extends GameActivity {
         context = this;
         int gameID = 0;
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
+        setTitle(localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         determineNumPages(); // JP
 
         if (syllableGame.equals("S")) {
@@ -166,7 +164,6 @@ public class Sudan extends GameActivity {
     }
 
     public void splitTileListAcrossPages() {
-
         int numTiles = cumulativeStageBasedTileList.size() - SAD.size();
         int cont = 0;
         for (int i = 0; i < numPages + 1; i++) {
@@ -177,7 +174,6 @@ public class Sudan extends GameActivity {
                 cont++;
             }
         }
-
     }
 
     public void splitSyllablesListAcrossPages() {
@@ -204,7 +200,7 @@ public class Sudan extends GameActivity {
                 tileView.setText(pagesList.get(page).get(k));
             }
             String type;
-            if (differentiateTypes) {
+            if (differentiatesTileTypes) {
                 type = tileTypeHashMapWithMultipleTypesNoSAD.get(pagesList.get(page).get(k));
             } else {
                 type = tileHashMapNoSAD.find(pagesList.get(page).get(k)).tileType;
@@ -215,7 +211,11 @@ public class Sudan extends GameActivity {
                     typeColor = COLORS.get(1);
                     break;
                 case "V":
-                    typeColor = COLORS.get(2);
+                case "LV":
+                case "AV":
+                case "BV":
+                case "FV":
+                    typeColor = COLORS.get(0);
                     break;
                 case "T":
                     typeColor = COLORS.get(3);

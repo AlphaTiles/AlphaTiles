@@ -23,11 +23,14 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.keyList;
 import static org.alphatilesapps.alphatiles.Start.COLORS;
+import static org.alphatilesapps.alphatiles.Start.langInfoList;
+import static org.alphatilesapps.alphatiles.Start.localAppName;
+import static org.alphatilesapps.alphatiles.Start.nameList;
 
 public class SetPlayerName extends AppCompatActivity {
 
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
 
     int keysInUse;
     int keyboardScreenNo; // for languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
@@ -63,7 +66,7 @@ public class SetPlayerName extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
-        setTitle(Start.localAppName);
+        setTitle(localAppName);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
 
@@ -74,9 +77,9 @@ public class SetPlayerName extends AppCompatActivity {
         String defaultName;
         String playerName;
 
-        String localWordForName = Start.langInfoList.find("NAME in local language");
+        String localWordForName = langInfoList.find("NAME in local language");
         if (localWordForName.equals("custom")) {
-            defaultName = Start.nameList.get(playerNumber);
+            defaultName = nameList.get(playerNumber);
         } else {
             defaultName = localWordForName + " " + playerNumber;
         }
@@ -186,12 +189,12 @@ public class SetPlayerName extends AppCompatActivity {
         if (keysInUse > KEYS.length) {
             TextView key34 = findViewById(KEYS[KEYS.length - 2]);
             key34.setBackgroundResource(R.drawable.zz_backward_green);
-            if (scriptDirection.equals("RTL")) {
+            if (scriptDirection.equals("RTL")) { //LM: LTR is default
                 key34.setRotationY(180);
             }
             key34.setText("");
             TextView key35 = findViewById(KEYS[KEYS.length - 1]);
-            if (scriptDirection.equals("RTL")) {
+            if (scriptDirection.equals("RTL")) { //LM: LTR is default
                 key35.setRotationY(180);
             }
             key35.setBackgroundResource(R.drawable.zz_forward_green);

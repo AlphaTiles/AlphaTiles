@@ -1,5 +1,7 @@
 package org.alphatilesapps.alphatiles;
 
+import static org.alphatilesapps.alphatiles.Start.gameList;
+import static org.alphatilesapps.alphatiles.Start.localAppName;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileListNoSAD;
@@ -56,7 +58,7 @@ public class Italy extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1)
+            audioInstructionsResID = res.getIdentifier(gameList.get(gameNumber - 1)
                     .gameInstrLabel, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
@@ -106,7 +108,7 @@ public class Italy extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
+        setTitle(localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         if (syllableGame.equals("S")) {
             sortableSyllArray = (Start.SyllableList) syllableList.clone();

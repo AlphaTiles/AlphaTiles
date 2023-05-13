@@ -17,11 +17,19 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import static org.alphatilesapps.alphatiles.Start.MULTI_TYPE_TILES;
+import static org.alphatilesapps.alphatiles.Start.gameList;
+import static org.alphatilesapps.alphatiles.Start.localAppName;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
+import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.COLORS;
 import static org.alphatilesapps.alphatiles.Start.CorV;
+import static org.alphatilesapps.alphatiles.Start.tileList;
+import static org.alphatilesapps.alphatiles.Start.Tile;
 
+
+//Identify the first TILE
 //level 1: 6 visible tiles, random wrong choices
 //level 2: 12 visible tiles, random wrong choices
 //level 3: 18 visible tiles, random wrong choices
@@ -29,12 +37,21 @@ import static org.alphatilesapps.alphatiles.Start.CorV;
 //level 5: 12 visible tiles, distractor wrong choices
 //level 6: 18 visible tiles, distractor wrong choices
 
-//level 1 + S: 6 visible syllables, random wrong choices
-//level 2 + S: 12 visible syllables, random wrong choices
-//level 3 + S: 18 visible syllables, random wrong choices
-//level 4 + S: 6 visible syllables, distractor wrong choices
-//level 5 + S: 12 visible syllables, distractor wrong choices
-//level 6 + S: 18 visible syllables, distractor wrong choices
+//Identify the first SOUND (esp. for Thai Script, when this may differ from starting tile).
+//level 7: 6 visible tiles, random wrong choices
+//level 8: 12 visible tiles, random wrong choices
+//level 9: 18 visible tiles, random wrong choices
+//level 10: 6 visible tiles, distractor wrong choices
+//level 11: 12 visible tiles, distractor wrong choices
+//level 12: 18 visible tiles, distractor wrong choices
+
+//Identify the first SYLLABLE (Mark 'S' for game's 'Mode')
+//level 1 (with S): 6 visible syllables, random wrong choices
+//level 2 (with S): 12 visible syllables, random wrong choices
+//level 3 (with S): 18 visible syllables, random wrong choices
+//level 4 (with S): 6 visible syllables, distractor wrong choices
+//level 5 (with S): 12 visible syllables, distractor wrong choices
+//level 6 (with S): 18 visible syllables, distractor wrong choices
 
 
 // IF A LANGUAGE HAS WORDS THAT START WITH SOMETHING OTHER THAN C OR V, THIS WILL CRASH
@@ -45,10 +62,7 @@ public class Georgia extends GameActivity {
     Set<String> answerChoices = new HashSet<String>();
     String initialTile = "";
     String initialSyll = "";
-    int visibleTiles; // will be 6, 12 or 18 based on challengeLevel 1, 2 or 3
-    String lastWord = "";
-    String secondToLastWord = "";
-    String thirdToLastWord = "";
+    int visibleTiles; // will be 6, 12 or 18 based on challengeLevel
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -89,7 +103,7 @@ public class Georgia extends GameActivity {
         int audioInstructionsResID;
         try {
 //          audioInstructionsResID = res.getIdentifier("georgia_" + challengeLevel, "raw", context.getPackageName());
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
 
         } catch (Exception e) {
             audioInstructionsResID = -1;
@@ -122,13 +136,17 @@ public class Georgia extends GameActivity {
         }
 
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
+        setTitle(localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         switch (challengeLevel) {
+            case 11:
+            case 8:
             case 5:
             case 2:
                 visibleTiles = 12;
                 break;
+            case 12:
+            case 9:
             case 6:
             case 3:
                 visibleTiles = 18;
@@ -138,7 +156,7 @@ public class Georgia extends GameActivity {
         }
 
         if (syllableGame.equals("S")) {
-            sortableSyllArray = (Start.SyllableList) Start.syllableList.clone();
+            sortableSyllArray = (Start.SyllableList) syllableList.clone();
         }
 
         if (getAudioInstructionsResID() == 0) {
@@ -198,10 +216,27 @@ public class Georgia extends GameActivity {
             if (!CorV.contains(initialTile)) { // Make sure chosen word begins with C or V
                 chooseWord();
             }
-            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
+            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP, wordInLOP); // KP
             initialTile = parsedWordArrayFinal.get(0);
+            if(challengeLevel>6 && challengeLevel<13) { // Find first non-LV tile (first sound, since LVs are pronounced after the consonants they precede)
+                Tile initialTileObject;
+                String initialTileType = "LV";
+                int t = -1;
+                while (initialTileType.equals("LV") && t < parsedWordArrayFinal.size()) {
+                    t++;
+                    initialTile = parsedWordArrayFinal.get(t);
+                    initialTileObject = tileHashMap.get(initialTile);
+                    ArrayList<String> parsedWordArrayPreliminary = tileList.parseWordIntoTilesPreliminary(wordInLOP);
+                    if (MULTI_TYPE_TILES.contains(initialTile)) {
+                        int indexInPreliminaryArray = tileList.returnInstanceIndexInPreliminaryParsedWordArray(initialTile, 0, parsedWordArrayFinal, wordInLOP);
+                        initialTileType = tileList.getInstanceTypeForMixedTilePreliminary(indexInPreliminaryArray, parsedWordArrayPreliminary, wordInLOP);
+                    } else {
+                        initialTileType = initialTileObject.tileType;
+                    }
+                }
+            }
         } else {
-            parsedWordSyllArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); // JP
+            parsedWordSyllArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP); // JP
             initialSyll = parsedWordSyllArrayFinal.get(0);
         }
 
@@ -324,7 +359,7 @@ public class Georgia extends GameActivity {
 
         boolean correctTileRepresented = false;
 
-        Start.Tile answer = tileHashMap.find(initialTile);
+        Tile answer = tileHashMap.find(initialTile);
 
         // LINES 369 - 404 ARE SET UP FOR LEVEL 2
         answerChoices.clear();

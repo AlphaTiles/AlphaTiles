@@ -5,7 +5,6 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
-import static org.alphatilesapps.alphatiles.Start.wordList;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
@@ -84,7 +83,7 @@ public class Japan extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
 
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
@@ -137,7 +136,7 @@ public class Japan extends GameActivity {
 
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
 
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
+        setTitle(localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     // forces landscape mode only
 
@@ -184,11 +183,11 @@ public class Japan extends GameActivity {
 
         chooseWord();
 
-        while(tileList.parseWordIntoTiles(wordInLOP).size() > MAX_TILES) { //JP: choose word w/ <= 12 tiles
+        while(tileList.parseWordIntoTiles(wordInLOP, wordInLOP).size() > MAX_TILES) { //JP: choose word w/ <= 12 tiles
             chooseWord();
         }
 
-        parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
+        parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP, wordInLOP);
         parsedWordArrayFinal.removeAll(SAD);
         parsedWordSyllArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
         parsedWordSyllArrayFinal.removeAll(SAD);
@@ -196,7 +195,7 @@ public class Japan extends GameActivity {
 
     private void displayWordRef() {
         TextView ref = findViewById(R.id.word);
-        ref.setText(wordList.stripInstructionCharacters(wordInLOP));
+        ref.setText(wordInLOPWithStandardizedSequenceOfCharacters(wordInLOP));
         ImageView image = findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
@@ -613,7 +612,7 @@ public class Japan extends GameActivity {
             // find number of tiles per correct syllable
             ArrayList<Integer> numTilesPerSyll = new ArrayList<>();
             for (String syll : parsedWordSyllArrayFinal) {
-                ArrayList<String> parsedSyllIntoTiles = tileList.parseWordIntoTiles(syll);
+                ArrayList<String> parsedSyllIntoTiles = tileList.parseWordIntoTilesPreliminary(syll);
                 numTilesPerSyll.add(parsedSyllIntoTiles.size());
                 parsedSyllIntoTiles.clear();
             }

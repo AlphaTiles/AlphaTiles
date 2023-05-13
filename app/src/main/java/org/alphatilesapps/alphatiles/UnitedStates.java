@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -25,7 +27,7 @@ public class UnitedStates extends GameActivity {
 
     int upperTileLimit = 5;
     int neutralFontSize;
-    String[] selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
+    String[] selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
@@ -48,7 +50,7 @@ public class UnitedStates extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -89,7 +91,8 @@ public class UnitedStates extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
+
+        setTitle(localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         int gameID = 0;
         switch (challengeLevel) {
@@ -150,13 +153,13 @@ public class UnitedStates extends GameActivity {
         int lengthOfLOPWord = Integer.MAX_VALUE;
         while(lengthOfLOPWord > upperTileLimit) {
             chooseWord();
-            lengthOfLOPWord = tileList.parseWordIntoTiles(wordInLOP).size();
+            lengthOfLOPWord = tileList.parseWordIntoTiles(wordInLOP, wordInLOP).size();
         }
 
         if (syllableGame.equals("S")) {
             parsedWordArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP); // JP
         } else {
-            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP); // KP
+            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP, wordInLOP); // KP
         }
 
         ImageView image = (ImageView) findViewById(R.id.wordImage);
@@ -199,18 +202,18 @@ public class UnitedStates extends GameActivity {
                     c = Util.parsedWordTileLength;
                 } else {
                     if (syllableGame.equals("S")) {
-                        for (int d = 0; d < Start.syllableList.size(); d++) {
+                        for (int d = 0; d < syllableList.size(); d++) {
                             if (SAD.contains(parsedWordArrayFinal.get(c))) {
                                 correspondingRow = tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(c));
                                 break;
-                            } else if (Start.syllableList.get(d).syllable.equals(parsedWordArrayFinal.get(c))) {
+                            } else if (syllableList.get(d).syllable.equals(parsedWordArrayFinal.get(c))) {
                                 correspondingRow = d;
                                 break;
                             }
                         }
                     } else {
-                        for (int d = 0; d < Start.tileList.size(); d++) {
-                            if (Start.tileList.get(d).baseTile.equals(parsedWordArrayFinal.get(c))) {
+                        for (int d = 0; d < tileList.size(); d++) {
+                            if (tileList.get(d).baseTile.equals(parsedWordArrayFinal.get(c))) {
                                 correspondingRow = d;
                                 break;
                             }
@@ -220,19 +223,19 @@ public class UnitedStates extends GameActivity {
 
                 Random rand = new Random();
                 int randomNum = rand.nextInt(2); // Choosing whether correct tile goes above ( =0 ) or below ( =1 )
-                randomNum2 = rand.nextInt(Start.ALT_COUNT); // KP // choosing between 2nd and 4th item of game tiles array
+                randomNum2 = rand.nextInt(ALT_COUNT); // KP // choosing between 2nd and 4th item of game tiles array
                 if (randomNum == 0) {
                     tileButtonA.setText(parsedWordArrayFinal.get(c));   // the correct tile
                     if (syllableGame.equals("S") && !SAD.contains(parsedWordArrayFinal.get(c))) {
-                        tileButtonB.setText(Start.syllableList.get(correspondingRow).distractors[randomNum2]);   // the (incorrect) suggested alternative
+                        tileButtonB.setText(syllableList.get(correspondingRow).distractors[randomNum2]);   // the (incorrect) suggested alternative
                     } else {
-                        tileButtonB.setText(Start.tileList.get(correspondingRow).altTiles[randomNum2]);   // the (incorrect) suggested alternative
+                        tileButtonB.setText(tileList.get(correspondingRow).altTiles[randomNum2]);   // the (incorrect) suggested alternative
                     }
                 } else {
                     if (syllableGame.equals("S") && !SAD.contains(parsedWordArrayFinal.get(c))) {
-                        tileButtonA.setText(Start.syllableList.get(correspondingRow).distractors[randomNum2]);   // the (incorrect) suggested alternative
+                        tileButtonA.setText(syllableList.get(correspondingRow).distractors[randomNum2]);   // the (incorrect) suggested alternative
                     } else {
-                        tileButtonA.setText(Start.tileList.get(correspondingRow).altTiles[randomNum2]);   // the (incorrect) suggested alternative
+                        tileButtonA.setText(tileList.get(correspondingRow).altTiles[randomNum2]);   // the (incorrect) suggested alternative
                     }
                     tileButtonB.setText(parsedWordArrayFinal.get(c));   // the correct tile
                 }
@@ -255,21 +258,30 @@ public class UnitedStates extends GameActivity {
 
     }
 
-    public void buildWord(String tileNumber, String tileString) {
+    public void buildWord(int tileIndex) {
 
         TextView constructedWord = findViewById(R.id.activeWordTextView);
 
-        StringBuilder displayedWord = new StringBuilder(); // KP
-
-        for (int j = 0; j < selections.length; j++) {
-            if (!selections[j].equals("")) {
-                displayedWord.append(selections[j]);
+        List<String> selectionsList = new ArrayList<String>();
+        for (int i = 0; i < selections.length; i++) {
+            if (!selections[i].equals("")) {
+                selectionsList.add(selections[i]);
             }
         }
 
-        constructedWord.setText(displayedWord);
+        int lastSelectedIndex;
+        if (tileIndex % 2 == 0) {
+            lastSelectedIndex = tileIndex / 2;
+        } else {
+            lastSelectedIndex = (tileIndex - 1) / 2;
+        }
 
-        if (displayedWord.toString().equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
+        String displayedWord = combineTilesToMakeWord(selectionsList, parsedWordArrayFinal, lastSelectedIndex, wordInLOP);
+
+        constructedWord.setText(displayedWord);
+        String correctAnswerText = combineTilesToMakeWord(parsedWordArrayFinal, parsedWordArrayFinal, -1, wordInLOP);
+
+        if (displayedWord.equals(correctAnswerText)) {
 
             // Good job!
             repeatLocked = false;
@@ -317,7 +329,7 @@ public class UnitedStates extends GameActivity {
         selections[tileIndex] = tile.getText().toString();
         selections[otherTileIndex] = "";
 
-        buildWord((String) view.getTag(), selections[tileIndex]);
+        buildWord(tileIndex);
 
     }
 
