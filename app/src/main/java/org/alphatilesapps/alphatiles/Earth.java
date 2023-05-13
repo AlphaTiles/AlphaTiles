@@ -26,7 +26,7 @@ import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Earth extends AppCompatActivity {
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
 
     int playerNumber = -1;
     String playerString;
@@ -57,7 +57,7 @@ public class Earth extends AppCompatActivity {
             activePlayerImage.setRotationY(180);
         }
 
-        setTitle(Start.localAppName);
+        setTitle(localAppName);
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         globalPoints = getIntent().getIntExtra("globalPoints", 0);
@@ -73,7 +73,7 @@ public class Earth extends AppCompatActivity {
         String playerName;
         String localWordForName = langInfoList.find("NAME in local language");
         if (localWordForName.equals("custom")) {
-            defaultName = Start.nameList.get(playerNumber - 1);
+            defaultName = nameList.get(playerNumber - 1);
         } else {
             defaultName = localWordForName + " " + playerNumber;
         }
@@ -123,12 +123,12 @@ public class Earth extends AppCompatActivity {
                     int doorIndex = Integer.parseInt((String) earthCL.getChildAt(j).getTag()) - 1;
                     String doorText = String.valueOf((pageNumber * doorsPerPage) + doorIndex + 1);
                     ((TextView) child).setText(doorText);
-                    if (((pageNumber * doorsPerPage) + doorIndex) >= Start.gameList.size()) {
+                    if (((pageNumber * doorsPerPage) + doorIndex) >= gameList.size()) {
                         ((TextView) child).setVisibility(View.INVISIBLE);
                     } else {
                         String project = "org.alphatilesapps.alphatiles.";
-                        String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
-                        String challengeLevel = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel;
+                        String country = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
+                        String challengeLevel = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel;
                         String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameMode;
                         String stage;
                         if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
@@ -150,7 +150,7 @@ public class Earth extends AppCompatActivity {
                         } else if (trackerCount < 12) {
                             ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
                         } else { // >= 12
-                            String textColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
+                            String textColor = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameColor;
                             ((TextView) child).setTextColor(Color.parseColor(COLORS.get(Integer.parseInt(textColor))));
                         }
 
@@ -176,7 +176,7 @@ public class Earth extends AppCompatActivity {
                         Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
                         if (changeColor) {
                             DrawableCompat.setTint(wrappedDrawable, Color.parseColor(COLORS.get(
-                                    Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage)
+                                    Integer.parseInt(gameList.get((pageNumber * doorsPerPage)
                                             + doorIndex).gameColor))));
                         }
                         ((TextView) child).setBackground(wrappedDrawable);
@@ -198,7 +198,7 @@ public class Earth extends AppCompatActivity {
         }
 
         ImageView forwardArrow = findViewById(R.id.goForward);
-        if (((pageNumber + 1) * doorsPerPage) < Start.gameList.size()) {
+        if (((pageNumber + 1) * doorsPerPage) < gameList.size()) {
             forwardArrow.setVisibility(View.VISIBLE);
         } else {
             forwardArrow.setVisibility(View.INVISIBLE);
@@ -234,10 +234,10 @@ public class Earth extends AppCompatActivity {
         finish();
         int doorIndex = Integer.parseInt((String) view.getTag()) - 1;
         String project = "org.alphatilesapps.alphatiles.";  // how to call this with code? It seemed to produce variable results
-        String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
+        String country = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
         String activityClass = project + country;
 
-        int challengeLevel = Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel);
+        int challengeLevel = Integer.parseInt(gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel);
         int gameNumber = (pageNumber * doorsPerPage) + doorIndex + 1;
         String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameMode;
         int stage;
@@ -276,7 +276,7 @@ public class Earth extends AppCompatActivity {
 
     public void goForward(View view) {
 
-        if (((pageNumber + 1) * doorsPerPage) < Start.gameList.size()) {
+        if (((pageNumber + 1) * doorsPerPage) < gameList.size()) {
             pageNumber++;
         }
         updateDoors();

@@ -49,7 +49,7 @@ public class Mexico extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -90,7 +90,7 @@ public class Mexico extends GameActivity {
         }
 
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
+        setTitle(localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         // new levels
         // Level 1: 3 pairs = 6
@@ -248,7 +248,7 @@ public class Mexico extends GameActivity {
         // Can't remember if we tested if the problem went away once replaying the game involves finishing the activity and restarting
 
         if (appearance.equals("TEXT")) {
-            card.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
+            card.setText(wordInLOPWithStandardizedSequenceOfCharacters(wordInLOP));
             card.setBackgroundResource(0);
         } else {
             card.setBackgroundResource(resID);
@@ -301,8 +301,8 @@ public class Mexico extends GameActivity {
             cardA.setBackgroundResource(0);
             cardB.setBackgroundResource(0);
 
-            cardA.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitA)[1]));
-            cardB.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitB)[1]));
+            cardA.setText(wordInLOPWithStandardizedSequenceOfCharacters(memoryCollection.get(cardHitA)[1]));
+            cardB.setText(wordInLOPWithStandardizedSequenceOfCharacters(memoryCollection.get(cardHitB)[1]));
 
             String tileColorStr = COLORS.get(cardHitA % 5);
             int tileColor = Color.parseColor(tileColorStr);
@@ -314,7 +314,6 @@ public class Mexico extends GameActivity {
             if (pairsCompleted == (visibleTiles / 2)) {
                 updatePointsAndTrackers((visibleTiles / 2));
             }
-
             playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleTiles / 2));
 
         } else {

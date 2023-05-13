@@ -1,6 +1,5 @@
 package org.alphatilesapps.alphatiles;
 
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import static org.alphatilesapps.alphatiles.Start.*;
@@ -61,7 +61,7 @@ public class Myanmar extends GameActivity {
         int audioInstructionsResID;
         try {
 //          audioInstructionsResID = res.getIdentifier("myanmar_" + challengeLevel, "raw", context.getPackageName());
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -208,7 +208,7 @@ public class Myanmar extends GameActivity {
             sevenWordsInLopLwc[i][1] = wordInLOP;
 
             int tileLength = 0;
-            tileLength = tileList.parseWordIntoTiles(sevenWordsInLopLwc[i][1]).size();
+            tileLength = tileList.parseWordIntoTiles(sevenWordsInLopLwc[i][1], sevenWordsInLopLwc[i][1]).size();
 
             if (tileLength < 3 || tileLength > 7) { // Limit game to words of tile length 3 to 7
                 i--;
@@ -285,7 +285,7 @@ public class Myanmar extends GameActivity {
 
                 wordDirection = directions[wordD][0];
                 wordFail = false;
-                wordLen = tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]).size();
+                wordLen = tileList.parseWordIntoTilesPreliminary(sevenWordsInLopLwc[w][1]).size();
 
                 // four checks to ensure that the word will not leave the board
                 if (wordDirection == 1 || wordDirection == 2 || wordDirection == 3) {
@@ -348,7 +348,7 @@ public class Myanmar extends GameActivity {
 
                     wordPlaced = true;
 
-                    parsedWordArrayFinal = tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]);
+                    parsedWordArrayFinal = tileList.parseWordIntoTilesPreliminary(sevenWordsInLopLwc[w][1]);
                     int tileX = 0;
                     int tileY = 0;
                     for (int t = 0; t < wordLen; t++) {
@@ -406,6 +406,10 @@ public class Myanmar extends GameActivity {
                     int randomNum = rand.nextInt(tileList.size()); // KP
                     randomTile = tileList.get(randomNum).baseTile;
 
+                    while(randomTile.contains("◌")){ // LM don't want complex vowels or  diacritics in the wordsearch
+                        randomNum = rand.nextInt(tileList.size()); // KP
+                        randomTile = tileList.get(randomNum).baseTile;
+                    }
                     tilesBoard[x][y] = randomTile;
 
                     tileNumber = y * 7 + x;
@@ -496,9 +500,10 @@ public class Myanmar extends GameActivity {
             selectionDirection = 73; // NW to SE diagonal
         }
 
-        String builtWord1 = "";
-        String builtWord2 = "";
         String displayWord = "";
+        ArrayList<String> tilesInBuiltWord1 = new ArrayList<String>(), tilesInBuiltWord2 = new ArrayList<String>();
+        ArrayList<String> builtWords1 = new ArrayList<String>();
+        ArrayList<String> builtWords2 = new ArrayList<String>();
 
         int[] incrementF = new int[2];
         int[] incrementB = new int[2];
@@ -547,8 +552,12 @@ public class Myanmar extends GameActivity {
                     tileX = (lowerClick % 7) + (t * incrementF[0]);
                     tileY = (lowerClick / 7) + (t * incrementF[1]);
                 }
-
-                builtWord1 = builtWord1 + tilesBoard[tileX][tileY];
+                tilesInBuiltWord1.add(tilesBoard[tileX][tileY]);
+            }
+            // Use each of the seven game words to generate a possibly correct combination (affects stacking of diacritic tiles, etc)
+            for(int w=0; w<7; w++){
+                ArrayList<String> gameWordParsedArray = tileList.parseWordIntoTilesPreliminary(sevenWordsInLopLwc[w][1]);
+                builtWords1.add(combineTilesToMakeWord(tilesInBuiltWord1, gameWordParsedArray, -1, sevenWordsInLopLwc[w][1]));
             }
 
             // Check backwards
@@ -578,22 +587,30 @@ public class Myanmar extends GameActivity {
                     tileY = (higherClick / 7) + (t * incrementB[1]);
                 }
 
-                builtWord2 = builtWord2 + tilesBoard[tileX][tileY];
+                tilesInBuiltWord2.add(tilesBoard[tileX][tileY]);
+            }
+            // Use each of the seven game words to generate a possibly correct combination (affects stacking of diacritic tiles, etc)
+            for(int w=0; w<7; w++){
+                ArrayList<String> gameWordParsedArray = tileList.parseWordIntoTilesPreliminary(sevenWordsInLopLwc[w][1]);
+                builtWords2.add(combineTilesToMakeWord(tilesInBuiltWord2, gameWordParsedArray, -1, sevenWordsInLopLwc[w][1]));
             }
 
+            // Find a match if there is one
             for (int w = 0; w < 7; w++) {
-                if (Start.wordList.stripInstructionCharacters(builtWord1).equals(Start.wordList.stripInstructionCharacters(sevenWordsInLopLwc[w][1]))) {
-                    wordFound = true;
+                ArrayList<String> tileStringsInTargetWord = tileList.parseWordIntoTilesPreliminary(sevenWordsInLopLwc[w][1]);
+                String targetWordString = combineTilesToMakeWord(tileStringsInTargetWord, tileStringsInTargetWord, -1, sevenWordsInLopLwc[w][1]);
+
+                if (builtWords1.get(w).equals(targetWordString)) {
                     indexOfFoundWord = w;
-                    displayWord = builtWord1;
+                    wordFound = true;
+                    displayWord = sevenWordsInLopLwc[w][1];
                 }
-                if (Start.wordList.stripInstructionCharacters(builtWord2).equals(Start.wordList.stripInstructionCharacters(sevenWordsInLopLwc[w][1]))) {
-                    wordFound = true;
+                if (builtWords2.get(w).equals(targetWordString)) {
                     indexOfFoundWord = w;
-                    displayWord = builtWord2;
+                    wordFound = true;
+                    displayWord = sevenWordsInLopLwc[w][1];
                 }
             }
-
         }
 
         if (wordFound) { // Word spelled correctly!
@@ -601,7 +618,7 @@ public class Myanmar extends GameActivity {
             wordsCompleted++;
 
             TextView activeWord = findViewById(R.id.activeWordTextView);
-            activeWord.setText(Start.wordList.stripInstructionCharacters(displayWord));
+            activeWord.setText(wordInLOPWithStandardizedSequenceOfCharacters(displayWord));
 
             // Color the tiles in the found word
             int tileX;
@@ -669,7 +686,7 @@ public class Myanmar extends GameActivity {
 
         int justClickedImage = Integer.parseInt((String) view.getTag());
         TextView activeWord = findViewById(R.id.activeWordTextView);
-        activeWord.setText(wordList.stripInstructionCharacters(sevenWordsInLopLwc[justClickedImage][1]));
+        activeWord.setText(wordInLOPWithStandardizedSequenceOfCharacters(sevenWordsInLopLwc[justClickedImage][1]));
 
         wordInLWC = sevenWordsInLopLwc[justClickedImage][0];
         playActiveWordClip(wordsCompleted == completionGoal);

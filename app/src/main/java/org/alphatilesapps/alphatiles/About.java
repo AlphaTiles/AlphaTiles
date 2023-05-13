@@ -18,12 +18,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import static org.alphatilesapps.alphatiles.Start.langInfoList;
+import static org.alphatilesapps.alphatiles.Start.localAppName;
+import static org.alphatilesapps.alphatiles.Start.settingsList;
+
 public class About extends AppCompatActivity {
 
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
-    String hideSILlogoSetting = Start.settingsList.find("Hide SIL logo");
-    String hidePrivacyPolicySetting = Start.settingsList.find("Hide privacy policy");
+    String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
+    String hideSILlogoSetting = settingsList.find("Hide SIL logo");
+    String hidePrivacyPolicySetting = settingsList.find("Hide privacy policy");
     Boolean hideSILlogo;
     Boolean hidePrivacyPolicy;
 
@@ -35,25 +39,25 @@ public class About extends AppCompatActivity {
 
         setContentView(R.layout.about);
 
-        setTitle(Start.localAppName);
+        setTitle(localAppName);
 
         TextView localName = findViewById(R.id.gameNameInLOP);
-        localName.setText(Start.localAppName);
+        localName.setText(localAppName);
         TextView lgNamesPlusCountry = findViewById(R.id.langNamesPlusCountry);
-        if (Start.langInfoList.find("Lang Name (In Local Lang)").equals(Start.langInfoList.find("Lang Name (In English)"))) {
+        if (langInfoList.find("Lang Name (In Local Lang)").equals(langInfoList.find("Lang Name (In English)"))) {
             lgNamesPlusCountry.setText(context.getString(R.string.names_plus_countryB,
-                    Start.langInfoList.find("Lang Name (In Local Lang)"),
-                    Start.langInfoList.find("Lang Name (In English)"),
-                    Start.langInfoList.find("Country"))); // RR, KP
+                    langInfoList.find("Lang Name (In Local Lang)"),
+                    langInfoList.find("Lang Name (In English)"),
+                    langInfoList.find("Country"))); // RR, KP
         } else {
             lgNamesPlusCountry.setText(context.getString(R.string.names_plus_countryA,
-                    Start.langInfoList.find("Lang Name (In Local Lang)"),
-                    Start.langInfoList.find("Lang Name (In English)"),
-                    Start.langInfoList.find("Country"))); // RR, KP
+                    langInfoList.find("Lang Name (In Local Lang)"),
+                    langInfoList.find("Lang Name (In English)"),
+                    langInfoList.find("Country"))); // RR, KP
         }
 
         TextView photoAudioCredits = findViewById(R.id.photoAudioCredits);
-        photoAudioCredits.setText(Start.langInfoList.find("Audio and image credits"));
+        photoAudioCredits.setText(langInfoList.find("Audio and image credits"));
         photoAudioCredits.setMovementMethod(new ScrollingMovementMethod());
 
         TextView photoAudioCredits2 = findViewById(R.id.photoAudioCredits2);
@@ -73,7 +77,7 @@ public class About extends AppCompatActivity {
 
         TextView email = findViewById(R.id.email);
         email.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
-        String contactEmail = Start.langInfoList.find("Email");
+        String contactEmail = langInfoList.find("Email");
     if (contactEmail.equals("none") || contactEmail.equals(null)|| contactEmail.equals("")) {
             email.setText("");
         } else {

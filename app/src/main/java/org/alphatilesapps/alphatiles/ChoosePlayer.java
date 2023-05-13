@@ -33,8 +33,8 @@ import static org.alphatilesapps.alphatiles.Start.*;
 
 public class ChoosePlayer extends AppCompatActivity {
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
-    String singleColorHex = Start.settingsList.find("Single hex color on avatar screen");
+    String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
+    String singleColorHex = settingsList.find("Single hex color on avatar screen");
 
     public static ArrayList<Integer> avatarIdList;
     public static ArrayList<Drawable> avatarJpgList;

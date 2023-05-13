@@ -18,11 +18,14 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.Scanner;
 
+import static org.alphatilesapps.alphatiles.Start.langInfoList;
+import static org.alphatilesapps.alphatiles.Start.localAppName;
+
 
 public class Resources extends AppCompatActivity {
 
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
 
     static int resourcesArraySize;      // the number of resources (plus the header row) in aa_resources.txt, as determined below
     static String[][] resourcesList;     // will capture the name, link and image name [3 items]
@@ -48,7 +51,7 @@ public class Resources extends AppCompatActivity {
 
         setContentView(R.layout.resources);
 
-        setTitle(Start.localAppName);
+        setTitle(localAppName);
 
         buildResourcesArray();
         loadResources();
