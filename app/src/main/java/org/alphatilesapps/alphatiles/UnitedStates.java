@@ -19,6 +19,10 @@ import android.widget.Button;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
+/*LEVELS:
+
+ */
+
 public class UnitedStates extends GameActivity {
 
     int upperTileLimit = 5;

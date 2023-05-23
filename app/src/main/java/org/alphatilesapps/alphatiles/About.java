@@ -59,12 +59,15 @@ public class About extends AppCompatActivity {
         String httpText = Start.langInfoList.find("Privacy Policy http");
         String displayText = Start.langInfoList.find("Privacy Policy display");
         String linkText = "<a href=\"" + httpText + "\">" + displayText + "</a>";
-        privacyPolicy.setText(Html.fromHtml(linkText));
+        CharSequence styledText = Html.fromHtml(linkText);
+        privacyPolicy.setText(styledText);
         privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
         hidePrivacyPolicy = Boolean.parseBoolean(hidePrivacyPolicySetting);
         if (hidePrivacyPolicy) {
             privacyPolicy.setVisibility(View.GONE);
+        } else{
+            privacyPolicy.setVisibility(View.VISIBLE);
         }
 
         String verName = BuildConfig.VERSION_NAME;
