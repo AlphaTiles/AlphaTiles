@@ -176,7 +176,7 @@
         android:id="@+id/backward"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="pageRight"
+        android:onClick="pageLeft"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH19"
         app:layout_constraintEnd_toStartOf="@+id/forward"
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"

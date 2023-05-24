@@ -80,4 +80,17 @@ public class Taiwan extends GameActivity{
             tileButton.setBackgroundColor(Color.parseColor(refColorStr));
         }
     }
+    public void pageLeft(View view) {
+        if (this.currentPage > 0){
+            currentPage -= 1;
+            this.setChoiceBlocks();
+        }
+    }
+
+    public void pageRight(View view) {
+        if (this.currentPage < (this.numPages -2)){
+            currentPage += 1;
+            this.setChoiceBlocks();
+        }
+    }
 }
