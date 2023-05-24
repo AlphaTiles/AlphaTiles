@@ -88,7 +88,7 @@ public class Taiwan extends GameActivity{
     }
 
     public void pageRight(View view) {
-        if (this.currentPage < (this.numPages -2)){
+        if (this.currentPage < (this.numPages -1)){
             currentPage += 1;
             this.setChoiceBlocks();
         }
