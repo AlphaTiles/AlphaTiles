@@ -641,9 +641,6 @@ public class Start extends AppCompatActivity {
                 header = false;
             } else {
                 Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7]);
-                if (game.gameNumber.equals("113")){
-                    header = false;
-                }
                 if (!game.hasNull()) {
                     gameList.add(game);
                 }
