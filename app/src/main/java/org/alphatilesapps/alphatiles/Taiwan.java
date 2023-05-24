@@ -16,9 +16,9 @@ import java.util.Random;
 
 public class Taiwan extends GameActivity{
 
-    //private ArrayList<ArrayList<Start.Word>> wordPages = new ArrayList<>();
-    //int numPages;
-    //int currentPage = 0;
+    private ArrayList<ArrayList<Start.Word>> wordPages = new ArrayList<>();
+    int numPages;
+    int currentPage = 0;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04, R.id.choice05, R.id.choice06,
@@ -59,25 +59,25 @@ public class Taiwan extends GameActivity{
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.taiwan);
-//        this.createWordPages();
-//        this.setChoiceBlocks();
+        this.createWordPages();
+        this.setChoiceBlocks();
 
     }
-//    private void createWordPages(){
-//        this.numPages = (int) Math.ceil(Start.wordList.size() / 9.0);
-//        for (int i = 0; i < this.numPages; i++){
-//            wordPages.add(new ArrayList<>());
-//        }
-//        for (int j = 0; j< Start.wordList.size(); j++){
-//            this.wordPages.get(j % 9).add(Start.wordList.get(j));
-//        }
-//    }
-//    private void setChoiceBlocks(){
-//        for (int i = 0; i < 9; i ++){
-//            TextView tileButton = (TextView) findViewById(getTileButtons()[i]);
-//            tileButton.setText(this.wordPages.get(this.currentPage).get(i).localWord);
-//            String refColorStr = COLORS.get(i % 5);
-//            tileButton.setBackgroundColor(Color.parseColor(refColorStr));
-//        }
-//    }
+    private void createWordPages(){
+        this.numPages = (int) Math.ceil(Start.wordList.size() / 9.0);
+        for (int i = 0; i < this.numPages; i++){
+            wordPages.add(new ArrayList<>());
+        }
+        for (int j = 0; j< Start.wordList.size(); j++){
+            this.wordPages.get(j % 9).add(Start.wordList.get(j));
+        }
+    }
+    private void setChoiceBlocks(){
+        for (int i = 0; i < 9; i ++){
+            TextView tileButton = (TextView) findViewById(getTileButtons()[i]);
+            tileButton.setText(this.wordPages.get(this.currentPage).get(i).localWord);
+            String refColorStr = COLORS.get(i % 5);
+            tileButton.setBackgroundColor(Color.parseColor(refColorStr));
+        }
+    }
 }
