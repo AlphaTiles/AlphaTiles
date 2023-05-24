@@ -3,6 +3,7 @@ package org.alphatilesapps.alphatiles;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import java.util.logging.Logger;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
@@ -42,6 +43,7 @@ public class LoadingScreen extends AppCompatActivity {
     //JP June 2022: moved loading of all SoundPool audio into this activity
     //note: audio instructions use MediaPlayer, not SoundPool
 
+    private static final Logger LOGGER = Logger.getLogger(Start.class.getName());
     private Handler mHandler = new Handler();
     Context context;
     ProgressBar progressBar;

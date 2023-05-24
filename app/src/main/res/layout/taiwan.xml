@@ -2,8 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/taiwanCl"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".Taiwan">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH0"
@@ -203,27 +206,43 @@
         android:contentDescription="@string/playAgain"
         android:rotationY="0"
         app:srcCompat="@drawable/zz_instructions" />
+
     <TextView
         android:id="@+id/choice01"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#9C27B0"
         android:gravity="center"
+        android:maxLines="1"
         android:onClick="onChoiceClick"
+        android:padding="2dp"
         android:tag="1"
         android:text="@string/choice01"
         android:textColor="#FFFFFF"
         android:textSize="50sp"
+        app:autoSizeMaxTextSize="50sp"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH1"
+        app:layout_constraintEnd_toStartOf="@+id/imageChoice01"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH0" />
+    <ImageView
+        android:id="@+id/imageChoice01"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:onClick="onChoiceClick"
+        android:tag="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toTopOf="@+id/guidelineH0"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="50sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
-        android:maxLines="1"/>
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        android:contentDescription="@string/playerAvatar" />
+
+
+
     <TextView
         android:id="@+id/choice02"
         android:layout_width="0dp"
@@ -236,7 +255,7 @@
         android:textColor="#FFFFFF"
         android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH3"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/imageChoice02"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toTopOf="@+id/guidelineH2"
         app:autoSizeTextType="uniform"
@@ -245,6 +264,18 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"/>
+    <ImageView
+        android:id="@+id/imageChoice02"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:onClick="onChoiceClick"
+        android:tag="2"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH3"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH2"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        android:contentDescription="@string/playerAvatar" />
     <TextView
         android:id="@+id/choice03"
         android:layout_width="0dp"
@@ -257,7 +288,7 @@
         android:textColor="#FFFFFF"
         android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/imageChoice03"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
         app:autoSizeTextType="uniform"
@@ -266,6 +297,18 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"/>
+    <ImageView
+        android:id="@+id/imageChoice03"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:onClick="onChoiceClick"
+        android:tag="3"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        android:contentDescription="@string/playerAvatar" />
     <TextView
         android:id="@+id/choice04"
         android:layout_width="0dp"
@@ -278,7 +321,7 @@
         android:textColor="#FFFFFF"
         android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/imageChoice04"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
         app:autoSizeTextType="uniform"
@@ -287,6 +330,18 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"/>
+    <ImageView
+        android:id="@+id/imageChoice04"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:onClick="onChoiceClick"
+        android:tag="4"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        android:contentDescription="@string/playerAvatar" />
     <TextView
         android:id="@+id/choice05"
         android:layout_width="0dp"
@@ -299,7 +354,7 @@
         android:textColor="#FFFFFF"
         android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/imageChoice05"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toTopOf="@+id/guidelineH8"
         app:autoSizeTextType="uniform"
@@ -308,6 +363,18 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"/>
+    <ImageView
+        android:id="@+id/imageChoice05"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:onClick="onChoiceClick"
+        android:tag="5"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        android:contentDescription="@string/playerAvatar" />
     <TextView
         android:id="@+id/choice06"
         android:layout_width="0dp"
@@ -320,7 +387,7 @@
         android:textColor="#FFFFFF"
         android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/imageChoice06"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toTopOf="@+id/guidelineH10"
         app:autoSizeTextType="uniform"
@@ -329,6 +396,18 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"/>
+    <ImageView
+        android:id="@+id/imageChoice06"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:onClick="onChoiceClick"
+        android:tag="6"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        android:contentDescription="@string/playerAvatar" />
     <TextView
         android:id="@+id/choice07"
         android:layout_width="0dp"
@@ -341,7 +420,7 @@
         android:textColor="#FFFFFF"
         android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH13"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/imageChoice07"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toTopOf="@+id/guidelineH12"
         app:autoSizeTextType="uniform"
@@ -350,6 +429,18 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"/>
+    <ImageView
+        android:id="@+id/imageChoice07"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:onClick="onChoiceClick"
+        android:tag="7"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH13"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH12"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        android:contentDescription="@string/playerAvatar" />
     <TextView
         android:id="@+id/choice08"
         android:layout_width="0dp"
@@ -362,7 +453,7 @@
         android:textColor="#FFFFFF"
         android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH15"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/imageChoice08"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toTopOf="@+id/guidelineH14"
         app:autoSizeTextType="uniform"
@@ -371,6 +462,18 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"/>
+    <ImageView
+        android:id="@+id/imageChoice08"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:onClick="onChoiceClick"
+        android:tag="8"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH15"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH14"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        android:contentDescription="@string/playerAvatar" />
     <TextView
         android:id="@+id/choice09"
         android:layout_width="0dp"
@@ -383,7 +486,7 @@
         android:textColor="#FFFFFF"
         android:textSize="50sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH17"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/imageChoice09"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toTopOf="@+id/guidelineH16"
         app:autoSizeTextType="uniform"
@@ -392,6 +495,20 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"/>
+    <ImageView
+        android:id="@+id/imageChoice09"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:onClick="onChoiceClick"
+        android:tag="9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH17"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH16"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        android:contentDescription="@string/playerAvatar" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

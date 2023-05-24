@@ -1,6 +1,7 @@
 package org.alphatilesapps.alphatiles;
 
 import android.content.Context;
+import java.util.logging.Logger;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioAttributes;
@@ -25,7 +26,7 @@ import java.util.StringTokenizer;
 
 public class Start extends AppCompatActivity {
     Context context;
-
+    private static final Logger LOGGER = Logger.getLogger(Start.class.getName());
     public static final int ALT_COUNT = 3;  // KP
 
     public static String localAppName; // KP add "public"
@@ -109,9 +110,13 @@ public class Start extends AppCompatActivity {
         // initialize to 3 for correct, incorrect, and correctFinal sounds
 
         buildLangInfoArray();
+        LOGGER.info("Remember: completed buildLangInfoArray()");
         buildKeysArray();
+        LOGGER.info("Remember: completed buildKeysArray()");
         buildSettingsArray();
+        LOGGER.info("Remember: completed buildSettingsArray()");
         buildColorsArray();
+        LOGGER.info("Remember: completed buildColorsArray()");
 
         String hasAudioSetting = settingsList.find("Has tile audio");
         if (!hasAudioSetting.equals("")) {
@@ -153,6 +158,7 @@ public class Start extends AppCompatActivity {
         } else {
             stageCorrespondenceRatio = 0.5;
         }
+        LOGGER.info("Remember: checkpoint 1");
 
         // JP: the old constructor is deprecated after API 21, so account for both scenarios
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -635,6 +641,9 @@ public class Start extends AppCompatActivity {
                 header = false;
             } else {
                 Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7]);
+                if (game.gameNumber.equals("113")){
+                    header = false;
+                }
                 if (!game.hasNull()) {
                     gameList.add(game);
                 }
