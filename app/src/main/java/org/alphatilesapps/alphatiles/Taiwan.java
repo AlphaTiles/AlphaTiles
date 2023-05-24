@@ -1,7 +1,10 @@
 package org.alphatilesapps.alphatiles;
 
 import static org.alphatilesapps.alphatiles.Start.COLORS;
+import static org.alphatilesapps.alphatiles.Start.correctSoundID;
+import static org.alphatilesapps.alphatiles.Start.gameSounds;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +20,7 @@ import java.util.Random;
 public class Taiwan extends GameActivity{
 
     private ArrayList<ArrayList<Start.Word>> wordPages = new ArrayList<>();
+    private final int NUM_Per_Page = 9;
     int numPages;
     int currentPage = 0;
 
@@ -37,7 +41,14 @@ public class Taiwan extends GameActivity{
 
     @Override
     protected int getAudioInstructionsResID() {
-        return 0;
+        android.content.res.Resources res = context.getResources();
+        int audioInstructionsResID;
+        try {
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+        } catch (Resources.NotFoundException e) {
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
     }
 
     @Override
@@ -64,20 +75,26 @@ public class Taiwan extends GameActivity{
 
     }
     private void createWordPages(){
-        this.numPages = (int) Math.ceil(Start.wordList.size() / 9.0);
+        this.numPages = (int) Math.ceil(Start.wordList.size() / (double) NUM_Per_Page);
         for (int i = 0; i < this.numPages; i++){
             wordPages.add(new ArrayList<>());
         }
         for (int j = 0; j< Start.wordList.size(); j++){
-            this.wordPages.get(j % 9).add(Start.wordList.get(j));
+            this.wordPages.get(j / NUM_Per_Page).add(Start.wordList.get(j));
         }
     }
     private void setChoiceBlocks(){
-        for (int i = 0; i < 9; i ++){
+        for (int i = 0; i < NUM_Per_Page; i ++){
             TextView tileButton = (TextView) findViewById(getTileButtons()[i]);
-            tileButton.setText(this.wordPages.get(this.currentPage).get(i).localWord);
-            String refColorStr = COLORS.get(i % 5);
-            tileButton.setBackgroundColor(Color.parseColor(refColorStr));
+            if (i < this.wordPages.get(this.currentPage).size()) {
+                tileButton.setText(this.wordPages.get(this.currentPage).get(i).localWord);
+                String refColorStr = Start.COLORS.get(i % 5);
+                tileButton.setBackgroundColor(Color.parseColor(refColorStr));
+                tileButton.setVisibility(View.VISIBLE);
+            }
+            else {
+                tileButton.setVisibility(View.INVISIBLE);
+            }
         }
     }
     public void pageLeft(View view) {
@@ -88,9 +105,23 @@ public class Taiwan extends GameActivity{
     }
 
     public void pageRight(View view) {
-        if (this.currentPage < (this.numPages -1)){
+        if (this.currentPage < (this.numPages - 1)){
             currentPage += 1;
             this.setChoiceBlocks();
         }
     }
+
+    public void onChoiceClick(View view){
+        super.wordInLWC = this.wordPages.get(this.currentPage).get(
+                Integer.parseInt((String) view.getTag())).nationalWord;
+        super.clickPicHearAudio(view);
+    }
+
+    public void playAudioInstructions(View view) {
+        if (getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
+    }
+
+
 }
