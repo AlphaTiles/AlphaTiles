@@ -626,10 +626,11 @@ public class Myanmar extends GameActivity {
 
             }
 
-            updatePointsAndTrackers(2);
-
             // Play word and "correct" sounds and then clear the image from word bank
             wordInLWC = sevenWordsInLopLwc[indexOfFoundWord][0];
+            if (wordsCompleted == completionGoal) {
+                updatePointsAndTrackers(wordsCompleted);
+            }
             playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
             handler = new Handler();
             handler.postDelayed(clearImageFromImageBank(indexOfFoundWord), Long.valueOf(wordDurations.get(wordInLWC) + correctSoundDuration));
