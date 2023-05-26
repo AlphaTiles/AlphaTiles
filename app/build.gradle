@@ -47,6 +47,10 @@ android {
         }
     }
     namespace 'org.alphatilesapps.alphatiles'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_9
+        targetCompatibility JavaVersion.VERSION_1_9
+    }
 }
 
 dependencies {

@@ -3,6 +3,7 @@ package org.alphatilesapps.alphatiles;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +26,8 @@ import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 public class Start extends AppCompatActivity {
+
+
     Context context;
 
     public static final int ALT_COUNT = 3;  // KP
@@ -106,6 +110,10 @@ public class Start extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         context = this;
+        if (BuildConfig.DEBUG){
+            Validator myValidator = new Validator(context);
+            myValidator.validate();
+        }
         totalAudio = 3; // JP: how many total audio files to load
         // will be used in LoadingScreen.java to determine when all audio files have loaded -> advance to ChoosePlayer
         // initialize to 3 for correct, incorrect, and correctFinal sounds
