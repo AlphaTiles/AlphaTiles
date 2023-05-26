@@ -36,6 +36,7 @@ import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Logger;
 
 public class LoadingScreen extends AppCompatActivity {
 
@@ -46,6 +47,8 @@ public class LoadingScreen extends AppCompatActivity {
     Context context;
     ProgressBar progressBar;
     int maxWordWidthInPixels = 39;
+
+    private static final Logger LOGGER = Logger.getLogger( LoadingScreen.class.getName() );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +182,7 @@ public class LoadingScreen extends AppCompatActivity {
             wordDurations.put(word.nationalWord, duration);
             word.duration = duration;
         }
+        LOGGER.info("LoadProgress: completed loadWordAudio()");
     }
 
     public void loadSyllableAudio() {
@@ -193,6 +197,7 @@ public class LoadingScreen extends AppCompatActivity {
             syllableDurations.put(syll.syllable, duration);
             syll.syllableDuration = duration;
         }
+        LOGGER.info("LoadProgress: completed loadSyllableAudio()");
     }
 
     public void loadTileAudio() {
@@ -229,6 +234,7 @@ public class LoadingScreen extends AppCompatActivity {
             }
 
         }
+        LOGGER.info("LoadProgress: completed loadTileAudio()");
     }
 
     public void loadGameAudio() {
@@ -240,6 +246,7 @@ public class LoadingScreen extends AppCompatActivity {
         correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
         //		incorrectSoundDuration = getAssetDuration(R.raw.zz_incorrect);	// not needed atm
         //		correctFinalSoundDuration = getAssetDuration(R.raw.zz_correct_final);	// not needed atm
+        LOGGER.info("LoadProgress: completed loadGameAudio()");
     }
 
 

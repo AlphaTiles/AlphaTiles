@@ -21,7 +21,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.StringTokenizer;
-
+import java.util.logging.Logger;
 
 public class Start extends AppCompatActivity {
     Context context;
@@ -99,6 +99,8 @@ public class Start extends AppCompatActivity {
     public static List<String> SYLLABLES = new ArrayList<>();
     public static List<String> MULTIFUNCTIONS = new ArrayList<>();
 
+    private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -109,9 +111,13 @@ public class Start extends AppCompatActivity {
         // initialize to 3 for correct, incorrect, and correctFinal sounds
 
         buildLangInfoArray();
+        LOGGER.info("LoadProgress: completed buildLangInfoArray()");
         buildKeysArray();
+        LOGGER.info("LoadProgress: completed buildKeysArray()");
         buildSettingsArray();
+        LOGGER.info("LoadProgress: completed buildSettingsArray()");
         buildColorsArray();
+        LOGGER.info("LoadProgress: completed buildColorsArray()");
 
         String hasAudioSetting = settingsList.find("Has tile audio");
         if (!hasAudioSetting.equals("")) {
@@ -184,6 +190,7 @@ public class Start extends AppCompatActivity {
                 MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
             }
         }
+        LOGGER.info("LoadProgress: completed buildTilesArray()");
 
         Collections.shuffle(CONSONANTS);
         Collections.shuffle(VOWELS);
@@ -197,9 +204,13 @@ public class Start extends AppCompatActivity {
         }
 
         buildWordsArray();
+        LOGGER.info("LoadProgress: completed buildWordsArray()");
         buildTileStagesLists();
+        LOGGER.info("LoadProgress: completed buildTileStagesLists()");
         buildWordStagesLists();
+        LOGGER.info("LoadProgress: completed buildWordStagesLists()");
         buildGamesArray();
+        LOGGER.info("LoadProgress: completed buildGamesArray()");
         totalAudio = totalAudio + wordList.size();
 
         if (hasSyllableGames) {
@@ -209,6 +220,7 @@ public class Start extends AppCompatActivity {
             }
             Collections.shuffle(SYLLABLES);
         }
+        LOGGER.info("LoadProgress: completed buildSyllablesArray()");
 
         if (hasSyllableAudio) {
             totalAudio = totalAudio + syllableList.size();
