@@ -134,14 +134,14 @@ public class Mexico extends GameActivity {
 
     public void repeatGame(View View) {
 
-//        if (mediaPlayerIsPlaying) {
-//            return;
-//        }
-//        // Closing and restarting the activity for each round is not ideal, but it seemed to be helping with memory issues...
-//        Intent intent = getIntent();
-//        intent.setClass(this, Mexico.class);    // so we retain the Extras
-//        startActivity(intent);
-//        finish();
+        if (mediaPlayerIsPlaying) {
+            return;
+        }
+        // Closing and restarting the activity for each round is not ideal, but it seemed to be helping with memory issues...
+        Intent intent = getIntent();
+        intent.setClass(this, Mexico.class);    // so we retain the Extras
+        startActivity(intent);
+        finish();
         playAgain();
 
     }
@@ -299,9 +299,12 @@ public class Mexico extends GameActivity {
             cardA.setTextColor(tileColor); // theme color
             cardB.setTextColor(tileColor); // theme color
 
-            updatePointsAndTrackers(1);
-
             wordInLWC = memoryCollection.get(cardHitA)[0];
+
+            if (pairsCompleted == (visibleTiles / 2)) {
+                updatePointsAndTrackers((visibleTiles / 2));
+            }
+
             playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleTiles / 2));
 
         } else {

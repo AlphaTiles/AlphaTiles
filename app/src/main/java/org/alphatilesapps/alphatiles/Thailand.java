@@ -564,7 +564,7 @@ public class Thailand extends GameActivity {
                 switch (refType) {
                     case "TILE_LOWER":
                     case "TILE_AUDIO":
-                        parsedChosenWordArrayFinal = tileList.parseWordIntoTiles(chosenItemText);
+                        parsedChosenWordArrayFinal = tileList.parseWordIntoTiles(fourChoices.get(t)[1]);
                         if (parsedChosenWordArrayFinal.get(0).equals(refItemText)) {
                             goodMatch = true;
                         }
@@ -578,7 +578,7 @@ public class Thailand extends GameActivity {
                         }
                         break;
                     case "TILE_UPPER":
-                        parsedChosenWordArrayFinal = tileList.parseWordIntoTiles(chosenItemText);
+                        parsedChosenWordArrayFinal = tileList.parseWordIntoTiles(fourChoices.get(t)[1]);
                         if (refItemText != null && refItemText.equals(tileListNoSAD.get(tileListNoSAD
                                 .returnPositionInAlphabet(parsedChosenWordArrayFinal.get(0))).upperTile)) {
                             goodMatch = true;

@@ -118,6 +118,9 @@ public class Colombia extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
+        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
+
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
