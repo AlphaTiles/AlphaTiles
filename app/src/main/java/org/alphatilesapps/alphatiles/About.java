@@ -56,7 +56,7 @@ public class About extends AppCompatActivity {
         photoAudioCredits.setMovementMethod(new ScrollingMovementMethod());
 
         TextView photoAudioCredits2 = findViewById(R.id.photoAudioCredits2);
-        String mediaTwo = Start.langInfoList.find("Audio-image credits (lang 2)");
+        String mediaTwo = Start.langInfoList.find("Audio and image credits (lang 2)");
         if (mediaTwo.equals("none") || mediaTwo.equals(null)|| mediaTwo.equals("")) {
             photoAudioCredits2.setText("");
         } else {
