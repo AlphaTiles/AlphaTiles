@@ -15,6 +15,8 @@
 # Since language-specific build assets go into the main source folder,
 # we ignore most of the src/main folder.
 /app/src/*
+# for saftey ignore any tokens folder
+/app/tokens
 
 
 # Auto-generated files generally shouldn't be included, as they can
@@ -28,3 +30,4 @@
 *output-metadata.json
 /.idea/.name
 /.idea/.gitignore
+

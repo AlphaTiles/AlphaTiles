@@ -110,10 +110,6 @@ public class Start extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         context = this;
-        if (BuildConfig.DEBUG){
-            Validator myValidator = new Validator(context);
-            myValidator.validate();
-        }
         totalAudio = 3; // JP: how many total audio files to load
         // will be used in LoadingScreen.java to determine when all audio files have loaded -> advance to ChoosePlayer
         // initialize to 3 for correct, incorrect, and correctFinal sounds
