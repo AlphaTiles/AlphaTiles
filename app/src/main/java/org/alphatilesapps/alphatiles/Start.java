@@ -174,20 +174,26 @@ public class Start extends AppCompatActivity {
         }
 
         buildTilesArray();
-        for (int d = 0; d < Start.tileList.size(); d++) {
-            if (Start.tileList.get(d).tileType.equals("C")) {
-                CONSONANTS.add(Start.tileList.get(d).baseTile);
-                CorV.add(Start.tileList.get(d).baseTile);
-            } else if (Start.tileList.get(d).tileType.equals("V")) {
-                VOWELS.add(Start.tileList.get(d).baseTile);
-                CorV.add(Start.tileList.get(d).baseTile);
-            } else if (Start.tileList.get(d).tileType.equals("T")) {
-                TONES.add(Start.tileList.get(d).baseTile);
-            } else if (Start.tileList.get(d).tileType.equals("SAD")) {
+        for (int d = 0; d < tileList.size(); d++) {
+            if (tileList.get(d).tileType.equals("C") || tileList.get(d).tileTypeB.equals("C") || tileList.get(d).tileTypeC.equals("C")) {
+                CONSONANTS.add(tileList.get(d).baseTile);
+                CorV.add(tileList.get(d).baseTile);
+            }
+            if (tileList.get(d).tileType.contains("V") || tileList.get(d).tileTypeB.contains("V") || tileList.get(d).tileTypeC.contains("V")) {
+                VOWELS.add(tileList.get(d).baseTile);
+                if(!CorV.contains(tileList.get(d).baseTile)) {
+                    CorV.add(tileList.get(d).baseTile);
+                }
+            }
+            if (tileList.get(d).tileType.equals("T") || tileList.get(d).tileTypeB.equals("T") || tileList.get(d).tileTypeC.equals("T")) {
+                TONES.add(tileList.get(d).baseTile);
+            }
+            if (tileList.get(d).tileType.equals("SAD")) {
                 hasSAD = true;
-                SAD.add(Start.tileList.get(d).baseTile);
-            } else if (!Start.tileList.get(d).tileTypeB.equals("none")) {
-                MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
+                SAD.add(tileList.get(d).baseTile);
+            }
+            if (!tileList.get(d).tileTypeB.equals("none")) {
+                MULTIFUNCTIONS.add(tileList.get(d).baseTile);
             }
         }
         LOGGER.info("LoadProgress: completed buildTilesArray()");
@@ -311,13 +317,13 @@ public class Start extends AppCompatActivity {
                 } else {
                     stageOfFirstAppearance = Integer.parseInt(thisLineArray[14]);
                 }
-                if(thisLineArray[15].equals("-")) { // If no second type stage is given, assume there is no second type
-                    stageOfFirstAppearanceType2 = -1;
+                if(thisLineArray[15].equals("-")) {
+                    stageOfFirstAppearanceType2 = 1;
                 } else {
                     stageOfFirstAppearanceType2 = Integer.parseInt(thisLineArray[15]);
                 }
-                if(thisLineArray[16].equals("-")) { // If no third type stage is given, assume there is no third type
-                    stageOfFirstAppearanceType3 = -1;
+                if(thisLineArray[16].equals("-")) {
+                    stageOfFirstAppearanceType3 = 1;
                 } else {
                     stageOfFirstAppearanceType3 = Integer.parseInt(thisLineArray[16]);
                 }
