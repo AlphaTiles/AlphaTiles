@@ -16,7 +16,7 @@ public class UnitTest {
 
     @Test
     public void validateLangPack() {
-        String url = "https://docs.google.com/spreadsheets/d/1nnLL5Y9sJnHeeAhZamQHqCyQfj55HOZhYGDzixq3tO8/edit#gid=771136728";
+        String url = "https://drive.google.com/drive/u/0/folders/1ykEWRmvVPhO-Y55bqt8QOu4WFGuLwLaH";
         boolean overWriteResFolder = false;
         String langPackNameForOverWriting = "tpxTeocuitlapa";
         try {
