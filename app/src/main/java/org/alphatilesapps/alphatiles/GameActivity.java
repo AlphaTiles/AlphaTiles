@@ -339,7 +339,7 @@ public abstract class GameActivity extends AppCompatActivity {
                                     String aTileInTheStageType = tileTypeHashMapWithMultipleTypes.get(aTileInTheStage);
                                     String tileInThisWordType;
                                     if (MULTIFUNCTIONS.contains(tilesInThisWord.get(t))) {
-                                        tileInThisWordType = tileList.getInstanceTypeForMixedTile(t, word.localWord);
+                                        tileInThisWordType = tileList.getInstanceTypeForMixedTile(t, word.nationalWord);
                                     } else {
                                         tileInThisWordType = tileTypeHashMapWithMultipleTypes.get(tilesInThisWord.get(t));
                                     }

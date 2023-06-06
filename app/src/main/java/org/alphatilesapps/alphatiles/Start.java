@@ -539,7 +539,7 @@ public class Start extends AppCompatActivity {
                                 String aTileInTheStageType = tileTypeHashMapWithMultipleTypes.get(aTileInTheStage);
                                 String tileInThisWordType;
                                 if (MULTIFUNCTIONS.contains(tilesInThisWord.get(t))){
-                                    tileInThisWordType = tileList.getInstanceTypeForMixedTile(t, word.localWord);
+                                    tileInThisWordType = tileList.getInstanceTypeForMixedTile(t, word.nationalWord);
                                 } else {
                                     tileInThisWordType = tileTypeHashMapWithMultipleTypes.get(tilesInThisWord.get(t));
                                 }
@@ -573,7 +573,7 @@ public class Start extends AppCompatActivity {
                 String firstTileType = "";
                 int stageFirstTileBelongsTo = firstTile.stageOfFirstAppearance;
                 if(MULTIFUNCTIONS.contains(firstTile)) { // Check if we need to get stageOfFirstAppearance2 or stageOfFirstAppearance3 instead
-                    firstTileType = tileList.getInstanceTypeForMixedTile(0, word.localWord);
+                    firstTileType = tileList.getInstanceTypeForMixedTile(0, word.nationalWord);
                     if(firstTile.tileTypeB.equals(firstTileType)){
                         stageFirstTileBelongsTo = firstTile.stageOfFirstAppearanceType2;
                     } else if (firstTile.tileTypeC.equals(firstTileType)) {
