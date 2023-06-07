@@ -85,13 +85,9 @@ public class China extends GameActivity {
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
-            ImageView playNextWordImage = (ImageView) findViewById(R.id.playNextWord);
-            ImageView referenceItemImage = (ImageView) findViewById(R.id.referenceItem);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
-            playNextWordImage.setRotationY(180);
-            referenceItemImage.setRotationY(180);
 
             fixConstraintsRTL(gameID);
         }
