@@ -15,21 +15,25 @@ public class UnitTest {
 
 
     @Test
-    public void validateLangPack() {
+    public void validateLangPack() throws Exception{
+
+        // TODO !!! replace the url below with the link to the language pack google drive folder
         String url = "https://drive.google.com/drive/u/0/folders/1ykEWRmvVPhO-Y55bqt8QOu4WFGuLwLaH";
+
+        // TODO !!! change "false" to "true" if you want the app to download/use the language pack from google drive
         boolean overWriteResFolder = false;
+
         String langPackNameForOverWriting = "tpxTeocuitlapa";
-        try {
-            Validator myValidator = new Validator(url);
-            myValidator.validate();
-            if (overWriteResFolder) {
-                String path = System.getProperty("user.dir") + "/src/" + langPackNameForOverWriting + "/res";
-                myValidator.writeValidatedFiles(path);
-            }
-            assertEquals((myValidator.getFatalErrors().equals(new HashSet<String>())
-                    && myValidator.getWarnings().equals(new HashSet<String>())), true);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Validator myValidator = new Validator(url);
+        myValidator.validate();
+        if (overWriteResFolder) {
+            String path = System.getProperty("user.dir") + "/src/" + langPackNameForOverWriting + "/res";
+            myValidator.writeValidatedFiles(path);
         }
+
+
+        assertEquals((myValidator.getFatalErrors().equals(new HashSet<String>())
+                && myValidator.getWarnings().equals(new HashSet<String>())), true);
+
     }
 }
