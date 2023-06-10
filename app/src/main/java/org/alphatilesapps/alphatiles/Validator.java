@@ -1,10 +1,15 @@
 package org.alphatilesapps.alphatiles;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +51,6 @@ public class Validator {
 
     private GoogleSheet langPackGoogleSheet;
 
-    //TODO double check the check size method
     private final HashMap<String, String> DESIRED_DATA_FROM_TABS = new HashMap<>(Map.of(
             "langinfo", "A1:B15",
             "gametiles", "A1:Q",
@@ -71,8 +75,6 @@ public class Validator {
     private boolean hasTileAudio = false;
     private boolean hasSyllableAudio = false;
     private boolean usesSyllables = false;
-
-
     private final String GENERIC_WARNING = "one or more checks was not able to be run because of unresolved fatal errors";
 
     private static final String credentialsJson = "{\"installed\":{\"client_id\":\"384994053794-tuci4d2mhf4caems7jalfmb4voi855b8.apps.googleusercontent.com\",\"project_id\":\"enhanced-medium-387818\",\"auth_uri\":\"https://accounts.google.com/o/oauth2/auth\",\"token_uri\":\"https://oauth2.googleapis.com/token\",\"auth_provider_x509_cert_url\":\"https://www.googleapis.com/oauth2/v1/certs\",\"client_secret\":\"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\",\"redirect_uris\":[\"http://localhost\"]}}";
@@ -123,12 +125,47 @@ public class Validator {
         return this.warnings;
     }
 
-    public void writeValidatedFiles(String path) throws IOException {
-        for (Tab tab : langPackGoogleSheet.getTabList()){
-            FileWriter writer = new FileWriter(path + "/aa_" + tab.getName() + ".txt");
-            writer.write(tab.toString());
-            writer.close();
+    public void writeValidatedFiles() throws Exception {
+
+        String path = "";
+        String flavorName = "";
+        boolean passedProductFlavors = false;
+        String pathToBuildGradle = System.getProperty("user.dir") + "/build.gradle";
+        BufferedReader reader = new BufferedReader(new FileReader(pathToBuildGradle));
+        String line;
+        while ((flavorName.equals("")) && (line = reader.readLine()) != null) {
+            if (passedProductFlavors && !line.contains("//") && !line.equals("")){
+                flavorName = line.substring(0, line.indexOf("{")).strip();
+            }
+            if (line.contains("productFlavors {")) {
+                passedProductFlavors = true;
+            }
         }
+        reader.close();
+
+        for (String tabName : DESIRED_DATA_FROM_TABS.keySet()) {
+            path = System.getProperty("user.dir") + "/src/" + flavorName + "/res/raw/";
+            langPackGoogleSheet.getFromName(tabName).writeToPath(path);
+        }
+
+        //todo write based on conditions
+        for (Map.Entry<String, String> subfolderSpecs : DESIRED_FILETYPE_FROM_SUBFOLDERS.entrySet()) {
+            try {
+                DriveFolder subFolder = langPackDriveFolder.getFolderFromName(subfolderSpecs.getKey());
+                if (subfolderSpecs.getValue().contains("image")) {
+                    path = System.getProperty("user.dir") + "/src/" + flavorName + "/res/drawable";
+                } else if (subfolderSpecs.getValue().contains("audio")) {
+                    path = System.getProperty("user.dir") + "/src/" + flavorName + "/res/raw";
+                }
+                for (DriveResource resource : subFolder.findAllOfType(DriveResource.class)) {
+                    resource.writeToPath(path);
+                }
+            }
+            catch (Exception e){
+                System.out.println("could not write " + subfolderSpecs.getKey() + " because of " + e.getMessage());
+            }
+        }
+
     }
 
     public abstract class GoogleDriveItem{
@@ -190,6 +227,7 @@ public class Validator {
             return "application/vnd.google-apps.folder";
         }
 
+        //todo this should throw an error
         protected DriveFolder getFolderFromName(String inName){
             for (DriveFolder item : this.findAllOfType(DriveFolder.class)){
                 if (item.getName().equals(inName)){
@@ -268,6 +306,30 @@ public class Validator {
         @Override
         protected String getMimeType(){
             return this.mimeType;
+        }
+
+        //todo write directories if they aren't there
+        protected void writeToPath(String path) {
+            try{
+                FileWriter writer = new FileWriter(path + this.getName() + this.getMimeType());
+                writer.write(this.toString());
+
+                OutputStream outputStream = new ByteArrayOutputStream();
+                driveService.files().get(this.getId())
+                        .executeMediaAndDownloadTo(outputStream);
+
+                ByteArrayOutputStream byteStream = (ByteArrayOutputStream) outputStream;
+
+                OutputStream fileOutputStream = new FileOutputStream(path + this.getName() + this.getMimeType());
+                byteStream.writeTo(outputStream);
+                fileOutputStream.close();
+            }
+            catch (Exception e) {
+                System.out.println("can't find the language pack folder to write files to, make sure" +
+                        " the product flavor name in your build.gradle file (under src) matches the " +
+                        "name of language pack folder you want to overwrite " +
+                        "(should be template the first time)" );
+            }
         }
     }
     private class GoogleSheet extends GoogleDriveItem {
@@ -424,6 +486,17 @@ public class Validator {
             return toReturn.toString();
         }
 
+        protected void writeToPath(String path) {
+            try{
+            FileWriter writer = new FileWriter(path + "/aa_" + this.getName() + ".txt");
+            writer.write(this.toString());
+            }
+            catch (IOException e) {
+                System.out.println("can't find the language pack folder to write files to, make sure" +
+                        " the product flavor name in your build.gradle file (under src) matches the " +
+                        "name of language pack folder you want to overwrite (should be template the first time)");
+            }
+        }
     }
 
     private void validateRequiredSheetTabs() throws Exception{

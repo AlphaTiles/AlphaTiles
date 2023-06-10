@@ -3,7 +3,7 @@ package org.alphatilesapps.alphatiles;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-
+import java.util.Scanner;
 import java.util.HashSet;
 
 /**
@@ -23,12 +23,12 @@ public class UnitTest {
         // TODO !!! change "false" to "true" if you want the app to download/use the language pack from google drive
         boolean overWriteResFolder = false;
 
-        String langPackNameForOverWriting = "tpxTeocuitlapa";
         Validator myValidator = new Validator(url);
         myValidator.validate();
+
+
         if (overWriteResFolder) {
-            String path = System.getProperty("user.dir") + "/src/" + langPackNameForOverWriting + "/res";
-            myValidator.writeValidatedFiles(path);
+            myValidator.writeValidatedFiles();
         }
 
 
