@@ -1,8 +1,10 @@
 package org.alphatilesapps.alphatiles;
+import android.os.Build;
+import androidx.annotation.RequiresApi;
+
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -10,6 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,17 +73,10 @@ public class Validator {
             "(OPTIONAL)_instruction_audio", "audio/mpeg",
             "(OPTIONAL)_syllable_audio", "audio/mpeg"));
 
-    // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
-    // that the app is trying to use these features
-    private boolean hasInstructionAudio = false;
-    private boolean hasTileAudio = false;
-    private boolean hasSyllableAudio = false;
-    private boolean usesSyllables = false;
-
     private final String GENERIC_WARNING = "one or more checks was not able to be run because of " +
             "unresolved fatal errors";
 
-
+    // region // the below fields can be ignored
     private static final String credentialsJson =
             "{\"installed\":{\"client_id\":\"384994053794-tuci4d2mhf4caems7jalfmb4voi855b8.apps." +
             "googleusercontent.com\",\"project_id\":\"enhanced-medium-387818\",\"auth_uri\":" +
@@ -87,7 +85,6 @@ public class Validator {
             "\"https://www.googleapis.com/oauth2/v1/certs\",\"client_secret\":" +
             "\"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\",\"redirect_uris\":[\"http://localhost\"]}}";
 
-    // the below fields can be ignored
     private static final String APPLICATION_NAME = "Alpha Tiles Validator";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -95,9 +92,11 @@ public class Validator {
             new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                     .setApplicationName(APPLICATION_NAME)
                     .build();
-    private final Drive driveService = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-            .setApplicationName(APPLICATION_NAME)
-            .build();
+    private final Drive driveService =
+            new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+    //endregion
 
     public Validator(String driveFolderUrl) throws IOException, GeneralSecurityException, ValidatorException {
         String driveFolderId = driveFolderUrl.substring(driveFolderUrl.indexOf("folders/") + 8);
@@ -109,7 +108,7 @@ public class Validator {
 
         this.validateRequiredSheetTabs();
 
-        this.usesSyllables = decideIfSyllablesAttempted();
+        boolean usesSyllables = decideIfSyllablesAttempted();
         if (usesSyllables) {
             this.validateSyllables();
         }
@@ -153,20 +152,25 @@ public class Validator {
         try {
             for (String cell : langPackGoogleSheet.getTabFromName("wordlist").getCol(0)) {
                 if (!cell.matches("[a-zA-Z0-9_]+")) {
-                    fatalErrors.add("In the first column of wordList, the word " + cell + " contains non-alphanumeric characters. " +
-                            "Please remove them. (The only allowed characters are a-z, A-Z, and 0-9.)");
+                    fatalErrors.add("In the first column of wordList, the word " + cell + " contains non-alphanumeric " +
+                            "characters. " + "Please remove them. (The only allowed characters are a-z, A-Z, and 0-9.)");
                 }
             }
         } catch (ValidatorException e) {
             warnings.add(GENERIC_WARNING);
         }
 
-        // Todo... make checks more readable
+        // Todo... make checks more readable...
         try {
+            Tab keyboardTab = langPackGoogleSheet.getTabFromName("keyboard");
+            // todo is adding the period and apostrophe by hand right? (i know apostrophe is proably not)
+            keyboardTab.add(new ArrayList<>(List.of(".", "0")));
+            keyboardTab.add(new ArrayList<>(List.of("'", "0")));
+
+            // this is a map of each key to how many times it is used in the wordslist
             Map<String, Integer> keyUsage = new HashMap<>();
-            keyUsage.put(".", 0);
-            keyUsage.put("'", 0);
-            for (String key : langPackGoogleSheet.getTabFromName("keyboard").getCol(0, true)) {
+            ArrayList<String> keysList = keyboardTab.getCol(0, true);
+            for (String key : keysList) {
                 keyUsage.put(key, 0);
             }
             for (String cell : langPackGoogleSheet.getTabFromName("wordlist").getCol(1, true)) {
@@ -194,13 +198,13 @@ public class Validator {
             for (String tile : langPackGoogleSheet.getTabFromName("gametiles").getCol(0, true)) {
                 boolean tileFound = false;
                 int wordIndex = 0;
-                ArrayList<String> wordArray = langPackGoogleSheet.getTabFromName("wordlist").getCol(1, true);
-                while (!tileFound && wordIndex < wordArray.size()) {
-                    if (langPackGoogleSheet.getTabFromName("wordlist").getCol(1).get(wordIndex).contains(tile)) {
+                ArrayList<String> wordList = langPackGoogleSheet.getTabFromName("wordlist").getCol(1, true);
+                while (!tileFound && wordIndex < wordList.size()) {
+                    if (wordList.get(wordIndex).contains(tile)) {
                         tileFound = true;
                     } else {
                         wordIndex += 1;
-                        if (wordIndex == wordArray.size()) {
+                        if (wordIndex == wordList.size()) {
                             warnings.add("tile " + tile + " is never used in a word");
                         }
                     }
@@ -233,7 +237,8 @@ public class Validator {
                 }
             }
             if (longWords > 0) {
-                warnings.add("the wordlist has " + longWords + " long words (10 to 15 game tiles); shorter words are preferable in an early literacy game. Consider removing longer words ");
+                warnings.add("the wordlist has " + longWords + " long words (10 to 15 game tiles);" +
+                        " shorter words are preferable in an early literacy game. Consider removing longer words ");
             }
             for (Map.Entry<String, Integer> tile : tileUsage.entrySet()) {
                 if (tile.getValue() < 6) {
@@ -280,9 +285,20 @@ public class Validator {
                 fatalErrors.add(e.getMessage());
             }
         }
-        this.hasInstructionAudio = decideIfAudioAttempted("games", 4, "(OPTIONAL)_instruction_audio");
-        this.hasSyllableAudio = decideIfAudioAttempted("syllables", 4, "(OPTIONAL)_syllable_audio");
-        this.hasTileAudio = decideIfAudioAttempted("gametiles", 5, "(OPTIONAL)_tile_audio");
+        // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
+        // that the app is trying to use these features
+        boolean hasInstructionAudio = decideIfAudioAttempted("games", 4, "(OPTIONAL)_instruction_audio");
+        if (!hasInstructionAudio){
+            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("(OPTIONAL)_instruction_audio");
+        }
+        boolean hasSyllableAudio = decideIfAudioAttempted("syllables", 4, "(OPTIONAL)_syllable_audio");
+        if (!hasSyllableAudio){
+            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("(OPTIONAL)_syllable_audio");
+        }
+        boolean hasTileAudio = decideIfAudioAttempted("gametiles", 5, "(OPTIONAL)_tile_audio");
+        if (!hasTileAudio){
+            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("(OPTIONAL)_tile_audio");
+        }
 
         try {
             DriveFolder resourceImages = langPackDriveFolder.getFolderFromName("resource_images");
@@ -302,9 +318,8 @@ public class Validator {
 
         try {
             DriveFolder wordAudio = langPackDriveFolder.getFolderFromName("word_audio");
-            //TODO find right word for broader language
-            ArrayList<String> wordsInBroaderLanguage = langPackGoogleSheet.getTabFromName("wordlist").getCol(0, true);
-            wordAudio.checkFileNameAgainstList(wordsInBroaderLanguage);
+            ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0, true);
+            wordAudio.checkFileNameAgainstList(wordsInLWC);
         } catch (ValidatorException e) {
             warnings.add(GENERIC_WARNING);
         }
@@ -387,66 +402,131 @@ public class Validator {
     }
 
     //TODO this needs work... including with throwing exceptions
-    public void writeValidatedFiles() throws Exception {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void writeValidatedFiles() throws IOException {
 
-        String path = "";
-        String flavorName = "";
-        boolean passedProductFlavors = false;
-        String pathToBuildGradle = System.getProperty("user.dir") + "/build.gradle";
-        BufferedReader reader = new BufferedReader(new FileReader(pathToBuildGradle));
-        String line;
-        while ((flavorName.equals("")) && (line = reader.readLine()) != null) {
-            if (passedProductFlavors && !line.contains("//") && !line.equals("")){
-                flavorName = line.substring(0, line.indexOf("{")).strip();
+        //TODO maybe discuss this again with Aaron... doesn't seem like the best idea to assume
+        // they have PublicLanguageAssets cloned in the same place
+
+        String langPackName = langPackGoogleSheet.getName();
+        String pathToLangPack = System.getProperty("user.dir") + "/src/" + langPackName;
+
+        deleteDirectory(new java.io.File(pathToLangPack));
+
+        String userDir = System.getProperty("user.dir");
+        String pathToStudioProjects = userDir.substring(0, userDir.indexOf("/AlphaTiles/app"));
+        String pathToTemplate = pathToStudioProjects + "/PublicLanguageAssets/templateTemplate";
+        java.io.File templateFile = new java.io.File(pathToTemplate);
+
+        Files.createDirectory(Paths.get(pathToLangPack));
+        copyDirectory(templateFile, pathToLangPack);
+
+        String pathToRaw = pathToLangPack + "/res/raw";
+        for (String desiredTabName : DESIRED_DATA_FROM_TABS.keySet()){
+            try{
+                Tab desiredTab = langPackGoogleSheet.getTabFromName(desiredTabName);
+                FileWriter writer = new FileWriter(pathToRaw + "/aa_" + desiredTab.getName() + ".txt");
+                writer.write(desiredTab.toString());
+                writer.close();
             }
-            if (line.contains("productFlavors {")) {
-                passedProductFlavors = true;
+            catch (ValidatorException e){
+                warnings.add(GENERIC_WARNING);
             }
-        }
-        reader.close();
 
-        for (String tabName : DESIRED_DATA_FROM_TABS.keySet()) {
-            path = System.getProperty("user.dir") + "/src/" + flavorName + "/res/raw/";
-            langPackGoogleSheet.getTabFromName(tabName).writeToPath(path);
         }
 
-        //todo write based on conditions
+
         for (Map.Entry<String, String> subfolderSpecs : DESIRED_FILETYPE_FROM_SUBFOLDERS.entrySet()) {
+            String subFolderName = subfolderSpecs.getKey();
+            String subFolderFileTypes = subfolderSpecs.getValue();
             try {
-                DriveFolder subFolder = langPackDriveFolder.getFolderFromName(subfolderSpecs.getKey());
-                if (subfolderSpecs.getValue().contains("image")) {
-                    path = System.getProperty("user.dir") + "/src/" + flavorName + "/res/drawable";
-                } else if (subfolderSpecs.getValue().contains("audio")) {
-                    path = System.getProperty("user.dir") + "/src/" + flavorName + "/res/raw";
+                DriveFolder wordImagesFolder = langPackDriveFolder.getFolderFromName(subFolderName);
+                ArrayList<GoogleDriveItem> folderContents = wordImagesFolder.getFolderContents();
+                String outputFolderPath = pathToLangPack + "/res/raw/";
+                if (subFolderFileTypes.contains("image")){
+                    outputFolderPath = pathToLangPack + "/res/drawable/";
                 }
-                for (DriveResource resource : subFolder.findAllOfType(DriveResource.class)) {
-                    resource.writeToPath(path);
+                for (GoogleDriveItem driveResource : folderContents) {
+                    String pathForResource = outputFolderPath + driveResource.getName();
+                    java.io.File downloadedResource = new java.io.File(pathForResource);
+                    OutputStream out = new FileOutputStream(downloadedResource);
+                    try {
+                        driveService.files().get(driveResource.getId()).executeMediaAndDownloadTo(out);
+                    }
+                    catch (Exception e){
+                        deleteDirectory(new java.io.File("/Users/nathanchou/StudioProjects/AlphaTiles/app/tokens"));
+                    }
+
                 }
-            }
-            catch (Exception e){
-                System.out.println("could not write " + subfolderSpecs.getKey() + " because of " + e.getMessage());
+            } catch (ValidatorException e) {
+                warnings.add(GENERIC_WARNING);
             }
         }
 
+
+
+        boolean reachedProductFlavors = false;
+        boolean passedLangPackName = false;
+        String sectionToRewrite =
+                "        productFlavors {\n" +
+                "        // Assigns this product flavor to the \"version\" flavor dimension.\n" +
+                "        // If you are using only one dimension, this property is optional,\n" +
+                "        // and the plugin automatically assigns all the module's flavors to\n" +
+                "        // that dimension.\n" +
+                "\n" +
+                "        //Alpha Tiles internal team developers can find active product flavor definitions here:\n" +
+                "        // https://docs.google.com/document/d/1a3satcmHFa5r6l7THrKLgxSWVCs-Mp2yOGyzk4oETsk/edit\n" +
+                "\n" +
+                "        " + langPackName + " {\n" +
+                "            dimension \"language\"\n" +
+                "            applicationIdSuffix \".blue." + langPackName+ "\"\n";
+        StringBuilder newBuildGradle = new StringBuilder();
+
+
+        String pathToBuildGradle = System.getProperty("user.dir") + "/build.gradle";
+        BufferedReader readBuildGradle = new BufferedReader(new FileReader(pathToBuildGradle));
+        String line;
+        while ((line = readBuildGradle.readLine()) != null) {
+            if (line.contains("productFlavors {")) {
+                reachedProductFlavors = true;
+                newBuildGradle.append(sectionToRewrite);
+            }
+            else if (reachedProductFlavors && line.contains("resValue")){
+                passedLangPackName = true;
+            }
+            if (!reachedProductFlavors || passedLangPackName){
+                newBuildGradle.append(line).append("\n");
+            }
+        }
+        readBuildGradle.close();
+
+        BufferedWriter writeBuildGradle = new BufferedWriter(new FileWriter(pathToBuildGradle));
+        writeBuildGradle.write(newBuildGradle.toString());
+        writeBuildGradle.close();
     }
 
-    public abstract class GoogleDriveItem{
+    public class GoogleDriveItem{
+
+        private String mimeType;
         private final String id;
         private String name;
         protected GoogleDriveItem(String inID){
             this.id = inID;
         }
 
-        protected GoogleDriveItem(String inID, String inName){
+        protected GoogleDriveItem(String inID, String inName, String inMimeType){
             this.id = inID;
             this.name = inName;
+            this.mimeType = inMimeType;
         }
 
         protected String getName() {
             return this.name;
         }
 
-        protected abstract String getMimeType();
+        protected String getMimeType(){
+            return this.mimeType;
+        }
 
         protected String getId() {
             return this.id;
@@ -459,6 +539,7 @@ public class Validator {
         protected DriveFolder(String driveFolderId) throws IOException{
             super(driveFolderId);
             super.name = driveService.files().get(driveFolderId).execute().getName();
+            super.mimeType = "application/vnd.google-apps.folder";
             String pageToken = null;
             do {
                 FileList result = driveService.files().list()
@@ -477,20 +558,15 @@ public class Validator {
                         folderContents.add(new DriveFolder(file.getId()));
                     }
                     else {
-                        folderContents.add(new DriveResource(file.getId(), file.getName(), file.getMimeType()));
+                        folderContents.add(new GoogleDriveItem(file.getId(), file.getName(), file.getMimeType()));
                     }
                  }
                 pageToken = result.getNextPageToken();
             } while (pageToken != null);
         }
 
-        @Override
-        protected String getMimeType(){
-            return "application/vnd.google-apps.folder";
-        }
-
         protected DriveFolder getFolderFromName(String inName) throws ValidatorException{
-            for (DriveFolder item : this.findAllOfType(DriveFolder.class)){
+            for (DriveFolder item : this.getContentsOfType(DriveFolder.class)){
                 if (item.getName().equals(inName)){
                     return item;
                 }
@@ -500,7 +576,7 @@ public class Validator {
 
         protected void checkFileNameAgainstList(ArrayList<String> toMatch){
             PriorityQueue<String> LongestFirstToMatch = new PriorityQueue<>(toMatch);
-            for (GoogleDriveItem item : folderContents) {
+            for (GoogleDriveItem item : new ArrayList<>(folderContents)) {
                 boolean hasMatchingName = false;
                 for (String candidate : new ArrayList<>(LongestFirstToMatch)) {
                     if (item.getName().startsWith(candidate)) {
@@ -511,16 +587,19 @@ public class Validator {
                 if (!hasMatchingName) {
                     warnings.add("the file " + item.getName() + " in " + this.getName() + " may be excess" +
                             "as the start of the filename does not appear to match to anything");
+                    folderContents.remove(item);
                 }
             }
             for (String shouldHaveMatched : LongestFirstToMatch){
                 warnings.add(shouldHaveMatched + "does not have a corresponding file in " + this.getName());
             }
         }
-
+        protected ArrayList<GoogleDriveItem> getFolderContents(){
+            return this.folderContents;
+        }
         //TODO I struggled with this method for a while and ended up just using something from
         // stack overflow but I should think about it more
-        protected <type extends GoogleDriveItem> ArrayList<type> findAllOfType(Class<type> myClass) {
+        protected <type extends GoogleDriveItem> ArrayList<type> getContentsOfType(Class<type> myClass) {
             ArrayList<type> filteredList = new ArrayList<>();
             for (GoogleDriveItem item : folderContents) {
                 try {
@@ -543,7 +622,7 @@ public class Validator {
         }
 
         protected GoogleSheet getOnlyGoogleSheet() throws ValidatorException{
-            ArrayList<GoogleSheet> allSheets = findAllOfType(GoogleSheet.class);
+            ArrayList<GoogleSheet> allSheets = getContentsOfType(GoogleSheet.class);
             if (allSheets.size() == 0) {
                 throw new ValidatorException("No google sheet found in specified google drive folder");
             } else if (allSheets.size() > 1) {
@@ -559,40 +638,7 @@ public class Validator {
 
 
     }
-    private class DriveResource extends GoogleDriveItem{
 
-        private final String mimeType;
-        protected DriveResource(String inParentId, String inName, String inMimeType){
-            super(inParentId, inName);
-            this.mimeType = inMimeType;
-        }
-        @Override
-        protected String getMimeType(){
-            return this.mimeType;
-        }
-
-        //todo write directories if they aren't there
-        protected void writeToPath(String path) {
-            try{
-                FileWriter writer = new FileWriter(path + this.getName() + this.getMimeType());
-                writer.write(this.toString());
-
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                driveService.files().get(this.getId())
-                        .executeMediaAndDownloadTo(outputStream);
-
-                OutputStream fileOutputStream = new FileOutputStream(path + this.getName() + this.getMimeType());
-                outputStream.writeTo(outputStream);
-                fileOutputStream.close();
-            }
-            catch (IOException e) {
-                System.out.println("can't find the language pack folder to write files to, make sure" +
-                        " the product flavor name in your build.gradle file (under src) matches the " +
-                        "name of language pack folder you want to overwrite " +
-                        "(should be template the first time)" );
-            }
-        }
-    }
     private class GoogleSheet extends GoogleDriveItem {
         private final ArrayList<Tab> tabList = new ArrayList<>();
 
@@ -600,16 +646,12 @@ public class Validator {
             super(spreadSheetId);
             Spreadsheet thisSpreadsheet = sheetsService.spreadsheets().get(spreadSheetId).execute();
             super.name = thisSpreadsheet.getProperties().getTitle();
+            super.mimeType = "application/vnd.google-apps.spreadsheet";
             List<Sheet> sheetList = thisSpreadsheet.getSheets();
             for (Sheet sheet : sheetList){
                 tabList.add(new Tab(spreadSheetId, sheet.getProperties().getTitle())) ;
 
             }
-        }
-
-        @Override
-        protected String getMimeType(){
-            return "application/vnd.google-apps.spreadsheet";
         }
 
         public Tab getTabFromName(String name) throws ValidatorException {
@@ -745,18 +787,6 @@ public class Validator {
             }
             return toReturn.toString();
         }
-
-        protected void writeToPath(String path) {
-            try{
-            FileWriter writer = new FileWriter(path + "/aa_" + this.getName() + ".txt");
-            writer.write(this.toString());
-            }
-            catch (IOException e) {
-                System.out.println("can't find the language pack folder to write files to, make sure" +
-                        " the product flavor name in your build.gradle file (under src) matches the " +
-                        "name of language pack folder you want to overwrite (should be template the first time)");
-            }
-        }
     }
 
     private boolean decideIfAudioAttempted(String tabName, int colNum, String subFolderName) {
@@ -784,13 +814,13 @@ public class Validator {
         if (someAudioNames && someAudioFiles){
             return true;
         } else if (someAudioNames) {
-            warnings.add("you list names of audio files in the column " + colNum + " of  the tab" + tabName
+            warnings.add("you list names of audio files in the column " + colNum + " of  the tab " + tabName
             + " (ie you have text in the column that is not 'X') but the folder" + subFolderName + " is empty"
             + " please add matching audio files to the folder" + subFolderName + " if you want to use this feature");
         } else if (someAudioFiles) {
             warnings.add("you have audio files in the folder " + subFolderName + " but column"
-                    + " of the tab" + tabName + " doesn't list any audio file names"
-                    + " please add matching audio file names to  the tab" + tabName + " if you want to use this feature");
+                    + " of the tabv" + tabName + " doesn't list any audio file names"
+                    + " please add matching audio file names to  the tabv" + tabName + " if you want to use this feature");
         }
         return false;
     }
@@ -864,7 +894,7 @@ public class Validator {
          //Global instance of the scopes required by this quickstart.
          //If modifying these scopes, delete your previously saved tokens/ folder.
 
-        List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY, DriveScopes.DRIVE_METADATA_READONLY);
+        List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY, DriveScopes.DRIVE_READONLY);
         //String CREDENTIALS_FILE_PATH = "/credentials.json";
         // Load client secrets.
         InputStream in = new ByteArrayInputStream(credentialsJson.getBytes());
@@ -881,9 +911,36 @@ public class Validator {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
+    private void deleteDirectory(java.io.File directoryToBeDeleted) {
+        java.io.File[] allContents = directoryToBeDeleted.listFiles();
+        if (allContents != null) {
+            for (java.io.File file : allContents) {
+                deleteDirectory(file);
+            }
+        }
+        directoryToBeDeleted.delete();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void copyDirectory(java.io.File directoryToBeCopied, String destinationPath) throws IOException {
+        java.io.File[] allContents = directoryToBeCopied.listFiles();
+        if (allContents != null) {
+            for (java.io.File subContent : allContents) {
+                Path oldAvatarPath = Paths.get(subContent.getPath());
+                Path newAvatarPath = Paths.get(destinationPath + "/" + subContent.getName());
+                Files.copy(oldAvatarPath, newAvatarPath);
+                if (subContent.isDirectory()) {
+                    copyDirectory(subContent, destinationPath + "/" + subContent.getName());
+                }
+            }
+        }
+    }
+
     public static class ValidatorException extends Exception {
         public ValidatorException(String errorMessage) {
             super(errorMessage);
         }
     }
+
+
 }
