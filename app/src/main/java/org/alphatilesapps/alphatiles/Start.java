@@ -8,9 +8,13 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.Time;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -246,6 +250,7 @@ public class Start extends AppCompatActivity
                 }
             }
         }
+        Wordle.data = Wordle.wordlePreProcess();
 
         Intent intent = new Intent(this, LoadingScreen.class);
 
