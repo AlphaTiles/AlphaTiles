@@ -297,36 +297,28 @@ public class Sudan extends GameActivity {
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
-        String viewText = "";
-        int justClickedKey = Integer.parseInt((String) view.getTag()) + (currentPageNumber * 35);
+        String viewText = pagesList.get(currentPageNumber).get(Integer.parseInt((String) view.getTag())-1);
+        int audioId = 0;
+        int duration = 0;
         if (syllableGame.equals("S")) {
-            viewText = Start.syllableList.get(justClickedKey - 1).syllable;
-
-
-            gameSounds.play(syllableAudioIDs.get(viewText), 1.0f, 1.0f, 2, 0, 1.0f);
-            soundSequencer.postDelayed(new Runnable() {
-                public void run() {
-                    if (repeatLocked) {
-                        setAllTilesClickable();
-                    }
-                    setOptionsRowClickable();
-                }
-
-            }, 925);
+            audioId = syllableAudioIDs.get(viewText);
+            duration = syllableDurations.get(viewText);
 
         } else {
-            viewText = cumulativeStageBasedTileList.get(justClickedKey - 1);
-            gameSounds.play(tileAudioIDs.get(viewText), 1.0f, 1.0f, 2, 0, 1.0f);
-            soundSequencer.postDelayed(new Runnable() {
-                public void run() {
-                    if (repeatLocked) {
-                        setAllTilesClickable();
-                    }
-                    setOptionsRowClickable();
-                }
-
-            }, 925);
+            audioId = tileAudioIDs.get(viewText);
+            duration = tileDurations.get(viewText);
         }
+
+        gameSounds.play(audioId, 1.0f, 1.0f, 2, 0, 1.0f);
+        soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                if (repeatLocked) {
+                    setAllTilesClickable();
+                }
+                setOptionsRowClickable();
+            }
+
+        }, duration);
     }
 
     public void clickPicHearAudio(View view) {
