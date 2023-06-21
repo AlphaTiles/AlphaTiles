@@ -2,11 +2,8 @@ package org.alphatilesapps.alphatiles;
 import android.os.Build;
 import androidx.annotation.RequiresApi;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,6 +58,7 @@ public class Validator {
             "games", "A1:H",
             "syllables", "A1:G",
             "resources", "A1:C7",
+            //TODO should this be a fixed number?
             "settings", "A1:B",
             "colors", "A1:C"));
 
@@ -151,9 +149,9 @@ public class Validator {
 
         try {
             for (String cell : langPackGoogleSheet.getTabFromName("wordlist").getCol(0)) {
-                if (!cell.matches("[a-zA-Z0-9_]+")) {
+                if (!cell.matches("[a-z0-9_]+")) {
                     fatalErrors.add("In the first column of wordList, the word " + cell + " contains non-alphanumeric " +
-                            "characters. " + "Please remove them. (The only allowed characters are a-z, A-Z, and 0-9.)");
+                            "characters. " + "Please remove them. (The only allowed characters are a-z, and 0-9.)");
                 }
             }
         } catch (ValidatorException e) {
@@ -163,17 +161,25 @@ public class Validator {
         // Todo... make checks more readable...
         try {
             Tab keyboardTab = langPackGoogleSheet.getTabFromName("keyboard");
-            // todo is adding the period and apostrophe by hand right? (i know apostrophe is proably not)
-            keyboardTab.add(new ArrayList<>(List.of(".", "0")));
-            keyboardTab.add(new ArrayList<>(List.of("'", "0")));
+
+            ArrayList<String> themeColorCol = keyboardTab.getCol(1);
+            themeColorCol.removeAll(Set.of("0", "1", "2", "3", "4"));
+            if (themeColorCol.size() > 0){
+                warnings.add("colum 2 of keyboard should only have numbers 0-4");
+            }
+
+            // the below section compares they keys in keyboard to the words in wordlist
+            if (!keyboardTab.getCol(0).contains(".")) {
+                keyboardTab.add(new ArrayList<>(List.of(".", "0")));
+            }
 
             // this is a map of each key to how many times it is used in the wordslist
             Map<String, Integer> keyUsage = new HashMap<>();
-            ArrayList<String> keysList = keyboardTab.getCol(0, true);
+            ArrayList<String> keysList = keyboardTab.getCol(0);
             for (String key : keysList) {
                 keyUsage.put(key, 0);
             }
-            for (String cell : langPackGoogleSheet.getTabFromName("wordlist").getCol(1, true)) {
+            for (String cell : langPackGoogleSheet.getTabFromName("wordlist").getCol(1)) {
                 for (String letter : cell.split("")) {
                     if (!keyUsage.containsKey(letter)) {
                         warnings.add("In wordList, the word " + cell + " contains the letter " + letter +
@@ -194,43 +200,28 @@ public class Validator {
             warnings.add(GENERIC_WARNING);
         }
 
+        //todo is checking headers still a necessary check for gameTiles or others?.. aslo non initial letters black box error?
         try {
-            for (String tile : langPackGoogleSheet.getTabFromName("gametiles").getCol(0, true)) {
-                boolean tileFound = false;
-                int wordIndex = 0;
-                ArrayList<String> wordList = langPackGoogleSheet.getTabFromName("wordlist").getCol(1, true);
-                while (!tileFound && wordIndex < wordList.size()) {
-                    if (wordList.get(wordIndex).contains(tile)) {
-                        tileFound = true;
-                    } else {
-                        wordIndex += 1;
-                        if (wordIndex == wordList.size()) {
-                            warnings.add("tile " + tile + " is never used in a word");
-                        }
-                    }
-                }
-            }
-        } catch (ValidatorException e) {
-            warnings.add(GENERIC_WARNING);
-        }
-
-        try {
+            // the below section compares the tiles in gameTiles to the words in wordlist
             Map<String, Integer> tileUsage = new HashMap<>();
             int longWords = 0;
             tileUsage.put(".", 0);
             tileUsage.put("'", 0);
-            for (String tile : langPackGoogleSheet.getTabFromName("gametiles").getCol(0, true)) {
+            for (String tile : langPackGoogleSheet.getTabFromName("gametiles").getCol(0)) {
                 tileUsage.put(tile, 0);
             }
-            for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1, true)) {
-                int tileCounter = numTilesInWord(word, tileUsage, 0);
+            for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1)) {
+                // the below numTilesInWord method parses a word into the tiles in the tileUsage dictionary,
+                // returning the number of tiles in the provided word.
+                // it also updates the tileUsage dictionary so the dictionary counts how many times each tile appears
+                int tileCounter = numTilesInWord(word, tileUsage);
                 if (tileCounter == 0) {
                     warnings.add("no combination of tiles can be put together to create " + word + "in wordlist");
                 }
 
                 if (tileCounter >= 10) {
                     if (tileCounter > 15) {
-                        fatalErrors.add("the word " + " in wordlist takes more than 15 tiles to build");
+                        fatalErrors.add("the word " + word + " in wordlist takes more than 15 tiles to build");
                     } else {
                         longWords += 1;
                     }
@@ -241,21 +232,33 @@ public class Validator {
                         " shorter words are preferable in an early literacy game. Consider removing longer words ");
             }
             for (Map.Entry<String, Integer> tile : tileUsage.entrySet()) {
-                if (tile.getValue() < 6) {
+                if (tile.getValue() < 3) {
                     warnings.add("the tile " + tile.getKey() + " in gametiles only appears in words " + tile.getValue()
-                            + " times. It is recommended that each letter be used in at least 6 words");
+                            + " times. It is recommended that each letter be used in at least 3 words");
                 }
             }
         } catch (ValidatorException e) {
             warnings.add(GENERIC_WARNING);
         }
         try {
-            Tab gameFiles = langPackGoogleSheet.getTabFromName("gametiles");
-            gameFiles.checkColForDuplicates(0);
-            for (ArrayList<String> row : gameFiles) {
-                List<String> alternates = row.subList(1, 4);
+            //todo.. the correct uppercase value?
+            Tab gameTiles = langPackGoogleSheet.getTabFromName("gametiles");
+            // below helper methods adds warnings for any duplicates in the provided column
+            gameTiles.checkColForDuplicates(0);
+            // the below portion makes sure each tile and their alternates are all unique
+            for (ArrayList<String> row : gameTiles) {
+                List<String> alternates = row.subList(0, 4);
                 if (new HashSet<>(alternates).size() < alternates.size()) {
                     warnings.add("the row " + row + " in gametiles has the same tile appearing in multiple places");
+                }
+            }
+            // this check makes sure that colum 4 of gameTiles only has valid type specifiers
+            ArrayList<String> gameTileTypes = gameTiles.getCol(4);
+            HashSet<String> validTypes = new HashSet<>(Set.of("C","V","X", "AD", "AV", "BV", "FV", "LV"));
+            for (int i = 0; i < gameTileTypes.size(); i++) {
+                if (!validTypes.contains(gameTileTypes.get(i))) {
+                    warnings.add("row " + i + 1 + " of gametiles does not specify a valid type in the types column. Valid" +
+                            "types are " + validTypes);
                 }
             }
         } catch (ValidatorException e) {
@@ -276,7 +279,7 @@ public class Validator {
     }
 
     private void validateResourceSubfolders(){
-
+        //todo add secondary image functionality
         for (Map.Entry<String, String> nameToMimeType : this.DESIRED_FILETYPE_FROM_SUBFOLDERS.entrySet()){
             try {
                 DriveFolder subFolder = langPackDriveFolder.getFolderFromName(nameToMimeType.getKey());
@@ -302,7 +305,7 @@ public class Validator {
 
         try {
             DriveFolder resourceImages = langPackDriveFolder.getFolderFromName("resource_images");
-            ArrayList<String> resourceImageNames = langPackGoogleSheet.getTabFromName("resources").getCol(1, true);
+            ArrayList<String> resourceImageNames = langPackGoogleSheet.getTabFromName("resources").getCol(1);
             resourceImages.checkFileNameAgainstList(resourceImageNames);
         } catch (ValidatorException e) {
             warnings.add(GENERIC_WARNING);
@@ -310,7 +313,7 @@ public class Validator {
 
         try {
             DriveFolder wordImages = langPackDriveFolder.getFolderFromName("word_images");
-            ArrayList<String> wordImageNames = langPackGoogleSheet.getTabFromName("wordlist").getCol(0, true);
+            ArrayList<String> wordImageNames = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
             wordImages.checkFileNameAgainstList(wordImageNames);
         } catch (ValidatorException e) {
             warnings.add(GENERIC_WARNING);
@@ -318,7 +321,7 @@ public class Validator {
 
         try {
             DriveFolder wordAudio = langPackDriveFolder.getFolderFromName("word_audio");
-            ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0, true);
+            ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
             wordAudio.checkFileNameAgainstList(wordsInLWC);
         } catch (ValidatorException e) {
             warnings.add(GENERIC_WARNING);
@@ -327,7 +330,7 @@ public class Validator {
         try {
             if (hasTileAudio) {
                 DriveFolder tileAudio = langPackDriveFolder.getFolderFromName("(OPTIONAL)_tile_audio");
-                ArrayList<String> tiles = langPackGoogleSheet.getTabFromName("gametiles").getCol(5, true);
+                ArrayList<String> tiles = langPackGoogleSheet.getTabFromName("gametiles").getCol(5);
                 tileAudio.checkFileNameAgainstList(tiles);
             }
         } catch (ValidatorException e) {
@@ -337,7 +340,7 @@ public class Validator {
         try {
             if (hasSyllableAudio) {
                 DriveFolder syllableAudio = langPackDriveFolder.getFolderFromName("(OPTIONAL)_syllable_audio");
-                ArrayList<String> syllables = langPackGoogleSheet.getTabFromName("syllables").getCol(4, true);
+                ArrayList<String> syllables = langPackGoogleSheet.getTabFromName("syllables").getCol(4);
                 syllableAudio.checkFileNameAgainstList(syllables);
             }
         } catch (ValidatorException e) {
@@ -347,7 +350,7 @@ public class Validator {
         try {
             if (hasInstructionAudio) {
                 DriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("(OPTIONAL)_instruction_audio");
-                ArrayList<String> gamesList = langPackGoogleSheet.getTabFromName("games").getCol(4, true);
+                ArrayList<String> gamesList = langPackGoogleSheet.getTabFromName("games").getCol(4);
                 gamesList.removeAll(Collections.singleton("X"));
                 instructionAudio.checkFileNameAgainstList(gamesList);
             }
@@ -360,9 +363,11 @@ public class Validator {
 
         try {
             Tab syllables = langPackGoogleSheet.getTabFromName("syllables");
+            // below makes sure the first column in the syllables tab doesn't have duplicates
             syllables.checkColForDuplicates(0);
+            // below makes sure each syllable and its alterantes are all unique
             for (ArrayList<String> row : syllables) {
-                List<String> alternates = row.subList(1, 4);
+                List<String> alternates = row.subList(0, 4);
                 if (new HashSet<>(alternates).size() < alternates.size()) {
                     warnings.add("the row " + row + " in syllables has the same tile appearing in multiple places");
                 }
@@ -372,9 +377,9 @@ public class Validator {
         }
 
         try {
-            HashSet<String> providedSyllables = new HashSet<>(langPackGoogleSheet.getTabFromName("syllables").getCol(0, true));
+            HashSet<String> providedSyllables = new HashSet<>(langPackGoogleSheet.getTabFromName("syllables").getCol(0));
             HashSet<String> parsedSyllables = new HashSet<>();
-            for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1, true)) {
+            for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1)) {
                 String[] syllablesInWord = word.split("\\.");
                 parsedSyllables.addAll(Arrays.asList(syllablesInWord));
             }
@@ -401,19 +406,15 @@ public class Validator {
         return this.warnings;
     }
 
-    //TODO this needs work... including with throwing exceptions
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void writeValidatedFiles() throws IOException {
+    public void writeValidatedFiles() throws IOException, ValidatorException {
 
-        //TODO maybe discuss this again with Aaron... doesn't seem like the best idea to assume
-        // they have PublicLanguageAssets cloned in the same place
-
+        String userDir = System.getProperty("user.dir");
         String langPackName = langPackGoogleSheet.getName();
-        String pathToLangPack = System.getProperty("user.dir") + "/src/" + langPackName;
+        String pathToLangPack = userDir + "/src/" + langPackName;
 
         deleteDirectory(new java.io.File(pathToLangPack));
 
-        String userDir = System.getProperty("user.dir");
         String pathToStudioProjects = userDir.substring(0, userDir.indexOf("/AlphaTiles/app"));
         String pathToTemplate = pathToStudioProjects + "/PublicLanguageAssets/templateTemplate";
         java.io.File templateFile = new java.io.File(pathToTemplate);
@@ -435,7 +436,7 @@ public class Validator {
 
         }
 
-
+        // TODO fix wierd little problem where you can't access the sheet but can the drive
         for (Map.Entry<String, String> subfolderSpecs : DESIRED_FILETYPE_FROM_SUBFOLDERS.entrySet()) {
             String subFolderName = subfolderSpecs.getKey();
             String subFolderFileTypes = subfolderSpecs.getValue();
@@ -450,13 +451,7 @@ public class Validator {
                     String pathForResource = outputFolderPath + driveResource.getName();
                     java.io.File downloadedResource = new java.io.File(pathForResource);
                     OutputStream out = new FileOutputStream(downloadedResource);
-                    try {
-                        driveService.files().get(driveResource.getId()).executeMediaAndDownloadTo(out);
-                    }
-                    catch (Exception e){
-                        deleteDirectory(new java.io.File("/Users/nathanchou/StudioProjects/AlphaTiles/app/tokens"));
-                    }
-
+                    driveService.files().get(driveResource.getId()).executeMediaAndDownloadTo(out);
                 }
             } catch (ValidatorException e) {
                 warnings.add(GENERIC_WARNING);
@@ -465,44 +460,54 @@ public class Validator {
 
 
 
-        boolean reachedProductFlavors = false;
-        boolean passedLangPackName = false;
-        String sectionToRewrite =
-                "        productFlavors {\n" +
-                "        // Assigns this product flavor to the \"version\" flavor dimension.\n" +
-                "        // If you are using only one dimension, this property is optional,\n" +
-                "        // and the plugin automatically assigns all the module's flavors to\n" +
-                "        // that dimension.\n" +
-                "\n" +
-                "        //Alpha Tiles internal team developers can find active product flavor definitions here:\n" +
-                "        // https://docs.google.com/document/d/1a3satcmHFa5r6l7THrKLgxSWVCs-Mp2yOGyzk4oETsk/edit\n" +
-                "\n" +
-                "        " + langPackName + " {\n" +
-                "            dimension \"language\"\n" +
-                "            applicationIdSuffix \".blue." + langPackName+ "\"\n";
-        StringBuilder newBuildGradle = new StringBuilder();
-
-
-        String pathToBuildGradle = System.getProperty("user.dir") + "/build.gradle";
-        BufferedReader readBuildGradle = new BufferedReader(new FileReader(pathToBuildGradle));
-        String line;
-        while ((line = readBuildGradle.readLine()) != null) {
-            if (line.contains("productFlavors {")) {
-                reachedProductFlavors = true;
-                newBuildGradle.append(sectionToRewrite);
-            }
-            else if (reachedProductFlavors && line.contains("resValue")){
-                passedLangPackName = true;
-            }
-            if (!reachedProductFlavors || passedLangPackName){
-                newBuildGradle.append(line).append("\n");
-            }
-        }
-        readBuildGradle.close();
-
-        BufferedWriter writeBuildGradle = new BufferedWriter(new FileWriter(pathToBuildGradle));
-        writeBuildGradle.write(newBuildGradle.toString());
-        writeBuildGradle.close();
+//        boolean reachedProductFlavors = false;
+//        boolean passedProductFlavors = false;
+//        String appName = "";
+//        try{
+//            appName = langPackGoogleSheet.getTabFromName("langinfo").get(7).get(1);
+//        }
+//        catch (Exception e){
+//            throw new ValidatorException("can't find the game name in langinfo");
+//        }
+//        String sectionToRewrite =
+//                "        productFlavors {\n" +
+//                "        // Assigns this product flavor to the \"version\" flavor dimension.\n" +
+//                "        // If you are using only one dimension, this property is optional,\n" +
+//                "        // and the plugin automatically assigns all the module's flavors to\n" +
+//                "        // that dimension.\n" +
+//                "\n" +
+//                "        //Alpha Tiles internal team developers can find active product flavor definitions here:\n" +
+//                "        // https://docs.google.com/document/d/1a3satcmHFa5r6l7THrKLgxSWVCs-Mp2yOGyzk4oETsk/edit\n" +
+//                "\n" +
+//                "        " + langPackName + " {\n" +
+//                "            dimension \"language\"\n" +
+//                "            applicationIdSuffix \".blue." + langPackName+ "\"\n" +
+//                "            resValue \"string\", \"app_name\", '" + appName + "'\n" +
+//                "        }\n" +
+//                "    }\n";
+//        StringBuilder newBuildGradle = new StringBuilder();
+//
+//
+//        String pathToBuildGradle = System.getProperty("user.dir") + "/build.gradle";
+//        BufferedReader readBuildGradle = new BufferedReader(new FileReader(pathToBuildGradle));
+//        String line;
+//        while ((line = readBuildGradle.readLine()) != null) {
+//            if (line.contains("productFlavors {")) {
+//                reachedProductFlavors = true;
+//                newBuildGradle.append(sectionToRewrite);
+//            }
+//            else if (reachedProductFlavors && line.contains("namespace 'org.alphatilesapps.alphatiles'")){
+//                passedProductFlavors = true;
+//            }
+//            if (!reachedProductFlavors || passedProductFlavors){
+//                newBuildGradle.append(line).append("\n");
+//            }
+//        }
+//        readBuildGradle.close();
+//
+//        BufferedWriter writeBuildGradle = new BufferedWriter(new FileWriter(pathToBuildGradle));
+//        writeBuildGradle.write(newBuildGradle.toString());
+//        writeBuildGradle.close();
     }
 
     public class GoogleDriveItem{
@@ -513,7 +518,6 @@ public class Validator {
         protected GoogleDriveItem(String inID){
             this.id = inID;
         }
-
         protected GoogleDriveItem(String inID, String inName, String inMimeType){
             this.id = inID;
             this.name = inName;
@@ -543,7 +547,7 @@ public class Validator {
             String pageToken = null;
             do {
                 FileList result = driveService.files().list()
-                        .setQ("parents in '" + driveFolderId + "'")
+                        .setQ("parents in '" + driveFolderId + "' and trashed = false")
                         .setSpaces("drive")
                         .setFields("nextPageToken, files(id, name, mimeType)")
                         .setPageToken(pageToken)
@@ -591,8 +595,10 @@ public class Validator {
                 }
             }
             for (String shouldHaveMatched : LongestFirstToMatch){
-                warnings.add(shouldHaveMatched + "does not have a corresponding file in " + this.getName());
+                warnings.add(shouldHaveMatched + "does not have a corresponding file in " + this.getName() +
+                        " of the correct file type");
             }
+            //TODO should I have services.json?
         }
         protected ArrayList<GoogleDriveItem> getFolderContents(){
             return this.folderContents;
@@ -673,14 +679,17 @@ public class Validator {
             super();
             this.name = inName;
             this.spreadSheetId = inSpreadsheetId;
+
             try {
                 ValueRange response = sheetsService.spreadsheets().values()
                         .get(spreadSheetId, name + "!A1:Z")
+                        .setValueRenderOption("UNFORMATTED_VALUE")
                         .execute();
                 for (List row : response.getValues()) {
                     ArrayList<String> newRow = new ArrayList<>();
                     for (Object cell : row) {
-                        newRow.add(cell.toString().strip());
+                            newRow.add(cell.toString().strip());
+
                     }
                     this.add(newRow);
                 }
@@ -727,27 +736,26 @@ public class Validator {
         }
 
 
-        public ArrayList<String> getCol(int colNum) {
-            ArrayList<String> col = new ArrayList<>();
-            for (ArrayList<String> row : this) {
-                col.add(row.get(colNum));
-            }
-            return col;
-        }
-
-        public ArrayList<String> getCol(int colNum, boolean excludeHeader) {
-            ArrayList<String> toReturn = new ArrayList<>(this.getCol(colNum));
-            if (excludeHeader){
+        public ArrayList<String> getCol(int colNum) throws ValidatorException {
+            try {
+                ArrayList<String> toReturn = new ArrayList<>();
+                for (ArrayList<String> row : this) {
+                    toReturn.add(row.get(colNum));
+                }
                 toReturn.remove(0);
+                return toReturn;
             }
-            return toReturn;
+            catch (IndexOutOfBoundsException e){
+                fatalErrors.add(("the tab " + this.getName() + " is completely empty"));
+                throw new ValidatorException("the tab " + this.getName() + " is completely empty");
+            }
         }
 
-        private void checkColForDuplicates(int colNum) {
+        private void checkColForDuplicates(int colNum) throws ValidatorException {
             Set<String> colSet = new HashSet<>();
             for (String cell : this.getCol(colNum)) {
                 if (!colSet.add(cell)) {
-                    warnings.add(cell + " appears more than once in column " + colNum + " of " + this.getName());
+                    fatalErrors.add(cell + " appears more than once in column " + colNum + 1 +  " of " + this.getName());
                 }
             }
         }
@@ -803,7 +811,7 @@ public class Validator {
         }
 
         try {
-            ArrayList<String> AudioNames = langPackGoogleSheet.getTabFromName(tabName).getCol(colNum, true);
+            ArrayList<String> AudioNames = langPackGoogleSheet.getTabFromName(tabName).getCol(colNum);
             AudioNames.removeAll(Collections.singleton("X"));
             if (AudioNames.size() > 0) {
                 someAudioNames = true;
@@ -832,7 +840,7 @@ public class Validator {
 
         try {
             int wordsSpliced = 0;
-            for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1, true)) {
+            for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1)) {
                 if (word.contains(".")) {
                     wordsSpliced += 1;
                 }
@@ -866,13 +874,21 @@ public class Validator {
     }
 
     // TODO clean this up a bit lol
-    private int numTilesInWord(String toParse, Map<String, Integer> tileUsage, int numTilesSoFar) {
+    private int numTilesInWord(String toParse, Map<String, Integer> tileUsage) {
         Set<String> tileSet = tileUsage.keySet();
         for (int i = toParse.length(); i > 0; i--) {
-            String tileToCheck = toParse.substring(0, i);
-            if (tileSet.contains(tileToCheck) && (i == toParse.length() || (numTilesInWord(toParse.substring(i), tileUsage, numTilesSoFar + 1)) != 0)) {
-                tileUsage.put(tileToCheck, tileUsage.get(tileToCheck) + 1);
-                return numTilesSoFar + 1;
+            String longestPossibleTile = toParse.substring(0, i);
+            if (tileSet.contains(longestPossibleTile)) {
+                if (i == toParse.length()){
+                    return 1;
+                }
+                else{
+                    int numTilesIfThisOne = numTilesInWord(toParse.substring(i), tileUsage);
+                    if (numTilesIfThisOne > 0){
+                        tileUsage.put(longestPossibleTile, tileUsage.get(longestPossibleTile) + 1);
+                        return  numTilesIfThisOne + 1;
+                    }
+                }
             }
         }
         return 0;
@@ -941,6 +957,5 @@ public class Validator {
             super(errorMessage);
         }
     }
-
 
 }
