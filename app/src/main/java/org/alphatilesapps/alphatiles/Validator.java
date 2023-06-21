@@ -1,5 +1,7 @@
 package org.alphatilesapps.alphatiles;
 import android.os.Build;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import java.io.ByteArrayInputStream;
@@ -24,11 +26,13 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -47,7 +51,11 @@ public class Validator {
 
     private final Set<String> fatalErrors = new LinkedHashSet<>();
     private final Set<String> warnings = new LinkedHashSet<>();
+
+    private Drive driveService;
     private final DriveFolder langPackDriveFolder;
+
+    private Sheets sheetsService;
     private final GoogleSheet langPackGoogleSheet;
 
     private final HashMap<String, String> DESIRED_DATA_FROM_TABS = new HashMap<>(Map.of(
@@ -74,30 +82,10 @@ public class Validator {
     private final String GENERIC_WARNING = "one or more checks was not able to be run because of " +
             "unresolved fatal errors";
 
-    // region // the below fields can be ignored
-    private static final String credentialsJson =
-            "{\"installed\":{\"client_id\":\"384994053794-tuci4d2mhf4caems7jalfmb4voi855b8.apps." +
-            "googleusercontent.com\",\"project_id\":\"enhanced-medium-387818\",\"auth_uri\":" +
-            "\"https://accounts.google.com/o/oauth2/auth\",\"token_uri\":" +
-            "\"https://oauth2.googleapis.com/token\",\"auth_provider_x509_cert_url\":" +
-            "\"https://www.googleapis.com/oauth2/v1/certs\",\"client_secret\":" +
-            "\"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\",\"redirect_uris\":[\"http://localhost\"]}}";
-
-    private static final String APPLICATION_NAME = "Alpha Tiles Validator";
-    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-    private final Sheets sheetsService =
-            new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                    .setApplicationName(APPLICATION_NAME)
-                    .build();
-    private final Drive driveService =
-            new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                .setApplicationName(APPLICATION_NAME)
-                .build();
-    //endregion
-
     public Validator(String driveFolderUrl) throws IOException, GeneralSecurityException, ValidatorException {
+
         String driveFolderId = driveFolderUrl.substring(driveFolderUrl.indexOf("folders/") + 8);
+        buildServices(driveFolderId);
         this.langPackDriveFolder = new DriveFolder(driveFolderId);
         this.langPackGoogleSheet = langPackDriveFolder.getOnlyGoogleSheet();
     }
@@ -409,12 +397,11 @@ public class Validator {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void writeValidatedFiles() throws IOException, ValidatorException {
 
-        String userDir = System.getProperty("user.dir");
-        String langPackName = langPackGoogleSheet.getName();
-        String pathToLangPack = userDir + "/src/" + langPackName;
-
+        // top portion writes the desired data from tabs into the raw folder
+        String pathToLangPack = "src/" + langPackGoogleSheet.getName();
         deleteDirectory(new java.io.File(pathToLangPack));
 
+        String userDir = System.getProperty("user.dir");
         String pathToStudioProjects = userDir.substring(0, userDir.indexOf("/AlphaTiles/app"));
         String pathToTemplate = pathToStudioProjects + "/PublicLanguageAssets/templateTemplate";
         java.io.File templateFile = new java.io.File(pathToTemplate);
@@ -424,29 +411,27 @@ public class Validator {
 
         String pathToRaw = pathToLangPack + "/res/raw";
         for (String desiredTabName : DESIRED_DATA_FROM_TABS.keySet()){
-            try{
-                Tab desiredTab = langPackGoogleSheet.getTabFromName(desiredTabName);
-                FileWriter writer = new FileWriter(pathToRaw + "/aa_" + desiredTab.getName() + ".txt");
-                writer.write(desiredTab.toString());
-                writer.close();
-            }
-            catch (ValidatorException e){
-                warnings.add(GENERIC_WARNING);
-            }
+            Tab desiredTab = langPackGoogleSheet.getTabFromName(desiredTabName);
+            FileWriter writer = new FileWriter(pathToRaw + "/aa_" + desiredTab.getName() + ".txt");
+            writer.write(desiredTab.toString());
+            writer.close();
 
         }
 
-        // TODO fix wierd little problem where you can't access the sheet but can the drive
         for (Map.Entry<String, String> subfolderSpecs : DESIRED_FILETYPE_FROM_SUBFOLDERS.entrySet()) {
+
             String subFolderName = subfolderSpecs.getKey();
             String subFolderFileTypes = subfolderSpecs.getValue();
+
             try {
                 DriveFolder wordImagesFolder = langPackDriveFolder.getFolderFromName(subFolderName);
                 ArrayList<GoogleDriveItem> folderContents = wordImagesFolder.getFolderContents();
+
                 String outputFolderPath = pathToLangPack + "/res/raw/";
                 if (subFolderFileTypes.contains("image")){
                     outputFolderPath = pathToLangPack + "/res/drawable/";
                 }
+
                 for (GoogleDriveItem driveResource : folderContents) {
                     String pathForResource = outputFolderPath + driveResource.getName();
                     java.io.File downloadedResource = new java.io.File(pathForResource);
@@ -511,13 +496,9 @@ public class Validator {
     }
 
     public class GoogleDriveItem{
-
         private String mimeType;
         private final String id;
         private String name;
-        protected GoogleDriveItem(String inID){
-            this.id = inID;
-        }
         protected GoogleDriveItem(String inID, String inName, String inMimeType){
             this.id = inID;
             this.name = inName;
@@ -540,10 +521,12 @@ public class Validator {
     private class DriveFolder extends GoogleDriveItem{
 
         private final ArrayList<GoogleDriveItem> folderContents = new ArrayList<>();
-        protected DriveFolder(String driveFolderId) throws IOException{
-            super(driveFolderId);
-            super.name = driveService.files().get(driveFolderId).execute().getName();
-            super.mimeType = "application/vnd.google-apps.folder";
+
+        protected DriveFolder(String driveFolderId) throws IOException {
+            this(driveFolderId, (String) driveService.files().get(driveFolderId).get("name"));
+        }
+        protected DriveFolder(String driveFolderId, String inName) throws IOException {
+            super(driveFolderId, inName, "application/vnd.google-apps.folder");
             String pageToken = null;
             do {
                 FileList result = driveService.files().list()
@@ -556,10 +539,10 @@ public class Validator {
                 for (File file : result.getFiles()){
 
                     if (file.getMimeType().equals("application/vnd.google-apps.spreadsheet")) {
-                        folderContents.add(new GoogleSheet(file.getId()));
+                        folderContents.add(new GoogleSheet(file.getId(), file.getName()));
                     }
                     else if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
-                        folderContents.add(new DriveFolder(file.getId()));
+                        folderContents.add(new DriveFolder(file.getId(), file.getName()));
                     }
                     else {
                         folderContents.add(new GoogleDriveItem(file.getId(), file.getName(), file.getMimeType()));
@@ -648,11 +631,9 @@ public class Validator {
     private class GoogleSheet extends GoogleDriveItem {
         private final ArrayList<Tab> tabList = new ArrayList<>();
 
-        protected GoogleSheet(String spreadSheetId) throws IOException {
-            super(spreadSheetId);
+        protected GoogleSheet(String spreadSheetId, String inName) throws IOException {
+            super(spreadSheetId, inName, "application/vnd.google-apps.spreadsheet");
             Spreadsheet thisSpreadsheet = sheetsService.spreadsheets().get(spreadSheetId).execute();
-            super.name = thisSpreadsheet.getProperties().getTitle();
-            super.mimeType = "application/vnd.google-apps.spreadsheet";
             List<Sheet> sheetList = thisSpreadsheet.getSheets();
             for (Sheet sheet : sheetList){
                 tabList.add(new Tab(spreadSheetId, sheet.getProperties().getTitle())) ;
@@ -709,8 +690,8 @@ public class Validator {
                             "have " + this.colLen);
                 }
 
-                for (int i = this.size() -1 ; i >= this.colLen; i--){
-                    this.remove(i);
+                if (this.size() > this.colLen) {
+                    this.subList(this.colLen, this.size()).clear();
                 }
             }
             for (int i = 0; i < this.size(); i++) {
@@ -781,6 +762,7 @@ public class Validator {
 
         }
 
+        @NonNull
         @Override
         public String toString() {
             StringBuilder toReturn = new StringBuilder();
@@ -894,6 +876,48 @@ public class Validator {
         return 0;
     }
 
+    private void buildServices(String driveFolderId) throws GeneralSecurityException, IOException {
+
+        // intially builds the drive and sheets service not knowing if the token is revoked/expired
+        String APPLICATION_NAME = "Alpha Tiles Validator";
+        JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+        NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        sheetsService =
+                new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                        .setApplicationName(APPLICATION_NAME)
+                        .build();
+        driveService =
+                new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                        .setApplicationName(APPLICATION_NAME)
+                        .build();
+        // tries to use the drive service to check if the token is revoked or expired
+        try {
+            driveService.files().get(driveFolderId).execute();
+        }
+        // if the token is revoked or expired, deletes the token and then rebuilds the services
+        catch (TokenResponseException | GoogleJsonResponseException e){
+            String errorDescription;
+            if (e instanceof TokenResponseException){
+                errorDescription = ((TokenResponseException) e).getDetails().get("error_description").toString();
+            }
+            else{
+                errorDescription = ((GoogleJsonResponseException) e).getDetails().get("error_description").toString();
+            }
+
+            if (errorDescription.equals("Token has been expired or revoked.")) {
+                deleteDirectory(new java.io.File("tokens"));
+                sheetsService =
+                        new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                                .setApplicationName(APPLICATION_NAME)
+                                .build();
+                driveService =
+                        new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                                .setApplicationName(APPLICATION_NAME)
+                                .build();
+            }
+        }
+    }
+
     /**
      * Creates an authorized Credential object.
      *
@@ -904,8 +928,15 @@ public class Validator {
     private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
             throws IOException {
 
-        String TOKENS_DIRECTORY_PATH = "tokens";
 
+        String credentialsJson =
+                "{\"installed\":{\"client_id\":\"384994053794-tuci4d2mhf4caems7jalfmb4voi855b8.apps." +
+                        "googleusercontent.com\",\"project_id\":\"enhanced-medium-387818\",\"auth_uri\":" +
+                        "\"https://accounts.google.com/o/oauth2/auth\",\"token_uri\":" +
+                        "\"https://oauth2.googleapis.com/token\",\"auth_provider_x509_cert_url\":" +
+                        "\"https://www.googleapis.com/oauth2/v1/certs\",\"client_secret\":" +
+                        "\"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\",\"redirect_uris\":[\"http://localhost\"]}}";
+        JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
          //Global instance of the scopes required by this quickstart.
          //If modifying these scopes, delete your previously saved tokens/ folder.
@@ -920,7 +951,7 @@ public class Validator {
         // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
+                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File("tokens")))
                 .setAccessType("offline")
                 .build();
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
