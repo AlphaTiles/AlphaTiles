@@ -1,16 +1,16 @@
 package org.alphatilesapps.alphatiles;
 import android.os.Build;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-
 import java.io.ByteArrayInputStream;
+import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Set;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponseException;
@@ -62,7 +61,7 @@ public class Validator {
             "langinfo", "A1:B15",
             "gametiles", "A1:Q",
             "wordlist", "A1:F",
-            "keyboard", "A1:B36",
+            "keyboard", "A1:B",
             "games", "A1:H",
             "syllables", "A1:G",
             "resources", "A1:C7",
@@ -71,18 +70,20 @@ public class Validator {
             "colors", "A1:C"));
 
     private final HashMap<String,String> DESIRED_FILETYPE_FROM_SUBFOLDERS = new HashMap<>(Map.of(
-            "word_images", "image/",
-            "word_audio" ,"audio/mpeg",
-            "resource_images", "image/",
-            "(OPTIONAL)_low_res_images", "image/",
-            "(OPTIONAL)_tile_audio", "audio/mpeg",
-            "(OPTIONAL)_instruction_audio", "audio/mpeg",
-            "(OPTIONAL)_syllable_audio", "audio/mpeg"));
+            "images_words", "image/",
+            "audio_words" ,"audio/mpeg",
+            "images_resources_optional", "image/",
+            "images_words_low_res", "image/",
+            "audio_tiles_optional", "audio/mpeg",
+            "audio_instructions_optional", "audio/mpeg",
+            "audio_syllables_optional", "audio/mpeg"));
 
     private final String GENERIC_WARNING = "one or more checks was not able to be run because of " +
             "unresolved fatal errors";
 
     public Validator(String driveFolderUrl) throws IOException, GeneralSecurityException, ValidatorException {
+
+        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out), true, "UTF-8"));
 
         String driveFolderId = driveFolderUrl.substring(driveFolderUrl.indexOf("folders/") + 8);
         buildServices(driveFolderId);
@@ -90,6 +91,8 @@ public class Validator {
         this.langPackGoogleSheet = langPackDriveFolder.getOnlyGoogleSheet();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    //TODO will requiring a higher minimum api matter for when the validator class goes into an app if its not used?
     public void validate() {
 
         this.validateRequiredSheetTabs();
@@ -139,7 +142,7 @@ public class Validator {
             for (String cell : langPackGoogleSheet.getTabFromName("wordlist").getCol(0)) {
                 if (!cell.matches("[a-z0-9_]+")) {
                     fatalErrors.add("In the first column of wordList, the word " + cell + " contains non-alphanumeric " +
-                            "characters. " + "Please remove them. (The only allowed characters are a-z, and 0-9.)");
+                            "characters. " + "Please remove them. (The only allowed characters are a-z, 0-9, and _)");
                 }
             }
         } catch (ValidatorException e) {
@@ -170,8 +173,8 @@ public class Validator {
             for (String cell : langPackGoogleSheet.getTabFromName("wordlist").getCol(1)) {
                 for (String letter : cell.split("")) {
                     if (!keyUsage.containsKey(letter)) {
-                        warnings.add("In wordList, the word " + cell + " contains the letter " + letter +
-                                " which is not in the keyboard.");
+                        warnings.add("In wordList, the word \"" + cell + "\" contains the letter \"" + letter +
+                                "\" which is not in the keyboard.");
                     } else {
                         keyUsage.put(letter, keyUsage.get(letter) + 1);
                     }
@@ -179,7 +182,7 @@ public class Validator {
             }
             for (Map.Entry<String, Integer> entry : keyUsage.entrySet()) {
                 if (entry.getValue() < 6) {
-                    warnings.add("In wordList.txt, the letter " + entry.getKey() + " is only used" +
+                    warnings.add("In wordList.txt, the letter \"" + entry.getKey() + "\" is only used" +
                             " in " + entry.getValue() + " words. It is recommended that each letter be" +
                             " used in at least 6 words.");
                 }
@@ -204,12 +207,12 @@ public class Validator {
                 // it also updates the tileUsage dictionary so the dictionary counts how many times each tile appears
                 int tileCounter = numTilesInWord(word, tileUsage);
                 if (tileCounter == 0) {
-                    warnings.add("no combination of tiles can be put together to create " + word + "in wordlist");
+                    warnings.add("no combination of tiles can be put together to create \"" + word + "\" in wordlist");
                 }
 
                 if (tileCounter >= 10) {
                     if (tileCounter > 15) {
-                        fatalErrors.add("the word " + word + " in wordlist takes more than 15 tiles to build");
+                        fatalErrors.add("the word \"" + word + "\" in wordlist takes more than 15 tiles to build");
                     } else {
                         longWords += 1;
                     }
@@ -221,7 +224,7 @@ public class Validator {
             }
             for (Map.Entry<String, Integer> tile : tileUsage.entrySet()) {
                 if (tile.getValue() < 3) {
-                    warnings.add("the tile " + tile.getKey() + " in gametiles only appears in words " + tile.getValue()
+                    warnings.add("the tile \"" + tile.getKey() + "\" in gametiles only appears in words " + tile.getValue()
                             + " times. It is recommended that each letter be used in at least 3 words");
                 }
             }
@@ -242,11 +245,11 @@ public class Validator {
             }
             // this check makes sure that colum 4 of gameTiles only has valid type specifiers
             ArrayList<String> gameTileTypes = gameTiles.getCol(4);
-            HashSet<String> validTypes = new HashSet<>(Set.of("C","V","X", "AD", "AV", "BV", "FV", "LV"));
+            HashSet<String> validTypes = new HashSet<>(Set.of("C","V","X", "AD", "AV", "BV", "FV", "LV", "T", "SAD"));
             for (int i = 0; i < gameTileTypes.size(); i++) {
                 if (!validTypes.contains(gameTileTypes.get(i))) {
                     warnings.add("row " + i + 1 + " of gametiles does not specify a valid type in the types column. Valid" +
-                            "types are " + validTypes);
+                            " types are " + validTypes);
                 }
             }
         } catch (ValidatorException e) {
@@ -260,12 +263,12 @@ public class Validator {
         }
         try {
             langPackGoogleSheet.getTabFromName("settings").checkColForDuplicates(0);
-            langPackGoogleSheet.getTabFromName("settings").checkColForDuplicates(1);
         } catch (ValidatorException e) {
             warnings.add(GENERIC_WARNING);
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void validateResourceSubfolders(){
         //todo add secondary image functionality
         for (Map.Entry<String, String> nameToMimeType : this.DESIRED_FILETYPE_FROM_SUBFOLDERS.entrySet()){
@@ -278,21 +281,21 @@ public class Validator {
         }
         // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
         // that the app is trying to use these features
-        boolean hasInstructionAudio = decideIfAudioAttempted("games", 4, "(OPTIONAL)_instruction_audio");
+        boolean hasInstructionAudio = decideIfAudioAttempted("games", 4, "audio_instructions_optional");
         if (!hasInstructionAudio){
-            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("(OPTIONAL)_instruction_audio");
+            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("audio_instructions_optional");
         }
-        boolean hasSyllableAudio = decideIfAudioAttempted("syllables", 4, "(OPTIONAL)_syllable_audio");
+        boolean hasSyllableAudio = decideIfAudioAttempted("syllables", 4, "audio_syllables_optional");
         if (!hasSyllableAudio){
-            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("(OPTIONAL)_syllable_audio");
+            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("audio_syllables_optional");
         }
-        boolean hasTileAudio = decideIfAudioAttempted("gametiles", 5, "(OPTIONAL)_tile_audio");
+        boolean hasTileAudio = decideIfAudioAttempted("gametiles", 5, "audio_tiles_optional");
         if (!hasTileAudio){
-            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("(OPTIONAL)_tile_audio");
+            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("audio_tiles_optional");
         }
 
         try {
-            DriveFolder resourceImages = langPackDriveFolder.getFolderFromName("resource_images");
+            DriveFolder resourceImages = langPackDriveFolder.getFolderFromName("images_resources_optional");
             ArrayList<String> resourceImageNames = langPackGoogleSheet.getTabFromName("resources").getCol(1);
             resourceImages.checkFileNameAgainstList(resourceImageNames);
         } catch (ValidatorException e) {
@@ -300,7 +303,7 @@ public class Validator {
         }
 
         try {
-            DriveFolder wordImages = langPackDriveFolder.getFolderFromName("word_images");
+            DriveFolder wordImages = langPackDriveFolder.getFolderFromName("images_words");
             ArrayList<String> wordImageNames = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
             wordImages.checkFileNameAgainstList(wordImageNames);
         } catch (ValidatorException e) {
@@ -308,7 +311,7 @@ public class Validator {
         }
 
         try {
-            DriveFolder wordAudio = langPackDriveFolder.getFolderFromName("word_audio");
+            DriveFolder wordAudio = langPackDriveFolder.getFolderFromName("audio_words");
             ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
             wordAudio.checkFileNameAgainstList(wordsInLWC);
         } catch (ValidatorException e) {
@@ -317,7 +320,7 @@ public class Validator {
 
         try {
             if (hasTileAudio) {
-                DriveFolder tileAudio = langPackDriveFolder.getFolderFromName("(OPTIONAL)_tile_audio");
+                DriveFolder tileAudio = langPackDriveFolder.getFolderFromName("audio_tiles_optional");
                 ArrayList<String> tiles = langPackGoogleSheet.getTabFromName("gametiles").getCol(5);
                 tileAudio.checkFileNameAgainstList(tiles);
             }
@@ -327,7 +330,7 @@ public class Validator {
 
         try {
             if (hasSyllableAudio) {
-                DriveFolder syllableAudio = langPackDriveFolder.getFolderFromName("(OPTIONAL)_syllable_audio");
+                DriveFolder syllableAudio = langPackDriveFolder.getFolderFromName("audio_syllables_optional");
                 ArrayList<String> syllables = langPackGoogleSheet.getTabFromName("syllables").getCol(4);
                 syllableAudio.checkFileNameAgainstList(syllables);
             }
@@ -337,7 +340,7 @@ public class Validator {
 
         try {
             if (hasInstructionAudio) {
-                DriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("(OPTIONAL)_instruction_audio");
+                DriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("audio_instructions_optional");
                 ArrayList<String> gamesList = langPackGoogleSheet.getTabFromName("games").getCol(4);
                 gamesList.removeAll(Collections.singleton("X"));
                 instructionAudio.checkFileNameAgainstList(gamesList);
@@ -547,7 +550,7 @@ public class Validator {
                     else {
                         folderContents.add(new GoogleDriveItem(file.getId(), file.getName(), file.getMimeType()));
                     }
-                 }
+                }
                 pageToken = result.getNextPageToken();
             } while (pageToken != null);
         }
@@ -561,23 +564,28 @@ public class Validator {
             throw new ValidatorException("was not able to find " + inName + " in the drive folder " + this.getName());
         }
 
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
         protected void checkFileNameAgainstList(ArrayList<String> toMatch){
-            PriorityQueue<String> LongestFirstToMatch = new PriorityQueue<>(toMatch);
+            toMatch.sort((first, second) -> Integer.compare(second.length(),
+                    first.length()));
+
             for (GoogleDriveItem item : new ArrayList<>(folderContents)) {
                 boolean hasMatchingName = false;
-                for (String candidate : new ArrayList<>(LongestFirstToMatch)) {
+                for (String candidate : new ArrayList<>(toMatch)) {
                     if (item.getName().startsWith(candidate)) {
-                        LongestFirstToMatch.remove(candidate);
+                        toMatch.remove(candidate);
                         hasMatchingName = true;
+                        break;
                     }
                 }
                 if (!hasMatchingName) {
-                    warnings.add("the file " + item.getName() + " in " + this.getName() + " may be excess" +
+                    warnings.add("the file " + item.getName() + " in " + this.getName() + " may be excess " +
                             "as the start of the filename does not appear to match to anything");
                     folderContents.remove(item);
                 }
             }
-            for (String shouldHaveMatched : LongestFirstToMatch){
+            for (String shouldHaveMatched : toMatch){
                 warnings.add(shouldHaveMatched + "does not have a corresponding file in " + this.getName() +
                         " of the correct file type");
             }
@@ -669,8 +677,13 @@ public class Validator {
                 for (List row : response.getValues()) {
                     ArrayList<String> newRow = new ArrayList<>();
                     for (Object cell : row) {
+                        // to allow a single white space cell
+                        if (cell.toString().matches("\\u0020+")){
+                            newRow.add(" ");
+                        }
+                        else{
                             newRow.add(cell.toString().strip());
-
+                        }
                     }
                     this.add(newRow);
                 }
@@ -686,7 +699,7 @@ public class Validator {
             this.colLen = colLenFromRange(inRange);
             if (this.colLen != null){
                 if (this.size() < this.colLen){
-                    fatalErrors.add("the tab " + this.name + " does not have enough rows. It should" +
+                    fatalErrors.add("the tab " + this.name + " does not have enough rows. It should " +
                             "have " + this.colLen);
                 }
 
@@ -805,8 +818,8 @@ public class Validator {
             return true;
         } else if (someAudioNames) {
             warnings.add("you list names of audio files in the column " + colNum + " of  the tab " + tabName
-            + " (ie you have text in the column that is not 'X') but the folder" + subFolderName + " is empty"
-            + " please add matching audio files to the folder" + subFolderName + " if you want to use this feature");
+                    + " (ie you have text in the column that is not 'X') but the folder" + subFolderName + " is empty"
+                    + " please add matching audio files to the folder" + subFolderName + " if you want to use this feature");
         } else if (someAudioFiles) {
             warnings.add("you have audio files in the folder " + subFolderName + " but column"
                     + " of the tabv" + tabName + " doesn't list any audio file names"
@@ -938,8 +951,8 @@ public class Validator {
                         "\"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\",\"redirect_uris\":[\"http://localhost\"]}}";
         JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
-         //Global instance of the scopes required by this quickstart.
-         //If modifying these scopes, delete your previously saved tokens/ folder.
+        //Global instance of the scopes required by this quickstart.
+        //If modifying these scopes, delete your previously saved tokens/ folder.
 
         List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY, DriveScopes.DRIVE_READONLY);
         //String CREDENTIALS_FILE_PATH = "/credentials.json";
