@@ -83,7 +83,7 @@ public class About extends AppCompatActivity {
         TextView privacyPolicy = findViewById(R.id.privacyPolicy);
 
         String httpText = Start.langInfoList.find("Privacy Policy");
-        String linkText = "<a href=\"" + httpText + "\">" + httpText + "</a>";
+        String linkText = "<a href=\"" + httpText + "\">" + "Privacy Policy" + "</a>";
         CharSequence styledText = Html.fromHtml(linkText);
         privacyPolicy.setText(styledText);
         privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
