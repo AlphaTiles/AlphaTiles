@@ -145,7 +145,6 @@ public class Georgia extends GameActivity {
             centerGamesHomeImage();
         }
 
-        visibleTiles = TILE_BUTTONS.length;
         updatePointsAndTrackers(0);
         playAgain();
     }

@@ -21,7 +21,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.StringTokenizer;
-
+import java.util.logging.Logger;
 
 public class Start extends AppCompatActivity {
     Context context;
@@ -99,6 +99,8 @@ public class Start extends AppCompatActivity {
     public static List<String> SYLLABLES = new ArrayList<>();
     public static List<String> MULTIFUNCTIONS = new ArrayList<>();
 
+    private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -109,9 +111,13 @@ public class Start extends AppCompatActivity {
         // initialize to 3 for correct, incorrect, and correctFinal sounds
 
         buildLangInfoArray();
+        LOGGER.info("LoadProgress: completed buildLangInfoArray()");
         buildKeysArray();
+        LOGGER.info("LoadProgress: completed buildKeysArray()");
         buildSettingsArray();
+        LOGGER.info("LoadProgress: completed buildSettingsArray()");
         buildColorsArray();
+        LOGGER.info("LoadProgress: completed buildColorsArray()");
 
         String hasAudioSetting = settingsList.find("Has tile audio");
         if (!hasAudioSetting.equals("")) {
@@ -168,22 +174,29 @@ public class Start extends AppCompatActivity {
         }
 
         buildTilesArray();
-        for (int d = 0; d < Start.tileList.size(); d++) {
-            if (Start.tileList.get(d).tileType.equals("C")) {
-                CONSONANTS.add(Start.tileList.get(d).baseTile);
-                CorV.add(Start.tileList.get(d).baseTile);
-            } else if (Start.tileList.get(d).tileType.equals("V")) {
-                VOWELS.add(Start.tileList.get(d).baseTile);
-                CorV.add(Start.tileList.get(d).baseTile);
-            } else if (Start.tileList.get(d).tileType.equals("T")) {
-                TONES.add(Start.tileList.get(d).baseTile);
-            } else if (Start.tileList.get(d).tileType.equals("SAD")) {
+        for (int d = 0; d < tileList.size(); d++) {
+            if (tileList.get(d).tileType.equals("C") || tileList.get(d).tileTypeB.equals("C") || tileList.get(d).tileTypeC.equals("C")) {
+                CONSONANTS.add(tileList.get(d).baseTile);
+                CorV.add(tileList.get(d).baseTile);
+            }
+            if (tileList.get(d).tileType.contains("V") || tileList.get(d).tileTypeB.contains("V") || tileList.get(d).tileTypeC.contains("V")) {
+                VOWELS.add(tileList.get(d).baseTile);
+                if(!CorV.contains(tileList.get(d).baseTile)) {
+                    CorV.add(tileList.get(d).baseTile);
+                }
+            }
+            if (tileList.get(d).tileType.equals("T") || tileList.get(d).tileTypeB.equals("T") || tileList.get(d).tileTypeC.equals("T")) {
+                TONES.add(tileList.get(d).baseTile);
+            }
+            if (tileList.get(d).tileType.equals("SAD")) {
                 hasSAD = true;
-                SAD.add(Start.tileList.get(d).baseTile);
-            } else if (!Start.tileList.get(d).tileTypeB.equals("none")) {
-                MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
+                SAD.add(tileList.get(d).baseTile);
+            }
+            if (!tileList.get(d).tileTypeB.equals("none")) {
+                MULTIFUNCTIONS.add(tileList.get(d).baseTile);
             }
         }
+        LOGGER.info("LoadProgress: completed buildTilesArray()");
 
         Collections.shuffle(CONSONANTS);
         Collections.shuffle(VOWELS);
@@ -197,9 +210,13 @@ public class Start extends AppCompatActivity {
         }
 
         buildWordsArray();
+        LOGGER.info("LoadProgress: completed buildWordsArray()");
         buildTileStagesLists();
+        LOGGER.info("LoadProgress: completed buildTileStagesLists()");
         buildWordStagesLists();
+        LOGGER.info("LoadProgress: completed buildWordStagesLists()");
         buildGamesArray();
+        LOGGER.info("LoadProgress: completed buildGamesArray()");
         totalAudio = totalAudio + wordList.size();
 
         if (hasSyllableGames) {
@@ -209,6 +226,7 @@ public class Start extends AppCompatActivity {
             }
             Collections.shuffle(SYLLABLES);
         }
+        LOGGER.info("LoadProgress: completed buildSyllablesArray()");
 
         if (hasSyllableAudio) {
             totalAudio = totalAudio + syllableList.size();
@@ -299,13 +317,13 @@ public class Start extends AppCompatActivity {
                 } else {
                     stageOfFirstAppearance = Integer.parseInt(thisLineArray[14]);
                 }
-                if(thisLineArray[15].equals("-")) { // If no second type stage is given, assume there is no second type
-                    stageOfFirstAppearanceType2 = -1;
+                if(thisLineArray[15].equals("-")) {
+                    stageOfFirstAppearanceType2 = 1;
                 } else {
                     stageOfFirstAppearanceType2 = Integer.parseInt(thisLineArray[15]);
                 }
-                if(thisLineArray[16].equals("-")) { // If no third type stage is given, assume there is no third type
-                    stageOfFirstAppearanceType3 = -1;
+                if(thisLineArray[16].equals("-")) {
+                    stageOfFirstAppearanceType3 = 1;
                 } else {
                     stageOfFirstAppearanceType3 = Integer.parseInt(thisLineArray[16]);
                 }
@@ -527,7 +545,7 @@ public class Start extends AppCompatActivity {
                                 String aTileInTheStageType = tileTypeHashMapWithMultipleTypes.get(aTileInTheStage);
                                 String tileInThisWordType;
                                 if (MULTIFUNCTIONS.contains(tilesInThisWord.get(t))){
-                                    tileInThisWordType = tileList.getInstanceTypeForMixedTile(t, word.localWord);
+                                    tileInThisWordType = tileList.getInstanceTypeForMixedTile(t, word.nationalWord);
                                 } else {
                                     tileInThisWordType = tileTypeHashMapWithMultipleTypes.get(tilesInThisWord.get(t));
                                 }
@@ -561,7 +579,7 @@ public class Start extends AppCompatActivity {
                 String firstTileType = "";
                 int stageFirstTileBelongsTo = firstTile.stageOfFirstAppearance;
                 if(MULTIFUNCTIONS.contains(firstTile)) { // Check if we need to get stageOfFirstAppearance2 or stageOfFirstAppearance3 instead
-                    firstTileType = tileList.getInstanceTypeForMixedTile(0, word.localWord);
+                    firstTileType = tileList.getInstanceTypeForMixedTile(0, word.nationalWord);
                     if(firstTile.tileTypeB.equals(firstTileType)){
                         stageFirstTileBelongsTo = firstTile.stageOfFirstAppearanceType2;
                     } else if (firstTile.tileTypeC.equals(firstTileType)) {

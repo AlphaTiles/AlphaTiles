@@ -7,6 +7,7 @@ import static org.alphatilesapps.alphatiles.Start.tileListNoSAD;
 import org.alphatilesapps.alphatiles.Start.WordList;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +17,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.Collections;
+
+import static org.alphatilesapps.alphatiles.Start.COLORS;
 
 public class Italy extends GameActivity {
     Start.TileList sortableTilesArray;
@@ -208,6 +211,9 @@ public class Italy extends GameActivity {
             boardCards.add(gameCards.get(tileNumber));
             TextView thisCardText = (TextView) findViewById(TILE_BUTTONS[tileNumber]);
             thisCardText.setText(wordList.stripInstructionCharacters(gameCards.get(tileNumber).localWord));
+            String tileColorStr = COLORS.get(tileNumber % 5);
+            int tileColor = Color.parseColor(tileColorStr);
+            thisCardText.setTextColor(tileColor); // resets as in previous round some text fields set to black
             ImageView thisCardImage = (ImageView) findViewById(TILE_IMAGES[tileNumber]);
             int resID = getResources().getIdentifier(gameCards.get(tileNumber).nationalWord, "drawable", getPackageName());
             thisCardImage.setImageResource(0);
@@ -264,6 +270,9 @@ public class Italy extends GameActivity {
 
         ImageView imageJustSelected = findViewById(TILE_IMAGES[indexOfTileJustSelected - 1]);
         imageJustSelected.setImageResource(R.drawable.zz_bean);
+
+        TextView thisCardText = (TextView) findViewById(TILE_BUTTONS[indexOfTileJustSelected - 1]);
+        thisCardText.setTextColor(Color.BLACK);
 
         if (loteria()) {
             respondToLoteria();

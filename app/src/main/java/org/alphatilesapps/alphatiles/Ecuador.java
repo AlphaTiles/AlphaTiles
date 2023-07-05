@@ -105,6 +105,7 @@ public class Ecuador extends GameActivity {
             centerGamesHomeImage();
         }
 
+        visibleTiles = TILE_BUTTONS.length;
         updatePointsAndTrackers(0);
         playAgain();
     }
@@ -375,7 +376,7 @@ public class Ecuador extends GameActivity {
         TextView rightWordTile = findViewById(R.id.activeWordTextView);
         rightWordTile.setText(wordList.stripInstructionCharacters(wordInLOP));
         ImageView image = (ImageView) findViewById(R.id.wordImage);
-        int resID = getResources().getIdentifier(wordInLOP + "2", "drawable", getPackageName());
+        int resID = getResources().getIdentifier(wordInLWC + "2", "drawable", getPackageName());
         image.setImageResource(resID);
 
         Random rand = new Random();
