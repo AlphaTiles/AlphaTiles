@@ -1,10 +1,11 @@
 package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -26,12 +27,17 @@ public class Myanmar extends GameActivity {
     int tilesInUse;
     int firstClickIndex = 0;
     int secondClickIndex = 0;
+    int firstClickPreviousBackgroundColor = 0;
+    int secondClickPreviousBackgroundColor = 0;
+    int firstClickPreviousTextColor = 0;
+    int secondClickPreviousTextColor = 0;
     int lowerClick = 0;
     int higherClick = 0;
     int wordsCompleted = 0;
     int completionGoal = 0;
-    int myanmarPoints;
     boolean myanmarHasChecked12Trackers;
+
+    Handler handler;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -88,7 +94,6 @@ public class Myanmar extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.myanmar);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -100,44 +105,13 @@ public class Myanmar extends GameActivity {
             fixConstraintsRTL(R.id.myanmarCL);
         }
 
-        points = getIntent().getIntExtra("points", 0); // KP
-        myanmarPoints = getIntent().getIntExtra("myanmarPoints", 0); // LM
-        myanmarHasChecked12Trackers = getIntent().getBooleanExtra("myanmarHasChecked12Trackers", false);
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        myanmarPoints = prefs.getInt("storedMyanmarPoints_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, 0);
-        myanmarHasChecked12Trackers = prefs.getBoolean("storedMyanmarHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
-        visibleTiles = TILE_BUTTONS.length;
-
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(myanmarPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-        if (trackerCount >= 12) {
-            myanmarHasChecked12Trackers = true;
-        }
-
-        updateTrackers();
-
-        setTextSizes();
-
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
+        setTextSizes();
+        updatePointsAndTrackers(0);
         playAgain();
-
     }
 
     @Override
@@ -227,19 +201,16 @@ public class Myanmar extends GameActivity {
 
     private void chooseWords() {
 
-        Random rand = new Random();
-
         for (int i = 0; i < 7; i++) {
 
-            int randomNum = rand.nextInt(Start.wordList.size()); // KP
-
-            sevenWordsInLopLwc[i][0] = Start.wordList.get(randomNum).nationalWord;
-            sevenWordsInLopLwc[i][1] = Start.wordList.get(randomNum).localWord;
+            chooseWord();
+            sevenWordsInLopLwc[i][0] = wordInLWC;
+            sevenWordsInLopLwc[i][1] = wordInLOP;
 
             int tileLength = 0;
 
-            for (int j = 0; j < i; j++) {
-                tileLength = tilesInArray(Start.tileList.parseWordIntoTiles(sevenWordsInLopLwc[i][1]));
+            for (int j = 0; j < i; j++) { // Prevent duplicates
+                tileLength = tileList.parseWordIntoTiles(sevenWordsInLopLwc[i][1]).size();
                 if (sevenWordsInLopLwc[i][0].equals(sevenWordsInLopLwc[j][0])) {
                     i--;
                 } else if (tileLength < 3 || tileLength > 7) {
@@ -314,7 +285,7 @@ public class Myanmar extends GameActivity {
 
                 wordDirection = directions[wordD][0];
                 wordFail = false;
-                wordLen = tilesInArray(Start.tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]));
+                wordLen = tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]).size();
 
                 // four checks to ensure that the word will not leave the board
                 if (wordDirection == 1 || wordDirection == 2 || wordDirection == 3) {
@@ -377,7 +348,7 @@ public class Myanmar extends GameActivity {
 
                     wordPlaced = true;
 
-                    parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]);
+                    parsedWordArrayFinal = tileList.parseWordIntoTiles(sevenWordsInLopLwc[w][1]);
                     int tileX = 0;
                     int tileY = 0;
                     for (int t = 0; t < wordLen; t++) {
@@ -393,6 +364,7 @@ public class Myanmar extends GameActivity {
                     int resID = getResources().getIdentifier(sevenWordsInLopLwc[w][0] + "2", "drawable", getPackageName());
                     image.setImageResource(resID);
                     image.setVisibility(View.VISIBLE);
+                    image.setClickable(true);
 
                 }
 
@@ -402,6 +374,7 @@ public class Myanmar extends GameActivity {
                 ImageView image = findViewById(WORD_IMAGES[w]);
                 image.setImageResource(0);
                 image.setVisibility(View.INVISIBLE);
+                image.setClickable(false);
                 completionGoal--;
             }
 
@@ -427,13 +400,11 @@ public class Myanmar extends GameActivity {
 
         int tileNumber;
         for (int x = 0; x < 7; x++) {
-
             for (int y = 0; y < 7; y++) {
-
                 if (tilesBoard[x][y].isEmpty()) {
 
-                    int randomNum = rand.nextInt(Start.tileList.size()); // KP
-                    randomTile = Start.tileList.get(randomNum).baseTile;
+                    int randomNum = rand.nextInt(tileList.size()); // KP
+                    randomTile = tileList.get(randomNum).baseTile;
 
                     tilesBoard[x][y] = randomTile;
 
@@ -443,47 +414,36 @@ public class Myanmar extends GameActivity {
 
                 }
             }
-
         }
-
     }
 
     private void respondToTileSelection(int justClickedTile) {
-
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
         TextView tile = findViewById(TILE_BUTTONS[justClickedTile - 1]);
-
+        int tileColor = ((ColorDrawable) tile.getBackground()).getColor();
         int textColor = tile.getCurrentTextColor();
 
-        boolean alreadyCompletedTile = false;
-        if (textColor == -1) {
-            alreadyCompletedTile = true;
-            // only the completed tiles switch to white (-1) font
-        }
+        tile.setBackgroundColor(Color.parseColor("#FFEB3B")); // Color the clicked tile yellow
 
-        if (!alreadyCompletedTile) {
-            tile.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
-            clickCount++;
-
-            if (clickCount == 1) {
-
-                firstClickIndex = justClickedTile - 1;
-
+        clickCount++;
+        if (clickCount == 1) {
+            firstClickIndex = justClickedTile - 1;
+            firstClickPreviousBackgroundColor = tileColor;
+            firstClickPreviousTextColor = textColor;
+        } else if (clickCount == 2) {
+            secondClickIndex = justClickedTile - 1;
+            secondClickPreviousBackgroundColor = tileColor;
+            secondClickPreviousTextColor = textColor;
+            if (tileColor == Color.parseColor("#FFEB3B")) { // For a second click to a yellow tile, reset to white with black text
+                secondClickPreviousBackgroundColor = Color.parseColor("#FFFFFF");
+                secondClickPreviousTextColor = Color.parseColor("#000000");
             }
-
-            if (clickCount == 2) {
-
-                secondClickIndex = justClickedTile - 1;
-                evaluateTwoClicks();
-
-            }
+            evaluateTwoClicks();
         }
-
         setAllTilesClickable();
         setOptionsRowClickable();
-
     }
 
     private void evaluateTwoClicks() {
@@ -491,33 +451,29 @@ public class Myanmar extends GameActivity {
         clickCount = 0;
 
         boolean wordFound = false;
+        int indexOfFoundWord = -1;
 
-        if (firstClickIndex == secondClickIndex) {
-
+        if (firstClickIndex == secondClickIndex) { // Clear
             TextView tileA = findViewById(TILE_BUTTONS[firstClickIndex]);
-            tileA.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
-            tileA.setTextColor(Color.parseColor("#000000")); // black
+            tileA.setBackgroundColor(firstClickPreviousBackgroundColor);
+            tileA.setTextColor(firstClickPreviousTextColor);
 
             TextView tileB = findViewById(TILE_BUTTONS[secondClickIndex]);
-            tileB.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
-            tileB.setTextColor(Color.parseColor("#000000")); // black
+            tileB.setBackgroundColor(secondClickPreviousBackgroundColor);
+            tileB.setTextColor(secondClickPreviousTextColor);
 
             setAllTilesClickable();
             setOptionsRowClickable();
             return;
-
         }
 
+        
         if (firstClickIndex > secondClickIndex) {
-
             lowerClick = secondClickIndex;
             higherClick = firstClickIndex;
-
         } else {
-
             higherClick = secondClickIndex;
             lowerClick = firstClickIndex;
-
         }
 
         int difference = higherClick - lowerClick;
@@ -525,27 +481,19 @@ public class Myanmar extends GameActivity {
         int selectionDirection = 0;     // 0 = invalid, 46 = horizontal, 82 = vertical, 19 = SW to NE diagonal, 73 = NW to SE diagonal
 
         if ((lowerClick / 7) == (higherClick / 7)) {
-
             selectionDirection = 46; // horizontal
-
         }
 
         if (difference % 7 == 0) {
-
             selectionDirection = 82; // vertical
-
         }
 
         if (((higherClick / 7) - (lowerClick / 7)) == -1 * ((higherClick % 7) - (lowerClick % 7))) {
-
             selectionDirection = 19; // SW to NE diagonal
-
         }
 
         if (((higherClick / 7) - (lowerClick / 7)) == ((higherClick % 7) - (lowerClick % 7))) {
-
             selectionDirection = 73; // NW to SE diagonal
-
         }
 
         String builtWord1 = "";
@@ -592,7 +540,6 @@ public class Myanmar extends GameActivity {
             int tileY;
 
             for (int t = 0; t < selectionLength; t++) {
-
                 if (selectionDirection == 19) { // Direction 19 is special, because the forward direction starts from the higher index
                     tileX = (higherClick % 7) + (t * incrementF[0]);
                     tileY = (higherClick / 7) + (t * incrementF[1]);
@@ -602,7 +549,6 @@ public class Myanmar extends GameActivity {
                 }
 
                 builtWord1 = builtWord1 + tilesBoard[tileX][tileY];
-
             }
 
             // Check backwards
@@ -624,7 +570,6 @@ public class Myanmar extends GameActivity {
             }
 
             for (int t = 0; t < selectionLength; t++) {
-
                 if (selectionDirection == 19) { // Direction 19 is special, because the backward direction starts from the lower index
                     tileX = (lowerClick % 7) + (t * incrementB[0]);
                     tileY = (lowerClick / 7) + (t * incrementB[1]);
@@ -634,32 +579,31 @@ public class Myanmar extends GameActivity {
                 }
 
                 builtWord2 = builtWord2 + tilesBoard[tileX][tileY];
-
             }
 
             for (int w = 0; w < 7; w++) {
-
                 if (Start.wordList.stripInstructionCharacters(builtWord1).equals(Start.wordList.stripInstructionCharacters(sevenWordsInLopLwc[w][1]))) {
                     wordFound = true;
+                    indexOfFoundWord = w;
                     displayWord = builtWord1;
                 }
                 if (Start.wordList.stripInstructionCharacters(builtWord2).equals(Start.wordList.stripInstructionCharacters(sevenWordsInLopLwc[w][1]))) {
                     wordFound = true;
+                    indexOfFoundWord = w;
                     displayWord = builtWord2;
                 }
-
             }
 
         }
 
-        if (wordFound) {
-//            // Word spelled correctly!
+        if (wordFound) { // Word spelled correctly!
 
             wordsCompleted++;
 
             TextView activeWord = findViewById(R.id.activeWordTextView);
             activeWord.setText(Start.wordList.stripInstructionCharacters(displayWord));
 
+            // Color the tiles in the found word
             int tileX;
             int tileY;
 
@@ -682,47 +626,37 @@ public class Myanmar extends GameActivity {
 
             }
 
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points += 2;
-            myanmarPoints += 2;
-            pointsEarned.setText(String.valueOf(myanmarPoints));
+            updatePointsAndTrackers(2);
 
-            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedMyanmarPoints_level" + challengeLevel + "_player"
-                    + playerString + "_" + syllableGame, myanmarPoints);
-            editor.putBoolean("storedMyanmarHasChecked12Trackers_level" + challengeLevel
-                    + "_player" + playerString + "_" + syllableGame, myanmarHasChecked12Trackers);
-            editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + "_" +
-                    syllableGame;
-            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-            editor.apply();
-
-            for (int w = 0; w < 7; w++) {
-
-                if (displayWord.equals(wordList.stripInstructionCharacters(sevenWordsInLopLwc[w][1]))) {
-
-                    wordInLWC = sevenWordsInLopLwc[w][0];
-
-                }
-
-            }
-
+            // Play word and "correct" sounds and then clear the image from word bank
+            wordInLWC = sevenWordsInLopLwc[indexOfFoundWord][0];
             playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
+            handler = new Handler();
+            handler.postDelayed(clearImageFromImageBank(indexOfFoundWord), Long.valueOf(wordDurations.get(wordInLWC) + correctSoundDuration));
 
-        } else { // word not found
+        } else { // Word not found
 
+            // Reset the tiles that were clicked to their previous color
             TextView tileA = findViewById(TILE_BUTTONS[firstClickIndex]);
-            tileA.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
-            tileA.setTextColor(Color.parseColor("#000000")); // black
+            tileA.setBackgroundColor(firstClickPreviousBackgroundColor);
+            tileA.setTextColor(firstClickPreviousTextColor);
 
             TextView tileB = findViewById(TILE_BUTTONS[secondClickIndex]);
-            tileB.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
-            tileB.setTextColor(Color.parseColor("#000000")); // black
+            tileB.setBackgroundColor(secondClickPreviousBackgroundColor);
+            tileB.setTextColor(secondClickPreviousTextColor);
 
         }
+    }
+
+    private Runnable clearImageFromImageBank(int w) {
+        Runnable clearImg = new Runnable() {
+            public void run() {
+                ImageView image = findViewById(WORD_IMAGES[w]);
+                image.setVisibility(View.INVISIBLE);
+                image.setClickable(false);
+            }
+        };
+        return clearImg;
     }
 
     public void onBtnClick(View view) {

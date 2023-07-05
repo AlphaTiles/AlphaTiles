@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,6 +54,31 @@ public class About extends AppCompatActivity {
         TextView photoAudioCredits = findViewById(R.id.photoAudioCredits);
         photoAudioCredits.setText(Start.langInfoList.find("Audio and image credits"));
         photoAudioCredits.setMovementMethod(new ScrollingMovementMethod());
+
+        TextView photoAudioCredits2 = findViewById(R.id.photoAudioCredits2);
+        String mediaTwo = Start.langInfoList.find("Audio-image credits (lang 2)");
+        if (mediaTwo.equals("none") || mediaTwo.equals(null)|| mediaTwo.equals("")) {
+            photoAudioCredits2.setText("");
+        } else {
+            photoAudioCredits2.setText(mediaTwo);
+            photoAudioCredits2.setMovementMethod(new ScrollingMovementMethod());
+            ConstraintLayout constraintLayout = findViewById(R.id.aboutCL);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+            constraintSet.connect(photoAudioCredits.getId(),ConstraintSet.BOTTOM,R.id.guidelineH8,ConstraintSet.TOP,0);
+//            constraintSet.connect(R.id.guidelineH7,ConstraintSet.TOP,R.id.guidelineH8,ConstraintSet.BOTTOM,0);
+            constraintSet.applyTo(constraintLayout);
+        }
+
+        TextView email = findViewById(R.id.email);
+        email.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+        String contactEmail = Start.langInfoList.find("Email");
+    if (contactEmail.equals("none") || contactEmail.equals(null)|| contactEmail.equals("")) {
+            email.setText("");
+        } else {
+            email.setText(contactEmail);
+            email.setMovementMethod(LinkMovementMethod.getInstance());
+        }
 
         TextView privacyPolicy = findViewById(R.id.privacyPolicy);
 

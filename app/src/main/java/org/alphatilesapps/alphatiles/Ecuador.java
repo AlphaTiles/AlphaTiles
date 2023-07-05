@@ -1,7 +1,5 @@
 package org.alphatilesapps.alphatiles;
 
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Insets;
@@ -35,16 +33,11 @@ import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Ecuador extends GameActivity {
 
-    ArrayList<String[]> wordListArray; // KP // the full list of words
-    ArrayList<String[]> searchCollection = new ArrayList(); // KP // the correct word plus the seven incorrect words
-
     int[][] boxCoordinates;   // Will be 8 boxes, defined by 4 parameters each: x1, y1, x2, y2
     int justClickedWord = 0;
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
-    int ecuadorPoints;
-    boolean ecuadorHasChecked12Trackers;
     // # 1 memoryCollection[LWC word, e.g. Spanish]
     // # 2 [LOP word, e.g. Me'phaa]
     // # 3 [state: "TEXT" or "IMAGE"]
@@ -97,7 +90,6 @@ public class Ecuador extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.ecuador);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);     // forces portrait mode only
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -109,41 +101,12 @@ public class Ecuador extends GameActivity {
             fixConstraintsRTL(R.id.ecuadorCL);
         }
 
-        points = getIntent().getIntExtra("points", 0); // KP
-        ecuadorPoints = getIntent().getIntExtra("ecuadorPoints", 0); // LM
-        ecuadorHasChecked12Trackers = getIntent().getBooleanExtra("ecuadorHasChecked12Trackers", false);
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        ecuadorPoints = prefs.getInt("storedEcuadorPoints_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, 0);
-        ecuadorHasChecked12Trackers = prefs.getBoolean("storedEcuadorHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-
-        wordListArray = new ArrayList(); // KP
-
-        visibleTiles = TILE_BUTTONS.length;
-
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(ecuadorPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-
-        updateTrackers();
-
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
+        updatePointsAndTrackers(0);
         playAgain();
-
     }
 
     @Override
@@ -164,8 +127,7 @@ public class Ecuador extends GameActivity {
         repeatLocked = true;
         setBoxes();
         setTextBoxColors();
-        buildWordsArray();
-        Collections.shuffle(wordListArray); // KP
+        Collections.shuffle(wordList); // KP
         setWords();
         setAllTilesClickable();
         setOptionsRowClickable();
@@ -407,63 +369,34 @@ public class Ecuador extends GameActivity {
 
     }
 
-    public void buildWordsArray() {
-
-        // This array will store every word available in wordlist.txt
-        // Subsequently, this will be narrowed down to 8 words for use in the Where's Waldo word game
-        // updated module by KP, Oct 2020
-        // AH, Nov 2020, revised to allow for spaces in words
-
-        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_wordlist));
-        if (scanner.hasNextLine()) {
-            scanner.nextLine();
-        }     // skip the header row
-
-        while (scanner.hasNextLine()) {
-            String thisLine = scanner.nextLine();
-            String[] thisLineArray = thisLine.split("\t");
-            wordListArray.add(thisLineArray);
-        }
-
-    }
-
     public void setWords() {
-        Boolean freshWord = false;
-        int rightWordIndex = -1;
-
-        while (!freshWord) {
-            Random rand = new Random();
-            int min = 0;
-            int max = TILE_BUTTONS.length - 1;
-            rightWordIndex = rand.nextInt((max - min) + 1) + min;
-
-            wordInLOP = wordListArray.get(rightWordIndex)[1];
-            wordInLWC = wordListArray.get(rightWordIndex)[0];
-
-            //If this word isn't one of the 3 previously tested words, we're good // LM
-            if (!wordInLWC.equals(lastWord)
-                    && !wordInLWC.equals(secondToLastWord)
-                    && !wordInLWC.equals(thirdToLastWord)) {
-                freshWord = true;
-                thirdToLastWord = secondToLastWord;
-                secondToLastWord = lastWord;
-                lastWord = wordInLWC;
-            }
-
-        } //generates a new word if it got one of the last three tested words // LM
+        chooseWord();
 
         TextView rightWordTile = findViewById(R.id.activeWordTextView);
-        rightWordTile.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
-
+        rightWordTile.setText(wordList.stripInstructionCharacters(wordInLOP));
         ImageView image = (ImageView) findViewById(R.id.wordImage);
-        int resID = getResources().getIdentifier(wordListArray.get(rightWordIndex)[0] + "2", "drawable", getPackageName());
+        int resID = getResources().getIdentifier(wordInLOP + "2", "drawable", getPackageName());
         image.setImageResource(resID);
 
+        Random rand = new Random();
+        int rightWordIndex = rand.nextInt(TILE_BUTTONS.length);
+        TextView correctMatchTile = findViewById(TILE_BUTTONS[rightWordIndex]);
+        correctMatchTile.setText(wordList.stripInstructionCharacters(wordInLOP));
+
+        ArrayList<String> wordsAlreadyOnTheBoard = new ArrayList<String>();
+        wordsAlreadyOnTheBoard.add(wordInLOP);
         for (int w = 0; w < TILE_BUTTONS.length; w++) {
             TextView wordTile = findViewById(TILE_BUTTONS[w]);
-            wordTile.setText(Start.wordList.stripInstructionCharacters(wordListArray.get(w)[1]));
             if (w != rightWordIndex) {
-                wordTile.setText(Start.wordList.stripInstructionCharacters(wordListArray.get(w)[1]));
+                boolean duplicate = true;
+                while (duplicate){
+                    int randomIndexOfOtherWord = rand.nextInt(cumulativeStageBasedWordList.size());
+                    String randomOtherWordInLOP = cumulativeStageBasedWordList.get(randomIndexOfOtherWord).localWord;
+                    if (!randomOtherWordInLOP.equals(wordInLOP)){
+                        wordTile.setText(wordList.stripInstructionCharacters(randomOtherWordInLOP));
+                        duplicate = false;
+                    }
+                }
             }
         }
     }
@@ -526,29 +459,7 @@ public class Ecuador extends GameActivity {
             // Good job!
             repeatLocked = false;
 
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points += 2;
-            ecuadorPoints += 2;
-            pointsEarned.setText(String.valueOf(ecuadorPoints));
-
-            trackerCount++;
-            if (trackerCount >= 12) {
-                ecuadorHasChecked12Trackers = true;
-            }
-            updateTrackers();
-
-            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedEcuadorPoints_level" + challengeLevel + "_player" + playerString
-                    + "_" + syllableGame, ecuadorPoints);
-            editor.putBoolean("storedEcuadorHasChecked12Trackers_level" + challengeLevel + "_player"
-                    + playerString + "_" + syllableGame, ecuadorHasChecked12Trackers);
-            editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
-                    + syllableGame;
-            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-            editor.apply();
+            updatePointsAndTrackers(2);
 
             for (int w = 0; w < TILE_BUTTONS.length; w++) {
                 TextView nextWord = findViewById(TILE_BUTTONS[w]);

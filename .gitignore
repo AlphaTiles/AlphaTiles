@@ -14,16 +14,17 @@
 
 # Since language-specific build assets go into the main source folder,
 # we ignore most of the src/main folder.
-/app/src
+/app/src/*
+
 
 # Auto-generated files generally shouldn't be included, as they can
 # be automatically regenerated
 /app/build
 
 # Explicitly includes the three main source folders
-!app/src/main
-!app/src/androidTest
-!app/test
+!/app/src/main
+!/app/src/androidTest
+!/app/src/test
 *output-metadata.json
 /.idea/.name
 /.idea/.gitignore

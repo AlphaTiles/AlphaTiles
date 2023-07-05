@@ -1,7 +1,9 @@
 package org.alphatilesapps.alphatiles;
 
+import static org.alphatilesapps.alphatiles.Start.tileList;
+import static org.alphatilesapps.alphatiles.Start.wordList;
+
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,7 +25,6 @@ public class China extends GameActivity {
     Boolean[] solvedLines = new Boolean[4];
     TextView blankTile;
     int moves;
-    int chinaPoints;
     boolean chinaHasChecked12Trackers;
 
     protected static final int[] TILE_BUTTONS = {
@@ -78,22 +79,6 @@ public class China extends GameActivity {
         context = this;
         setContentView(R.layout.china);
         int gameID = R.id.chinaCL;
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        points = getIntent().getIntExtra("points", 0); // KP
-        chinaPoints = getIntent().getIntExtra("chinaPoints", 0); // LM
-        chinaHasChecked12Trackers = getIntent().getBooleanExtra("chinaHasChecked12Trackers", false);
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        chinaPoints = prefs.getInt("storedChinaPoints_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, 0);
-        chinaHasChecked12Trackers = prefs.getBoolean("storedChinaHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
-
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
@@ -111,26 +96,13 @@ public class China extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(chinaPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-        if (trackerCount >= 12) {
-            chinaHasChecked12Trackers = true;
-        }
-
-        updateTrackers();
-
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
         visibleTiles = 16;
-
+        updatePointsAndTrackers(0);
         playAgain();
-
     }
 
     @Override
@@ -171,18 +143,16 @@ public class China extends GameActivity {
     }
 
     private void chooseWords() {
-        //For the first three words
-        Random rand = new Random();
-        int randomNum;
+        // Find three four-tile words
         int tileLength;
         for (int i = 0; i < 3; i++) {
-            randomNum = rand.nextInt(Start.wordList.size());
+            chooseWord();
 
-            threeFourWordInLopLwc[i][0] = Start.wordList.get(randomNum).nationalWord;
-            threeFourWordInLopLwc[i][1] = Start.wordList.get(randomNum).localWord;
+            threeFourWordInLopLwc[i][0] = wordInLWC;
+            threeFourWordInLopLwc[i][1] = wordInLOP;
 
-            tileLength = tilesInArray(Start.tileList.parseWordIntoTiles(threeFourWordInLopLwc[i][1]));
-            for (int j = 0; j < i; j++) {
+            tileLength = tileList.parseWordIntoTiles(threeFourWordInLopLwc[i][1]).size();
+            for (int j = 0; j < i; j++) { // Find a word that's 4 tiles long and not a duplicate
                 if (threeFourWordInLopLwc[i][0].equals(threeFourWordInLopLwc[j][0])) {
                     i--;
                 } else if (tileLength != 4) {
@@ -191,31 +161,27 @@ public class China extends GameActivity {
             }
         }
 
-        // For the last word
-        boolean cont = true;
-        while (cont) {
-            randomNum = rand.nextInt(Start.wordList.size());
-
-            oneThreeWordInLopLwc[0] = Start.wordList.get(randomNum).nationalWord;
-            oneThreeWordInLopLwc[1] = Start.wordList.get(randomNum).localWord;
-            tileLength = tilesInArray(Start.tileList.parseWordIntoTiles(oneThreeWordInLopLwc[1]));
-            if (tileLength == 3) {
-                cont = false;
-            }
+        // Find one three-tile word
+        tileLength = -1;
+        while (!(tileLength==3)) {
+            chooseWord();
+            oneThreeWordInLopLwc[0] = wordInLWC;
+            oneThreeWordInLopLwc[1] = wordInLOP;
+            tileLength = tileList.parseWordIntoTiles(oneThreeWordInLopLwc[1]).size();
         }
     }
 
     private void setUpTiles() {
         ArrayList<String> tiles = new ArrayList<>();
         for (int t = 0; t < 3; t++) {
-            tiles.addAll(Start.tileList.parseWordIntoTiles(threeFourWordInLopLwc[t][1]));
+            tiles.addAll(tileList.parseWordIntoTiles(threeFourWordInLopLwc[t][1]));
 
             ImageView image = findViewById(WORD_IMAGES[t]);
             int resID = getResources().getIdentifier(threeFourWordInLopLwc[t][0] + "2", "drawable", getPackageName());
             image.setImageResource(resID);
             image.setVisibility(View.VISIBLE);
         }
-        tiles.addAll(Start.tileList.parseWordIntoTiles(oneThreeWordInLopLwc[1]));
+        tiles.addAll(tileList.parseWordIntoTiles(oneThreeWordInLopLwc[1]));
         Collections.shuffle(tiles);
 
         ImageView image = findViewById(WORD_IMAGES[3]);
@@ -297,29 +263,7 @@ public class China extends GameActivity {
         if (areAllLinesSolved()) {
             repeatLocked = false;
 
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points += 4;
-            chinaPoints += 4;
-            pointsEarned.setText(String.valueOf(chinaPoints));
-
-            trackerCount++;
-
-            if (trackerCount >= 12) {
-                chinaHasChecked12Trackers = true;
-            }
-            updateTrackers();
-
-            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedChinaPoints_level" + challengeLevel + "_player" + playerString
-                    + "_" + syllableGame, chinaPoints);
-            editor.putBoolean("storedChinaHasChecked12Trackers_level" + challengeLevel + "_player"
-                    + playerString + "_" + syllableGame, chinaHasChecked12Trackers);
-            editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-            editor.apply();
+            updatePointsAndTrackers(4);
 
             playCorrectFinalSound();
             setAllTilesUnclickable();
@@ -343,9 +287,9 @@ public class China extends GameActivity {
         String gridWord = "";
         String correctWord = "";
         if (row < 4) {
-            correctWord = Start.wordList.stripInstructionCharacters(threeFourWordInLopLwc[row - 1][1]);
+            correctWord = wordList.stripInstructionCharacters(threeFourWordInLopLwc[row - 1][1]);
         } else {
-            correctWord = Start.wordList.stripInstructionCharacters(oneThreeWordInLopLwc[1]);
+            correctWord = wordList.stripInstructionCharacters(oneThreeWordInLopLwc[1]);
         }
         TextView gameTile1 = findViewById(TILE_BUTTONS[leftMostTile]);
         TextView gameTile2 = findViewById(TILE_BUTTONS[leftMostTile + 1]);

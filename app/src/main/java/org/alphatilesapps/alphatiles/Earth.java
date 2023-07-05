@@ -25,20 +25,11 @@ public class Earth extends AppCompatActivity {
     Context context;
     String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
-    int points = 0;
-
-    int challengeLevel;
-
     int playerNumber = -1;
-
-    int gameNumber;
-
-    String country;
-
+    String playerString;
     int pageNumber; // Games 001 to 023 are displayed on page 1, games 024 to 046 are displayed on page 2, etc.
-
+    int globalPoints;
     int doorsPerPage = 23;
-
     ConstraintLayout earthCL;
 
     @Override
@@ -46,6 +37,7 @@ public class Earth extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = this;
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
+        playerString = Util.returnPlayerStringToAppend(playerNumber);
         setContentView(R.layout.earth);
         earthCL = findViewById(R.id.earthCL);
 
@@ -64,11 +56,10 @@ public class Earth extends AppCompatActivity {
         setTitle(Start.localAppName);
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        points = prefs.getInt("storedPoints_player" + playerString, 0);
+        globalPoints = getIntent().getIntExtra("globalPoints", 0);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(String.valueOf(globalPoints));
 
         ImageView avatar = findViewById(R.id.activePlayerImage);
         int resID = getResources().getIdentifier(String.valueOf(ChoosePlayer.AVATAR_JPG_IDS[playerNumber - 1]), "drawable", getPackageName());
@@ -104,10 +95,7 @@ public class Earth extends AppCompatActivity {
 
     public void updateDoors() {
 
-        String project = "org.alphatilesapps.alphatiles.";  // how to call this with code? It seemed to produce variable results
-
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
         int trackerCount;
 
         for (int j = 0; j < earthCL.getChildCount(); j++) {
@@ -120,12 +108,19 @@ public class Earth extends AppCompatActivity {
                     if (((pageNumber * doorsPerPage) + doorIndex) >= Start.gameList.size()) {
                         ((TextView) child).setVisibility(View.INVISIBLE);
                     } else {
-                        country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
+                        String project = "org.alphatilesapps.alphatiles.";
+                        String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
                         String challengeLevel = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel;
                         String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameMode;
-                        String uniqueGameLevelPlayerID = String.format("%s%s%s%s%s", project, country, challengeLevel, playerString, syllableGame);
+                        String stage;
+                        if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
+                            stage = "1";
+                        } else {
+                            stage = gameList.get((pageNumber * doorsPerPage) + doorIndex).stage;
+                        }
+                        String uniqueGameLevelPlayerModeStageID = project + country + challengeLevel + playerString + syllableGame + stage;
 
-                        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
+                        trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
 
                         // This is currently the only game that has no right/wrong responses with an incrementing trackerCount variable
                         // So we are forcing this game's door to initialize with a start
@@ -173,7 +168,6 @@ public class Earth extends AppCompatActivity {
                 } catch (Throwable ex)    // Never reached if tags are well formed!
                 {
                     ex.printStackTrace();
-                    continue;
                 }
             }
         }
@@ -225,9 +219,15 @@ public class Earth extends AppCompatActivity {
         String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameCountry;
         String activityClass = project + country;
 
-        challengeLevel = Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel);
-        gameNumber = (pageNumber * doorsPerPage) + doorIndex + 1;
+        int challengeLevel = Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).gameLevel);
+        int gameNumber = (pageNumber * doorsPerPage) + doorIndex + 1;
         String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).gameMode;
+        int stage;
+        if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
+            stage = 1;
+        } else {
+            stage = Integer.parseInt(gameList.get((pageNumber * doorsPerPage) + doorIndex).stage);
+        }
 
         Intent intent = getIntent();    // preserve Extras
         try {
@@ -236,11 +236,12 @@ public class Earth extends AppCompatActivity {
             e.printStackTrace();
         }
         intent.putExtra("challengeLevel", challengeLevel);
-        intent.putExtra("points", points);
+        intent.putExtra("globalPoints", globalPoints);
         intent.putExtra("gameNumber", gameNumber);
         intent.putExtra("pageNumber", pageNumber);
         intent.putExtra("country", country);
         intent.putExtra("syllableGame", syllableGame);
+        intent.putExtra("stage", stage);
         startActivity(intent);
         finish();
 

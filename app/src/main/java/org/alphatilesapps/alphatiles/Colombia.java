@@ -1,7 +1,5 @@
 package org.alphatilesapps.alphatiles;
 
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -38,7 +36,6 @@ public class Colombia extends GameActivity {
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
-    int colombiaPoints;
     static List<String> keysList = new ArrayList<>();
     static List<String> keysClicked = new ArrayList<>(); // Keys clicked, in order
 
@@ -109,8 +106,6 @@ public class Colombia extends GameActivity {
             gameID = R.id.colombiaCL;
         }
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
@@ -123,37 +118,12 @@ public class Colombia extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-
-        points = getIntent().getIntExtra("points", 0); // KP
-        colombiaPoints = getIntent().getIntExtra("colombiaPoints", 0); // LM
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        colombiaPoints = prefs.getInt("storedColombiaPoints_level" + challengeLevel + "_player"
-                + playerString + "_" + syllableGame, 0);
-        colombiaHasChecked12Trackers = prefs.getBoolean("storedColombiaHasChecked12Trackers_level"
-                + String.valueOf(challengeLevel) + "_player" + playerString + "_" + syllableGame, false); //JP
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
-
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(colombiaPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-
-        updateTrackers();
-
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
         keyboardScreenNo = 1;
+        updatePointsAndTrackers(0);
         playAgain();
     }
 
@@ -180,7 +150,7 @@ public class Colombia extends GameActivity {
         wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
         wordToBuild.setTextColor(Color.parseColor("#000000")); // black
 
-        chooseWord();
+        setWord();
 
         ImageView deleteArrow = (ImageView) findViewById(R.id.deleteImage);
         deleteArrow.setClickable(true);
@@ -189,42 +159,19 @@ public class Colombia extends GameActivity {
 
     }
 
-    private void chooseWord() {
-
-        boolean freshWord = false;
+    private void setWord() {
         keysClicked.clear();
-
-        while (!freshWord) { // Generates a new word if it got one of the last three tested words // LM
-            Random rand = new Random();
-            int randomNum = rand.nextInt(Start.wordList.size()); // KP
-
-            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
-
-            // If this word isn't one of the 3 previously tested words, we're good // LM
-            if (!wordInLWC.equals(lastWord)
-                    && !wordInLWC.equals(secondToLastWord)
-                    && !wordInLWC.equals(thirdToLastWord)) {
-                freshWord = true;
-                thirdToLastWord = secondToLastWord;
-                secondToLastWord = lastWord;
-                lastWord = wordInLWC;
-            }
-        }
-
+        chooseWord();
         ImageView image = (ImageView) findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
-        // KP
         if (syllableGame.equals("S")) {
             parsedWordArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); // KP
         } else {
             parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
         }
         initial = parsedWordArrayFinal.get(0); // KP
-
-
     }
 
     public void loadKeyboard() {
@@ -479,29 +426,7 @@ public class Colombia extends GameActivity {
             ImageView deleteArrow = (ImageView) findViewById(R.id.deleteImage);
             deleteArrow.setClickable(false);
 
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points += 4;
-            colombiaPoints += 4;
-            pointsEarned.setText(String.valueOf(colombiaPoints));
-
-            trackerCount++;
-            if (trackerCount >= 12) {
-                colombiaHasChecked12Trackers = true;
-            }
-            updateTrackers();
-
-            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.putInt("storedColombiaPoints_level" + challengeLevel + "_player"
-                    + playerString + "_" + syllableGame, colombiaPoints);
-            editor.putBoolean("storedColumbiaHasChecked12Trackers_level" + challengeLevel + "_player"
-                    + playerString + "_" + syllableGame, colombiaHasChecked12Trackers);
-            editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
-                    + syllableGame;
-            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-            editor.apply();
+            updatePointsAndTrackers(4);
 
             playCorrectSoundThenActiveWordClip(false);
 

@@ -1,7 +1,5 @@
 package org.alphatilesapps.alphatiles;
 
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -49,10 +47,6 @@ public class Brazil extends GameActivity {
     int visibleTiles;
     int numTones;
     String correctTile = "";
-    String lastWord = "";
-    String secondToLastWord = "";
-    String thirdToLastWord = "";
-    int brazilPoints;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -110,8 +104,6 @@ public class Brazil extends GameActivity {
         } else {
             setContentView(R.layout.brazil_cl1);
         }
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -119,7 +111,6 @@ public class Brazil extends GameActivity {
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
-
             int gameID = 0;
             if (challengeLevel == 3 || challengeLevel == 6) {
                 gameID = R.id.brazil_cl3_CL;
@@ -128,22 +119,6 @@ public class Brazil extends GameActivity {
             }
             fixConstraintsRTL(gameID);
         }
-
-        points = getIntent().getIntExtra("points", 0); // KP
-        brazilPoints = getIntent().getIntExtra("brazilPoints", 0); // KP
-        brazilHasChecked12Trackers = getIntent().getBooleanExtra("brazilHasChecked12Trackers", false); // LM
-
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        brazilPoints = prefs.getInt("storedBrazilPoints_level" + String.valueOf(challengeLevel)
-                + "_player" + playerString + "_" + syllableGame, 0);
-        brazilHasChecked12Trackers = prefs.getBoolean("storedBrazilHasChecked12Trackers_level"
-                + String.valueOf(challengeLevel) + "_player" + playerString + "_" + syllableGame, false); // LM
-
-        playerNumber = getIntent().getIntExtra("playerNumber", -1); // KP
-        challengeLevel = getIntent().getIntExtra("challengeLevel", -1); // KP
-        gameNumber = getIntent().getIntExtra("gameNumber", 0); // KP
-        syllableGame = getIntent().getStringExtra("syllableGame");
 
         if (challengeLevel < 4 && !syllableGame.equals("S")) {
 
@@ -225,20 +200,12 @@ public class Brazil extends GameActivity {
             sortableTilesArray = (Start.TileList) Start.tileList.clone(); // KP
         }
 
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(brazilPoints));
-
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID, 0);
-
-        updateTrackers();
-
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
 
+        updatePointsAndTrackers(0);
         playAgain();
-
     }
 
     @Override
@@ -265,7 +232,7 @@ public class Brazil extends GameActivity {
             Collections.shuffle(sortableTilesArray); // KP
         }
 
-        chooseWord();
+        setWord();
         removeTile();
         setAllTilesUnclickable();
         setOptionsRowUnclickable();
@@ -284,28 +251,9 @@ public class Brazil extends GameActivity {
         }
     }
 
-    private void chooseWord() {
+    private void setWord() {
 
-        boolean freshWord = false;
-
-        while (!freshWord) { // Generates a new word if it got one of the last three tested words // LM
-            Random rand = new Random();
-            int randomNum = rand.nextInt(Start.wordList.size()); // KP
-
-            wordInLWC = Start.wordList.get(randomNum).nationalWord; // KP
-            wordInLOP = Start.wordList.get(randomNum).localWord; // KP
-
-            // If this word isn't one of the 3 previously tested words, we're good // LM
-            if (!wordInLWC.equals(lastWord)
-                    && !wordInLWC.equals(secondToLastWord)
-                    && !wordInLWC.equals(thirdToLastWord)) {
-                freshWord = true;
-                thirdToLastWord = secondToLastWord;
-                secondToLastWord = lastWord;
-                lastWord = wordInLWC;
-            }
-        }
-
+        chooseWord();
         ImageView image = findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
@@ -381,7 +329,7 @@ public class Brazil extends GameActivity {
             }
 
             if (!proceed) { // Some languages (e.g. skr) have words without vowels (as defined by game tiles), so we filter out those words
-                chooseWord();
+                setWord();
             }
         }
     }
@@ -711,33 +659,7 @@ public class Brazil extends GameActivity {
         if (correctTile.equals(gameTileString)) {
             // Good job! You chose the right tile
             repeatLocked = false;
-
-            TextView pointsEarned = findViewById(R.id.pointsTextView);
-            points++;
-            brazilPoints++;
-            pointsEarned.setText(String.valueOf(brazilPoints));
-
-            trackerCount++;
-            if (trackerCount >= 12) {
-                brazilHasChecked12Trackers = true;
-            }
-            updateTrackers();
-
-            SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-            String playerString = Util.returnPlayerStringToAppend(playerNumber);
-            editor.putInt("storedPoints_player" + playerString, points);
-            editor.apply();
-            editor.putInt("storedBrazilPoints_level" + String.valueOf(challengeLevel) + "_player"
-                    + playerString + "_" + syllableGame, brazilPoints);
-            editor.apply();
-            editor.putBoolean("storedBrazilHasChecked12Trackers_level" +
-                            String.valueOf(challengeLevel) + "_player" + playerString + "_" + syllableGame,
-                    brazilHasChecked12Trackers);
-            editor.apply();
-            String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString
-                    + syllableGame;
-            editor.putInt(uniqueGameLevelPlayerID, trackerCount);
-            editor.apply();
+            updatePointsAndTrackers(1);
 
             for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
                 if ("__".equals(parsedWordArrayFinal.get(i))) {
