@@ -82,15 +82,17 @@ public class About extends AppCompatActivity {
 
         TextView privacyPolicy = findViewById(R.id.privacyPolicy);
 
-        String httpText = "https://alphatilesapps.org/privacypolicy.html";
-        String displayText = "Alpha Tiles Privacy Policy";
-        String linkText = "<a href=\"" + httpText + "\">" + displayText + "</a>";
-        privacyPolicy.setText(Html.fromHtml(linkText));
+        String httpText = Start.langInfoList.find("Privacy Policy");
+        String linkText = "<a href=\"" + httpText + "\">" + "Privacy Policy" + "</a>";
+        CharSequence styledText = Html.fromHtml(linkText);
+        privacyPolicy.setText(styledText);
         privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
         hidePrivacyPolicy = Boolean.parseBoolean(hidePrivacyPolicySetting);
         if (hidePrivacyPolicy) {
             privacyPolicy.setVisibility(View.GONE);
+        } else{
+            privacyPolicy.setVisibility(View.VISIBLE);
         }
 
         String verName = BuildConfig.VERSION_NAME;
