@@ -238,7 +238,7 @@
         android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintStart_toEndOf="@+id/guidelineV10"
         app:layout_constraintTop_toTopOf="@+id/guidelineH15"
         app:srcCompat="@drawable/zz_instructions" />
 
