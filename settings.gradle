@@ -1,2 +1,3 @@
 include ':app'
 rootProject.name = "DLGGames3"
+include ':validator'

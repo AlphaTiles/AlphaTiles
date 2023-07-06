@@ -16,7 +16,7 @@
 # we ignore most of the src/main folder.
 /app/src/*
 # for saftey ignore any tokens folder
-/app/tokens
+/tokens
 
 
 # Auto-generated files generally shouldn't be included, as they can
@@ -27,6 +27,9 @@
 !/app/src/main
 !/app/src/androidTest
 !/app/src/test
+# Explicitly includes run configurations
+!/.idea/runConfigurations
+!/.idea/runConfigurations/*
 *output-metadata.json
 /.idea/.name
 /.idea/.gitignore
