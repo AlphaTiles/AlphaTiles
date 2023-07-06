@@ -3,6 +3,7 @@ package org.alphatilesapps.alphatiles;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.annotation.TargetApi;
@@ -12,10 +13,12 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.*;
@@ -86,6 +89,20 @@ public class Earth extends AppCompatActivity {
         } else {
             forceLTRIfSupported();
         }
+
+        resID = context.getResources().getIdentifier("zzz_earth", "raw", context.getPackageName());
+        if (resID == 0) {
+            // hide audio instructions icon
+            ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+            instructionsButton.setVisibility(View.GONE);
+
+            ConstraintLayout constraintLayout = findViewById(R.id.earthCL);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+            constraintSet.centerHorizontally(R.id.resourcePromo, R.id.earthCL);
+            constraintSet.applyTo(constraintLayout);
+        }
+
     }
 
     @Override
@@ -276,6 +293,43 @@ public class Earth extends AppCompatActivity {
     private void forceLTRIfSupported() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
+    }
+
+    public void playAudioInstructions(View view) {
+        setAllElemsUnclickable();
+        int resID = context.getResources().getIdentifier("zzz_earth", "raw", context.getPackageName());
+        MediaPlayer mp3 = MediaPlayer.create(this, resID);
+        mp3.start();
+        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp3) {
+                setAllElemsClickable();
+                mp3.release();
+            }
+        });
+
+    }
+
+    protected void setAllElemsUnclickable() {
+        // Get reference to the parent layout container
+        LinearLayout parentLayout = findViewById(R.id.earthCL);
+
+        // Disable clickability of all child views
+        for (int i = 0; i < parentLayout.getChildCount(); i++) {
+            View child = parentLayout.getChildAt(i);
+            child.setClickable(false);
+        }
+    }
+
+    protected void setAllElemsClickable() {
+        // Get reference to the parent layout container
+        LinearLayout parentLayout = findViewById(R.id.earthCL);
+
+        // Disable clickability of all child views
+        for (int i = 0; i < parentLayout.getChildCount(); i++) {
+            View child = parentLayout.getChildAt(i);
+            child.setClickable(true);
         }
     }
 }
