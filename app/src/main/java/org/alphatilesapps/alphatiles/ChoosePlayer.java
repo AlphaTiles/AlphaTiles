@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.net.Uri;
 import android.os.Build;
@@ -227,6 +229,18 @@ public class ChoosePlayer extends AppCompatActivity {
                 }
             }
         }
+
+        int resID = context.getResources().getIdentifier("zzz_choose_player", "raw", context.getPackageName());
+        if (resID == 0) {
+            // hide audio instructions icon
+            ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+            instructionsButton.setVisibility(View.GONE);
+        } else{
+            ImageView avatar12image = (ImageView) findViewById(R.id.avatar12);
+            avatar12image.setVisibility(View.GONE);
+            TextView playername12 = (TextView) findViewById(R.id.playername12);
+            playername12.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -254,6 +268,43 @@ public class ChoosePlayer extends AppCompatActivity {
         startActivity(intent);
         finish();
 
+    }
+
+    public void playAudioInstructionsChoosePlayer(View view) {
+        setAllElemsUnclickable();
+        int resID = context.getResources().getIdentifier("zzz_choose_player", "raw", context.getPackageName());
+        MediaPlayer mp3 = MediaPlayer.create(this, resID);
+        mp3.start();
+        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp3) {
+                setAllElemsClickable();
+                mp3.release();
+            }
+        });
+
+    }
+
+    protected void setAllElemsUnclickable() {
+        // Get reference to the parent layout container
+        ConstraintLayout parentLayout = findViewById(R.id.choosePlayerCL);
+
+        // Disable clickability of all child views
+        for (int i = 0; i < parentLayout.getChildCount(); i++) {
+            View child = parentLayout.getChildAt(i);
+            child.setClickable(false);
+        }
+    }
+
+    protected void setAllElemsClickable() {
+        // Get reference to the parent layout container
+        ConstraintLayout parentLayout = findViewById(R.id.choosePlayerCL);
+
+        // Disable clickability of all child views
+        for (int i = 0; i < parentLayout.getChildCount(); i++) {
+            View child = parentLayout.getChildAt(i);
+            child.setClickable(true);
+        }
     }
 
 

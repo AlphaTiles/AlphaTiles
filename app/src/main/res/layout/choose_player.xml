@@ -452,6 +452,19 @@
         android:padding = "2dp"
         android:maxLines="1"/>
 
+    <ImageView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/playAgain"
+        android:onClick="playAudioInstructionsChoosePlayer"
+        android:rotationY="0"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH13"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV5"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
+        app:srcCompat="@drawable/zz_instructions" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH1"
         android:layout_width="wrap_content"
