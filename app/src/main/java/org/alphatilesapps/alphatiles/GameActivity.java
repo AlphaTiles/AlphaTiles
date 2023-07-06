@@ -216,6 +216,8 @@ public abstract class GameActivity extends AppCompatActivity {
             // after12CheckedTrackers option 1: nothing happens; players keep playing even after checking all 12 trackers
             // after12CheckedTrackers option 2: app returns players to Earth after checking all 12 trackers. They can get back in. Will return to Earth again after another 12 correct answers.
             if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 2) {
+                //ImageView repeatImage = (ImageView) findViewById(layoutResourceID);
+                //repeatImage.setClickable(false);
                 soundSequencer.postDelayed(new Runnable() {
                     public void run() {
                         Intent intent = getIntent();
@@ -228,6 +230,8 @@ public abstract class GameActivity extends AppCompatActivity {
             }
             // after12CheckedTrackers option 3: app displays celebration screen and moves on to the next unchecked game after checking all 12 trackers.
             if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 3) {
+                //ImageView repeatImage = (ImageView) findViewById(layoutResourceID);
+                //repeatImage.setClickable(false);
                 soundSequencer.postDelayed(new Runnable() {
                     public void run() {
                         // Show celebration screen
