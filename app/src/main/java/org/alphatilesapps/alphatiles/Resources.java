@@ -3,6 +3,7 @@ package org.alphatilesapps.alphatiles;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -12,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.Scanner;
 
@@ -54,6 +57,19 @@ public class Resources extends AppCompatActivity {
             forceRTLIfSupported();
         } else {
             forceLTRIfSupported();
+        }
+
+        int resID = context.getResources().getIdentifier("zzz_resources", "raw", context.getPackageName());
+        if (resID == 0) {
+            // hide audio instructions icon
+            ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+            instructionsButton.setVisibility(View.GONE);
+
+            ConstraintLayout constraintLayout = findViewById(R.id.resourcesCL);
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+            constraintSet.centerHorizontally(R.id.gamesHomeImage, R.id.earthCL);
+            constraintSet.applyTo(constraintLayout);
         }
 
     }
@@ -238,6 +254,43 @@ public class Resources extends AppCompatActivity {
         startActivity(intent);
         finish();
 
+    }
+
+    public void playAudioInstructionsResources(View view) {
+        setAllElemsUnclickable();
+        int resID = context.getResources().getIdentifier("zzz_resources", "raw", context.getPackageName());
+        MediaPlayer mp3 = MediaPlayer.create(this, resID);
+        mp3.start();
+        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp3) {
+                setAllElemsClickable();
+                mp3.release();
+            }
+        });
+
+    }
+
+    protected void setAllElemsUnclickable() {
+        // Get reference to the parent layout container
+        ConstraintLayout parentLayout = findViewById(R.id.resourcesCL);
+
+        // Disable clickability of all child views
+        for (int i = 0; i < parentLayout.getChildCount(); i++) {
+            View child = parentLayout.getChildAt(i);
+            child.setClickable(false);
+        }
+    }
+
+    protected void setAllElemsClickable() {
+        // Get reference to the parent layout container
+        ConstraintLayout parentLayout = findViewById(R.id.resourcesCL);
+
+        // Disable clickability of all child views
+        for (int i = 0; i < parentLayout.getChildCount(); i++) {
+            View child = parentLayout.getChildAt(i);
+            child.setClickable(true);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
