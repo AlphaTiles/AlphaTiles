@@ -35,6 +35,7 @@ public class Earth extends AppCompatActivity {
     int doorsPerPage = 23;
     ConstraintLayout earthCL;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -296,7 +297,7 @@ public class Earth extends AppCompatActivity {
         }
     }
 
-    public void playAudioInstructions(View view) {
+    public void playAudioInstructionsEarth(View view) {
         setAllElemsUnclickable();
         int resID = context.getResources().getIdentifier("zzz_earth", "raw", context.getPackageName());
         MediaPlayer mp3 = MediaPlayer.create(this, resID);
@@ -313,7 +314,7 @@ public class Earth extends AppCompatActivity {
 
     protected void setAllElemsUnclickable() {
         // Get reference to the parent layout container
-        LinearLayout parentLayout = findViewById(R.id.earthCL);
+        ConstraintLayout parentLayout = findViewById(R.id.earthCL);
 
         // Disable clickability of all child views
         for (int i = 0; i < parentLayout.getChildCount(); i++) {
@@ -324,7 +325,7 @@ public class Earth extends AppCompatActivity {
 
     protected void setAllElemsClickable() {
         // Get reference to the parent layout container
-        LinearLayout parentLayout = findViewById(R.id.earthCL);
+        ConstraintLayout parentLayout = findViewById(R.id.earthCL);
 
         // Disable clickability of all child views
         for (int i = 0; i < parentLayout.getChildCount(); i++) {

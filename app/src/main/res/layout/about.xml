@@ -143,11 +143,24 @@
         android:layout_height="0dp"
         android:onClick="goBackToEarth"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH18"
-        app:layout_constraintEnd_toStartOf="@+id/logoSILImage"
+        app:layout_constraintEnd_toStartOf="@+id/instructions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineH17"
         android:contentDescription="@string/playerAvatar"
         app:srcCompat="@drawable/zz_games_home" />
+
+    <ImageView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/playAgain"
+        android:onClick="playAudioInstructionsAbout"
+        android:rotationY="0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH18"
+        app:layout_constraintEnd_toStartOf="@+id/logoSILImage"
+        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH17"
+        app:srcCompat="@drawable/zz_instructions" />
 
     <ImageView
         android:id="@+id/logoSILImage"
@@ -155,7 +168,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH18"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintStart_toEndOf="@+id/instructions"
         app:layout_constraintTop_toTopOf="@+id/guidelineH17"
         android:contentDescription="@string/playerAvatar"
         app:srcCompat="@drawable/zz_sil" />
