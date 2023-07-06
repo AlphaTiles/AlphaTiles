@@ -229,19 +229,6 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH15"
         app:srcCompat="@drawable/zz_games_home" />
 
-    <ImageView
-        android:id="@+id/instructions"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/playAgain"
-        android:onClick="playAudioInstructionsResources"
-        android:rotationY="0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV10"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH15"
-        app:srcCompat="@drawable/zz_instructions" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH1"
         android:layout_width="wrap_content"
