@@ -2,14 +2,10 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,9 +17,10 @@ import java.util.logging.Logger;
 public class Wordle extends GameActivity {
     static WordleData data;
     private static final Logger LOGGER = Logger.getLogger(Wordle.class.getName());
-    static final int MIN_WORD_LENGTH = 4;
-    static final int MAX_WORD_LENGTH = 6;
-    static final int MAX_KEYBOARD_SIZE = 30;
+    static int maxWordLength = 6;
+    static int minWordLength = 4;
+    static int maxKeyboardSize = 50;
+    static int baseGuessCount = 8;
     static final int GREEN = 0xFF00FF00;
     static final int YELLOW = 0xFFFFFF00;
     static final int EMPTY = 0xFF222222;
@@ -72,22 +69,26 @@ public class Wordle extends GameActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         hasChecked12Trackers = prefs.getBoolean("storedWordleHasChecked12Trackers_level"
                 + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
-
         challengeLevel = getIntent().getIntExtra("challengeLevel", 0);
         syllableGame = getIntent().getStringExtra("syllableGame");
         String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
-        updateTrackers();
+
         LOGGER.log(Level.INFO, "Wordle start");
+
         context = this;
         setContentView(R.layout.wordle);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        data.guesses = 8 - challengeLevel;
+
+        updateTrackers();
+
+        data.guesses = baseGuessCount - challengeLevel;
         LOGGER.log(Level.INFO, ""+data.guesses);
         int wordleBoxID = R.id.wordleBox;
         wordleBox = findViewById(wordleBoxID);
@@ -138,7 +139,7 @@ public class Wordle extends GameActivity {
         for(int i = 0; i < tiles.size(); i++) {
             TileAdapter.ColorTile tile = tiles.get(i);
             tile.text = "";
-            tile.color = 0xFF333333;
+            tile.color = EMPTY;
         }
         for(int i = 0; i < keys.size(); i++) {
             TileAdapter.ColorTile key = keys.get(i);
@@ -230,6 +231,18 @@ public class Wordle extends GameActivity {
         }
     }
     public static WordleData wordlePreProcess() {
+        try {
+            Wordle.baseGuessCount = Integer.parseInt(Start.settingsList.find("Wordle base guess count"));
+        }
+        catch (Exception e) {}
+        try {
+            Wordle.minWordLength = Integer.parseInt(Start.settingsList.find("Wordle minimum word length"));
+        }
+        catch (Exception e) {}
+        try {
+            Wordle.maxWordLength = Integer.parseInt(Start.settingsList.find("Wordle maximum word length"));
+        }
+        catch (Exception e) {}
         ArrayList<String[]> splitWords = new ArrayList<>();
 
         for(Start.Word word : Start.wordList) {
@@ -241,7 +254,7 @@ public class Wordle extends GameActivity {
         LOGGER.log(Level.INFO, Integer.toString(splitWords.size()));
         int bestLength = 0;
         int bestCount = 0;
-        for(int i = MIN_WORD_LENGTH; i <= MAX_WORD_LENGTH; i++) {
+        for(int i = minWordLength; i <= maxWordLength; i++) {
             int count = 0;
             for(String[] word : splitWords) {
                 if(word.length == i) {
@@ -265,7 +278,7 @@ public class Wordle extends GameActivity {
         for(int i = 0; i < splitWords.size();) {
             boolean canUseWord = true;
             for(String tile : splitWords.get(i)) {
-                if(keyboard.size() < MAX_KEYBOARD_SIZE) {
+                if(keyboard.size() < maxKeyboardSize) {
                     keyboard.add(tile);
                 }
                 else if(!keyboard.contains(tile)) {
