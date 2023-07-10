@@ -52,14 +52,12 @@ public class TileAdapter extends BaseAdapter {
         Context context = viewGroup.getContext();
         if(oldView == null) {
             layout = (SquareConstraintLayout) LayoutInflater.from(context).inflate(R.layout.tileadapter_tile, viewGroup, false);
-            inner = (LinearLayout) layout.getChildAt(0);
-            text = (AutoTextView)inner.getChildAt(0);
         }
         else {
             layout = (SquareConstraintLayout) oldView;
-            inner = (LinearLayout) layout.getChildAt(0);
-            text = (AutoTextView)inner.getChildAt(0);
         }
+        inner = (LinearLayout) layout.getChildAt(0);
+        text = (AutoTextView)inner.getChildAt(0);
         inner.setBackgroundColor(tile.color);
         text.setBackgroundColor(tile.color);
         text.setText(tile.text);
