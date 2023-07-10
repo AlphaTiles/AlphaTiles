@@ -6,6 +6,10 @@ application {
     mainClass = 'org.alphatilesapps.validator.Validator'
 }
 
+run {
+    standardInput = System.in
+    timeout = Duration.ofMinutes(25)
+}
 
 dependencies{
     implementation 'com.google.api-client:google-api-client:2.0.0'

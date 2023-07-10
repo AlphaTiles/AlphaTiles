@@ -19,7 +19,6 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -51,9 +50,31 @@ import javax.swing.JOptionPane;
 
 public class Validator {
 
-    public static void main(String[] args) throws ValidatorException, GeneralSecurityException, IOException {
+    /**
+     * For app builders to customize. Validator will add notify if is a key is used less than this
+     * number of times.
+     */
+    private static final int NUM_TIMES_KEYS_WANTED_IN_WORDS = 5;
 
-       boolean hideRecommendations = false;
+    /**
+     * For app builders to customize. Validator will add notify if is a key is used less than this
+     * number of times.
+     */
+    private static final int NUM_TIMES_TILES_WANTED_IN_WORDS = 5;
+
+    /**
+     * For app builders to customize. Validator will add notify if is a key is used less than this
+     * number of times.
+     */
+    private static final boolean SHOW_RECOMMENDATIONS = true;
+
+    /**
+     * main method for running the validator. Prompts user for the URL of the google drive folder.
+     * Constructs a Validator object using the URL. Calls the validate method.  Prints out
+     * a list fatal errors, warnings, and recommendations. Prompts the to decide whether to download
+     * the language pack into android studio, and if desired, calls the writeValidatedFiles method.
+     */
+    public static void main(String[] args) throws ValidatorException, GeneralSecurityException, IOException {
 
         String url = JOptionPane.showInputDialog(null, "Enter the URL for the Google Drive folder of your " +
                        "language pack", "AlphaTiles", JOptionPane.PLAIN_MESSAGE);
@@ -70,13 +91,12 @@ public class Validator {
             System.out.println(warning);
         }
 
-        if (!hideRecommendations) {
+        if (SHOW_RECOMMENDATIONS) {
             System.out.println("\nList of Recommendations\n********");
             for (String recommendation : myValidator.getRecommendations()) {
                 System.out.println(recommendation);
             }
         }
-
 
        int wantsToDownload = JOptionPane.showOptionDialog(null, "After reviewing errors and warnings, " +
                "are you ready to download the data from this language pack into android studio", "AlphaTiles",
@@ -95,18 +115,53 @@ public class Validator {
 
     }
 
+    /**
+     * A LinkedHashSet of fatal errors found by the validator (is Set to avoid duplicate messages). Printed by main.
+     */
     private final Set<String> fatalErrors = new LinkedHashSet<>();
+
+    /**
+     * A LinkedHashSet of warnings found by the validator (is Set to avoid duplicate messages). Printed by main.
+     */
     private final Set<String> warnings = new LinkedHashSet<>();
 
+    /**
+     * A LinkedHashSet of recommendations found by the validator (is Set to avoid duplicate messages). Printed by main.
+     */
     private final Set<String> recommendations = new LinkedHashSet<>();
 
+    /**
+     * A com.google.api.services.drive.Drive object used to populate the Validator's google drive data structures.
+     * Avoid using driveService directly, use the validator custom objects and methods instead.
+     */
     private Drive driveService;
-    private final DriveFolder langPackDriveFolder;
 
+    /**
+     * A GoogleDriveFolder object representing the entire language pack folder. Contains all the files and folders in the
+     * language pack. They are accessible through methods provided in the GoogleDriveFolder class
+     */
+    private final GoogleDriveFolder langPackDriveFolder;
+
+    /**
+     * A com.google.api.services.sheets.v4.Sheets object used to populate the Validator's google drive data structures.
+     * Avoid using driveService directly, use the validator custom objects and methods instead.
+     */
     private Sheets sheetsService;
+
+    /**
+     * A GoogleSheet object representing the entire language pack spreadsheet. Contains all the tabs and cells in the
+     * language pack. They are accessible through methods provided in the GoogleSheet class.
+     */
     private final GoogleSheet langPackGoogleSheet;
 
-    private final HashMap<String, String> DESIRED_DATA_FROM_TABS = new HashMap<>(Map.of(
+    /**
+     * A Map of the names of the tabs needed for validation to the ranges of cells needed from each tab
+     * (in A1 notation). The validator automatically checks for these tabs in the langPackGoogleSheet,
+     * checks for empty cells in these ranges, checks for enough rows (if applicable) and
+     * shrinks down the tabs to only contain the ranges specified in this map. Any tabs specified here are automatically
+     * added to the raw folder as aa_tabName.txt if the language pack is downloaded.
+     */
+    private static final HashMap<String, String> DESIRED_RANGE_FROM_TABS = new HashMap<>(Map.of(
             "langinfo", "A1:B15",
             "gametiles", "A1:Q",
             "wordlist", "A1:F",
@@ -114,12 +169,18 @@ public class Validator {
             "games", "A1:H",
             "syllables", "A1:G",
             "resources", "A1:C7",
-            //TODO should this be a fixed number?
             "settings", "A1:B",
             "colors", "A1:C",
             "names", "A1:B14"));
 
-    private final HashMap<String,String> DESIRED_FILETYPE_FROM_SUBFOLDERS = new HashMap<>(Map.of(
+    /**
+     * A Map of the names of the folders needed for validation to the file types needed in each folder (in MIME type).
+     * The validator automatically checks for these folders in the langPackDriveFolder,
+     * and checks that each file in the folder is of the correct type (warning and removing if not).
+     * Any folder specified here are will automatically have its contents added to drawable if it is an image
+     * and raw otherwise if the language pack is downloaded to android studio.
+     */
+    private static final HashMap<String,String> DESIRED_FILETYPE_FROM_SUBFOLDERS = new HashMap<>(Map.of(
             "images_words", "image/",
             "audio_words" ,"audio/mpeg",
             "images_resources_optional", "image/",
@@ -128,39 +189,62 @@ public class Validator {
             "audio_instructions_optional", "audio/mpeg",
             "audio_syllables_optional", "audio/mpeg"));
 
+    /**
+     * A String used as a prefix to the warning given when catching a ValidatorException. Use command F to make sure
+     * your use is consistent with previous catches of the same ValidatorException.
+     */
     private final String FAILED_CHECK_WARNING = "one or more checks was not able to be run because of " +
             "unresolved fatal errors in the checking of ";
 
+    /**
+     * A constructor for a Validator object, creates the langPackDriveFolder field from the URL and searches for one
+     * (and only one) google sheet in the folder to set as the langPackGoogleSheet field.
+     *
+     * @param driveFolderUrl a String representing the URL of the language pack folder in google drive
+     */
     public Validator(String driveFolderUrl) throws IOException, GeneralSecurityException, ValidatorException {
 
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
         String driveFolderId = driveFolderUrl.substring(driveFolderUrl.indexOf("folders/") + 8);
         buildServices(driveFolderId);
-        this.langPackDriveFolder = new DriveFolder(driveFolderId);
+        this.langPackDriveFolder = new GoogleDriveFolder(driveFolderId);
+        if (langPackDriveFolder.size() == 0) {
+            throw new ValidatorException("Cannot find find any files in a folder with the given URL");
+        }
         this.langPackGoogleSheet = langPackDriveFolder.getOnlyGoogleSheet();
     }
 
+    /**
+     * Executes all validation, delegating to validateGoogleSheet, validateSyllables (
+     * if it appears syllables are attempted) and validateResourceSubfolders.
+     * Populates fatalErrors, warnings, and recommendations.
+     */
     public void validate() {
 
-        this.validateRequiredSheetTabs();
+        this.validateGoogleSheet();
 
         //runs syllable checks only if 6 or more words contain periods (for syllable splicing)
         boolean usesSyllables = decideIfSyllablesAttempted();
         if (usesSyllables) {
-            this.validateSyllables();
+            this.validateSyllablesTab();
         }
 
         this.validateResourceSubfolders();
 
     }
 
-    private void validateRequiredSheetTabs(){
+    /**
+     * Executes checks langPackGoogleSheet, including default checks based on DESIRED_RANGE_FROM_TABS.
+     * Checks are wrapped in try catch blocks so that if one check fails, the rest of the checks can still be run.
+     * Populates fatalErrors, warnings, and recommendations.
+     */
+    private void validateGoogleSheet(){
 
         // this first step is looks at the desired data from tabs field set at the top of the
         // code, searches for a tab that has the matching name, and shrinks the internal representation
         // of those tabs to only be what is specified
 
-        for (Map.Entry<String, String> nameAndRange : DESIRED_DATA_FROM_TABS.entrySet()) {
+        for (Map.Entry<String, String> nameAndRange : DESIRED_RANGE_FROM_TABS.entrySet()) {
             try {
                 Tab desiredTab = langPackGoogleSheet.getTabFromName(nameAndRange.getKey());
                 desiredTab.sizeTabUsingRange(nameAndRange.getValue());
@@ -188,14 +272,14 @@ public class Validator {
             warnings.add(FAILED_CHECK_WARNING + "the wordlist tab");
         }
 
-        // Todo... make checks more readable...
         try {
             Tab keyboardTab = langPackGoogleSheet.getTabFromName("keyboard");
 
+            // makes sure colors are 0-11
             ArrayList<String> themeColorCol = keyboardTab.getCol(1);
-            themeColorCol.removeAll(Set.of("0", "1", "2", "3", "4"));
+            themeColorCol.removeAll(Set.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"));
             if (themeColorCol.size() > 0){
-                fatalErrors.add("colum 2 of keyboard should only have numbers 0-4");
+                fatalErrors.add("colum B of keyboard should only have numbers 0-4");
             }
 
             // the below section compares they keys in keyboard to the words in wordlist
@@ -222,7 +306,7 @@ public class Validator {
                 }
             }
             for (Map.Entry<String, Integer> entry : keyUsage.entrySet()) {
-                if (entry.getValue() < 6) {
+                if (entry.getValue() < NUM_TIMES_KEYS_WANTED_IN_WORDS) {
                     String unicodeString = "";
                     String key = entry.getKey();
                     if (key.length() != 0){
@@ -230,14 +314,14 @@ public class Validator {
                     }
                     recommendations.add("In wordList.txt, the key \"" + entry.getKey() + "\"" + unicodeString +
                             " is only used in " + entry.getValue() + " words. It is recommended that each key be" +
-                            " used in at least 6 words.");
+                            " used in at least " + NUM_TIMES_KEYS_WANTED_IN_WORDS + " times");
                 }
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the keyboard tab");
         }
 
-        //todo is checking headers still a necessary check for gameTiles or others?.. aslo non initial letters black box error?
+        //todo is checking headers still a necessary check for gameTiles or others?
         try {
             // compare the tiles in gameTiles to the words in wordlist
             Map<String, Integer> tileUsage = new HashMap<>();
@@ -270,17 +354,15 @@ public class Validator {
                         " shorter words are preferable in an early literacy game. Consider removing longer words ");
             }
             for (Map.Entry<String, Integer> tile : tileUsage.entrySet()) {
-                if (tile.getValue() < 3) {
+                if (tile.getValue() < NUM_TIMES_TILES_WANTED_IN_WORDS) {
                     recommendations.add("the tile \"" + tile.getKey() + "\" in gametiles only appears in words " + tile.getValue()
-                            + " times. It is recommended that each tile be used in at least 3 words");
+                            + " times. It is recommended that each tile be used in at least " + NUM_TIMES_TILES_WANTED_IN_WORDS + " times");
                 }
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + " the gametiles tab or the wordlist tab");
         }
         try {
-            //todo.. the correct uppercase value? check for not matching proper and full upper case. Check for not matching proper.
-            //todo lang info RTL and thai/roman
             Tab gameTiles = langPackGoogleSheet.getTabFromName("gametiles");
             // add warnings for any duplicates in the provided column
             gameTiles.checkColForDuplicates(0);
@@ -301,33 +383,42 @@ public class Validator {
                 }
             }
 
-            ArrayList<String> multyKeyGameTileUpperCase = gameTiles.getCol(6);
-            for (int i = multyKeyGameTileUpperCase.size() -1; i <=0; i--){
-                if (multyKeyGameTileUpperCase.get(i).length() == 1){
-                    multyKeyGameTileUpperCase.remove(i);
+            // check if the uppercase tiles are all full upper case or proper case and warn accordingly
+            ArrayList<String> multiKeyGameTileUpperCase = gameTiles.getCol(6);
+            for (int i = multiKeyGameTileUpperCase.size() -1; i >=0; i--){
+                if (multiKeyGameTileUpperCase.get(i).length() == 1){
+                    multiKeyGameTileUpperCase.remove(i);
                 }
             }
 
             ArrayList<String> properCaseOnly = new ArrayList<>();
             ArrayList<String> fullUpperCaseOnly = new ArrayList<>();
-            for (String upperCaseTile : multyKeyGameTileUpperCase) {
+            ArrayList<String> other = new ArrayList<>();
+            for (String upperCaseTile : multiKeyGameTileUpperCase) {
                 String fullUpper = upperCaseTile.toUpperCase();
-                char firstChar = upperCaseTile.charAt(0);
-                String properCase = upperCaseTile.toLowerCase().replace(firstChar, Character.toUpperCase(firstChar));
+                String properCase = upperCaseTile.toLowerCase();
+                char firstChar = properCase.charAt(0);
+                properCase = properCase.replace(firstChar, Character.toUpperCase(firstChar));
 
                 if (upperCaseTile.equals(fullUpper)) {
                     fullUpperCaseOnly.add(upperCaseTile);
                 } else if (upperCaseTile.equals(properCase)) {
                     properCaseOnly.add(upperCaseTile);
                 }
+                else{
+                    other.add(upperCaseTile);
+                }
             }
-            if (Math.max(properCaseOnly.size(), fullUpperCaseOnly.size()) != multyKeyGameTileUpperCase.size()){
+            if (Math.max(properCaseOnly.size(), fullUpperCaseOnly.size()) != multiKeyGameTileUpperCase.size()){
 
-                int numExamples = Math.min(Math.min(fullUpperCaseOnly.size(), properCaseOnly.size()),6);
+                int numExamplesFullUpper = Math.min(fullUpperCaseOnly.size(), 5);
+                int numExamplesProper = Math.min(properCaseOnly.size(),5);
+                int numExamplesOther = Math.min(other.size(),5);
                 warnings.add("The upper case column in tilelist doesn't appear to consistently stick with proper case " +
                         "(the first key being upper case) or full upper case (the whole tile is upper case) " +
-                        "\n\tYour use of full upper case can be seen in tiles such as " + fullUpperCaseOnly.subList(0,numExamples) +
-                        "\n\tYour use of proper case can be seen in tiles such as " + properCaseOnly.subList(0,numExamples));
+                        "\n\tExamples of tiles that seem to use full uppercase are " + fullUpperCaseOnly.subList(0,numExamplesFullUpper) +
+                        "\n\tExamples of tiles that seem to use proper case are " + properCaseOnly.subList(0,numExamplesProper) +
+                        "\n\tExamples of tiles that appear to be neither are " + other.subList(0,numExamplesOther));
             }
 
             if (fullUpperCaseOnly.size()!=0){
@@ -416,27 +507,28 @@ public class Validator {
 
     }
 
+    /**
+     * Executes checks on the resource folders langPackGoogleDrive.
+     * Includes default checks based on DESIRED_FILETYPE_FROM_SUBFOLDERS.
+     * Checks are wrapped in try catch blocks so that if one check fails, the rest of the checks can still be run.
+     * Populates fatalErrors, warnings, and recommendations.
+     */
     private void validateResourceSubfolders(){
 
         for (Map.Entry<String, String> nameToMimeType : this.DESIRED_FILETYPE_FROM_SUBFOLDERS.entrySet()){
             try {
-                DriveFolder subFolder = langPackDriveFolder.getFolderFromName(nameToMimeType.getKey());
+                GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(nameToMimeType.getKey());
                 subFolder.filterByMimeType(nameToMimeType.getValue());
             } catch (ValidatorException e) {
                 fatalErrors.add(e.getMessage());
             }
         }
         // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
-        // that the app is trying to use these features
+        // that the the given column lists file names (anything other than X or naWhileMPOnly)
+        // and the referenced drive folder contains files
         boolean hasInstructionAudio = decideIfAudioAttempted("games", 4, "audio_instructions_optional");
-        if (!hasInstructionAudio){
-            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("audio_instructions_optional");
-        }
 
-//        boolean hasSyllableAudio = decideIfAudioAttempted("syllables", 4, "audio_syllables_optional");
-//        if (!hasSyllableAudio){
-//            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("audio_syllables_optional");
-//        }
+        //tile and syllable audio have the extra step of checking against settings to see if the checks should be run
         boolean syllableAudioAttempted = decideIfAudioAttempted("syllables", 4, "audio_syllables_optional");
         boolean syllableAudioSetting = false;
         try {
@@ -447,7 +539,6 @@ public class Validator {
         catch (Exception e){}
         boolean hasSyllableAudio = syllableAudioAttempted && syllableAudioSetting;
         if (!hasSyllableAudio){
-            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("audio_syllables_optional");
             if (syllableAudioAttempted){
                 warnings.add("Although it appears you spread up your language pack for syllable audio, cell B5 " +
                         " in the settings tab is not set to \"TRUE\"");
@@ -468,7 +559,6 @@ public class Validator {
         catch (Exception e){}
         boolean hasTileAudio = tileAudioSetting && tileAudioAttempted;
         if (!hasTileAudio){
-            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("audio_tiles_optional");
             if (tileAudioAttempted){
                 warnings.add("Although it appears you spread up your language pack for tile audio, cell B3 " +
                         " in the settings tab is not set to \"TRUE\"");
@@ -480,44 +570,44 @@ public class Validator {
         }
 
         try {
-            DriveFolder resourceImages = langPackDriveFolder.getFolderFromName("images_resources_optional");
+            GoogleDriveFolder resourceImages = langPackDriveFolder.getFolderFromName("images_resources_optional");
             ArrayList<String> resourceImageNames = langPackGoogleSheet.getTabFromName("resources").getCol(2);
-            resourceImages.checkFileNameAgainstList(resourceImageNames);
+            resourceImages.checkItemNamesAgainstList(resourceImageNames);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_resources_optional folder or the resources tab");
         }
 
         try {
-            DriveFolder wordImages = langPackDriveFolder.getFolderFromName("images_words");
+            GoogleDriveFolder wordImages = langPackDriveFolder.getFolderFromName("images_words");
             ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordImages.checkFileNameAgainstList(wordsInLWC);
+            wordImages.checkItemNamesAgainstList(wordsInLWC);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_words folder or the wordlist tab");
         }
         try{
-            DriveFolder lowResWordImages = langPackDriveFolder.getFolderFromName("images_words_low_res");
+            GoogleDriveFolder lowResWordImages = langPackDriveFolder.getFolderFromName("images_words_low_res");
             ArrayList<String> smallWordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
             for (int i = 0; i < smallWordsInLWC.size(); i++){
                 smallWordsInLWC.set(i, smallWordsInLWC.get(i) + "2");
             }
-            lowResWordImages.checkFileNameAgainstList(smallWordsInLWC);
+            lowResWordImages.checkItemNamesAgainstList(smallWordsInLWC);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_words_low_res folder or the wordlist tab");
         }
 
         try {
-            DriveFolder wordAudio = langPackDriveFolder.getFolderFromName("audio_words");
+            GoogleDriveFolder wordAudio = langPackDriveFolder.getFolderFromName("audio_words");
             ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordAudio.checkFileNameAgainstList(wordsInLWC);
+            wordAudio.checkItemNamesAgainstList(wordsInLWC);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_words folder or the wordlist tab");
         }
 
         try {
             if (hasTileAudio) {
-                DriveFolder tileAudio = langPackDriveFolder.getFolderFromName("audio_tiles_optional");
+                GoogleDriveFolder tileAudio = langPackDriveFolder.getFolderFromName("audio_tiles_optional");
                 ArrayList<String> tiles = langPackGoogleSheet.getTabFromName("gametiles").getCol(5);
-                tileAudio.checkFileNameAgainstList(tiles);
+                tileAudio.checkItemNamesAgainstList(tiles);
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_tiles_optional folder or the gametiles tab");
@@ -525,9 +615,9 @@ public class Validator {
 
         try {
             if (hasSyllableAudio) {
-                DriveFolder syllableAudio = langPackDriveFolder.getFolderFromName("audio_syllables_optional");
+                GoogleDriveFolder syllableAudio = langPackDriveFolder.getFolderFromName("audio_syllables_optional");
                 ArrayList<String> syllables = langPackGoogleSheet.getTabFromName("syllables").getCol(4);
-                syllableAudio.checkFileNameAgainstList(syllables);
+                syllableAudio.checkItemNamesAgainstList(syllables);
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_syllables_optional folder or the syllables tab");
@@ -535,17 +625,22 @@ public class Validator {
 
         try {
             if (hasInstructionAudio) {
-                DriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("audio_instructions_optional");
+                GoogleDriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("audio_instructions_optional");
                 ArrayList<String> gamesList = langPackGoogleSheet.getTabFromName("games").getCol(4);
-                gamesList.removeAll(Collections.singleton("X"));
-                instructionAudio.checkFileNameAgainstList(gamesList);
+                gamesList.removeAll(Set.of("X", "naWhileMPOnly"));
+                instructionAudio.checkItemNamesAgainstList(gamesList);
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_instructions_optional folder or the games tab");
         }
     }
 
-    private void validateSyllables(){
+    /**
+     * Executes checks on the syllable tab in langPackGoogleSheet.
+     * Checks are wrapped in try catch blocks so that if one check fails, the rest of the checks can still be run.
+     * Populates fatalErrors, warnings, and recommendations.
+     */
+    private void validateSyllablesTab(){
 
         try {
             Tab syllables = langPackGoogleSheet.getTabFromName("syllables");
@@ -584,6 +679,7 @@ public class Validator {
 
     }
 
+
     public Set<String> getFatalErrors() {
         return this.fatalErrors;
     }
@@ -596,9 +692,16 @@ public class Validator {
         return this.recommendations;
     }
 
-    public void writeValidatedFiles(Path pathtoApp) throws IOException, ValidatorException {
+    /**
+     * Writes an android language pack to be used in the AlphaTiles app, including adjustments to build.gradle.
+     * Bases language pack template on local device in PublicLanguageAssets repo that should be sister to AlphaTiles.
+     * Delegates to writeNewBuildGradle, writeRawTxtFiles,and writeImageAndAudioFiles.
+     * Also copies the google_services.json file from the old language pack if it exists.
+     * @param pathToApp a Path object that leads to the app folder in the AlphaTiles repo
+     */
+    public void writeValidatedFiles(Path pathToApp) throws IOException, ValidatorException {
 
-        Path pathToLangPack = pathtoApp.resolve("src").resolve(langPackGoogleSheet.getName());
+        Path pathToLangPack = pathToApp.resolve("src").resolve(langPackGoogleSheet.getName());
 
         //checks for a google_services.json file and copies it to a temporary location before deleting
         //old language pack
@@ -613,7 +716,7 @@ public class Validator {
         // copies template to be new language pack, first looks for a public language assets folder as a sister to
         //AlphaTiles repo, then tries to download it from github.
 
-        Path pathToTemplate = pathtoApp.getParent().getParent().resolve("PublicLanguageAssets").resolve("templateTemplate");
+        Path pathToTemplate = pathToApp.getParent().getParent().resolve("PublicLanguageAssets").resolve("templateTemplate");
         if (Files.exists(pathToTemplate)) {
             copyDirectory(pathToTemplate, pathToLangPack);
         }
@@ -628,19 +731,25 @@ public class Validator {
             Files.move(pathToTempServices, pathToLangPack.resolve("google_services.json"));
         }
 
-        writeNewBuildGradle(pathtoApp);
+        writeNewBuildGradle(pathToApp);
         writeRawTxtFiles(pathToLangPack);
         writeImageAndAudioFiles(pathToLangPack);
 
 
     }
 
+    /**
+     * Copies the contents of the old build.gradle file into three StringBuilders,
+     * one for the beginning of the file up to the first language pack, one for the language packs (commented out)
+     * except for the one being overwritten, and one for the rest of the file. Writes a new build.gradle with the
+     * beginning, the new language pack, the commented out old language packs and the end of the build.gradle file.
+     * @param pathToApp a Path object that leads to the app folder in the AlphaTiles repo
+     */
     private void writeNewBuildGradle(Path pathToApp) throws IOException, ValidatorException{
 
         String appName = "";
         String langPackName = langPackGoogleSheet.getName();
         try{
-            //TODO change these to not be number dependent
             appName = langPackGoogleSheet.getTabFromName("langinfo").getRowFromFirstCell("Game Name (In Local Lang)").get(1);
             appName = appName.replace("'", "ꞌ");
         }
@@ -672,6 +781,8 @@ public class Validator {
                 reachedFirstLangPack = true;
             }
         }
+        //delete the first \n
+        beforeLangPacks.delete(0,2);
 
         boolean onTargetLangPack = false;
         boolean finishedLangPacks = false;
@@ -714,10 +825,14 @@ public class Validator {
         writeBuildGradle.close();
     }
 
+    /**
+     * Writes each tab in DESIRED_RANGE_FROM_TABS to a raw txt file in the downloaded language pack.
+     * @param pathToLangPack a Path object that leads to the app/src/name-of-langPack folder in the AlphaTiles repo
+     */
     private void writeRawTxtFiles(Path pathToLangPack) throws IOException, ValidatorException{
         System.out.println("\n\ndownloading language pack spreadsheet from google drive into language pack ... ");
         Path pathToRaw = pathToLangPack .resolve("res").resolve("raw");
-        for (String desiredTabName : DESIRED_DATA_FROM_TABS.keySet()){
+        for (String desiredTabName : DESIRED_RANGE_FROM_TABS.keySet()){
             Tab desiredTab = langPackGoogleSheet.getTabFromName(desiredTabName);
             java.io.File rawFile = pathToRaw.resolve("aa_" + desiredTab.getName() + ".txt").toFile();
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(rawFile), StandardCharsets.UTF_8);
@@ -727,13 +842,18 @@ public class Validator {
         System.out.println("finished downloading language pack spreadsheet from google drive into language pack");
     }
 
+    /**
+     * Writes each folder in DESIRED_FILETYPE_FROM_SUBFOLDERS to the appropriate folder in the downloaded language pack.
+     * (drawable for images and raw for everything else)
+     * @param pathToLangPack a Path object that leads to the app/src/name-of-langPack folder in the AlphaTiles repo
+     */
     private void writeImageAndAudioFiles(Path pathToLangPack) throws IOException, ValidatorException{
         for (Map.Entry<String, String> subfolderSpecs : DESIRED_FILETYPE_FROM_SUBFOLDERS.entrySet()) {
 
             String subFolderName = subfolderSpecs.getKey();
             String subFolderFileTypes = subfolderSpecs.getValue();
 
-            DriveFolder wordImagesFolder = langPackDriveFolder.getFolderFromName(subFolderName);
+            GoogleDriveFolder wordImagesFolder = langPackDriveFolder.getFolderFromName(subFolderName);
             ArrayList<GoogleDriveItem> folderContents = wordImagesFolder.getFolderContents();
 
             System.out.println("downloading " + subFolderName + " from google drive into language pack ... ");
@@ -752,10 +872,34 @@ public class Validator {
         }
     }
 
-    public class GoogleDriveItem{
-        private String mimeType;
+    /**
+     * Represents any item in google drive. Extended by GoogleDriveFolder and GoogleSheet,
+     * and directly instantiated for files that are not folders or spreadsheets (example images and audio files).
+     */
+    private class GoogleDriveItem{
+
+        /**
+         * the mimeType of any GoogleDriveItem instance.
+         */
+        private final String mimeType;
+
+        /**
+         * the google id of any GoogleDriveItem instance.
+         * (used for driveService or sheetsService operations)
+         */
         private final String id;
-        private String name;
+
+        /**
+         * the file/folder/sheet name of any GoogleDriveItem instance.
+         */
+        private final String name;
+
+        /**
+         * Constructor for GoogleDriveItem.
+         * @param inID a String that is the google id of the item
+         * @param inName a String that is the name of the item
+         * @param inMimeType a String that is the mimeType of the item
+         */
         protected GoogleDriveItem(String inID, String inName, String inMimeType){
             this.id = inID;
             this.name = inName;
@@ -775,14 +919,39 @@ public class Validator {
         }
     }
 
-    private class DriveFolder extends GoogleDriveItem{
+    /**
+     * Represents a google drive folder, extended from GoogleDriveItem. On construction automatically
+     * recursively populates the folderContents field with all the contents of the folder
+     * (constructing GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects as appropriate).
+     */
+    private class GoogleDriveFolder extends GoogleDriveItem{
 
+        /**
+         * ArrayList of all the GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects in the folder.
+         * Automatically populated on construction.
+         */
         private final ArrayList<GoogleDriveItem> folderContents = new ArrayList<>();
 
-        protected DriveFolder(String driveFolderId) throws IOException {
+        protected ArrayList<GoogleDriveItem> getFolderContents(){
+            return this.folderContents;
+        }
+
+        /**
+         * Constructor for GoogleDriveFolder. Recursively populates the folderContents field with all the contents of the folder
+         * (constructing GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects as appropriate).
+         * @param driveFolderId a String that is the google id of this folder
+         */
+        protected GoogleDriveFolder(String driveFolderId) throws IOException {
             this(driveFolderId, (String) driveService.files().get(driveFolderId).get("name"));
         }
-        protected DriveFolder(String driveFolderId, String inName) throws IOException {
+
+        /**
+         * Constructor for GoogleDriveFolder. Recursively populates the folderContents field with all the contents of the folder
+         * (constructing GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects as appropriate).
+         * @param driveFolderId a String that is the google id of this folder
+         * @param inName a String that is the name of this folder
+         */
+        protected GoogleDriveFolder(String driveFolderId, String inName) throws IOException {
             super(driveFolderId, inName, "application/vnd.google-apps.folder");
             String pageToken = null;
             do {
@@ -799,7 +968,7 @@ public class Validator {
                         folderContents.add(new GoogleSheet(file.getId(), file.getName()));
                     }
                     else if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
-                        folderContents.add(new DriveFolder(file.getId(), file.getName()));
+                        folderContents.add(new GoogleDriveFolder(file.getId(), file.getName()));
                     }
                     else {
                         folderContents.add(new GoogleDriveItem(file.getId(), file.getName(), file.getMimeType()));
@@ -809,8 +978,28 @@ public class Validator {
             } while (pageToken != null);
         }
 
-        protected DriveFolder getFolderFromName(String inName) throws ValidatorException{
-            for (DriveFolder item : this.getContentsOfType(DriveFolder.class)){
+        /**
+         * Searches for a GoogleDriveItem object in folderContents with the given name.
+         * @param inName a String that is the name of the item to search for
+         * @return a GoogleDriveItem object with the given name if found, null otherwise
+         */
+        protected GoogleDriveItem getItemFromName(String inName){
+            for (GoogleDriveItem item : this.folderContents){
+                if (item.getName().equals(inName)){
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Searches for a GoogleDriveFolder object in the folderContents field with the given name.
+         * @param inName a String that is the name of the folder to search for
+         * @return a GoogleDriveFolder object with the given name if found, throws exception otherwise
+         * @throws ValidatorException if no GoogleDriveFolder object with the given name is found
+         */
+        protected GoogleDriveFolder getFolderFromName(String inName) throws ValidatorException{
+            for (GoogleDriveFolder item : this.<GoogleDriveFolder>getAllOfMimeType("vnd.google-apps.folder")){
                 if (item.getName().equals(inName)){
                     return item;
                 }
@@ -819,14 +1008,21 @@ public class Validator {
         }
 
 
-        protected void checkFileNameAgainstList(ArrayList<String> toMatch){
+        //todo this method can be made cleaner with the getItemFromName
+        /**
+         * Takes a list of names of the items that should be in the folder. Removes any items from folderContents
+         * that do not match one of the names in the list (adding a warning as it does). Also adds a warning for any
+         * name that does not match to an item.
+         * @param namesList an ArrayList of Strings which are the names to be compared against folderContents
+         */
+        protected void checkItemNamesAgainstList(ArrayList<String> namesList){
 
             for (GoogleDriveItem item : new ArrayList<>(folderContents)) {
                 boolean hasMatchingName = false;
-                for (String desiredName : new ArrayList<>(toMatch)) {
+                for (String desiredName : new ArrayList<>(namesList)) {
                     String itemName = item.getName();
                     if (itemName.substring(0,itemName.indexOf(".")).equals(desiredName)) {
-                        toMatch.remove(desiredName);
+                        namesList.remove(desiredName);
                         hasMatchingName = true;
                         break;
                     }
@@ -837,32 +1033,38 @@ public class Validator {
                     folderContents.remove(item);
                 }
             }
-            for (String shouldHaveMatched : toMatch){
+            for (String shouldHaveMatched : namesList){
+                if (this.getItemFromName(shouldHaveMatched) != null){
+                    warnings.add("The file name " + shouldHaveMatched + " in " + this.getName() + " is asked for in multiple places ");
+                }
                 warnings.add(shouldHaveMatched + " does not have a corresponding file in " + this.getName() +
                         " of the correct file type");
             }
 
         }
-        protected ArrayList<GoogleDriveItem> getFolderContents(){
-            return this.folderContents;
-        }
-        //TODO I struggled with this method for a while and ended up just using something from
-        // stack overflow but I should think about it more.
-        // Add a little description of the method, any warnings or limitations you can think of,
-        // and a link to the source (https://stackoverflow.com/questions/6029974/how-to-compare-type-of-an-objects-instance-to-a-generic-type)
-        protected <type extends GoogleDriveItem> ArrayList<type> getContentsOfType(Class<type> myClass) {
+
+        /**
+         * returns a list of all items in the folderContents field that are of the given type.
+         * WARNING the mimeType parameter must ensure items can be cast to the type parameter type
+         * @param mimeType a String that is the mimeType desired in the returned list
+         * @param <type> a generic type that items should be cast to in the returned list
+         * @return an ArrayList of all items in the folderContents field that are of the given type
+         */
+        protected <type extends GoogleDriveItem> ArrayList<type> getAllOfMimeType(String mimeType) {
             ArrayList<type> filteredList = new ArrayList<>();
             for (GoogleDriveItem item : folderContents) {
-                try {
-                    filteredList.add((myClass.cast(item)));
-                }
-                catch (ClassCastException e){
+                if (item.getMimeType().contains(mimeType)) {
+                    filteredList.add((type) item);
                 }
             }
             return filteredList;
         }
 
-
+        /**
+         * Removes any items from the folderContents field that are not of the given mimeType, adding a warning every
+         * time it does so.
+         * @param mimeType a String that is the mimeType to filter by
+         */
         protected void filterByMimeType(String mimeType) {
             for (GoogleDriveItem item : new ArrayList<>(folderContents)) {
                 if (!item.getMimeType().contains(mimeType)) {
@@ -873,8 +1075,13 @@ public class Validator {
             }
         }
 
+        /**
+         * Searches for one and only google sheet in folderContents, returns it if found, throws an exception if not
+         * or if multiple found
+         * @return the one and only google sheet in folderContents
+         */
         protected GoogleSheet getOnlyGoogleSheet() throws ValidatorException{
-            ArrayList<GoogleSheet> allSheets = getContentsOfType(GoogleSheet.class);
+            ArrayList<GoogleSheet> allSheets = getAllOfMimeType("google-apps.spreadsheet");
             if (allSheets.size() == 0) {
                 throw new ValidatorException("No google sheet found in specified google drive folder");
             } else if (allSheets.size() > 1) {
@@ -884,6 +1091,10 @@ public class Validator {
             }
         }
 
+        /**
+         * returns the number of items in the folderContents field
+         * @return the number of items in the folderContents field
+         */
         protected int size(){
             return folderContents.size();
         }
@@ -891,42 +1102,72 @@ public class Validator {
 
     }
 
+    /**
+     * Represents a google sheet, extended from GoogleDriveItem. On construction automatically
+     * populates the tabList field with Tab objects representing all the tabs in the actual google sheet.
+     */
     private class GoogleSheet extends GoogleDriveItem {
+
+        /**
+         * An ArrayList of Tab objects representing all the tabs in the actual google sheet.
+         */
         private final ArrayList<Tab> tabList = new ArrayList<>();
 
+        /**
+         * Constructor for a google sheet object. Automatically populates the tabList field with Tab objects.
+         * @param spreadSheetId a String that is the id of the google sheet
+         * @param inName a String that is the name of the google sheet
+         */
         protected GoogleSheet(String spreadSheetId, String inName) throws IOException {
             super(spreadSheetId, inName, "application/vnd.google-apps.spreadsheet");
             Spreadsheet thisSpreadsheet = sheetsService.spreadsheets().get(spreadSheetId).execute();
             List<Sheet> sheetList = thisSpreadsheet.getSheets();
             for (Sheet sheet : sheetList){
                 tabList.add(new Tab(spreadSheetId, sheet.getProperties().getTitle())) ;
-
             }
         }
 
-        public Tab getTabFromName(String name) throws ValidatorException {
+        /**
+         * searches for a Tab object in the tabList field with the given name. Returns it if found, throws a
+         * ValidatorException if not.
+         * @param inName a String that is the name of the tab to be searched for
+         * @return a Tab object in the tabList field with the given name
+         * @throws ValidatorException if no Tab object in the tabList field has the given name
+         */
+        protected Tab getTabFromName(String inName) throws ValidatorException {
             for (Tab tab : tabList) {
-                if (tab.getName().equals(name)) {
+                if (tab.getName().equals(inName)) {
                     return tab;
                 }
             }
-            throw new ValidatorException("The " + name + " tab does not exist");
+            throw new ValidatorException("The " + inName + " tab does not exist");
         }
     }
-    private class Tab extends ArrayList<ArrayList<String>> {
-        private final String name;
-        private Integer rowLen;
-        private Integer colLen;
-        private final String spreadSheetId;
 
+    /**
+     * Represents a tab in a google sheet. On construction uses the google sheets api to populate itself
+     * with the cells in the tab. Extended from an a two dimensional String ArrayList.
+     */
+    private class Tab extends ArrayList<ArrayList<String>> {
+
+        /**
+         * The name of this tab.
+         */
+        private final String name;
+
+        /**
+         * Constructor for a tab object. Uses sheetsService to populate itself with the cells in the actual google
+         * sheets tab. Automatically strips all leading and trailing white space from the cells.
+         * @param inSpreadsheetId a String that is the id of the google sheet the tab is in
+         * @param inName a String that is the name of the tab
+         */
         protected Tab(String inSpreadsheetId, String inName) {
             super();
             this.name = inName;
-            this.spreadSheetId = inSpreadsheetId;
 
             try {
                 ValueRange response = sheetsService.spreadsheets().values()
-                        .get(spreadSheetId, name + "!A1:Z")
+                        .get(inSpreadsheetId, name + "!A1:Z")
                         .setValueRenderOption("FORMATTED_VALUE")
                         .execute();
                 for (List row : response.getValues()) {
@@ -949,28 +1190,38 @@ public class Validator {
 
         }
 
+        protected String getName() {
+            return this.name;
+        }
+
+        /**
+         * compares the tab against a provided range (A1 format). Adds fatal errors if there are not enough rows in the
+         * tab, removes rows/columns outside the range if they are present. Adds fatal errors for too short rows,
+         * empty cells, and cells that are multiple lines.
+         * @param inRange a String that is the range to compare the tab against (in A1 format)
+         */
         private void sizeTabUsingRange(String inRange) {
-            this.rowLen = rowLenFromRange(inRange);
-            this.colLen = colLenFromRange(inRange);
-            if (this.colLen != null){
-                if (this.size() < this.colLen){
+            Integer rowLen = rowLenFromRange(inRange);
+            Integer colLen = colLenFromRange(inRange);
+            if (colLen != null){
+                if (this.size() < colLen){
                     fatalErrors.add("the tab " + this.name + " does not have enough rows. It should " +
-                            "have " + this.colLen);
+                            "have " + colLen);
                 }
 
-                if (this.size() > this.colLen) {
-                    this.subList(this.colLen, this.size()).clear();
+                if (this.size() > colLen) {
+                    this.subList(colLen, this.size()).clear();
                 }
             }
             for (int i = 0; i < this.size(); i++) {
-                if (this.get(i).size() > this.rowLen){
-                    this.set(i, new ArrayList<>(this.get(i).subList(0, this.rowLen)));
+                if (this.get(i).size() > rowLen){
+                    this.set(i, new ArrayList<>(this.get(i).subList(0, rowLen)));
                 }
                 if (this.get(i).size() == 0 || new HashSet<>(this.get(i)).size() == 1 && this.get(i).get(0).equals("")){
                     this.remove(i);
                     i--;
                 }
-                else if (this.get(i).size() < this.rowLen) {
+                else if (this.get(i).size() < rowLen) {
                     fatalErrors.add("The row " + (i + 1) + " in " + this.name + " is missing information");
                 }
                 else{
@@ -986,16 +1237,16 @@ public class Validator {
                     }
                 }
             }
-
-
-
         }
 
-        protected String getName() {
-            return this.name;
-        }
-
-
+        /**
+         * returns an ArrayList of Strings representing the column at the given column number. Removes the
+         * first row of the tab (the header row) before returning the column. Adds a fatal error
+         * and throws a ValidatorException if the tab is empty.
+         * @param colNum the column number to return (0 indexed)
+         * @return an ArrayList of Strings representing the given column number in the tab (excluding header)
+         * @throws ValidatorException if the tab is empty
+         */
         protected ArrayList<String> getCol(int colNum) throws ValidatorException {
             try {
                 ArrayList<String> toReturn = new ArrayList<>();
@@ -1011,6 +1262,14 @@ public class Validator {
             }
         }
 
+        /**
+         * returns an ArrayList of Strings representing a row that starts with the given first cell. Adds
+         * a fatal error and throws a ValidatorException if the tab does not contain a row that starts with the given
+         * first cell.
+         * @param firstCell a String that is the first cell of the row to return
+         * @return an ArrayList of Strings representing a row in the tab that starts with the given first cell
+         * @throws ValidatorException if the tab does not contain a row that starts with the given first cell
+         */
         protected ArrayList<String> getRowFromFirstCell(String firstCell) throws ValidatorException {
             for (ArrayList<String> row : this){
                 if (row.get(0).contains(firstCell)){
@@ -1021,6 +1280,10 @@ public class Validator {
             throw new ValidatorException("cannot find a row in " + this.getName() + " that starts with " + firstCell);
         }
 
+        /**
+         * checks if the column at the given column number contains duplicates. Adds a fatal error if it does.
+         * @param colNum the column number to check (zero indexed)
+         */
         private void checkColForDuplicates(int colNum) throws ValidatorException {
             Set<String> colSet = new HashSet<>();
             for (String cell : this.getCol(colNum)) {
@@ -1030,6 +1293,11 @@ public class Validator {
             }
         }
 
+        /**
+         * Private helper function in Tab to interpret the provided range (A1 format) and return the number of rows
+         * @param range a String that is the range to interpret (in A1 format)
+         * @return the number of rows specified by the range
+         */
         private Integer rowLenFromRange(String range) {
             try {
                 int ascii1 = (int) range.charAt(0);
@@ -1040,6 +1308,11 @@ public class Validator {
             }
         }
 
+        /**
+         * Private helper function in Tab to interpret the provided range (A1 format) and return the number of columns
+         * @param range a String that is the range to interpret (in A1 format)
+         * @return the number of columns specified by the range, or null if none are specified
+         */
         private Integer colLenFromRange(String range) {
             try {
                 int ascii1 = Integer.parseInt(range.substring(1, range.indexOf(':')));
@@ -1051,6 +1324,10 @@ public class Validator {
 
         }
 
+        /**
+         * Overrides the toString method to return a tab separated string representation of the tab
+         * @return a tab separated string representation of the tab
+         */
         @Override
         public String toString() {
             StringBuilder toReturn = new StringBuilder();
@@ -1067,13 +1344,25 @@ public class Validator {
         }
     }
 
+    /**
+     * Private helper function to evaluate if an optional audio feature is being attempted. Returns true
+     * if the tab contains any audio names in the given colum AND the subfolder with the given name
+     * is not empty. Returns false otherwise, removing the subfolder from DESIRED_FILETYPE_FROM_SUBFOLDER
+     * and adding a warning if one of the two conditions is met.
+     * (skips cells containing "X" or "naWhileMPOnly" when evaluating a tab).
+     * @param tabName a String that is the name of the tab with the audio names
+     * @param colNum the column number of the tab with the audio names
+     * @param subFolderName a String that is the name of the subfolder in the drive folder with the audio files
+     * @return True if the tab contains any audio names in the given colum AND the subfolder with the given name
+     * is not empty. False otherwise.
+     */
     private boolean decideIfAudioAttempted(String tabName, int colNum, String subFolderName) {
 
         boolean someAudioFiles = false;
         boolean someAudioNames = false;
 
         try {
-            DriveFolder subFolder = langPackDriveFolder.getFolderFromName(subFolderName);
+            GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(subFolderName);
             if (subFolder.getName().equals(subFolderName) && subFolder.size() > 0) {
                 someAudioFiles = true;
             }
@@ -1082,7 +1371,7 @@ public class Validator {
 
         try {
             ArrayList<String> AudioNames = langPackGoogleSheet.getTabFromName(tabName).getCol(colNum);
-            AudioNames.removeAll(Collections.singleton("X"));
+            AudioNames.removeAll(Set.of("X", "naWhileMPOnly"));
             if (AudioNames.size() > 0) {
                 someAudioNames = true;
             }
@@ -1100,9 +1389,17 @@ public class Validator {
                     + " of the tab " + tabName + " doesn't list any audio file names"
                     + " please add matching audio file names to the tab " + tabName + " if you want to use this feature");
         }
+        DESIRED_FILETYPE_FROM_SUBFOLDERS.remove(subFolderName);
         return false;
     }
 
+    /**
+     * Private helper function to evaluate if an optional syllables feature is being attempted. Returns true
+     * if the tab contains more than six words parsed into syllables (they contain periods) AND the syllables tab is not
+     * empty. Returns false otherwise, adding a warning if one of the two conditions is met.
+     * @return True if the syllables tab contains more than six words parsed into syllables (they contain periods)
+     * AND the syllables tab is not empty. False otherwise.
+     */
     private boolean decideIfSyllablesAttempted(){
 
         boolean numerousWordsSpliced = false;
@@ -1143,7 +1440,13 @@ public class Validator {
         return false;
     }
 
-    // TODO clean this up a bit lol
+    /**
+     * Private helper function to parse words into tiles and count the number of tiles in a word. Also updates
+     * a map of tiles to their usage as it goes.
+     * @param toParse a String that is the word to parse into tiles
+     * @param tileUsage a Map of Strings representing tiles to ints representing their usage in the wordlist (so far)
+     * @return the number of tiles in the provided word
+     */
     private int numTilesInWord(String toParse, Map<String, Integer> tileUsage) {
         Set<String> tileSet = tileUsage.keySet();
         for (int i = toParse.length(); i > 0; i--) {
@@ -1164,6 +1467,11 @@ public class Validator {
         return 0;
     }
 
+    /**
+     * Private helper function to build the driveService and sheetsService objects. Replaces the refresh token
+     * if it expired or revoked.
+     * @param driveFolderId a String that is the a google drive ID used to check if the token is revoked or expired
+     */
     private void buildServices(String driveFolderId) throws GeneralSecurityException, IOException {
 
         // initially builds the drive and sheets service not knowing if the token is revoked/expired
@@ -1246,6 +1554,10 @@ public class Validator {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
+    /**
+     * Deletes the entire directory at the given path in the computer's file system.
+     * @param directoryToBeDeleted the Path object to the directory to be deleted
+     */
     private void deleteDirectory(Path directoryToBeDeleted) {
         java.io.File[] allContents = directoryToBeDeleted.toFile().listFiles();
         if (allContents != null) {
@@ -1256,6 +1568,11 @@ public class Validator {
         directoryToBeDeleted.toFile().delete();
     }
 
+    /**
+     * Copies an entire directory from one path to another. (recursively)
+     * @param directoryToBeCopied the Path object to the directory to be copied
+     * @param destinationPath the Path object to the destination directory
+     */
     public void copyDirectory(Path directoryToBeCopied, Path destinationPath) throws IOException {
         java.io.File[] allContents = directoryToBeCopied.toFile().listFiles();
         if (allContents != null) {
