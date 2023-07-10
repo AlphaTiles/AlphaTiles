@@ -250,7 +250,7 @@ public class Start extends AppCompatActivity
                 }
             }
         }
-        Wordle.data = Wordle.wordlePreProcess();
+        Chile.data = Chile.chilePreProcess();
 
         Intent intent = new Intent(this, LoadingScreen.class);
 
