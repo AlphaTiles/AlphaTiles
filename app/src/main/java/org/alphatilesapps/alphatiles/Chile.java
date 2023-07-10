@@ -2,10 +2,15 @@ package org.alphatilesapps.alphatiles;
 
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,21 +44,44 @@ public class Chile extends GameActivity {
     ArrayList<TileAdapter.ColorTile> keys = new ArrayList<>();
     @Override
     protected int[] getTileButtons() {
-        return new int[0];
+        return null;
     }
 
     @Override
     protected int[] getWordImages() {
-        return new int[0];
+        return null;
     }
 
     @Override
     protected int getAudioInstructionsResID() {
-        return 0;
+        // Copied from Colombia.java
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try{
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+        }
+        catch (NullPointerException e){
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
     }
 
     @Override
-    protected void centerGamesHomeImage() {}
+    protected void centerGamesHomeImage() {
+        // Copied from Sudan.java
+        View instructionsButton = findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        int gameID = R.id.chileCL;
+
+        ConstraintLayout constraintLayout = findViewById(gameID);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.repeatImage,ConstraintSet.START,0);
+        constraintSet.connect(R.id.repeatImage,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
+        constraintSet.applyTo(constraintLayout);
+    }
 
     @Override
     public void goBackToEarth(View view) {
@@ -119,7 +147,10 @@ public class Chile extends GameActivity {
         secret = data.words.get(rng.nextInt(data.words.size()));
         LOGGER.log(Level.INFO, Arrays.toString(secret));
         currentRow = 0;
-
+        int iID = getAudioInstructionsResID();
+        if(iID == 0 || iID == -1) {
+            centerGamesHomeImage();
+        }
     }
     private void backSpace() {
         for(int i = (currentRow + 1) * data.wordLength - 1; i >= (currentRow) * data.wordLength; i--) {
@@ -187,7 +218,7 @@ public class Chile extends GameActivity {
         }
         guessAdapter.notifyDataSetChanged();
         keyAdapter.notifyDataSetChanged();
-        if(greenCount == data.wordLength) {
+        if(greenCount == data.wordLength && !finished) {
             finished = true;
             int sound;
             if(++trackerCount >= 12) {
