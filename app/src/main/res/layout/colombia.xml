@@ -1086,13 +1086,13 @@
         android:id="@+id/instructions"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/playAgain"
         android:onClick="playAudioInstructions"
+        android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toEndOf="@+id/repeatImage"
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/playAgain"
-        android:rotationY="0"
         app:srcCompat="@drawable/zz_instructions" />
 
     <ImageView

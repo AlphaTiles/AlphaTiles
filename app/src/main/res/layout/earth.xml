@@ -40,11 +40,12 @@
         android:contentDescription="@string/resourcePromo"
         android:onClick="goToResources"
         android:src="@drawable/zz_resource_promo"
-        app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1" />
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/instructions"
+        app:layout_constraintStart_toEndOf="@+id/pointsImage"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintVertical_bias="0.416" />
 
     <TextView
         android:id="@+id/avatarName"
@@ -635,8 +636,8 @@
 
     <TextView
         android:id="@+id/pointsTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="83dp"
+        android:layout_height="80dp"
         android:gravity="center"
         android:maxLines="1"
         android:padding="7dp"
@@ -653,6 +654,19 @@
         app:layout_constraintEnd_toEndOf="@+id/pointsImage"
         app:layout_constraintStart_toStartOf="@+id/pointsImage"
         app:layout_constraintTop_toTopOf="@+id/pointsImage" />
+
+    <ImageView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/playAgain"
+        android:onClick="playAudioInstructionsEarth"
+        android:rotationY="0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintEnd_toStartOf="@+id/logoImage"
+        app:layout_constraintStart_toEndOf="@+id/resourcePromo"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:srcCompat="@drawable/zz_instructions" />
 
     <ImageView
         android:id="@+id/logoImage"

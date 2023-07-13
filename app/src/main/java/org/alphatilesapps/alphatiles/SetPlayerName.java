@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.keyList;
 import static org.alphatilesapps.alphatiles.Start.COLORS;
@@ -99,6 +101,13 @@ public class SetPlayerName extends AppCompatActivity {
             forceRTLIfSupported();
         } else {
             forceLTRIfSupported();
+        }
+
+        resID = context.getResources().getIdentifier("zzz_set_player_name", "raw", context.getPackageName());
+        if (resID == 0) {
+            // hide audio instructions icon
+            ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+            instructionsButton.setVisibility(View.GONE);
         }
 
     }
@@ -309,6 +318,43 @@ public class SetPlayerName extends AppCompatActivity {
         startActivity(intent);
         finish();
 
+    }
+
+    public void playAudioInstructionsPlayerName(View view) {
+        setAllElemsUnclickable();
+        int resID = context.getResources().getIdentifier("zzz_set_player_name", "raw", context.getPackageName());
+        MediaPlayer mp3 = MediaPlayer.create(this, resID);
+        mp3.start();
+        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp3) {
+                setAllElemsClickable();
+                mp3.release();
+            }
+        });
+
+    }
+
+    protected void setAllElemsUnclickable() {
+        // Get reference to the parent layout container
+        ConstraintLayout parentLayout = findViewById(R.id.setPlayerNameCL);
+
+        // Disable clickability of all child views
+        for (int i = 0; i < parentLayout.getChildCount(); i++) {
+            View child = parentLayout.getChildAt(i);
+            child.setClickable(false);
+        }
+    }
+
+    protected void setAllElemsClickable() {
+        // Get reference to the parent layout container
+        ConstraintLayout parentLayout = findViewById(R.id.setPlayerNameCL);
+
+        // Disable clickability of all child views
+        for (int i = 0; i < parentLayout.getChildCount(); i++) {
+            View child = parentLayout.getChildAt(i);
+            child.setClickable(true);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
