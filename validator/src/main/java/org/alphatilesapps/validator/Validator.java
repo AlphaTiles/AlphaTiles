@@ -23,6 +23,7 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.google.common.base.VerifyException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -41,6 +42,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.security.cert.CertPathValidatorException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,6 +52,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -364,14 +367,20 @@ public class Validator {
                 // returning the number of tiles in the provided word.
                 // it also updates the tileUsage dictionary so the dictionary counts how many times each tile appears
                 //TODO get better parsing from start class
-                ArrayList<String> tilesInWord = parseWordIntoTiles(word, new ArrayList<>());
-                if (tilesInWord == null) {
-                    fatalErrors.add("the word \"" + word + "\" in wordlist cannot be built out of tiles in gametiles");
-                    continue;
+                ArrayList<String> tilesInWord = new ArrayList<>();
+                try{
+                    tilesInWord = parseWordIntoTiles(word);
                 }
+                // go to the next word if this one cannot be parsed
+                catch (ValidatorException e){continue;}
 
                 for (String tile : tilesInWord) {
-                    tileUsage.put(tile, tileUsage.get(tile) + 1);
+                    if (tileUsage.containsKey(tile)) {
+                        tileUsage.put(tile, tileUsage.get(tile) + 1);
+                    }
+                    else {
+                        fatalErrors.add("");
+                    }
                 }
 
                 int numTiles = tilesInWord.size();
@@ -398,7 +407,7 @@ public class Validator {
                 }
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + " the gametiles tab or the wordlist tab");
+            warnings.add(FAILED_CHECK_WARNING + "the gametiles tab, the wordlist tab, or the langinfo setting \"11. Script type\"");
         }
         try {
             Tab gameTiles = langPackGoogleSheet.getTabFromName("gametiles");
@@ -589,10 +598,13 @@ public class Validator {
             boolean header = true;
             for (ArrayList<String> row : langPackGoogleSheet.getTabFromName("wordlist")){
                 if (header){header = false; continue;}
-                parseTypeSpecification(row.get(1), row.get(3));
+                try{
+                    parseTypeSpecification(row.get(1), row.get(3));
+                }
+                catch (ValidatorException e){continue;}
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the wordlist tab or the gametiles tab");
+            warnings.add(FAILED_CHECK_WARNING + "the gametiles tab, the wordlist tab, or the langinfo setting \"11. Script type\"");
         }
 
     }
@@ -1410,13 +1422,25 @@ public class Validator {
          * @throws ValidatorException if the tab does not contain a row that starts with the given first cell
          */
         protected ArrayList<String> getRowFromFirstCell(String firstCell) throws ValidatorException {
+            return getRowWithCellInCol(firstCell,0);
+        }
+
+        /**
+         * returns an ArrayList of Strings representing a row that the given cell in the given column number. Adds
+         * a fatal error and throws a ValidatorException if the tab does not contain a row satisfies these conditions
+         * @param cell a String that is the desired cell to be looked for in a specific column
+         * @param col the column to look for the given cell in
+         * @return an ArrayList of Strings representing a row in the tab that contains the given cell at the given column
+         * @throws ValidatorException if the tab does not contain a row that satisfies these conditions
+         */
+        protected ArrayList<String> getRowWithCellInCol(String cell, int col) throws ValidatorException {
             for (ArrayList<String> row : this){
-                if (row.get(0).equals(firstCell)){
+                if (row.get(col).equals(cell)){
                     return row;
                 }
             }
-            fatalErrors.add("cannot find a row in " + this.getName() + " that starts with \"" + firstCell + "\"");
-            throw new ValidatorException("cannot find a row in " + this.getName() + " that starts with \"" + firstCell + "\"");
+            fatalErrors.add("cannot find a row in " + this.getName() + " that contains \"" + cell + "\" in column " + col);
+            throw new ValidatorException("cannot find a row in " + this.getName() + " that contains \"" + cell + "\" in column " + col);
         }
 
         /**
@@ -1558,6 +1582,7 @@ public class Validator {
             }
         }
         catch (ValidatorException e){
+            warnings.add(FAILED_CHECK_WARNING + "the wordlist tab");
         }
 
         try {
@@ -1588,7 +1613,7 @@ public class Validator {
      *                  this function
      * @return an ArrayList of Strings representing the tiles found in the word
      */
-    private ArrayList<String> parseWordIntoTiles(String wordInLOP, ArrayList<String> tilesSoFar) throws ValidatorException {
+    private ArrayList<String> parseWordIntoTilesSimple(String wordInLOP, ArrayList<String> tilesSoFar) throws ValidatorException {
         if (wordInLOP.startsWith(".")){
             wordInLOP = wordInLOP.replaceFirst(".", "");
         }
@@ -1604,7 +1629,7 @@ public class Validator {
                 if (i == wordInLOP.length()) {
                     return tilesSoFarCopy;
                 } else {
-                    ArrayList<String> tilesInRemaining = parseWordIntoTiles(wordInLOP.substring(i), tilesSoFarCopy);
+                    ArrayList<String> tilesInRemaining = parseWordIntoTilesSimple(wordInLOP.substring(i), tilesSoFarCopy);
                     if (tilesInRemaining != null) {
                         return tilesInRemaining;
                     }
@@ -1614,61 +1639,28 @@ public class Validator {
         return null;
     }
 
-    private ArrayList<String> parseTypeSpecification(String wordInLop, String typeSpecifications) throws ValidatorException {
-        Tab gameTilesTab = langPackGoogleSheet.getTabFromName("gametiles");
-        ArrayList<String> wordAsTileList = parseWordIntoTiles(wordInLop, new ArrayList<>());
-        if (wordAsTileList == null) {
-            fatalErrors.add("the word \"" + wordInLop + "\" in wordlist cannot be built out of tiles in gametiles");
-            throw new ValidatorException("the word \"" + wordInLop + "\" in wordlist cannot be built out of tiles in gametiles");
+    private ArrayList<String> parseWordIntoTiles(String wordInLOP) throws ValidatorException {
+        ArrayList<String> finalTileList;
+        Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
+        if (!langInfo.getRowFromFirstCell("11. Script type").get(1).equals("(Thai)")){
+            finalTileList = parseWordIntoTilesThai(wordInLOP);
         }
+        else{
+            finalTileList = parseWordIntoTilesSimple(wordInLOP, new ArrayList<>());
+        }
+        if (!(finalTileList == null) && !(finalTileList.size() == 0)){
+            return finalTileList;
+        }
+        fatalErrors.add("Cannot parse word \"" + wordInLOP + "\" in wordlist into tiles from gametiles.");
+        throw new ValidatorException("Cannot parse word \"" + wordInLOP + "\" in wordlist into tiles from gametiles.");
+    }
 
-        // if the type specification was abbreviated to "-", build the full type specification and call this function again
-        if (typeSpecifications.equals("-")) {
-            StringBuilder typeSpecString = new StringBuilder();
-            for (int i = 0; i < wordAsTileList.size(); i++) {
-                typeSpecString.append(i + 1);
-            }
-            return parseTypeSpecification(wordInLop, typeSpecString.toString());
-        }
-        // if the type specification was abbreviated to one type value, build the full type specification and call this function again
-        else if (typeSpecifications.matches("[CVXT]|AD|AV|BV|FV|LV|SAD]")){
-            boolean foundMultiTypeTile = false;
-            StringBuilder typeSpecString = new StringBuilder();
-            for (int i = 0; i < wordAsTileList.size(); i++) {
-                ArrayList<String> tileRow = gameTilesTab.getRowFromFirstCell(wordAsTileList.get(i));
-                if ((!tileRow.get(7).equals("none") || !tileRow.get(9).equals("none")) && foundMultiTypeTile){
-                    fatalErrors.add("In wordlist, the word \"" + wordInLop + "\" specifies ONE multy-type tile with the" +
-                            "type specificaiton \"" + typeSpecifications +
-                            "\" but more than one of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
-                    throw new ValidatorException("In wordlist, the word \"" + wordInLop + "\" specifies ONE multy-type tile with the" +
-                            "type specificaiton \"" + typeSpecifications +
-                            "\" but more than one of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
-                }
-                else if (!tileRow.get(7).equals("none") && !foundMultiTypeTile){
-                    foundMultiTypeTile = true;
-                    typeSpecString.append(tileRow.get(7));
-                }
-                else if (!tileRow.get(9).equals("none") && !foundMultiTypeTile){
-                    foundMultiTypeTile = true;
-                    typeSpecString.append(tileRow.get(9));
-                }
-                else if (!foundMultiTypeTile){
-                    typeSpecString.append(typeSpecifications);
-                }
-                else{
-                    typeSpecString.append(i + 1);
-                }
-            }
-            if (!foundMultiTypeTile) {
-                fatalErrors.add("In wordlist, the word \"" + wordInLop + "\" specifies ONE multy-type tile with the" +
-                        "type specificaiton \"" + typeSpecifications +
-                        "\" but none of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
-                throw new ValidatorException("In wordlist, the word \"" + wordInLop + "\" specifies ONE multy-type tile with the" +
-                        "type specificaiton \"" + typeSpecifications +
-                        "\" but none tiles have multiple types (its tiles are " + wordAsTileList + ")");
-            }
-            return parseTypeSpecification(wordInLop, typeSpecString.toString());
-        }
+
+    private ArrayList<String> parseTypeSpecification(String wordInLOP, String typeSpecifications) throws ValidatorException {
+        Tab gameTilesTab = langPackGoogleSheet.getTabFromName("gametiles");
+        ArrayList<String> wordAsTileList = parseWordIntoTilesSimple(wordInLOP, new ArrayList<>());
+        if (wordAsTileList == null){throw new ValidatorException("Cannot parse word \"" + wordInLOP + "\" in wordlist into tiles from gametiles.");}
+
 
         //compare the type specifications to the possible types of the tiles in the word
         ArrayList<String> toReturn = new ArrayList<>();
@@ -1685,11 +1677,14 @@ public class Validator {
             typeSpecsList.add(specMatcher.group());
         }
 
+        if (typeSpecsList.size() == 1){
+            return parseSingleTypeSpecification(wordInLOP, typeSpecifications);
+        }
 
-        if (typeSpecsList.size() != wordAsTileList.size()) {
-            fatalErrors.add("In wordlist, the word " + wordInLop + " has " + wordAsTileList.size() +
+        else if (typeSpecsList.size() != wordAsTileList.size()) {
+            fatalErrors.add("In wordlist, the word " + wordInLOP + " has " + wordAsTileList.size() +
                     " tiles, but the mixed types cell has " + typeSpecsList.size() + " specifications");
-            throw new ValidatorException("In wordlist, the word " + wordInLop + " has " + wordAsTileList.size() +
+            throw new ValidatorException("In wordlist, the word " + wordInLOP + " has " + wordAsTileList.size() +
                     " tiles, but the mixed types cell has " + typeSpecsList.size() + " specifications");
         }
 
@@ -1700,31 +1695,368 @@ public class Validator {
 
             if (currentSpecification.matches("1?[0-9]")){
                 if ((!tileRow.get(7).equals("none") || !tileRow.get(9).equals("none"))){
-                    fatalErrors.add("In wordlist, the word " + wordInLop + " has no type specification" +
+                    fatalErrors.add("In wordlist, the word " + wordInLOP + " has no type specification" +
                             " for tile " + currentTile + " but that tile has multiple types");
                 }
                 toReturn.add(tileRow.get(4));
-            } else if (currentSpecification.equals(tileRow.get(7))) {
-                toReturn.add(tileRow.get(7));
-            } else if (currentSpecification.equals(tileRow.get(9))) {
-                toReturn.add(tileRow.get(9));
+            } else if (currentSpecification.equals(tileRow.get(7)) || currentSpecification.equals(tileRow.get(9))) {
+                toReturn.add(currentSpecification);
             }
             else {
-                fatalErrors.add("In wordlist, the word " + wordInLop + " has type specification " + currentSpecification +
+                fatalErrors.add("In wordlist, the word " + wordInLOP + " has type specification " + currentSpecification +
                         " for tile " + currentTile + " but that tile does not have that type specification");
-                throw new ValidatorException("In wordlist, the word " + wordInLop + " has type specification " + currentSpecification +
+                throw new ValidatorException("In wordlist, the word " + wordInLOP + " has type specification " + currentSpecification +
                         " for tile " + currentTile + " but that tile does not have that type specification");
             }
         }
         return toReturn;
     }
 
-    public ArrayList<String> parseWordIntoTilesComplex(String wordInLOP) throws ValidatorException {
+    private ArrayList<String> parseSingleTypeSpecification(String wordInLOP, String typeSpecifications) throws ValidatorException {
+        Tab gameTilesTab = langPackGoogleSheet.getTabFromName("gametiles");
+        ArrayList<String> wordAsTileList = parseWordIntoTilesSimple(wordInLOP, new ArrayList<>());
+        if (wordAsTileList == null) {
+            throw new ValidatorException("Cannot parse word \"" + wordInLOP + "\" in wordlist into tiles from gametiles.");
+        }
+
+        // if the type specification was abbreviated to "-", build the full type specification and call the normal parsing method
+        if (typeSpecifications.equals("-")) {
+            StringBuilder typeSpecString = new StringBuilder();
+            for (int i = 0; i < wordAsTileList.size(); i++) {
+                typeSpecString.append(i + 1);
+            }
+            return parseTypeSpecification(wordInLOP, typeSpecString.toString());
+        }
+        // Otherwise, go through each tile in the word, checking if the tile is multi-type and if the single multi-type
+        // tile has been found already and adding to the tile specifications list accordingly.
+
+        else {
+            ArrayList<String> toReturn = new ArrayList<>();
+            boolean foundMultiTypeTile = false;
+            for (int i = 0; i < wordAsTileList.size(); i++) {
+                ArrayList<String> tileRow = gameTilesTab.getRowFromFirstCell(wordAsTileList.get(i));
+                boolean isMultiType = !tileRow.get(7).equals("none") || !tileRow.get(9).equals("none");
+                if (isMultiType) {
+                    if (foundMultiTypeTile) {
+                        fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multy-type tile with the" +
+                                "type specificaiton \"" + typeSpecifications +
+                                "\" but more than one of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
+                        throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multy-type tile with the" +
+                                "type specificaiton \"" + typeSpecifications +
+                                "\" but more than one of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
+                    } else {
+                        if (tileRow.get(7).equals(typeSpecifications) || tileRow.get(9).equals(typeSpecifications)
+                                || tileRow.get(4).equals(typeSpecifications)) {
+                            foundMultiTypeTile = true;
+                            toReturn.add(typeSpecifications);
+                        } else {
+                            fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multy-type tile (with the" +
+                                    "type specificaiton \"" + typeSpecifications +
+                                    "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
+                            throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multy-type tile (with the" +
+                                    "type specificaiton \"" + typeSpecifications +
+                                    "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
+                        }
+                    }
+                } else {
+                    toReturn.add(tileRow.get(4));
+                }
+            }
+            if (!foundMultiTypeTile) {
+                fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multy-type tile with the" +
+                        "type specificaiton \"" + typeSpecifications +
+                        "\" but none of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
+                throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multy-type tile with the" +
+                        "type specificaiton \"" + typeSpecifications +
+                        "\" but none tiles have multiple types (its tiles are " + wordAsTileList + ")");
+            }
+            return toReturn;
+        }
+
+    }
+
+    public ArrayList<String> parseWordIntoTilesThai(String stringToParse, String wordInLOP) throws ValidatorException {
+        Tab gameTiles = langPackGoogleSheet.getTabFromName("gametiles");
+        Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
+        ArrayList<String> parsedWordArrayPreliminary = parseWordIntoTilesSimple(stringToParse, new ArrayList<String>());
+        ArrayList<String> typeSpecifications = parseTypeSpecification(wordInLOP, wordlist.getRowWithCellInCol(wordInLOP,1).get(3));
+
+        // This doesn't make sense to me but its what the __ method in start was doing so I just copied.
+        String typeSpec = wordlist.getRowWithCellInCol(wordInLOP,1).get(3);
+        if (typeSpec.matches("[CVXT]|AD|AV|BV|FV|LV|SAD|-")){
+            typeSpecifications.clear();
+            for (int i = 0; i < parsedWordArrayPreliminary.size(); i++){
+                typeSpecifications.add(typeSpec);
+            }
+        }
+
+        Tab gameTilesMultiFunc = (Tab) gameTiles.clone();
+        for (int i = gameTiles.size() -1; i >=0 ; i--){
+            if (gameTiles.get(i).get(7).equals("none")){
+                gameTilesMultiFunc.remove(i);
+            }
+        }
+
+        ArrayList<String> parsedWordArray = new ArrayList<String>();
+
+        int consonantScanIndex = 0;
+        int currentConsonantIndex = 0;
+        int previousConsonantIndex = -1;
+        int nextConsonantIndex = parsedWordArrayPreliminary.size();
+        boolean foundNextConsonant = false;
+
+        while (consonantScanIndex < parsedWordArrayPreliminary.size()) {
+
+            String currentConsonant = "";
+
+            foundNextConsonant = false;
+            ArrayList<String> currentTile;
+            String currentTileString;
+            String currentTileType;
+            // Scan for the next unchecked consonant tile
+            while (!foundNextConsonant && consonantScanIndex < parsedWordArrayPreliminary.size()) {
+                currentTileString = parsedWordArrayPreliminary.get(consonantScanIndex);
+                currentTile = gameTiles.getRowFromFirstCell(currentTileString);
+                if (gameTilesMultiFunc.getCol(0).contains(currentTileString)) { // Discern the type of the current tile
+                    int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(currentTileString, consonantScanIndex, parsedWordArrayPreliminary, wordInLOP);
+                    if (indexInPreliminaryArray == -1){
+                        currentTileType = "";
+                    }
+                    else {
+                        currentTileType = typeSpecifications.get(indexInPreliminaryArray);
+                    }
+                } else {
+                    currentTileType = currentTile.get(4);
+                }
+                if (currentTileType.equals("C")) {
+                    currentConsonant = currentTileString;
+                    currentConsonantIndex = consonantScanIndex;
+                    foundNextConsonant = true;
+                }
+                consonantScanIndex++;
+            }
+            if (!foundNextConsonant) {
+                currentConsonantIndex = parsedWordArrayPreliminary.size();
+            }
+
+            foundNextConsonant = false;
+            // Scan for the unchecked consonant tile after that one, if it exists. Just save its index; it won't be added to the array on this iteration.
+            while (!foundNextConsonant && consonantScanIndex < parsedWordArrayPreliminary.size()) {
+                currentTileString = parsedWordArrayPreliminary.get(consonantScanIndex);
+                currentTile = gameTiles.getRowFromFirstCell(currentTileString);
+                if (gameTilesMultiFunc.getCol(0).contains(currentTileString)) { // Discern the type of the current tile
+                    int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(currentTileString, consonantScanIndex, parsedWordArrayPreliminary, wordInLOP);
+                    if (indexInPreliminaryArray == -1){
+                        currentTileType = "";
+                    }
+                    else {
+                        currentTileType = typeSpecifications.get(indexInPreliminaryArray);
+                    }
+                } else {
+                    currentTileType = currentTile.get(4);
+                }
+                if (currentTileType.equals("C")) {
+                    nextConsonantIndex = consonantScanIndex;
+                    foundNextConsonant = true;
+                }
+                consonantScanIndex++;
+            }
+            if (!foundNextConsonant) {
+                nextConsonantIndex = parsedWordArrayPreliminary.size();
+            }
+
+            // Combine vowel symbols into complex vowels that occur around the current consonant, as applicable. Find diacritics, spaces, and dashes that occur on/after this syllable.
+
+            // Find vowel symbols that occur between previous and current consonants
+            String vowel = "";
+            String typeSADSymbols = "";
+            String ADSymbols = "";
+            String nonCombiningVowelFromPreviousSyllable = "";
+            for (int b = previousConsonantIndex + 1; b < currentConsonantIndex; b++) {
+                currentTileString = parsedWordArrayPreliminary.get(b);
+                currentTile = gameTiles.getRowFromFirstCell(currentTileString);
+                if (gameTilesMultiFunc.getCol(0).contains(currentTileString)) { // Discern the type of the current tile
+                    int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(currentTileString, consonantScanIndex, parsedWordArrayPreliminary, wordInLOP);
+                    if (indexInPreliminaryArray == -1){
+                        currentTileType = "";
+                    }
+                    else {
+                        currentTileType = typeSpecifications.get(indexInPreliminaryArray);
+                    }
+                } else {
+                    currentTileType = currentTile.get(4);
+                }
+                if (currentTileType.equals("LV")) {
+                    vowel += currentTileString;
+                } else if (currentTileType.equals("V")){
+                    nonCombiningVowelFromPreviousSyllable += currentTileString;
+                }
+            }
+
+            // Find vowel, diacritic, space, and dash symbols that occur between current and next consonants
+            ArrayList<String> vowelTile;
+            String vowelTileString;
+            String vowelTileType;
+            String vowelToStartTheNextSyllable = "";
+            int indexOfLastFoundMultitypeVowel = -1;
+            for (int a = currentConsonantIndex + 1; a < nextConsonantIndex; a++) {
+                currentTileString = parsedWordArrayPreliminary.get(a);
+                currentTile = gameTiles.getRowFromFirstCell(currentTileString);
+                if (gameTilesMultiFunc.getCol(0).contains(currentTileString)) { // Discern the type of the current tile
+                    int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(currentTileString, consonantScanIndex, parsedWordArrayPreliminary, wordInLOP);
+                    if (indexInPreliminaryArray == -1){
+                        currentTileType = "";
+                    }
+                    else {
+                        currentTileType = typeSpecifications.get(indexInPreliminaryArray);
+                    }
+                    if(currentTileType.contains("V")){
+                        indexOfLastFoundMultitypeVowel = indexInPreliminaryArray;
+                    }
+                } else {
+                    currentTileType = currentTile.get(4);
+                }
+
+                if (currentTileType.equals("AV") || currentTileType.equals("BV") || currentTileType.equals("FV")) { // Prepare to add current AV/BV/FV to vowel-so-far
+                    if (gameTiles.getCol(0).contains(vowel)) {
+                        vowelTile = gameTiles.getRowFromFirstCell(vowel);
+                    }
+                    else {vowelTile = null;}
+                    if(!Objects.isNull(vowelTile)){ // Vowel composite so far is parsable as one tile in the tile list
+                        vowelTileString = vowelTile.get(0);
+                        if (gameTilesMultiFunc.getCol(0).contains(vowelTileString)) { // Discern the type of the current tile
+                            int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(vowelTileString, indexOfLastFoundMultitypeVowel, parsedWordArrayPreliminary, wordInLOP);
+                            if (indexInPreliminaryArray == -1){
+                                vowelTileType = "";
+                            }
+                            else {
+                                vowelTileType = typeSpecifications.get(indexInPreliminaryArray);
+                            }
+                        } else {
+                            vowelTileType = vowelTile.get(4);
+                        }
+                        if(vowelTileType.equals("LV")){
+                            vowel += "◌";
+                        } else if (vowelTileType.equals("AV") || vowelTileType.equals("BV") || vowelTileType.equals("FV")){
+                            vowel = "◌" + vowelTile.get(0); // Put the placeholder before the previous AV/BV/FV before adding current AV/BV/FV to it
+                        }
+                    }
+                    vowel += currentTileString;
+                } else if (currentTileType.equals("AD")) { // Save any diacritics that come between syllables
+                    if(!ADSymbols.equals("")){
+                        ADSymbols = "◌" + ADSymbols; // For complex diacritics
+                    }
+                    ADSymbols+=currentTileString;
+                } else if (currentTileType.equals("SAD")) { // Save any Space-And-Dash chars that come between syllables
+                    typeSADSymbols += currentTileString;
+                } else if (!foundNextConsonant && currentTileType.equals("V")){ // There is a V (not LV/FV/AV/BV/on the end of the word)
+                    vowelToStartTheNextSyllable+=currentTileString;
+                }
+            }
+
+
+            // Add saved items to the tile array
+            if(!nonCombiningVowelFromPreviousSyllable.equals("")){
+                parsedWordArray.add(nonCombiningVowelFromPreviousSyllable);
+            }
+            if (!currentConsonant.equals("")) {
+                if (!vowel.equals("")) {
+                    vowelTile = gameTiles.getRowFromFirstCell(vowel);
+                    vowelTileString = vowelTile.get(0);
+                    if (gameTilesMultiFunc.getCol(0).contains(vowelTileString)) { // Discern the type of the current tile
+                        int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(vowelTileString, indexOfLastFoundMultitypeVowel, parsedWordArrayPreliminary, wordInLOP);
+                        if (indexInPreliminaryArray == -1){
+                            vowelTileType = "";
+                        }
+                        else {
+                            vowelTileType = typeSpecifications.get(indexInPreliminaryArray);
+                        }
+                    } else {
+                        vowelTileType = vowelTile.get(4);
+                    }
+                    // Add tiles in different orders based on the vowel's position
+                    if (vowelTileType.equals("LV")) {
+                        parsedWordArray.add(vowel);
+                        parsedWordArray.add(currentConsonant);
+                        if (!ADSymbols.equals("")) {
+                            parsedWordArray.add(ADSymbols);
+                        }
+                    } else if (vowelTileType.equals("AV") || vowelTileType.equals("BV") || vowelTileType.equals("V")) {
+                        parsedWordArray.add(currentConsonant);
+                        parsedWordArray.add(vowel);
+                        if (!ADSymbols.equals("")) {
+                            parsedWordArray.add(ADSymbols);
+                        }
+                    } else if (vowelTileType.equals("FV")){
+                        parsedWordArray.add(currentConsonant);
+                        if (!ADSymbols.equals("")) {
+                            parsedWordArray.add(ADSymbols);
+                        }
+                        parsedWordArray.add(vowel);
+                    }
+                } else { // No vowel between current and (next) consonants
+                    parsedWordArray.add(currentConsonant);
+                    if (!ADSymbols.equals("")) {
+                        parsedWordArray.add(ADSymbols);
+                    }
+                }
+                // Add any spaces or dashes that come between syllables
+                if (!typeSADSymbols.equals("")) {
+                    parsedWordArray.add(typeSADSymbols);
+                }
+                // If a vowel of type V was found before the next consonant, add it. It is syllable-initial or mid.
+                if (!vowelToStartTheNextSyllable.equals("")) {
+                    parsedWordArray.add(vowelToStartTheNextSyllable);
+                }
+                previousConsonantIndex = currentConsonantIndex;
+            }
+            consonantScanIndex = nextConsonantIndex;
+        }
+        System.out.println(parsedWordArray);
+        return parsedWordArray;
+    }
+
+    public int returnInstanceIndexInPreliminaryParsedWordArray(String tileString, int indexOfTileStringInWordArrayInProgress, ArrayList<String> wordArrayInProgress, String wordInLOP) throws ValidatorException {
+
+        Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
+
+        int indexInPreliminaryArray = -1;
+        int lastIndexOfThisMultifunctionTile = 0;
+        int instancesBeforeTheOneWeWant = 0;
+        String previousTilesConcatenated = "";
+        for(int t = 0; t<indexOfTileStringInWordArrayInProgress; t++){
+            previousTilesConcatenated+=wordArrayInProgress.get(t);
+        }
+
+        // Figure out which instance of this tile in the tile list we are looking at
+        while (lastIndexOfThisMultifunctionTile != -1) {
+            lastIndexOfThisMultifunctionTile = previousTilesConcatenated.indexOf(tileString, lastIndexOfThisMultifunctionTile);
+            if (lastIndexOfThisMultifunctionTile != -1) {
+                instancesBeforeTheOneWeWant++;
+                lastIndexOfThisMultifunctionTile += tileString.length(); // Start looking again after the instance we just found
+            }
+        }
+        ArrayList<String> parsedWordArrayPreliminary = parseTypeSpecification(wordInLOP, wordlist.getRowWithCellInCol(wordInLOP,1).get(3));
+        // Figure out its instance type using the index of that instance in the preliminary parsed array
+        for(int t = 0; t<parsedWordArrayPreliminary.size(); t++){
+            if(parsedWordArrayPreliminary.get(t).contains(tileString)){
+                if(instancesBeforeTheOneWeWant == 0){
+                    indexInPreliminaryArray = t;
+                }
+                instancesBeforeTheOneWeWant--;
+            }
+        }
+
+        return indexInPreliminaryArray;
+
+    }
+    public ArrayList<String> parseWordIntoTilesThai(String wordInLOP) throws ValidatorException {
 
         ArrayList<String> parsedWordArray = new ArrayList<>();
-        Tab gameTiles = langPackGoogleSheet.getTabFromName("gameTiles");
-        ArrayList<String> typeSpecifications = parseTypeSpecification(wordInLOP, gameTiles.getRowFromFirstCell(wordInLOP).get(3));
-        ArrayList<String> parsedWordArrayPreliminary = parseWordIntoTiles(wordInLOP, new ArrayList<>());
+        Tab gameTiles = langPackGoogleSheet.getTabFromName("gametiles");
+        Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
+        ArrayList<String> typeSpecifications = parseTypeSpecification(wordInLOP, wordlist.getRowWithCellInCol(wordInLOP,1).get(3));
+        ArrayList<String> parsedWordArrayPreliminary = parseWordIntoTilesSimple(wordInLOP, new ArrayList<>());
 
         LinkedList<Integer> consonantIndexStack = new LinkedList<>();
         for (int i = 0; i < typeSpecifications.size(); i ++){
@@ -1754,7 +2086,7 @@ public class Validator {
             StringBuilder nonCombiningVowelFromPreviousSyllable = new StringBuilder();
             StringBuilder vowelToStartTheNextSyllable = new StringBuilder();
 
-
+            int indexOfLastVowel = -1;
             String currentTile;
             String currentTileType;
             // Find vowel symbols that occur between previous and current consonants
@@ -1769,17 +2101,15 @@ public class Validator {
             }
 
             // Find vowel, diacritic, space, and dash symbols that occur between current and next consonants
-            String vowelTileType;
-            int indexOfLastFoundMultitypeVowel = -1;
-            Integer goToIndex = Math.max(nextConsonantIndex, parsedWordArrayPreliminary.size());
+            String vowelTileType = "";
+            int goToIndex = Math.max(nextConsonantIndex, parsedWordArrayPreliminary.size());
             for (int a = currentConsonantIndex + 1; a < goToIndex; a++) {
                 currentTile = parsedWordArrayPreliminary.get(a);
                 currentTileType = typeSpecifications.get(a);
-
                 if (currentTileType.equals("AV") || currentTileType.equals("BV") || currentTileType.equals("FV")) { // Prepare to add current AV/BV/FV to vowel-so-far
                     if(gameTiles.getCol(0).contains(vowel.toString())){ // Vowel composite so far is parsable as one tile in the tile list
-                        //TODO not sure what this should be. Im hoping there is an easy way to know where to check in type specifications
-                        vowelTileType = "Not SOLVED"; //vowelTile.tileType;
+                        vowelTileType = typeSpecifications.get(a);
+                        indexOfLastVowel = a;
                         if(vowelTileType.equals("LV")){
                             vowel.append("◌");
                         } else if (vowelTileType.equals("AV") || vowelTileType.equals("BV") || vowelTileType.equals("FV")){
@@ -1802,22 +2132,45 @@ public class Validator {
 
 
             // Add saved items to the tile array
-            if(!nonCombiningVowelFromPreviousSyllable.isEmpty()) {
+            if(!nonCombiningVowelFromPreviousSyllable.isEmpty()){
                 parsedWordArray.add(nonCombiningVowelFromPreviousSyllable.toString());
             }
-            if(!vowel.isEmpty()) {
-                parsedWordArray.add(vowel.toString());
+            if (!vowel.isEmpty()) {
+                if (vowelTileType.equals("LV")) {
+                    parsedWordArray.add(vowel.toString());
+                    parsedWordArray.add(parsedWordArrayPreliminary.get(currentConsonantIndex));
+                    if (!ADSymbols.isEmpty()) {
+                        parsedWordArray.add(ADSymbols.toString());
+                    }
+                } else if (vowelTileType.equals("AV") || vowelTileType.equals("BV") || vowelTileType.equals("V")) {
+                    parsedWordArray.add(parsedWordArrayPreliminary.get(currentConsonantIndex));
+                    parsedWordArray.add(vowel.toString());
+                    if (!ADSymbols.isEmpty()) {
+                        parsedWordArray.add(ADSymbols.toString());
+                    }
+                } else if (vowelTileType.equals("FV")){
+                    parsedWordArray.add(parsedWordArrayPreliminary.get(currentConsonantIndex));
+                    if (!ADSymbols.isEmpty()) {
+                        parsedWordArray.add(ADSymbols.toString());
+                    }
+                    parsedWordArray.add(vowel.toString());
+                }
+            } else { // No vowel between current and (next) consonants
+                parsedWordArray.add(parsedWordArrayPreliminary.get(currentConsonantIndex));
+                if (!ADSymbols.isEmpty()) {
+                    parsedWordArray.add(ADSymbols.toString());
+                }
             }
-            if(!ADSymbols.isEmpty()) {
-                parsedWordArray.add(ADSymbols.toString());
-            }
-            if(!typeSADSymbols.isEmpty()) {
+            // Add any spaces or dashes that come between syllables
+            if (!typeSADSymbols.isEmpty()) {
                 parsedWordArray.add(typeSADSymbols.toString());
             }
-            if(!vowelToStartTheNextSyllable.isEmpty()) {
+            // If a vowel of type V was found before the next consonant, add it. It is syllable-initial or mid.
+            if (!vowelToStartTheNextSyllable.isEmpty()) {
                 parsedWordArray.add(vowelToStartTheNextSyllable.toString());
             }
         }
+        System.out.println(parsedWordArray);
         return parsedWordArray;
     }
 
