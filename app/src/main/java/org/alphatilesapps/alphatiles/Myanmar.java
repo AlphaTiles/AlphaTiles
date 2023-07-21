@@ -208,18 +208,18 @@ public class Myanmar extends GameActivity {
             sevenWordsInLopLwc[i][1] = wordInLOP;
 
             int tileLength = 0;
+            tileLength = tileList.parseWordIntoTiles(sevenWordsInLopLwc[i][1]).size();
 
-            for (int j = 0; j < i; j++) { // Prevent duplicates
-                tileLength = tileList.parseWordIntoTiles(sevenWordsInLopLwc[i][1]).size();
-                if (sevenWordsInLopLwc[i][0].equals(sevenWordsInLopLwc[j][0])) {
-                    i--;
-                } else if (tileLength < 3 || tileLength > 7) {
-                    i--;
+            if (tileLength < 3 || tileLength > 7) { // Limit game to words of tile length 3 to 7
+                i--;
+            } else {
+                for (int j = 0; j < i; j++) { // Prevent duplicates
+                    if (sevenWordsInLopLwc[i][0].equals(sevenWordsInLopLwc[j][0])) {
+                        i--;
+                    }
                 }
             }
-
         }
-
     }
 
     public void resetBoard() {
