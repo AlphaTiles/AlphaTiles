@@ -23,7 +23,6 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import com.google.common.base.VerifyException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -42,14 +41,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
-import java.security.cert.CertPathValidatorException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -182,10 +179,10 @@ public class Validator {
             "keyboard", "A1:B",
             "games", "A1:H",
             "syllables", "A1:G",
-            "resources", "A1:C7",
+            "resources", "A1:C",
             "settings", "A1:B",
             "colors", "A1:C",
-            "names", "A1:B14"));
+            "names", "A1:B"));
 
     /**
      * A Map of the names of the folders needed for validation to the file types needed in each folder (in MIME type).
@@ -309,7 +306,7 @@ public class Validator {
             ArrayList<String> themeColorCol = keyboardTab.getCol(1);
             themeColorCol.removeAll(Set.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"));
             if (themeColorCol.size() > 0){
-                fatalErrors.add("column B of keyboard should only have numbers 0-4");
+                fatalErrors.add("column B of keyboard should only have numbers 0-11");
             }
 
             // the below section compares they keys in keyboard to the words in wordlist
@@ -322,16 +319,19 @@ public class Validator {
             }
             for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1)) {
                 word = word.replace(".","");
-                for (String key : word.split("")) {
-                    if (!keyUsage.containsKey(key)) {
-                        String unicodeString = "";
-                        if (key.length() != 0){
-                            unicodeString = "(Unicode) " + (int) key.charAt(0);
-                        }
-                        fatalErrors.add("In wordList, the word \"" + word + "\" contains the key \"" + key +
-                                "\" which is not in the keyboard. " + unicodeString);
-                    } else {
+                for (int i = 0; i < word.length(); i++){
+                    String keyMaybeWithDiacritic = word.substring(i,Math.min(word.length(), i+2));
+                    String key = word.substring(i,i+1);
+                    if (keyUsage.containsKey(keyMaybeWithDiacritic)){
+                        keyUsage.put(keyMaybeWithDiacritic, keyUsage.get(keyMaybeWithDiacritic) + 1);
+                        i++;
+                    } else if (keyUsage.containsKey(key)) {
                         keyUsage.put(key, keyUsage.get(key) + 1);
+                    }
+                    else{
+                        String unicodeString = "(Unicode) " + (int) word.charAt(i);
+                        fatalErrors.add("In wordList, the word \"" + word + "\" contains the key \"" + word.charAt(i) +
+                                "\" which is not in the keyboard. " + unicodeString);
                     }
                 }
             }
@@ -353,7 +353,6 @@ public class Validator {
         // will be used later to check for an error in the China game
         int fourTileWords = 0;
         int threeTileWords = 0;
-        //todo is checking headers still a necessary check for gameTiles or others?
         try {
             // compare the tiles in gameTiles to the words in wordlist
             Map<String, Integer> tileUsage = new HashMap<>();
@@ -366,20 +365,23 @@ public class Validator {
                 // numTilesInWord method parses a word into the tiles in the tileUsage dictionary,
                 // returning the number of tiles in the provided word.
                 // it also updates the tileUsage dictionary so the dictionary counts how many times each tile appears
-                //TODO get better parsing from start class
-                ArrayList<String> tilesInWord = new ArrayList<>();
+
+                ArrayList<String> tilesInWord;
                 try{
                     tilesInWord = parseWordIntoTiles(word);
                 }
                 // go to the next word if this one cannot be parsed
-                catch (ValidatorException e){continue;}
+                catch (ValidatorException e){
+                    continue;
+                }
 
                 for (String tile : tilesInWord) {
                     if (tileUsage.containsKey(tile)) {
                         tileUsage.put(tile, tileUsage.get(tile) + 1);
                     }
                     else {
-                        fatalErrors.add("");
+                        fatalErrors.add("Thai/Lao parsing is indicating the tile \"" + tile +"\" is in the word \"" + word +
+                                "\" but that tiles is not in the tile list");
                     }
                 }
 
@@ -388,7 +390,7 @@ public class Validator {
                     threeTileWords += 1;
                 } else if (numTiles == 4) {
                     fourTileWords += 1;
-                } if (numTiles >= 10) {
+                } if (numTiles >= 9) {
                     if (numTiles > 15) {
                         fatalErrors.add("the word \"" + word + "\" in wordlist takes more than 15 tiles to build");
                     } else {
@@ -407,7 +409,7 @@ public class Validator {
                 }
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the gametiles tab, the wordlist tab, or the langinfo setting \"11. Script type\"");
+            warnings.add(FAILED_CHECK_WARNING + "the gametiles tab, the wordlist tab, or the langinfo setting \"Script type\"");
         }
         try {
             Tab gameTiles = langPackGoogleSheet.getTabFromName("gametiles");
@@ -425,7 +427,7 @@ public class Validator {
             HashSet<String> validTypes = new HashSet<>(Set.of("C","V","X", "AD", "AV", "BV", "FV", "LV", "T", "SAD"));
             for (int i = 0; i < gameTileTypes.size(); i++) {
                 if (!validTypes.contains(gameTileTypes.get(i))) {
-                    warnings.add("row " + i + 1 + " of gametiles does not specify a valid type in the types column. Valid" +
+                    fatalErrors.add("row " + (i + 2) + " of gametiles does not specify a valid type in the types column. Valid" +
                             " types are " + validTypes);
                 }
             }
@@ -497,47 +499,47 @@ public class Validator {
         }
         try {
             Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
-            if (!langInfo.getRowFromFirstCell("8. Script direction (LTR or RTL)").get(1).matches("(LTR|RTL)")){
-                fatalErrors.add("In langinfo \"script direction\" must be either \"LTR\" or \"RTL\")");
+            if (!langInfo.getRowFromFirstCell("Script direction (LTR or RTL)").get(1).matches("(LTR|RTL)")){
+                fatalErrors.add("In langinfo \"script direction\" must be either \"LTR\" or \"RTL\"");
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the lannginfo tab");
         }
         try {
             Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
-            if (!langInfo.getRowFromFirstCell("11. Script type").get(1).matches("(Roman|Thai)")){
-                fatalErrors.add("In langinfo  \"Script type\" must be either \"Roman\" or \"Thai\")");
+            if (!langInfo.getRowFromFirstCell("Script type").get(1).matches("(Roman|Thai|Lao)")){
+                fatalErrors.add("In langinfo  \"Script type\" must be either \"Roman\" or \"Thai\" or \"Lao\"");
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the lannginfo tab");
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
-            if (!settings.getRowFromFirstCell("2. Has tile audio").get(1).matches("(TRUE|FALSE)")){
-                fatalErrors.add("In settings \"Has tile audio\" must be either \"TRUE\" or \"FALSE\")");
+            if (!settings.getRowFromFirstCell("Has tile audio").get(1).matches("(TRUE|FALSE)")){
+                fatalErrors.add("In settings \"Has tile audio\" must be either \"TRUE\" or \"FALSE\"");
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the settings tab");
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
-            if (!settings.getRowFromFirstCell("4. Has syllable audio").get(1).matches("(TRUE|FALSE)")){
-                fatalErrors.add("In settings \"Has syllable audio\" must be either \"TRUE\" or \"FALSE\")");
+            if (!settings.getRowFromFirstCell("Has syllable audio").get(1).matches("(TRUE|FALSE)")){
+                fatalErrors.add("In settings \"Has syllable audio\" must be either \"TRUE\" or \"FALSE\"");
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the settings tab");
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
-            if (!settings.getRowFromFirstCell("6. Differentiates types of multitype symbols").get(1).matches("(TRUE|FALSE)")){
-                fatalErrors.add("In settings \"Differentiates types of multitype symbols\" must be either \"TRUE\" or \"FALSE\")");
+            if (!settings.getRowFromFirstCell("Differentiates types of multitype symbols").get(1).matches("(TRUE|FALSE)")){
+                fatalErrors.add("In settings \"Differentiates types of multitype symbols\" must be either \"TRUE\" or \"FALSE\"");
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the settings tab");
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
-            if (!settings.getRowFromFirstCell("8. First letter stage correspondence").get(1).matches("(TRUE|FALSE)")){
+            if (!settings.getRowFromFirstCell("First letter stage correspondence").get(1).matches("(TRUE|FALSE)")){
                 fatalErrors.add("In settings \"First letter stage correspondence\" must be either \"TRUE\" or \"FALSE\")");
             }
         } catch (ValidatorException e) {
@@ -601,10 +603,10 @@ public class Validator {
                 try{
                     parseTypeSpecification(row.get(1), row.get(3));
                 }
-                catch (ValidatorException e){continue;}
+                catch (ValidatorException e){}
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the gametiles tab, the wordlist tab, or the langinfo setting \"11. Script type\"");
+            warnings.add(FAILED_CHECK_WARNING + "the gametiles tab, the wordlist tab, or the langinfo setting \"Script type\"");
         }
 
     }
@@ -634,7 +636,7 @@ public class Validator {
         boolean syllableAudioAttempted = decideIfAudioAttempted("syllables", 4, "audio_syllables_optional");
         boolean syllableAudioSetting = false;
         try {
-            if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("4. Has syllable audio").get(1).equals("TRUE")){
+            if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has syllable audio").get(1).equals("TRUE")){
                 syllableAudioSetting = true;
             }
         }
@@ -642,8 +644,8 @@ public class Validator {
         boolean hasSyllableAudio = syllableAudioAttempted && syllableAudioSetting;
         if (!hasSyllableAudio){
             if (syllableAudioAttempted){
-                warnings.add("Although it appears you spread up your language pack for syllable audio, cell B5 " +
-                        " in the settings tab is not set to \"TRUE\"");
+                warnings.add("Although it appears you spread up your language pack for syllable audio, the \"Has syllable audio\" " +
+                        "row in the settings tab is not set to \"TRUE\"");
             }
             if (syllableAudioSetting){
                 warnings.add("Although you entered \"TRUE\" for \"has syllable audio\" in the settings tab, " +
@@ -654,7 +656,7 @@ public class Validator {
         boolean tileAudioAttempted = decideIfAudioAttempted("gametiles", 5, "audio_tiles_optional");
         boolean tileAudioSetting = false;
         try {
-            if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("2. Has tile audio").get(1).equals("TRUE")){
+            if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has tile audio").get(1).equals("TRUE")){
                 tileAudioSetting = true;
             }
         }
@@ -662,7 +664,7 @@ public class Validator {
         boolean hasTileAudio = tileAudioSetting && tileAudioAttempted;
         if (!hasTileAudio){
             if (tileAudioAttempted){
-                warnings.add("Although it appears you spread up your language pack for tile audio, cell B3 " +
+                warnings.add("Although it appears you spread up your language pack for tile audio, \"has tile audio\" " +
                         " in the settings tab is not set to \"TRUE\"");
             }
             if (tileAudioSetting){
@@ -743,17 +745,17 @@ public class Validator {
         try {
             Tab gamesTab = langPackGoogleSheet.getTabFromName("games");
             boolean hasSudanForSyllables = false;
-            for (int i = 0; i < gamesTab.size(); i++){
+            for (int i = 1; i < gamesTab.size(); i++){
                 if (gamesTab.get(i).get(1).equals("Sudan") && gamesTab.get(i).get(6).equals("S")) {
                     hasSudanForSyllables = true;
                     break;
                 }
             }
 
-            if (hasTileAudio && !hasSudanForSyllables) {
+            if (hasSyllableAudio && !hasSudanForSyllables) {
                 recommendations.add("Its is recommended you add Sudan for syllables to the games tab if you have syllable audio");
             }
-            else if (!hasTileAudio && hasSudanForSyllables) {
+            else if (!hasSyllableAudio && hasSudanForSyllables) {
                 fatalErrors.add("You cannot have Sudan for syllables in the games tab if you do not have syllable audio");
             }
         } catch (ValidatorException e) {
@@ -779,7 +781,7 @@ public class Validator {
      */
     private void validateSyllablesTab(){
 
-        try {
+         try {
             Tab syllables = langPackGoogleSheet.getTabFromName("syllables");
             // make sure the first column in the syllables tab doesn't have duplicates
             syllables.checkColForDuplicates(0);
@@ -787,7 +789,7 @@ public class Validator {
             for (ArrayList<String> row : syllables) {
                 List<String> alternates = row.subList(0, 4);
                 if (new HashSet<>(alternates).size() < alternates.size()) {
-                    warnings.add("the row " + row + " in syllables has the same tile appearing in multiple places");
+                    warnings.add("the row " + row + " in syllables has the same cell appearing in multiple places");
                 }
             }
         } catch (ValidatorException e) {
@@ -875,7 +877,7 @@ public class Validator {
         String appName;
         String langPackName = langPackGoogleSheet.getName();
         try{
-            appName = langPackGoogleSheet.getTabFromName("langinfo").getRowFromFirstCell("7. Game Name (In Local Lang)").get(1);
+            appName = langPackGoogleSheet.getTabFromName("langinfo").getRowFromFirstCell("Game Name (In Local Lang)").get(1);
             appName = appName.replace("'", "ꞌ");
         }
         catch (Exception e){
@@ -1053,7 +1055,7 @@ public class Validator {
      * recursively populates the folderContents field with all the contents of the folder
      * (constructing GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects as appropriate).
      */
-    private class GoogleDriveFolder extends GoogleDriveItem{
+    private class GoogleDriveFolder extends GoogleDriveItem {
 
         /**
          * ArrayList of all the GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects in the folder.
@@ -1061,25 +1063,26 @@ public class Validator {
          */
         private final ArrayList<GoogleDriveItem> folderContents = new ArrayList<>();
 
-        protected ArrayList<GoogleDriveItem> getFolderContents(){
+        protected ArrayList<GoogleDriveItem> getFolderContents() {
             return this.folderContents;
         }
 
         /**
          * Constructor for GoogleDriveFolder. Recursively populates the folderContents field with all the contents of the folder
          * (constructing GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects as appropriate).
+         *
          * @param driveFolderId a String that is the google id of this folder
          */
-        //TODO get name doesn't work
         protected GoogleDriveFolder(String driveFolderId) throws IOException {
-            this(driveFolderId, (String) driveService.files().get(driveFolderId).get("name"));
+            this(driveFolderId, driveService.files().get(driveFolderId).setFields("name").execute().getName());
         }
 
         /**
          * Constructor for GoogleDriveFolder. Recursively populates the folderContents field with all the contents of the folder
          * (constructing GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects as appropriate).
+         *
          * @param driveFolderId a String that is the google id of this folder
-         * @param inName a String that is the name of this folder
+         * @param inName        a String that is the name of this folder
          */
         protected GoogleDriveFolder(String driveFolderId, String inName) throws IOException {
             super(driveFolderId, inName, "application/vnd.google-apps.folder");
@@ -1092,15 +1095,13 @@ public class Validator {
                         .setPageToken(pageToken)
                         .execute();
 
-                for (File file : result.getFiles()){
+                for (File file : result.getFiles()) {
 
                     if (file.getMimeType().equals("application/vnd.google-apps.spreadsheet")) {
                         folderContents.add(new GoogleSheet(file.getId(), file.getName()));
-                    }
-                    else if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
+                    } else if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
                         folderContents.add(new GoogleDriveFolder(file.getId(), file.getName()));
-                    }
-                    else {
+                    } else {
                         folderContents.add(new GoogleDriveItem(file.getId(), file.getName(), file.getMimeType()));
                     }
                 }
@@ -1109,13 +1110,18 @@ public class Validator {
         }
 
         /**
-         * Searches for a GoogleDriveItem object in folderContents with the given name.
+         * Searches for a GoogleDriveItem object in folderContents with the given name before the period (if there is a
+         * period)
+         *
          * @param inName a String that is the name of the item to search for
-         * @return a GoogleDriveItem object with the given name if found, null otherwise
+         * @return a Google Drive Item in this.folderContents who name has inName before the period (if there is a
+         * period). Null otherwise.
          */
-        protected GoogleDriveItem getItemFromName(String inName){
-            for (GoogleDriveItem item : this.folderContents){
-                if (item.getName().equals(inName)){
+        protected GoogleDriveItem getItemWithName(String inName) {
+            for (GoogleDriveItem item : this.folderContents) {
+                String itemName = item.getName();
+                int endIndex = (!itemName.contains(".") ? folderContents.size() : itemName.indexOf("."));
+                if (itemName.substring(0, endIndex).equals(inName)) {
                     return item;
                 }
             }
@@ -1145,30 +1151,31 @@ public class Validator {
          * name that does not match to an item.
          * @param namesList an ArrayList of Strings which are the names to be compared against folderContents
          */
-        protected void checkItemNamesAgainstList(ArrayList<String> namesList){
+        protected void checkItemNamesAgainstList(ArrayList<String> namesList) {
 
-            for (GoogleDriveItem item : new ArrayList<>(folderContents)) {
-                boolean hasMatchingName = false;
-                for (String desiredName : new ArrayList<>(namesList)) {
-                    String itemName = item.getName();
-                    if (itemName.substring(0,itemName.indexOf(".")).equals(desiredName)) {
-                        namesList.remove(desiredName);
-                        hasMatchingName = true;
-                        break;
+            ArrayList<String> namesNotYetFound = new ArrayList<>(namesList);
+            ArrayList<GoogleDriveItem> filesNotYetMatched = new ArrayList<>(this.folderContents);
+
+            for (String name : namesList){
+                GoogleDriveItem itemWithName = this.getItemWithName(name);
+                if (itemWithName != null) {
+                    namesNotYetFound.remove(name);
+                    filesNotYetMatched.remove(itemWithName);
+                    if (namesNotYetFound.contains(name)) {
+                        warnings.add("The file name " + name + " in " + this.getName() + " is asked for in multiple places ");
                     }
                 }
-                if (!hasMatchingName) {
-                    warnings.add("the file " + item.getName() + " in " + this.getName() + " may be excess " +
-                            "as the start of the filename does not appear to match to anything");
-                    folderContents.remove(item);
-                }
             }
-            for (String shouldHaveMatched : namesList){
-                if (this.getItemFromName(shouldHaveMatched) != null){
-                    warnings.add("The file name " + shouldHaveMatched + " in " + this.getName() + " is asked for in multiple places ");
-                }
-                warnings.add(shouldHaveMatched + " does not have a corresponding file in " + this.getName() +
+
+            for (String shouldHaveFound : namesNotYetFound) {
+                warnings.add(shouldHaveFound + " does not have a corresponding file in " + this.getName() +
                         " of the correct file type");
+            }
+
+            for (GoogleDriveItem shouldHaveMatched: filesNotYetMatched) {
+                warnings.add("the file " + shouldHaveMatched.getName() + " in " + this.getName() + " may be excess " +
+                        "or duplicate and will be ignored");
+                folderContents.remove(shouldHaveMatched);
             }
 
         }
@@ -1309,14 +1316,15 @@ public class Validator {
                             newRow.add(" ");
                         }
                         else{
-                            newRow.add(cell.toString().strip());
+                            // otherwise strip cells and decompose diacritics from them
+                            newRow.add(Normalizer.normalize(cell.toString().strip(), Normalizer.Form.NFD));
                         }
                     }
                     this.add(newRow);
                 }
             } catch (Exception e) {
-                fatalErrors.add("not able to find information in the tab " + this.name +
-                        " or software was unable to access the sheet");
+                fatalErrors.add("not able to find information in the tab \"" + this.name +
+                        "\" or software was unable to access the sheet");
             }
 
         }
@@ -1365,7 +1373,7 @@ public class Validator {
             }
             for (int i = toRemove.size() - 1; i >= 0; i--){
                 if (!(toRemove.contains(toRemove.get(i)+1) || toRemove.get(i)+1 == this.size())){
-                    warnings.add("The row " + (toRemove.get(i) + 2) + " in " + this.name + " appears to have empty rows beneath it." +
+                    warnings.add("The row " + (toRemove.get(i) + 2) + " in " + this.name + " appears to have empty rows above it." +
                             " The code will behave as if these empty row(s) were deleted");
                 }
                 this.remove((int)toRemove.get(i));
@@ -1434,8 +1442,11 @@ public class Validator {
          * @throws ValidatorException if the tab does not contain a row that satisfies these conditions
          */
         protected ArrayList<String> getRowWithCellInCol(String cell, int col) throws ValidatorException {
+
             for (ArrayList<String> row : this){
-                if (row.get(col).equals(cell)){
+                // allows for a number followed by a period followed by any number of spaces before the String cell
+                //(which is treated as a string literal)
+                if (row.get(col).matches("([0-9]+\\.)?\\s*" + Pattern.quote(cell))){
                     return row;
                 }
             }
@@ -1451,7 +1462,7 @@ public class Validator {
             Set<String> colSet = new HashSet<>();
             for (String cell : this.getCol(colNum)) {
                 if (!colSet.add(cell)) {
-                    fatalErrors.add(cell + " appears more than once in column " + colNum + 1 +  " of " + this.getName());
+                    fatalErrors.add("\"" + cell + "\"" + " appears more than once in column " + colNum + 1 +  " of " + this.getName());
                 }
             }
         }
@@ -1509,6 +1520,7 @@ public class Validator {
     //</editor-fold>
 
     //<editor-fold desc="helper methods">
+
     /**
      * Private helper function to evaluate if an optional audio feature is being attempted. Returns true
      * if the tab contains any audio names in the given colum AND the subfolder with the given name
@@ -1607,55 +1619,14 @@ public class Validator {
     }
 
     /**
-     * Private helper function to parse words into tiles recursively
-     * @param wordInLOP a String representing a word to be parsed
-     * @param tilesSoFar an ArrayList of Strings representing the tiles found in the word so far by previous calls to
-     *                  this function
-     * @return an ArrayList of Strings representing the tiles found in the word
+     * Private helper function to compare a word against its type specification string, adding errors appropriately.
+     * Compares the possible type specifications for the tiles in the word against what is specified in the type
+     * specification string.
+     * @param wordInLOP a String representing a word from wordlist
+     * @param typeSpecifications a String representing the type specifications for the tiles in the given word. Follows
+     *                           Alpha Tiles conventions.
+     * @return An ArrayList of Strings, where the ith string represents the type specification of the ith tile in the word
      */
-    private ArrayList<String> parseWordIntoTilesSimple(String wordInLOP, ArrayList<String> tilesSoFar) throws ValidatorException {
-        if (wordInLOP.startsWith(".")){
-            wordInLOP = wordInLOP.replaceFirst(".", "");
-        }
-        Set<String> tileSet = new HashSet<>(langPackGoogleSheet.getTabFromName("gametiles").getCol(0));
-
-        for (int i = wordInLOP.length(); i > 0; i--) {
-            String longestPossibleTile = wordInLOP.substring(0, i);
-
-            if (tileSet.contains(longestPossibleTile)) {
-                ArrayList<String> tilesSoFarCopy = new ArrayList<>(tilesSoFar);
-                tilesSoFarCopy.add(longestPossibleTile);
-
-                if (i == wordInLOP.length()) {
-                    return tilesSoFarCopy;
-                } else {
-                    ArrayList<String> tilesInRemaining = parseWordIntoTilesSimple(wordInLOP.substring(i), tilesSoFarCopy);
-                    if (tilesInRemaining != null) {
-                        return tilesInRemaining;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    private ArrayList<String> parseWordIntoTiles(String wordInLOP) throws ValidatorException {
-        ArrayList<String> finalTileList;
-        Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
-        if (!langInfo.getRowFromFirstCell("11. Script type").get(1).equals("(Thai)")){
-            finalTileList = parseWordIntoTilesThai(wordInLOP);
-        }
-        else{
-            finalTileList = parseWordIntoTilesSimple(wordInLOP, new ArrayList<>());
-        }
-        if (!(finalTileList == null) && !(finalTileList.size() == 0)){
-            return finalTileList;
-        }
-        fatalErrors.add("Cannot parse word \"" + wordInLOP + "\" in wordlist into tiles from gametiles.");
-        throw new ValidatorException("Cannot parse word \"" + wordInLOP + "\" in wordlist into tiles from gametiles.");
-    }
-
-
     private ArrayList<String> parseTypeSpecification(String wordInLOP, String typeSpecifications) throws ValidatorException {
         Tab gameTilesTab = langPackGoogleSheet.getTabFromName("gametiles");
         ArrayList<String> wordAsTileList = parseWordIntoTilesSimple(wordInLOP, new ArrayList<>());
@@ -1678,7 +1649,7 @@ public class Validator {
         }
 
         if (typeSpecsList.size() == 1){
-            return parseSingleTypeSpecification(wordInLOP, typeSpecifications);
+            return parseAbbreviatedTypeSpecification(wordInLOP, typeSpecifications);
         }
 
         else if (typeSpecsList.size() != wordAsTileList.size()) {
@@ -1699,20 +1670,27 @@ public class Validator {
                             " for tile " + currentTile + " but that tile has multiple types");
                 }
                 toReturn.add(tileRow.get(4));
-            } else if (currentSpecification.equals(tileRow.get(7)) || currentSpecification.equals(tileRow.get(9))) {
+            } else if (currentSpecification.equals(tileRow.get(4)) || currentSpecification.equals(tileRow.get(7)) || currentSpecification.equals(tileRow.get(9))) {
                 toReturn.add(currentSpecification);
             }
             else {
-                fatalErrors.add("In wordlist, the word " + wordInLOP + " has type specification " + currentSpecification +
-                        " for tile " + currentTile + " but that tile does not have that type specification");
-                throw new ValidatorException("In wordlist, the word " + wordInLOP + " has type specification " + currentSpecification +
-                        " for tile " + currentTile + " but that tile does not have that type specification");
+                fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" has type specification \"" + currentSpecification +
+                        "\" for tile \"" + currentTile + "\" but that tile does not have that type specification");
+                throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" has type specification \"" + currentSpecification +
+                        "\" for tile " + currentTile + "\" but that tile does not have that type specification");
             }
         }
         return toReturn;
     }
-
-    private ArrayList<String> parseSingleTypeSpecification(String wordInLOP, String typeSpecifications) throws ValidatorException {
+    /**
+     * Private helper function for parseTypeSpecification. Compares a word to a typeSpecification if the user has chosen
+     * to use an abbreviated form of type specification.
+     * @param wordInLOP a String representing a word from wordlist
+     * @param typeSpecifications a String representing the type specifications for the tiles in the given word. Follows
+     *                           Alpha Tiles conventions.
+     * @return An ArrayList of Strings, where the ith string represents the type specification of the ith tile in the word
+     */
+    private ArrayList<String> parseAbbreviatedTypeSpecification(String wordInLOP, String typeSpecifications) throws ValidatorException {
         Tab gameTilesTab = langPackGoogleSheet.getTabFromName("gametiles");
         ArrayList<String> wordAsTileList = parseWordIntoTilesSimple(wordInLOP, new ArrayList<>());
         if (wordAsTileList == null) {
@@ -1775,20 +1753,70 @@ public class Validator {
 
     }
 
-    public ArrayList<String> parseWordIntoTilesThai(String stringToParse, String wordInLOP) throws ValidatorException {
-        Tab gameTiles = langPackGoogleSheet.getTabFromName("gametiles");
-        Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
-        ArrayList<String> parsedWordArrayPreliminary = parseWordIntoTilesSimple(stringToParse, new ArrayList<String>());
-        ArrayList<String> typeSpecifications = parseTypeSpecification(wordInLOP, wordlist.getRowWithCellInCol(wordInLOP,1).get(3));
+    /**
+     * Private helper function to parse Roman, Thai, and Lao script words into tiles.
+     * @param wordInLOP a String representing a word to be parsed
+     * @return an ArrayList of Strings representing the tiles found in the word
+     */
+    private ArrayList<String> parseWordIntoTiles(String wordInLOP) throws ValidatorException {
+        ArrayList<String> finalTileList;
+        Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
+        if (langInfo.getRowFromFirstCell("Script type").get(1).matches("Thai|Lao")){
+            finalTileList = ThaiParseWordIntoTiles(wordInLOP);
+        }
+        else{
+            finalTileList = parseWordIntoTilesSimple(wordInLOP, new ArrayList<>());
+        }
+        if (!(finalTileList == null) && !(finalTileList.size() == 0)){
+            return finalTileList;
+        }
+        fatalErrors.add("Cannot parse word \"" + wordInLOP + "\" in wordlist into tiles from gametiles.");
+        throw new ValidatorException("Cannot parse word \"" + wordInLOP + "\" in wordlist into tiles from gametiles.");
+    }
 
-        // This doesn't make sense to me but its what the __ method in start was doing so I just copied.
-        String typeSpec = wordlist.getRowWithCellInCol(wordInLOP,1).get(3);
-        if (typeSpec.matches("[CVXT]|AD|AV|BV|FV|LV|SAD|-")){
-            typeSpecifications.clear();
-            for (int i = 0; i < parsedWordArrayPreliminary.size(); i++){
-                typeSpecifications.add(typeSpec);
+    /**
+     * Private helper function for parseWordIntoTiles used when parsing can be done with a recursive greedy algorithm,
+     * such as with Roman Scripts.
+     * @param wordInLOP a String representing a word to be parsed
+     * @param tilesSoFar an ArrayList of Strings representing the tiles found in the word so far by previous calls to
+     *                  this function
+     * @return an ArrayList of Strings representing the tiles found in the word
+     */
+    private ArrayList<String> parseWordIntoTilesSimple(String wordInLOP, ArrayList<String> tilesSoFar) throws ValidatorException {
+        if (wordInLOP.startsWith(".")){
+            wordInLOP = wordInLOP.replaceFirst(".", "");
+        }
+        Set<String> tileSet = new HashSet<>(langPackGoogleSheet.getTabFromName("gametiles").getCol(0));
+
+        for (int i = wordInLOP.length(); i > 0; i--) {
+            String longestPossibleTile = wordInLOP.substring(0, i);
+
+            if (tileSet.contains(longestPossibleTile)) {
+                ArrayList<String> tilesSoFarCopy = new ArrayList<>(tilesSoFar);
+                tilesSoFarCopy.add(longestPossibleTile);
+
+                if (i == wordInLOP.length()) {
+                    return tilesSoFarCopy;
+                } else {
+                    ArrayList<String> tilesInRemaining = parseWordIntoTilesSimple(wordInLOP.substring(i), tilesSoFarCopy);
+                    if (tilesInRemaining != null) {
+                        return tilesInRemaining;
+                    }
+                }
             }
         }
+        return null;
+    }
+
+    /**
+     * Private helper function for parseWordIntoTiles used for Thai and Lao scripts, adapted from app Start class.
+     * @param wordInLOP a String representing a word to be parsed
+     * @return an ArrayList of Strings representing the tiles found in the word
+     */
+    private ArrayList<String> ThaiParseWordIntoTiles(String wordInLOP) throws ValidatorException {
+        Tab gameTiles = langPackGoogleSheet.getTabFromName("gametiles");
+        ArrayList<String> parsedWordArrayPreliminary = ThaiParseWordIntoTilesPreliminary(wordInLOP);
+        ArrayList<String> parsedWordArrayPreliminaryReference = ThaiParseWordIntoTilesPreliminary(wordInLOP);
 
         Tab gameTilesMultiFunc = (Tab) gameTiles.clone();
         for (int i = gameTiles.size() -1; i >=0 ; i--){
@@ -1796,14 +1824,13 @@ public class Validator {
                 gameTilesMultiFunc.remove(i);
             }
         }
-
-        ArrayList<String> parsedWordArray = new ArrayList<String>();
+        ArrayList<String> parsedWordArray = new ArrayList<>();
 
         int consonantScanIndex = 0;
         int currentConsonantIndex = 0;
         int previousConsonantIndex = -1;
         int nextConsonantIndex = parsedWordArrayPreliminary.size();
-        boolean foundNextConsonant = false;
+        boolean foundNextConsonant;
 
         while (consonantScanIndex < parsedWordArrayPreliminary.size()) {
 
@@ -1816,15 +1843,15 @@ public class Validator {
             // Scan for the next unchecked consonant tile
             while (!foundNextConsonant && consonantScanIndex < parsedWordArrayPreliminary.size()) {
                 currentTileString = parsedWordArrayPreliminary.get(consonantScanIndex);
-                currentTile = gameTiles.getRowFromFirstCell(currentTileString);
+                if (currentTileString.equals("")){
+                    currentTile = null;
+                }
+                else {
+                    currentTile = gameTiles.getRowFromFirstCell(currentTileString);
+                }
                 if (gameTilesMultiFunc.getCol(0).contains(currentTileString)) { // Discern the type of the current tile
-                    int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(currentTileString, consonantScanIndex, parsedWordArrayPreliminary, wordInLOP);
-                    if (indexInPreliminaryArray == -1){
-                        currentTileType = "";
-                    }
-                    else {
-                        currentTileType = typeSpecifications.get(indexInPreliminaryArray);
-                    }
+                    int indexInPreliminaryArray = ThaiReturnInstanceIndexInPreliminaryParsedWordArray(currentTileString, consonantScanIndex, parsedWordArrayPreliminary, wordInLOP);
+                    currentTileType = ThaiGetInstanceTypeForMixedTilePreliminary(indexInPreliminaryArray, parsedWordArrayPreliminaryReference, wordInLOP);
                 } else {
                     currentTileType = currentTile.get(4);
                 }
@@ -1843,15 +1870,15 @@ public class Validator {
             // Scan for the unchecked consonant tile after that one, if it exists. Just save its index; it won't be added to the array on this iteration.
             while (!foundNextConsonant && consonantScanIndex < parsedWordArrayPreliminary.size()) {
                 currentTileString = parsedWordArrayPreliminary.get(consonantScanIndex);
-                currentTile = gameTiles.getRowFromFirstCell(currentTileString);
+                if (currentTileString.equals("")){
+                    currentTile = null;
+                }
+                else {
+                    currentTile = gameTiles.getRowFromFirstCell(currentTileString);
+                }
                 if (gameTilesMultiFunc.getCol(0).contains(currentTileString)) { // Discern the type of the current tile
-                    int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(currentTileString, consonantScanIndex, parsedWordArrayPreliminary, wordInLOP);
-                    if (indexInPreliminaryArray == -1){
-                        currentTileType = "";
-                    }
-                    else {
-                        currentTileType = typeSpecifications.get(indexInPreliminaryArray);
-                    }
+                    int indexInPreliminaryArray = ThaiReturnInstanceIndexInPreliminaryParsedWordArray(currentTileString, consonantScanIndex, parsedWordArrayPreliminary, wordInLOP);
+                    currentTileType = ThaiGetInstanceTypeForMixedTilePreliminary(indexInPreliminaryArray, parsedWordArrayPreliminaryReference, wordInLOP);
                 } else {
                     currentTileType = currentTile.get(4);
                 }
@@ -1874,15 +1901,15 @@ public class Validator {
             String nonCombiningVowelFromPreviousSyllable = "";
             for (int b = previousConsonantIndex + 1; b < currentConsonantIndex; b++) {
                 currentTileString = parsedWordArrayPreliminary.get(b);
-                currentTile = gameTiles.getRowFromFirstCell(currentTileString);
+                if (currentTileString.equals("")){
+                    currentTile = null;
+                }
+                else {
+                    currentTile = gameTiles.getRowFromFirstCell(currentTileString);
+                }
                 if (gameTilesMultiFunc.getCol(0).contains(currentTileString)) { // Discern the type of the current tile
-                    int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(currentTileString, consonantScanIndex, parsedWordArrayPreliminary, wordInLOP);
-                    if (indexInPreliminaryArray == -1){
-                        currentTileType = "";
-                    }
-                    else {
-                        currentTileType = typeSpecifications.get(indexInPreliminaryArray);
-                    }
+                    int indexInPreliminaryArray = ThaiReturnInstanceIndexInPreliminaryParsedWordArray(currentTileString, b, parsedWordArrayPreliminary, wordInLOP);
+                    currentTileType = ThaiGetInstanceTypeForMixedTilePreliminary(indexInPreliminaryArray, parsedWordArrayPreliminaryReference, wordInLOP);
                 } else {
                     currentTileType = currentTile.get(4);
                 }
@@ -1901,37 +1928,33 @@ public class Validator {
             int indexOfLastFoundMultitypeVowel = -1;
             for (int a = currentConsonantIndex + 1; a < nextConsonantIndex; a++) {
                 currentTileString = parsedWordArrayPreliminary.get(a);
-                currentTile = gameTiles.getRowFromFirstCell(currentTileString);
-                if (gameTilesMultiFunc.getCol(0).contains(currentTileString)) { // Discern the type of the current tile
-                    int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(currentTileString, consonantScanIndex, parsedWordArrayPreliminary, wordInLOP);
-                    if (indexInPreliminaryArray == -1){
-                        currentTileType = "";
-                    }
-                    else {
-                        currentTileType = typeSpecifications.get(indexInPreliminaryArray);
-                    }
+                if (currentTileString.equals("")){
+                    currentTile = null;
+                }
+                else {
+                    currentTile = gameTiles.getRowFromFirstCell(currentTileString);
+                }
+                if (gameTilesMultiFunc.getCol(0).contains(currentTileString)) {
+                    int indexInPreliminaryArray = ThaiReturnInstanceIndexInPreliminaryParsedWordArray(currentTileString, a, parsedWordArrayPreliminary, wordInLOP);
+                    currentTileType = ThaiGetInstanceTypeForMixedTilePreliminary(indexInPreliminaryArray, parsedWordArrayPreliminaryReference, wordInLOP);
                     if(currentTileType.contains("V")){
                         indexOfLastFoundMultitypeVowel = indexInPreliminaryArray;
                     }
                 } else {
                     currentTileType = currentTile.get(4);
                 }
-
                 if (currentTileType.equals("AV") || currentTileType.equals("BV") || currentTileType.equals("FV")) { // Prepare to add current AV/BV/FV to vowel-so-far
-                    if (gameTiles.getCol(0).contains(vowel)) {
+                    if (vowel.isEmpty()){
+                        vowelTile = null;
+                    }
+                    else {
                         vowelTile = gameTiles.getRowFromFirstCell(vowel);
                     }
-                    else {vowelTile = null;}
                     if(!Objects.isNull(vowelTile)){ // Vowel composite so far is parsable as one tile in the tile list
                         vowelTileString = vowelTile.get(0);
-                        if (gameTilesMultiFunc.getCol(0).contains(vowelTileString)) { // Discern the type of the current tile
-                            int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(vowelTileString, indexOfLastFoundMultitypeVowel, parsedWordArrayPreliminary, wordInLOP);
-                            if (indexInPreliminaryArray == -1){
-                                vowelTileType = "";
-                            }
-                            else {
-                                vowelTileType = typeSpecifications.get(indexInPreliminaryArray);
-                            }
+                        if (gameTilesMultiFunc.getCol(0).contains(vowelTileString)) { // Discern type of current vowel composite
+                            int indexInPreliminaryArray = ThaiReturnInstanceIndexInPreliminaryParsedWordArray(vowelTileString, indexOfLastFoundMultitypeVowel, parsedWordArrayPreliminary, wordInLOP);
+                            vowelTileType = ThaiGetInstanceTypeForMixedTilePreliminary(indexInPreliminaryArray, parsedWordArrayPreliminaryReference, wordInLOP);
                         } else {
                             vowelTileType = vowelTile.get(4);
                         }
@@ -1961,16 +1984,16 @@ public class Validator {
             }
             if (!currentConsonant.equals("")) {
                 if (!vowel.equals("")) {
-                    vowelTile = gameTiles.getRowFromFirstCell(vowel);
+                    if (vowel.isEmpty()){
+                        vowelTile = null;
+                    }
+                    else {
+                        vowelTile = gameTiles.getRowFromFirstCell(vowel);
+                    }
                     vowelTileString = vowelTile.get(0);
-                    if (gameTilesMultiFunc.getCol(0).contains(vowelTileString)) { // Discern the type of the current tile
-                        int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(vowelTileString, indexOfLastFoundMultitypeVowel, parsedWordArrayPreliminary, wordInLOP);
-                        if (indexInPreliminaryArray == -1){
-                            vowelTileType = "";
-                        }
-                        else {
-                            vowelTileType = typeSpecifications.get(indexInPreliminaryArray);
-                        }
+                    if (gameTilesMultiFunc.getCol(0).contains(vowelTileString)) { // Discern the type of the vowel
+                        int indexInPreliminaryArray = ThaiReturnInstanceIndexInPreliminaryParsedWordArray(vowelTileString, indexOfLastFoundMultitypeVowel, parsedWordArrayPreliminary, wordInLOP);
+                        vowelTileType = ThaiGetInstanceTypeForMixedTilePreliminary(indexInPreliminaryArray, parsedWordArrayPreliminaryReference, wordInLOP);
                     } else {
                         vowelTileType = vowelTile.get(4);
                     }
@@ -2012,14 +2035,13 @@ public class Validator {
             }
             consonantScanIndex = nextConsonantIndex;
         }
-        System.out.println(parsedWordArray);
         return parsedWordArray;
     }
 
-    public int returnInstanceIndexInPreliminaryParsedWordArray(String tileString, int indexOfTileStringInWordArrayInProgress, ArrayList<String> wordArrayInProgress, String wordInLOP) throws ValidatorException {
-
-        Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
-
+    /**
+     * Private helper function for parsing words in Thai and Lao scripts, adapted from parsing in app Start class.
+     */
+    private int ThaiReturnInstanceIndexInPreliminaryParsedWordArray(String tileString, int indexOfTileStringInWordArrayInProgress, ArrayList<String> wordArrayInProgress, String wordInLOP) throws ValidatorException {
         int indexInPreliminaryArray = -1;
         int lastIndexOfThisMultifunctionTile = 0;
         int instancesBeforeTheOneWeWant = 0;
@@ -2036,7 +2058,7 @@ public class Validator {
                 lastIndexOfThisMultifunctionTile += tileString.length(); // Start looking again after the instance we just found
             }
         }
-        ArrayList<String> parsedWordArrayPreliminary = parseTypeSpecification(wordInLOP, wordlist.getRowWithCellInCol(wordInLOP,1).get(3));
+        ArrayList<String> parsedWordArrayPreliminary = ThaiParseWordIntoTilesPreliminary(wordInLOP);
         // Figure out its instance type using the index of that instance in the preliminary parsed array
         for(int t = 0; t<parsedWordArrayPreliminary.size(); t++){
             if(parsedWordArrayPreliminary.get(t).contains(tileString)){
@@ -2050,132 +2072,179 @@ public class Validator {
         return indexInPreliminaryArray;
 
     }
-    public ArrayList<String> parseWordIntoTilesThai(String wordInLOP) throws ValidatorException {
 
-        ArrayList<String> parsedWordArray = new ArrayList<>();
-        Tab gameTiles = langPackGoogleSheet.getTabFromName("gametiles");
-        Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
-        ArrayList<String> typeSpecifications = parseTypeSpecification(wordInLOP, wordlist.getRowWithCellInCol(wordInLOP,1).get(3));
-        ArrayList<String> parsedWordArrayPreliminary = parseWordIntoTilesSimple(wordInLOP, new ArrayList<>());
+    /**
+     * Private helper function for parsing words in Thai and Lao scripts, adapted from parsing in app Start class.
+     */
+    private String ThaiGetInstanceTypeForMixedTilePreliminary(int index, ArrayList<String> tilesInWordPreliminary, String wordInLOP) throws ValidatorException {
+        // if mixedDefinitionInfo is not C or V or X or dash, then we assume it has two elements
+        // to disambiguate, e.g. niwan', where...
+        // first n is a C and second n is a X (nasality indicator), and we would code as C234X6
 
-        LinkedList<Integer> consonantIndexStack = new LinkedList<>();
-        for (int i = 0; i < typeSpecifications.size(); i ++){
-            if (typeSpecifications.get(i).equals("C")){
-                consonantIndexStack.add(i);
-            }
-        }
+        // JP: these types come from the wordlist
+        // in the wordlist, "-" does not mean "dash", it means "no multifunction symbols in this word"
+        // but the types in the wordlist come from the same set of choices as from the gametiles
+        Tab wordList = langPackGoogleSheet.getTabFromName("wordlist");
+        ArrayList<String> word = wordList.getRowWithCellInCol(wordInLOP,1);
+        String mixedDefinitionInfoString = word.get(3);
+        String instanceType = null;
+        ArrayList<String> types = new ArrayList<String>(Arrays.asList("C", "V", "X", "T", "-", "SAD", "LV", "AV", "BV", "FV", "AD"));
 
-        Integer previousConsonantIndex;
-        Integer currentConsonantIndex = -1;
-        Integer nextConsonantIndex;
+        if (!mixedDefinitionInfoString.equals("C") && !mixedDefinitionInfoString.equals("V")
+                && !mixedDefinitionInfoString.equals("X") && !mixedDefinitionInfoString.equals("T")
+                && !mixedDefinitionInfoString.equals("-") && !mixedDefinitionInfoString.equals("SAD")
+                && !mixedDefinitionInfoString.equals("LV") && !mixedDefinitionInfoString.equals("AV")
+                && !mixedDefinitionInfoString.equals("BV") && !mixedDefinitionInfoString.equals("FV")
+                && !mixedDefinitionInfoString.equals("AD")) {
 
-        while (!consonantIndexStack.isEmpty()) {
+            // Store the mixed types information (e.g. C234X6, 1FV3C5) from the wordlist in an array.
+            // one designation per tile. Either just tile index number (1-indexed), or a type specification.
+            int numTilesInWord = tilesInWordPreliminary.size();
+            String[] mixedDefinitionInfoArray = new String[numTilesInWord];
 
-            previousConsonantIndex = currentConsonantIndex;
-            currentConsonantIndex = consonantIndexStack.removeFirst();
-            nextConsonantIndex = consonantIndexStack.peekFirst();
-            if (nextConsonantIndex == null) {
-                nextConsonantIndex = -1;
-            }
-
-            // Combine vowel symbols into complex vowels that occur around the current consonant, as applicable. Find diacritics, spaces, and dashes that occur on/after this syllable.
-
-            StringBuilder vowel = new StringBuilder();
-            StringBuilder typeSADSymbols = new StringBuilder();
-            StringBuilder ADSymbols = new StringBuilder();
-            StringBuilder nonCombiningVowelFromPreviousSyllable = new StringBuilder();
-            StringBuilder vowelToStartTheNextSyllable = new StringBuilder();
-
-            int indexOfLastVowel = -1;
-            String currentTile;
-            String currentTileType;
-            // Find vowel symbols that occur between previous and current consonants
-            for (int b = previousConsonantIndex + 1; b < currentConsonantIndex; b++) {
-                currentTile = parsedWordArrayPreliminary.get(b);
-                currentTileType = typeSpecifications.get(b);
-                if (currentTileType.equals("LV")) {
-                    vowel.append(currentTile);
-                } else if (currentTileType.equals("V")){
-                    nonCombiningVowelFromPreviousSyllable.append(currentTile);
+            // For numbers in the info string, store the numbers in the array
+            for(int i=0; i<numTilesInWord; i++){
+                String number = String.valueOf(i+1);
+                if(mixedDefinitionInfoString.contains(number)){
+                    mixedDefinitionInfoArray[i] = number;
                 }
             }
+            // Now store what's in between the numbers (the type info parts)
+            int previousNumberEndIndex = 0;
+            int nextNumberStartIndex;
+            for(int i=0; i<numTilesInWord; i++){
+                String previousNumber = String.valueOf(i); // The number before this one, 1-indexed
+                String nextNumber = String.valueOf(i+2); // The number after this one, 1-indexed
+                int tilesInBetween = 1;
 
-            // Find vowel, diacritic, space, and dash symbols that occur between current and next consonants
-            String vowelTileType = "";
-            int goToIndex = Math.max(nextConsonantIndex, parsedWordArrayPreliminary.size());
-            for (int a = currentConsonantIndex + 1; a < goToIndex; a++) {
-                currentTile = parsedWordArrayPreliminary.get(a);
-                currentTileType = typeSpecifications.get(a);
-                if (currentTileType.equals("AV") || currentTileType.equals("BV") || currentTileType.equals("FV")) { // Prepare to add current AV/BV/FV to vowel-so-far
-                    if(gameTiles.getCol(0).contains(vowel.toString())){ // Vowel composite so far is parsable as one tile in the tile list
-                        vowelTileType = typeSpecifications.get(a);
-                        indexOfLastVowel = a;
-                        if(vowelTileType.equals("LV")){
-                            vowel.append("◌");
-                        } else if (vowelTileType.equals("AV") || vowelTileType.equals("BV") || vowelTileType.equals("FV")){
-                            vowel.insert(0,"◌"); // Put the placeholder before the previous AV/BV/FV before adding current AV/BV/FV to it
+                if(mixedDefinitionInfoArray[i] == null){ // A number wasn't filled in here, there must be type info for this tile
+                    nextNumberStartIndex = mixedDefinitionInfoString.indexOf(nextNumber);
+                    int nextNumberInt = Integer.valueOf(nextNumber);
+                    while(nextNumberStartIndex==-1 && nextNumberInt<=numTilesInWord){ // Maybe the number after this one is not in the array, either. Find the next one that is.
+                        nextNumberInt++;
+                        nextNumber = String.valueOf(nextNumberInt);
+                        nextNumberStartIndex = mixedDefinitionInfoString.indexOf(nextNumber);
+                        tilesInBetween++;
+                    }
+                    if (nextNumberStartIndex==-1 && nextNumberInt>numTilesInWord){ // It checked to the end and didn't find any more numbers
+                        nextNumberStartIndex = mixedDefinitionInfoString.length();
+                    }
+
+                    String infoBetweenPreviousAndNextNumbers = mixedDefinitionInfoString.substring(previousNumberEndIndex, nextNumberStartIndex);
+                    if(tilesInBetween==1){ // The substring is the type of the ith preliminary tile
+                        mixedDefinitionInfoArray[i] = mixedDefinitionInfoString.substring(previousNumberEndIndex, nextNumberStartIndex);
+                    } else { // The first type in substring is the type of the ith preliminary tile
+                        String type = "";
+                        for(int c=1; c<infoBetweenPreviousAndNextNumbers.length(); c++){
+                            String firstC = infoBetweenPreviousAndNextNumbers.substring(0, c);
+                            if(types.contains(firstC)){
+                                type = firstC;
+                            }
                         }
+                        mixedDefinitionInfoArray[i] = type;
                     }
-                    vowel.append(currentTile);
-
-                } else if (currentTileType.equals("AD")) { // Save any diacritics that come between syllables
-                    if(!ADSymbols.isEmpty()){
-                        ADSymbols.insert(0,"◌"); // For complex diacritics
-                    }
-                    ADSymbols.append(currentTile);
-                } else if (currentTileType.equals("SAD")) { // Save any Space-And-Dash chars that come between syllables
-                    typeSADSymbols.append(currentTile);
-                } else if (nextConsonantIndex == -1 && currentTileType.equals("V")){ // There is a V (not LV/FV/AV/BV/on the end of the word)
-                    vowelToStartTheNextSyllable.append(currentTile);
                 }
+                previousNumberEndIndex = previousNumberEndIndex + mixedDefinitionInfoArray[i].length(); // Next time, look starting after this info
             }
-
-
-            // Add saved items to the tile array
-            if(!nonCombiningVowelFromPreviousSyllable.isEmpty()){
-                parsedWordArray.add(nonCombiningVowelFromPreviousSyllable.toString());
-            }
-            if (!vowel.isEmpty()) {
-                if (vowelTileType.equals("LV")) {
-                    parsedWordArray.add(vowel.toString());
-                    parsedWordArray.add(parsedWordArrayPreliminary.get(currentConsonantIndex));
-                    if (!ADSymbols.isEmpty()) {
-                        parsedWordArray.add(ADSymbols.toString());
-                    }
-                } else if (vowelTileType.equals("AV") || vowelTileType.equals("BV") || vowelTileType.equals("V")) {
-                    parsedWordArray.add(parsedWordArrayPreliminary.get(currentConsonantIndex));
-                    parsedWordArray.add(vowel.toString());
-                    if (!ADSymbols.isEmpty()) {
-                        parsedWordArray.add(ADSymbols.toString());
-                    }
-                } else if (vowelTileType.equals("FV")){
-                    parsedWordArray.add(parsedWordArrayPreliminary.get(currentConsonantIndex));
-                    if (!ADSymbols.isEmpty()) {
-                        parsedWordArray.add(ADSymbols.toString());
-                    }
-                    parsedWordArray.add(vowel.toString());
-                }
-            } else { // No vowel between current and (next) consonants
-                parsedWordArray.add(parsedWordArrayPreliminary.get(currentConsonantIndex));
-                if (!ADSymbols.isEmpty()) {
-                    parsedWordArray.add(ADSymbols.toString());
-                }
-            }
-            // Add any spaces or dashes that come between syllables
-            if (!typeSADSymbols.isEmpty()) {
-                parsedWordArray.add(typeSADSymbols.toString());
-            }
-            // If a vowel of type V was found before the next consonant, add it. It is syllable-initial or mid.
-            if (!vowelToStartTheNextSyllable.isEmpty()) {
-                parsedWordArray.add(vowelToStartTheNextSyllable.toString());
-            }
+            instanceType = mixedDefinitionInfoArray[index];
+        } else {
+            instanceType = mixedDefinitionInfoString; // When mixedDefs is just "C", "V", etc. by itself
         }
-        System.out.println(parsedWordArray);
-        return parsedWordArray;
+        return instanceType;
     }
 
+    /**
+     * Private helper function for parsing words in Thai and Lao scripts, adapted from parsing in app Start class.
+     */
+    private ArrayList<String> ThaiParseWordIntoTilesPreliminary(String parseMe) throws ValidatorException {
+        // Updates by KP, Oct 2020
+        // AH, Nov 2020, extended to check up to four characters in a game tile
 
+        ArrayList<String> parsedWordArrayTemp = new ArrayList<>();
 
+        int charBlock;
+        String next1; // the next one character from the string
+        String next2; // the next two characters from the string
+        String next3; // the next three characters from the string
+        String next4; // the next four characters from the string
+
+        int i; // counter to iterate through the characters of the analyzed word
+        int k; // counter to scroll through all game tiles for hits on the analyzed character(s) of the word string
+
+        for (i = 0; i < parseMe.length(); i++) {
+
+            // Create blocks of the next one, two, three and four Unicode characters for analysis
+            next1 = parseMe.substring(i, i + 1);
+
+            if (i < parseMe.length() - 1) {
+                next2 = parseMe.substring(i, i + 2);
+            } else {
+                next2 = "XYZXYZ";
+            }
+
+            if (i < parseMe.length() - 2) {
+                next3 = parseMe.substring(i, i + 3);
+            } else {
+                next3 = "XYZXYZ";
+            }
+
+            if (i < parseMe.length() - 3) {
+                next4 = parseMe.substring(i, i + 4);
+            } else {
+                next4 = "XYZXYZ";
+            }
+
+            // See if the blocks of length one, two, three or four Unicode characters matches game tiles
+            // Choose the longest block that matches a game tile and add that as the next segment in the parsed word array
+            charBlock = 0;
+            Tab gameTiles = langPackGoogleSheet.getTabFromName("gametiles");
+            for (k = 0; k < gameTiles.size(); k++) {
+
+                if (next1.equals(gameTiles.get(k).get(0)) && charBlock == 0) {
+                    // If charBlock is already assigned 2 or 3 or 4, it should not overwrite with 1
+                    charBlock = 1;
+                }
+                if (next2.equals(gameTiles.get(k).get(0)) && charBlock != 3 && charBlock != 4) {
+                    // The value 2 can overwrite 1 but it can't overwrite 3 or 4
+                    charBlock = 2;
+                }
+                if (next3.equals(gameTiles.get(k).get(0)) && charBlock != 4) {
+                    // The value 3 can overwrite 1 or 2 but it can't overwrite 4
+                    charBlock = 3;
+                }
+                if (next4.equals(gameTiles.get(k).get(0))) {
+                    // The value 4 can overwrite 1 or 2 or 3
+                    charBlock = 4;
+                }
+                if (gameTiles.get(k).get(0) == null && k > 0) {
+                    k = gameTiles.size();
+                }
+            }
+
+            // Add the selected game tile (the longest selected from the previous loop) to the parsed word array
+            switch (charBlock) {
+                case 1:
+                    parsedWordArrayTemp.add(next1);
+                    break;
+                case 2:
+                    parsedWordArrayTemp.add(next2);
+                    i++;
+                    break;
+                case 3:
+                    parsedWordArrayTemp.add(next3);
+                    i += 2;
+                    break;
+                case 4:
+                    parsedWordArrayTemp.add(next4);
+                    i += 3;
+                    break;
+                default:
+                    break;
+            }
+
+        }
+        return parsedWordArrayTemp;
+    }
 
     /**
      * Private helper function to build the driveService and sheetsService objects. Replaces the refresh token
@@ -2296,6 +2365,7 @@ public class Validator {
             }
         }
     }
+
     //</editor-fold>
 
     //<editor-fold desc="ValidatorException">
