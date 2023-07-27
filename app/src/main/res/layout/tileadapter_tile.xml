@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.alphatilesapps.alphatiles.SquareConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tileadapter_tile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="bottom"
+        android:layout_margin="2dp"
+        >
+
+        <org.alphatilesapps.alphatiles.AutoTextView
+            android:id="@+id/tileadapter_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+
+            android:textColor="@color/WHITE"
+            android:textDirection="rtl"
+            android:textSize="0sp" />
+    </LinearLayout>
+
+</org.alphatilesapps.alphatiles.SquareConstraintLayout>
