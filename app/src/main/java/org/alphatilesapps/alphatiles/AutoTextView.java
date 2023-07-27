@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 public class AutoTextView extends androidx.appcompat.widget.AppCompatTextView {
     static Logger LOGGER = Logger.getLogger(AutoTextView.class.getName());
-    float baselinePercent = 0.8f;
+    float baselinePercent = 0.7f;
     float maximumDescend = 0.95f;
     float maximumAscend = 0.05f;
     float leftMargin = 0.03f, rightMargin = 0.03f, bottomMargin = 0.03f, topMargin = 0.03f;
@@ -115,7 +115,6 @@ public class AutoTextView extends androidx.appcompat.widget.AppCompatTextView {
             paint.setTextSize(getWidth());
             paint.getTextBounds(text.toString(), 0, text.length(), r);
             float width = r.width();
-            paint.getTextBounds("ABCDjgy", 0, 7, r);
             float leftM = leftMargin * getWidth();
             float rightM = rightMargin * getWidth();
             float topM = topMargin * getHeight();
