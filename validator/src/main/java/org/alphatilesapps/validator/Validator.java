@@ -23,7 +23,6 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -53,7 +52,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class Validator {
@@ -85,7 +84,10 @@ public class Validator {
      */
     public static void main(String[] args) throws ValidatorException, GeneralSecurityException, IOException {
 
-        String url = JOptionPane.showInputDialog(null, "Enter the URL for the Google Drive folder of your " +
+        JFrame jf = new JFrame();
+        jf.setAlwaysOnTop(true);
+
+        String url = JOptionPane.showInputDialog(jf, "Enter the URL for the Google Drive folder of your " +
                        "language pack", "AlphaTiles", JOptionPane.PLAIN_MESSAGE);
 
        Validator myValidator = new Validator(url);
@@ -107,12 +109,12 @@ public class Validator {
             }
         }
 
-       int wantsToDownload = JOptionPane.showOptionDialog(null, "After reviewing errors and warnings, " +
+       int wantsToDownload = JOptionPane.showOptionDialog(jf, "After reviewing errors and warnings, " +
                "are you ready to download the data from this language pack into android studio", "AlphaTiles",
                YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,null, null);
 
         if (wantsToDownload == 0) {
-            int isSure = JOptionPane.showOptionDialog(null,
+            int isSure = JOptionPane.showOptionDialog(jf,
                     "Are you sure? This will replace any existing language pack of the same name in android studio",
                     "AlphaTiles", YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,null, null);
 
@@ -121,7 +123,7 @@ public class Validator {
                 myValidator.writeValidatedFiles(pathToApp);
             }
         }
-
+        jf.dispose();
     }
     //</editor-fold>
 
@@ -508,7 +510,7 @@ public class Validator {
         try {
             Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
             if (!langInfo.getRowFromFirstCell("Script type").get(1).matches("(Roman|Thai|Lao)")){
-                fatalErrors.add("In langinfo  \"Script type\" must be either \"Roman\" or \"Thai\" or \"Lao\"");
+                fatalErrors.add("In langinfo \"Script type\" must be either \"Roman,\" \"Thai,\" or \"Lao\"");
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the lannginfo tab");
@@ -661,6 +663,7 @@ public class Validator {
             }
         }
         catch (Exception e){warnings.add(FAILED_CHECK_WARNING + "the settings tab");}
+
         boolean hasTileAudio = tileAudioSetting && tileAudioAttempted;
         if (!hasTileAudio){
             if (tileAudioAttempted){
@@ -709,6 +712,18 @@ public class Validator {
             if (hasTileAudio) {
                 GoogleDriveFolder tileAudio = langPackDriveFolder.getFolderFromName("audio_tiles_optional");
                 ArrayList<String> tiles = langPackGoogleSheet.getTabFromName("gametiles").getCol(5);
+                ArrayList<String> tilesType2 = langPackGoogleSheet.getTabFromName("gametiles").getCol(8);
+                for (String tileB : tilesType2){
+                    if (!tileB.equals("X")){
+                        tiles.add(tileB);
+                    }
+                }
+                ArrayList<String> tilesType3 = langPackGoogleSheet.getTabFromName("gametiles").getCol(10);
+                for (String tileC : tilesType3){
+                    if (!tileC.equals("X")){
+                        tiles.add(tileC);
+                    }
+                }
                 tileAudio.checkItemNamesAgainstList(tiles);
             }
         } catch (ValidatorException e) {
@@ -1168,7 +1183,7 @@ public class Validator {
             }
 
             for (String shouldHaveFound : namesNotYetFound) {
-                warnings.add(shouldHaveFound + " does not have a corresponding file in " + this.getName() +
+                fatalErrors.add(shouldHaveFound + " does not have a corresponding file in " + this.getName() +
                         " of the correct file type");
             }
 
@@ -2258,11 +2273,11 @@ public class Validator {
         JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
         NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         sheetsService =
-                new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCrdntls(HTTP_TRANSPORT))
                         .setApplicationName(APPLICATION_NAME)
                         .build();
         driveService =
-                new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCrdntls(HTTP_TRANSPORT))
                         .setApplicationName(APPLICATION_NAME)
                         .build();
         // tries to use the drive service to check if the token is revoked or expired
@@ -2279,14 +2294,14 @@ public class Validator {
                 errorDescription = ((GoogleJsonResponseException) e).getDetails().get("message").toString();
             }
 
-            if (errorDescription.equals("Token has been expired or revoked.")) {
+            if (errorDescription.equals("Token has been expired or revoked.") || errorDescription.contains("Request had invalid authentication credentials. Expected OAuth 2 access token")) {
                 deleteDirectory(Paths.get("tokens"));
                 sheetsService =
-                        new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                        new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCrdntls(HTTP_TRANSPORT))
                                 .setApplicationName(APPLICATION_NAME)
                                 .build();
                 driveService =
-                        new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                        new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCrdntls(HTTP_TRANSPORT))
                                 .setApplicationName(APPLICATION_NAME)
                                 .build();
             }
@@ -2300,17 +2315,19 @@ public class Validator {
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.
      */
-    private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
+    private Credential getCrdntls(final NetHttpTransport HTTP_TRANSPORT)
             throws IOException {
 
 
-        String credentialsJson =
-                "{\"installed\":{\"client_id\":\"384994053794-tuci4d2mhf4caems7jalfmb4voi855b8.apps." +
-                        "googleusercontent.com\",\"project_id\":\"enhanced-medium-387818\",\"auth_uri\":" +
-                        "\"https://accounts.google.com/o/oauth2/auth\",\"token_uri\":" +
-                        "\"https://oauth2.googleapis.com/token\",\"auth_provider_x509_cert_url\":" +
-                        "\"https://www.googleapis.com/oauth2/v1/certs\",\"client_secret\":" +
-                        "\"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\",\"redirect_uris\":[\"http://localhost\"]}}";
+        String crdntls =
+                "{\"installed\":{\"client_id\":" +
+                        "\"408067119694-iun4c6kd4mti4s5lcmg9vrqdmn99p486.apps.googleusercontent.com\"," +
+                        "\"project_id\":\"alpha-tiles-validator\"," +
+                        "\"auth_uri\":\"https://accounts.google.com/o/oauth2/auth\"," +
+                        "\"token_uri\":\"https://oauth2.googleapis.com/token\"," +
+                        "\"auth_provider_x509_cert_url\":\"https://www.googleapis.com/oauth2/v1/certs\"," +
+                        "\"client_secret\":\"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\"," +
+                        "\"redirect_uris\":[\"http://localhost\"]}}";
         JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
         //Global instance of the scopes required by this quickstart.
@@ -2319,7 +2336,7 @@ public class Validator {
         List<String> SCOPES = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY, DriveScopes.DRIVE_READONLY);
         //String CREDENTIALS_FILE_PATH = "/credentials.json";
         // Load client secrets.
-        InputStream in = new ByteArrayInputStream(credentialsJson.getBytes());
+        InputStream in = new ByteArrayInputStream(crdntls.getBytes());
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
