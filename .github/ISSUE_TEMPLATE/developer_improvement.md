@@ -16,3 +16,5 @@ A clear and concise description of any alternative solutions or features you've 
 
 **Additional context**
 Add any other context or screenshots about the feature request here.
+
+- [ ] I have added this issue to the project so that project managers will see it. (To the right of this issue draft, Click 'Projects' > 'Alpha Tiles Development')

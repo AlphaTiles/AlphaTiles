@@ -15,7 +15,6 @@ _Demonstrate any UI / behavioral changes with screenshots or animations._
 - [ ] I have reviewed the title & description of this PR which I will use as the squashed PR commit message
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] I have enabled auto-merge (optional)
 
 ## Testing
 

@@ -32,3 +32,5 @@ The version number found on the loading screen of the app.
 
 **Additional context**
 Add any other context about the problem here.
+
+- [ ] I have added this issue to the project so that project managers will see it. (To the right of this issue draft, Click 'Projects' > 'Alpha Tiles Development')
