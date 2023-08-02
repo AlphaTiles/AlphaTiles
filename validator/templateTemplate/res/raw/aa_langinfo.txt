@@ -1,0 +1,15 @@
+Item	Answer
+1. Lang Name (In Local Lang)
+2. Lang Name (In English)
+3. Lang Name (In Reg/Ntnl Lang)
+4. Ethnologue code
+5. Country
+6. Variant info
+7. Game Name (In Local Lang)
+8. Script direction (LTR or RTL)
+9. Audio and image credits
+10. The word NAME in local language
+11. Script type	Roman
+12. Email
+13. Privacy Policy	https://alphatilesapps.org/privacypolicy.html
+14. Audio and image credits (lang 2)	none

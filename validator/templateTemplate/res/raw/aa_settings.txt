@@ -1,0 +1,11 @@
+Setting	Value
+1. Game 001 Scan Setting	1
+2. Show filter options for Game 001 False
+3. Has tile audio	FALSE
+4. After 12 checked trackers	3
+5. Has syllable audio	FALSE
+6. Number of avatars	12
+7. Differentiates types of multitype symbols	TRUE
+8. Stage correspondence ratio	0.75
+8. First letter stage correspondence	FALSE
+9. Stage 1-2 max word length	99

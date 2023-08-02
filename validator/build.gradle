@@ -22,6 +22,6 @@ dependencies{
     implementation 'com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0'
 }
 java {
-    sourceCompatibility = JavaVersion.VERSION_15
-    targetCompatibility = JavaVersion.VERSION_15
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
