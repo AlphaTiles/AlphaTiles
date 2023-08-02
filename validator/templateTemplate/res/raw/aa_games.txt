@@ -1,0 +1,2 @@
+Door	Country	ChallengeLevel	Color	InstructionAudio	AudioDuration	SyllOrTile	StagesIncluded
+				X	0	T	-

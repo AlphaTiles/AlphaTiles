@@ -1,0 +1,14 @@
+Game Color Number	Color Name	Hex Code
+0	themePurple	#9C27B0
+1	themeBlue	#2196F3
+2	themeOrange	#F44336
+3	themeGreen	#4CAF50
+4	themeRed	#E91E63
+5	yellow	#FFFF00
+6	black	#000000
+7	dark green	#006600
+8	gray	#808080
+9	brown	#663300
+10	red	#FF0000
+11	magenta	#A50021
+12	blue	#0000CC

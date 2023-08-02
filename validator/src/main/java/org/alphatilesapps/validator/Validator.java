@@ -23,6 +23,8 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -52,6 +54,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -86,44 +89,53 @@ public class Validator {
 
         JFrame jf = new JFrame();
         jf.setAlwaysOnTop(true);
+        jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        jf.setUndecorated(true);
+        jf.setLocationRelativeTo(null);
+        jf.setVisible(true);
+        try {
+            String url = JOptionPane.showInputDialog(jf, "Enter the URL for the Google Drive folder of your " +
+                    "language pack", "AlphaTiles", JOptionPane.PLAIN_MESSAGE);
+           Validator myValidator = new Validator(url);
+           myValidator.validate();
 
-        String url = JOptionPane.showInputDialog(jf, "Enter the URL for the Google Drive folder of your " +
-                       "language pack", "AlphaTiles", JOptionPane.PLAIN_MESSAGE);
-
-       Validator myValidator = new Validator(url);
-       myValidator.validate();
-
-        System.out.println("\n\nList of Fatal Errors\n********");
-        for (String error : myValidator.getFatalErrors()) {
-            System.out.println(error);
-        }
-        System.out.println("\nList of Warnings\n********");
-        for (String warning : myValidator.getWarnings()) {
-            System.out.println(warning);
-        }
-
-        if (SHOW_RECOMMENDATIONS) {
-            System.out.println("\nList of Recommendations\n********");
-            for (String recommendation : myValidator.getRecommendations()) {
-                System.out.println(recommendation);
+            System.out.println("\n\nList of Fatal Errors\n********");
+            for (String error : myValidator.getFatalErrors()) {
+                System.out.println(error);
             }
-        }
-
-       int wantsToDownload = JOptionPane.showOptionDialog(jf, "After reviewing errors and warnings, " +
-               "are you ready to download the data from this language pack into android studio", "AlphaTiles",
-               YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,null, null);
-
-        if (wantsToDownload == 0) {
-            int isSure = JOptionPane.showOptionDialog(jf,
-                    "Are you sure? This will replace any existing language pack of the same name in android studio",
-                    "AlphaTiles", YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,null, null);
-
-            if (isSure == 0) {
-                Path pathToApp = Paths.get(System.getProperty("user.dir")).getParent().resolve("app");
-                myValidator.writeValidatedFiles(pathToApp);
+            System.out.println("\nList of Warnings\n********");
+            for (String warning : myValidator.getWarnings()) {
+                System.out.println(warning);
             }
+
+            if (SHOW_RECOMMENDATIONS) {
+                System.out.println("\nList of Recommendations\n********");
+                for (String recommendation : myValidator.getRecommendations()) {
+                    System.out.println(recommendation);
+                }
+            }
+
+            jf.setVisible(true);
+            int wantsToDownload = JOptionPane.showOptionDialog(jf, "After reviewing errors and warnings, " +
+                   "are you ready to download the data from this language pack into android studio", "AlphaTiles",
+                   YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,null, null);
+
+            if (wantsToDownload == 0) {
+                jf.setVisible(true);
+                int isSure = JOptionPane.showOptionDialog(jf,
+                        "Are you sure? This will replace any existing language pack of the same name in android studio",
+                        "AlphaTiles", YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,null, null);
+
+                if (isSure == 0) {
+                    Path pathToApp = Paths.get(System.getProperty("user.dir")).getParent().resolve("app");
+                    myValidator.writeValidatedFiles(pathToApp);
+                }
+            }
+
         }
-        jf.dispose();
+        finally {
+            jf.dispose();
+        }
     }
     //</editor-fold>
 
@@ -435,6 +447,7 @@ public class Validator {
             }
 
             // check if the uppercase tiles are all full upper case or proper case and warn accordingly
+
             ArrayList<String> multiPossibleUpperCase = gameTiles.getCol(6);
             for (int i = multiPossibleUpperCase.size() -1; i >=0; i--){
                 int numPossibleUpperCase = 0;
@@ -455,8 +468,8 @@ public class Validator {
                 String fullUpper = upperCaseTile.toUpperCase();
                 //building proper case string may not work if tile starts with char that cannot be uppercase
                 String properCase = upperCaseTile.toLowerCase();
-                char firstChar = properCase.charAt(0);
-                properCase = properCase.replace(firstChar, Character.toUpperCase(firstChar));
+                String firstChar = properCase.substring(0,1);
+                properCase = properCase.replaceFirst(firstChar, firstChar.toUpperCase());
 
                 if (upperCaseTile.equals(fullUpper)) {
                     fullUpperCaseOnly.add(upperCaseTile);
@@ -625,6 +638,14 @@ public class Validator {
             try {
                 GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(nameToMimeType.getKey());
                 subFolder.filterByMimeType(nameToMimeType.getValue());
+                for (GoogleDriveItem itemInFolder : langPackDriveFolder.getFolderFromName(nameToMimeType.getKey()).folderContents){
+                    // make sure the file names use valid
+                    if (!itemInFolder.getName().matches("[a-z0-9_]+\\.+[a-z0-9_]+")) {
+                        fatalErrors.add("In " + nameToMimeType.getKey() + ", the file \"" + itemInFolder.getName() +
+                                "\" must be in the format name.type, where both name and type only use characters" +
+                                " a-z, 0-9, and _");
+                    }
+                }
             } catch (ValidatorException e) {
                 fatalErrors.add(e.getMessage());
             }
@@ -693,9 +714,17 @@ public class Validator {
         }
         try{
             GoogleDriveFolder lowResWordImages = langPackDriveFolder.getFolderFromName("images_words_low_res");
-            ArrayList<String> TwoAppendedWordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            TwoAppendedWordsInLWC.replaceAll(s -> s + "2");
-            lowResWordImages.checkItemNamesAgainstList(TwoAppendedWordsInLWC);
+            // if lowResWordImages is not empty, we assume the user is trying to provide their own low res images
+            //otherwise we will generate these in writeImageAndAudioFiles
+            if (lowResWordImages.size() > 0) {
+                ArrayList<String> TwoAppendedWordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
+                TwoAppendedWordsInLWC.replaceAll(s -> s + "2");
+                lowResWordImages.checkItemNamesAgainstList(TwoAppendedWordsInLWC);
+            }
+            else {
+                warnings.add("Since the folder images_words_low_res is empty, the validator will automatically generate " +
+                        "smaller versions of all images if asked to download language data from google drive.");
+            }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_words_low_res folder or the wordlist tab");
         }
@@ -844,7 +873,8 @@ public class Validator {
      */
     public void writeValidatedFiles(Path pathToApp) throws IOException, ValidatorException {
 
-        Path pathToLangPack = pathToApp.resolve("src").resolve(langPackGoogleSheet.getName());
+        String langPackNameNoSpaces = langPackGoogleSheet.getName().replaceAll("\\s+", "");
+        Path pathToLangPack = pathToApp.resolve("src").resolve(langPackNameNoSpaces);
 
         //checks for a google_services.json file and copies it to a temporary location before deleting
         //old language pack
@@ -858,15 +888,8 @@ public class Validator {
 
         // copies template to be new language pack, looks for a public language assets folder as a sister to
         //AlphaTiles repo
-        Path pathToTemplate = pathToApp.getParent().getParent().resolve("PublicLanguageAssets").resolve("templateTemplate");
-        if (Files.exists(pathToTemplate)) {
-            copyDirectory(pathToTemplate, pathToLangPack);
-        }
-        else{
-            throw new ValidatorException("Couldn't find a PublicLangaugeAssets folder as a sister to the AlphaTiles in your" +
-                    " file system. Check steps two and three in \"Clone the source code and sample build assets\" " +
-                    "at this link https://github.com/AlphaTiles/AlphaTiles#readme");
-        }
+        Path pathToTemplate = Paths.get("templateTemplate");
+        copyDirectory(pathToTemplate, pathToLangPack);
 
         // If a temporary services.json file was created, moves it into the new language pack.
         if (Files.exists(pathToTempServices)){
@@ -890,7 +913,7 @@ public class Validator {
     private void writeNewBuildGradle(Path pathToApp) throws IOException, ValidatorException{
 
         String appName;
-        String langPackName = langPackGoogleSheet.getName();
+        String langPackName = langPackGoogleSheet.getName().replaceAll("\\s+","");
         try{
             appName = langPackGoogleSheet.getTabFromName("langinfo").getRowFromFirstCell("Game Name (In Local Lang)").get(1);
             appName = appName.replace("'", "ꞌ");
@@ -916,7 +939,7 @@ public class Validator {
         while (!reachedFirstLangPack && line != null) {
             beforeLangPacks.append(line).append("\n");
             line = readBuildGradle.readLine();
-            if (line.matches("\s*productFlavors\s*\\{.*")) {
+            if (line.matches("\\s*productFlavors\\s*\\{.*")) {
                 reachedProductFlavors = true;
             }
             else if (reachedProductFlavors && line.contains("{")){
@@ -940,7 +963,7 @@ public class Validator {
                 finishedLangPacks = true;
             }
 
-            if (line.matches("\s*" + langPackName + "\s*\\{.*")) {
+            if (line.matches("\\s*" + langPackName + "\\s*\\{.*")) {
                 onTargetLangPack = true;
             }
             else if (onTargetLangPack && line.contains("}")){
@@ -973,15 +996,20 @@ public class Validator {
      * Writes each tab in DESIRED_RANGE_FROM_TABS to a raw txt file in the downloaded language pack.
      * @param pathToLangPack a Path object that leads to the app/src/name-of-langPack folder in the AlphaTiles repo
      */
-    private void writeRawTxtFiles(Path pathToLangPack) throws IOException, ValidatorException{
+    private void writeRawTxtFiles(Path pathToLangPack) throws IOException{
         System.out.println("\n\ndownloading language pack spreadsheet from google drive into language pack ... ");
         Path pathToRaw = pathToLangPack .resolve("res").resolve("raw");
         for (String desiredTabName : DESIRED_RANGE_FROM_TABS.keySet()){
-            Tab desiredTab = langPackGoogleSheet.getTabFromName(desiredTabName);
-            java.io.File rawFile = pathToRaw.resolve("aa_" + desiredTab.getName() + ".txt").toFile();
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(rawFile), StandardCharsets.UTF_8);
-            writer.write(desiredTab.toString());
-            writer.close();
+            try {
+                Tab desiredTab = langPackGoogleSheet.getTabFromName(desiredTabName);
+                java.io.File rawFile = pathToRaw.resolve("aa_" + desiredTab.getName() + ".txt").toFile();
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(rawFile), StandardCharsets.UTF_8);
+                writer.write(desiredTab.toString());
+                writer.close();
+            }
+            catch (ValidatorException e){
+                System.out.println("FAILED TO DOWNLOAD data from tab \"" + desiredTabName + "\"");
+            }
         }
         System.out.println("finished downloading language pack spreadsheet from google drive into language pack");
     }
@@ -991,28 +1019,81 @@ public class Validator {
      * (drawable for images and raw for everything else)
      * @param pathToLangPack a Path object that leads to the app/src/name-of-langPack folder in the AlphaTiles repo
      */
-    private void writeImageAndAudioFiles(Path pathToLangPack) throws IOException, ValidatorException{
+    private void writeImageAndAudioFiles(Path pathToLangPack) throws IOException{
+        boolean missingLowResImages = false;
+        try {
+            if (langPackDriveFolder.getFolderFromName("images_words_low_res").size() == 0) {
+                missingLowResImages = true;
+            }
+        }
+        catch (ValidatorException e){
+            missingLowResImages = true;
+        }
         for (Map.Entry<String, String> subfolderSpecs : DESIRED_FILETYPE_FROM_SUBFOLDERS.entrySet()) {
 
-            String subFolderName = subfolderSpecs.getKey();
-            String subFolderFileTypes = subfolderSpecs.getValue();
+            try {
+                String subFolderName = subfolderSpecs.getKey();
+                String subFolderFileTypes = subfolderSpecs.getValue();
 
-            GoogleDriveFolder wordImagesFolder = langPackDriveFolder.getFolderFromName(subFolderName);
-            ArrayList<GoogleDriveItem> folderContents = wordImagesFolder.getFolderContents();
+                GoogleDriveFolder wordImagesFolder = langPackDriveFolder.getFolderFromName(subFolderName);
+                ArrayList<GoogleDriveItem> folderContents = wordImagesFolder.getFolderContents();
 
-            System.out.println("downloading " + subFolderName + " from google drive into language pack ... ");
-            Path outputFolderPath = pathToLangPack.resolve("res").resolve("raw");
-            if (subFolderFileTypes.contains("image")){
-                outputFolderPath = pathToLangPack.resolve("res").resolve("drawable");
+                System.out.println("downloading " + subFolderName + " from google drive into language pack ... ");
+                Path outputFolderPath = pathToLangPack.resolve("res").resolve("raw");
+                if (subFolderFileTypes.contains("image")) {
+                    outputFolderPath = pathToLangPack.resolve("res").resolve("drawable");
+                }
+
+                for (GoogleDriveItem driveResource : folderContents) {
+                    Path pathForResource = outputFolderPath.resolve(driveResource.getName());
+                    java.io.File downloadedResource = pathForResource.toFile();
+                    OutputStream out = new FileOutputStream(downloadedResource);
+                    driveService.files().get(driveResource.getId()).executeMediaAndDownloadTo(out);
+
+                    // if the user did not provide low res images, generate them and put them in drawable
+                    if (missingLowResImages && subFolderFileTypes.contains("image")) {
+
+                        BufferedImage needsLowRes = ImageIO.read(downloadedResource);
+                        Path pathForLowRes = outputFolderPath.resolve(driveResource.getName().replace(".", "2."));
+
+                        int currentWidth = needsLowRes.getWidth();
+                        int currentHeight = needsLowRes.getHeight();
+                        double scaleFactor = Math.min(524.0 / currentWidth, 524.0 / currentHeight);
+
+                        String informalTypeName = driveResource.mimeType.substring(driveResource.mimeType.indexOf("/") + 1);
+
+                        if (scaleFactor < 1 && scaleFactor > 0) {
+                            Image lowResImage = needsLowRes.getScaledInstance((int) (currentWidth * scaleFactor),
+                                    (int) (currentHeight * scaleFactor), Image.SCALE_DEFAULT);
+                            BufferedImage lowResBuffered = new BufferedImage((int) (currentWidth * scaleFactor),
+                                    (int) (currentHeight * scaleFactor), BufferedImage.TYPE_INT_ARGB);
+                            lowResBuffered.createGraphics().drawImage(lowResImage, 0, 0, null);
+                            boolean wroteSuccessfully = ImageIO.write(lowResBuffered, informalTypeName, pathForLowRes.toFile());
+
+                            if (!wroteSuccessfully){
+                                // if downloading fails, try with a different buffered image type (works for JPEGs but
+                                // not transparent png images
+                                 lowResBuffered = new BufferedImage((int) (currentWidth * scaleFactor),
+                                        (int) (currentHeight * scaleFactor), BufferedImage.TYPE_INT_RGB);
+                                 lowResBuffered.createGraphics().drawImage(lowResImage, 0, 0, null);
+                                 wroteSuccessfully = ImageIO.write(lowResBuffered, informalTypeName, pathForLowRes.toFile());
+                            }
+
+                            if (!wroteSuccessfully){
+                                System.out.println("FAILED TO DOWNLOAD low res version of " + driveResource.getName());
+                            }
+
+                        }
+                        else{
+                            ImageIO.write(needsLowRes, informalTypeName, pathForLowRes.toFile());
+                        }
+                    }
+                }
+                System.out.println("finished downloading " + subFolderName + " from google drive into language pack.");
             }
-
-            for (GoogleDriveItem driveResource : folderContents) {
-                Path pathForResource = outputFolderPath.resolve(driveResource.getName());
-                java.io.File downloadedResource = pathForResource.toFile();
-                OutputStream out = new FileOutputStream(downloadedResource);
-                driveService.files().get(driveResource.getId()).executeMediaAndDownloadTo(out);
+            catch (ValidatorException e){
+                System.out.println("FAILED TO DOWNLOAD " + subfolderSpecs.getKey() + " from google drive into language pack.");
             }
-            System.out.println("finished downloading " + subFolderName + " from google drive into language pack.");
         }
     }
     //</editor-fold>
@@ -1135,7 +1216,7 @@ public class Validator {
         protected GoogleDriveItem getItemWithName(String inName) {
             for (GoogleDriveItem item : this.folderContents) {
                 String itemName = item.getName();
-                int endIndex = (!itemName.contains(".") ? folderContents.size() : itemName.indexOf("."));
+                int endIndex = (!itemName.contains(".") ? itemName.length() : itemName.indexOf("."));
                 if (itemName.substring(0, endIndex).equals(inName)) {
                     return item;
                 }
@@ -1355,6 +1436,7 @@ public class Validator {
          * @param inRange a String that is the range to compare the tab against (in A1 format)
          */
         private void sizeTabUsingRange(String inRange) {
+
             Integer rowLen = rowLenFromRange(inRange);
             Integer colLen = colLenFromRange(inRange);
 
@@ -1367,10 +1449,20 @@ public class Validator {
                     toRemove.add(i);
                 }
                 else if (this.get(i).size() < rowLen) {
-                    fatalErrors.add("The row " + (i + 1) + " in " + this.name + " is too short. It should have " +
-                            rowLen + " cells.");
                     for (int j = this.get(i).size(); j < rowLen; j++) {
-                        this.get(i).add("");
+
+                        if (defaultValInTemplateTxt(this.name, j) != null){
+                            this.get(i).add(defaultValInTemplateTxt(this.name,j));
+                            warnings.add("The tab \"" + this.getName() + "\" is missing cells/columns which could be replaced " +
+                                    "by default values found in the latest language pack template. " +
+                                    "Validation and downloading will proceed as if missing information was filled " +
+                                    "in with default values.");
+                        }
+                        else {
+                            this.get(i).add("");
+                            fatalErrors.add("The row " + (i + 1) + " in " + this.name + " is too short. It should have " +
+                                    rowLen + " cells.");
+                        }
                     }
                 }
                 else{
@@ -1380,8 +1472,18 @@ public class Validator {
                                     " contains multiple lines. Please delete the 'enter' character ");
                         }
                         else if (this.get(i).get(j).equals("")){
-                            fatalErrors.add("The cell at row " + (i + 1) + " column " + (j+1) + " in " + this.name +
-                                    " is empty. Please add info to this cell.");
+                            if (defaultValInTemplateTxt(this.name, j) != null){
+                                this.get(i).set(j, defaultValInTemplateTxt(this.name,j));
+                                warnings.add("The tab \"" + this.getName() + "\" is missing cells/columns which could be replaced " +
+                                        "by default values found in the latest language pack template. " +
+                                        "Validation and downloading will proceed as if missing information was filled " +
+                                        "in with default values.");
+
+                            }
+                            else {
+                                fatalErrors.add("The cell at row " + (i + 1) + " column " + (j+1) + " in " + this.name +
+                                        " is empty. Please add info to this cell.");
+                            }
                         }
                     }
                 }
@@ -2354,7 +2456,7 @@ public class Validator {
      * Deletes the entire directory at the given path in the computer's file system.
      * @param directoryToBeDeleted the Path object to the directory to be deleted
      */
-    private void deleteDirectory(Path directoryToBeDeleted) {
+    private static void deleteDirectory(Path directoryToBeDeleted) {
         java.io.File[] allContents = directoryToBeDeleted.toFile().listFiles();
         if (allContents != null) {
             for (java.io.File file : allContents) {
@@ -2365,11 +2467,40 @@ public class Validator {
     }
 
     /**
+     * Provides the default value for a given colum in a given txt file in templateTemplate/res/raw
+     * @param rawFileName the name of the raw file to be looked at (without the "aa_" or ".txt")
+     * @param col the column number to look at the default value of
+     * @return a string which is the default value of the given raw txt file at the given value, or null if there is none
+     */
+    private static String defaultValInTemplateTxt(String rawFileName, int col) {
+
+        Path pathToRawFile = Paths.get("templateTemplate")
+                .resolve("res").resolve("raw").resolve("aa_" + rawFileName + ".txt");
+        try {
+            BufferedReader txtReader = new BufferedReader(new FileReader(pathToRawFile.toFile()));
+            String line;
+            ArrayList<ArrayList<String>> contents = new ArrayList<>();
+            while ((line = txtReader.readLine()) != null) {
+                contents.add(new ArrayList<>(List.of(line.split("\t"))));
+            }
+            if ((contents.size() == 2) && (contents.get(1).size() > col)) {
+                if (!contents.get(1).get(col).equals("")) {
+                    return contents.get(1).get(col);
+                }
+            }
+        }
+        catch (IOException e){
+            return null;
+        }
+        return null;
+    }
+
+    /**
      * Copies an entire directory from one path to another. (recursively)
      * @param directoryToBeCopied the Path object to the directory to be copied
      * @param destinationPath the Path object to the destination directory
      */
-    public void copyDirectory(Path directoryToBeCopied, Path destinationPath) throws IOException {
+    public static void copyDirectory(Path directoryToBeCopied, Path destinationPath) throws IOException {
         java.io.File[] allContents = directoryToBeCopied.toFile().listFiles();
         if (allContents != null) {
             for (java.io.File subContent : allContents) {

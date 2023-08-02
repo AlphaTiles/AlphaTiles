@@ -1,0 +1,2 @@
+tiles	Or1	Or2	Or3	Type	AudioName	Upper	Type2	AudioName2	Type3	AudioName3	Placeholder	Placeholder	Placeholder	FirstAppearsInStage...	FirstAppearsInStage...(Type2)	FirstAppearsInStage...(Type3)
+							none	X	none	X	0	0	0	-	-	-
