@@ -40,21 +40,19 @@ import static org.alphatilesapps.alphatiles.Start.*;
 // No reason to accommodate 15 syllables, right?
 
 public class Brazil extends GameActivity {
-
-    Start.TileList sortableTilesArray; // KP
-    Start.SyllableList sortableSyllArray; //JP
     Set<String> answerChoices = new HashSet<String>();
-    int visibleTiles;
     int numTones;
-    String correctTile = "";
+    Start.Tile correctTile;
+    Start.Syllable correctSyllable;
+    String correctString;
 
-    protected static final int[] TILE_BUTTONS = {
+    protected static final int[] GAME_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15
     };
 
-    protected int[] getTileButtons() {
-        return TILE_BUTTONS;
+    protected int[] getGameButtons() {
+        return GAME_BUTTONS;
     }
 
     protected int[] getWordImages() {
@@ -66,7 +64,7 @@ public class Brazil extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -124,12 +122,11 @@ public class Brazil extends GameActivity {
 
             if (VOWELS.isEmpty()) {  // Makes sure VOWELS is populated only once when the app is running
                 for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (Start.tileList.get(d).tileType.equals("V")) {
-                        VOWELS.add(Start.tileList.get(d).baseTile);
+                    if (tileList.get(d).typeOfThisTileInstance.equals("V")) {
+                        VOWELS.add(Start.tileList.get(d));
                     }
                 }
             }
-
             Collections.shuffle(VOWELS); // AH
 
         } else if (syllableGame.equals("S")) {
@@ -143,8 +140,8 @@ public class Brazil extends GameActivity {
 
             if (CONSONANTS.isEmpty()) {  // Makes sure CONSONANTS is populated only once when the app is running
                 for (int d = 0; d < Start.tileList.size(); d++) {
-                    if (Start.tileList.get(d).tileType.equals("C")) {
-                        CONSONANTS.add(Start.tileList.get(d).baseTile);
+                    if (tileList.get(d).typeOfThisTileInstance.equals("C")) {
+                        CONSONANTS.add(Start.tileList.get(d));
                     }
                 }
             }
@@ -155,8 +152,8 @@ public class Brazil extends GameActivity {
 
         if (MULTIFUNCTIONS.isEmpty()) {  // Makes sure MULTIFUNCTIONS is populated only once when the app is running
             for (int d = 0; d < Start.tileList.size(); d++) {
-                if (!Start.tileList.get(d).tileTypeB.equals("none")) {
-                    MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
+                if (!tileList.get(d).typeOfThisTileInstance.equals("none")) {
+                    MULTIFUNCTIONS.add(Start.tileList.get(d).text);
                 }
             }
         }
@@ -167,19 +164,19 @@ public class Brazil extends GameActivity {
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         if (syllableGame.equals("S")) {
-            visibleTiles = 4;
+            visibleGameButtons = 4;
         } else {
             switch (challengeLevel) {
                 case 3:
-                    visibleTiles = VOWELS.size();
-                    if (visibleTiles > 15) {    // AH
-                        visibleTiles = 15;      // AH
+                    visibleGameButtons = VOWELS.size();
+                    if (visibleGameButtons > 15) {    // AH
+                        visibleGameButtons = 15;      // AH
                     }                           // AH
                     break;
                 case 6:
-                    visibleTiles = CONSONANTS.size();
-                    if (visibleTiles > 15) {    // AH
-                        visibleTiles = 15;      // AH
+                    visibleGameButtons = CONSONANTS.size();
+                    if (visibleGameButtons > 15) {    // AH
+                        visibleGameButtons = 15;      // AH
                     }                           // AH
                     break;
                 case 7:
@@ -187,17 +184,11 @@ public class Brazil extends GameActivity {
                     if (numTones > 4) {
                         numTones = 4;
                     }
-                    visibleTiles = 4;
+                    visibleGameButtons = 4;
                     break;
                 default:
-                    visibleTiles = 4;
+                    visibleGameButtons = 4;
             }
-        }
-
-        if (syllableGame.equals("S")) {
-            sortableSyllArray = (Start.SyllableList) syllableList.clone(); // JP
-        } else {
-            sortableTilesArray = (Start.TileList) Start.tileList.clone(); // KP
         }
 
         if (getAudioInstructionsResID() == 0) {
@@ -227,15 +218,10 @@ public class Brazil extends GameActivity {
 
         repeatLocked = true;
         setAdvanceArrowToGray();
-        if (syllableGame.equals("S")) {
-            Collections.shuffle(sortableSyllArray);
-        } else {
-            Collections.shuffle(sortableTilesArray); // KP
-        }
 
         setWord();
         removeTile();
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         if (syllableGame.equals("S")) {
             setUpSyllables();
@@ -243,11 +229,11 @@ public class Brazil extends GameActivity {
             setUpTiles();
         }
         playActiveWordClip(false);
-        setAllTilesClickable();
+        setAllGameButtonsClickable();
         setOptionsRowClickable();
 
-        for (int i = 0; i < visibleTiles; i++) {
-            TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
+        for (int i = 0; i < visibleGameButtons; i++) {
+            TextView nextWord = (TextView) findViewById(GAME_BUTTONS[i]);
             nextWord.setClickable(true);
         }
     }
@@ -256,18 +242,18 @@ public class Brazil extends GameActivity {
 
         chooseWord();
         ImageView image = findViewById(R.id.wordImage);
-        int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+        int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
         if (syllableGame.equals("S")) {
-            parsedWordArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
+            parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
         } else {
-            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP);
+            parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord);
         }
 
 
         boolean proceed = false;
-        String nextTile;
+        Start.Tile nextTile;
 
         // JP: this section is not relevant to syllable games, right?
         if (!syllableGame.equals("S")) {
@@ -275,16 +261,16 @@ public class Brazil extends GameActivity {
                 case 4:
                 case 5:
                 case 6:
-                    for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
+                    for (int i = 0; i < parsedRefWordTileArray.size(); i++) {
 
-                        nextTile = parsedWordArrayFinal.get(i);
+                        nextTile = parsedRefWordTileArray.get(i);
                         // Include if a simple consonant
                         if (CONSONANTS.contains(nextTile) && !MULTIFUNCTIONS.contains(nextTile)) {
                             proceed = true;
                         }
                         // Include if a multi-function symbol that is a consonant in this instance
                         if (MULTIFUNCTIONS.contains(nextTile)) {
-                            String instanceType = Start.tileList.getInstanceTypeForMixedTile(i, wordInLWC);
+                            String instanceType = Start.tileList.getInstanceTypeForMixedTile(i, refWord);
                             if (instanceType.equals("C")) {
                                 proceed = true;
                             }
@@ -293,16 +279,16 @@ public class Brazil extends GameActivity {
                     }
                     break;
                 case 7:
-                    for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
+                    for (int i = 0; i < parsedRefWordTileArray.size(); i++) {
 
-                        nextTile = parsedWordArrayFinal.get(i);
+                        nextTile = parsedRefWordTileArray.get(i);
                         // Include if a simple tone marker
                         if (TONES.contains(nextTile) && !MULTIFUNCTIONS.contains(nextTile)) {
                             proceed = true;
                         }
                         // Include if a multi-function symbol that is a tone marker in this instance
                         if (MULTIFUNCTIONS.contains(nextTile)) {
-                            String instanceType = Start.tileList.getInstanceTypeForMixedTile(i, wordInLWC);
+                            String instanceType = Start.tileList.getInstanceTypeForMixedTile(i, refWord);
                             if (instanceType.equals("T")) {
                                 proceed = true;
                             }
@@ -311,16 +297,16 @@ public class Brazil extends GameActivity {
                     }
                     break;
                 default:
-                    for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
+                    for (int i = 0; i < parsedRefWordTileArray.size(); i++) {
 
-                        nextTile = parsedWordArrayFinal.get(i);
+                        nextTile = parsedRefWordTileArray.get(i);
                         // Include if a simple vowel
                         if (VOWELS.contains(nextTile) && !MULTIFUNCTIONS.contains(nextTile)) {
                             proceed = true;
                         }
                         // Include if a multi-function symbol that is a vowel in this instance
                         if (MULTIFUNCTIONS.contains(nextTile)) {
-                            String instanceType = Start.tileList.getInstanceTypeForMixedTile(i, wordInLWC);
+                            String instanceType = Start.tileList.getInstanceTypeForMixedTile(i, refWord);
                             if (instanceType.equals("V")) {
                                 proceed = true;
                             }
@@ -340,106 +326,110 @@ public class Brazil extends GameActivity {
         Random rand = new Random();
         int index = 0;
         int index_to_remove = 0;
-        correctTile = "";
 
         boolean repeat = true;
-        String instanceType = null;
 
         if (!syllableGame.equals("S")) {
             ArrayList<Integer> possibleIndices = new ArrayList<>();
-            for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
+            for (int i = 0; i < parsedRefWordTileArray.size(); i++) {
                 possibleIndices.add(i);
             }
-            while (repeat) { // JP: changed from 200 chances to keeping track
-
-                // JP: index is no longer corresponding to the index we remove from the word
+            while (repeat) {
                 index = rand.nextInt(possibleIndices.size());
-                correctTile = parsedWordArrayFinal.get(possibleIndices.get(index));
+                correctTile = parsedRefWordTileArray.get(possibleIndices.get(index));
                 index_to_remove = possibleIndices.get(index);
                 possibleIndices.remove(possibleIndices.get(index));
-                while (SAD.contains(correctTile)) { // JP: Makes sure that SAD is never chosen as missing tile
+                while (SAD_STRINGS.contains(correctTile.text)) { // JP: Makes sure that SAD is never chosen as missing tile
                     index = rand.nextInt(possibleIndices.size());
-                    correctTile = parsedWordArrayFinal.get(possibleIndices.get(index));
+                    correctTile = parsedRefWordTileArray.get(possibleIndices.get(index));
                     index_to_remove = possibleIndices.get(index);
                     possibleIndices.remove(possibleIndices.get(index));
                 }
-                if (MULTIFUNCTIONS.contains(correctTile)) {
-                    instanceType = Start.tileList.getInstanceTypeForMixedTile(index, wordInLWC);
-                } else {
-                    instanceType = Start.tileList.get(Start.tileList.returnPositionInAlphabet(correctTile)).tileType;
-                }
 
                 if (challengeLevel < 4) {
-                    if (instanceType.equals("V")) {
+                    if (correctTile.typeOfThisTileInstance.equals("V")) {
                         repeat = false;
                     }
                 }
 
                 if (challengeLevel > 3 && challengeLevel < 7) {
-                    if (instanceType.equals("C")) {
+                    if (correctTile.typeOfThisTileInstance.equals("C")) {
                         repeat = false;
                     }
                 }
 
                 if (challengeLevel == 7) {
-                    if (instanceType.equals("T")) {
+                    if (correctTile.typeOfThisTileInstance.equals("T")) {
                         repeat = false;
                     }
                 }
 
             }
+            correctString = correctTile.text;
         } else { // syllable game
-            index_to_remove = rand.nextInt(parsedWordArrayFinal.size());
-            correctTile = parsedWordArrayFinal.get(index_to_remove);
-            while (SAD.contains(correctTile)) { // JP: makes sure that SAD is never chosen as missing syllable
-                index_to_remove = rand.nextInt(parsedWordArrayFinal.size());
-                correctTile = parsedWordArrayFinal.get(index_to_remove);
+            index_to_remove = rand.nextInt(parsedRefWordSyllableArray.size());
+            correctSyllable = parsedRefWordSyllableArray.get(index_to_remove);
+            while (SAD_STRINGS.contains(correctSyllable.text)) { // JP: makes sure that SAD is never chosen as missing syllable
+                index_to_remove = rand.nextInt(parsedRefWordSyllableArray.size());
+                correctSyllable = parsedRefWordSyllableArray.get(index_to_remove);
             }
+            correctString = correctSyllable.text;
         }
 
-        parsedWordArrayFinal.set(index_to_remove, "__");
         TextView constructedWord = findViewById(R.id.activeWordTextView);
         StringBuilder word = new StringBuilder();
-        for (String s : parsedWordArrayFinal) {
-            if (s != null) {
-                word.append(s);
+        if (syllableGame.equals("S")) {
+            Start.Syllable blankSyllable = new Start.Syllable("__", new ArrayList<>(),"X", 0, correctSyllable.color);
+            parsedRefWordSyllableArray.set(index_to_remove, blankSyllable);
+            for (Syllable s : parsedRefWordSyllableArray) {
+                if (s != null) {
+                    word.append(s.text);
+                }
+            }
+
+        } else { // Tile game
+            Start.Tile blankTile = new Start.Tile("__", new ArrayList<>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, correctTile.typeOfThisTileInstance, 1, "");
+            parsedRefWordTileArray.set(index_to_remove, blankTile);
+            for (Tile t : parsedRefWordTileArray) {
+                if (t != null) {
+                    word.append(t.text);
+                }
             }
         }
         constructedWord.setText(word.toString());
-
     }
 
     private void setUpSyllables() {
-        boolean correctSyllRepresented = false;
-        Start.Syllable answer = syllableHashMap.find(correctTile); // Find corresponding syllable object for correct answer
+        boolean containsCorrectSyllable = false;
+        Start.Syllable answer = syllableHashMap.find(correctSyllable.text); // Find corresponding syllable object for correct answer
 
         answerChoices.clear();
-        answerChoices.add(correctTile);
-        answerChoices.add(answer.distractors[0]);
-        answerChoices.add(answer.distractors[1]);
-        answerChoices.add(answer.distractors[2]);
+        answerChoices.add(correctSyllable.text);
+        answerChoices.add(answer.distractors.get(0));
+        answerChoices.add(answer.distractors.get(1));
+        answerChoices.add(answer.distractors.get(2));
 
         Random rand = new Random();
 
         while (answerChoices.size() < 4) { // This shouldn't happen if distractors are set up correctly
-            answerChoices.add(syllableList.get(rand.nextInt(syllableList.size())).syllable);
+            answerChoices.add(syllableList.get(rand.nextInt(syllableList.size())).text);
         }
 
         List<String> answerChoicesList = new ArrayList<>(answerChoices); // So we can index into answer choices now
 
-        for (int t = 0; t < visibleTiles; t++) {
-            TextView gameTile = findViewById(TILE_BUTTONS[t]);
+        for (int t = 0; t < visibleGameButtons; t++) {
+            TextView gameTile = findViewById(GAME_BUTTONS[t]);
 
-            if (sortableSyllArray.get(t).syllable.equals(correctTile) && t < visibleTiles) {
-                correctSyllRepresented = true;
+            if (syllableList.get(t).text.equals(correctSyllable.text) && t < visibleGameButtons) {
+                containsCorrectSyllable = true;
             }
 
             String tileColorStr = COLORS.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
             if (challengeLevel == 1) {
-                if (t < visibleTiles) {
-                    gameTile.setText(sortableSyllArray.get(t).syllable); // KP
+                if (t < visibleGameButtons) {
+                    gameTile.setText(syllableList.get(t).text); // KP
                     gameTile.setBackgroundColor(tileColor);
                     gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                     gameTile.setVisibility(View.VISIBLE);
@@ -451,17 +441,17 @@ public class Brazil extends GameActivity {
                     gameTile.setVisibility(View.INVISIBLE);
                 }
             } else {
-                if (t < visibleTiles) {
+                if (t < visibleGameButtons) {
                     // think through this logic more -- how to get distractor syllables in there but
                     // also fill other syllables beyond the 3 distractors
 
-                    // first make a visibleTiles-sized array with the correct answer,
+                    // first make a visibleGameButtons-sized array with the correct answer,
                     // its distractor syllables, and any other syllables that start with the same tile;
                     // filter out repeats
 
-                    // then iterate through TILE_BUTTONS and fill them in using the other array, shuffled
-                    if (answerChoicesList.get(t) == correctTile) {
-                        correctSyllRepresented = true;
+                    // then iterate through GAME_BUTTONS and fill them in using the other array, shuffled
+                    if (answerChoicesList.get(t).equals(correctString)) {
+                        containsCorrectSyllable = true;
                     }
                     gameTile.setText(answerChoicesList.get(t)); // KP
                     gameTile.setBackgroundColor(tileColor);
@@ -475,17 +465,13 @@ public class Brazil extends GameActivity {
                     gameTile.setVisibility(View.INVISIBLE);
                 }
             }
-
-
         }
 
-        if (!correctSyllRepresented) { // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
-
+        if (!containsCorrectSyllable) { // If the right tile didn't randomly show up in the range, then here the right tile overwrites one of the other tiles
             rand = new Random();
-            int randomNum = rand.nextInt(visibleTiles - 1); // KP
-            TextView gameTile = findViewById(TILE_BUTTONS[randomNum]);
-            gameTile.setText(correctTile);
-
+            int randomNum = rand.nextInt(visibleGameButtons - 1); // KP
+            TextView gameTile = findViewById(GAME_BUTTONS[randomNum]);
+            gameTile.setText(correctSyllable.text);
         }
 
     }
@@ -495,15 +481,15 @@ public class Brazil extends GameActivity {
         Collections.shuffle(VOWELS);
         Collections.shuffle(CONSONANTS);
         if (challengeLevel == 3 || challengeLevel == 6) {
-            for (int t = 0; t < visibleTiles; t++) {
-                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+            for (int t = 0; t < visibleGameButtons; t++) {
+                TextView gameTile = findViewById(GAME_BUTTONS[t]);
                 if (challengeLevel == 3) {
-                    gameTile.setText(VOWELS.get(t));
+                    gameTile.setText(VOWELS.get(t).text);
                     if (VOWELS.get(t).equals(correctTile)) {
                         correctTileRepresented = true;
                     }
                 } else {
-                    gameTile.setText(CONSONANTS.get(t));
+                    gameTile.setText(CONSONANTS.get(t).text);
                     if (CONSONANTS.get(t).equals(correctTile)) {
                         correctTileRepresented = true;
                     }
@@ -518,15 +504,15 @@ public class Brazil extends GameActivity {
                 gameTile.setClickable(true);
             }
 
-            for (int i = visibleTiles; i < TILE_BUTTONS.length; i++) {
-                TextView gameTile = findViewById(TILE_BUTTONS[i]);
+            for (int i = visibleGameButtons; i < GAME_BUTTONS.length; i++) {
+                TextView gameTile = findViewById(GAME_BUTTONS[i]);
                 gameTile.setVisibility(View.INVISIBLE);
             }
         } else if (challengeLevel == 1) {
 
-            for (int t = 0; t < visibleTiles; t++) {
+            for (int t = 0; t < visibleGameButtons; t++) {
 
-                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                TextView gameTile = findViewById(GAME_BUTTONS[t]);
 
                 if (VOWELS.get(t).equals(correctTile)) {
                     correctTileRepresented = true;
@@ -535,7 +521,7 @@ public class Brazil extends GameActivity {
                 String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
-                gameTile.setText(VOWELS.get(t));
+                gameTile.setText(VOWELS.get(t).text);
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameTile.setVisibility(View.VISIBLE);
@@ -544,9 +530,9 @@ public class Brazil extends GameActivity {
 
         } else if (challengeLevel == 4) {
 
-            for (int t = 0; t < visibleTiles; t++) {
+            for (int t = 0; t < visibleGameButtons; t++) {
 
-                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                TextView gameTile = findViewById(GAME_BUTTONS[t]);
 
                 if (CONSONANTS.get(t).equals(correctTile)) {
                     correctTileRepresented = true;
@@ -555,7 +541,7 @@ public class Brazil extends GameActivity {
                 String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
-                gameTile.setText(CONSONANTS.get(t));
+                gameTile.setText(CONSONANTS.get(t).text);
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameTile.setVisibility(View.VISIBLE);
@@ -565,7 +551,7 @@ public class Brazil extends GameActivity {
         } else if (challengeLevel == 7) {
             for (int t = 0; t < numTones; t++) {
 
-                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+                TextView gameTile = findViewById(GAME_BUTTONS[t]);
 
                 if (TONES.get(t).equals(correctTile)) {
                     correctTileRepresented = true;
@@ -574,14 +560,14 @@ public class Brazil extends GameActivity {
                 String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
-                gameTile.setText(TONES.get(t));
+                gameTile.setText(TONES.get(t).text);
                 gameTile.setBackgroundColor(tileColor);
                 gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameTile.setVisibility(View.VISIBLE);
                 gameTile.setClickable(true);
             }
-            for (int t = numTones; t < visibleTiles; t++) {
-                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+            for (int t = numTones; t < visibleGameButtons; t++) {
+                TextView gameTile = findViewById(GAME_BUTTONS[t]);
                 gameTile.setVisibility(View.INVISIBLE);
                 gameTile.setClickable(false);
             }
@@ -590,7 +576,7 @@ public class Brazil extends GameActivity {
             correctTileRepresented = true;
             int correspondingRow = 0;
             for (int d = 0; d < Start.tileList.size(); d++) {
-                if (Start.tileList.get(d).baseTile.equals(correctTile)) {
+                if (Start.tileList.get(d).text.equals(correctTile.text)) {
                     correspondingRow = d;
                     break;
                 }
@@ -599,8 +585,8 @@ public class Brazil extends GameActivity {
             List<String> usedTiles = new ArrayList<>();
             Random rand = new Random();
             int randomNum;
-            for (int t = 0; t < visibleTiles; t++) {
-                TextView gameTile = findViewById(TILE_BUTTONS[t]);
+            for (int t = 0; t < visibleGameButtons; t++) {
+                TextView gameTile = findViewById(GAME_BUTTONS[t]);
 
                 String tileColorStr = COLORS.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
@@ -610,12 +596,23 @@ public class Brazil extends GameActivity {
                 gameTile.setVisibility(View.VISIBLE);
                 gameTile.setClickable(true);
 
-                randomNum = rand.nextInt(visibleTiles); //
-                String nextTile;
+                randomNum = rand.nextInt(visibleGameButtons); //
+                String nextTile = null;
                 if (randomNum == 0) {
-                    nextTile = Start.tileList.get(correspondingRow).baseTile;
+                    nextTile = Start.tileList.get(correspondingRow).text;
                 } else {
-                    nextTile = Start.tileList.get(correspondingRow).altTiles[randomNum - 1];
+                    switch (randomNum) {
+                        case 0:
+                            nextTile = tileList.get(correspondingRow).distractors.get(0);
+                            break;
+                        case 1:
+                            nextTile = tileList.get(correspondingRow).distractors.get(1);
+                            break;
+                        case 2:
+                            nextTile = tileList.get(correspondingRow).distractors.get(2);
+                            break;
+                    }
+
                 }
                 if (!usedTiles.contains(nextTile)) {
                     gameTile.setText(nextTile);
@@ -633,68 +630,92 @@ public class Brazil extends GameActivity {
             // This check is not necessary for challengeLevel 2 and 5, so at beginning of code above correctTileRepresented set to true
 
             int min = 0;
-            int max = visibleTiles - 1;
+            int max = visibleGameButtons - 1;
             Random rand = new Random();
             int randomNum = rand.nextInt((max - min) + 1) + min;
 
-            TextView gameTile = findViewById(TILE_BUTTONS[randomNum]);
-            gameTile.setText(correctTile);
+            TextView gameTile = findViewById(GAME_BUTTONS[randomNum]);
+            gameTile.setText(correctTile.text);
 
         }
 
     }
 
-    private void respondToTileSelection(int justClickedTile) {
+    private void respondToTileSelection(int justClickedButton) {
 
         if (mediaPlayerIsPlaying) {
             return;
         }
 
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
-        int tileNo = justClickedTile - 1; //  justClickedTile uses 1 to 15, t uses the array ID (between [0] and [14]
-        TextView tile = findViewById(TILE_BUTTONS[tileNo]);
-        String gameTileString = tile.getText().toString();
+        int tileNo = justClickedButton - 1; //  justClickedButton uses 1 to 15, t uses the array ID (between [0] and [14]
+        TextView gameButton = findViewById(GAME_BUTTONS[tileNo]);
+        String gameButtonString = gameButton.getText().toString();
 
-        if (correctTile.equals(gameTileString)) {
-            // Good job! You chose the right tile
+        if (gameButtonString.equals(correctString)) {
+            // Good job! You chose the right gameButton
             repeatLocked = false;
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
 
-            for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
-                if ("__".equals(parsedWordArrayFinal.get(i))) {
-                    parsedWordArrayFinal.set(i, gameTileString);
+            if (syllableGame.equals("S")) {
+                for (int i = 0; i < parsedRefWordSyllableArray.size(); i++) {
+                    if ("__".equals(parsedRefWordSyllableArray.get(i).text)) {
+                        parsedRefWordSyllableArray.set(i, correctSyllable);
+                    }
+                }
+
+                TextView constructedWord = findViewById(R.id.activeWordTextView);
+                StringBuilder word = new StringBuilder();
+                for (Syllable s: parsedRefWordSyllableArray) {
+                    if (s != null) {
+                        word.append(s.text);
+                    }
+                }
+                constructedWord.setText(word.toString());
+
+                for (int t = 0; t < visibleGameButtons; t++) {
+                    TextView gameTile = findViewById(GAME_BUTTONS[t]);
+                    gameTile.setClickable(false);
+                    if (t != (tileNo)) {
+                        String wordColorStr = "#A9A9A9"; // dark gray
+                        int wordColorNo = Color.parseColor(wordColorStr);
+                        gameTile.setBackgroundColor(wordColorNo);
+                        gameTile.setTextColor(Color.parseColor("#000000")); // black
+                    }
+                }
+            } else { // Tile game
+                for (int i = 0; i < parsedRefWordTileArray.size(); i++) {
+                    if ("__".equals(parsedRefWordTileArray.get(i).text)) {
+                        parsedRefWordTileArray.set(i, correctTile);
+                    }
+                }
+
+                TextView constructedWord = findViewById(R.id.activeWordTextView);
+                StringBuilder word = new StringBuilder();
+                for (Tile t : parsedRefWordTileArray) {
+                    if (t != null) {
+                        word.append(t.text);
+                    }
+                }
+                constructedWord.setText(word.toString());
+
+                for (int t = 0; t < visibleGameButtons; t++) {
+                    TextView gameTile = findViewById(GAME_BUTTONS[t]);
+                    gameTile.setClickable(false);
+                    if (t != (tileNo)) {
+                        String wordColorStr = "#A9A9A9"; // dark gray
+                        int wordColorNo = Color.parseColor(wordColorStr);
+                        gameTile.setBackgroundColor(wordColorNo);
+                        gameTile.setTextColor(Color.parseColor("#000000")); // black
+                    }
                 }
             }
-
-            TextView constructedWord = findViewById(R.id.activeWordTextView);
-            StringBuilder word = new StringBuilder();
-            for (String s : parsedWordArrayFinal) {
-                if (s != null) {
-                    word.append(s);
-                }
-            }
-            constructedWord.setText(word.toString());
-
-            for (int t = 0; t < visibleTiles; t++) {
-                TextView gameTile = findViewById(TILE_BUTTONS[t]);
-                gameTile.setClickable(false);
-                if (t != (tileNo)) {
-                    String wordColorStr = "#A9A9A9"; // dark gray
-                    int wordColorNo = Color.parseColor(wordColorStr);
-                    gameTile.setBackgroundColor(wordColorNo);
-                    gameTile.setTextColor(Color.parseColor("#000000")); // black
-                }
-            }
-
             playCorrectSoundThenActiveWordClip(false);
-
         } else {
-
             playIncorrectSound();
-
         }
 
     }
