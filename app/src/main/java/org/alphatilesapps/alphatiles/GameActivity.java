@@ -25,13 +25,11 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.alphatilesapps.alphatiles.Start.MULTIFUNCTIONS;
-import static org.alphatilesapps.alphatiles.Start.differentiateTypes;
+import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
-import static org.alphatilesapps.alphatiles.Start.tileTypeHashMapWithMultipleTypes;
 import static org.alphatilesapps.alphatiles.Start.wordStagesLists;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
@@ -39,7 +37,6 @@ import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
-import static org.alphatilesapps.alphatiles.Start.wordDurations;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.after12checkedTrackers;
 
@@ -65,16 +62,15 @@ public abstract class GameActivity extends AppCompatActivity {
     int globalPoints;
     int trackerCount = 0;
 
-    Start.TileListWithMultipleTypes cumulativeStageBasedTileList = new Start.TileListWithMultipleTypes();
+    Start.TileList cumulativeStageBasedTileList = new Start.TileList();
     Start.WordList cumulativeStageBasedWordList = new Start.WordList();
-    Start.TileListWithMultipleTypes previousStagesTileList = new Start.TileListWithMultipleTypes();
+    Start.TileList previousStagesTileList = new Start.TileList();
     Start.WordList previousStagesWordList = new Start.WordList();
-    ArrayList<String> parsedWordArrayFinal;
-    ArrayList<String> parsedWordSyllArrayFinal;
+    ArrayList<Start.Tile> parsedRefWordTileArray;
+    ArrayList<Start.Syllable> parsedRefWordSyllableArray;
 
-    int visibleTiles;
-    String wordInLWC = "";    // the lWC word (e.g. Spanish), which exactly matches the image and audio file names
-    String wordInLOP = "";    // the corresponding word in the language of play (e.g. Me'phaa)
+    int visibleGameButtons;
+    Start.Word refWord;
     Queue<String> last12Words = new PriorityQueue<>();
 
 
@@ -88,7 +84,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
     };
 
-    protected abstract int[] getTileButtons();
+    protected abstract int[] getGameButtons();
 
     protected abstract int[] getWordImages();
 
@@ -259,24 +255,24 @@ public abstract class GameActivity extends AppCompatActivity {
                             // Get the info about the next game
                             gameNumber = gameNumber + 1;
                             if (gameNumber - 1 < gameList.size()) {
-                                challengeLevel = Integer.valueOf(gameList.get(gameNumber - 1).gameLevel);
+                                challengeLevel = Integer.valueOf(gameList.get(gameNumber - 1).level);
                                 if (gameList.get(gameNumber-1).stage.equals("-")) {
                                     stage = 1;
                                 } else {
                                     stage = Integer.valueOf(gameList.get(gameNumber - 1).stage);
                                 }
-                                syllableGame = gameList.get(gameNumber - 1).gameMode;
-                                country = gameList.get(gameNumber - 1).gameCountry;
+                                syllableGame = gameList.get(gameNumber - 1).mode;
+                                country = gameList.get(gameNumber - 1).country;
                             } else {
                                 gameNumber = 1;
-                                challengeLevel = Integer.valueOf(gameList.get(0).gameLevel);
+                                challengeLevel = Integer.valueOf(gameList.get(0).level);
                                 if (gameList.get(0).stage.equals("-")) {
                                     stage = 1;
                                 } else {
                                     stage = Integer.valueOf(gameList.get(0).stage);
                                 }
-                                syllableGame = gameList.get(0).gameMode;
-                                country = gameList.get(0).gameCountry;
+                                syllableGame = gameList.get(0).mode;
+                                country = gameList.get(0).country;
                             }
                             String activityClass = project + country;
 
@@ -328,31 +324,21 @@ public abstract class GameActivity extends AppCompatActivity {
                 Start.WordList lowerCorrespondenceWords = new Start.WordList();
 
                 for (Start.Word word : wordStagesLists.get(0)) {
-                    ArrayList<String> tilesInThisWord = tileList.parseWordIntoTiles(word.localWord);
+                    ArrayList<Start.Tile> tilesInThisWord = tileList.parseWordIntoTiles(word);
                     int nonSADtilesInThisWord = tilesInThisWord.size();
                     int correspondingTiles = 0;
                     for (int t = 0; t < tilesInThisWord.size(); t++) {
+                        Start.Tile aTileInThisWord = tilesInThisWord.get(t);
                         for (int a = 0; a < tileStagesLists.get(0).size(); a++) {
-                            String aTileInTheStage = tileStagesLists.get(0).get(a);
-                            String aTileInTheStageSuffix = Character.toString(aTileInTheStage.charAt(aTileInTheStage.length() - 1));
-                            String aTileInTheStageWithoutSuffix = aTileInTheStage;
-                            if (aTileInTheStageSuffix.equals("B") || aTileInTheStageSuffix.equals("C")) {
-                                aTileInTheStageWithoutSuffix = aTileInTheStageWithoutSuffix.substring(0, aTileInTheStageWithoutSuffix.length() - 1);
-                            }
-                            if (tilesInThisWord.get(t).equals(aTileInTheStageWithoutSuffix)) {
-                                if (differentiateTypes) {
-                                    String aTileInTheStageType = tileTypeHashMapWithMultipleTypes.get(aTileInTheStage);
-                                    String tileInThisWordType;
-                                    if (MULTIFUNCTIONS.contains(tilesInThisWord.get(t))) {
-                                        tileInThisWordType = tileList.getInstanceTypeForMixedTile(t, word.nationalWord);
-                                    } else {
-                                        tileInThisWordType = tileTypeHashMapWithMultipleTypes.get(tilesInThisWord.get(t));
-                                    }
-
+                            Start.Tile aTileInTheStage = tileStagesLists.get(0).get(a);
+                            if (aTileInThisWord.text.equals(aTileInTheStage.text)) {
+                                if (differentiatesTileTypes) {
+                                    String aTileInTheStageType = aTileInTheStage.typeOfThisTileInstance;
                                     if (aTileInTheStageType.equals("SAD")) {
                                         nonSADtilesInThisWord--;
                                     }
-                                    if (aTileInTheStageType.equals(tileInThisWordType)) {
+                                    String aTileInThisWordType = aTileInThisWord.typeOfThisTileInstance;
+                                    if (aTileInTheStageType.equals(aTileInThisWordType)) {
                                         correspondingTiles++;
                                         break;
                                     }
@@ -373,24 +359,19 @@ public abstract class GameActivity extends AppCompatActivity {
                 int randomNumberForWeightingTowardHighCorrespondence = rand.nextInt(wordStagesLists.get(0).size());
                 if (randomNumberForWeightingTowardHighCorrespondence < wordStagesLists.get(0).size() * 0.5 || lowerCorrespondenceWords.size()==0) { // Select a word with higher correspondence to stage 1 tiles (only tiles introduced so far)
                     int randomNumberForChoosingAHighCorrespondenceWord = rand.nextInt(higherCorrespondenceWords.size());
-                    wordInLWC = higherCorrespondenceWords.get(randomNumberForChoosingAHighCorrespondenceWord).nationalWord;
-                    wordInLOP = higherCorrespondenceWords.get(randomNumberForChoosingAHighCorrespondenceWord).localWord;
+                    refWord = higherCorrespondenceWords.get(randomNumberForChoosingAHighCorrespondenceWord);
                 } else { // Select a word that corresponds to stage 1 at a lower ratio
                     int randomNumberForChoosingALowCorrespondenceWord = rand.nextInt(lowerCorrespondenceWords.size());
-                    wordInLWC = lowerCorrespondenceWords.get(randomNumberForChoosingALowCorrespondenceWord).nationalWord;
-                    wordInLOP = lowerCorrespondenceWords.get(randomNumberForChoosingALowCorrespondenceWord).localWord;
-
+                    refWord = lowerCorrespondenceWords.get(randomNumberForChoosingALowCorrespondenceWord);
                 }
             } else { // If stage > 1, weight toward words that are new in this stage
                 int randomNumberForWeightingTowardNewWords = rand.nextInt(cumulativeStageBasedWordList.size());
                 if (randomNumberForWeightingTowardNewWords < cumulativeStageBasedWordList.size() * 0.5) { // Select a word that's added in the current stage 50% of the time
                     int randomNumberForChoosingANewWord = rand.nextInt(wordStagesLists.get(stage - 1).size());
-                    wordInLWC = wordStagesLists.get(stage - 1).get(randomNumberForChoosingANewWord).nationalWord;
-                    wordInLOP = wordStagesLists.get(stage - 1).get(randomNumberForChoosingANewWord).localWord;
+                    refWord = wordStagesLists.get(stage - 1).get(randomNumberForChoosingANewWord);
                 } else { // Select a word that was added in any previous stage
                     int randomNumberForChoosingAnOlderWord = rand.nextInt(previousStagesWordList.size());
-                    wordInLWC = previousStagesWordList.get(randomNumberForChoosingAnOlderWord).nationalWord;
-                    wordInLOP = previousStagesWordList.get(randomNumberForChoosingAnOlderWord).localWord;
+                    refWord = previousStagesWordList.get(randomNumberForChoosingAnOlderWord);
                 }
             }
 
@@ -406,16 +387,16 @@ public abstract class GameActivity extends AppCompatActivity {
             }
         }
     }
-    protected void setAllTilesUnclickable() {
-        for (int t = 0; t < visibleTiles; t++) {
-            TextView gameTile = findViewById(getTileButtons()[t]);
+    protected void setAllGameButtonsUnclickable() {
+        for (int t = 0; t < visibleGameButtons; t++) {
+            TextView gameTile = findViewById(getGameButtons()[t]);
             gameTile.setClickable(false);
         }
     }
 
-    protected void setAllTilesClickable() {
-        for (int t = 0; t < visibleTiles; t++) {
-            TextView gameTile = findViewById(getTileButtons()[t]);
+    protected void setAllGameButtonsClickable() {
+        for (int t = 0; t < visibleGameButtons; t++) {
+            TextView gameTile = findViewById(getGameButtons()[t]);
             gameTile.setClickable(true);
         }
     }
@@ -472,11 +453,11 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void playActiveWordClip1(final boolean playFinalSound) {
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
-        if (wordAudioIDs.containsKey(wordInLWC)) {
-            gameSounds.play(wordAudioIDs.get(wordInLWC), 1.0f, 1.0f, 2, 0, 1.0f);
+        if (wordAudioIDs.containsKey(refWord.wordInLWC)) {
+            gameSounds.play(wordAudioIDs.get(refWord.wordInLWC), 1.0f, 1.0f, 2, 0, 1.0f);
         }
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
@@ -486,7 +467,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     playCorrectFinalSound();
                 } else {
                     if (repeatLocked) {
-                        setAllTilesClickable();
+                        setAllGameButtonsClickable();
                     }
                     if (after12checkedTrackers == 1){
                         setOptionsRowClickable();
@@ -503,13 +484,13 @@ public abstract class GameActivity extends AppCompatActivity {
                     }
                 }
             }
-        }, wordDurations.get(wordInLWC));
+        }, refWord.duration);
     }
 
     protected void playActiveWordClip0(final boolean playFinalSound) {
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(wordInLWC, "raw", getPackageName());
+        int resID = getResources().getIdentifier(refWord.wordInLWC, "raw", getPackageName());
         final MediaPlayer mp1 = MediaPlayer.create(this, resID);
         mediaPlayerIsPlaying = true;
         //mp1.start();
@@ -530,7 +511,7 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void playCorrectSoundThenActiveWordClip1(final boolean playFinalSound) {
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
         gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
@@ -555,7 +536,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
 
     protected void playCorrectSoundThenActiveWordClip0(final boolean playFinalSound) {
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
         mediaPlayerIsPlaying = true;
@@ -578,15 +559,15 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void playIncorrectSound1() {
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
-        setAllTilesClickable();
+        setAllGameButtonsClickable();
         setOptionsRowClickable();
     }
 
     protected void playIncorrectSound0() {
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
         mediaPlayerIsPlaying = true;
@@ -595,7 +576,7 @@ public abstract class GameActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp3) {
                 mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
+                setAllGameButtonsClickable();
                 setOptionsRowClickable();
                 mp3.reset(); //JP
                 mp3.release();
@@ -611,7 +592,7 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void playCorrectFinalSound1() {
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
         setAllTilesClickable();
@@ -628,7 +609,7 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void playCorrectFinalSound0() {
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         mediaPlayerIsPlaying = true;
         MediaPlayer mp3 = MediaPlayer.create(this, R.raw.zz_correct_final);
@@ -637,7 +618,7 @@ public abstract class GameActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp3) {
                 mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
+                setAllGameButtonsClickable();
                 setOptionsRowClickable();
                 mp3.reset(); //JP
                 mp3.release();
@@ -646,7 +627,7 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     public void playAudioInstructions(View view) {
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         mediaPlayerIsPlaying = true;
         MediaPlayer mp3 = MediaPlayer.create(this, getAudioInstructionsResID());
@@ -655,7 +636,7 @@ public abstract class GameActivity extends AppCompatActivity {
             @Override
             public void onCompletion(MediaPlayer mp3) {
                 mediaPlayerIsPlaying = false;
-                setAllTilesClickable();
+                setAllGameButtonsClickable();
                 setOptionsRowClickable();
                 mp3.release();
             }
@@ -671,7 +652,7 @@ public abstract class GameActivity extends AppCompatActivity {
         } else {
             mediaPlayerIsPlaying = false;
             if (repeatLocked) {
-                setAllTilesClickable();
+                setAllGameButtonsClickable();
             }
             setOptionsRowClickable();
             mp.reset(); //JP

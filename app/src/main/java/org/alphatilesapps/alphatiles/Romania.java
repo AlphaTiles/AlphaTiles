@@ -1,7 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,7 +16,7 @@ import static org.alphatilesapps.alphatiles.Start.*;
 public class Romania extends GameActivity {
 
     boolean failedToMatchInitialTile = false;
-    String activeTile;
+    Start.Tile activeTile;
     boolean directionIsForward = true;
     int scanSetting = 1; // 1, 2 or 3 from aa_settings.txt
     // 1 = Only show word if tile is initial
@@ -27,10 +26,11 @@ public class Romania extends GameActivity {
     int groupCount; // Number of words selected for an active tile, based on settings
     int indexWithinGroup = 0; // Index of the word being viewed within the group of all words for the tile
     boolean skipThisTile = false; // True when it's a gray word (a word that demonstrates the tile with a medial instance not a word-initial instance)
-    String[][] groupOfWordsForActiveTile;
-    String firstAlphabetTile;
+    Start.Word[] groupOfWordsForActiveTile;
+    String tileToStartOn;
+    String typeOfTileToStartOn;
 
-    protected int[] getTileButtons() {
+    protected int[] getGameButtons() {
         return null;
     }
 
@@ -43,7 +43,7 @@ public class Romania extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
         } catch (Resources.NotFoundException e) {
             audioInstructionsResID = -1;
         }
@@ -114,8 +114,10 @@ public class Romania extends GameActivity {
                 setInitialOnly();
         }
 
-        firstAlphabetTile = cumulativeStageBasedTileList.get(0);
-        String startingAlphabetTile = prefs.getString("lastActiveTileGame001_player" + playerString, firstAlphabetTile);
+        tileToStartOn = cumulativeStageBasedTileList.get(0).text;
+        typeOfTileToStartOn = cumulativeStageBasedTileList.get(0).typeOfThisTileInstance;
+        String tileToStartOn = prefs.getString("lastActiveTileGame001_player" + playerString, this.tileToStartOn);
+        String typeOfTileToStartOn = prefs.getString("typeOfLastActiveTileGame001_player" + playerString, this.typeOfTileToStartOn);
 
         scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
         if (scriptDirection.equals("RTL")) {
@@ -138,7 +140,11 @@ public class Romania extends GameActivity {
             centerGamesHomeImage();
         }
 
-        activeTile = startingAlphabetTile;
+        int i = 0;
+        while(!(cumulativeStageBasedTileList.get(i).text.equals(tileToStartOn) && cumulativeStageBasedTileList.get(i).typeOfThisTileInstance.equals(typeOfTileToStartOn))){
+            i++;
+        }
+        activeTile = cumulativeStageBasedTileList.get(i);
         setUpBasedOnGameTile(activeTile);
     }
 
@@ -147,7 +153,7 @@ public class Romania extends GameActivity {
         // no action
     }
 
-    private void setUpBasedOnGameTile(String activeTileString) { // Called every time a player starts the Romania game, and every time they click the arrows to go to a new tile
+    private void setUpBasedOnGameTile(Start.Tile activeTile) { // Called every time a player starts the Romania game, and every time they click the arrows to go to a new tile
 
         skipThisTile = false;
 
@@ -156,17 +162,17 @@ public class Romania extends GameActivity {
             case 2:
                 // CASE 2: check Group One, if count is zero, then check Group Two
                 // Group One = words that START with the active tile
-                groupCount = Start.wordList.numberOfWordsForActiveTile(activeTileString, 1);
+                groupCount = Start.wordList.numberOfWordsForActiveTile(activeTile, 1);
                 if (groupCount > 0) {
-                    groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTileString, groupCount, 1);
+                    groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTile, groupCount, 1);
                     failedToMatchInitialTile = false;
                 } else {
                     // Group Two = words that contain the active tile non-initially (but excluding initially)
                     failedToMatchInitialTile = true;
-                    groupCount = Start.wordList.numberOfWordsForActiveTile(activeTileString, 2);
+                    groupCount = Start.wordList.numberOfWordsForActiveTile(activeTile, 2);
 
                     if (groupCount > 0) {
-                        groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTileString, groupCount, 2); // Group Two = words that contain the active tile non-initially (but excluding initially)
+                        groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTile, groupCount, 2); // Group Two = words that contain the active tile non-initially (but excluding initially)
                     } else {
                         skipThisTile = true;
                     }
@@ -175,9 +181,9 @@ public class Romania extends GameActivity {
             case 3:
                 // CASE 3: check Group Three
                 // Group Three = words containing the active tile anywhere (initial and/or non-initial)
-                groupCount = Start.wordList.numberOfWordsForActiveTile(activeTileString, 3);
+                groupCount = Start.wordList.numberOfWordsForActiveTile(activeTile, 3);
                 if (groupCount > 0) {
-                    groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTileString, groupCount, 3); // Group Three = words containing the active tile anywhere (initial and/or non-initial)
+                    groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTile, groupCount, 3); // Group Three = words containing the active tile anywhere (initial and/or non-initial)
                 } else {
                     skipThisTile = true;
                 }
@@ -185,9 +191,9 @@ public class Romania extends GameActivity {
             default:
                 // CASE 1: check Group One
                 // Group One = words that START with the active tile
-                groupCount = Start.wordList.numberOfWordsForActiveTile(activeTileString, 1);
+                groupCount = Start.wordList.numberOfWordsForActiveTile(activeTile, 1);
                 if (groupCount > 0) {
-                    groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTileString, groupCount, 1);
+                    groupOfWordsForActiveTile = Start.wordList.wordsForActiveTile(activeTile, groupCount, 1);
                     failedToMatchInitialTile = false;
                 } else { // There are no words at begin with the active tile
                     failedToMatchInitialTile = true;
@@ -197,10 +203,7 @@ public class Romania extends GameActivity {
 
         // Put the tile text in the view, as well as the count for the words for that tile
         TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
-        String tileText = activeTileString;
-        if (activeTileString.endsWith("B") || activeTileString.endsWith("C")) {
-            tileText = activeTileString.substring(0, activeTileString.length() - 1);
-        }
+        String tileText = activeTile.text;
         gameTile.setText(tileText);
         TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
         magTile.setText(indexWithinGroup + 1 + " / " + String.valueOf(String.valueOf(groupCount)));
@@ -208,22 +211,21 @@ public class Romania extends GameActivity {
         if (!skipThisTile) { // If we DO have words in the group for this tile given the scan setting, then...
 
             // Display a word (should normally be the first word) from the group of words for the active tile
-            wordInLWC = groupOfWordsForActiveTile[indexWithinGroup][0];
-            wordInLOP = groupOfWordsForActiveTile[indexWithinGroup][1];
+            refWord = groupOfWordsForActiveTile[indexWithinGroup];
 
             // Group 3 has all words containing the tile anywhere. This checks whether the current word is active-tile-initial or not
             if (scanSetting == 3) {
-                parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP); // KP
-                failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
+                parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord); // KP
+                failedToMatchInitialTile = !activeTile.text.equals(parsedRefWordTileArray.get(0).text);
             }
 
             TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
-            activeWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
+            activeWord.setText(Start.wordList.stripInstructionCharacters(refWord.wordInLOP));
 
 
             ImageView image = (ImageView) findViewById(R.id.wordImage);
             if (groupCount > 0) {
-                int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+                int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
                 image.setImageResource(resID);
             } else {
                 int resID2 = getResources().getIdentifier("zz_no_image_found", "drawable", getPackageName());
@@ -231,7 +233,7 @@ public class Romania extends GameActivity {
                 activeWord.setText("");
             }
 
-            int alphabetPosition = tileList.returnPositionInAlphabet(activeTileString);
+            int alphabetPosition = tileList.returnPositionInAlphabet(activeTile);
             String tileColorStr = COLORS.get(alphabetPosition % 5);
             int tileColor = Color.parseColor(tileColorStr);
             gameTile = (TextView) findViewById(R.id.tileBoxTextView);
@@ -257,30 +259,29 @@ public class Romania extends GameActivity {
 
     }
 
-    public void goToNextWord(String activeTileString) {
+    public void goToNextWord(Start.Tile activeTile) {
 
         indexWithinGroup++;
         if (indexWithinGroup == groupCount) {
             indexWithinGroup = 0;
         }
-        wordInLWC = groupOfWordsForActiveTile[indexWithinGroup][0];
-        wordInLOP = groupOfWordsForActiveTile[indexWithinGroup][1];
+        refWord = groupOfWordsForActiveTile[indexWithinGroup];
 
 
         if (scanSetting == 3) {
-            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP); // KP
-            failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
+            parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord); // KP
+            failedToMatchInitialTile = !activeTile.text.equals(parsedRefWordTileArray.get(0).text);
         }
 
         // Display the next word in groupOfWordsForActiveTile[][]
         if (!skipThisTile) {
 
             TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
-            activeWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
+            activeWord.setText(Start.wordList.stripInstructionCharacters(refWord.wordInLOP));
 
             ImageView image = (ImageView) findViewById(R.id.wordImage);
             if (groupCount > 0) {
-                int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+                int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
                 image.setImageResource(resID);
             } else {
                 int resID2 = getResources().getIdentifier("zz_no_image_found", "drawable", getPackageName());
@@ -288,7 +289,7 @@ public class Romania extends GameActivity {
                 activeWord.setText("");
             }
 
-            int alphabetPosition = tileList.returnPositionInAlphabet(activeTileString);
+            int alphabetPosition = tileList.returnPositionInAlphabet(activeTile);
             String tileColorStr = COLORS.get(alphabetPosition % 5);
             int tileColor = Color.parseColor(tileColorStr);
             TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
@@ -317,29 +318,28 @@ public class Romania extends GameActivity {
 
     }
 
-    public void goToPreviousWord(String activeTileString) {
+    public void goToPreviousWord(Start.Tile activeTile) {
         indexWithinGroup--;
         if (indexWithinGroup == -1) { // Got to the beginning of the word group list
             indexWithinGroup = groupCount - 1; // Wrap back to the end of the list
         }
-        wordInLWC = groupOfWordsForActiveTile[indexWithinGroup][0];
-        wordInLOP = groupOfWordsForActiveTile[indexWithinGroup][1];
+        refWord = groupOfWordsForActiveTile[indexWithinGroup];
 
 
         if (scanSetting == 3) {
-            parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP); // KP
-            failedToMatchInitialTile = !activeTileString.equals(parsedWordArrayFinal.get(0));
+            parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord); // KP
+            failedToMatchInitialTile = !activeTile.text.equals(parsedRefWordTileArray.get(0).text);
         }
 
         // Display the previous word in groupOfWordsForActiveTile[][]
         if (!skipThisTile) {
 
             TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
-            activeWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP));
+            activeWord.setText(Start.wordList.stripInstructionCharacters(refWord.wordInLOP));
 
             ImageView image = (ImageView) findViewById(R.id.wordImage);
             if (groupCount > 0) {
-                int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+                int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
                 image.setImageResource(resID);
             } else {
                 int resID2 = getResources().getIdentifier("zz_no_image_found", "drawable", getPackageName());
@@ -347,7 +347,7 @@ public class Romania extends GameActivity {
                 activeWord.setText("");
             }
 
-            int alphabetPosition = tileList.returnPositionInAlphabet(activeTileString);
+            int alphabetPosition = tileList.returnPositionInAlphabet(activeTile);
             String tileColorStr = COLORS.get(alphabetPosition % 5);
             int tileColor = Color.parseColor(tileColorStr);
             TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
@@ -377,62 +377,64 @@ public class Romania extends GameActivity {
 
     public void goToNextTile(View View) {
         directionIsForward = true;
-        String oldTile = activeTile;
-        activeTile = cumulativeStageBasedTileList.returnNextAlphabetTileDifferentiateTypes(oldTile);
+        Start.Tile oldTile = activeTile;
+        activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
 
         if (scanSetting == 1) {
             while (Start.wordList.numberOfWordsForActiveTile(activeTile, 1) == 0) { // JP: prevents user from having to click
                 // the arrow multiple times to skip irrelevant tiles that are never word-initial
                 oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnNextAlphabetTileDifferentiateTypes(oldTile);
+                activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
             }
         } else if (scanSetting == 2) {
-            while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 2) == 0) {
+            while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 2) == 0) {
                 oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnNextAlphabetTileDifferentiateTypes(oldTile);
+                activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
             }
         } else { // scanSetting 3
-            while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) ||
+            while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0))) ||
                     Start.wordList.numberOfWordsForActiveTile(activeTile, 3) == 0) {
                 oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnNextAlphabetTileDifferentiateTypes(oldTile);
+                activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
             }
         }
 
         indexWithinGroup = 0;
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
+        editor.putString("lastActiveTileGame001_player" + playerString, activeTile.text);
+        editor.putString("typeOfLastActiveTileGame001_player" + playerString, activeTile.typeOfThisTileInstance);
         editor.apply();
         setUpBasedOnGameTile(activeTile);
     }
 
     public void goToPreviousTile(View View) {
         directionIsForward = false;
-        String oldTile = activeTile;
-        activeTile = cumulativeStageBasedTileList.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
+        Start.Tile oldTile = activeTile;
+        activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
         if (scanSetting == 1) {
             while (Start.wordList.numberOfWordsForActiveTile(activeTile, 1) == 0) {
                 // JP: prevents user from having to click
                 // the arrow multiple times to skip irrelevant tiles that are never word-initial
                 oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
+                activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
             }
         } else if (scanSetting == 2) {
-            while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 2) == 0) {
+            while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 2) == 0) {
                 oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
+                activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
             }
         } else { // scanSetting 3
-            while ((activeTile.length() == 1 && Character.isWhitespace(activeTile.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 3) == 0) {
+            while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 3) == 0) {
                 oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnPreviousAlphabetTileDifferentiateTypes(oldTile);
+                activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
             }
         }
 
         indexWithinGroup = 0;
         SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        editor.putString("lastActiveTileGame001_player" + playerString, activeTile);
+        editor.putString("lastActiveTileGame001_player" + playerString, activeTile.text);
+        editor.putString("typeOfLastActiveTileGame001_player" + playerString, activeTile.typeOfThisTileInstance);
         editor.apply();
         setUpBasedOnGameTile(activeTile);
     }
@@ -526,7 +528,7 @@ public class Romania extends GameActivity {
     }
 
     @Override
-    protected void setAllTilesUnclickable() {
+    protected void setAllGameButtonsUnclickable() {
 
         TextView tileBox = findViewById(R.id.tileBoxTextView);
         tileBox.setClickable(false);
@@ -550,7 +552,7 @@ public class Romania extends GameActivity {
     }
 
     @Override
-    protected void setAllTilesClickable() {
+    protected void setAllGameButtonsClickable() {
 
         TextView tileBox = findViewById(R.id.tileBoxTextView);
         tileBox.setClickable(true);

@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,20 +19,19 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 //Game of 15
 public class China extends GameActivity {
-    String[][] threeFourWordInLopLwc = new String[3][2];
-    String[] oneThreeWordInLopLwc = new String[2];
+    ArrayList<Start.Word> threeFourTileWords = new ArrayList<>();
+    Start.Word oneThreeTileWord;
     Boolean[] solvedLines = new Boolean[4];
     TextView blankTile;
     int moves;
-    boolean chinaHasChecked12Trackers;
 
-    protected static final int[] TILE_BUTTONS = {
+    protected static final int[] GAME_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16
     };
 
-    protected int[] getTileButtons() {
-        return TILE_BUTTONS;
+    protected int[] getGameButtons() {
+        return GAME_BUTTONS;
     }
 
     protected int[] getWordImages() {
@@ -65,7 +63,7 @@ public class China extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
 
         } catch (Exception e) {
             audioInstructionsResID = -1;
@@ -96,7 +94,7 @@ public class China extends GameActivity {
             centerGamesHomeImage();
         }
 
-        visibleTiles = 16;
+        visibleGameButtons = 16;
         updatePointsAndTrackers(0);
         playAgain();
     }
@@ -135,54 +133,42 @@ public class China extends GameActivity {
         setAdvanceArrowToGray();
         chooseWords();
         setUpTiles();
-        setAllTilesClickable();
+        setAllGameButtonsClickable();
         //wip
     }
 
     private void chooseWords() {
         // Find three four-tile words
-        int tileLength;
-        for (int i = 0; i < 3; i++) {
+        while (threeFourTileWords.size()<3){
             chooseWord();
-
-            threeFourWordInLopLwc[i][0] = wordInLWC;
-            threeFourWordInLopLwc[i][1] = wordInLOP;
-
-            tileLength = tileList.parseWordIntoTiles(threeFourWordInLopLwc[i][1]).size();
-            for (int j = 0; j < i; j++) { // Find a word that's 4 tiles long and not a duplicate
-                if (threeFourWordInLopLwc[i][0].equals(threeFourWordInLopLwc[j][0])) {
-                    i--;
-                } else if (tileLength != 4) {
-                    i--;
-                }
+            if(tileList.parseWordIntoTiles(refWord).size() == 4){
+                threeFourTileWords.add(refWord);
             }
         }
 
+
         // Find one three-tile word
-        tileLength = -1;
-        while (!(tileLength==3)) {
+        while (tileList.parseWordIntoTiles(refWord).size()!=3) {
             chooseWord();
-            oneThreeWordInLopLwc[0] = wordInLWC;
-            oneThreeWordInLopLwc[1] = wordInLOP;
-            tileLength = tileList.parseWordIntoTiles(oneThreeWordInLopLwc[1]).size();
         }
+        oneThreeTileWord = refWord;
     }
 
     private void setUpTiles() {
-        ArrayList<String> tiles = new ArrayList<>();
+        ArrayList<Start.Tile> tiles = new ArrayList<>();
         for (int t = 0; t < 3; t++) {
-            tiles.addAll(tileList.parseWordIntoTiles(threeFourWordInLopLwc[t][1]));
+            tiles.addAll(tileList.parseWordIntoTiles(threeFourTileWords.get(t)));
 
             ImageView image = findViewById(WORD_IMAGES[t]);
-            int resID = getResources().getIdentifier(threeFourWordInLopLwc[t][0] + "2", "drawable", getPackageName());
+            int resID = getResources().getIdentifier(threeFourTileWords.get(t).wordInLWC + "2", "drawable", getPackageName());
             image.setImageResource(resID);
             image.setVisibility(View.VISIBLE);
         }
-        tiles.addAll(tileList.parseWordIntoTiles(oneThreeWordInLopLwc[1]));
+        tiles.addAll(tileList.parseWordIntoTiles(oneThreeTileWord));
         Collections.shuffle(tiles);
 
         ImageView image = findViewById(WORD_IMAGES[3]);
-        int resID = getResources().getIdentifier(oneThreeWordInLopLwc[0] + "2", "drawable", getPackageName());
+        int resID = getResources().getIdentifier(oneThreeTileWord.wordInLWC + "2", "drawable", getPackageName());
         image.setImageResource(resID);
         image.setVisibility(View.VISIBLE);
 
@@ -193,12 +179,12 @@ public class China extends GameActivity {
         }
 
         for (int i = 0; i < 15; i++) {
-            TextView gameTile = findViewById(TILE_BUTTONS[i]);
-            gameTile.setText(tiles.get(i));
+            TextView gameTile = findViewById(GAME_BUTTONS[i]);
+            gameTile.setText(tiles.get(i).text);
             gameTile.setBackgroundColor(Color.parseColor("#000000"));
             gameTile.setTextColor(Color.parseColor("#FFFFFF"));
         }
-        TextView finalTile = findViewById(TILE_BUTTONS[15]);
+        TextView finalTile = findViewById(GAME_BUTTONS[15]);
         finalTile.setText("");
         finalTile.setBackgroundColor(Color.parseColor("#FFFFFF"));
         finalTile.setTextColor(Color.parseColor("#FFFFFF"));
@@ -209,10 +195,10 @@ public class China extends GameActivity {
         int lastTile = 16;
 
         while (moves != 0) {
-            tileX = rand.nextInt(TILE_BUTTONS.length);
+            tileX = rand.nextInt(GAME_BUTTONS.length);
 
             if (isSlideable(tileX) && tileX != lastTile) {
-                TextView t = findViewById(TILE_BUTTONS[tileX]);
+                TextView t = findViewById(GAME_BUTTONS[tileX]);
                 swapTiles(t, blankTile);
                 lastTile = tileX;
                 moves--;
@@ -238,15 +224,13 @@ public class China extends GameActivity {
 
     private void respondToTileSelection(int justClickedTile) {
 
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
         String blankTag = String.valueOf(blankTile.getTag());
 
-        int tileOfTargetRow = Integer.parseInt(blankTag);
-
         int tileNo = justClickedTile - 1; //  justClickedTile uses 1 to 16, tileNo uses the array ID (between [0] and [15]
-        TextView tileSelected = findViewById(TILE_BUTTONS[tileNo]);
+        TextView tileSelected = findViewById(GAME_BUTTONS[tileNo]);
 
         if (isSlideable(tileNo)) {
             swapTiles(tileSelected, blankTile);
@@ -264,10 +248,10 @@ public class China extends GameActivity {
             updatePointsAndTrackers(4);
 
             playCorrectFinalSound();
-            setAllTilesUnclickable();
+            setAllGameButtonsUnclickable();
             setOptionsRowClickable();
         } else {
-            setAllTilesClickable();
+            setAllGameButtonsClickable();
             setOptionsRowClickable();
         }
 
@@ -285,14 +269,14 @@ public class China extends GameActivity {
         String gridWord = "";
         String correctWord = "";
         if (row < 4) {
-            correctWord = wordList.stripInstructionCharacters(threeFourWordInLopLwc[row - 1][1]);
+            correctWord = wordList.stripInstructionCharacters(threeFourTileWords.get(row-1).wordInLOP);
         } else {
-            correctWord = wordList.stripInstructionCharacters(oneThreeWordInLopLwc[1]);
+            correctWord = wordList.stripInstructionCharacters(oneThreeTileWord.wordInLOP);
         }
-        TextView gameTile1 = findViewById(TILE_BUTTONS[leftMostTile]);
-        TextView gameTile2 = findViewById(TILE_BUTTONS[leftMostTile + 1]);
-        TextView gameTile3 = findViewById(TILE_BUTTONS[leftMostTile + 2]);
-        TextView gameTile4 = findViewById(TILE_BUTTONS[leftMostTile + 3]);
+        TextView gameTile1 = findViewById(GAME_BUTTONS[leftMostTile]);
+        TextView gameTile2 = findViewById(GAME_BUTTONS[leftMostTile + 1]);
+        TextView gameTile3 = findViewById(GAME_BUTTONS[leftMostTile + 2]);
+        TextView gameTile4 = findViewById(GAME_BUTTONS[leftMostTile + 3]);
         gridWord = gameTile1.getText().toString() + gameTile2.getText().toString() + gameTile3.getText().toString() + gameTile4.getText().toString();
 
         if (row == 4) {
@@ -304,7 +288,7 @@ public class China extends GameActivity {
         if (gridWord.equals(correctWord)) {
             solvedLines[row - 1] = true;
             for (int i = leftMostTile; i <= (leftMostTile + 3); i++) {
-                TextView gameTile = findViewById(TILE_BUTTONS[i]);
+                TextView gameTile = findViewById(GAME_BUTTONS[i]);
                 if (gameTile == blankTile) {
                     String wordColorStr = "#FFFFFF"; //white
                     int wordColorNo = Color.parseColor(wordColorStr);
@@ -318,7 +302,7 @@ public class China extends GameActivity {
         } else {
             solvedLines[row - 1] = false;
             for (int i = leftMostTile; i <= (leftMostTile + 3); i++) {
-                TextView gameTile = findViewById(TILE_BUTTONS[i]);
+                TextView gameTile = findViewById(GAME_BUTTONS[i]);
                 if (gameTile == blankTile) {
                     String wordColorStr = "#FFFFFF"; //white
                     int wordColorNo = Color.parseColor(wordColorStr);
@@ -336,7 +320,7 @@ public class China extends GameActivity {
 
         boolean solved = false;
 
-        if (solvedLines[0] == true && solvedLines[1] == true && solvedLines[2] == true && solvedLines[3] == true) {
+        if (solvedLines[0] && solvedLines[1] && solvedLines[2] && solvedLines[3]) {
             solved = true;
         }
         return solved;
@@ -348,22 +332,22 @@ public class China extends GameActivity {
         TextView tileToCheck;
 
         if (tileNo != 0 && tileNo != 4 && tileNo != 8 && tileNo != 12) {
-            tileToCheck = findViewById(TILE_BUTTONS[tileNo - 1]);
+            tileToCheck = findViewById(GAME_BUTTONS[tileNo - 1]);
             slideable = (tileToCheck == blankTile);
         }
 
         if (tileNo != 3 && tileNo != 7 && tileNo != 11 && tileNo != 15 && !slideable) {
-            tileToCheck = findViewById(TILE_BUTTONS[tileNo + 1]);
+            tileToCheck = findViewById(GAME_BUTTONS[tileNo + 1]);
             slideable = (tileToCheck == blankTile);
         }
 
         if (tileNo >= 4 && !slideable) {
-            tileToCheck = findViewById(TILE_BUTTONS[tileNo - 4]);
+            tileToCheck = findViewById(GAME_BUTTONS[tileNo - 4]);
             slideable = (tileToCheck == blankTile);
         }
 
         if (tileNo < 12 && !slideable) {
-            tileToCheck = findViewById(TILE_BUTTONS[tileNo + 4]);
+            tileToCheck = findViewById(GAME_BUTTONS[tileNo + 4]);
             slideable = (tileToCheck == blankTile);
         }
 
@@ -376,9 +360,9 @@ public class China extends GameActivity {
         int justClickedImage = Integer.parseInt((String) view.getTag());
 
         if (justClickedImage == 20) {
-            wordInLWC = oneThreeWordInLopLwc[0];
+            refWord = oneThreeTileWord;
         } else {
-            wordInLWC = threeFourWordInLopLwc[justClickedImage - 17][0];
+            refWord = threeFourTileWords.get(justClickedImage - 17);
         }
         playActiveWordClip(false);
 

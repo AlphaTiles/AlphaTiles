@@ -11,7 +11,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -24,12 +23,12 @@ public class Peru extends GameActivity {
     String thirdToLastWord = "";
     boolean peruHasChecked12Trackers;
 
-    protected static final int[] TILE_BUTTONS = {
+    protected static final int[] GAME_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
     };
 
-    protected int[] getTileButtons() {
-        return TILE_BUTTONS;
+    protected int[] getGameButtons() {
+        return GAME_BUTTONS;
     }
 
     protected int[] getWordImages() {
@@ -41,8 +40,7 @@ public class Peru extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier("peru_" + challengeLevel, "raw", context.getPackageName());
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -97,7 +95,7 @@ public class Peru extends GameActivity {
             Collections.shuffle(TONES);
 
         }
-        visibleTiles = TILE_BUTTONS.length;
+        visibleGameButtons = GAME_BUTTONS.length;
         updatePointsAndTrackers(0);
         playAgain();
     }
@@ -120,12 +118,12 @@ public class Peru extends GameActivity {
         repeatLocked = true;
         setAdvanceArrowToGray();
         chooseWord();
-        parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
-        int tileLength = parsedWordArrayFinal.size();
+        parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord); // KP
+        int tileLength = parsedRefWordTileArray.size();
 
         // Set thematic colors for four word choice TextViews, also make clickable
-        for (int i = 0; i < TILE_BUTTONS.length; i++) {
-            TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
+        for (int i = 0; i < GAME_BUTTONS.length; i++) {
+            TextView nextWord = (TextView) findViewById(GAME_BUTTONS[i]);
             String wordColorStr = COLORS.get(i);
             int wordColorNo = Color.parseColor(wordColorStr);
             nextWord.setBackgroundColor(wordColorNo);
@@ -134,7 +132,7 @@ public class Peru extends GameActivity {
         }
 
         ImageView image = (ImageView) findViewById(R.id.wordImage);
-        int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
+        int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
         ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
@@ -142,14 +140,14 @@ public class Peru extends GameActivity {
 
         Random rand = new Random();
         int indexOfCorrectAnswerAmongChoices = rand.nextInt(4);
-        List<String> shuffledDistractorTiles = Arrays.asList(Start.tileList.get(Start.tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).altTiles);
+        List<String> shuffledDistractorTiles = parsedRefWordTileArray.get(0).distractors;
         Collections.shuffle(shuffledDistractorTiles);
 
         int incorrectLapNo = 0;
-        for (int i = 0; i < TILE_BUTTONS.length; i++) {
-            TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
+        for (int i = 0; i < GAME_BUTTONS.length; i++) {
+            TextView nextWord = (TextView) findViewById(GAME_BUTTONS[i]);
             if (i == indexOfCorrectAnswerAmongChoices) {
-                nextWord.setText(Start.wordList.stripInstructionCharacters(wordInLOP)); // the correct answer (the unmodified version of the word)
+                nextWord.setText(Start.wordList.stripInstructionCharacters(refWord.wordInLOP)); // the correct answer (the unmodified version of the word)
             } else {
 
                 incorrectLapNo++;
@@ -160,11 +158,11 @@ public class Peru extends GameActivity {
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (THE FIRST TILE) REPLACED
                         // REPLACEMENT IS FROM DISTRACTOR TRIO
                         while (isDuplicateAnswerChoice) {
-                            List<String> tempArray1 = new ArrayList<>(parsedWordArrayFinal);
-                            tempArray1.set(0, shuffledDistractorTiles.get(incorrectLapNo - 1)); // KP // LM
+                            List<Start.Tile> tempArray1 = new ArrayList<>(parsedRefWordTileArray);
+                            tempArray1.set(0, tileHashMap.find(shuffledDistractorTiles.get(incorrectLapNo - 1))); // KP // LM
                             StringBuilder builder1 = new StringBuilder("");
-                            for (String s : tempArray1) {
-                                builder1.append(s);
+                            for (Tile t : tempArray1) {
+                                builder1.append(t.text);
                             }
                             String incorrectChoice1 = builder1.toString();
                             nextWord.setText(incorrectChoice1);
@@ -185,7 +183,7 @@ public class Peru extends GameActivity {
                         //fix: some accidental duplicates
                         while (isDuplicateAnswerChoice) {
                             int randomNum3 = rand.nextInt(tileLength - 1);       // KP // this represents which position in word string will be replaced
-                            List<String> tempArray2 = new ArrayList<>(parsedWordArrayFinal);
+                            List<Tile> tempArray2 = new ArrayList<>(parsedRefWordTileArray);
                             int randomNum4;
                             if (VOWELS.contains(tempArray2.get(randomNum3))) {
                                 randomNum4 = rand.nextInt(VOWELS.size());       // KP // this represents which game tile will overwrite some part of the correct wor
@@ -199,19 +197,19 @@ public class Peru extends GameActivity {
                             }
 
                             StringBuilder builder2 = new StringBuilder("");
-                            for (String s : tempArray2) {
-                                builder2.append(s);
+                            for (Tile t : tempArray2) {
+                                builder2.append(t.text);
                             }
                             String incorrectChoice2 = builder2.toString();
                             nextWord.setText(incorrectChoice2);
 
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
                             for (int answerChoice = 0; answerChoice < i; answerChoice++) {
-                                if (incorrectChoice2.equals(((TextView) findViewById(TILE_BUTTONS[answerChoice])).getText().toString())) {
+                                if (incorrectChoice2.equals(((TextView) findViewById(GAME_BUTTONS[answerChoice])).getText().toString())) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
-                            if (incorrectChoice2.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
+                            if (incorrectChoice2.equals(Start.wordList.stripInstructionCharacters(refWord.wordInLOP))) {
                                 isDuplicateAnswerChoice = true;
                             }
                             for (int j = 0; j < incorrectChoice2.length() - 2; j++) {
@@ -231,18 +229,18 @@ public class Peru extends GameActivity {
 
                         while (isDuplicateAnswerChoice) {
                             int randomNum5 = rand.nextInt(tileLength - 1);       // this represents which position in word string will be replaced
-                            List<String> tempArray3 = new ArrayList<>(parsedWordArrayFinal);
-                            tempArray3.set(randomNum5, Start.tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(randomNum5)));
+                            List<Tile> tempArray3 = new ArrayList<>(parsedRefWordTileArray);
+                            tempArray3.set(randomNum5, Start.tileList.returnRandomDistractorTile(parsedRefWordTileArray.get(randomNum5)));
                             StringBuilder builder3 = new StringBuilder("");
-                            for (String s : tempArray3) {
-                                builder3.append(s);
+                            for (Tile t : tempArray3) {
+                                builder3.append(t.text);
                             }
                             String incorrectChoice3 = builder3.toString();
                             nextWord.setText(incorrectChoice3);
 
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
                             for (int answerChoice = 0; answerChoice < i; answerChoice++) {
-                                if (incorrectChoice3.equals(((TextView) findViewById(TILE_BUTTONS[answerChoice])).getText().toString())) {
+                                if (incorrectChoice3.equals(((TextView) findViewById(GAME_BUTTONS[answerChoice])).getText().toString())) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
@@ -263,18 +261,18 @@ public class Peru extends GameActivity {
     private void respondToWordSelection(int justClickedWord) {
 
         int t = justClickedWord - 1; //  justClickedWord uses 1 to 4, t uses the array ID (between [0] and [3]
-        TextView chosenWord = findViewById(TILE_BUTTONS[t]);
+        TextView chosenWord = findViewById(GAME_BUTTONS[t]);
         String chosenWordText = chosenWord.getText().toString();
 
-        if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
+        if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(refWord.wordInLOP))) {
             // Good job!
             repeatLocked = false;
             setAdvanceArrowToBlue();
 
            updatePointsAndTrackers(2);
 
-            for (int w = 0; w < TILE_BUTTONS.length; w++) {
-                TextView nextWord = findViewById(TILE_BUTTONS[w]);
+            for (int w = 0; w < GAME_BUTTONS.length; w++) {
+                TextView nextWord = findViewById(GAME_BUTTONS[w]);
                 nextWord.setClickable(false);
                 if (w != t) {
                     String wordColorStr = "#A9A9A9"; // dark gray
