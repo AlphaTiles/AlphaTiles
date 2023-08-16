@@ -783,7 +783,10 @@ public class Thailand extends GameActivity {
                 if (repeatLocked) {
                     setAllTilesClickable();
                 }
-                setOptionsRowClickable();
+                if (trackerCount >0 && trackerCount % 12 != 0) {
+                    setOptionsRowClickable();
+                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                }
             }
         }, 925);
     }
@@ -812,7 +815,10 @@ public class Thailand extends GameActivity {
                 if (repeatLocked) {
                     setAllTilesClickable();
                 }
-                setOptionsRowClickable();
+                if (trackerCount % 12 != 0) {
+                    setOptionsRowClickable();
+                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise?
+                }
             }
         }, 925 + syllableDurations.get(syllableList.get(syllableList.returnPositionInSyllList(refTile)).syllable));
     }
@@ -849,7 +855,10 @@ public class Thailand extends GameActivity {
                 if (repeatLocked) {
                     setAllTilesClickable();
                 }
-                setOptionsRowClickable();
+                if (trackerCount >0 && trackerCount % 12 != 0) {
+                    setOptionsRowClickable();
+                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                }
             }
         }, 925 + tileDurations.get(tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile));
         // Above represents the hardcoded value of zz_correct.mp3 (876 ms) + duration of tile audio

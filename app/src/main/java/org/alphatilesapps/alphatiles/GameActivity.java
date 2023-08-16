@@ -166,6 +166,8 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void updatePointsAndTrackers(int pointsIncrease) {
+        setOptionsRowUnclickable();
+        setAllTilesUnclickable();
         // Update global points and game points gem
         globalPoints+=pointsIncrease;
         points+=pointsIncrease;
@@ -215,9 +217,7 @@ public abstract class GameActivity extends AppCompatActivity {
             // LM
             // after12CheckedTrackers option 1: nothing happens; players keep playing even after checking all 12 trackers
             // after12CheckedTrackers option 2: app returns players to Earth after checking all 12 trackers. They can get back in. Will return to Earth again after another 12 correct answers.
-            if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 2) {
-                //ImageView repeatImage = (ImageView) findViewById(layoutResourceID);
-                //repeatImage.setClickable(false);
+            if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 2){
                 soundSequencer.postDelayed(new Runnable() {
                     public void run() {
                         Intent intent = getIntent();
@@ -230,8 +230,8 @@ public abstract class GameActivity extends AppCompatActivity {
             }
             // after12CheckedTrackers option 3: app displays celebration screen and moves on to the next unchecked game after checking all 12 trackers.
             if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 3) {
-                //ImageView repeatImage = (ImageView) findViewById(layoutResourceID);
-                //repeatImage.setClickable(false);
+                setOptionsRowUnclickable();
+                setAllTilesUnclickable();
                 soundSequencer.postDelayed(new Runnable() {
                     public void run() {
                         // Show celebration screen
@@ -584,7 +584,10 @@ public abstract class GameActivity extends AppCompatActivity {
         setOptionsRowUnclickable();
         gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
         setAllTilesClickable();
-        setOptionsRowClickable();
+        if (trackerCount > 0 && trackerCount % 12 != 0) {
+            setOptionsRowClickable();
+            //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise?
+        }
     }
 
     protected void playCorrectFinalSound0() {
