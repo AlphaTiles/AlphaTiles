@@ -7,6 +7,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -26,6 +31,8 @@ public class UnitedStates extends GameActivity {
     int wordLengthLimitInTiles = 5;
     int neutralFontSize;
     String[] selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
+    ArrayList<Tile> tileOptions = new ArrayList<>();
+    Tile[] tileSelections;
 
     protected static final int[] GAME_BUTTONS = {
             R.id.button01a, R.id.button01b, R.id.button02a, R.id.button02b, R.id.button03a, R.id.button03b, R.id.button04a, R.id.button04b, R.id.button05a, R.id.button05b,
@@ -146,16 +153,22 @@ public class UnitedStates extends GameActivity {
         setAdvanceArrowToGray();
         selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
         int parsedLengthOfRefWord = Integer.MAX_VALUE;
+
         while(parsedLengthOfRefWord > wordLengthLimitInTiles) {
             chooseWord();
-            parsedLengthOfRefWord = tileList.parseWordIntoTiles(refWord).size();
+            parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
+            parsedLengthOfRefWord = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord).size();
         }
+
+        // Set up additional structures
         if (syllableGame.equals("S")) {
-            parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord); // JP
+            parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
             parsedLengthOfRefWord = parsedRefWordSyllableArray.size();
         } else {
-            parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord); // KP
+            tileSelections = new Tile[parsedLengthOfRefWord];
+            tileOptions.clear();
         }
+
         ImageView image = (ImageView) findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
@@ -202,6 +215,8 @@ public class UnitedStates extends GameActivity {
                     } else {
                         gameButtonA.setText(parsedRefWordTileArray.get(parseIndex).text);
                         gameButtonB.setText(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor));
+                        tileOptions.add(parsedRefWordTileArray.get(parseIndex));
+                        tileOptions.add(tileHashMap.find(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor)));
                     }
                 } else { // Correct string goes below
                     if (syllableGame.equals("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
@@ -210,6 +225,8 @@ public class UnitedStates extends GameActivity {
                     } else {
                         gameButtonB.setText(parsedRefWordTileArray.get(parseIndex).text);
                         gameButtonA.setText(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor));
+                        tileOptions.add(tileHashMap.find(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor)));
+                        tileOptions.add(parsedRefWordTileArray.get(parseIndex));
                     }
                 }
                 gameButtonA.setVisibility(View.VISIBLE);
@@ -228,22 +245,37 @@ public class UnitedStates extends GameActivity {
         setAllGameButtonsClickable();
     }
 
-    public void buildWord() {
+    public void buildWord(int tileIndex) {
 
         TextView constructedWord = findViewById(R.id.activeWordTextView);
-
-        StringBuilder displayedWord = new StringBuilder(); // KP
-
-        for (int j = 0; j < selections.length; j++) {
-            if (!selections[j].equals("")) {
-                displayedWord.append(selections[j]);
-            }
+        int lastSelectedIndex;
+        if (tileIndex % 2 == 0) {
+            lastSelectedIndex = tileIndex / 2;
+        } else {
+            lastSelectedIndex = (tileIndex - 1) / 2;
         }
 
-        constructedWord.setText(displayedWord);
+        String displayedWord;
+        if (syllableGame.equals("S")){
+           StringBuilder stringBuilder = new StringBuilder();
+           for (String s : selections) {
+               stringBuilder.append(s);
+           }
+            displayedWord = stringBuilder.toString();
+            constructedWord.setText(displayedWord);
+        } else {
+            ArrayList<Tile> tilesSelected = new ArrayList<>();
+            for (Tile tile : tileSelections) {
+                if(!Objects.isNull(tile)) { // In the process of building the word, there will be some null tiles at the end of the array
+                    tilesSelected.add(tile);
+                }
+            }
+            displayedWord = combineTilesToMakeWord(tilesSelected, refWord, lastSelectedIndex);
+            constructedWord.setText(displayedWord);
+        }
 
-        if (displayedWord.toString().equals(Start.wordList.stripInstructionCharacters(refWord.wordInLOP))) {
 
+        if (displayedWord.equals(wordInLOPWithStandardizedSequenceOfCharacters(refWord))) {
             // Good job!
             repeatLocked = false;
             setAdvanceArrowToBlue();
@@ -258,7 +290,6 @@ public class UnitedStates extends GameActivity {
             }
 
             playCorrectSoundThenActiveWordClip(false);
-
         } else {
             constructedWord.setTextColor(Color.BLACK);
             constructedWord.setTypeface(constructedWord.getTypeface(), Typeface.NORMAL);
@@ -267,18 +298,23 @@ public class UnitedStates extends GameActivity {
 
     public void onBtnClick(View view) {
         int justClickedTile = Integer.parseInt((String) view.getTag());
-        int tileIndex = justClickedTile - 1; //  justClickedTile uses 1 to 10 (or 14 or 18), tileNo uses the array ID (between [0] and [9] (or [13] or [17])
-        int otherTileIndex; // the corresponding tile that is above or below the justClickedTile
+        int selectionIndex = justClickedTile - 1; //  justClickedTile uses 1 to 10 (or 14 or 18), tileNo uses the array ID (between [0] and [9] (or [13] or [17])
+        int otherOptionIndex; // the corresponding tile that is above or below the justClickedTile
         if (justClickedTile % 2 == 0) {
-            otherTileIndex = tileIndex - 1;
+            otherOptionIndex = selectionIndex - 1;
         } else {
-            otherTileIndex = tileIndex + 1;
+            otherOptionIndex = selectionIndex + 1;
         }
 
-        Button tile = findViewById(GAME_BUTTONS[tileIndex]);
-        Button otherTile = findViewById(GAME_BUTTONS[otherTileIndex]);
+        Button tile = findViewById(GAME_BUTTONS[selectionIndex]);
+        Button otherTile = findViewById(GAME_BUTTONS[otherOptionIndex]);
+        selections[selectionIndex] = tile.getText().toString();
+        selections[otherOptionIndex] = "";
+        if(syllableGame.equals("T")) {
+            tileSelections[selectionIndex/2] = tileOptions.get(selectionIndex);
+        }
 
-        String tileColorStr = COLORS.get((tileIndex / 2) % 5);
+        String tileColorStr = COLORS.get((selectionIndex / 2) % 5);
         int tileColorNo = Color.parseColor(tileColorStr);
         tile.setBackgroundColor(tileColorNo);
         tile.setTextColor(Color.parseColor("#FFFFFF")); // white
@@ -288,10 +324,7 @@ public class UnitedStates extends GameActivity {
         otherTile.setBackgroundColor(tileColorNo2);
         otherTile.setTextColor(Color.parseColor("#000000")); // black
 
-        selections[tileIndex] = tile.getText().toString();
-        selections[otherTileIndex] = "";
-
-        buildWord();
+        buildWord(selectionIndex);
 
     }
 

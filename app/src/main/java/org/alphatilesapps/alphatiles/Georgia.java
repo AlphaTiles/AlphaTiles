@@ -27,6 +27,14 @@ import static org.alphatilesapps.alphatiles.Start.CorV;
 //level 5: 12 visible tiles, distractor wrong choices
 //level 6: 18 visible tiles, distractor wrong choices
 
+//Identify the first SOUND (esp. for Thai and Lao script languages, when this may differ from starting tile).
+//level 7: 6 visible tiles, random wrong choices
+//level 8: 12 visible tiles, random wrong choices
+//level 9: 18 visible tiles, random wrong choices
+//level 10: 6 visible tiles, distractor wrong choices
+//level 11: 12 visible tiles, distractor wrong choices
+//level 12: 18 visible tiles, distractor wrong choices
+
 //level 1 + S: 6 visible syllables, random wrong choices
 //level 2 + S: 12 visible syllables, random wrong choices
 //level 3 + S: 18 visible syllables, random wrong choices
@@ -118,10 +126,14 @@ public class Georgia extends GameActivity {
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         switch (challengeLevel) {
+            case 11:
+            case 8:
             case 5:
             case 2:
                 visibleGameButtons = 12;
                 break;
+            case 12:
+            case 9:
             case 6:
             case 3:
                 visibleGameButtons = 18;
@@ -188,15 +200,24 @@ public class Georgia extends GameActivity {
 
     private void setWord() {
         chooseWord();
-        if (syllableGame.equals("T")) {
+        if (syllableGame.equals("S")) {
+            parsedRefWordSyllableArray = Start.syllableList.parseWordIntoSyllables(refWord); // JP
+            initialSyllable = parsedRefWordSyllableArray.get(0);
+        } else {
+            parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
+            initialTile = parsedRefWordTileArray.get(0);
             if (!CorV.contains(initialTile)) { // Make sure chosen word begins with C or V
                 chooseWord();
             }
-            parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord); // KP
-            initialTile = parsedRefWordTileArray.get(0);
-        } else {
-            parsedRefWordSyllableArray = Start.syllableList.parseWordIntoSyllables(refWord); // JP
-            initialSyllable = parsedRefWordSyllableArray.get(0);
+            if(challengeLevel>6 && challengeLevel<13) { // Find first non-LV tile (first sound, since LVs are pronounced after the consonants they precede)
+                String initialTileType = "LV";
+                int t = -1;
+                while (initialTileType.equals("LV") && t < parsedRefWordTileArray.size()) {
+                    t++;
+                    initialTile = parsedRefWordTileArray.get(t);
+                    initialTileType = initialTile.typeOfThisTileInstance;
+                }
+            }
         }
 
         ImageView image = (ImageView) findViewById(R.id.wordImage);

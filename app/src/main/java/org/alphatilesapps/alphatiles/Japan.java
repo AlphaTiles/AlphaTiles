@@ -134,14 +134,18 @@ public class Japan extends GameActivity {
         setAdvanceArrowToGray();
         chooseWord();
 
-        while(tileList.parseWordIntoTiles(refWord).size() > MAX_TILES) { //JP: choose word w/ <= 12 tiles
+        while(tileList.parseWordIntoTiles(refWord.wordInLOP, refWord).size() > MAX_TILES) { //JP: choose word w/ <= 12 tiles
             chooseWord();
         }
 
-        parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord);
+        parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
         parsedRefWordTileArray.removeAll(SAD);
         parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
-        parsedRefWordSyllableArray.removeAll(SAD);
+        for (Syllable syllable : parsedRefWordSyllableArray) {
+            if (SAD_STRINGS.equals(syllable.text)) {
+                parsedRefWordSyllableArray.remove(syllable);
+            }
+        }
 
         currentViews.clear();
         originalViews.clear();
@@ -181,7 +185,7 @@ public class Japan extends GameActivity {
         ArrayList<Integer> tilesPerCorrectSyllable = new ArrayList<>();
         for (Syllable syllable : parsedRefWordSyllableArray) {
             Start.Word syllableWord = new Start.Word(refWord.wordInLWC, syllable.text, 0, "-", "1", "1");
-            ArrayList<Tile> syllableParsedIntoTiles = tileList.parseWordIntoTiles(syllableWord);
+            ArrayList<Tile> syllableParsedIntoTiles = tileList.parseWordIntoTiles(syllableWord.wordInLOP, syllableWord);
             tilesPerCorrectSyllable.add(syllableParsedIntoTiles.size());
             syllableParsedIntoTiles.clear();
         }

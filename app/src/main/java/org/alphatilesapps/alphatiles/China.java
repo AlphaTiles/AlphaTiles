@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Random;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -141,14 +143,14 @@ public class China extends GameActivity {
         // Find three four-tile words
         while (threeFourTileWords.size()<3){
             chooseWord();
-            if(tileList.parseWordIntoTiles(refWord).size() == 4){
+            if(tileList.parseWordIntoTilesPreliminary(refWord.wordInLOP, refWord).size() == 4){
                 threeFourTileWords.add(refWord);
             }
         }
 
 
         // Find one three-tile word
-        while (tileList.parseWordIntoTiles(refWord).size()!=3) {
+        while (tileList.parseWordIntoTilesPreliminary(refWord.wordInLOP, refWord).size()!=3) {
             chooseWord();
         }
         oneThreeTileWord = refWord;
@@ -157,14 +159,14 @@ public class China extends GameActivity {
     private void setUpTiles() {
         ArrayList<Start.Tile> tiles = new ArrayList<>();
         for (int t = 0; t < 3; t++) {
-            tiles.addAll(tileList.parseWordIntoTiles(threeFourTileWords.get(t)));
+            tiles.addAll(tileList.parseWordIntoTilesPreliminary(threeFourTileWords.get(t).wordInLOP, threeFourTileWords.get(t)));
 
             ImageView image = findViewById(WORD_IMAGES[t]);
             int resID = getResources().getIdentifier(threeFourTileWords.get(t).wordInLWC + "2", "drawable", getPackageName());
             image.setImageResource(resID);
             image.setVisibility(View.VISIBLE);
         }
-        tiles.addAll(tileList.parseWordIntoTiles(oneThreeTileWord));
+        tiles.addAll(tileList.parseWordIntoTilesPreliminary(oneThreeTileWord.wordInLOP, oneThreeTileWord));
         Collections.shuffle(tiles);
 
         ImageView image = findViewById(WORD_IMAGES[3]);
@@ -267,17 +269,21 @@ public class China extends GameActivity {
         int leftMostTile = (row - 1) * 4;
 
         String gridWord = "";
-        String correctWord = "";
+        Start.Word correctWord = null;
         if (row < 4) {
-            correctWord = wordList.stripInstructionCharacters(threeFourTileWords.get(row-1).wordInLOP);
+            correctWord = threeFourTileWords.get(row-1);
         } else {
-            correctWord = wordList.stripInstructionCharacters(oneThreeTileWord.wordInLOP);
+            correctWord = oneThreeTileWord;
         }
-        TextView gameTile1 = findViewById(GAME_BUTTONS[leftMostTile]);
-        TextView gameTile2 = findViewById(GAME_BUTTONS[leftMostTile + 1]);
-        TextView gameTile3 = findViewById(GAME_BUTTONS[leftMostTile + 2]);
-        TextView gameTile4 = findViewById(GAME_BUTTONS[leftMostTile + 3]);
-        gridWord = gameTile1.getText().toString() + gameTile2.getText().toString() + gameTile3.getText().toString() + gameTile4.getText().toString();
+        ArrayList<Start.Tile> tilesInGridWord = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            TextView gameButton = findViewById(GAME_BUTTONS[leftMostTile + i]);
+            Start.Tile gameTile = tileHashMap.find(gameButton.getText().toString());
+            if (!Objects.isNull(gameTile)){
+                tilesInGridWord.add(gameTile);
+            }
+        }
+        gridWord = combineTilesToMakeWord(tilesInGridWord, correctWord, -1);
 
         if (row == 4) {
             if (blankTile.getTag().equals("14") || blankTile.getTag().equals("15")) {
@@ -285,7 +291,7 @@ public class China extends GameActivity {
             }
         }
 
-        if (gridWord.equals(correctWord)) {
+        if (gridWord.equals(wordInLOPWithStandardizedSequenceOfCharacters(correctWord))) {
             solvedLines[row - 1] = true;
             for (int i = leftMostTile; i <= (leftMostTile + 3); i++) {
                 TextView gameTile = findViewById(GAME_BUTTONS[i]);
