@@ -215,7 +215,7 @@ public class Romania extends GameActivity {
 
             // Group 3 has all words containing the tile anywhere. This checks whether the current word is active-tile-initial or not
             if (scanSetting == 3) {
-                parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord); // KP
+                parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
                 failedToMatchInitialTile = !activeTile.text.equals(parsedRefWordTileArray.get(0).text);
             }
 
@@ -269,7 +269,7 @@ public class Romania extends GameActivity {
 
 
         if (scanSetting == 3) {
-            parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord); // KP
+            parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
             failedToMatchInitialTile = !activeTile.text.equals(parsedRefWordTileArray.get(0).text);
         }
 
@@ -325,9 +325,8 @@ public class Romania extends GameActivity {
         }
         refWord = groupOfWordsForActiveTile[indexWithinGroup];
 
-
         if (scanSetting == 3) {
-            parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord); // KP
+            parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
             failedToMatchInitialTile = !activeTile.text.equals(parsedRefWordTileArray.get(0).text);
         }
 

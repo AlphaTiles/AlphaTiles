@@ -31,7 +31,8 @@ public class Colombia extends GameActivity {
     int partial; // Number of visible keys on final partial screen
     static List<Start.Tile> tileKeysList = new ArrayList<>();
     static List<Start.Syllable> syllableKeysList = new ArrayList<>();
-    static List<String> clickedKeyStrings = new ArrayList<>(); // Keys clicked, in order
+    static List<WordPiece> clickedKeys = new ArrayList<>(); // Keys clicked, in order
+    static ArrayList<Start.Tile> tilesInBuiltWord = new ArrayList<>();
 
     final int tilesPerPage = 35;
     final int syllablesPerPage = 18;
@@ -154,12 +155,11 @@ public class Colombia extends GameActivity {
         ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
         wordImage.setClickable(true);
 
-        loadKeyboard();
-
     }
 
     private void setWord() {
-        clickedKeyStrings.clear();
+        clickedKeys.clear();
+        tilesInBuiltWord.clear();
         chooseWord();
         ImageView image = (ImageView) findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
@@ -168,8 +168,10 @@ public class Colombia extends GameActivity {
         if (syllableGame.equals("S")) {
             parsedRefWordSyllableArray = Start.syllableList.parseWordIntoSyllables(refWord); // KP
         } else {
-            parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord); // KP
+            parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
         }
+
+        loadKeyboard();
 
     }
 
@@ -298,6 +300,9 @@ public class Colombia extends GameActivity {
                     }
 
                 } else { // Full key list
+                    for (Start.Key key: keyList) {
+                        tileKeysList.add(tileHashMap.find(key.text));
+                    }
                     keysInUse = keyList.size(); // KP
                     partial = keysInUse % (GAME_BUTTONS.length - 2);
                     totalScreens = keysInUse / (GAME_BUTTONS.length - 2);
@@ -364,23 +369,32 @@ public class Colombia extends GameActivity {
 
     private void respondToKeySelection(int justClickedIndex) {
 
-        String clickedKeyString = "";
-
+        WordPiece clickedKey;
+        Tile typedTile;
+        String currentWord = "";
+        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
         if (syllableGame.equals("S")) {
-            clickedKeyString = syllableKeysList.get(justClickedIndex).text;
+            clickedKey = syllableKeysList.get(justClickedIndex);
+            clickedKeys.add(clickedKey);
+            for(WordPiece key : clickedKeys) {
+                currentWord+= key.text;
+            }
         } else {
             if(!(challengeLevel==3)){
-                clickedKeyString = tileKeysList.get(justClickedIndex).text;
+                clickedKey = tileKeysList.get(justClickedIndex);
+                typedTile = tileKeysList.get(justClickedIndex);
+                tilesInBuiltWord.add(typedTile);
+                clickedKeys.add(clickedKey);
+                currentWord = combineTilesToMakeWord(tilesInBuiltWord, refWord, -1);
             } else {
-                clickedKeyString = keyList.get(justClickedIndex).text;
+                clickedKey = new WordPiece(keyList.get(justClickedIndex).text);
+                clickedKeys.add(clickedKey);
+                currentWord = wordToBuild.getText() + clickedKey.text;
             }
+
         }
-        clickedKeyStrings.add(clickedKeyString);
 
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-        String currentWord = wordToBuild.getText() + clickedKeyString;     // RR
-        wordToBuild.setText(currentWord);                           // RR
-
+        wordToBuild.setText(currentWord);
         evaluateStatus();
     }
 
@@ -388,7 +402,15 @@ public class Colombia extends GameActivity {
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
 
-        if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(refWord.wordInLOP))) { // Word spelled correctly!
+        String correctString = wordInLOPWithStandardizedSequenceOfCharacters(refWord);
+        String currentAttempt;
+        if (syllableGame.equals("S") || (syllableGame.equals("T") && challengeLevel == 3)) {
+            currentAttempt = wordToBuild.getText().toString();
+        } else {
+            currentAttempt = combineTilesToMakeWord(tilesInBuiltWord, refWord, -1);
+        }
+
+        if (currentAttempt.equals(correctString)) { // Word spelled correctly!
             wordToBuild.setBackgroundColor(Color.parseColor("#4CAF50"));      // theme green
             wordToBuild.setTextColor(Color.parseColor("#FFFFFF")); // white
             for (int i=0; i<visibleGameButtons; i++) {
@@ -406,27 +428,32 @@ public class Colombia extends GameActivity {
             wordToBuild.setBackgroundColor(Color.parseColor("#A9A9A9")); // gray for wrong
             wordToBuild.setTextColor(Color.parseColor("#000000")); // black
 
-            if (Start.wordList.stripInstructionCharacters(refWord.wordInLOP).length() > wordToBuild.getText().length()) {
-                if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(refWord.wordInLOP)
-                        .substring(0, wordToBuild.getText().length()))) {
-                    // yes this is still an issue:
-                    // problem when what's in textbox is longer than the correct word??
-                    // doesn't prev if statement take care of that?
-                    // specifically on level 3 syllables ??
-
-                    // Word, so far, spelled correctly, but a less than complete match
-                    // orange=true if there is no tile/key option that would allow you to continue correctly
+            if (correctString.length() > currentAttempt.length()) {
+                ArrayList<WordPiece> firstNCorrectTiles = new ArrayList<>();
+                for (int t=0; t<clickedKeys.size(); t++) {
+                    if (syllableGame.equals("S")) {
+                        if (t<parsedRefWordSyllableArray.size()){
+                            firstNCorrectTiles.add(parsedRefWordSyllableArray.get(t));
+                        }
+                    } else {
+                        if (t<parsedRefWordTileArray.size()) {
+                            firstNCorrectTiles.add(parsedRefWordTileArray.get(t));
+                        }
+                    }
+                }
+                if (currentAttempt.equals(correctString.substring(0, currentAttempt.length()))
+                || clickedKeys.equals(firstNCorrectTiles)) { // Word is incomplete but spelled correctly so far
+                    // orange=true if there is no key option that would allow the player to continue correctly
                     if (challengeLevel == 1 || challengeLevel == 2 || syllableGame.equals("S")) {
                         boolean orange = false;
-                        for (int i = 0; i < clickedKeyStrings.size(); i++) {
-
+                        for (int i = 0; i < clickedKeys.size(); i++) {
                             if (syllableGame.equals("S")) {
-                                if (!clickedKeyStrings.get(i).equals(parsedRefWordSyllableArray.get(i).text)) {
+                                if (!clickedKeys.get(i).text.equals(parsedRefWordSyllableArray.get(i).text)) {
                                     orange = true;
                                     break;
                                 }
                             } else {
-                                if (!clickedKeyStrings.get(i).equals(parsedRefWordTileArray.get(i).text)) {
+                                if (!clickedKeys.get(i).text.equals(parsedRefWordTileArray.get(i).text)) {
                                     orange = true;
                                     break;
                                 }
@@ -453,32 +480,21 @@ public class Colombia extends GameActivity {
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
 
         String typedLettersSoFar = wordToBuild.getText().toString();
-        String nowWithOneLessChar = "";
+        String nowWithOneLessWordPiece = "";
 
-        if (typedLettersSoFar.length() > 0) {       // RR
-            nowWithOneLessChar = typedLettersSoFar.substring(0, typedLettersSoFar.length() - 1);
-            clickedKeyStrings.remove(clickedKeyStrings.size() - 1);
+        if (typedLettersSoFar.length() > 0) {
+            clickedKeys.remove(clickedKeys.size() - 1);
+            if (syllableGame.equals("S")) {
+                nowWithOneLessWordPiece = typedLettersSoFar.substring(0, typedLettersSoFar.length() - 1);
+            } else if (syllableGame.equals("T") && challengeLevel == 3) { // Using keyboard keys, not tiles
+                nowWithOneLessWordPiece = typedLettersSoFar.substring(0, typedLettersSoFar.length() - 1);
+            } else if (syllableGame.equals("T")) {
+                tilesInBuiltWord.remove(tilesInBuiltWord.size() - 1);
+                nowWithOneLessWordPiece = combineTilesToMakeWord(tilesInBuiltWord, refWord, -1);
+            }
         }
 
-        wordToBuild.setText(nowWithOneLessChar);
-        evaluateStatus();
-
-    }
-
-    public void deleteLastKeyed(View view) { // JP
-
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-
-        String typedLettersSoFar = wordToBuild.getText().toString();
-        String nowWithOneLessSyllable = "";
-
-        if (typedLettersSoFar.length() > 0) {       // RR
-            int shortenFromThisIndex = typedLettersSoFar.lastIndexOf(clickedKeyStrings.get(clickedKeyStrings.size() - 1));
-            nowWithOneLessSyllable = typedLettersSoFar.substring(0, shortenFromThisIndex);
-            clickedKeyStrings.remove(clickedKeyStrings.size() - 1);
-        }
-
-        wordToBuild.setText(nowWithOneLessSyllable);
+        wordToBuild.setText(nowWithOneLessWordPiece);
         evaluateStatus();
 
     }

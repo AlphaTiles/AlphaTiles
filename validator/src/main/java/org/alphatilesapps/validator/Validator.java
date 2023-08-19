@@ -1903,9 +1903,9 @@ public class Validator {
 
         else if (typeSpecsList.size() != wordAsTileList.size()) {
             fatalErrors.add("In wordlist, the word " + wordInLOP + " has " + wordAsTileList.size() +
-                    " tiles, but the mixed types cell has " + typeSpecsList.size() + " specifications");
+                    " tiles, but the mixed types cell has " + typeSpecsList.size() + " specifications (its tiles are " + wordAsTileList + ")");
             throw new ValidatorException("In wordlist, the word " + wordInLOP + " has " + wordAsTileList.size() +
-                    " tiles, but the mixed types cell has " + typeSpecsList.size() + " specifications");
+                    " tiles, but the mixed types cell has " + typeSpecsList.size() + " specifications (its tiles are " + wordAsTileList + ")");
         }
 
         for (int i = 0; i < typeSpecsList.size(); i++){
@@ -2010,7 +2010,7 @@ public class Validator {
     private ArrayList<String> parseWordIntoTiles(String wordInLOP) throws ValidatorException {
         ArrayList<String> finalTileList;
         Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
-        if (langInfo.getRowFromFirstCell("Script type").get(1).matches("Thai|Lao")){
+        if (langInfo.getRowFromFirstCell("Script type").get(1).matches("(Thai|Lao)")) {
             finalTileList = ThaiParseWordIntoTiles(wordInLOP);
         }
         else{
