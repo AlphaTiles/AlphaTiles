@@ -2388,15 +2388,18 @@ public class Validator {
         }
         // if the token is revoked or expired, deletes the token and then rebuilds the services
         catch (TokenResponseException | GoogleJsonResponseException e){
-            String errorDescription;
+            boolean badToken = false;
             if (e instanceof TokenResponseException){
-                errorDescription = ((TokenResponseException) e).getDetails().get("error_description").toString();
+                badToken = true;
             }
             else{
-                errorDescription = ((GoogleJsonResponseException) e).getDetails().get("message").toString();
+                String errorDescription = ((GoogleJsonResponseException) e).getDetails().get("message").toString();
+                if (errorDescription.contains("Request had invalid authentication credentials. Expected OAuth 2 access token")){
+                    badToken = true;
+                }
             }
 
-            if (errorDescription.equals("Token has been expired or revoked.") || errorDescription.contains("Request had invalid authentication credentials. Expected OAuth 2 access token")) {
+            if (badToken) {
                 deleteDirectory(Paths.get("tokens"));
                 sheetsService =
                         new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCrdntls(HTTP_TRANSPORT))
