@@ -478,7 +478,10 @@ public abstract class GameActivity extends AppCompatActivity {
                     if (repeatLocked) {
                         setAllTilesClickable();
                     }
-                    setOptionsRowClickable();
+                    if (trackerCount >0 && trackerCount % 12 != 0) {
+                        setOptionsRowClickable();
+                        //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                    }
                 }
             }
         }, wordDurations.get(wordInLWC));
@@ -516,7 +519,10 @@ public abstract class GameActivity extends AppCompatActivity {
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 setAllTilesClickable();
-                setOptionsRowClickable();
+                if (trackerCount >0 && trackerCount % 12 != 0) {
+                    setOptionsRowClickable();
+                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                }
                 playActiveWordClip(playFinalSound);
             }
         }, correctSoundDuration);

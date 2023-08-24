@@ -815,7 +815,7 @@ public class Thailand extends GameActivity {
                 if (repeatLocked) {
                     setAllTilesClickable();
                 }
-                if (trackerCount % 12 != 0) {
+                if (trackerCount >0 && trackerCount % 12 != 0) {
                     setOptionsRowClickable();
                     //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise?
                 }
