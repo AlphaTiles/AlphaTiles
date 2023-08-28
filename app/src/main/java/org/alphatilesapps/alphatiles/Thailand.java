@@ -714,7 +714,16 @@ public class Thailand extends GameActivity {
                     if (repeatLocked) {
                         setAllTilesClickable();
                     }
-                    setOptionsRowClickable();
+                    if (after12checkedTrackers == 1){
+                        setOptionsRowClickable();
+                        //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                    }
+                    else if (trackerCount >0 && trackerCount % 12 != 0) {
+                        setOptionsRowClickable();
+                        //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                        // and we don't want the user to be able to advance before returning to earth (2) or
+                        // before seeing the celebration screen (3)
+                    }
                 }
             }, syllableDurations.get(tileText));
         }
@@ -742,7 +751,16 @@ public class Thailand extends GameActivity {
                     if (repeatLocked) {
                         setAllTilesClickable();
                     }
-                    setOptionsRowClickable();
+                    if (after12checkedTrackers == 1){
+                        setOptionsRowClickable();
+                        //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                    }
+                    else if (trackerCount >0 && trackerCount % 12 != 0) {
+                        setOptionsRowClickable();
+                        //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                        // and we don't want the user to be able to advance before returning to earth (2) or
+                        // before seeing the celebration screen (3)
+                    }
                 }
             }, tileDurations.get(tileText));
         }
@@ -783,9 +801,15 @@ public class Thailand extends GameActivity {
                 if (repeatLocked) {
                     setAllTilesClickable();
                 }
-                if (trackerCount >0 && trackerCount % 12 != 0) {
+                if (after12checkedTrackers == 1){
+                    setOptionsRowClickable();
+                    //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                }
+                else if (trackerCount >0 && trackerCount % 12 != 0) {
                     setOptionsRowClickable();
                     //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                    // and we don't want the user to be able to advance before returning to earth (2) or
+                    // before seeing the celebration screen (3)
                 }
             }
         }, 925);
@@ -815,9 +839,15 @@ public class Thailand extends GameActivity {
                 if (repeatLocked) {
                     setAllTilesClickable();
                 }
-                if (trackerCount >0 && trackerCount % 12 != 0) {
+                if (after12checkedTrackers == 1){
                     setOptionsRowClickable();
-                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise?
+                    //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                }
+                else if (trackerCount >0 && trackerCount % 12 != 0) {
+                    setOptionsRowClickable();
+                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                    // and we don't want the user to be able to advance before returning to earth (2) or
+                    // before seeing the celebration screen (3)
                 }
             }
         }, 925 + syllableDurations.get(syllableList.get(syllableList.returnPositionInSyllList(refTile)).syllable));
@@ -855,9 +885,15 @@ public class Thailand extends GameActivity {
                 if (repeatLocked) {
                     setAllTilesClickable();
                 }
-                if (trackerCount >0 && trackerCount % 12 != 0) {
+                if (after12checkedTrackers == 1){
+                    setOptionsRowClickable();
+                    //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                }
+                else if (trackerCount >0 && trackerCount % 12 != 0) {
                     setOptionsRowClickable();
                     //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                    // and we don't want the user to be able to advance before returning to earth (2) or
+                    // before seeing the celebration screen (3)
                 }
             }
         }, 925 + tileDurations.get(tileList.get(tileList.returnPositionInAlphabet(refTile)).baseTile));

@@ -478,9 +478,18 @@ public abstract class GameActivity extends AppCompatActivity {
                     if (repeatLocked) {
                         setAllTilesClickable();
                     }
-                    if (trackerCount >0 && trackerCount % 12 != 0) {
+                    if (after12checkedTrackers == 1){
+                        setOptionsRowClickable();
+                        //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                    }
+                    else if (trackerCount >0 && trackerCount % 12 != 0) {
                         setOptionsRowClickable();
                         //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                        // and we don't want the user to be able to advance before returning to earth (2) or
+                        // before seeing the celebration screen (3)
+                    }
+                    else if (trackerCount == 0){
+                        setOptionsRowClickable();
                     }
                 }
             }
@@ -519,9 +528,15 @@ public abstract class GameActivity extends AppCompatActivity {
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 setAllTilesClickable();
-                if (trackerCount >0 && trackerCount % 12 != 0) {
+                if (after12checkedTrackers == 1){
+                    setOptionsRowClickable();
+                    //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                }
+                else if (trackerCount >0 && trackerCount % 12 != 0) {
                     setOptionsRowClickable();
                     //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                    // and we don't want the user to be able to advance before returning to earth (2) or
+                    // before seeing the celebration screen (3)
                 }
                 playActiveWordClip(playFinalSound);
             }
@@ -590,9 +605,15 @@ public abstract class GameActivity extends AppCompatActivity {
         setOptionsRowUnclickable();
         gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
         setAllTilesClickable();
-        if (trackerCount > 0 && trackerCount % 12 != 0) {
+        if (after12checkedTrackers == 1){
             setOptionsRowClickable();
-            //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise?
+            //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+        }
+        else if (trackerCount >0 && trackerCount % 12 != 0) {
+            setOptionsRowClickable();
+            //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+            // and we don't want the user to be able to advance before returning to earth (2) or
+            // before seeing the celebration screen (3)
         }
     }
 
