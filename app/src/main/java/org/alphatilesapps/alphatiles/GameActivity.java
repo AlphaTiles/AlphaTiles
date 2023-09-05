@@ -664,6 +664,10 @@ public abstract class GameActivity extends AppCompatActivity {
         if (mediaPlayerIsPlaying){
             mp3.stop();
             mp3.release();
+            mediaPlayerIsPlaying = false;
+            setAllGameButtonsClickable();
+            setOptionsRowClickable();
+            return;
         }
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();

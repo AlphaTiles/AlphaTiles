@@ -157,9 +157,6 @@ public class Peru extends GameActivity {
                         while (isDuplicateAnswerChoice) {
                             ArrayList<Start.Tile> tilesInIncorrectChoice = new ArrayList<>(parsedRefWordTileArray);
                             Tile replacementTile = tileHashMap.find(shuffledDistractorTiles.get(incorrectLapNo - 1));
-                            if (replacementTile==null) {
-                                LOGGER.info("Distractor tile not in the tile list: " + shuffledDistractorTiles.get(incorrectLapNo - 1));
-                            }
                             tilesInIncorrectChoice.set(0, replacementTile);
                             String incorrectChoiceString = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, 0);
                             nextWord.setText(incorrectChoiceString);
