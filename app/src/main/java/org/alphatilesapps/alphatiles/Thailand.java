@@ -214,9 +214,9 @@ public class Thailand extends GameActivity {
                         refTileType =  refTile.typeOfThisTileInstance;
                     }
                     // SAD should never be first tile linguistically, so no need to programmatically filter out
-                    if (!refString.equalsIgnoreCase(refStringLast)
-                            && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast)) {
+                    if (!refString.equals(refStringLast)
+                            && !refString.equals(refStringSecondToLast)
+                            && !refString.equals(refStringThirdToLast)) {
                         freshTile = true;
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
@@ -310,8 +310,8 @@ public class Thailand extends GameActivity {
                     refTile = tileListNoSAD.get(randomTileIndex);
                     refString = refTile.text;
                     refTileType = refTile.typeOfThisTileInstance;
-                    while (challengeLevelThai == 1 && refTileType.equals("T")) {
-                        // JP: Disallow tone marker from being reference in level 1
+                    while (challengeLevelThai == 1 && refTileType.matches("(T|AD)")) {
+                        // JP: Disallow tone markers and diacritics from being reference in level 1
                         randomTileIndex = rand.nextInt(tileListNoSAD.size());
                         refTile = tileListNoSAD.get(randomTileIndex);
                         refString = refTile.text;
@@ -402,7 +402,7 @@ public class Thailand extends GameActivity {
             // challengeLevelThai 1 = pull random tiles for wrong choices
             // challengeLevelThai 2 = pull distractor tiles for wrong choices
         } else if ((choiceType.equals("WORD_TEXT") || choiceType.equals("WORD_IMAGE")) && (!refType.contains("SYLLABLE"))) {
-            fourWordChoices = wordList.returnFourWords(refWord, refTile, challengeLevelThai, refType, choiceType);
+            fourWordChoices = wordList.returnFourWords(refWord, refTile, challengeLevelThai, refType);
             // challengeLevelThai 1 = pull words that begin with random tiles (not distractor, not same) for wrong choices
             // challengeLevelThai 2 = pull words that begin with distractor tiles (or if not random) for wrong choices
             // challengeLevelThai 3 = pull words that begin with same tile (as correct word) for wrong choices
@@ -581,7 +581,8 @@ public class Thailand extends GameActivity {
                     case "TILE_LOWER":
                     case "TILE_AUDIO":
                         parsedChosenWordTileArray = tileList.parseWordIntoTiles(fourWordChoices.get(t).wordInLOP, fourWordChoices.get(t));
-                        if (parsedChosenWordTileArray.get(0).text.equals(refItemText)) {
+                        Tile initialTile = parsedChosenWordTileArray.get(0);
+                        if (initialTile.text.equals(refItemText) && initialTile.typeOfThisTileInstance.equals(refTileType)) {
                             goodMatch = true;
                         }
                         break;

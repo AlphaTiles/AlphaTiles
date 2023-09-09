@@ -148,7 +148,7 @@ public class Sudan extends GameActivity {
                 total = total - syllablesPerPage;
             }
         } else {
-            int total = cumulativeStageBasedTileList.size() - SAD.size() - tilesPerPage;
+            int total = cumulativeStageBasedTileList.size() - SAD.size() - SILENT_PLACEHOLDER_CONSONANTS.size() - tilesPerPage;
             while (total >= 0) {
                 numPages++;
                 List<Start.Tile> page = new ArrayList<>();
@@ -160,13 +160,13 @@ public class Sudan extends GameActivity {
 
     public void splitTileListAcrossPages() {
 
-        int numTiles = cumulativeStageBasedTileList.size() - SAD.size();
+        int numTiles = cumulativeStageBasedTileList.size() - SAD.size() - SILENT_PLACEHOLDER_CONSONANTS.size();
         int tileIndex = 0;
         for (int i = 0; i <= numPages; i++) {
             for (int j = 0; j < tilesPerPage; j++) {
                 if(tileIndex < numTiles) {
                     Tile thisTile = cumulativeStageBasedTileList.get(tileIndex);
-                    if (!SAD.contains(thisTile)) {
+                    if (!SAD.contains(thisTile) && !SILENT_PLACEHOLDER_CONSONANTS.contains(thisTile)) {
                         tilePagesLists.get(i).add(thisTile);
                     }
                     tileIndex++;

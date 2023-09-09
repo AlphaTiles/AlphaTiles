@@ -206,17 +206,26 @@ public class Georgia extends GameActivity {
         } else {
             parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
             initialTile = parsedRefWordTileArray.get(0);
-            if (!CorV.contains(initialTile)) { // Make sure chosen word begins with C or V
-                chooseWord();
-            }
+            String initialTileType = initialTile.typeOfThisTileInstance;
             if(challengeLevel>6 && challengeLevel<13) { // Find first non-LV tile (first sound, since LVs are pronounced after the consonants they precede)
-                String initialTileType = "LV";
-                int t = -1;
-                while (initialTileType.equals("LV") && t < parsedRefWordTileArray.size()) {
+                Start.Tile initialLV = null;
+                int t = 0;
+                while (initialTileType.equals("LV") && t < parsedRefWordTileArray.size()) { // Unless there is a placeholder consonant, the consonant is the first sound
+                    initialLV = initialTile;
                     t++;
                     initialTile = parsedRefWordTileArray.get(t);
                     initialTileType = initialTile.typeOfThisTileInstance;
                 }
+                if (initialTileType.equals("PC") && t < parsedRefWordTileArray.size()) { // If there is a placeholder consonant, vowel is the first sound
+                    if (!(initialLV==null)) {
+                        initialTile = initialLV;
+                    } else {
+                        initialTile = parsedRefWordTileArray.get(t+1);
+                    }
+                }
+            }
+            if (!CorV.contains(initialTile)) { // Make sure chosen word begins with C or V
+                setWord();
             }
         }
 
