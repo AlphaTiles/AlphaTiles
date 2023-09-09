@@ -486,7 +486,7 @@ public class Validator {
             }
             // make sure that colum 4 of gameTiles only has valid type specifiers
             ArrayList<String> gameTileTypes = gameTiles.getCol(4);
-            HashSet<String> validTypes = new HashSet<>(Set.of("C","V","X", "AD", "AV", "BV", "FV", "LV", "T", "SAD"));
+            HashSet<String> validTypes = new HashSet<>(Set.of("C", "PC","V","X", "AD", "AV", "BV", "FV", "LV", "T", "SAD"));
             for (int i = 0; i < gameTileTypes.size(); i++) {
                 if (!validTypes.contains(gameTileTypes.get(i))) {
                     fatalErrors.add("row " + (i + 2) + " of gametiles does not specify a valid type in the types column. Valid" +
@@ -1891,7 +1891,7 @@ public class Validator {
             typeSpecsList.add("1");
             }
         // split the type specifications into a list of strings. Cannot use split with lookahead because it doesn't work with variable length lookaheads
-        Pattern oneSpec = Pattern.compile("1?[0-9]|[CVXT]|AD|AV|BV|FV|LV|SAD|.");
+        Pattern oneSpec = Pattern.compile("1?[0-9]|[CVXT]|AD|AV|BV|FV|LV|SAD|PC|.");
         Matcher specMatcher = oneSpec.matcher(typeSpecifications);
         while(specMatcher.find()) {
             typeSpecsList.add(specMatcher.group());
@@ -2104,7 +2104,7 @@ public class Validator {
                 } else {
                     currentTileType = currentTile.get(4);
                 }
-                if (currentTileType.equals("C")) {
+                if (currentTileType.matches("(C|PC)")) {
                     currentConsonant = currentTileString;
                     currentConsonantIndex = consonantScanIndex;
                     foundNextConsonant = true;
@@ -2131,7 +2131,7 @@ public class Validator {
                 } else {
                     currentTileType = currentTile.get(4);
                 }
-                if (currentTileType.equals("C")) {
+                if (currentTileType.matches("(C|PC)")) {
                     nextConsonantIndex = consonantScanIndex;
                     foundNextConsonant = true;
                 }
@@ -2337,14 +2337,14 @@ public class Validator {
         ArrayList<String> word = wordList.getRowWithCellInCol(wordInLOP,1);
         String mixedDefinitionInfoString = word.get(3);
         String instanceType = null;
-        ArrayList<String> types = new ArrayList<String>(Arrays.asList("C", "V", "X", "T", "-", "SAD", "LV", "AV", "BV", "FV", "AD"));
+        ArrayList<String> types = new ArrayList<String>(Arrays.asList("C", "PC", "V", "X", "T", "-", "SAD", "LV", "AV", "BV", "FV", "AD"));
 
         if (!mixedDefinitionInfoString.equals("C") && !mixedDefinitionInfoString.equals("V")
                 && !mixedDefinitionInfoString.equals("X") && !mixedDefinitionInfoString.equals("T")
                 && !mixedDefinitionInfoString.equals("-") && !mixedDefinitionInfoString.equals("SAD")
                 && !mixedDefinitionInfoString.equals("LV") && !mixedDefinitionInfoString.equals("AV")
                 && !mixedDefinitionInfoString.equals("BV") && !mixedDefinitionInfoString.equals("FV")
-                && !mixedDefinitionInfoString.equals("AD")) {
+                && !mixedDefinitionInfoString.equals("AD") && !mixedDefinitionInfoString.equals("PC")) {
 
             // Store the mixed types information (e.g. C234X6, 1FV3C5) from the wordlist in an array.
             // one designation per tile. Either just tile index number (1-indexed), or a type specification.

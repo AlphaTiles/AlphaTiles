@@ -29,6 +29,7 @@ import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.MULTITYPE_TILES;
+import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
@@ -145,7 +146,7 @@ public abstract class GameActivity extends AppCompatActivity {
         cumulativeStageBasedTileList.addAll(Start.SAD);
         for(int s=0; s<stage; s++){
             for(Start.Tile tile : tileStagesLists.get(s)){
-                if(!tile.audioForThisTileType.equals("zz_no_audio_needed")){
+                if(!SILENT_PRELIMINARY_TILES.contains(tile)){
                     cumulativeStageBasedTileList.add(tile);
                 }
             }
@@ -155,8 +156,8 @@ public abstract class GameActivity extends AppCompatActivity {
         previousStagesTileList.addAll(Start.SAD);
         for(int s=0; s<(stage-1); s++){
             for(Start.Tile tile : tileStagesLists.get(s)){
-                if(!tile.audioForThisTileType.equals("zz_no_audio_needed")){
-                    cumulativeStageBasedTileList.add(tile);
+                if(!SILENT_PRELIMINARY_TILES.contains(tile)){
+                    previousStagesTileList.add(tile);
                 }
             }
             previousStagesWordList.addAll(wordStagesLists.get(s));
@@ -766,7 +767,7 @@ public abstract class GameActivity extends AppCompatActivity {
         int index = 0;
         for (Start.Tile thisTile : tilesInThisWordOption) {
             String stringToAppend = thisTile.text;
-            if (thisTile.typeOfThisTileInstance.equals("C")){
+            if (thisTile.typeOfThisTileInstance.matches("(C|PC)")){
                 previousConsonant = thisTile.text;
                 previousAboveOrBelowVowel = ""; // Reset; new syllable
                 previousDiacritics = ""; // Reset; new syllable
@@ -788,7 +789,7 @@ public abstract class GameActivity extends AppCompatActivity {
             }
 
             if ((replacingLVwithOtherV && index == indexOfReplacedTile && (thisTile.typeOfThisTileInstance.matches("(AV|BV|FV|V)")))
-            || (replacingOtherVwithLV && index==indexOfReplacedTile-1 && thisTile.typeOfThisTileInstance.equals("C"))) {
+            || (replacingOtherVwithLV && index==indexOfReplacedTile-1 && thisTile.typeOfThisTileInstance.matches("(C|PC)"))) {
                 previousString = stringToAppend;
                 previousTile = thisTile;
                 // Don't append this string. (That would put FV, etc. in LV position or LV in FV,etc position)
