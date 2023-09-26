@@ -182,7 +182,7 @@ public class Mexico extends GameActivity {
             boolean wordAcceptable = true;
             chooseWord();
             for (int j = 0; j < i; j++) {
-                if (wordInLWC.equals(memoryCollection.get(j*2)[0])) {
+                if (refWord.wordInLWC.equals(memoryCollection.get(j*2)[0])) {
                     wordAcceptable = false;
                     j=i;
                 }
@@ -194,23 +194,23 @@ public class Mexico extends GameActivity {
             if (wordAcceptable) {
                 String[] content = new String[]
                         {
-                                wordInLWC,
-                                wordInLOP,
+                                refWord.wordInLWC,
+                                refWord.wordInLOP,
                                 "TEXT",
                                 "UNSELECTED",
-                                String.valueOf(wordHashMap.get(wordInLWC).duration),    // audio clip duration in seconds
-                                wordHashMap.get(wordInLWC).adjustment,    // font adjustment
+                                String.valueOf(lwcWordHashMap.get(refWord.wordInLWC).duration),    // audio clip duration in seconds
+                                lwcWordHashMap.get(refWord.wordInLWC).adjustment,    // font adjustment
 
                         };
                 memoryCollection.add(content);
                 content = new String[]
                         {
-                                wordInLWC,
-                                wordInLOP,
+                                refWord.wordInLWC,
+                                refWord.wordInLOP,
                                 "IMAGE",
                                 "UNSELECTED",
-                                String.valueOf(wordHashMap.get(wordInLWC).duration),    // audio clip duration in seconds
-                                wordHashMap.get(wordInLWC).adjustment,    // font adjustment
+                                String.valueOf(lwcWordHashMap.get(refWord.wordInLWC).duration),    // audio clip duration in seconds
+                                lwcWordHashMap.get(refWord.wordInLWC).adjustment,    // font adjustment
 
                         };
                 memoryCollection.add(content);
