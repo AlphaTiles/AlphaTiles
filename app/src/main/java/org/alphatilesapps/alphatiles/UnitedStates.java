@@ -163,6 +163,11 @@ public class UnitedStates extends GameActivity {
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
+        ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
+        wordImage.setClickable(true);
+        ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+        repeatImage.setImageResource(R.drawable.zz_forward);
+
         switch (challengeLevel) {
             case 2:
                 visibleTiles = 14;   // RR

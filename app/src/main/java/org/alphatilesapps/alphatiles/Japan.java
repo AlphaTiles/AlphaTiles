@@ -178,6 +178,10 @@ public class Japan extends GameActivity {
         displayTileChoices();
         setVisButtonsClickable();
         setTilesUnclickable();
+        ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
+        wordImage.setClickable(true);
+        ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+        repeatImage.setImageResource(R.drawable.zz_forward);
     }
 
     private void setWord() {
