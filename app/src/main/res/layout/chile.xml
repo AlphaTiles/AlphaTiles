@@ -182,7 +182,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineHSys"
+        app:layout_constraintBottom_toBottomOf="@+id/pointsImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/keyboardBoxDivider" />
@@ -245,7 +245,37 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.80" />
+    <ImageView
+        android:id="@+id/pointsImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/gamesHomeImage"
+        app:layout_constraintEnd_toStartOf="@+id/backspace"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/keyboard"
+        android:contentDescription="@string/pointsImage"
+        app:srcCompat="@drawable/zz_pointsscoredthisgame" />
 
+    <TextView
+            android:id="@+id/pointsTextView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:padding="7dp"
+            android:text="@string/pointsScored"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="25sp"
+            app:autoSizeMinTextSize="5sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="@+id/pointsImage"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="@+id/pointsImage"
+            app:layout_constraintStart_toStartOf="@+id/pointsImage"
+            app:layout_constraintTop_toTopOf="@+id/pointsImage" />
     <ImageView
         android:id="@+id/backspace"
         android:layout_width="wrap_content"

@@ -84,36 +84,15 @@ public class Chile extends GameActivity {
     }
 
     @Override
-    public void goBackToEarth(View view) {
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        prefs.edit().putInt(uniqueGameLevelPlayerID, trackerCount).apply();
-        super.goBackToEarth(view);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        playerNumber = getIntent().getIntExtra("playerNumber", -1);
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        hasChecked12Trackers = prefs.getBoolean("storedChileHasChecked12Trackers_level"
-                + challengeLevel + "_player" + playerString + "_" + syllableGame, false);
-        challengeLevel = getIntent().getIntExtra("challengeLevel", 0);
-        syllableGame = getIntent().getStringExtra("syllableGame");
-        String uniqueGameLevelPlayerID = getClass().getName() + challengeLevel + playerString + syllableGame;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerID,0);
-
         LOGGER.log(Level.INFO, "Chile start");
-
         context = this;
         setContentView(R.layout.chile);
-        updateTrackers();
+        updatePointsAndTrackers(0);
 
         data.guesses = baseGuessCount - challengeLevel;
-        LOGGER.log(Level.INFO, ""+data.guesses);
         int guessBoxID = R.id.guessBox;
         guessBox = findViewById(guessBoxID);
         guessBox.setNumColumns(data.wordLength);
@@ -220,16 +199,7 @@ public class Chile extends GameActivity {
         keyAdapter.notifyDataSetChanged();
         if(greenCount == data.wordLength && !finished) {
             finished = true;
-            int sound;
-            if(++trackerCount >= 12) {
-                sound = Start.correctFinalSoundID;
-                hasChecked12Trackers = true;
-            }
-            else {
-                sound = Start.correctSoundID;
-            }
-            updateTrackers();
-            Start.gameSounds.play(sound, 1.0f, 1.0f, 3, 0, 1.0f);
+            updatePointsAndTrackers(1);
         }
         else if(currentRow == data.guesses - 1) {
             finished = true;
