@@ -136,6 +136,11 @@ public class Peru extends GameActivity {
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
+        ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
+        wordImage.setClickable(true);
+        ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+        repeatImage.setImageResource(R.drawable.zz_forward);
+
         Random rand = new Random();
         int indexOfCorrectAnswerAmongChoices = rand.nextInt(4);
         List<String> shuffledDistractorTiles = Arrays.asList(Start.tileList.get(Start.tileList.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).altTiles);

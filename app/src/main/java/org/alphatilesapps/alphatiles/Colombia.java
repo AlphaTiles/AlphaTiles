@@ -3,6 +3,7 @@ package org.alphatilesapps.alphatiles;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -157,6 +158,11 @@ public class Colombia extends GameActivity {
 
         ImageView deleteArrow = (ImageView) findViewById(R.id.deleteImage);
         deleteArrow.setClickable(true);
+
+        ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
+        wordImage.setClickable(true);
+        ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+        repeatImage.setImageResource(R.drawable.zz_forward);
 
         loadKeyboard();
 
