@@ -32,7 +32,6 @@ public class Chile extends GameActivity {
     static final int GRAY = 0xFF444444;
     static final int KEY_COLOR = 0xFF552222;
     boolean finished = false;
-    boolean hasChecked12Trackers;
     int currentRow;
 
     String[] secret;
@@ -40,6 +39,7 @@ public class Chile extends GameActivity {
     TileAdapter keyAdapter;
     GridView guessBox;
     Random rng = new Random();
+    ArrayList<String[]> wordList = new ArrayList<>();
     ArrayList<TileAdapter.ColorTile> tiles = new ArrayList<>();
     ArrayList<TileAdapter.ColorTile> keys = new ArrayList<>();
     @Override
@@ -123,7 +123,15 @@ public class Chile extends GameActivity {
         keyboard.setAdapter(keyAdapter);
 
         keyboard.setOnItemClickListener((board, key, i, l) -> keyPressed(key));
-        secret = data.words.get(rng.nextInt(data.words.size()));
+        wordList = new ArrayList<>(data.words);
+        // shuffle
+        for(int i = wordList.size() - 1; i > 0; i--) {
+            String[] tmp = wordList.get(i);
+            int j = rng.nextInt(i + 1);
+            wordList.set(i, wordList.get(j));
+            wordList.set(j, wordList.get(i));
+        }
+        secret = wordList.remove(wordList.size() - 1);
         LOGGER.log(Level.INFO, Arrays.toString(secret));
         currentRow = 0;
         int iID = getAudioInstructionsResID();
@@ -153,7 +161,17 @@ public class Chile extends GameActivity {
         }
         currentRow = 0;
         finished = false;
-        secret = data.words.get(rng.nextInt(data.words.size()));
+        if(wordList.isEmpty()) {
+            wordList = new ArrayList<>(data.words);
+            // shuffle
+            for(int i = wordList.size() - 1; i > 0; i--) {
+                String[] tmp = wordList.get(i);
+                int j = rng.nextInt(i + 1);
+                wordList.set(i, wordList.get(j));
+                wordList.set(j, tmp);
+            }
+        }
+        secret = wordList.remove(wordList.size() - 1);
         LOGGER.log(Level.INFO, Arrays.toString(secret));
         guessAdapter.notifyDataSetChanged();
         keyAdapter.notifyDataSetChanged();
