@@ -1,13 +1,12 @@
 package org.alphatilesapps.alphatiles;
 
 
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -97,6 +96,7 @@ public class Chile extends GameActivity {
         guessBox = findViewById(guessBoxID);
         guessBox.setNumColumns(data.wordLength);
         guessAdapter = new TileAdapter(tiles);
+        guessAdapter.setFontScale(data.fontScale);
         guessBox.setAdapter(guessAdapter);
 
         for(int row = 0; row < data.guesses; row++) {
@@ -108,7 +108,7 @@ public class Chile extends GameActivity {
         GridView keyboard = findViewById(keyboardID);
         keyboard.setNumColumns(data.keyboardWidth);
         keyAdapter = new TileAdapter(keys);
-
+        keyAdapter.setFontScale(data.fontScale);
         for(int row = 0; row <= data.keys.length / data.keyboardWidth; row++) {
             for(int col = 0; col < data.keyboardWidth; col++) {
                 if(row * data.keyboardWidth + col < data.keys.length) {
@@ -121,7 +121,6 @@ public class Chile extends GameActivity {
         findViewById(R.id.complete_word).setOnClickListener(view -> completeWord());
         findViewById(R.id.repeatImage).setOnClickListener(view -> reset());
         keyboard.setAdapter(keyAdapter);
-
         keyboard.setOnItemClickListener((board, key, i, l) -> keyPressed(key));
         wordList = new ArrayList<>(data.words);
         // shuffle
@@ -129,7 +128,7 @@ public class Chile extends GameActivity {
             String[] tmp = wordList.get(i);
             int j = rng.nextInt(i + 1);
             wordList.set(i, wordList.get(j));
-            wordList.set(j, wordList.get(i));
+            wordList.set(j, tmp);
         }
         secret = wordList.remove(wordList.size() - 1);
         LOGGER.log(Level.INFO, Arrays.toString(secret));
@@ -232,7 +231,7 @@ public class Chile extends GameActivity {
     private void keyPressed(View key) {
         LOGGER.log(Level.INFO, "Key pressed");
         String text =
-                ((AutoTextView)((LinearLayout)(((SquareConstraintLayout)key).getChildAt(0)))
+                ((TextView)((LinearLayout)(((SquareConstraintLayout)key).getChildAt(0)))
                         .getChildAt(0))
                         .getText()
                         .toString(); // ._.
@@ -314,7 +313,8 @@ public class Chile extends GameActivity {
         }
         String[] sortedKeyboard = keyboard.toArray(new String[0]);
         Arrays.sort(sortedKeyboard);
-        return new ChileData(bestLength, splitWords, sortedKeyboard, keyboardWidth);
+        float fontScale = Util.getMinFontSize(sortedKeyboard, 0.75f);
+        return new ChileData(bestLength, splitWords, sortedKeyboard, keyboardWidth, fontScale);
     }
     public static class ChileData {
         public int guesses;
@@ -322,12 +322,13 @@ public class Chile extends GameActivity {
         public int keyboardWidth;
         public String[] keys;
         public ArrayList<String[]> words;
-
-        public ChileData(int wordLength, ArrayList<String[]> words, String[] keys, int keyboardWidth) {
+        public float fontScale;
+        public ChileData(int wordLength, ArrayList<String[]> words, String[] keys, int keyboardWidth, float fontScale) {
             this.wordLength = wordLength;
             this.keyboardWidth = keyboardWidth;
             this.keys = keys;
             this.words = words;
+            this.fontScale = fontScale;
         }
     }
 }

@@ -182,7 +182,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/pointsImage"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/keyboardBoxDivider" />
@@ -249,10 +249,10 @@
         android:id="@+id/pointsImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/gamesHomeImage"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toStartOf="@+id/backspace"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/keyboard"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineHSys"
         android:contentDescription="@string/pointsImage"
         app:srcCompat="@drawable/zz_pointsscoredthisgame" />
 
