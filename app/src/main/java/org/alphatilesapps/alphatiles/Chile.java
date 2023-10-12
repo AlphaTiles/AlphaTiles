@@ -199,6 +199,7 @@ public class Chile extends GameActivity {
         keyAdapter.notifyDataSetChanged();
         if(greenCount == data.wordLength && !finished) {
             finished = true;
+            Start.gameSounds.play(Start.correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
             updatePointsAndTrackers(1);
         }
         else if(currentRow == data.guesses - 1) {
