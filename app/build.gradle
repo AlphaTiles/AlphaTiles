@@ -2,24 +2,15 @@ apply plugin: 'com.android.application'
 //apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "30.0.3"
+    compileSdk 34
 
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "org.alphatilesapps.alphatiles"
         minSdkVersion 21
-        targetSdkVersion 33
-        versionCode 107
-        versionName "1.4.10"
-
-        // API 14 = Ice Cream (4.0)
-        // API 16 = Jelly Bean (4.1) - required for Firebase
-        // API 21 = Lollipop (5.0) - required for correct display of special characters in TextViews without Grandroid, etc.
-        // As of July 20th, 2020, SIL Reading App Builder supported 4.0 (Ice Cream Sandwich) and above; this is API
-        // https://software.sil.org/readingappbuilder/support/faq/
-        // API 17 = Jelly Bean MR1 (4.2) - required for forcing RTL
-
+        targetSdkVersion 34
+        versionCode 108
+        versionName "1.5.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -27,20 +18,28 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Optional code that customizes the .apk output name
+            applicationVariants.all{
+                variant ->
+                    variant.outputs.each{
+                        output->
+                            def apkOutputName = "alphaTiles.Blue.${variant.productFlavors[0].name}.V${variant.versionName}.apk"
+                            output.outputFileName = apkOutputName
+                    }
+            }
         }
-
     }
 
-    flavorDimensions "language"
+    flavorDimensions += "language"
     productFlavors {
-        // Assigns this product flavor to the "version" flavor dimension.
-        // If you are using only one dimension, this property is optional,
-        // and the plugin automatically assigns all the module's flavors to
-        // that dimension.
-
         //Alpha Tiles internal team developers can find active product flavor definitions here:
         // https://docs.google.com/document/d/1a3satcmHFa5r6l7THrKLgxSWVCs-Mp2yOGyzk4oETsk/edit
 
+        amfHamar {
+            dimension "language"
+            applicationIdSuffix ".blue.amfHamar"
+            resValue "string", "app_name", 'Pidalla Wonna'
+        }
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
@@ -54,7 +53,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.10.0'
 //    implementation platform('com.google.firebase:firebase-bom:25.12.0')
 //    implementation 'com.google.firebase:firebase-analytics'
     testImplementation 'androidx.test.ext:junit:1.1.5'
