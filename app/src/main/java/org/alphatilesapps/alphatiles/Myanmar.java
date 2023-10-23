@@ -379,8 +379,14 @@ public class Myanmar extends GameActivity {
             for (int y = 0; y < 7; y++) {
                 if (tilesBoard[x][y]==null) {
 
-                    int randomNum = rand.nextInt(tileListNoSAD.size()); // KP
-                    randomTile = tileListNoSAD.get(randomNum);
+                    boolean simpleTile = false;
+                    while (!simpleTile){
+                        int randomNum = rand.nextInt(tileListNoSAD.size()); // KP
+                        randomTile = tileListNoSAD.get(randomNum);
+                        if(!(randomTile.typeOfThisTileInstance.equals("V"))){
+                            simpleTile = true;
+                        }
+                    }
 
                     tilesBoard[x][y] = randomTile;
 

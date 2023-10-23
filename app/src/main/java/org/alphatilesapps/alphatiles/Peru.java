@@ -157,6 +157,7 @@ public class Peru extends GameActivity {
                         while (isDuplicateAnswerChoice) {
                             ArrayList<Start.Tile> tilesInIncorrectChoice = new ArrayList<>(parsedRefWordTileArray);
                             Tile replacementTile = tileHashMap.find(shuffledDistractorTiles.get(incorrectLapNo - 1));
+                            replacementTile.typeOfThisTileInstance = parsedRefWordTileArray.get(0).typeOfThisTileInstance;
                             tilesInIncorrectChoice.set(0, replacementTile);
                             String incorrectChoiceString = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, 0);
                             nextWord.setText(incorrectChoiceString);
@@ -223,7 +224,9 @@ public class Peru extends GameActivity {
                         while (isDuplicateAnswerChoice) {
                             int randomIndexToReplace = rand.nextInt(tileLength - 1);       // this represents which position in word string will be replaced
                             ArrayList<Tile> tilesInIncorrectChoice = new ArrayList<>(parsedRefWordTileArray);
-                            tilesInIncorrectChoice.set(randomIndexToReplace, Start.tileList.returnRandomDistractorTile(parsedRefWordTileArray.get(randomIndexToReplace)));
+                            Tile incorrectTile = Start.tileList.returnRandomDistractorTile(parsedRefWordTileArray.get(randomIndexToReplace));
+                            incorrectTile.typeOfThisTileInstance = parsedRefWordTileArray.get(randomIndexToReplace).typeOfThisTileInstance;
+                            tilesInIncorrectChoice.set(randomIndexToReplace, incorrectTile);
                             String incorrectChoice3 = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, randomIndexToReplace);
 
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:

@@ -134,7 +134,7 @@ public class Japan extends GameActivity {
         setAdvanceArrowToGray();
         chooseWord();
 
-        while(tileList.parseWordIntoTiles(refWord.wordInLOP, refWord).size() > MAX_TILES) { //JP: choose word w/ <= 12 tiles
+        while(tileList.parseWordIntoTiles(refWord.wordInLOP, refWord).size() > MAX_TILES) {
             chooseWord();
         }
 

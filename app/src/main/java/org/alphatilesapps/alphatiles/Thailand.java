@@ -721,13 +721,12 @@ public class Thailand extends GameActivity {
                     }
                     if (after12checkedTrackers == 1){
                         setOptionsRowClickable();
-                        //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
                     }
                     else if (trackerCount >0 && trackerCount % 12 != 0) {
                         setOptionsRowClickable();
-                        //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
-                        // and we don't want the user to be able to advance before returning to earth (2) or
-                        // before seeing the celebration screen (3)
+                        // Otherwise, updatePointsAndTrackers will set it clickable only after
+                        // the player returns to earth (2) or sees the celebration screen (3)
                     }
                 }
             }
@@ -755,13 +754,12 @@ public class Thailand extends GameActivity {
                     }
                     if (after12checkedTrackers == 1){
                         setOptionsRowClickable();
-                        //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
                     }
                     else if (trackerCount >0 && trackerCount % 12 != 0) {
                         setOptionsRowClickable();
-                        //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
-                        // and we don't want the user to be able to advance before returning to earth (2) or
-                        // before seeing the celebration screen (3)
+                        // Otherwise, updatePointsAndTrackers will set it clickable only after
+                        // the player returns to earth (2) or sees the celebration screen (3)
                     }
                 }
             }
@@ -798,13 +796,12 @@ public class Thailand extends GameActivity {
                 }
                 if (after12checkedTrackers == 1){
                     setOptionsRowClickable();
-                    //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                    //JP: In setting 1, the player can always keep advancing to the next tile/word/image
                 }
                 else if (trackerCount >0 && trackerCount % 12 != 0) {
                     setOptionsRowClickable();
-                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
-                    // and we don't want the user to be able to advance before returning to earth (2) or
-                    // before seeing the celebration screen (3)
+                    // Otherwise, updatePointsAndTrackers will set it clickable only after
+                    // the player returns to earth (2) or sees the celebration screen (3)
                 }
             }
         }, 925);
@@ -818,18 +815,17 @@ public class Thailand extends GameActivity {
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 playActiveSyllableClip(playFinalSound);
+                if (repeatLocked) {
+                    setAllGameButtonsClickable();
+                }
                 if (after12checkedTrackers == 1){
                     setOptionsRowClickable();
-                    //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                    // JP: In setting 1, the player can always keep advancing to the next tile/word/image
                 }
                 else if (trackerCount >0 && trackerCount % 12 != 0) {
                     setOptionsRowClickable();
-                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
-                    // and we don't want the user to be able to advance before returning to earth (2) or
-                    // before seeing the celebration screen (3)
-                }
-                if (repeatLocked) {
-                    setAllTilesClickable();
+                    // Otherwise, updatePointsAndTrackers will set it clickable only after
+                    // the player returns to earth (2) or sees the celebration screen (3)
                 }
             }
         }, correctSoundDuration);
@@ -852,7 +848,7 @@ public class Thailand extends GameActivity {
             public void run() {
                 playActiveTileClip(playFinalSound);
                 if (repeatLocked) {
-                    setAllTilesClickable();
+                    setAllGameButtonsClickable();
                 if (after12checkedTrackers == 1){
                 }
                     setOptionsRowClickable();
