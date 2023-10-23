@@ -148,11 +148,6 @@ public class Romania extends GameActivity {
         setUpBasedOnGameTile(activeTile);
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
     private void setUpBasedOnGameTile(Start.Tile activeTile) { // Called every time a player starts the Romania game, and every time they click the arrows to go to a new tile
 
         skipThisTile = false;

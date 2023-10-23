@@ -134,11 +134,6 @@ public class UnitedStates extends GameActivity {
         playAgain();
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
     public void repeatGame(View view) {
 
         if (!repeatLocked) {

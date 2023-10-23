@@ -123,12 +123,6 @@ public class Italy extends GameActivity {
         updatePointsAndTrackers(0);
         playAgain();
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
     @Override
     public void setAllGameButtonsUnclickable() {
         super.setAllGameButtonsUnclickable();

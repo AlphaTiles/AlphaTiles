@@ -199,12 +199,6 @@ public class Brazil extends GameActivity {
         playAgain();
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
-
     public void repeatGame(View View) {
         if (!repeatLocked) {
             playAgain();
