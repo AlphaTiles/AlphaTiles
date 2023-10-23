@@ -201,7 +201,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected void updatePointsAndTrackers(int pointsIncrease) {
         setOptionsRowUnclickable();
-        setAllTilesUnclickable();
+        setAllGameButtonsUnclickable();
         // Update global points and game points gem
         globalPoints+=pointsIncrease;
         points+=pointsIncrease;
@@ -265,7 +265,7 @@ public abstract class GameActivity extends AppCompatActivity {
             // after12CheckedTrackers option 3: app displays celebration screen and moves on to the next unchecked game after checking all 12 trackers.
             if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 3) {
                 setOptionsRowUnclickable();
-                setAllTilesUnclickable();
+                setAllGameButtonsUnclickable();
                 soundSequencer.postDelayed(new Runnable() {
                     public void run() {
                         // Show celebration screen
@@ -419,6 +419,8 @@ public abstract class GameActivity extends AppCompatActivity {
                     last12Words.poll();
                 }
                 last12Words.add(refWord.wordInLOP);
+            } else {
+                freshWord = false;
             }
         }
     }
@@ -506,13 +508,12 @@ public abstract class GameActivity extends AppCompatActivity {
                     }
                     if (after12checkedTrackers == 1){
                         setOptionsRowClickable();
-                        //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
                     }
                     else if (trackerCount >0 && trackerCount % 12 != 0) {
                         setOptionsRowClickable();
-                        //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
-                        // and we don't want the user to be able to advance before returning to earth (2) or
-                        // before seeing the celebration screen (3)
+                        // Otherwise, updatePointsAndTrackers will set it clickable only after
+                        // the player returns to earth (2) or sees the celebration screen (3)
                     }
                     else if (trackerCount == 0){
                         setOptionsRowClickable();
@@ -553,16 +554,15 @@ public abstract class GameActivity extends AppCompatActivity {
 
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
-                setAllTilesClickable();
+                setAllGameButtonsClickable();
                 if (after12checkedTrackers == 1){
                     setOptionsRowClickable();
-                    //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                    //JP: In setting 1, the player can always keep advancing to the next tile/word/image
                 }
                 else if (trackerCount >0 && trackerCount % 12 != 0) {
                     setOptionsRowClickable();
-                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
-                    // and we don't want the user to be able to advance before returning to earth (2) or
-                    // before seeing the celebration screen (3)
+                    // Otherwise, updatePointsAndTrackers will set it clickable only after
+                    // the player returns to earth (2) or sees the celebration screen (3)
                 }
                 playActiveWordClip(playFinalSound);
             }
@@ -630,16 +630,15 @@ public abstract class GameActivity extends AppCompatActivity {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
-        setAllTilesClickable();
+        setAllGameButtonsClickable();
         if (after12checkedTrackers == 1){
             setOptionsRowClickable();
-            //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+            // JP: In setting 1, the player can always keep advancing to the next tile/word/image
         }
         else if (trackerCount >0 && trackerCount % 12 != 0) {
             setOptionsRowClickable();
-            //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
-            // and we don't want the user to be able to advance before returning to earth (2) or
-            // before seeing the celebration screen (3)
+            // Otherwise, updatePointsAndTrackers will set it clickable only after
+            // the player returns to earth (2) or sees the celebration screen (3)
         }
     }
 
