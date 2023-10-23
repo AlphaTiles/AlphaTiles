@@ -133,11 +133,6 @@ public class Thailand extends GameActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
     public void repeatGame(View view) {
         if (!repeatLocked) {
             playAgain();

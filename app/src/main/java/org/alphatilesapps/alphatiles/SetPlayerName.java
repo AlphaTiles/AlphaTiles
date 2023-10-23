@@ -111,11 +111,6 @@ public class SetPlayerName extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
     public void setTextSizes() {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();

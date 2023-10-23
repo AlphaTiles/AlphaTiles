@@ -122,12 +122,6 @@ public class Colombia extends GameActivity {
         updatePointsAndTrackers(0);
         playAgain();
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
     public void repeatGame(View View) {
 
         if (!repeatLocked) {
