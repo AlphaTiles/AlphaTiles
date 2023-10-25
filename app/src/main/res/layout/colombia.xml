@@ -1106,7 +1106,7 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         android:contentDescription="@string/playAgain"
         android:rotationY="0"
-        app:srcCompat="@drawable/zz_forward" />
+        app:srcCompat="@drawable/zz_forward_inactive" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHneg1"

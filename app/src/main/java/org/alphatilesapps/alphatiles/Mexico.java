@@ -145,6 +145,8 @@ public class Mexico extends GameActivity {
 
     public void playAgain() {
 
+        repeatLocked = true;
+        setAdvanceArrowToGray();
         setCardTextToEmpty();
         chooseMemoryWords();
         Collections.shuffle(memoryCollection); // KP
@@ -313,6 +315,7 @@ public class Mexico extends GameActivity {
 
             if (pairsCompleted == (visibleTiles / 2)) {
                 updatePointsAndTrackers((visibleTiles / 2));
+                setAdvanceArrowToBlue();
             }
 
             playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleTiles / 2));

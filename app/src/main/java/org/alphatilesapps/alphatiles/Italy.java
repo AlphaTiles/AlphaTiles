@@ -192,6 +192,7 @@ public class Italy extends GameActivity {
 
     public void playAgain() {
         repeatLocked = true;
+        setAdvanceArrowToGray();
         deckIndex = -1;
         gameCards.removeAll(gameCards);
         for (int card = 0; card < 16; card++) {
@@ -303,6 +304,7 @@ public class Italy extends GameActivity {
     }
 
     public void respondToLoteria() {
+        setAdvanceArrowToBlue();
         playCorrectSoundThenActiveWordClip(true);
         updatePointsAndTrackers(4);
 

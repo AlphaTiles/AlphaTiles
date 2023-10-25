@@ -173,6 +173,7 @@ public class Japan extends GameActivity {
 
     private void play() {
         repeatLocked = true;
+        setAdvanceArrowToGray();
         setWord();
         displayWordRef();
         displayTileChoices();
@@ -180,8 +181,6 @@ public class Japan extends GameActivity {
         setTilesUnclickable();
         ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
         wordImage.setClickable(true);
-        ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
-        repeatImage.setImageResource(R.drawable.zz_forward);
     }
 
     private void setWord() {
@@ -596,6 +595,7 @@ public class Japan extends GameActivity {
         if (config.toString().equals(wordInLOPNoSAD)) { // completely correct
             //great job!
             repeatLocked = false;
+            setAdvanceArrowToBlue();
             playCorrectSoundThenActiveWordClip(false); //JP not sure what this bool is for
             updatePointsAndTrackers(1);
 

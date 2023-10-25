@@ -163,6 +163,7 @@ public class Thailand extends GameActivity {
     public void playAgain() {
 
         repeatLocked = true;
+        setAdvanceArrowToGray();
 
         TextView refItem = findViewById(R.id.referenceItem);
         refItem.setText("");
@@ -607,6 +608,7 @@ public class Thailand extends GameActivity {
         if (goodMatch) {
             // Good job!
             repeatLocked = false;
+            setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
 
             for (int b = 0; b < TILE_BUTTONS.length; b++) {
