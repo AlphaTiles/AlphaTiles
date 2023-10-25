@@ -147,6 +147,7 @@ public class Colombia extends GameActivity {
     public void playAgain() {
 
         repeatLocked = true;
+        setAdvanceArrowToGray();
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
 
@@ -161,8 +162,6 @@ public class Colombia extends GameActivity {
 
         ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
         wordImage.setClickable(true);
-        ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
-        repeatImage.setImageResource(R.drawable.zz_forward);
 
         loadKeyboard();
 
@@ -440,6 +439,7 @@ public class Colombia extends GameActivity {
             playCorrectSoundThenActiveWordClip(false);
 
             repeatLocked = false;
+            setAdvanceArrowToBlue();
 
         } else { // Word is partial and, for the moment, assumed to be incorrect
             wordToBuild.setBackgroundColor(Color.parseColor("#A9A9A9")); // gray for wrong

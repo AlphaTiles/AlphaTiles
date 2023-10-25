@@ -247,7 +247,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/instructions"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        app:srcCompat="@drawable/zz_forward" />
+        app:srcCompat="@drawable/zz_forward_inactive" />
 
     <ImageView
         android:id="@+id/wordImage01"

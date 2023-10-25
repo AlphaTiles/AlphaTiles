@@ -419,11 +419,7 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void setOptionsRowUnclickable() {
-        ImageView repeatImage = findViewById(R.id.repeatImage);
         ImageView wordImage = findViewById(R.id.wordImage);
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-        repeatImage.setClickable(false);
         if (wordImage != null)
             wordImage.setClickable(false);
         if (getWordImages() != null)
@@ -431,15 +427,13 @@ public abstract class GameActivity extends AppCompatActivity {
                 wordImage = findViewById(getWordImages()[i]);
                 wordImage.setClickable(false);
             }
+        ImageView repeatImage = findViewById(R.id.repeatImage);
+        repeatImage.setClickable(false);
     }
 
     protected void setOptionsRowClickable() {
-        ImageView repeatImage = findViewById(R.id.repeatImage);
         ImageView wordImage = findViewById(R.id.wordImage);
         ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-        repeatImage.setClickable(true);
         gamesHomeImage.setClickable(true);
         if (wordImage != null)
             wordImage.setClickable(true);
@@ -448,6 +442,20 @@ public abstract class GameActivity extends AppCompatActivity {
                 wordImage = findViewById(getWordImages()[i]);
                 wordImage.setClickable(true);
             }
+        ImageView repeatImage = findViewById(R.id.repeatImage);
+        repeatImage.setClickable(true);
+    }
+
+    protected void setAdvanceArrowToBlue() {
+        ImageView repeatImage = findViewById(R.id.repeatImage);
+        repeatImage.setBackgroundResource(0);
+        repeatImage.setImageResource(R.drawable.zz_forward);
+    }
+
+    protected void setAdvanceArrowToGray() {
+        ImageView repeatImage = findViewById(R.id.repeatImage);
+        repeatImage.setBackgroundResource(0);
+        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
     }
 
     public void clickPicHearAudio(View view) {

@@ -391,14 +391,15 @@
         android:id="@+id/repeatImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@string/playAgain"
         android:onClick="repeatGame"
+        android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/instructions"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/playAgain"
-        android:rotationY="0"
-        app:srcCompat="@drawable/zz_forward" />
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/zz_forward_inactive" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHneg1"
