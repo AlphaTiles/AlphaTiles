@@ -169,6 +169,7 @@ public class Georgia extends GameActivity {
         }
 
         repeatLocked = true;
+        setAdvanceArrowToGray();
         if (syllableGame.equals("S")) {
             Collections.shuffle(sortableSyllArray); //JP
         }
@@ -456,6 +457,7 @@ public class Georgia extends GameActivity {
         if (correct.equals(selectedTile)) {
             // Good job! You chose the right tile
             repeatLocked = false;
+            setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
 
             for (int t = 0; t < TILE_BUTTONS.length; t++) {

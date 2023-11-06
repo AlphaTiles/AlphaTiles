@@ -3,6 +3,7 @@ package org.alphatilesapps.alphatiles;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -146,6 +147,7 @@ public class Colombia extends GameActivity {
     public void playAgain() {
 
         repeatLocked = true;
+        setAdvanceArrowToGray();
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
 
@@ -157,6 +159,9 @@ public class Colombia extends GameActivity {
 
         ImageView deleteArrow = (ImageView) findViewById(R.id.deleteImage);
         deleteArrow.setClickable(true);
+
+        ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
+        wordImage.setClickable(true);
 
         loadKeyboard();
 
@@ -434,6 +439,7 @@ public class Colombia extends GameActivity {
             playCorrectSoundThenActiveWordClip(false);
 
             repeatLocked = false;
+            setAdvanceArrowToBlue();
 
         } else { // Word is partial and, for the moment, assumed to be incorrect
             wordToBuild.setBackgroundColor(Color.parseColor("#A9A9A9")); // gray for wrong

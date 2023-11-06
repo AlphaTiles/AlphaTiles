@@ -146,6 +146,7 @@ public class UnitedStates extends GameActivity {
     public void playAgain() {
 
         repeatLocked = true;
+        setAdvanceArrowToGray();
         selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
         int lengthOfLOPWord = Integer.MAX_VALUE;
         while(lengthOfLOPWord > upperTileLimit) {
@@ -162,6 +163,9 @@ public class UnitedStates extends GameActivity {
         ImageView image = (ImageView) findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
+
+        ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
+        wordImage.setClickable(true);
 
         switch (challengeLevel) {
             case 2:
@@ -273,6 +277,7 @@ public class UnitedStates extends GameActivity {
 
             // Good job!
             repeatLocked = false;
+            setAdvanceArrowToBlue();
             constructedWord.setTextColor(Color.parseColor("#006400")); // dark green
             constructedWord.setTypeface(constructedWord.getTypeface(), Typeface.BOLD);
 

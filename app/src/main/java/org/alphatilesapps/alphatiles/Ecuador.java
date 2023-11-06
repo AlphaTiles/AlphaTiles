@@ -126,6 +126,7 @@ public class Ecuador extends GameActivity {
     public void playAgain() {
 
         repeatLocked = true;
+        setAdvanceArrowToGray();
         setBoxes();
         setTextBoxColors();
         Collections.shuffle(wordList); // KP
@@ -459,6 +460,7 @@ public class Ecuador extends GameActivity {
         if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
             // Good job!
             repeatLocked = false;
+            setAdvanceArrowToBlue();
 
             updatePointsAndTrackers(2);
 

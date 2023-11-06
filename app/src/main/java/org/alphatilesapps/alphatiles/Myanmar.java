@@ -183,6 +183,7 @@ public class Myanmar extends GameActivity {
     public void playAgain() {
 
         repeatLocked = true;
+        setAdvanceArrowToGray();
         wordsCompleted = 0;
         clickCount = 0;
         firstClickIndex = 0;
@@ -629,6 +630,7 @@ public class Myanmar extends GameActivity {
             // Play word and "correct" sounds and then clear the image from word bank
             wordInLWC = sevenWordsInLopLwc[indexOfFoundWord][0];
             if (wordsCompleted == completionGoal) {
+                setAdvanceArrowToBlue();
                 updatePointsAndTrackers(wordsCompleted);
             }
             playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);

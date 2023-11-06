@@ -132,6 +132,7 @@ public class China extends GameActivity {
         }
 
         repeatLocked = true;
+        setAdvanceArrowToGray();
         chooseWords();
         setUpTiles();
         setAllTilesClickable();
@@ -258,6 +259,7 @@ public class China extends GameActivity {
 
         if (areAllLinesSolved()) {
             repeatLocked = false;
+            setAdvanceArrowToBlue();
 
             updatePointsAndTrackers(4);
 

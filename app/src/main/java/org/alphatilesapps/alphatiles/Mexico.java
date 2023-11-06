@@ -14,8 +14,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.alphatilesapps.alphatiles.Start.WordList;
-
 import static android.graphics.Color.BLACK;
 
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -31,7 +29,6 @@ public class Mexico extends GameActivity {
     int pairsCompleted = 0;
     int cardHitA = 0;
     int cardHitB = 0;
-    double lowestAdjustment = 0.7;
     Handler handler; // KP
 
     protected static final int[] TILE_BUTTONS = {
@@ -62,7 +59,7 @@ public class Mexico extends GameActivity {
     @Override
     protected void centerGamesHomeImage() {
 
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
         int gameID = R.id.mexicoCL;
@@ -83,8 +80,8 @@ public class Mexico extends GameActivity {
         setContentView(R.layout.mexico);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView repeatImage = findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
@@ -148,6 +145,8 @@ public class Mexico extends GameActivity {
 
     public void playAgain() {
 
+        repeatLocked = true;
+        setAdvanceArrowToGray();
         setCardTextToEmpty();
         chooseMemoryWords();
         Collections.shuffle(memoryCollection); // KP
@@ -180,29 +179,42 @@ public class Mexico extends GameActivity {
         int cardsToSetUp = visibleTiles / 2;   // this is half the number of cards
 
         for (int i = 0; i < cardsToSetUp; i++) {
+            boolean wordAcceptable = true;
             chooseWord();
-            String[] content = new String[]
-                    {
-                            wordInLWC,
-                            wordInLOP,
-                            "TEXT",
-                            "UNSELECTED",
-                            String.valueOf(wordHashMap.get(wordInLWC).duration),    // audio clip duration in seconds
-                            wordHashMap.get(wordInLWC).adjustment,    // font adjustment
+            for (int j = 0; j < i; j++) {
+                if (wordInLWC.equals(memoryCollection.get(j*2)[0])) {
+                    wordAcceptable = false;
+                    j=i;
+                }
+            }
+            if (!wordAcceptable) {
+                i--;
+            }
 
-                    };
-            memoryCollection.add(content);
-            content = new String[]
-                    {
-                            wordInLWC,
-                            wordInLOP,
-                            "IMAGE",
-                            "UNSELECTED",
-                            String.valueOf(wordHashMap.get(wordInLWC).duration),    // audio clip duration in seconds
-                            wordHashMap.get(wordInLWC).adjustment,    // font adjustment
+            if (wordAcceptable) {
+                String[] content = new String[]
+                        {
+                                wordInLWC,
+                                wordInLOP,
+                                "TEXT",
+                                "UNSELECTED",
+                                String.valueOf(wordHashMap.get(wordInLWC).duration),    // audio clip duration in seconds
+                                wordHashMap.get(wordInLWC).adjustment,    // font adjustment
 
-                    };
-            memoryCollection.add(content);
+                        };
+                memoryCollection.add(content);
+                content = new String[]
+                        {
+                                wordInLWC,
+                                wordInLOP,
+                                "IMAGE",
+                                "UNSELECTED",
+                                String.valueOf(wordHashMap.get(wordInLWC).duration),    // audio clip duration in seconds
+                                wordHashMap.get(wordInLWC).adjustment,    // font adjustment
+
+                        };
+                memoryCollection.add(content);
+            }
         }
     }
 
@@ -303,6 +315,7 @@ public class Mexico extends GameActivity {
 
             if (pairsCompleted == (visibleTiles / 2)) {
                 updatePointsAndTrackers((visibleTiles / 2));
+                setAdvanceArrowToBlue();
             }
 
             playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleTiles / 2));

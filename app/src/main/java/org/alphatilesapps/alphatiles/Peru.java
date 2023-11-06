@@ -118,6 +118,7 @@ public class Peru extends GameActivity {
 
     public void playAgain() {
         repeatLocked = true;
+        setAdvanceArrowToGray();
         chooseWord();
         parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
         int tileLength = parsedWordArrayFinal.size();
@@ -135,6 +136,9 @@ public class Peru extends GameActivity {
         ImageView image = (ImageView) findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
+
+        ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
+        wordImage.setClickable(true);
 
         Random rand = new Random();
         int indexOfCorrectAnswerAmongChoices = rand.nextInt(4);
@@ -265,6 +269,7 @@ public class Peru extends GameActivity {
         if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
             // Good job!
             repeatLocked = false;
+            setAdvanceArrowToBlue();
 
            updatePointsAndTrackers(2);
 

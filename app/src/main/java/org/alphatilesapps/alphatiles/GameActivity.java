@@ -166,6 +166,8 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void updatePointsAndTrackers(int pointsIncrease) {
+        setOptionsRowUnclickable();
+        setAllTilesUnclickable();
         // Update global points and game points gem
         globalPoints+=pointsIncrease;
         points+=pointsIncrease;
@@ -215,7 +217,7 @@ public abstract class GameActivity extends AppCompatActivity {
             // LM
             // after12CheckedTrackers option 1: nothing happens; players keep playing even after checking all 12 trackers
             // after12CheckedTrackers option 2: app returns players to Earth after checking all 12 trackers. They can get back in. Will return to Earth again after another 12 correct answers.
-            if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 2) {
+            if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 2){
                 soundSequencer.postDelayed(new Runnable() {
                     public void run() {
                         Intent intent = getIntent();
@@ -228,6 +230,8 @@ public abstract class GameActivity extends AppCompatActivity {
             }
             // after12CheckedTrackers option 3: app displays celebration screen and moves on to the next unchecked game after checking all 12 trackers.
             if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 3) {
+                setOptionsRowUnclickable();
+                setAllTilesUnclickable();
                 soundSequencer.postDelayed(new Runnable() {
                     public void run() {
                         // Show celebration screen
@@ -415,11 +419,7 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void setOptionsRowUnclickable() {
-        ImageView repeatImage = findViewById(R.id.repeatImage);
         ImageView wordImage = findViewById(R.id.wordImage);
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
-        repeatImage.setClickable(false);
         if (wordImage != null)
             wordImage.setClickable(false);
         if (getWordImages() != null)
@@ -427,15 +427,13 @@ public abstract class GameActivity extends AppCompatActivity {
                 wordImage = findViewById(getWordImages()[i]);
                 wordImage.setClickable(false);
             }
+        ImageView repeatImage = findViewById(R.id.repeatImage);
+        repeatImage.setClickable(false);
     }
 
     protected void setOptionsRowClickable() {
-        ImageView repeatImage = findViewById(R.id.repeatImage);
         ImageView wordImage = findViewById(R.id.wordImage);
         ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
-        repeatImage.setBackgroundResource(0);
-        repeatImage.setImageResource(R.drawable.zz_forward);
-        repeatImage.setClickable(true);
         gamesHomeImage.setClickable(true);
         if (wordImage != null)
             wordImage.setClickable(true);
@@ -444,6 +442,20 @@ public abstract class GameActivity extends AppCompatActivity {
                 wordImage = findViewById(getWordImages()[i]);
                 wordImage.setClickable(true);
             }
+        ImageView repeatImage = findViewById(R.id.repeatImage);
+        repeatImage.setClickable(true);
+    }
+
+    protected void setAdvanceArrowToBlue() {
+        ImageView repeatImage = findViewById(R.id.repeatImage);
+        repeatImage.setBackgroundResource(0);
+        repeatImage.setImageResource(R.drawable.zz_forward);
+    }
+
+    protected void setAdvanceArrowToGray() {
+        ImageView repeatImage = findViewById(R.id.repeatImage);
+        repeatImage.setBackgroundResource(0);
+        repeatImage.setImageResource(R.drawable.zz_forward_inactive);
     }
 
     public void clickPicHearAudio(View view) {
@@ -474,7 +486,19 @@ public abstract class GameActivity extends AppCompatActivity {
                     if (repeatLocked) {
                         setAllTilesClickable();
                     }
-                    setOptionsRowClickable();
+                    if (after12checkedTrackers == 1){
+                        setOptionsRowClickable();
+                        //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                    }
+                    else if (trackerCount >0 && trackerCount % 12 != 0) {
+                        setOptionsRowClickable();
+                        //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                        // and we don't want the user to be able to advance before returning to earth (2) or
+                        // before seeing the celebration screen (3)
+                    }
+                    else if (trackerCount == 0){
+                        setOptionsRowClickable();
+                    }
                 }
             }
         }, wordDurations.get(wordInLWC));
@@ -512,7 +536,16 @@ public abstract class GameActivity extends AppCompatActivity {
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 setAllTilesClickable();
-                setOptionsRowClickable();
+                if (after12checkedTrackers == 1){
+                    setOptionsRowClickable();
+                    //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                }
+                else if (trackerCount >0 && trackerCount % 12 != 0) {
+                    setOptionsRowClickable();
+                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+                    // and we don't want the user to be able to advance before returning to earth (2) or
+                    // before seeing the celebration screen (3)
+                }
                 playActiveWordClip(playFinalSound);
             }
         }, correctSoundDuration);
@@ -580,7 +613,16 @@ public abstract class GameActivity extends AppCompatActivity {
         setOptionsRowUnclickable();
         gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
         setAllTilesClickable();
-        setOptionsRowClickable();
+        if (after12checkedTrackers == 1){
+            setOptionsRowClickable();
+            //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+        }
+        else if (trackerCount >0 && trackerCount % 12 != 0) {
+            setOptionsRowClickable();
+            //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
+            // and we don't want the user to be able to advance before returning to earth (2) or
+            // before seeing the celebration screen (3)
+        }
     }
 
     protected void playCorrectFinalSound0() {

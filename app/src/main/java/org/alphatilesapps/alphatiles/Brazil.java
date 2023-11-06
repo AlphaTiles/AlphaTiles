@@ -226,6 +226,7 @@ public class Brazil extends GameActivity {
         }
 
         repeatLocked = true;
+        setAdvanceArrowToGray();
         if (syllableGame.equals("S")) {
             Collections.shuffle(sortableSyllArray);
         } else {
@@ -659,6 +660,7 @@ public class Brazil extends GameActivity {
         if (correctTile.equals(gameTileString)) {
             // Good job! You chose the right tile
             repeatLocked = false;
+            setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
 
             for (int i = 0; i < parsedWordArrayFinal.size(); i++) {
