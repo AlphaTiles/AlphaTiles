@@ -90,6 +90,7 @@ public class Chile extends GameActivity {
         context = this;
         setContentView(R.layout.chile);
         updatePointsAndTrackers(0);
+        setAdvanceArrowToGray();
 
         data.guesses = baseGuessCount - challengeLevel;
         int guessBoxID = R.id.guessBox;
@@ -139,6 +140,7 @@ public class Chile extends GameActivity {
         }
     }
     private void backSpace() {
+        if(finished) return;
         for(int i = (currentRow + 1) * data.wordLength - 1; i >= (currentRow) * data.wordLength; i--) {
             if(!tiles.get(i).text.equals("")) {
                 tiles.get(i).text = "";
@@ -149,6 +151,7 @@ public class Chile extends GameActivity {
     }
     private void reset() {
         if(!finished) return;
+        setAdvanceArrowToGray();
         for(int i = 0; i < tiles.size(); i++) {
             TileAdapter.ColorTile tile = tiles.get(i);
             tile.text = "";
@@ -216,11 +219,15 @@ public class Chile extends GameActivity {
         keyAdapter.notifyDataSetChanged();
         if(greenCount == data.wordLength && !finished) {
             finished = true;
+            setAdvanceArrowToBlue();
             Start.gameSounds.play(Start.correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
             updatePointsAndTrackers(1);
+            setOptionsRowClickable();
         }
         else if(currentRow == data.guesses - 1) {
             finished = true;
+            setAdvanceArrowToBlue();
+            Start.gameSounds.play(Start.incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
         }
         else {
             currentRow++;
