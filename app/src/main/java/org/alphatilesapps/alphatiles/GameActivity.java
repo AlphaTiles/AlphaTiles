@@ -19,6 +19,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -74,8 +76,8 @@ public abstract class GameActivity extends AppCompatActivity {
     String wordInLWC = "";    // the lWC word (e.g. Spanish), which exactly matches the image and audio file names
     String wordInLOP = "";    // the corresponding word in the language of play (e.g. Me'phaa)
     String lastWord = "";
-    String secondToLastWord = "";
-    String thirdToLastWord = "";
+    Queue<String> last12Words = new PriorityQueue<>();
+
 
     boolean mediaPlayerIsPlaying = false;
     boolean repeatLocked = true;
@@ -393,14 +395,16 @@ public abstract class GameActivity extends AppCompatActivity {
                 }
             }
 
-            // If this word isn't one of the 3 previously tested words, we're good
-            if (!wordInLWC.equals(lastWord)
-                    && !wordInLWC.equals(secondToLastWord)
-                    && !wordInLWC.equals(thirdToLastWord)) {
+            // If this word isn't one of the 12 previously tested words, we're good
+            if (!last12Words.contains(lastWord)) {
                 freshWord = true;
-                thirdToLastWord = secondToLastWord;
-                secondToLastWord = lastWord;
+                if(last12Words.size()==12){
+                    last12Words.poll();
+                }
+                last12Words.add(lastWord);
                 lastWord = wordInLWC;
+            } else {
+                freshWord = false;
             }
         }
     }
