@@ -9,8 +9,8 @@ android {
         applicationId "org.alphatilesapps.alphatiles"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 112
-        versionName "1.5.4"
+        versionCode 113
+        versionName "1.5.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

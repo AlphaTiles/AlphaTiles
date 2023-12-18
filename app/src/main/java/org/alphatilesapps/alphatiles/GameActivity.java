@@ -75,7 +75,6 @@ public abstract class GameActivity extends AppCompatActivity {
     int visibleTiles;
     String wordInLWC = "";    // the lWC word (e.g. Spanish), which exactly matches the image and audio file names
     String wordInLOP = "";    // the corresponding word in the language of play (e.g. Me'phaa)
-    String lastWord = "";
     Queue<String> last12Words = new PriorityQueue<>();
 
 
@@ -396,13 +395,12 @@ public abstract class GameActivity extends AppCompatActivity {
             }
 
             // If this word isn't one of the 12 previously tested words, we're good
-            if (!last12Words.contains(lastWord)) {
+            if (!last12Words.contains(wordInLWC)) {
                 freshWord = true;
                 if(last12Words.size()==12){
                     last12Words.poll();
                 }
-                last12Words.add(lastWord);
-                lastWord = wordInLWC;
+                last12Words.add(wordInLWC);
             } else {
                 freshWord = false;
             }
