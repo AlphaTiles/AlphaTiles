@@ -14,8 +14,7 @@ public class AlphaTilesApplication extends Application {
     protected static Context applicationContext;
     protected static String writeKey = "zUhUqolnBCrAAdkU7Fh1MyOrbrmAzlly";
 
-    @Override
-    public void onCreate(){
+    @Override public void onCreate(){
         super.onCreate();
         applicationContext = getApplicationContext();
 
@@ -23,7 +22,6 @@ public class AlphaTilesApplication extends Application {
                 .trackApplicationLifecycleEvents()
                 .recordScreenViews()
                 .build();
-
         Analytics.setSingletonInstance(analytics);
 
     }
