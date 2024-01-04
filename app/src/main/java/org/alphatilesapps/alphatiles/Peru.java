@@ -18,11 +18,16 @@ import java.util.Random;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
+
 public class Peru extends GameActivity {
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
     boolean peruHasChecked12Trackers;
+
+    long levelBegunTime;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
@@ -258,6 +263,7 @@ public class Peru extends GameActivity {
                 }
             }
         }
+        levelBegunTime = System.currentTimeMillis();
     }
 
     private void respondToWordSelection(int justClickedWord) {
@@ -268,6 +274,9 @@ public class Peru extends GameActivity {
 
         if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
             // Good job!
+            String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+            Analytics.with(context).track("correct!", new Properties().putValue(gameUniqueID, System.currentTimeMillis() - levelBegunTime));
+
             repeatLocked = false;
             setAdvanceArrowToBlue();
 

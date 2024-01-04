@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -47,6 +49,8 @@ public class Brazil extends GameActivity {
     int visibleTiles;
     int numTones;
     String correctTile = "";
+
+    long levelBegunTime;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -250,6 +254,7 @@ public class Brazil extends GameActivity {
             TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
             nextWord.setClickable(true);
         }
+        levelBegunTime = System.currentTimeMillis();
     }
 
     private void setWord() {
@@ -659,6 +664,9 @@ public class Brazil extends GameActivity {
 
         if (correctTile.equals(gameTileString)) {
             // Good job! You chose the right tile
+            String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+            Analytics.with(context).track("correct!", new Properties().putValue(gameUniqueID, System.currentTimeMillis() - levelBegunTime));
+
             repeatLocked = false;
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);

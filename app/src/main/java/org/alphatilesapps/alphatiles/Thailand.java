@@ -575,7 +575,9 @@ public class Thailand extends GameActivity {
 
         if (goodMatch) {
             // Good job!
-            Analytics.with(context).track("correct!", new Properties().putValue(System.currentTimeMillis() - levelBegunTime));
+            String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+            Analytics.with(context).track("correct!", new Properties().putValue(gameUniqueID, System.currentTimeMillis() - levelBegunTime));
+
             repeatLocked = false;
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
