@@ -22,6 +22,9 @@ import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.COLORS;
 import static org.alphatilesapps.alphatiles.Start.CorV;
 
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
+
 //level 1: 6 visible tiles, random wrong choices
 //level 2: 12 visible tiles, random wrong choices
 //level 3: 18 visible tiles, random wrong choices
@@ -46,6 +49,8 @@ public class Georgia extends GameActivity {
     String initialTile = "";
     String initialSyll = "";
     int visibleTiles; // will be 6, 12 or 18 based on challengeLevel 1, 2 or 3
+
+    long levelBegunTime;
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
@@ -190,6 +195,8 @@ public class Georgia extends GameActivity {
             TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
             nextWord.setClickable(true);
         }
+
+        levelBegunTime = System.currentTimeMillis();
 
     }
 
@@ -456,6 +463,9 @@ public class Georgia extends GameActivity {
 
         if (correct.equals(selectedTile)) {
             // Good job! You chose the right tile
+            String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+            Analytics.with(context).track("correct!", new Properties().putValue(gameUniqueID, System.currentTimeMillis() - levelBegunTime));
+
             repeatLocked = false;
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);

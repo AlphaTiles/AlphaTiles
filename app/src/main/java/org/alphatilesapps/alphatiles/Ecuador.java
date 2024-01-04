@@ -27,6 +27,9 @@ import java.util.Scanner;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
+
 // JP TO DO:
 // 1. FIX SETBOXES() FUNCTION
 // 2. FILTER DUPLICATE ANSWER CHOICES
@@ -38,6 +41,7 @@ public class Ecuador extends GameActivity {
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
+    long levelBegunTime;
     // # 1 memoryCollection[LWC word, e.g. Spanish]
     // # 2 [LOP word, e.g. Me'phaa]
     // # 3 [state: "TEXT" or "IMAGE"]
@@ -90,6 +94,7 @@ public class Ecuador extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.ecuador);
+        Analytics.with(context).screen("Ecuador", new Properties().putValue("hi", "there"));
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -137,6 +142,7 @@ public class Ecuador extends GameActivity {
         setWords();
         setAllTilesClickable();
         setOptionsRowClickable();
+        levelBegunTime = System.currentTimeMillis();
 
     }
 
@@ -463,6 +469,9 @@ public class Ecuador extends GameActivity {
 
         if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
             // Good job!
+            String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+            Analytics.with(context).track("correct!", new Properties().putValue(gameUniqueID, System.currentTimeMillis() - levelBegunTime));
+
             repeatLocked = false;
             setAdvanceArrowToBlue();
 
