@@ -20,7 +20,6 @@ public class AlphaTilesApplication extends Application {
 
         Analytics analytics = new Analytics.Builder(applicationContext, writeKey)
                 .trackApplicationLifecycleEvents()
-                .recordScreenViews()
                 .build();
         Analytics.setSingletonInstance(analytics);
 

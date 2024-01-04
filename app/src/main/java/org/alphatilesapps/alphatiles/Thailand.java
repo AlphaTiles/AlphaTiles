@@ -45,6 +45,8 @@ public class Thailand extends GameActivity {
     int refColor;
     int challengeLevelThai;
 
+    long levelBegunTime;
+
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
     };
@@ -164,8 +166,6 @@ public class Thailand extends GameActivity {
     }
 
     public void playAgain() {
-        long startTime = System.currentTimeMillis();
-
         repeatLocked = true;
         setAdvanceArrowToGray();
 
@@ -422,7 +422,7 @@ public class Thailand extends GameActivity {
                 }
                 break;
         }
-        Analytics.with(context).track("playAgain", new Properties().putValue("Thailand", System.currentTimeMillis() - startTime));
+        levelBegunTime = System.currentTimeMillis();
     }
 
     private boolean verifyFreshTile(String refTile) {
@@ -575,6 +575,7 @@ public class Thailand extends GameActivity {
 
         if (goodMatch) {
             // Good job!
+            Analytics.with(context).track("correct!", new Properties().putValue(System.currentTimeMillis() - levelBegunTime));
             repeatLocked = false;
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
