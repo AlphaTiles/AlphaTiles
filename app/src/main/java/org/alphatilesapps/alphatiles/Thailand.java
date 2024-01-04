@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
+
 import static android.graphics.Color.WHITE;
 import static org.alphatilesapps.alphatiles.Start.*;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
@@ -161,6 +164,7 @@ public class Thailand extends GameActivity {
     }
 
     public void playAgain() {
+        long startTime = System.currentTimeMillis();
 
         repeatLocked = true;
         setAdvanceArrowToGray();
@@ -192,14 +196,7 @@ public class Thailand extends GameActivity {
                         refTile = parsedWordArrayFinal.get(0);
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
-                    if (!refTile.equals(refTileLast)
-                            && !refTile.equals(refTileSecondToLast)
-                            && !refTile.equals(refTileThirdToLast)) {
-                        freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    }
+                    freshTile = verifyFreshTile(refTile);
                 }
 
             } else if (refType.equals("TILE_UPPER") || choiceType.equals("TILE_UPPER")) {
@@ -217,14 +214,7 @@ public class Thailand extends GameActivity {
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
                     // SAD should never be first tile linguistically, so no need to programatically filter out
-                    if (!refTile.equals(refTileLast)
-                            && !refTile.equals(refTileSecondToLast)
-                            && !refTile.equals(refTileThirdToLast)) {
-                        freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    }
+                    freshTile = verifyFreshTile(refTile);
                 }
 
             } else if (refType.contains("WORD") && choiceType.contains("WORD")) {
@@ -241,14 +231,7 @@ public class Thailand extends GameActivity {
                         refTile = parsedWordArrayFinal.get(0);
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
-                    if (!refTile.equals(refTileLast)
-                            && !refTile.equals(refTileSecondToLast)
-                            && !refTile.equals(refTileThirdToLast)) {
-                        freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    }
+                    freshTile = verifyFreshTile(refTile);
                 }
 
             }
@@ -258,14 +241,7 @@ public class Thailand extends GameActivity {
             while (!freshTile) {
                 int randomNum2 = rand.nextInt(sortableSyllArray.size());
                 refTile = sortableSyllArray.get(randomNum2).syllable;
-                if (!refTile.equals(refTileLast)
-                        && !refTile.equals(refTileSecondToLast)
-                        && !refTile.equals(refTileThirdToLast)) {
-                    freshTile = true;
-                    refTileThirdToLast = refTileSecondToLast;
-                    refTileSecondToLast = refTileLast;
-                    refTileLast = refTile;
-                }
+                freshTile = verifyFreshTile(refTile);
             }
 
         } else if (choiceType.contains("WORD") && refType.contains("SYLL")) {
@@ -274,14 +250,7 @@ public class Thailand extends GameActivity {
                 chooseWord();
                 parsedWordArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
                 refTile = parsedWordArrayFinal.get(0);
-                if (!refTile.equals(refTileLast)
-                        && !refTile.equals(refTileSecondToLast)
-                        && !refTile.equals(refTileThirdToLast)) {
-                    freshTile = true;
-                    refTileThirdToLast = refTileSecondToLast;
-                    refTileSecondToLast = refTileLast;
-                    refTileLast = refTile;
-                }
+                freshTile = verifyFreshTile(refTile);
             }
 
         } else {
@@ -302,14 +271,7 @@ public class Thailand extends GameActivity {
                         refTile = sortableTilesArray.get(randomNum2).baseTile;
                         refTileType = sortableTilesArray.get(randomNum2).tileType;
                     }
-                    if (!refTile.equals(refTileLast)
-                            && !refTile.equals(refTileSecondToLast)
-                            && !refTile.equals(refTileThirdToLast)) {
-                        freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    }
+                    freshTile = verifyFreshTile(refTile);
                 }
             }
             if (refType.equals("TILE_UPPER")) {
@@ -326,14 +288,7 @@ public class Thailand extends GameActivity {
                         refTile = sortableTilesArray.get(randomNum2).upperTile;
                         refTileType = sortableTilesArray.get(randomNum2).tileType;
                     }
-                    if (!refTile.equals(refTileLast)
-                            && !refTile.equals(refTileSecondToLast)
-                            && !refTile.equals(refTileThirdToLast)) {
-                        freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    }
+                    freshTile = verifyFreshTile(refTile);
                 }
             }
         }
@@ -467,6 +422,19 @@ public class Thailand extends GameActivity {
                 }
                 break;
         }
+        Analytics.with(context).track("playAgain", new Properties().putValue("Thailand", System.currentTimeMillis() - startTime));
+    }
+
+    private boolean verifyFreshTile(String refTile) {
+        if (!refTile.equals(refTileLast)
+                && !refTile.equals(refTileSecondToLast)
+                && !refTile.equals(refTileThirdToLast)) {
+            refTileThirdToLast = refTileSecondToLast;
+            refTileSecondToLast = refTileLast;
+            refTileLast = refTile;
+            return true;
+        }
+        return false;
     }
 
 

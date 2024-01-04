@@ -1,7 +1,4 @@
 apply plugin: 'com.android.application'
-//plugins {
-//    id 'application'
-//}
 //apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -9,7 +6,7 @@ android {
 
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
-        applicationId "org.alphatilesapps.alphatiles"  // .AlphaTilesApplication
+        applicationId "org.alphatilesapps.alphatiles"
         minSdkVersion 21
         targetSdkVersion 34
         versionCode 113
@@ -49,10 +46,6 @@ android {
     }
     namespace 'org.alphatilesapps.alphatiles'
 }
-
-//application {
-//    mainClass = 'alphatiles.AlphaTilesApplication'
-//}
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
