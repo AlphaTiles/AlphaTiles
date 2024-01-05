@@ -51,6 +51,7 @@ public class Georgia extends GameActivity {
     int visibleTiles; // will be 6, 12 or 18 based on challengeLevel 1, 2 or 3
 
     long levelBegunTime;
+    int incorrectOnLevel;
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
@@ -196,8 +197,8 @@ public class Georgia extends GameActivity {
             nextWord.setClickable(true);
         }
 
+        incorrectOnLevel = 0;
         levelBegunTime = System.currentTimeMillis();
-
     }
 
     private void setWord() {
@@ -463,8 +464,11 @@ public class Georgia extends GameActivity {
 
         if (correct.equals(selectedTile)) {
             // Good job! You chose the right tile
+
+            // report time and number of incorrect guesses
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Analytics.with(context).track("correct!", new Properties().putValue(gameUniqueID, System.currentTimeMillis() - levelBegunTime));
+            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime).putValue("prior incorrect", incorrectOnLevel);
+            Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
             setAdvanceArrowToBlue();
@@ -484,9 +488,8 @@ public class Georgia extends GameActivity {
             playCorrectSoundThenActiveWordClip(false);
 
         } else {
-
+            incorrectOnLevel += 1;
             playIncorrectSound();
-
         }
 
     }

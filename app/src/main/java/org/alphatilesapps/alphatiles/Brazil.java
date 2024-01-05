@@ -49,8 +49,8 @@ public class Brazil extends GameActivity {
     int visibleTiles;
     int numTones;
     String correctTile = "";
-
     long levelBegunTime;
+    int incorrectOnLevel = 0;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -254,6 +254,7 @@ public class Brazil extends GameActivity {
             TextView nextWord = (TextView) findViewById(TILE_BUTTONS[i]);
             nextWord.setClickable(true);
         }
+        incorrectOnLevel = 0;
         levelBegunTime = System.currentTimeMillis();
     }
 
@@ -664,8 +665,11 @@ public class Brazil extends GameActivity {
 
         if (correctTile.equals(gameTileString)) {
             // Good job! You chose the right tile
+
+            // report time and number of incorrect guesses
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Analytics.with(context).track("correct!", new Properties().putValue(gameUniqueID, System.currentTimeMillis() - levelBegunTime));
+            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime).putValue("prior incorrect", incorrectOnLevel);
+            Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
             setAdvanceArrowToBlue();
@@ -700,9 +704,8 @@ public class Brazil extends GameActivity {
             playCorrectSoundThenActiveWordClip(false);
 
         } else {
-
+            incorrectOnLevel += 1;
             playIncorrectSound();
-
         }
 
     }

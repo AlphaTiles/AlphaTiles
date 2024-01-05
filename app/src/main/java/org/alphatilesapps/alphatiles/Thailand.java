@@ -44,8 +44,8 @@ public class Thailand extends GameActivity {
     String choiceType;
     int refColor;
     int challengeLevelThai;
-
     long levelBegunTime;
+    int incorrectOnLevel = 0;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
@@ -422,6 +422,7 @@ public class Thailand extends GameActivity {
                 }
                 break;
         }
+        incorrectOnLevel = 0;
         levelBegunTime = System.currentTimeMillis();
     }
 
@@ -575,8 +576,11 @@ public class Thailand extends GameActivity {
 
         if (goodMatch) {
             // Good job!
+
+            // report time and number of incorrect guesses
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Analytics.with(context).track("correct!", new Properties().putValue(gameUniqueID, System.currentTimeMillis() - levelBegunTime));
+            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime).putValue("prior incorrect", incorrectOnLevel);
+            Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
             setAdvanceArrowToBlue();
@@ -620,6 +624,7 @@ public class Thailand extends GameActivity {
             }
 
         } else {
+            incorrectOnLevel += 1;
             playIncorrectSound();
         }
     }

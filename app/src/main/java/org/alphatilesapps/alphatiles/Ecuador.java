@@ -42,6 +42,7 @@ public class Ecuador extends GameActivity {
     String secondToLastWord = "";
     String thirdToLastWord = "";
     long levelBegunTime;
+    int incorrectOnLevel;
     // # 1 memoryCollection[LWC word, e.g. Spanish]
     // # 2 [LOP word, e.g. Me'phaa]
     // # 3 [state: "TEXT" or "IMAGE"]
@@ -142,6 +143,7 @@ public class Ecuador extends GameActivity {
         setWords();
         setAllTilesClickable();
         setOptionsRowClickable();
+        incorrectOnLevel = 0;
         levelBegunTime = System.currentTimeMillis();
 
     }
@@ -469,8 +471,11 @@ public class Ecuador extends GameActivity {
 
         if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
             // Good job!
+
+            // report time and number of incorrect guesses
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Analytics.with(context).track("correct!", new Properties().putValue(gameUniqueID, System.currentTimeMillis() - levelBegunTime));
+            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime).putValue("prior incorrect", incorrectOnLevel);
+            Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
             setAdvanceArrowToBlue();
@@ -491,6 +496,7 @@ public class Ecuador extends GameActivity {
             playCorrectSoundThenActiveWordClip(false);
 
         } else {
+            incorrectOnLevel += 1;
             playIncorrectSound();
         }
     }

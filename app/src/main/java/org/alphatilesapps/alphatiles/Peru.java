@@ -26,8 +26,8 @@ public class Peru extends GameActivity {
     String secondToLastWord = "";
     String thirdToLastWord = "";
     boolean peruHasChecked12Trackers;
-
     long levelBegunTime;
+    int incorrectOnLevel = 0;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
@@ -264,6 +264,7 @@ public class Peru extends GameActivity {
             }
         }
         levelBegunTime = System.currentTimeMillis();
+        incorrectOnLevel = 0;
     }
 
     private void respondToWordSelection(int justClickedWord) {
@@ -274,8 +275,11 @@ public class Peru extends GameActivity {
 
         if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
             // Good job!
+
+            // report time and number of incorrect guesses
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Analytics.with(context).track("correct!", new Properties().putValue(gameUniqueID, System.currentTimeMillis() - levelBegunTime));
+            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime).putValue("prior incorrect", incorrectOnLevel);
+            Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
             setAdvanceArrowToBlue();
@@ -296,6 +300,7 @@ public class Peru extends GameActivity {
             playCorrectSoundThenActiveWordClip(false);
 
         } else {
+            incorrectOnLevel += 1;
             playIncorrectSound();
         }
     }
