@@ -21,6 +21,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
+
 import static org.alphatilesapps.alphatiles.Start.*;
 
 
@@ -30,6 +33,7 @@ public class Earth extends AppCompatActivity {
 
     int playerNumber = -1;
     String playerString;
+    char grade;
     int pageNumber; // Games 001 to 023 are displayed on page 1, games 024 to 046 are displayed on page 2, etc.
     int globalPoints;
     int doorsPerPage = 23;
@@ -78,6 +82,14 @@ public class Earth extends AppCompatActivity {
             defaultName = localWordForName + " " + playerNumber;
         }
         playerName = prefs.getString("storedName" + playerString, defaultName);
+
+        // find one-digit grade level of student
+        for (int i = 0; i < playerName.length(); i++) {
+            char nameChar = playerName.charAt(i);
+            if (Character.isDigit(nameChar)) grade = nameChar;
+        }
+        Analytics.with(context).track("earth", new Properties().putValue("playerName", playerName).putValue("grade", grade));
+
         TextView name = findViewById(R.id.avatarName);
         name.setText(playerName);
 
@@ -260,6 +272,7 @@ public class Earth extends AppCompatActivity {
         intent.putExtra("country", country);
         intent.putExtra("syllableGame", syllableGame);
         intent.putExtra("stage", stage);
+        intent.putExtra("studentGrade", grade);
         startActivity(intent);
         finish();
 
