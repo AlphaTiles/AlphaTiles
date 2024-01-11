@@ -41,8 +41,7 @@ public class Ecuador extends GameActivity {
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
-    long levelBegunTime;
-    int incorrectOnLevel;
+
     // # 1 memoryCollection[LWC word, e.g. Spanish]
     // # 2 [LOP word, e.g. Me'phaa]
     // # 3 [state: "TEXT" or "IMAGE"]
@@ -95,7 +94,6 @@ public class Ecuador extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.ecuador);
-        Analytics.with(context).screen("Ecuador", new Properties().putValue("hi", "there"));
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -474,7 +472,9 @@ public class Ecuador extends GameActivity {
 
             // report time and number of incorrect guesses
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime).putValue("prior incorrect", incorrectOnLevel);
+            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime)
+                    .putValue("prior incorrect", incorrectOnLevel)
+                    .putValue("grade", studentGrade);
             Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;

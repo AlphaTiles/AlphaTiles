@@ -22,8 +22,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.segment.analytics.Analytics;
-import com.segment.analytics.Properties;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -233,7 +231,6 @@ public class ChoosePlayer extends AppCompatActivity {
         }
 
         int resID = context.getResources().getIdentifier("zzz_choose_player", "raw", context.getPackageName());
-        Analytics.with(getApplicationContext()).track("Player Selected", new Properties().putValue("ResID", resID));
         if (resID == 0) {
             // hide audio instructions icon
             ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);

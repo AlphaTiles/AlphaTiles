@@ -64,7 +64,10 @@ public abstract class GameActivity extends AppCompatActivity {
     int points;
     int globalPoints;
     int trackerCount = 0;
+
     char studentGrade;
+    long levelBegunTime;
+    int incorrectOnLevel = 0;
 
     Start.TileListWithMultipleTypes cumulativeStageBasedTileList = new Start.TileListWithMultipleTypes();
     Start.WordList cumulativeStageBasedWordList = new Start.WordList();

@@ -26,8 +26,6 @@ public class Peru extends GameActivity {
     String secondToLastWord = "";
     String thirdToLastWord = "";
     boolean peruHasChecked12Trackers;
-    long levelBegunTime;
-    int incorrectOnLevel = 0;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
@@ -278,7 +276,9 @@ public class Peru extends GameActivity {
 
             // report time and number of incorrect guesses
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime).putValue("prior incorrect", incorrectOnLevel);
+            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime)
+                    .putValue("prior incorrect", incorrectOnLevel)
+                    .putValue("grade", studentGrade);
             Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;

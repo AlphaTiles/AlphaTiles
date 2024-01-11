@@ -50,8 +50,6 @@ public class Georgia extends GameActivity {
     String initialSyll = "";
     int visibleTiles; // will be 6, 12 or 18 based on challengeLevel 1, 2 or 3
 
-    long levelBegunTime;
-    int incorrectOnLevel;
     String lastWord = "";
     String secondToLastWord = "";
     String thirdToLastWord = "";
@@ -467,7 +465,9 @@ public class Georgia extends GameActivity {
 
             // report time and number of incorrect guesses
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime).putValue("prior incorrect", incorrectOnLevel);
+            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime)
+                    .putValue("prior incorrect", incorrectOnLevel)
+                    .putValue("grade", studentGrade);
             Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;

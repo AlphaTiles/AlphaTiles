@@ -2,11 +2,8 @@ package org.alphatilesapps.alphatiles;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Bundle;
 
 import com.segment.analytics.Analytics;
-import com.segment.analytics.ConnectionFactory;
-import com.segment.analytics.Properties;
 //import com.segment.analytics.android.integrations.firebase.FirebaseIntegration;
 
 public class AlphaTilesApplication extends Application {
@@ -18,9 +15,7 @@ public class AlphaTilesApplication extends Application {
         super.onCreate();
         applicationContext = getApplicationContext();
 
-        Analytics analytics = new Analytics.Builder(applicationContext, writeKey)
-                .trackApplicationLifecycleEvents()
-                .build();
+        Analytics analytics = new Analytics.Builder(applicationContext, writeKey).build();
         Analytics.setSingletonInstance(analytics);
 
     }

@@ -83,12 +83,11 @@ public class Earth extends AppCompatActivity {
         }
         playerName = prefs.getString("storedName" + playerString, defaultName);
 
-        // find one-digit grade level of student
+        // find one-digit grade level of student (ASSUMES GRADE IS ONLY ONE DIGIT LONG AND ONLY DIGIT IN NAME)
         for (int i = 0; i < playerName.length(); i++) {
             char nameChar = playerName.charAt(i);
             if (Character.isDigit(nameChar)) grade = nameChar;
         }
-        Analytics.with(context).track("earth", new Properties().putValue("playerName", playerName).putValue("grade", grade));
 
         TextView name = findViewById(R.id.avatarName);
         name.setText(playerName);

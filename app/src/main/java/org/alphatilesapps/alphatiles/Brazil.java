@@ -49,8 +49,6 @@ public class Brazil extends GameActivity {
     int visibleTiles;
     int numTones;
     String correctTile = "";
-    long levelBegunTime;
-    int incorrectOnLevel = 0;
 
     protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -668,7 +666,9 @@ public class Brazil extends GameActivity {
 
             // report time and number of incorrect guesses
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime).putValue("prior incorrect", incorrectOnLevel);
+            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime)
+                    .putValue("prior incorrect", incorrectOnLevel)
+                    .putValue("grade", studentGrade);
             Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
