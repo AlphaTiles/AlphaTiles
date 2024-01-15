@@ -147,6 +147,7 @@ public class Thailand extends GameActivity {
 
         visibleTiles = TILE_BUTTONS.length;
         updatePointsAndTrackers(0);
+        incorrectAnswersSelected = new ArrayList<>(3);
         playAgain();
 
     }
@@ -420,6 +421,10 @@ public class Thailand extends GameActivity {
                 }
                 break;
         }
+        for (int i = 0; i < 3; i++) {
+            if (incorrectAnswersSelected.size() < 3) incorrectAnswersSelected.add("");
+            else incorrectAnswersSelected.set(i, "");
+        }
         incorrectOnLevel = 0;
         levelBegunTime = System.currentTimeMillis();
     }
@@ -581,6 +586,11 @@ public class Thailand extends GameActivity {
                     .putValue("prior incorrect", incorrectOnLevel)
                     .putValue("tile", refTile)
                     .putValue("grade", studentGrade);
+            for (int i = 0; i < 3; i++) {
+                if (!incorrectAnswersSelected.get(i).equals("")) {
+                    info.putValue("incorrect"+(i+1), incorrectAnswersSelected.get(i));
+                }
+            }
             Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
@@ -626,6 +636,14 @@ public class Thailand extends GameActivity {
 
         } else {
             incorrectOnLevel += 1;
+            for (int i = 0; i < 3; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(chosenItemText)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, chosenItemText);
+                    break;
+                }
+            }
             playIncorrectSound();
         }
     }

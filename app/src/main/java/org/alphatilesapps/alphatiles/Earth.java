@@ -21,9 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.segment.analytics.Analytics;
-import com.segment.analytics.Properties;
-
 import static org.alphatilesapps.alphatiles.Start.*;
 
 
