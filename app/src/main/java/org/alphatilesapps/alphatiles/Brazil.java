@@ -207,6 +207,11 @@ public class Brazil extends GameActivity {
         }
 
         updatePointsAndTrackers(0);
+        incorrectAnswersSelected = new ArrayList<>(3);
+        for (int i = 0; i < visibleTiles-1; i++) {
+            incorrectAnswersSelected.add("");
+        }
+        playAgain();
         playAgain();
     }
 
@@ -253,6 +258,9 @@ public class Brazil extends GameActivity {
             nextWord.setClickable(true);
         }
         incorrectOnLevel = 0;
+        for (int i = 0; i < visibleTiles-1; i++) {
+            incorrectAnswersSelected.set(i, "");
+        }
         levelBegunTime = System.currentTimeMillis();
     }
 
@@ -669,6 +677,11 @@ public class Brazil extends GameActivity {
             Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime)
                     .putValue("prior incorrect", incorrectOnLevel)
                     .putValue("grade", studentGrade);
+            for (int i = 0; i < visibleTiles-1; i++) {
+                if (!incorrectAnswersSelected.get(i).equals("")) {
+                    info.putValue("incorrect"+(i+1), incorrectAnswersSelected.get(i));
+                }
+            }
             Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
@@ -705,6 +718,14 @@ public class Brazil extends GameActivity {
 
         } else {
             incorrectOnLevel += 1;
+            for (int i = 0; i < visibleTiles-1; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(gameTileString)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, gameTileString);
+                    break;
+                }
+            }
             playIncorrectSound();
         }
 

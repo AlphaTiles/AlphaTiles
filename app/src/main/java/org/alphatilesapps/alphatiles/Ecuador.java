@@ -115,6 +115,10 @@ public class Ecuador extends GameActivity {
 
         visibleTiles = TILE_BUTTONS.length;
         updatePointsAndTrackers(0);
+        incorrectAnswersSelected = new ArrayList<>(visibleTiles-1);
+        for (int i = 0; i < visibleTiles-1; i++) {
+            incorrectAnswersSelected.add("");
+        }
         playAgain();
     }
 
@@ -141,6 +145,9 @@ public class Ecuador extends GameActivity {
         setWords();
         setAllTilesClickable();
         setOptionsRowClickable();
+        for (int i = 0; i < 3; i++) {
+            incorrectAnswersSelected.set(i, "");
+        }
         incorrectOnLevel = 0;
         levelBegunTime = System.currentTimeMillis();
 
@@ -475,6 +482,11 @@ public class Ecuador extends GameActivity {
             Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime)
                     .putValue("prior incorrect", incorrectOnLevel)
                     .putValue("grade", studentGrade);
+            for (int i = 0; i < visibleTiles-1; i++) {
+                if (!incorrectAnswersSelected.get(i).equals("")) {
+                    info.putValue("incorrect"+(i+1), incorrectAnswersSelected.get(i));
+                }
+            }
             Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
@@ -497,6 +509,14 @@ public class Ecuador extends GameActivity {
 
         } else {
             incorrectOnLevel += 1;
+            for (int i = 0; i < visibleTiles-1; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(chosenWordText)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, chosenWordText);
+                    break;
+                }
+            }
             playIncorrectSound();
         }
     }

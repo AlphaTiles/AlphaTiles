@@ -68,6 +68,7 @@ public abstract class GameActivity extends AppCompatActivity {
     char studentGrade;
     long levelBegunTime;
     int incorrectOnLevel = 0;
+    ArrayList<String> incorrectAnswersSelected;
 
     Start.TileListWithMultipleTypes cumulativeStageBasedTileList = new Start.TileListWithMultipleTypes();
     Start.WordList cumulativeStageBasedWordList = new Start.WordList();
