@@ -207,7 +207,7 @@ public class Brazil extends GameActivity {
         }
 
         updatePointsAndTrackers(0);
-        incorrectAnswersSelected = new ArrayList<>(3);
+        incorrectAnswersSelected = new ArrayList<>(visibleTiles-1);
         for (int i = 0; i < visibleTiles-1; i++) {
             incorrectAnswersSelected.add("");
         }
