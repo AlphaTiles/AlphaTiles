@@ -148,6 +148,9 @@ public class Thailand extends GameActivity {
         visibleTiles = TILE_BUTTONS.length;
         updatePointsAndTrackers(0);
         incorrectAnswersSelected = new ArrayList<>(3);
+        for (int i = 0; i < 3; i++) {
+            incorrectAnswersSelected.add("");
+        }
         playAgain();
 
     }
@@ -422,8 +425,7 @@ public class Thailand extends GameActivity {
                 break;
         }
         for (int i = 0; i < 3; i++) {
-            if (incorrectAnswersSelected.size() < 3) incorrectAnswersSelected.add("");
-            else incorrectAnswersSelected.set(i, "");
+            incorrectAnswersSelected.set(i, "");
         }
         incorrectOnLevel = 0;
         levelBegunTime = System.currentTimeMillis();

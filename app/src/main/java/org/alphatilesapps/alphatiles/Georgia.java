@@ -149,6 +149,10 @@ public class Georgia extends GameActivity {
             centerGamesHomeImage();
         }
 
+        incorrectAnswersSelected = new ArrayList<>(visibleTiles-1);
+        for (int i = 0; i < visibleTiles-1; i++) {
+            incorrectAnswersSelected.add("");
+        }
         updatePointsAndTrackers(0);
         playAgain();
     }
@@ -195,6 +199,9 @@ public class Georgia extends GameActivity {
             nextWord.setClickable(true);
         }
 
+        for (int i = 0; i < visibleTiles-1; i++) {
+            incorrectAnswersSelected.set(i, "");
+        }
         incorrectOnLevel = 0;
         levelBegunTime = System.currentTimeMillis();
     }
@@ -468,6 +475,11 @@ public class Georgia extends GameActivity {
             Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime)
                     .putValue("prior incorrect", incorrectOnLevel)
                     .putValue("grade", studentGrade);
+            for (int i = 0; i < visibleTiles-1; i++) {
+                if (!incorrectAnswersSelected.get(i).equals("")) {
+                    info.putValue("incorrect"+(i+1), incorrectAnswersSelected.get(i));
+                }
+            }
             Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
@@ -490,6 +502,14 @@ public class Georgia extends GameActivity {
         } else {
             incorrectOnLevel += 1;
             playIncorrectSound();
+            for (int i = 0; i < visibleTiles-1; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(selectedTile)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, selectedTile);
+                    break;
+                }
+            }
         }
 
     }

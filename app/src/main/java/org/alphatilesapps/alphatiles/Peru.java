@@ -102,6 +102,10 @@ public class Peru extends GameActivity {
         }
         visibleTiles = TILE_BUTTONS.length;
         updatePointsAndTrackers(0);
+        incorrectAnswersSelected = new ArrayList<>(3);
+        for (int i = 0; i < 3; i++) {
+            incorrectAnswersSelected.add("");
+        }
         playAgain();
     }
 
@@ -261,8 +265,12 @@ public class Peru extends GameActivity {
                 }
             }
         }
-        levelBegunTime = System.currentTimeMillis();
+        for (int i = 0; i < 3; i++) {
+            incorrectAnswersSelected.set(i, "");
+        }
         incorrectOnLevel = 0;
+        levelBegunTime = System.currentTimeMillis();
+
     }
 
     private void respondToWordSelection(int justClickedWord) {
@@ -279,12 +287,17 @@ public class Peru extends GameActivity {
             Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime)
                     .putValue("prior incorrect", incorrectOnLevel)
                     .putValue("grade", studentGrade);
+            for (int i = 0; i < 3; i++) {
+                if (!incorrectAnswersSelected.get(i).equals("")) {
+                    info.putValue("incorrect"+(i+1), incorrectAnswersSelected.get(i));
+                }
+            }
             Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
             setAdvanceArrowToBlue();
 
-           updatePointsAndTrackers(2);
+            updatePointsAndTrackers(2);
 
             for (int w = 0; w < TILE_BUTTONS.length; w++) {
                 TextView nextWord = findViewById(TILE_BUTTONS[w]);
@@ -301,6 +314,14 @@ public class Peru extends GameActivity {
 
         } else {
             incorrectOnLevel += 1;
+            for (int i = 0; i < 3; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(chosenWordText)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, chosenWordText);
+                    break;
+                }
+            }
             playIncorrectSound();
         }
     }
