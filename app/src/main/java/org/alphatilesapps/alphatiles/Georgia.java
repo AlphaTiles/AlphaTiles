@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import static org.alphatilesapps.alphatiles.Start.recentlyMissed;
+import static org.alphatilesapps.alphatiles.Start.recentlyMissedIndex;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.COLORS;
@@ -503,12 +505,20 @@ public class Georgia extends GameActivity {
         } else {
             incorrectOnLevel += 1;
             playIncorrectSound();
-            for (int i = 0; i < visibleTiles-1; i++) {
+            for (int i = 0; i < visibleTiles - 1; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(selectedTile)) break;  // this incorrect answer already selected
                 if (item.equals("")) {
                     incorrectAnswersSelected.set(i, selectedTile);
                     break;
+                }
+            }
+            if (syllableGame.equals("T")) {
+                int index = recentlyMissedIndex.get(playerNumber - 1);  // least recently filled spot in your "recently missed" array
+                if (!recentlyMissed.get(playerNumber - 1).contains(correct)) {
+                    recentlyMissed.get(playerNumber - 1).set(index, correct);  // set that spot to be this tile
+                    recentlyMissedIndex.set(playerNumber - 1,
+                            (index + 1) % recentlyMissed.get(playerNumber - 1).size()); // increment the counter, wrapping around
                 }
             }
         }
