@@ -587,7 +587,7 @@ public class Thailand extends GameActivity {
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
             Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime)
                     .putValue("prior incorrect", incorrectOnLevel)
-                    .putValue("tile", refTile)
+                    .putValue("correct answer", refTile)
                     .putValue("grade", studentGrade);
             for (int i = 0; i < 3; i++) {
                 if (!incorrectAnswersSelected.get(i).equals("")) {
