@@ -212,7 +212,6 @@ public class Brazil extends GameActivity {
             incorrectAnswersSelected.add("");
         }
         playAgain();
-        playAgain();
     }
 
     @Override

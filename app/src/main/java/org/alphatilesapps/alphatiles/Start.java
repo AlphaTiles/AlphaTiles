@@ -90,6 +90,8 @@ public class Start extends AppCompatActivity {
     public static double stageCorrespondenceRatio;
 
     public static int numberOfAvatars = 12;
+    public static ArrayList<ArrayList<String>> recentlyMissed = new ArrayList<>();
+    public static ArrayList<Integer> recentlyMissedIndex = new ArrayList<>();
 
     public static List<String> CONSONANTS = new ArrayList<>();
     public static List<String> VOWELS = new ArrayList<>();
@@ -237,6 +239,16 @@ public class Start extends AppCompatActivity {
                 if (!Start.tileList.get(d).tileTypeB.equals("none")) {
                     MULTIFUNCTIONS.add(Start.tileList.get(d).baseTile);
                 }
+            }
+        }
+
+        recentlyMissed = new ArrayList<>(12);
+        recentlyMissedIndex = new ArrayList<>(12);
+        for (int i = 0; i < 12; i++) {
+            recentlyMissed.add(i, new ArrayList<>(5));
+            recentlyMissedIndex.add(0);
+            for (int j = 0; j < 5; j++) {
+                recentlyMissed.get(i).add("");
             }
         }
 

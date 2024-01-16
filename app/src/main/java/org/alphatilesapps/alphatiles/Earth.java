@@ -23,6 +23,11 @@ import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
+
+import java.util.ArrayList;
+
 
 public class Earth extends AppCompatActivity {
     Context context;
@@ -112,6 +117,10 @@ public class Earth extends AppCompatActivity {
             constraintSet.applyTo(constraintLayout);
         }
 
+//        ArrayList<String> recentlyMissedArray = recentlyMissed.get(playerNumber-1);
+//        String recentlyMissedString = recentlyMissedArray.get(0) + recentlyMissedArray.get(1) +
+//                recentlyMissedArray.get(2) + recentlyMissedArray.get(3) + recentlyMissedArray.get(4);
+//        Analytics.with(context).track("recently missed", new Properties().putValue("string", recentlyMissedString));
     }
 
     @Override

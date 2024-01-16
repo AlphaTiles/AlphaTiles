@@ -168,6 +168,7 @@ public class Thailand extends GameActivity {
     }
 
     public void playAgain() {
+
         repeatLocked = true;
         setAdvanceArrowToGray();
 
@@ -638,6 +639,8 @@ public class Thailand extends GameActivity {
 
         } else {
             incorrectOnLevel += 1;
+            playIncorrectSound();
+
             for (int i = 0; i < 3; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(chosenItemText)) break;  // this incorrect answer already selected
@@ -646,7 +649,32 @@ public class Thailand extends GameActivity {
                     break;
                 }
             }
-            playIncorrectSound();
+
+            // add to "recently missed"
+            int index = recentlyMissedIndex.get(playerNumber - 1);  // least recently filled spot in your "recently missed" array
+            switch (refType) {
+                case "TILE_LOWER":
+                case "TILE_UPPER":
+                case "TILE_AUDIO":
+                    if (!recentlyMissed.get(playerNumber - 1).contains(refTile)) {
+                        recentlyMissed.get(playerNumber - 1).set(index, refTile);  // set that spot to be this tile
+                        recentlyMissedIndex.set(playerNumber - 1,
+                                (index + 1) % recentlyMissed.get(playerNumber - 1).size()); // increment the counter, wrapping around
+                    }
+                default:
+                    switch (choiceType) {
+                        case "TILE_LOWER":
+                        case "TILE_UPPER":
+                            // (same as above)
+                            if (!recentlyMissed.get(playerNumber - 1).contains(refTile)) {
+                                recentlyMissed.get(playerNumber - 1).set(index, refTile);
+                                recentlyMissedIndex.set(playerNumber - 1,
+                                        (index + 1) % recentlyMissed.get(playerNumber - 1).size());
+                            }
+                    }
+            }
+
+
         }
     }
 
