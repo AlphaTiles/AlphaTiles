@@ -481,6 +481,7 @@ public class Ecuador extends GameActivity {
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
             Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime)
                     .putValue("prior incorrect", incorrectOnLevel)
+                    .putValue("correct answer", chosenWordText)
                     .putValue("grade", studentGrade);
             for (int i = 0; i < visibleTiles-1; i++) {
                 if (!incorrectAnswersSelected.get(i).equals("")) {
