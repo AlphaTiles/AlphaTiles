@@ -323,9 +323,9 @@ public class Validator {
                 fatalErrors.add("column B of keyboard should only have numbers 0-11");
             }
 
-            // the below section compares they keys in keyboard to the words in wordlist
+            // the below section compares the keys in keyboard to the words in wordlist
 
-            //a map of each key to how many times it is used in the wordslist
+            //a map of each key to how many times it is used in the wordlist
             Map<String, Integer> keyUsage = new HashMap<>();
             ArrayList<String> keysList = keyboardTab.getCol(0);
             for (String key : keysList) {
@@ -485,7 +485,7 @@ public class Validator {
                 int numExamplesFullUpper = Math.min(fullUpperCaseOnly.size(), 5);
                 int numExamplesProper = Math.min(properCaseOnly.size(),5);
                 int numExamplesOther = Math.min(other.size(),5);
-                warnings.add("The upper case column in tilelist doesn't appear to consistently stick with proper case " +
+                warnings.add("The column Upper in the gametiles tab doesn't appear to consistently stick with proper case " +
                         "(the first key being upper case) or full upper case (the whole tile is upper case) " +
                         "\n\tExamples of tiles that seem to use full uppercase are " + fullUpperCaseOnly.subList(0,numExamplesFullUpper) +
                         "\n\tExamples of tiles that seem to use proper case are " + properCaseOnly.subList(0,numExamplesProper) +
@@ -493,7 +493,7 @@ public class Validator {
             }
 
             if (fullUpperCaseOnly.size()!=0){
-                warnings.add("You use full upper case in the uppercase column in tilelist. This may lead to unintended" +
+                warnings.add("You use full upper case in the Upper column in the gametiles tab. This may lead to unintended" +
                         " formatting. For example if you had a tile \"ch\" with the uppercase value \"CH\", users could" +
                         " see the word CHildren");
             }
@@ -518,7 +518,7 @@ public class Validator {
                 fatalErrors.add("In langinfo \"script direction\" must be either \"LTR\" or \"RTL\"");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the lannginfo tab");
+            warnings.add(FAILED_CHECK_WARNING + "the langinfo tab");
         }
         try {
             Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
@@ -526,7 +526,7 @@ public class Validator {
                 fatalErrors.add("In langinfo \"Script type\" must be either \"Roman,\" \"Thai,\" or \"Lao\"");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the lannginfo tab");
+            warnings.add(FAILED_CHECK_WARNING + "the langinfo tab");
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
@@ -1833,11 +1833,11 @@ public class Validator {
                 boolean isMultiType = !tileRow.get(7).equals("none") || !tileRow.get(9).equals("none");
                 if (isMultiType) {
                     if (foundMultiTypeTile) {
-                        fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multy-type tile with the" +
-                                "type specificaiton \"" + typeSpecifications +
+                        fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                                "type specification \"" + typeSpecifications +
                                 "\" but more than one of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
-                        throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multy-type tile with the" +
-                                "type specificaiton \"" + typeSpecifications +
+                        throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                                "type specification \"" + typeSpecifications +
                                 "\" but more than one of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
                     } else {
                         if (tileRow.get(7).equals(typeSpecifications) || tileRow.get(9).equals(typeSpecifications)
@@ -1845,11 +1845,11 @@ public class Validator {
                             foundMultiTypeTile = true;
                             toReturn.add(typeSpecifications);
                         } else {
-                            fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multy-type tile (with the" +
-                                    "type specificaiton \"" + typeSpecifications +
+                            fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multi-type tile (with the" +
+                                    "type specification \"" + typeSpecifications +
                                     "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
-                            throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multy-type tile (with the" +
-                                    "type specificaiton \"" + typeSpecifications +
+                            throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multi-type tile (with the" +
+                                    "type specification \"" + typeSpecifications +
                                     "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
                         }
                     }
@@ -1858,11 +1858,11 @@ public class Validator {
                 }
             }
             if (!foundMultiTypeTile) {
-                fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multy-type tile with the" +
-                        "type specificaiton \"" + typeSpecifications +
+                fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                        "type specification \"" + typeSpecifications +
                         "\" but none of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
-                throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multy-type tile with the" +
-                        "type specificaiton \"" + typeSpecifications +
+                throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                        "type specification \"" + typeSpecifications +
                         "\" but none tiles have multiple types (its tiles are " + wordAsTileList + ")");
             }
             return toReturn;
