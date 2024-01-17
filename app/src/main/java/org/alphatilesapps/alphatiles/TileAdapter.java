@@ -61,7 +61,7 @@ public class TileAdapter extends BaseAdapter {
         text.post(new Runnable() {
             @Override
             public void run() {
-                text.setTextSize(TypedValue.COMPLEX_UNIT_PX, text.getWidth() * fontScale);
+                text.setTextSize(TypedValue.COMPLEX_UNIT_PX, layout.getWidth() * fontScale);
             }
         });
         inner.setBackgroundColor(tile.color);

@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.GridView;
@@ -25,11 +26,11 @@ public class Chile extends GameActivity {
     static int minWordLength = 4;
     static int maxKeyboardSize = 50;
     static int baseGuessCount = 8;
-    static final int GREEN = 0xFF00FF00;
-    static final int YELLOW = 0xFFFFFF00;
-    static final int EMPTY = 0xFF222222;
-    static final int GRAY = 0xFF444444;
-    static final int KEY_COLOR = 0xFF552222;
+    static final int GREEN = Color.parseColor(Start.COLORS.get(7));
+    static final int YELLOW = Color.parseColor(Start.COLORS.get(5));
+    static final int EMPTY = Color.parseColor(Start.COLORS.get(6));
+    static final int GRAY = Color.parseColor(Start.COLORS.get(8));
+    static final int KEY_COLOR = Color.parseColor(Start.COLORS.get(0));
     boolean finished = false;
     int currentRow;
 
