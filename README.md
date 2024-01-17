@@ -48,11 +48,11 @@ For a detailed guide to assembling, validating and building a new app, follow th
 ## Analytics
 To use [Firebase Analytics](https://firebase.google.com/), add a valid `google-services.json` file at the root of the build assets folder. Unless you are part of the Alpha Tiles development team, generate a google-services.json file using [this tutorial](https://cloud.google.com/firestore/docs/client/get-firebase) from Firebase. 
 
-Then, in [app/build.gradle](app/build.gradle), add this line to the top:
+Or, if not including this file, go to [app/build.gradle](app/build.gradle) and comment out the following three lines:
 
 * `apply plugin: 'com.google.gms.google-services'`
 
-and add these lines to `dependencies {}`:
+and under `dependencies {}`:
 
 * `implementation platform('com.google.firebase:firebase-bom:25.12.0')`
 * `implementation 'com.google.firebase:firebase-analytics'`

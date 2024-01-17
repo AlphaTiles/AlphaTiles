@@ -105,6 +105,10 @@ public class Myanmar extends GameActivity {
             fixConstraintsRTL(R.id.myanmarCL);
         }
 
+        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+
+        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
+
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
