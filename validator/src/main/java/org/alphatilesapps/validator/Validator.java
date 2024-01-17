@@ -199,7 +199,7 @@ public class Validator {
             "names", "A1:B"));
 
     /**
-     * A Map of the names of the folders needed for validation to the file types needed in each folder (in MIME type).
+     * A Map of the names of the folders needed for validation to the file types needed in each folder (in MIME type, comma delimited).
      * The validator automatically checks for these folders in the langPackDriveFolder,
      * and checks that each file in the folder is of the correct type (warning and removing if not).
      * Any folder specified here are will automatically have its contents added to drawable if it is an image
@@ -212,7 +212,9 @@ public class Validator {
             "images_words_low_res", "image/",
             "audio_tiles_optional", "audio/mpeg",
             "audio_instructions_optional", "audio/mpeg",
-            "audio_syllables_optional", "audio/mpeg"));
+            "audio_syllables_optional", "audio/mpeg",
+            "font", "application/x-font-ttf, text/xml"
+    ));
 
     /**
      * A String used as a prefix to the warning given when catching a ValidatorException. Use command F to make sure
@@ -637,7 +639,7 @@ public class Validator {
         for (Map.Entry<String, String> nameToMimeType : DESIRED_FILETYPE_FROM_SUBFOLDERS.entrySet()){
             try {
                 GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(nameToMimeType.getKey());
-                subFolder.filterByMimeType(nameToMimeType.getValue());
+                subFolder.filterByMimeTypes(nameToMimeType.getValue().split(","));
                 for (GoogleDriveItem itemInFolder : langPackDriveFolder.getFolderFromName(nameToMimeType.getKey()).folderContents){
                     // make sure the file names use valid
                     if (!itemInFolder.getName().matches("[a-z0-9_]+\\.+[a-z0-9_]+")) {
@@ -1043,6 +1045,9 @@ public class Validator {
                 if (subFolderFileTypes.contains("image")) {
                     outputFolderPath = pathToLangPack.resolve("res").resolve("drawable");
                 }
+                if(subFolderName.equals("font")) {
+                    outputFolderPath = pathToLangPack.resolve("res").resolve("font");
+                }
 
                 for (GoogleDriveItem driveResource : folderContents) {
                     Path pathForResource = outputFolderPath.resolve(driveResource.getName());
@@ -1297,14 +1302,18 @@ public class Validator {
         /**
          * Removes any items from the folderContents field that are not of the given mimeType, adding a warning every
          * time it does so.
-         * @param mimeType a String that is the mimeType to filter by
+         * @param mimeTypes an array of Strings that are the mimeTypes to filter by
          */
-        protected void filterByMimeType(String mimeType) {
+        protected void filterByMimeTypes(String[] mimeTypes) {
             for (GoogleDriveItem item : new ArrayList<>(folderContents)) {
-                if (!item.getMimeType().contains(mimeType)) {
+                boolean success = false;
+                for (String mimeType : mimeTypes) {
+                    success |= item.getMimeType().contains(mimeType.trim());
+                }
+                if (!success) {
                     folderContents.remove(item);
                     warnings.add(item.getName() + " will be ignored in " + this.getName() +
-                            " as it was not of type " + mimeType);
+                            " as it was not of any of these types: " + Arrays.toString(mimeTypes) + ", it was of type " + item.getMimeType());
                 }
             }
         }
