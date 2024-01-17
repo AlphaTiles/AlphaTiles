@@ -82,7 +82,7 @@ public class Validator {
     /**
      * main method for running the validator. Prompts user for the URL of the google drive folder.
      * Constructs a Validator object using the URL. Calls the validate method.  Prints out
-     * a list fatal errors, warnings, and recommendations. Prompts the to decide whether to download
+     * a list fatal errors, warnings, project notes and recommendations. Prompts the to decide whether to download
      * the language pack into android studio, and if desired, calls the writeValidatedFiles method.
      */
     public static void main(String[] args) throws ValidatorException, GeneralSecurityException, IOException {
@@ -100,18 +100,29 @@ public class Validator {
            myValidator.validate();
 
             System.out.println("\n\nList of Fatal Errors\n********");
+            int n = 0;
             for (String error : myValidator.getFatalErrors()) {
-                System.out.println(error);
+                n++;
+                System.out.println(n + ". " + error);
             }
+            n = 0;
             System.out.println("\nList of Warnings\n********");
             for (String warning : myValidator.getWarnings()) {
-                System.out.println(warning);
+                n++;
+                System.out.println(n + ". " + warning);
             }
-
+            n = 0;
+            System.out.println("\nProject Notes\n********");
+            for (String note : myValidator.getNotes()) {
+                n++;
+                System.out.println(n + ". " + note);
+            }
+            n = 0;
             if (SHOW_RECOMMENDATIONS) {
                 System.out.println("\nList of Recommendations\n********");
                 for (String recommendation : myValidator.getRecommendations()) {
-                    System.out.println(recommendation);
+                    n++;
+                    System.out.println(n + ". " + recommendation);
                 }
             }
 
@@ -151,6 +162,11 @@ public class Validator {
     private final Set<String> warnings = new LinkedHashSet<>();
 
     /**
+     * A LinkedHashSet of project notes found by the validator (is Set to avoid duplicate messages). Printed by main.
+     */
+    private final Set<String> project_notes = new LinkedHashSet<>();
+
+    /**
      * A LinkedHashSet of recommendations found by the validator (is Set to avoid duplicate messages). Printed by main.
      */
     private final Set<String> recommendations = new LinkedHashSet<>();
@@ -186,17 +202,18 @@ public class Validator {
      * shrinks down the tabs to only contain the ranges specified in this map. Any tabs specified here are automatically
      * added to the raw folder as aa_tabName.txt if the language pack is downloaded.
      */
-    private static final HashMap<String, String> DESIRED_RANGE_FROM_TABS = new HashMap<>(Map.of(
-            "langinfo", "A1:B15",
-            "gametiles", "A1:Q",
-            "wordlist", "A1:F",
-            "keyboard", "A1:B",
-            "games", "A1:H",
-            "syllables", "A1:G",
-            "resources", "A1:C",
-            "settings", "A1:B",
-            "colors", "A1:C",
-            "names", "A1:B"));
+    private static final HashMap<String, String> DESIRED_RANGE_FROM_TABS = new HashMap<>(Map.ofEntries(
+            Map.entry("langinfo", "A1:B15"),
+            Map.entry("gametiles", "A1:Q"),
+            Map.entry("wordlist", "A1:F"),
+            Map.entry("keyboard", "A1:B"),
+            Map.entry("games", "A1:H"),
+            Map.entry("syllables", "A1:G"),
+            Map.entry("resources", "A1:C"),
+            Map.entry("settings", "A1:B"),
+            Map.entry("colors", "A1:C"),
+            Map.entry("names", "A1:B"),
+            Map.entry("notes", "A1:B")));
 
     /**
      * A Map of the names of the folders needed for validation to the file types needed in each folder (in MIME type).
@@ -249,6 +266,10 @@ public class Validator {
         return this.warnings;
     }
 
+    public Set<String> getNotes() {
+        return this.project_notes;
+    }
+
     public Set<String> getRecommendations() {
         return this.recommendations;
     }
@@ -258,7 +279,7 @@ public class Validator {
     /**
      * Executes all validation, delegating to validateGoogleSheet, validateSyllables (
      * if it appears syllables are attempted) and validateResourceSubfolders.
-     * Populates fatalErrors, warnings, and recommendations.
+     * Populates fatalErrors, warnings, project notes and recommendations.
      */
     public void validate() {
 
@@ -277,7 +298,7 @@ public class Validator {
     /**
      * Executes checks langPackGoogleSheet, including default checks based on DESIRED_RANGE_FROM_TABS.
      * Checks are wrapped in try catch blocks so that if one check fails, the rest of the checks can still be run.
-     * Populates fatalErrors, warnings, and recommendations.
+     * Populates fatalErrors, warnings, project notes and recommendations.
      */
     private void validateGoogleSheet(){
 
@@ -528,6 +549,18 @@ public class Validator {
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the langinfo tab");
         }
+        // AARON
+        try {
+            Tab notesTab = langPackGoogleSheet.getTabFromName("notes");
+            ArrayList<String> notesCol = notesTab.getCol(1);
+            int i = 0;
+            for (String custom_note : notesCol) {
+                i++;
+                project_notes.add(custom_note);
+            }
+        } catch (ValidatorException e) {
+            warnings.add(FAILED_CHECK_WARNING + "the notes tab");
+        }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
             if (!settings.getRowFromFirstCell("Has tile audio").get(1).matches("(TRUE|FALSE)")){
@@ -630,7 +663,7 @@ public class Validator {
      * Executes checks on the resource folders langPackGoogleDrive.
      * Includes default checks based on DESIRED_FILETYPE_FROM_SUBFOLDERS.
      * Checks are wrapped in try catch blocks so that if one check fails, the rest of the checks can still be run.
-     * Populates fatalErrors, warnings, and recommendations.
+     * Populates fatalErrors, warnings, project notes and recommendations.
      */
     private void validateResourceSubfolders(){
 
@@ -769,7 +802,7 @@ public class Validator {
             }
 
             if (hasTileAudio && !hasSudanForTiles) {
-                recommendations.add("Its is recommended you add Sudan for tiles to the games tab if you have tile audio");
+                recommendations.add("It is recommended you add Sudan for tiles to the games tab if you have tile audio");
             }
             else if (!hasTileAudio && hasSudanForTiles) {
                 fatalErrors.add("You cannot have Sudan for tiles in the games tab if you do not have tile audio");
@@ -797,7 +830,7 @@ public class Validator {
             }
 
             if (hasSyllableAudio && !hasSudanForSyllables) {
-                recommendations.add("Its is recommended you add Sudan for syllables to the games tab if you have syllable audio");
+                recommendations.add("It is recommended you add Sudan for syllables to the games tab if you have syllable audio");
             }
             else if (!hasSyllableAudio && hasSudanForSyllables) {
                 fatalErrors.add("You cannot have Sudan for syllables in the games tab if you do not have syllable audio");
@@ -821,7 +854,7 @@ public class Validator {
     /**
      * Executes checks on the syllable tab in langPackGoogleSheet.
      * Checks are wrapped in try catch blocks so that if one check fails, the rest of the checks can still be run.
-     * Populates fatalErrors, warnings, and recommendations.
+     * Populates fatalErrors, warnings, project notes and recommendations.
      */
     private void validateSyllablesTab(){
 
