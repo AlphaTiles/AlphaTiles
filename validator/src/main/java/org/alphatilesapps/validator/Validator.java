@@ -286,7 +286,17 @@ public class Validator {
         // this first step is looks at the desired data from tabs field set at the top of the
         // code, searches for a tab that has the matching name, and shrinks the internal representation
         // of those tabs to only be what is specified
-
+        try{
+            String appName = langPackGoogleSheet
+                    .getTabFromName("langinfo")
+                    .getRowFromFirstCell("Game Name (In Local Lang)")
+                    .get(1)
+                    .replace("'", "ꞌ");
+            if (appName.length() > 30) {
+                warnings.add("App name '" + appName + "' is too long, should be less than 30 characters to be compatible with Play Store limits.");
+            }
+        }
+        catch (Exception ignored){}
         for (Map.Entry<String, String> nameAndRange : DESIRED_RANGE_FROM_TABS.entrySet()) {
             try {
                 Tab desiredTab = langPackGoogleSheet.getTabFromName(nameAndRange.getKey());
