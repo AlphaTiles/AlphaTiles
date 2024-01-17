@@ -549,13 +549,10 @@ public class Validator {
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the langinfo tab");
         }
-        // AARON
         try {
             Tab notesTab = langPackGoogleSheet.getTabFromName("notes");
             ArrayList<String> notesCol = notesTab.getCol(1);
-            int i = 0;
             for (String custom_note : notesCol) {
-                i++;
                 project_notes.add(custom_note);
             }
         } catch (ValidatorException e) {
@@ -1612,7 +1609,7 @@ public class Validator {
             Set<String> colSet = new HashSet<>();
             for (String cell : this.getCol(colNum)) {
                 if (!colSet.add(cell)) {
-                    fatalErrors.add("\"" + cell + "\"" + " appears more than once in column " + colNum + 1 +  " of " + this.getName());
+                    fatalErrors.add("\"" + cell + "\"" + " appears more than once in column " + (colNum + 1) +  " of " + this.getName());
                 }
             }
         }
