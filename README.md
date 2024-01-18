@@ -43,7 +43,7 @@ In [app/build.gradle](app/build.gradle), remove or comment out any flavors in `p
 Lastly, select `File > Sync Project with Gradle Files`. Once the project syncs, try out the app in an emulator or connected device by clicking the green 'play' icon in the top menu. Export an apk or app bundle using the `Build` menu.
 
 ### Detailed processing steps
-For a detailed guide to assembling, validating and building a new app, follow these detailed [processing steps](https://docs.google.com/document/d/1q8P81o_3eIw2dJHbx4smEWO_pT8_q5Svxvh_dHzJTEY).
+For a detailed guide to assembling, validating and building a new app, follow these detailed [processing steps](https://docs.google.com/document/d/1C93cJrd83B5Cn97azkj34eBQ_bWDTBKHotcCSPQ78uY).
 
 ## Analytics
 To use [Firebase Analytics](https://firebase.google.com/), add a valid `google-services.json` file at the root of the build assets folder. Unless you are part of the Alpha Tiles development team, generate a google-services.json file using [this tutorial](https://cloud.google.com/firestore/docs/client/get-firebase) from Firebase. 
