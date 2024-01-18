@@ -585,13 +585,13 @@ public class Thailand extends GameActivity {
 
             // report time and number of incorrect guesses
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Properties info = new Properties().putValue("time", System.currentTimeMillis() - levelBegunTime)
-                    .putValue("prior incorrect", incorrectOnLevel)
-                    .putValue("correct answer", refTile)
-                    .putValue("grade", studentGrade);
+            Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
+                    .putValue("Number Incorrect", incorrectOnLevel)
+                    .putValue("Correct Answer", refTile)
+                    .putValue("Grade", studentGrade);
             for (int i = 0; i < 3; i++) {
                 if (!incorrectAnswersSelected.get(i).equals("")) {
-                    info.putValue("incorrect"+(i+1), incorrectAnswersSelected.get(i));
+                    info.putValue("Incorrect_"+(i+1), incorrectAnswersSelected.get(i));
                 }
             }
             Analytics.with(context).track(gameUniqueID, info);
@@ -657,6 +657,7 @@ public class Thailand extends GameActivity {
                 case "TILE_UPPER":
                 case "TILE_AUDIO":
                     if (!recentlyMissed.get(playerNumber - 1).contains(refTile)) {
+                        //Start.Tile correspondingTile = Start.tileList.retrieveTile(refTile);
                         recentlyMissed.get(playerNumber - 1).set(index, refTile);  // set that spot to be this tile
                         recentlyMissedIndex.set(playerNumber - 1,
                                 (index + 1) % recentlyMissed.get(playerNumber - 1).size()); // increment the counter, wrapping around
