@@ -1610,6 +1610,21 @@ public class Start extends AppCompatActivity {
 
         }
 
+        public Tile retrieveTile(String someGameTile) {
+
+            for (int i = 0; i < size(); i++) {
+                Tile thisTile = get(i);
+                if (thisTile.baseTile.equals(someGameTile)) {
+                    return thisTile;
+                }
+                if (thisTile.upperTile.equals(someGameTile)) {
+                    return thisTile;
+                }
+            }
+
+            return null;
+        }
+
         public String returnRandomCorrespondingTile(String correctTile) {
 
             String wrongTile = "";

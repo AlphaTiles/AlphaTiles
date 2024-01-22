@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 
 import com.segment.analytics.Analytics;
-//import com.segment.analytics.android.integrations.firebase.FirebaseIntegration;
 
 public class AlphaTilesApplication extends Application {
 
