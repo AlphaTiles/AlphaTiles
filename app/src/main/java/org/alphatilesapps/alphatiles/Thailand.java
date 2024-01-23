@@ -180,6 +180,7 @@ public class Thailand extends GameActivity {
 
             if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO") || choiceType.equals("TILE_LOWER")) {
                 boolean freshTile = false;
+                int freshChecks = 0;
                 while (!freshTile) {
                     chooseWord();
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
@@ -199,11 +200,19 @@ public class Thailand extends GameActivity {
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
                         refTileLast = refTile;
+                    } else {
+                        freshChecks++;
+                        if (freshChecks > 25) {
+                            refTileThirdToLast = refTileSecondToLast;
+                            refTileSecondToLast = refTileLast;
+                            refTileLast = refTile;
+                        }
                     }
                 }
 
             } else if (refType.equals("TILE_UPPER") || choiceType.equals("TILE_UPPER")) {
                 boolean freshTile = false;
+                int freshChecks = 0;
                 while (!freshTile) {
                     chooseWord();
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
@@ -224,11 +233,19 @@ public class Thailand extends GameActivity {
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
                         refTileLast = refTile;
+                    } else {
+                        freshChecks++;
+                        if (freshChecks > 25) {
+                            refTileThirdToLast = refTileSecondToLast;
+                            refTileSecondToLast = refTileLast;
+                            refTileLast = refTile;
+                        }
                     }
                 }
 
             } else if (refType.contains("WORD") && choiceType.contains("WORD")) {
                 boolean freshTile = false;
+                int freshChecks = 0;
                 while (!freshTile) {
                     chooseWord();
                     parsedWordArrayFinal = tileList.parseWordIntoTiles(wordInLOP);
@@ -248,6 +265,13 @@ public class Thailand extends GameActivity {
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
                         refTileLast = refTile;
+                    } else {
+                        freshChecks++;
+                        if (freshChecks > 25) {
+                            refTileThirdToLast = refTileSecondToLast;
+                            refTileSecondToLast = refTileLast;
+                            refTileLast = refTile;
+                        }
                     }
                 }
 
@@ -255,6 +279,7 @@ public class Thailand extends GameActivity {
 
         } else if (choiceType.contains("SYLL") && refType.contains("SYLL")) {
             boolean freshTile = false;
+            int freshChecks = 0;
             while (!freshTile) {
                 int randomNum2 = rand.nextInt(sortableSyllArray.size());
                 refTile = sortableSyllArray.get(randomNum2).syllable;
@@ -265,11 +290,19 @@ public class Thailand extends GameActivity {
                     refTileThirdToLast = refTileSecondToLast;
                     refTileSecondToLast = refTileLast;
                     refTileLast = refTile;
+                } else {
+                    freshChecks++;
+                    if (freshChecks > 25) {
+                        refTileThirdToLast = refTileSecondToLast;
+                        refTileSecondToLast = refTileLast;
+                        refTileLast = refTile;
+                    }
                 }
             }
 
         } else if (choiceType.contains("WORD") && refType.contains("SYLL")) {
             boolean freshTile = false;
+            int freshChecks = 0;
             while (!freshTile) {
                 chooseWord();
                 parsedWordArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
@@ -281,6 +314,13 @@ public class Thailand extends GameActivity {
                     refTileThirdToLast = refTileSecondToLast;
                     refTileSecondToLast = refTileLast;
                     refTileLast = refTile;
+                } else {
+                    freshChecks++;
+                    if (freshChecks > 25) {
+                        refTileThirdToLast = refTileSecondToLast;
+                        refTileSecondToLast = refTileLast;
+                        refTileLast = refTile;
+                    }
                 }
             }
 
@@ -290,6 +330,7 @@ public class Thailand extends GameActivity {
             String refCVX = "X";
             if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO")) {
                 boolean freshTile = false;
+                int freshChecks = 0;
                 while (!freshTile || refCVX.equals("X")) {
                     int randomNum2 = rand.nextInt(sortableTilesArray.size());
                     refCVX = sortableTilesArray.get(randomNum2).tileType;
@@ -309,11 +350,19 @@ public class Thailand extends GameActivity {
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
                         refTileLast = refTile;
+                    } else {
+                        freshChecks++;
+                        if (freshChecks > 25) {
+                            refTileThirdToLast = refTileSecondToLast;
+                            refTileSecondToLast = refTileLast;
+                            refTileLast = refTile;
+                        }
                     }
                 }
             }
             if (refType.equals("TILE_UPPER")) {
                 boolean freshTile = false;
+                int freshChecks = 0;
                 while (!freshTile || refCVX.equals("X")) {
                     int randomNum2 = rand.nextInt(sortableTilesArray.size());
                     refCVX = sortableTilesArray.get(randomNum2).tileType;
@@ -333,6 +382,13 @@ public class Thailand extends GameActivity {
                         refTileThirdToLast = refTileSecondToLast;
                         refTileSecondToLast = refTileLast;
                         refTileLast = refTile;
+                    } else {
+                        freshChecks++;
+                        if (freshChecks > 25) {
+                            refTileThirdToLast = refTileSecondToLast;
+                            refTileSecondToLast = refTileLast;
+                            refTileLast = refTile;
+                        }
                     }
                 }
             }
