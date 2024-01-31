@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textAlignment="center"
-
+            android:bufferType="spannable"
             android:textColor="@color/WHITE"
             android:textDirection="rtl"
             android:textSize="0sp" />

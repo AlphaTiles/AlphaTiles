@@ -175,7 +175,7 @@
         app:layout_constraintBottom_toTopOf="@+id/keyboardBoxDivider"
         app:layout_constraintVertical_bias="0.7"
         android:gravity="center"
-        android:paddingHorizontal="10dp" />
+        android:layout_margin="10dp" />
 
     <GridView
         android:id="@+id/keyboard"
@@ -185,7 +185,9 @@
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/keyboardBoxDivider" />
+        app:layout_constraintTop_toBottomOf="@+id/keyboardBoxDivider"
+        android:padding="10dp"
+        />
 
     <ImageView
         android:id="@+id/gamesHomeImage"

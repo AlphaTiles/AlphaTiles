@@ -22,8 +22,8 @@ import java.util.logging.Logger;
 public class Chile extends GameActivity {
     static ChileData data;
     private static final Logger LOGGER = Logger.getLogger(Chile.class.getName());
-    static int maxWordLength = 6;
-    static int minWordLength = 4;
+    static int maxWordLength = 100;
+    static int minWordLength = 3;
     static int maxKeyboardSize = 50;
     static int baseGuessCount = 8;
     static final int GREEN = Color.parseColor(Start.COLORS.get(7));
@@ -319,10 +319,26 @@ public class Chile extends GameActivity {
                 i++;
             }
         }
-        String[] sortedKeyboard = keyboard.toArray(new String[0]);
-        Arrays.sort(sortedKeyboard);
-        float fontScale = Util.getMinFontSize(sortedKeyboard, 0.75f);
-        return new ChileData(bestLength, splitWords, sortedKeyboard, keyboardWidth, fontScale);
+        String[] kbArray = keyboard.toArray(new String[0]);
+        int[] indexArray = new int[kbArray.length];
+        int j = 0;
+        for (String key : kbArray) {
+            for(int idx = 0; idx < Start.tileList.size(); idx++) {
+                if (key.equals(Start.tileList.get(idx).baseTile)) {
+                    indexArray[j] = idx;
+                    break;
+                }
+            }
+            j++;
+        }
+        Arrays.sort(indexArray);
+        j = 0;
+        for (int idx : indexArray) {
+            kbArray[j] = Start.tileList.get(idx).baseTile;
+            j++;
+        }
+        float fontScale = Util.getMinFontSize(kbArray);
+        return new ChileData(bestLength, splitWords, kbArray, keyboardWidth, fontScale);
     }
     public static class ChileData {
         public int guesses;

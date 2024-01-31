@@ -26,23 +26,17 @@ public class Util {
 
     }
     /// Gets the minimum font size required to fit all given strings in a 1px area
-    public static float getMinFontSize(String[] strings, float baseline) {
+    public static float getMinFontSize(String[] strings) {
         Paint paint = new Paint();
         float size = 1000;
         paint.setTextSize(size);
-        float min = 10000; // meaningless large number
+        float min = 0.5f;
         for(String s : strings) {
             Rect r = new Rect();
             paint.getTextBounds(s, 0, s.length(), r);
             float width = r.width();
-            float ascent = r.top;
-            float descent = r.bottom;
-            float descentScale = Math.abs((size - baseline * size) / descent);
-            float ascentScale = Math.abs((baseline * size) / ascent);
             float widthScale = size / width;
-            float scale = Math.min(descentScale, Math.min(ascentScale, widthScale));
-            LOGGER.log(Level.INFO, s + " " + scale);
-            min = Math.min(scale, min);
+            min = Math.min(widthScale, min);
         }
         LOGGER.log(Level.INFO, min + "");
         return min;
