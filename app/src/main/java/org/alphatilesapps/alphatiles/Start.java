@@ -90,6 +90,7 @@ public class Start extends AppCompatActivity {
     public static double stageCorrespondenceRatio;
 
     public static int numberOfAvatars = 12;
+    public static ArrayList<Boolean> sendAnalytics = new ArrayList<>();
     public static ArrayList<ArrayList<String>> recentlyMissed = new ArrayList<>();
     public static ArrayList<Integer> recentlyMissedIndex = new ArrayList<>();
 
@@ -251,6 +252,11 @@ public class Start extends AppCompatActivity {
                 recentlyMissed.get(i).add("");
             }
         }
+
+//        sendAnalytics = new ArrayList<>(12);
+//        for (int i = 0; i < 12; i++) {
+//            sendAnalytics.add(i, null);
+//        }
 
         Intent intent = new Intent(this, LoadingScreen.class);
         startActivity(intent);
