@@ -7,23 +7,28 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     tools:context=".Chile">
-
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline9"
+        android:id="@+id/guidelineH0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintGuide_percent="0.04"
         android:orientation="horizontal" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineHneg1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.01"
+        android:orientation="horizontal" />
 
-    <ImageView
+   <ImageView
         android:id="@+id/tracker01"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/tracker1of12"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toStartOf="@+id/tracker02"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
     <ImageView
@@ -32,10 +37,10 @@
         android:layout_height="0dp"
         android:contentDescription="@string/tracker2of12"
         android:tag="2"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toStartOf="@+id/tracker03"
         app:layout_constraintStart_toEndOf="@+id/tracker01"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
     <ImageView
@@ -44,10 +49,10 @@
         android:layout_height="0dp"
         android:contentDescription="@string/tracker3of12"
         android:tag="3"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toStartOf="@+id/tracker04"
         app:layout_constraintStart_toEndOf="@+id/tracker02"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
     <ImageView
@@ -56,10 +61,10 @@
         android:layout_height="0dp"
         android:contentDescription="@string/tracker4of12"
         android:tag="4"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toStartOf="@+id/tracker05"
         app:layout_constraintStart_toEndOf="@+id/tracker03"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
     <ImageView
@@ -68,10 +73,10 @@
         android:layout_height="0dp"
         android:contentDescription="@string/tracker5of12"
         android:tag="5"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toStartOf="@+id/tracker06"
         app:layout_constraintStart_toEndOf="@+id/tracker04"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
     <ImageView
@@ -80,10 +85,10 @@
         android:layout_height="0dp"
         android:contentDescription="@string/tracker6of12"
         android:tag="6"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toStartOf="@+id/tracker07"
         app:layout_constraintStart_toEndOf="@+id/tracker05"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
     <ImageView
@@ -92,10 +97,10 @@
         android:layout_height="0dp"
         android:contentDescription="@string/tracker7of12"
         android:tag="7"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toStartOf="@+id/tracker08"
         app:layout_constraintStart_toEndOf="@+id/tracker06"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
     <ImageView
@@ -104,10 +109,10 @@
         android:layout_height="0dp"
         android:contentDescription="@string/tracker8of12"
         android:tag="8"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toStartOf="@+id/tracker09"
         app:layout_constraintStart_toEndOf="@+id/tracker07"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
     <ImageView
@@ -116,10 +121,10 @@
         android:layout_height="0dp"
         android:contentDescription="@string/tracker9of12"
         android:tag="9"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toStartOf="@+id/tracker10"
         app:layout_constraintStart_toEndOf="@+id/tracker08"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
     <ImageView
@@ -128,10 +133,10 @@
         android:layout_height="0dp"
         android:contentDescription="@string/tracker10of12"
         android:tag="10"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toStartOf="@+id/tracker11"
         app:layout_constraintStart_toEndOf="@+id/tracker09"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
     <ImageView
@@ -140,10 +145,10 @@
         android:layout_height="0dp"
         android:contentDescription="@string/tracker11of12"
         android:tag="11"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toStartOf="@+id/tracker12"
         app:layout_constraintStart_toEndOf="@+id/tracker10"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
 
     <ImageView
@@ -152,12 +157,11 @@
         android:layout_height="0dp"
         android:contentDescription="@string/tracker12of12"
         android:tag="12"
-        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tracker11"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
         app:srcCompat="@drawable/zz_incomplete" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/keyboardBoxDivider"
         android:layout_width="wrap_content"
@@ -191,48 +195,51 @@
 
     <ImageView
         android:id="@+id/gamesHomeImage"
+        android:paddingHorizontal="4dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/playerAvatar"
         android:onClick="goBackToEarth"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toStartOf="@+id/instructions"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/pointsImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         app:srcCompat="@drawable/zz_games_home" />
 
     <ImageView
         android:id="@+id/instructions"
+        android:paddingHorizontal="4dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/playAgain"
         android:onClick="playAudioInstructions"
         android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toStartOf="@+id/repeatImage"
+        app:layout_constraintEnd_toStartOf="@+id/backspace"
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         app:srcCompat="@drawable/zz_instructions" />
 
     <ImageView
         android:id="@+id/repeatImage"
+        android:paddingHorizontal="4dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/playAgain"
         android:rotationY="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintStart_toEndOf="@+id/instructions"
+        app:layout_constraintStart_toEndOf="@+id/backspace"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         app:srcCompat="@drawable/zz_forward" />
 
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHSys1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.90" />
+ <androidx.constraintlayout.widget.Guideline
+     android:id="@+id/guidelineHSys1"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:orientation="horizontal"
+     app:layout_constraintGuide_percent="0.89" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHSys2"
@@ -241,20 +248,20 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.99" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHSys"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.80" />
+ <androidx.constraintlayout.widget.Guideline
+     android:id="@+id/guidelineHSys"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:orientation="horizontal"
+     app:layout_constraintGuide_percent="0.99" />
     <ImageView
         android:id="@+id/pointsImage"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
-        app:layout_constraintEnd_toStartOf="@+id/backspace"
+        android:paddingHorizontal="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineHSys"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineHSys1"
         android:contentDescription="@string/pointsImage"
         app:srcCompat="@drawable/zz_pointsscoredthisgame" />
 
@@ -280,28 +287,29 @@
             app:layout_constraintTop_toTopOf="@+id/pointsImage" />
     <ImageView
         android:id="@+id/backspace"
+        android:paddingHorizontal="4dp"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:padding="10dp"
 
-        app:layout_constraintBottom_toTopOf="@id/guidelineHSys1"
+        app:layout_constraintBottom_toTopOf="@id/guidelineHSys"
 
-        app:layout_constraintLeft_toRightOf="@id/middleLine"
+        app:layout_constraintLeft_toRightOf="@id/instructions"
         app:layout_constraintRight_toLeftOf="@id/complete_word"
-        app:layout_constraintTop_toBottomOf="@id/guidelineHSys"
+        app:layout_constraintTop_toBottomOf="@id/guidelineHSys1"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/zz_deletetext" />
 
     <ImageView
         android:id="@+id/complete_word"
+        android:paddingHorizontal="4dp"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@id/guidelineHSys1"
+        app:layout_constraintBottom_toTopOf="@id/guidelineHSys"
         app:layout_constraintLeft_toRightOf="@id/backspace"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineHSys"
+        app:layout_constraintTop_toBottomOf="@id/guidelineHSys1"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/zz_complete" />
 

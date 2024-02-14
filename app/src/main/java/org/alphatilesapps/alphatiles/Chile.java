@@ -27,7 +27,7 @@ public class Chile extends GameActivity {
     static int maxKeyboardSize = 50;
     static int baseGuessCount = 8;
     static final int GREEN = Color.parseColor(Start.COLORS.get(7));
-    static final int YELLOW = Color.parseColor(Start.COLORS.get(5));
+    static final int YELLOW = 0xFFCCCC00;
     static final int EMPTY = Color.parseColor(Start.COLORS.get(6));
     static final int GRAY = Color.parseColor(Start.COLORS.get(8));
     static final int KEY_COLOR = Color.parseColor(Start.COLORS.get(0));
@@ -122,6 +122,9 @@ public class Chile extends GameActivity {
         findViewById(R.id.backspace).setOnClickListener(view -> backSpace());
         findViewById(R.id.complete_word).setOnClickListener(view -> completeWord());
         findViewById(R.id.repeatImage).setOnClickListener(view -> reset());
+        findViewById(R.id.repeatImage).setVisibility(View.INVISIBLE);
+        findViewById(R.id.complete_word).setVisibility(View.VISIBLE);
+
         keyboard.setAdapter(keyAdapter);
         keyboard.setOnItemClickListener((board, key, i, l) -> keyPressed(key));
         wordList = new ArrayList<>(data.words);
@@ -152,7 +155,11 @@ public class Chile extends GameActivity {
     }
     private void reset() {
         if(!finished) return;
+        guessBox.smoothScrollToPosition(0);
         setAdvanceArrowToGray();
+        while (tiles.size() > data.guesses * data.wordLength) {
+            tiles.remove(tiles.size() - 1);
+        }
         for(int i = 0; i < tiles.size(); i++) {
             TileAdapter.ColorTile tile = tiles.get(i);
             tile.text = "";
@@ -178,9 +185,12 @@ public class Chile extends GameActivity {
         LOGGER.log(Level.INFO, Arrays.toString(secret));
         guessAdapter.notifyDataSetChanged();
         keyAdapter.notifyDataSetChanged();
+        findViewById(R.id.repeatImage).setVisibility(View.INVISIBLE);
+        findViewById(R.id.complete_word).setVisibility(View.VISIBLE);
     }
 
     private void completeWord() {
+        if (finished) return;
         TileAdapter.ColorTile[] row = new TileAdapter.ColorTile[data.wordLength];
         int j = 0;
         for(int i = currentRow * data.wordLength; i < (currentRow + 1) * data.wordLength; i++) {
@@ -204,14 +214,16 @@ public class Chile extends GameActivity {
                     row[i].color = YELLOW;
                 }
                 else {
-                    row[i].color =  GRAY;
+                    row[i].color = GRAY;
                 }
             }
             else {
                 row[i].color = GRAY;
-                for(TileAdapter.ColorTile key : keys) {
-                    if(key.text.equals(row[i].text)) {
-                        key.color = GRAY;
+            }
+            for(TileAdapter.ColorTile key : keys) {
+                if(key.text.equals(row[i].text)) {
+                    if((key.color != YELLOW && key.color != GREEN) || (key.color == YELLOW && row[i].color == GREEN)) {
+                        key.color = row[i].color;
                     }
                 }
             }
@@ -220,24 +232,32 @@ public class Chile extends GameActivity {
         keyAdapter.notifyDataSetChanged();
         if(greenCount == data.wordLength && !finished) {
             finished = true;
-            setAdvanceArrowToBlue();
             Start.gameSounds.play(Start.correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
             updatePointsAndTrackers(1);
-            setOptionsRowClickable();
         }
         else if(currentRow == data.guesses - 1) {
             finished = true;
-            setAdvanceArrowToBlue();
+            for(String tile : secret) {
+                tiles.add(new TileAdapter.ColorTile(tile, GREEN, YELLOW));
+            }
+            guessBox.smoothScrollToPosition(tiles.size());
+            guessAdapter.notifyDataSetChanged();
             Start.gameSounds.play(Start.incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
         }
         else {
             currentRow++;
         }
-
+        if(finished) {
+            findViewById(R.id.repeatImage).setVisibility(View.VISIBLE);
+            findViewById(R.id.complete_word).setVisibility(View.INVISIBLE);
+            setAdvanceArrowToBlue();
+            setOptionsRowClickable();
+        }
     }
 
     private void keyPressed(View key) {
         LOGGER.log(Level.INFO, "Key pressed");
+        guessBox.smoothScrollToPosition(currentRow * data.wordLength);
         String text =
                 ((TextView)((LinearLayout)(((SquareConstraintLayout)key).getChildAt(0)))
                         .getChildAt(0))

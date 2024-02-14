@@ -66,6 +66,7 @@ public class TileAdapter extends BaseAdapter {
         });
         inner.setBackgroundColor(tile.color);
         text.setBackgroundColor(tile.color);
+        text.setTextColor(tile.fontColor);
         text.setText(tile.text);
         return layout;
     }
@@ -73,10 +74,16 @@ public class TileAdapter extends BaseAdapter {
         public String text;
         @ColorInt
         public int color;
-
+        @ColorInt
+        public int fontColor = 0xFFFFFFFF;
         public ColorTile(String text, @ColorInt int color) {
             this.text = text;
             this.color = color;
+        }
+        public ColorTile(String text, @ColorInt int color, @ColorInt int fontColor) {
+            this.text = text;
+            this.color = color;
+            this.fontColor = fontColor;
         }
     }
 }
