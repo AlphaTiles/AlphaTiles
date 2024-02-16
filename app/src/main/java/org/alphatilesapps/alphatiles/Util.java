@@ -1,5 +1,9 @@
 package org.alphatilesapps.alphatiles;
 
+import android.graphics.Paint;
+import android.graphics.Rect;
+
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Util {
@@ -21,7 +25,22 @@ public class Util {
         return appendedPlayerNumber;
 
     }
-
+    /// Gets the minimum font size required to fit all given strings in a 1px area
+    public static float getMinFontSize(String[] strings) {
+        Paint paint = new Paint();
+        float size = 1000;
+        paint.setTextSize(size);
+        float min = 0.5f;
+        for(String s : strings) {
+            Rect r = new Rect();
+            paint.getTextBounds(s, 0, s.length(), r);
+            float width = r.width();
+            float widthScale = size / width;
+            min = Math.min(widthScale, min);
+        }
+        LOGGER.log(Level.INFO, min + "");
+        return min;
+    }
     public static void logMemory() {
         // https://stackoverflow.com/questions/3571203/what-are-runtime-getruntime-totalmemory-and-freememory
         float dataSize = 1024 * 1024;

@@ -9,9 +9,13 @@ import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.Time;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -239,6 +243,7 @@ public class Start extends AppCompatActivity {
                 }
             }
         }
+        Chile.data = Chile.chilePreProcess();
 
         Intent intent = new Intent(this, LoadingScreen.class);
         startActivity(intent);
