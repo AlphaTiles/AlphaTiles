@@ -555,8 +555,8 @@ public class Validator {
         }
         try {
             Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
-            if (!langInfo.getRowFromFirstCell("Script type").get(1).matches("(Roman|Thai|Lao)")){
-                fatalErrors.add("In langinfo \"Script type\" must be either \"Roman,\" \"Thai,\" or \"Lao\"");
+            if (!langInfo.getRowFromFirstCell("Script type").get(1).matches("(Arabic|Devanagari|Khmer|Lao|Roman|Thai|)")){
+                fatalErrors.add("In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\"");
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the langinfo tab");
