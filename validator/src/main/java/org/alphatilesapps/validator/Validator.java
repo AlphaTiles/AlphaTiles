@@ -853,6 +853,17 @@ public class Validator {
                 GoogleDriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("audio_instructions_optional");
                 ArrayList<String> instructions = langPackGoogleSheet.getTabFromName("games").getCol(4);
                 ArrayList<String> names = langPackGoogleSheet.getTabFromName("games").getCol(1);
+                String[] special = new String[] {
+                        "zzz_earth",
+                        "zzz_about",
+                        "zzz_choose_player",
+                        "zzz_resources",
+                        "zzz_set_player_name",
+                };
+                for(String s : special) {
+                    // Stupid hacky solution but maybe works
+                    instructionAudio.folderContents.add(new GoogleDriveItem("", s, ""));
+                }
                 for (int idx = 0; idx < names.size();) {
                     String instruction = instructions.get(idx);
                     if(instruction.equals("X") || instruction.equals("naWhileMPOnly")) {
