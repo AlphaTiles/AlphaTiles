@@ -230,7 +230,7 @@ public class Validator {
             "audio_tiles_optional", "audio/mpeg",
             "audio_instructions_optional", "audio/mpeg",
             "audio_syllables_optional", "audio/mpeg",
-            "font", "application/x-font-ttf, text/xml"
+            "font", "application/x-font-ttf, font/ttf, text/xml"
     ));
 
     /**
@@ -742,7 +742,7 @@ public class Validator {
         try {
             GoogleDriveFolder resourceImages = langPackDriveFolder.getFolderFromName("images_resources_optional");
             ArrayList<String> resourceImageNames = langPackGoogleSheet.getTabFromName("resources").getCol(2);
-            resourceImages.checkItemNamesAgainstList(resourceImageNames);
+            resourceImages.checkItemNamesAgainstList(resourceImageNames, false);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_resources_optional folder or the resources tab");
         }
@@ -750,7 +750,7 @@ public class Validator {
         try {
             GoogleDriveFolder wordImages = langPackDriveFolder.getFolderFromName("images_words");
             ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordImages.checkItemNamesAgainstList(wordsInLWC);
+            wordImages.checkItemNamesAgainstList(wordsInLWC, false);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_words folder or the wordlist tab");
         }
@@ -761,7 +761,7 @@ public class Validator {
             if (lowResWordImages.size() > 0) {
                 ArrayList<String> TwoAppendedWordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
                 TwoAppendedWordsInLWC.replaceAll(s -> s + "2");
-                lowResWordImages.checkItemNamesAgainstList(TwoAppendedWordsInLWC);
+                lowResWordImages.checkItemNamesAgainstList(TwoAppendedWordsInLWC, false);
             }
             else {
                 warnings.add("Since the folder images_words_low_res is empty, the validator will automatically generate " +
@@ -774,7 +774,7 @@ public class Validator {
         try {
             GoogleDriveFolder wordAudio = langPackDriveFolder.getFolderFromName("audio_words");
             ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordAudio.checkItemNamesAgainstList(wordsInLWC);
+            wordAudio.checkItemNamesAgainstList(wordsInLWC, false);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_words folder or the wordlist tab");
         }
@@ -795,7 +795,7 @@ public class Validator {
                         tiles.add(tileC);
                     }
                 }
-                tileAudio.checkItemNamesAgainstList(tiles);
+                tileAudio.checkItemNamesAgainstList(tiles, false);
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_tiles_optional folder or the gametiles tab");
@@ -823,7 +823,7 @@ public class Validator {
             if (hasSyllableAudio) {
                 GoogleDriveFolder syllableAudio = langPackDriveFolder.getFolderFromName("audio_syllables_optional");
                 ArrayList<String> syllables = langPackGoogleSheet.getTabFromName("syllables").getCol(4);
-                syllableAudio.checkItemNamesAgainstList(syllables);
+                syllableAudio.checkItemNamesAgainstList(syllables, false);
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_syllables_optional folder or the syllables tab");
@@ -851,9 +851,26 @@ public class Validator {
         try {
             if (hasInstructionAudio) {
                 GoogleDriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("audio_instructions_optional");
-                ArrayList<String> gamesList = langPackGoogleSheet.getTabFromName("games").getCol(4);
-                gamesList.removeAll(Set.of("X", "naWhileMPOnly"));
-                instructionAudio.checkItemNamesAgainstList(gamesList);
+                ArrayList<String> instructions = langPackGoogleSheet.getTabFromName("games").getCol(4);
+                ArrayList<String> names = langPackGoogleSheet.getTabFromName("games").getCol(1);
+                for (int idx = 0; idx < names.size();) {
+                    String instruction = instructions.get(idx);
+                    if(instruction.equals("X") || instruction.equals("naWhileMPOnly")) {
+                        instructions.remove(idx);
+                        names.remove(idx);
+                    } else {
+                        idx++;
+                    }
+                }
+                instructionAudio.checkItemNamesAgainstList(instructions, true);
+                HashMap<String, String> map = new HashMap<>();
+                for (int idx = 0; idx < names.size(); idx++) {
+                    if (!map.containsKey(instructions.get(idx))) {
+                        map.put(instructions.get(idx), names.get(idx));
+                    } else if(!map.get(instructions.get(idx)).equals(names.get(idx))) {
+                        warnings.add("Instruction audio " + instructions.get(idx) + " is used in more than one game.");
+                    }
+                }
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_instructions_optional folder or the games tab");
@@ -1292,7 +1309,7 @@ public class Validator {
          * name that does not match to an item.
          * @param namesList an ArrayList of Strings which are the names to be compared against folderContents
          */
-        protected void checkItemNamesAgainstList(ArrayList<String> namesList) {
+        protected void checkItemNamesAgainstList(ArrayList<String> namesList, boolean allowRepeats) {
 
             ArrayList<String> namesNotYetFound = new ArrayList<>(namesList);
             ArrayList<GoogleDriveItem> filesNotYetMatched = new ArrayList<>(this.folderContents);
@@ -1302,7 +1319,7 @@ public class Validator {
                 if (itemWithName != null) {
                     namesNotYetFound.remove(name);
                     filesNotYetMatched.remove(itemWithName);
-                    if (namesNotYetFound.contains(name)) {
+                    if (namesNotYetFound.contains(name) && !allowRepeats) {
                         warnings.add("The file name " + name + " in " + this.getName() + " is asked for in multiple places ");
                     }
                 }
