@@ -469,7 +469,7 @@ public class Colombia extends GameActivity {
         }
     }
 
-    public void deleteLastKeyedLetter(View view) {
+    public void deleteLastKeyed(View view) {
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
 
@@ -477,15 +477,15 @@ public class Colombia extends GameActivity {
         String nowWithOneLessWordPiece = "";
 
         if (typedLettersSoFar.length() > 0) {
-            clickedKeys.remove(clickedKeys.size() - 1);
             if (syllableGame.equals("S")) {
-                nowWithOneLessWordPiece = typedLettersSoFar.substring(0, typedLettersSoFar.length() - 1);
+                nowWithOneLessWordPiece = typedLettersSoFar.substring(0, typedLettersSoFar.length() - clickedKeys.get(clickedKeys.size()-1).text.length());
             } else if (syllableGame.equals("T") && challengeLevel == 3) { // Using keyboard keys, not tiles
                 nowWithOneLessWordPiece = typedLettersSoFar.substring(0, typedLettersSoFar.length() - 1);
             } else if (syllableGame.equals("T")) {
                 tilesInBuiltWord.remove(tilesInBuiltWord.size() - 1);
                 nowWithOneLessWordPiece = combineTilesToMakeWord(tilesInBuiltWord, refWord, -1);
             }
+            clickedKeys.remove(clickedKeys.size() - 1);
         }
 
         wordToBuild.setText(nowWithOneLessWordPiece);

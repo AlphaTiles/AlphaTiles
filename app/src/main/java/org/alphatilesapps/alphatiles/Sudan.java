@@ -120,6 +120,7 @@ public class Sudan extends GameActivity {
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
+        showOrHideScrollingArrows();
     }
 
     private void fixConstraintsRTLSudan(int gameID) {
@@ -264,6 +265,7 @@ public class Sudan extends GameActivity {
             } else {
                 showCorrectNumTiles(currentPageNumber);
             }
+            showOrHideScrollingArrows();
         }
     }
 
@@ -275,6 +277,22 @@ public class Sudan extends GameActivity {
             } else {
                 showCorrectNumTiles(currentPageNumber);
             }
+            showOrHideScrollingArrows();
+        }
+    }
+
+    public void showOrHideScrollingArrows() {
+        ImageView nextPageArrow = findViewById(R.id.repeatImage);
+        ImageView prevPageArrow = findViewById(R.id.repeatImage2);
+        if (currentPageNumber == numPages) {
+            nextPageArrow.setVisibility(View.INVISIBLE);
+        } else {
+            nextPageArrow.setVisibility(View.VISIBLE);
+        }
+        if(currentPageNumber == 0) {
+            prevPageArrow.setVisibility(View.INVISIBLE);
+        } else {
+            prevPageArrow.setVisibility(View.VISIBLE);
         }
     }
 

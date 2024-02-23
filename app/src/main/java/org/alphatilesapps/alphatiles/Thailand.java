@@ -162,6 +162,7 @@ public class Thailand extends GameActivity {
                 int freshChecks = 0;
                 while (!freshTile) {
                     chooseWord();
+                    freshChecks++;
                     parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
                     refTile = parsedRefWordTileArray.get(0);
                     refString = refTile.text;
@@ -174,20 +175,14 @@ public class Thailand extends GameActivity {
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if (!refString.equalsIgnoreCase(refStringLast)
+                    if ((!refString.equalsIgnoreCase(refStringLast)
                             && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast)) {
+                            && !refString.equalsIgnoreCase(refStringThirdToLast))
+                            || freshChecks > 25) {
                         freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    } else {
-                        freshChecks++;
-                        if (freshChecks > 25) {
-                            refTileThirdToLast = refTileSecondToLast;
-                            refTileSecondToLast = refTileLast;
-                            refTileLast = refTile;
-                        }
+                        refStringThirdToLast = refStringSecondToLast;
+                        refStringSecondToLast = refStringLast;
+                        refStringLast = refTile.text;
                     }
                 }
 
@@ -196,6 +191,7 @@ public class Thailand extends GameActivity {
                 int freshChecks = 0;
                 while (!freshTile) {
                     chooseWord();
+                    freshChecks++;
                     parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
                     refTile = parsedRefWordTileArray.get(0);
                     refString = refTile.upper;
@@ -209,20 +205,14 @@ public class Thailand extends GameActivity {
                         refTileType =  refTile.typeOfThisTileInstance;
                     }
                     // SAD should never be first tile linguistically, so no need to programmatically filter out
-                    if (!refString.equals(refStringLast)
-                            && !refString.equals(refStringSecondToLast)
-                            && !refString.equals(refStringThirdToLast)) {
+                    if ((!refString.equalsIgnoreCase(refStringLast)
+                            && !refString.equalsIgnoreCase(refStringSecondToLast)
+                            && !refString.equalsIgnoreCase(refStringThirdToLast))
+                            || freshChecks > 25) {
                         freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    } else {
-                        freshChecks++;
-                        if (freshChecks > 25) {
-                            refTileThirdToLast = refTileSecondToLast;
-                            refTileSecondToLast = refTileLast;
-                            refTileLast = refTile;
-                        }
+                        refStringThirdToLast = refStringSecondToLast;
+                        refStringSecondToLast = refStringLast;
+                        refStringLast = refTile.text;
                     }
                 }
 
@@ -238,25 +228,20 @@ public class Thailand extends GameActivity {
                     while (challengeLevelThai == 1 && refTileType.equals("T")) {
                         // JP: disallow tone marker from being reference in level 1
                         chooseWord();
+                        freshChecks++;
                         parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
                         refTile = parsedRefWordTileArray.get(0);
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if (!refString.equalsIgnoreCase(refStringLast)
+                    if ((!refString.equalsIgnoreCase(refStringLast)
                             && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast)) {
+                            && !refString.equalsIgnoreCase(refStringThirdToLast))
+                            || freshChecks > 25) {
                         freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    } else {
-                        freshChecks++;
-                        if (freshChecks > 25) {
-                            refTileThirdToLast = refTileSecondToLast;
-                            refTileSecondToLast = refTileLast;
-                            refTileLast = refTile;
-                        }
+                        refStringThirdToLast = refStringSecondToLast;
+                        refStringSecondToLast = refStringLast;
+                        refStringLast = refTile.text;
                     }
                 }
 
@@ -300,63 +285,58 @@ public class Thailand extends GameActivity {
             // Ensure that chosen tile is a consonant or vowel
             if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO")) {
                 boolean freshTile = false;
+                int freshChecks = 0;
                 while (!freshTile || !(CorV.contains(refTile))) {
                     int randomTileIndex = rand.nextInt(tileListNoSAD.size());
+                    freshChecks++;
                     refTile = tileListNoSAD.get(randomTileIndex);
                     refString = refTile.text;
                     refTileType = refTile.typeOfThisTileInstance;
                     while (challengeLevelThai == 1 && refTileType.matches("(T|AD)")) {
                         // JP: Disallow tone markers and diacritics from being reference in level 1
+                        freshChecks++;
                         randomTileIndex = rand.nextInt(tileListNoSAD.size());
                         refTile = tileListNoSAD.get(randomTileIndex);
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if (!refString.equals(refStringLast)
-                            && !refString.equals(refStringSecondToLast)
-                            && !refString.equals(refStringThirdToLast)) {
+                    if ((!refString.equalsIgnoreCase(refStringLast)
+                            && !refString.equalsIgnoreCase(refStringSecondToLast)
+                            && !refString.equalsIgnoreCase(refStringThirdToLast))
+                            || freshChecks > 25) {
                         freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    } else {
-                        freshChecks++;
-                        if (freshChecks > 25) {
-                            refTileThirdToLast = refTileSecondToLast;
-                            refTileSecondToLast = refTileLast;
-                            refTileLast = refTile;
-                        }
+                        refStringThirdToLast = refStringSecondToLast;
+                        refStringSecondToLast = refStringLast;
+                        refStringLast = refTile.text;
                     }
                 }
             }
             if (refType.equals("TILE_UPPER")) {
                 boolean freshTile = false;
+                int freshChecks = 0;
+
                 while (!freshTile || refTileType.equals("X")) {
                     int randomTileIndex = rand.nextInt(tileListNoSAD.size());
+                    freshChecks++;
                     refTile = tileListNoSAD.get(randomTileIndex);
                     refString = refTile.upper;
                     refTileType = refTile.typeOfThisTileInstance;
                     while (challengeLevelThai == 1 && refTileType.equals("T")) {
                         // JP: disallow tone marker from being reference in level 1
                         randomTileIndex = rand.nextInt(tileListNoSAD.size());
+                        freshChecks++;
                         refTile = tileListNoSAD.get(randomTileIndex);
                         refString = refTile.upper;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if (!refString.equals(refStringLast)
-                            && !refString.equals(refStringSecondToLast)
-                            && !refString.equals(refStringThirdToLast)) {
+                    if ((!refString.equalsIgnoreCase(refStringLast)
+                            && !refString.equalsIgnoreCase(refStringSecondToLast)
+                            && !refString.equalsIgnoreCase(refStringThirdToLast))
+                            || freshChecks > 25) {
                         freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    } else {
-                        freshChecks++;
-                        if (freshChecks > 25) {
-                            refTileThirdToLast = refTileSecondToLast;
-                            refTileSecondToLast = refTileLast;
-                            refTileLast = refTile;
-                        }
+                        refStringThirdToLast = refStringSecondToLast;
+                        refStringSecondToLast = refStringLast;
+                        refStringLast = refTile.text;
                     }
                 }
             }
