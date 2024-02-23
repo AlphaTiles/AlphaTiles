@@ -44,7 +44,7 @@ public class Chile extends GameActivity {
     ArrayList<TileAdapter.ColorTile> tiles = new ArrayList<>();
     ArrayList<TileAdapter.ColorTile> keys = new ArrayList<>();
     @Override
-    protected int[] getTileButtons() {
+    protected int[] getGameButtons() {
         return null;
     }
 
@@ -59,7 +59,7 @@ public class Chile extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try{
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
         }
         catch (NullPointerException e){
             audioInstructionsResID = -1;
@@ -298,7 +298,10 @@ public class Chile extends GameActivity {
         ArrayList<String[]> splitWords = new ArrayList<>();
 
         for(Start.Word word : Start.wordList) {
-            ArrayList<String> split = Start.tileList.parseWordIntoTiles(word.localWord);
+            ArrayList<String> split = new ArrayList<>();
+            for(Start.Tile tile : Start.tileList.parseWordIntoTiles(word.wordInLOP, word)) {
+                split.add(tile.text);
+            }
             if(split != null) {
                 splitWords.add(split.toArray(new String[0]));
             }
@@ -348,7 +351,7 @@ public class Chile extends GameActivity {
         int j = 0;
         for (String key : kbArray) {
             for(int idx = 0; idx < Start.tileList.size(); idx++) {
-                if (key.equals(Start.tileList.get(idx).baseTile)) {
+                if (key.equals(Start.tileList.get(idx).text)) {
                     indexArray[j] = idx;
                     break;
                 }
@@ -358,7 +361,7 @@ public class Chile extends GameActivity {
         Arrays.sort(indexArray);
         j = 0;
         for (int idx : indexArray) {
-            kbArray[j] = Start.tileList.get(idx).baseTile;
+            kbArray[j] = Start.tileList.get(idx).text;
             j++;
         }
         float fontScale = Util.getMinFontSize(kbArray);

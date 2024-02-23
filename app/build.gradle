@@ -46,7 +46,6 @@ android {
             applicationIdSuffix ".blue.tpxTeocuitlapa"
             resValue "string", "app_name", 'Mu̱ꞌtsíin meꞌphaa'
         }
-
     }
     namespace 'org.alphatilesapps.alphatiles'
 }
