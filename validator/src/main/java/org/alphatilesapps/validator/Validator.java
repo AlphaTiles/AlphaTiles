@@ -1001,7 +1001,7 @@ public class Validator {
         StringBuilder beforeLangPacks = new StringBuilder();
         StringBuilder otherLangPacks = new StringBuilder();
         StringBuilder afterLangPacks = new StringBuilder();
-        BufferedReader readBuildGradle = new BufferedReader(new FileReader(pathToApp.resolve("build.gradle").toFile()));
+        BufferedReader readBuildGradle = new BufferedReader(new FileReader(pathToApp.resolve("build.gradle").toFile(), StandardCharsets.UTF_8));
 
         boolean reachedProductFlavors = false;
         boolean reachedFirstLangPack = false;
@@ -1040,9 +1040,6 @@ public class Validator {
                 onTargetLangPack = false;
             }
             else if (!onTargetLangPack) {
-                if (!line.startsWith("//") && bracketCounter > 0){
-                    line = "//" + line;
-                }
                 otherLangPacks.append(line).append("\n");
             }
             line = readBuildGradle.readLine();
@@ -1057,7 +1054,7 @@ public class Validator {
 
         readBuildGradle.close();
 
-        BufferedWriter writeBuildGradle = new BufferedWriter(new FileWriter(pathToApp.resolve("build.gradle").toFile()));
+        BufferedWriter writeBuildGradle = new BufferedWriter(new FileWriter(pathToApp.resolve("build.gradle").toFile(), StandardCharsets.UTF_8));
         writeBuildGradle.write(beforeLangPacks + newLangPack + otherLangPacks + afterLangPacks);
         writeBuildGradle.close();
     }
