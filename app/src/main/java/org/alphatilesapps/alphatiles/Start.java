@@ -75,7 +75,7 @@ public class Start extends AppCompatActivity {
     public static Boolean hasSAD = false;
     public static double stageCorrespondenceRatio;
     public static int numberOfAvatars = 12;
-    public static String scriptType; // LM Can be "Thai" or "Lao" for special tile parsing. If nothing specified, tile parsing defaults to unidirectional.
+    public static String scriptType; // LM Can be "Thai", "Lao", or "Khmer" for special tile parsing. If nothing specified, tile parsing defaults to unidirectional.
 
     public static TileList CONSONANTS = new TileList();
     public static TileList PLACEHOLDER_CONSONANTS = new TileList();
@@ -88,7 +88,6 @@ public class Start extends AppCompatActivity {
     public static TileList SAD = new TileList();
     public static List<String> SYLLABLES = new ArrayList<>();
     public static List<String> SAD_STRINGS = new ArrayList<>();
-
     public static ArrayList<String> MULTITYPE_TILES = new ArrayList<>();
 
 
@@ -680,7 +679,7 @@ public class Start extends AppCompatActivity {
         }
 
         localAppName = langInfoList.find("Game Name");
-        scriptType = langInfoList.find("Script type"); // If "Thai" or "Lao", special tile parsing occurs
+        scriptType = langInfoList.find("Script type"); // If "Thai", "Lao", or "Khmer", special tile parsing occurs
 
         String localWordForName = langInfoList.find("NAME in local language");
         if (localWordForName.equals("custom")) {
@@ -790,7 +789,7 @@ public class Start extends AppCompatActivity {
             this.tileDuration3 = tileDuration3;
             this.stageOfFirstAppearance = stageOfFirstAppearance;
             this.stageOfFirstAppearanceB = stageOfFirstAppearanceB;
-            this.stageOfFirstAppearanceC = stageOfFirstAppearanceB;
+            this.stageOfFirstAppearanceC = stageOfFirstAppearanceC;
             this.typeOfThisTileInstance = typeOfThisTileInstance;
             this.stageOfFirstAppearanceForThisTileType = stageOfFirstAppearanceForThisTileType;
             this.audioForThisTileType = audioForThisTileType;
@@ -881,7 +880,7 @@ public class Start extends AppCompatActivity {
 
             String activeTileType = activeTile.typeOfThisTileInstance;
 
-            if((scriptType.equals("Thai") || scriptType.equals("Lao")) && activeTileType.matches("LV") && scanSetting==1){
+            if(scriptType.matches("(Thai|Lao|Khmer)") && activeTileType.matches("LV") && scanSetting==1){
                 return 0;
             }
 
@@ -889,7 +888,7 @@ public class Start extends AppCompatActivity {
             for (int i = 0; i < size(); i++) {
                 ArrayList<Tile> parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).wordInLOP, get(i));
                 int t = 0;
-                if((scriptType.equals("Thai") || scriptType.equals("Lao")) && scanSetting==1) { // Find first sound tile (not LV, which is pronounced after the consonant it precedes)
+                if(scriptType.matches("(Thai|Lao|Khmer)") && scanSetting==1) { // Find first sound tile (not LV, which is pronounced after the consonant it precedes)
                     Tile initialTile;
                     String initialTileType = "LV";
                     t = -1;
@@ -948,7 +947,7 @@ public class Start extends AppCompatActivity {
             for (int i = 0; i < size(); i++) {
                 parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).wordInLOP, get(i));
                 int t = 0;
-                if((scriptType.equals("Thai") || scriptType.equals("Lao")) && scanSetting==1) { // Find first sound tile (not LV, which is pronounced after the consonant it precedes)
+                if(scriptType.matches("(Thai|Lao|Khmer)") && scanSetting==1) { // Find first sound tile (not LV, which is pronounced after the consonant it precedes)
                     Tile initialTile;
                     String initialTileType = "LV";
                     t = -1;
@@ -1366,7 +1365,7 @@ public class Start extends AppCompatActivity {
 
         public ArrayList<Tile> parseWordIntoTiles (String stringToParse, Word referenceWord) {
             ArrayList<Tile> parsedWordArrayPreliminary = parseWordIntoTilesPreliminary(stringToParse, referenceWord);
-            if (!(scriptType.equals("Thai") || scriptType.equals("Lao"))) {
+            if (!scriptType.matches("(Thai|Lao|Khmer)")) {
                 return parsedWordArrayPreliminary;
             }
 
@@ -1838,18 +1837,6 @@ public class Start extends AppCompatActivity {
 
         }
 
-        public String getInstanceTypeForMixedTile(int index, Word wordListWord) {
-
-            // Figure out which instance of this particular tile we are looking at (first, second, third, etc) in this word
-            ArrayList<Start.Tile> parsedWordListWordTileArray = tileList.parseWordIntoTiles(wordListWord.wordInLOP, wordListWord);
-            String tileString = parsedWordListWordTileArray.get(index).text;
-            ArrayList<Tile> parsedWordListWordPreliminaryTileArray = parseWordIntoTilesPreliminary(wordListWord.wordInLOP, wordListWord);
-            int indexInPreliminaryArray = returnInstanceIndexInPreliminaryParsedWordArray(tileString, index, parsedWordListWordPreliminaryTileArray, parsedWordListWordTileArray, wordListWord);
-
-            return getInstanceTypeForMixedTilePreliminary(indexInPreliminaryArray, parsedWordListWordPreliminaryTileArray, wordListWord);
-
-        }
-
         public String getInstanceTypeForMixedTilePreliminary(int index, ArrayList<Tile> tilesInWordPreliminary, Word wordListWord) {
             // if mixedDefinitionInfo is not C or V or X or dash, then we assume it has two elements
             // to disambiguate, e.g. niwan', where...
@@ -1918,35 +1905,6 @@ public class Start extends AppCompatActivity {
                 instanceType = mixedDefinitionInfoString; // When mixedDefs is just "C", "V", etc. by itself
             }
             return instanceType;
-        }
-
-        public int returnInstanceIndexInPreliminaryParsedWordArray(String tileString, int indexOfTileStringInWordArrayInProgress, ArrayList<Tile> preliminaryWordTileArrayInProgress, ArrayList<Tile> wordTileArrayInProgress, Word wordListWord){
-            int indexInPreliminaryArray = -1;
-            int lastIndexOfThisMultifunctionTile = 0;
-            int instancesBeforeTheOneWeWant = 0;
-            String previousTilesConcatenated = "";
-            for(int t = 0; t<indexOfTileStringInWordArrayInProgress; t++){
-                previousTilesConcatenated+=wordTileArrayInProgress.get(t).text;
-            }
-
-            // Figure out which instance of this tile in the tile list we are looking at
-            while (lastIndexOfThisMultifunctionTile != -1) {
-                lastIndexOfThisMultifunctionTile = previousTilesConcatenated.indexOf(tileString, lastIndexOfThisMultifunctionTile);
-                if (lastIndexOfThisMultifunctionTile != -1) {
-                    instancesBeforeTheOneWeWant++;
-                    lastIndexOfThisMultifunctionTile += tileString.length(); // Start looking again after the instance we just found
-                }
-            }
-            // Figure out its instance type using the index of that instance in the preliminary parsed array
-            for(int t = 0; t< preliminaryWordTileArrayInProgress.size(); t++){
-                if(preliminaryWordTileArrayInProgress.get(t).text.contains(tileString)){
-                    if(instancesBeforeTheOneWeWant == 0){
-                        indexInPreliminaryArray = t;
-                    }
-                    instancesBeforeTheOneWeWant--;
-                }
-            }
-            return indexInPreliminaryArray;
         }
 
     }
