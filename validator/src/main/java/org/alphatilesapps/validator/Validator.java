@@ -484,6 +484,27 @@ public class Validator {
                     warnings.add("the row " + row + " in gametiles has the same tile appearing in multiple places");
                 }
             }
+
+            // make sure that the distractors are subsets of the language pack's game tiles
+            List<String> validGameTiles = gameTiles.getCol(0);
+            List<String> firstAlternates = gameTiles.getCol(1);
+            List<String> secondAlternates = gameTiles.getCol(2);
+            List<String> thirdAlternates = gameTiles.getCol(3);
+            for(int i = 0; i<validGameTiles.size(); i++) {
+                if (!validGameTiles.contains(firstAlternates.get(i))) {
+                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate: " + firstAlternates.get(i)
+                    + ". Please add this alternate to the tile list if it is missing or replace it with a valid tile from the list.");
+                }
+                if (!validGameTiles.contains(secondAlternates.get(i))) {
+                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate: " + secondAlternates.get(i)
+                            + ". Please add this alternate to the tile list if it is missing or replace it with a valid tile from the list.");
+                }
+                if (!validGameTiles.contains(thirdAlternates.get(i))) {
+                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate: " + thirdAlternates.get(i)
+                            + ". Please add this alternate to the tile list if it is missing or replace it with a valid tile from the list.");
+                }
+            }
+
             // make sure that colum 4 of gameTiles only has valid type specifiers
             ArrayList<String> gameTileTypes = gameTiles.getCol(4);
             HashSet<String> validTypes = new HashSet<>(Set.of("C", "PC","V","X", "AD", "AV", "BV", "FV", "LV", "T", "SAD"));
@@ -2010,7 +2031,7 @@ public class Validator {
     private ArrayList<String> parseWordIntoTiles(String wordInLOP) throws ValidatorException {
         ArrayList<String> finalTileList;
         Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
-        if (langInfo.getRowFromFirstCell("Script type").get(1).matches("(Thai|Lao)")) {
+        if (langInfo.getRowFromFirstCell("Script type").get(1).matches("(Thai|Lao|Khmer)")) {
             finalTileList = ThaiParseWordIntoTiles(wordInLOP);
         }
         else{
