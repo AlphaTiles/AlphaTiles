@@ -113,9 +113,13 @@ public abstract class GameActivity extends AppCompatActivity {
         String data = "Word\tTiles Parsed\tTiles recombined\n";
         for(Start.Word thisWord : wordList){
             ArrayList<Start.Tile> thisParsedTileArray = tileList.parseWordIntoTiles(thisWord.wordInLOP, thisWord);
+            ArrayList<Start.Tile> thisPreliminaryParsedTileArray = tileList.parseWordIntoTilesPreliminary(thisWord.wordInLOP, thisWord);
             data += thisWord.wordInLOP + "\t" + thisParsedTileArray.toString() + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n";
             if(!wordInLOPWithStandardizedSequenceOfCharacters(thisWord).equals(combineTilesToMakeWord(thisParsedTileArray, thisWord, -1))){
-                LOGGER.info("Parsing/combining error: " + thisWord.wordInLOP + "\t" + thisParsedTileArray.toString() + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n");
+                LOGGER.info("Parsing/combining error: " + thisWord.wordInLOP + "\t" + thisParsedTileArray + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n");
+            }
+            if(!wordInLOPWithStandardizedSequenceOfCharacters(thisWord).equals(combineTilesToMakeWord(thisPreliminaryParsedTileArray, thisWord, -1))){
+                LOGGER.info("Preliminary parsing/combining error: " + thisWord.wordInLOP + "\t" + thisPreliminaryParsedTileArray + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n");
             }
         }
         //LOGGER.info(data);
@@ -170,6 +174,7 @@ public abstract class GameActivity extends AppCompatActivity {
         }
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        // testParsingAndCombining(); // Helpful runtime check for complex tile parsing
         super.onCreate(state);
     }
 
@@ -876,6 +881,8 @@ public abstract class GameActivity extends AppCompatActivity {
         ArrayList<String> AVs = new ArrayList<>();
         ArrayList<String> ADs = new ArrayList<>();
         ArrayList<String> FVs = new ArrayList<>();
+        ArrayList<String> BVs = new ArrayList<>();
+
         // Since we're going char by char, it's important that teams store their ADs by themselves (single chars) in the gametiles list, even if they also store them
         // attached to consonants.
         for (int i = 0; i < wordListWord.wordInLOP.length(); i++) {
@@ -887,7 +894,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     ArrayList<Start.Tile> parsedWordListWordTileArrayPreliminary = tileList.parseWordIntoTilesPreliminary(wordListWord.wordInLOP, wordListWord);
 
                     int preliminaryTileIndex = -1;
-                    int cumulativeCharIndex = 0;
+                    int cumulativeCharIndex = -1;
                     for (Start.Tile tile : parsedWordListWordTileArrayPreliminary) { // Figure out which tile this is
                         cumulativeCharIndex += tile.text.length();
                         preliminaryTileIndex++;
@@ -905,11 +912,13 @@ public abstract class GameActivity extends AppCompatActivity {
                     ADs.add(thisTileChar);
                 } else if (typeOfThisInstanceOfThisTile.equals("FV")) {
                     FVs.add(thisTileChar);
+                } else if (typeOfThisInstanceOfThisTile.equals("BV")) {
+                    BVs.add(thisTileChar);
                 }
             }
         }
 
-        // Add other non-ambiguous AV, AD, FV tiles to avoid
+        // Add other non-ambiguous AV, AD, FV, and BV tiles to avoid
         for(Start.Tile tile : tileList) {
             if (!MULTITYPE_TILES.contains(tile.text) && tile.text.length()==1) {
                 if (tile.tileType.equals("AV")) {
@@ -918,6 +927,8 @@ public abstract class GameActivity extends AppCompatActivity {
                     ADs.add(tile.text);
                 } else if (tile.tileType.equals("FV")) {
                     FVs.add(tile.text);
+                } else if (tile.tileType.equals("BV")) {
+                    BVs.add(tile.text);
                 }
             }
         }
@@ -928,9 +939,14 @@ public abstract class GameActivity extends AppCompatActivity {
                 prohibitedCharSequences.add(ADs.get(d) + AVs.get(v));
             }
         }
+        for (int d = 0; d < ADs.size(); d++) {
+            for (int v = 0; v < BVs.size(); v++) {
+                prohibitedCharSequences.add(ADs.get(d) + BVs.get(v));
+            }
+        }
         for (int f = 0; f < FVs.size(); f++) {
             for (int d = 0; d < ADs.size(); d++) {
-                if(!tileHashMap.keySet().contains(FVs.get(f) + ADs.get(d))){
+                if(!tileHashMap.containsKey(FVs.get(f) + ADs.get(d))){
                     prohibitedCharSequences.add(FVs.get(f) + ADs.get(d));
                 }
             }
