@@ -348,14 +348,15 @@ public class Validator {
 
         try {
             Tab keyboardTab = langPackGoogleSheet.getTabFromName("keyboard");
-
-            // makes sure colors are 0-11
+            Tab colorTab = langPackGoogleSheet.getTabFromName("colors");
+            // Makes sure all colors exist
             ArrayList<String> themeColorCol = keyboardTab.getCol(1);
-            themeColorCol.removeAll(Set.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"));
-            if (themeColorCol.size() > 0){
-                fatalErrors.add("column B of keyboard should only have numbers 0-11");
+            ArrayList<String> available = colorTab.getCol(0);
+            for (String color : themeColorCol) {
+                if (!available.contains(color)) {
+                    fatalErrors.add("Keyboard uses color id " + color + ", which is not defined in the colors tab");
+                }
             }
-
             // the below section compares the keys in keyboard to the words in wordlist
 
             //a map of each key to how many times it is used in the wordlist
