@@ -26,9 +26,10 @@ public class Chile extends GameActivity {
     static int minWordLength = 3;
     static int maxKeyboardSize = 50;
     static int baseGuessCount = 8;
-    static final int GREEN = Color.parseColor(Start.COLORS.get(7));
-    static final int YELLOW = 0xFFCCCC00;
+    static final int GREEN = Color.parseColor(Start.COLORS.get(3));
+    static final int BLUE = Color.parseColor(Start.COLORS.get(1));
     static final int EMPTY = Color.parseColor(Start.COLORS.get(6));
+    static final int YELLOW = Color.parseColor(Start.COLORS.get(5));
     static final int GRAY = Color.parseColor(Start.COLORS.get(8));
     static final int KEY_COLOR = Color.parseColor(Start.COLORS.get(0));
     boolean finished = false;
@@ -214,7 +215,7 @@ public class Chile extends GameActivity {
             else if(Arrays.asList(secret).contains(row[i].text)) {
                 if(!checkedYellows.contains(row[i].text)) {
                     checkedYellows.add(row[i].text);
-                    row[i].color = YELLOW;
+                    row[i].color = BLUE;
                 }
                 else {
                     row[i].color = GRAY;
@@ -225,7 +226,7 @@ public class Chile extends GameActivity {
             }
             for(TileAdapter.ColorTile key : keys) {
                 if(key.text.equals(row[i].text)) {
-                    if((key.color != YELLOW && key.color != GREEN) || (key.color == YELLOW && row[i].color == GREEN)) {
+                    if((key.color != BLUE && key.color != GREEN) || (key.color == BLUE && row[i].color == GREEN)) {
                         key.color = row[i].color;
                     }
                 }
