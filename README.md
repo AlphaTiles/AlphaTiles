@@ -54,7 +54,7 @@ Or, if not including this file, go to [app/build.gradle](app/build.gradle) and c
 
 and under `dependencies {}`:
 
-* `implementation platform('com.google.firebase:firebase-bom:25.12.0')`
+* `implementation platform('com.google.firebase:firebase-bom:32.7.4')`
 * `implementation 'com.google.firebase:firebase-analytics'`
 
 ## Minimum API levels
