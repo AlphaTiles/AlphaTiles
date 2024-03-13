@@ -1908,10 +1908,10 @@ public class Validator {
                 boolean isMultiType = !tileRow.get(7).equals("none") || !tileRow.get(9).equals("none");
                 if (isMultiType) {
                     if (foundMultiTypeTile) {
-                        fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                        fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the " +
                                 "type specification \"" + typeSpecifications +
                                 "\" but more than one of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
-                        throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                        throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the " +
                                 "type specification \"" + typeSpecifications +
                                 "\" but more than one of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
                     } else {
@@ -1920,10 +1920,10 @@ public class Validator {
                             foundMultiTypeTile = true;
                             toReturn.add(typeSpecifications);
                         } else {
-                            fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multi-type tile (with the" +
+                            fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multi-type tile (with the " +
                                     "type specification \"" + typeSpecifications +
                                     "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
-                            throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multi-type tile (with the" +
+                            throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multi-type tile (with the " +
                                     "type specification \"" + typeSpecifications +
                                     "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
                         }
@@ -1933,10 +1933,10 @@ public class Validator {
                 }
             }
             if (!foundMultiTypeTile) {
-                fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the " +
                         "type specification \"" + typeSpecifications +
                         "\" but none of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
-                throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the " +
                         "type specification \"" + typeSpecifications +
                         "\" but none tiles have multiple types (its tiles are " + wordAsTileList + ")");
             }
