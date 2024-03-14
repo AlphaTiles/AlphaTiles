@@ -230,7 +230,7 @@ public class Validator {
             "audio_tiles_optional", "audio/mpeg",
             "audio_instructions_optional", "audio/mpeg",
             "audio_syllables_optional", "audio/mpeg",
-            "font", "application/x-font-ttf, text/xml"
+            "font", "application/x-font-ttf, font/ttf, text/xml"
     ));
 
     /**
@@ -348,14 +348,15 @@ public class Validator {
 
         try {
             Tab keyboardTab = langPackGoogleSheet.getTabFromName("keyboard");
-
-            // makes sure colors are 0-11
+            Tab colorTab = langPackGoogleSheet.getTabFromName("colors");
+            // Makes sure all colors exist
             ArrayList<String> themeColorCol = keyboardTab.getCol(1);
-            themeColorCol.removeAll(Set.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"));
-            if (themeColorCol.size() > 0){
-                fatalErrors.add("column B of keyboard should only have numbers 0-11");
+            ArrayList<String> available = colorTab.getCol(0);
+            for (String color : themeColorCol) {
+                if (!available.contains(color)) {
+                    fatalErrors.add("Keyboard uses color id " + color + ", which is not defined in the colors tab");
+                }
             }
-
             // the below section compares the keys in keyboard to the words in wordlist
 
             //a map of each key to how many times it is used in the wordlist
@@ -555,8 +556,8 @@ public class Validator {
         }
         try {
             Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
-            if (!langInfo.getRowFromFirstCell("Script type").get(1).matches("(Roman|Thai|Lao)")){
-                fatalErrors.add("In langinfo \"Script type\" must be either \"Roman,\" \"Thai,\" or \"Lao\"");
+            if (!langInfo.getRowFromFirstCell("Script type").get(1).matches("(Arabic|Devanagari|Khmer|Lao|Roman|Thai|)")){
+                fatalErrors.add("In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\"");
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the langinfo tab");
@@ -742,7 +743,7 @@ public class Validator {
         try {
             GoogleDriveFolder resourceImages = langPackDriveFolder.getFolderFromName("images_resources_optional");
             ArrayList<String> resourceImageNames = langPackGoogleSheet.getTabFromName("resources").getCol(2);
-            resourceImages.checkItemNamesAgainstList(resourceImageNames);
+            resourceImages.checkItemNamesAgainstList(resourceImageNames, false);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_resources_optional folder or the resources tab");
         }
@@ -750,7 +751,7 @@ public class Validator {
         try {
             GoogleDriveFolder wordImages = langPackDriveFolder.getFolderFromName("images_words");
             ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordImages.checkItemNamesAgainstList(wordsInLWC);
+            wordImages.checkItemNamesAgainstList(wordsInLWC, false);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_words folder or the wordlist tab");
         }
@@ -761,7 +762,7 @@ public class Validator {
             if (lowResWordImages.size() > 0) {
                 ArrayList<String> TwoAppendedWordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
                 TwoAppendedWordsInLWC.replaceAll(s -> s + "2");
-                lowResWordImages.checkItemNamesAgainstList(TwoAppendedWordsInLWC);
+                lowResWordImages.checkItemNamesAgainstList(TwoAppendedWordsInLWC, false);
             }
             else {
                 warnings.add("Since the folder images_words_low_res is empty, the validator will automatically generate " +
@@ -774,7 +775,7 @@ public class Validator {
         try {
             GoogleDriveFolder wordAudio = langPackDriveFolder.getFolderFromName("audio_words");
             ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordAudio.checkItemNamesAgainstList(wordsInLWC);
+            wordAudio.checkItemNamesAgainstList(wordsInLWC, false);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_words folder or the wordlist tab");
         }
@@ -795,7 +796,7 @@ public class Validator {
                         tiles.add(tileC);
                     }
                 }
-                tileAudio.checkItemNamesAgainstList(tiles);
+                tileAudio.checkItemNamesAgainstList(tiles, false);
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_tiles_optional folder or the gametiles tab");
@@ -823,7 +824,7 @@ public class Validator {
             if (hasSyllableAudio) {
                 GoogleDriveFolder syllableAudio = langPackDriveFolder.getFolderFromName("audio_syllables_optional");
                 ArrayList<String> syllables = langPackGoogleSheet.getTabFromName("syllables").getCol(4);
-                syllableAudio.checkItemNamesAgainstList(syllables);
+                syllableAudio.checkItemNamesAgainstList(syllables, false);
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_syllables_optional folder or the syllables tab");
@@ -851,9 +852,37 @@ public class Validator {
         try {
             if (hasInstructionAudio) {
                 GoogleDriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("audio_instructions_optional");
-                ArrayList<String> gamesList = langPackGoogleSheet.getTabFromName("games").getCol(4);
-                gamesList.removeAll(Set.of("X", "naWhileMPOnly"));
-                instructionAudio.checkItemNamesAgainstList(gamesList);
+                ArrayList<String> instructions = langPackGoogleSheet.getTabFromName("games").getCol(4);
+                ArrayList<String> names = langPackGoogleSheet.getTabFromName("games").getCol(1);
+                String[] special = new String[] {
+                        "zzz_earth",
+                        "zzz_about",
+                        "zzz_choose_player",
+                        "zzz_resources",
+                        "zzz_set_player_name",
+                };
+                for(String s : special) {
+                    // Stupid hacky solution but maybe works
+                    instructionAudio.folderContents.add(new GoogleDriveItem("", s, ""));
+                }
+                for (int idx = 0; idx < names.size();) {
+                    String instruction = instructions.get(idx);
+                    if(instruction.equals("X") || instruction.equals("naWhileMPOnly")) {
+                        instructions.remove(idx);
+                        names.remove(idx);
+                    } else {
+                        idx++;
+                    }
+                }
+                instructionAudio.checkItemNamesAgainstList(instructions, true);
+                HashMap<String, String> map = new HashMap<>();
+                for (int idx = 0; idx < names.size(); idx++) {
+                    if (!map.containsKey(instructions.get(idx))) {
+                        map.put(instructions.get(idx), names.get(idx));
+                    } else if(!map.get(instructions.get(idx)).equals(names.get(idx))) {
+                        warnings.add("Instruction audio " + instructions.get(idx) + " is used in more than one game.");
+                    }
+                }
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_instructions_optional folder or the games tab");
@@ -973,7 +1002,7 @@ public class Validator {
         StringBuilder beforeLangPacks = new StringBuilder();
         StringBuilder otherLangPacks = new StringBuilder();
         StringBuilder afterLangPacks = new StringBuilder();
-        BufferedReader readBuildGradle = new BufferedReader(new FileReader(pathToApp.resolve("build.gradle").toFile()));
+        BufferedReader readBuildGradle = new BufferedReader(new FileReader(pathToApp.resolve("build.gradle").toFile(), StandardCharsets.UTF_8));
 
         boolean reachedProductFlavors = false;
         boolean reachedFirstLangPack = false;
@@ -1012,9 +1041,6 @@ public class Validator {
                 onTargetLangPack = false;
             }
             else if (!onTargetLangPack) {
-                if (!line.startsWith("//") && bracketCounter > 0){
-                    line = "//" + line;
-                }
                 otherLangPacks.append(line).append("\n");
             }
             line = readBuildGradle.readLine();
@@ -1029,7 +1055,7 @@ public class Validator {
 
         readBuildGradle.close();
 
-        BufferedWriter writeBuildGradle = new BufferedWriter(new FileWriter(pathToApp.resolve("build.gradle").toFile()));
+        BufferedWriter writeBuildGradle = new BufferedWriter(new FileWriter(pathToApp.resolve("build.gradle").toFile(), StandardCharsets.UTF_8));
         writeBuildGradle.write(beforeLangPacks + newLangPack + otherLangPacks + afterLangPacks);
         writeBuildGradle.close();
     }
@@ -1292,7 +1318,7 @@ public class Validator {
          * name that does not match to an item.
          * @param namesList an ArrayList of Strings which are the names to be compared against folderContents
          */
-        protected void checkItemNamesAgainstList(ArrayList<String> namesList) {
+        protected void checkItemNamesAgainstList(ArrayList<String> namesList, boolean allowRepeats) {
 
             ArrayList<String> namesNotYetFound = new ArrayList<>(namesList);
             ArrayList<GoogleDriveItem> filesNotYetMatched = new ArrayList<>(this.folderContents);
@@ -1302,7 +1328,7 @@ public class Validator {
                 if (itemWithName != null) {
                     namesNotYetFound.remove(name);
                     filesNotYetMatched.remove(itemWithName);
-                    if (namesNotYetFound.contains(name)) {
+                    if (namesNotYetFound.contains(name) && !allowRepeats) {
                         warnings.add("The file name " + name + " in " + this.getName() + " is asked for in multiple places ");
                     }
                 }
@@ -1882,10 +1908,10 @@ public class Validator {
                 boolean isMultiType = !tileRow.get(7).equals("none") || !tileRow.get(9).equals("none");
                 if (isMultiType) {
                     if (foundMultiTypeTile) {
-                        fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                        fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the " +
                                 "type specification \"" + typeSpecifications +
                                 "\" but more than one of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
-                        throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                        throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the " +
                                 "type specification \"" + typeSpecifications +
                                 "\" but more than one of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
                     } else {
@@ -1894,10 +1920,10 @@ public class Validator {
                             foundMultiTypeTile = true;
                             toReturn.add(typeSpecifications);
                         } else {
-                            fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multi-type tile (with the" +
+                            fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multi-type tile (with the " +
                                     "type specification \"" + typeSpecifications +
                                     "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
-                            throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multi-type tile (with the" +
+                            throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies only ONE multi-type tile (with the " +
                                     "type specification \"" + typeSpecifications +
                                     "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
                         }
@@ -1907,10 +1933,10 @@ public class Validator {
                 }
             }
             if (!foundMultiTypeTile) {
-                fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                fatalErrors.add("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the " +
                         "type specification \"" + typeSpecifications +
                         "\" but none of its tiles have multiple types (its tiles are " + wordAsTileList + ")");
-                throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the" +
+                throw new ValidatorException("In wordlist, the word \"" + wordInLOP + "\" specifies ONE multi-type tile with the " +
                         "type specification \"" + typeSpecifications +
                         "\" but none tiles have multiple types (its tiles are " + wordAsTileList + ")");
             }
