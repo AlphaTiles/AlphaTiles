@@ -13,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Random;
 
 import static android.graphics.Color.WHITE;
@@ -39,6 +41,10 @@ public class Thailand extends GameActivity {
     String refTileSecondToLast = "";
     String refTileThirdToLast = "";
     String choiceType;
+    Queue<String> lastXTiles = new PriorityQueue<>();
+
+    int uniqueTileSpan;
+
     int refColor;
     int challengeLevelThai;
 
@@ -143,6 +149,7 @@ public class Thailand extends GameActivity {
         }
 
         visibleTiles = TILE_BUTTONS.length;
+        uniqueTileSpan = Integer.parseInt(Start.settingsList.find("Span of unique tiles in Thailand games"));
         updatePointsAndTrackers(0);
         playAgain();
 
@@ -193,20 +200,14 @@ public class Thailand extends GameActivity {
                         refTile = parsedWordArrayFinal.get(0);
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
-                    if (!refTile.equals(refTileLast)
-                            && !refTile.equals(refTileSecondToLast)
-                            && !refTile.equals(refTileThirdToLast)) {
+                    if (!lastXTiles.contains(refTile) && freshChecks <= 25) {
                         freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    } else {
-                        freshChecks++;
-                        if (freshChecks > 25) {
-                            refTileThirdToLast = refTileSecondToLast;
-                            refTileSecondToLast = refTileLast;
-                            refTileLast = refTile;
+                        if(lastXTiles.size()==uniqueTileSpan){
+                            lastXTiles.poll();
                         }
+                        lastXTiles.add(refTile);
+                    } else {
+                        freshTile = false;
                     }
                 }
 
@@ -226,20 +227,14 @@ public class Thailand extends GameActivity {
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
                     // SAD should never be first tile linguistically, so no need to programatically filter out
-                    if (!refTile.equals(refTileLast)
-                            && !refTile.equals(refTileSecondToLast)
-                            && !refTile.equals(refTileThirdToLast)) {
+                    if (!lastXTiles.contains(refTile) && freshChecks <= 25) {
                         freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    } else {
-                        freshChecks++;
-                        if (freshChecks > 25) {
-                            refTileThirdToLast = refTileSecondToLast;
-                            refTileSecondToLast = refTileLast;
-                            refTileLast = refTile;
+                        if(lastXTiles.size()==uniqueTileSpan){
+                            lastXTiles.poll();
                         }
+                        lastXTiles.add(refTile);
+                    } else {
+                        freshTile = false;
                     }
                 }
 
@@ -258,20 +253,14 @@ public class Thailand extends GameActivity {
                         refTile = parsedWordArrayFinal.get(0);
                         refTileType = tileListNoSAD.get(tileListNoSAD.returnPositionInAlphabet(parsedWordArrayFinal.get(0))).tileType;
                     }
-                    if (!refTile.equals(refTileLast)
-                            && !refTile.equals(refTileSecondToLast)
-                            && !refTile.equals(refTileThirdToLast)) {
+                    if (!lastXTiles.contains(refTile) && freshChecks <= 25) {
                         freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    } else {
-                        freshChecks++;
-                        if (freshChecks > 25) {
-                            refTileThirdToLast = refTileSecondToLast;
-                            refTileSecondToLast = refTileLast;
-                            refTileLast = refTile;
+                        if(lastXTiles.size()==uniqueTileSpan){
+                            lastXTiles.poll();
                         }
+                        lastXTiles.add(refTile);
+                    } else {
+                        freshTile = false;
                     }
                 }
 
@@ -283,20 +272,14 @@ public class Thailand extends GameActivity {
             while (!freshTile) {
                 int randomNum2 = rand.nextInt(sortableSyllArray.size());
                 refTile = sortableSyllArray.get(randomNum2).syllable;
-                if (!refTile.equals(refTileLast)
-                        && !refTile.equals(refTileSecondToLast)
-                        && !refTile.equals(refTileThirdToLast)) {
+                if (!lastXTiles.contains(refTile) && freshChecks <= 25) {
                     freshTile = true;
-                    refTileThirdToLast = refTileSecondToLast;
-                    refTileSecondToLast = refTileLast;
-                    refTileLast = refTile;
-                } else {
-                    freshChecks++;
-                    if (freshChecks > 25) {
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
+                    if(lastXTiles.size()==uniqueTileSpan){
+                        lastXTiles.poll();
                     }
+                    lastXTiles.add(refTile);
+                } else {
+                    freshTile = false;
                 }
             }
 
@@ -307,20 +290,14 @@ public class Thailand extends GameActivity {
                 chooseWord();
                 parsedWordArrayFinal = syllableList.parseWordIntoSyllables(wordInLOP);
                 refTile = parsedWordArrayFinal.get(0);
-                if (!refTile.equals(refTileLast)
-                        && !refTile.equals(refTileSecondToLast)
-                        && !refTile.equals(refTileThirdToLast)) {
+                if (!lastXTiles.contains(refTile) && freshChecks <= 25) {
                     freshTile = true;
-                    refTileThirdToLast = refTileSecondToLast;
-                    refTileSecondToLast = refTileLast;
-                    refTileLast = refTile;
-                } else {
-                    freshChecks++;
-                    if (freshChecks > 25) {
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
+                    if(lastXTiles.size()==uniqueTileSpan){
+                        lastXTiles.poll();
                     }
+                    lastXTiles.add(refTile);
+                } else {
+                    freshTile = false;
                 }
             }
 
@@ -343,20 +320,14 @@ public class Thailand extends GameActivity {
                         refTile = sortableTilesArray.get(randomNum2).baseTile;
                         refTileType = sortableTilesArray.get(randomNum2).tileType;
                     }
-                    if (!refTile.equals(refTileLast)
-                            && !refTile.equals(refTileSecondToLast)
-                            && !refTile.equals(refTileThirdToLast)) {
+                    if (!lastXTiles.contains(refTile) && freshChecks <= 25) {
                         freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    } else {
-                        freshChecks++;
-                        if (freshChecks > 25) {
-                            refTileThirdToLast = refTileSecondToLast;
-                            refTileSecondToLast = refTileLast;
-                            refTileLast = refTile;
+                        if(lastXTiles.size()==uniqueTileSpan){
+                            lastXTiles.poll();
                         }
+                        lastXTiles.add(refTile);
+                    } else {
+                        freshTile = false;
                     }
                 }
             }
@@ -375,20 +346,14 @@ public class Thailand extends GameActivity {
                         refTile = sortableTilesArray.get(randomNum2).upperTile;
                         refTileType = sortableTilesArray.get(randomNum2).tileType;
                     }
-                    if (!refTile.equals(refTileLast)
-                            && !refTile.equals(refTileSecondToLast)
-                            && !refTile.equals(refTileThirdToLast)) {
+                    if (!lastXTiles.contains(refTile) && freshChecks <= 25) {
                         freshTile = true;
-                        refTileThirdToLast = refTileSecondToLast;
-                        refTileSecondToLast = refTileLast;
-                        refTileLast = refTile;
-                    } else {
-                        freshChecks++;
-                        if (freshChecks > 25) {
-                            refTileThirdToLast = refTileSecondToLast;
-                            refTileSecondToLast = refTileLast;
-                            refTileLast = refTile;
+                        if(lastXTiles.size()==uniqueTileSpan){
+                            lastXTiles.poll();
                         }
+                        lastXTiles.add(refTile);
+                    } else {
+                        freshTile = false;
                     }
                 }
             }
