@@ -701,6 +701,11 @@ public class Validator {
                 fatalErrors.add(e.getMessage());
             }
         }
+        try {
+            langPackDriveFolder.getFolderFromName("font");
+        } catch (ValidatorException e) {
+            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("font");
+        }
         // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
         // that the the given column lists file names (anything other than X or naWhileMPOnly)
         // and the referenced drive folder contains files
