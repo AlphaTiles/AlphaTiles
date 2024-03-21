@@ -710,7 +710,7 @@ public class Validator {
         boolean hasSyllableAudio = syllableAudioAttempted && syllableAudioSetting;
         if (!hasSyllableAudio){
             if (syllableAudioAttempted){
-                warnings.add("Although it appears you spread up your language pack for syllable audio, the \"Has syllable audio\" " +
+                warnings.add("Although it appears you set up your language pack for syllable audio, the \"Has syllable audio\" " +
                         "row in the settings tab is not set to \"TRUE\"");
             }
             if (syllableAudioSetting){
@@ -731,7 +731,7 @@ public class Validator {
         boolean hasTileAudio = tileAudioSetting && tileAudioAttempted;
         if (!hasTileAudio){
             if (tileAudioAttempted){
-                warnings.add("Although it appears you spread up your language pack for tile audio, \"has tile audio\" " +
+                warnings.add("Although it appears you set up your language pack for tile audio, \"has tile audio\" " +
                         " in the settings tab is not set to \"TRUE\"");
             }
             if (tileAudioSetting){
