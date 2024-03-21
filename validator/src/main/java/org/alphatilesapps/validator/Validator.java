@@ -54,6 +54,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -668,7 +670,13 @@ public class Validator {
         }
 
     }
-
+    Set<String> SPECIAL_AUDIO_INSTRUCTIONS = Set.of(
+            "zzz_earth.mp3",
+            "zzz_about.mp3",
+            "zzz_choose_player.mp3",
+            "zzz_resources.mp3",
+            "zzz_set_player_name.mp3"
+    );
     /**
      * Executes checks on the resource folders langPackGoogleDrive.
      * Includes default checks based on DESIRED_FILETYPE_FROM_SUBFOLDERS.
@@ -854,17 +862,7 @@ public class Validator {
                 GoogleDriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("audio_instructions_optional");
                 ArrayList<String> instructions = langPackGoogleSheet.getTabFromName("games").getCol(4);
                 ArrayList<String> names = langPackGoogleSheet.getTabFromName("games").getCol(1);
-                String[] special = new String[] {
-                        "zzz_earth",
-                        "zzz_about",
-                        "zzz_choose_player",
-                        "zzz_resources",
-                        "zzz_set_player_name",
-                };
-                for(String s : special) {
-                    // Stupid hacky solution but maybe works
-                    instructionAudio.folderContents.add(new GoogleDriveItem("", s, ""));
-                }
+
                 for (int idx = 0; idx < names.size();) {
                     String instruction = instructions.get(idx);
                     if(instruction.equals("X") || instruction.equals("naWhileMPOnly")) {
@@ -874,7 +872,7 @@ public class Validator {
                         idx++;
                     }
                 }
-                instructionAudio.checkItemNamesAgainstList(instructions, true);
+                instructionAudio.checkItemNamesAgainstList(instructions, true, SPECIAL_AUDIO_INSTRUCTIONS);
                 HashMap<String, String> map = new HashMap<>();
                 for (int idx = 0; idx < names.size(); idx++) {
                     if (!map.containsKey(instructions.get(idx))) {
@@ -1319,8 +1317,12 @@ public class Validator {
          * @param namesList an ArrayList of Strings which are the names to be compared against folderContents
          */
         protected void checkItemNamesAgainstList(ArrayList<String> namesList, boolean allowRepeats) {
+            checkItemNamesAgainstList(namesList, allowRepeats, Set.of());
+        }
+        protected void checkItemNamesAgainstList(ArrayList<String> namesList, boolean allowRepeats, Set<String> optional) {
 
             ArrayList<String> namesNotYetFound = new ArrayList<>(namesList);
+            namesNotYetFound.addAll(optional);
             ArrayList<GoogleDriveItem> filesNotYetMatched = new ArrayList<>(this.folderContents);
 
             for (String name : namesList){
@@ -1335,16 +1337,17 @@ public class Validator {
             }
 
             for (String shouldHaveFound : namesNotYetFound) {
+                if (optional.contains(shouldHaveFound)) continue;
                 fatalErrors.add(shouldHaveFound + " does not have a corresponding file in " + this.getName() +
                         " of the correct file type");
             }
 
             for (GoogleDriveItem shouldHaveMatched: filesNotYetMatched) {
+                if (optional.contains(shouldHaveMatched.name)) continue;
                 warnings.add("the file " + shouldHaveMatched.getName() + " in " + this.getName() + " may be excess " +
                         "or duplicate and will be ignored");
                 folderContents.remove(shouldHaveMatched);
             }
-
         }
 
         /**
@@ -1732,6 +1735,14 @@ public class Validator {
 
         try {
             GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(subFolderName);
+            // Don't include special instructions in this check.
+            // (will need to change this if the special instructions stop being hardcoded
+            for (GoogleDriveItem item : subFolder.folderContents) {
+                if (SPECIAL_AUDIO_INSTRUCTIONS.contains(item.name)) {
+                    someAudioNames = true;
+                    break; // Override name check
+                }
+            }
             if (subFolder.getName().equals(subFolderName) && subFolder.size() > 0) {
                 someAudioFiles = true;
             }
