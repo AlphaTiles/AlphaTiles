@@ -176,7 +176,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tracker01"
-        app:layout_constraintBottom_toTopOf="@+id/keyboardBoxDivider"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard"
         app:layout_constraintVertical_bias="0.7"
         android:gravity="center"
         android:layout_margin="10dp" />
@@ -184,9 +184,10 @@
     <GridView
         android:id="@+id/keyboard"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constrainedHeight="true"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/keyboardBoxDivider"
@@ -223,12 +224,13 @@
     <ImageView
         android:id="@+id/repeatImage"
         android:paddingHorizontal="4dp"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:contentDescription="@string/playAgain"
-        android:rotationY="0"
+        android:adjustViewBounds="true"
+        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys"
         app:layout_constraintStart_toEndOf="@+id/backspace"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         app:srcCompat="@drawable/zz_forward" />
@@ -290,14 +292,10 @@
         android:paddingHorizontal="4dp"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:padding="10dp"
 
         app:layout_constraintBottom_toTopOf="@id/guidelineHSys"
-
-        app:layout_constraintLeft_toRightOf="@id/instructions"
-        app:layout_constraintRight_toLeftOf="@id/complete_word"
+        app:layout_constraintStart_toEndOf="@id/instructions"
         app:layout_constraintTop_toBottomOf="@id/guidelineHSys1"
-        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/zz_deletetext" />
 
     <ImageView
@@ -307,8 +305,8 @@
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         app:layout_constraintBottom_toTopOf="@id/guidelineHSys"
-        app:layout_constraintLeft_toRightOf="@id/backspace"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@id/backspace"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guidelineHSys1"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/zz_complete" />
