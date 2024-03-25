@@ -1449,10 +1449,15 @@ public class Start extends AppCompatActivity {
                     if (currentTileType.matches("(AV|BV|FV)")) { // Prepare to add current AV/BV/FV to vowel-so-far
                         if(tileHashMap.containsKey(vowelStringSoFar)){ // Vowel composite so far is parsable as one tile in the tile list
                             if(vowelTypeSoFar.equals("LV")){
-                                vowelStringSoFar += "◌";
-                            } else if (vowelTypeSoFar.matches("(AV|BV|FV)")){
+                                if(!vowelStringSoFar.endsWith("◌")){
+                                    vowelStringSoFar += "◌";
+                                }
+                            } else if (vowelTypeSoFar.matches("(AV|BV|FV)") && !vowelStringSoFar.startsWith("◌")){
                                 vowelStringSoFar = "◌" + vowelStringSoFar; // Put the placeholder before the previous AV/BV/FV before adding current AV/BV/FV to it
                             }
+                        }
+                        if (vowelStringSoFar.contains("◌") && currentTileString.contains("◌")) {
+                            currentTileString = currentTileString.replace("◌", ""); // Just want one ◌
                         }
                         vowelStringSoFar += currentTileString;
                         if (vowelStringSoFar.equals(currentTileString)) { // the vowel so far is a preliminary tile
@@ -1461,13 +1466,16 @@ public class Start extends AppCompatActivity {
                             vowelTypeSoFar = tileHashMap.find(vowelStringSoFar).tileType;
                         }
                     } else if (currentTileType.equals("AD")) { // Save any diacritics that come between syllables
-                        if(!ADstringSoFar.equals("")){
+                        if(!ADstringSoFar.isEmpty() && !ADstringSoFar.contains("◌")){
                             ADstringSoFar = "◌" + ADstringSoFar; // For complex diacritics
+                        }
+                        if(ADstringSoFar.contains("◌") && currentTileString.contains("◌")) { // Just want one ◌
+                            currentTileString = currentTileString.replace("◌", "");
                         }
                         ADstringSoFar+=currentTileString;
                     } else if (currentTileType.equals("SAD")) { // Save any Space-And-Dash chars that comes between syllables.
                         SADTiles.add(currentTile);
-                    } else if (!foundNextConsonant && currentTileType.equals("V")){ // There is a V (not LV/FV/AV/BV/on the end of the word)
+                    } else if (!foundNextConsonant && currentTileType.equals("V")){ // There is a V (not LV/FV/AV/BV) on the end of the word
                         vowelToStartTheNextSyllable = currentTile;
                     }
                 }
@@ -1479,41 +1487,47 @@ public class Start extends AppCompatActivity {
                 }
                 if (!(currentConsonant==null)) {
                     // Combine ADSymbols with consonant if that combination is in the tileList. Ex:บ๋
-                    if (!ADstringSoFar.isEmpty() && tileHashMap.containsKey(currentConsonant.text + ADstringSoFar)) {
-                        currentConsonant = tileHashMap.find(currentConsonant.text + ADstringSoFar);
+                    if (!ADstringSoFar.isEmpty() && tileHashMap.containsKey(currentConsonant.text + ADstringSoFar.replace("◌", ""))) {
+                        currentConsonant = tileHashMap.find(currentConsonant.text + ADstringSoFar.replace("◌", ""));
                         ADstringSoFar = "";
                     }
 
                     if (!vowelStringSoFar.isEmpty()) {
                         // Add tiles in different orders based on the vowel's position
-                        if (vowelTypeSoFar.equals("LV")) {
-                            vowelTile = tileHashMap.find(vowelStringSoFar);
-                            parsedWordTileArray.add(vowelTile);
-                            parsedWordTileArray.add(currentConsonant);
-                            if (!ADstringSoFar.equals("")) {
-                                ADTile = tileHashMap.find(ADstringSoFar);
-                                parsedWordTileArray.add(ADTile);
-                            }
-                        } else if (vowelTypeSoFar.equals("AV") || vowelTypeSoFar.equals("BV") || vowelTypeSoFar.equals("V")) {
-                            vowelTile = tileHashMap.find(vowelStringSoFar);
-                            parsedWordTileArray.add(currentConsonant);
-                            parsedWordTileArray.add(vowelTile);
-                            if (!ADstringSoFar.equals("")) {
-                                ADTile = tileHashMap.find(ADstringSoFar);
-                                parsedWordTileArray.add(ADTile);
-                            }
-                        } else if (vowelTypeSoFar.equals("FV")){
-                            parsedWordTileArray.add(currentConsonant);
-                            if (!ADstringSoFar.equals("")) {
-                                ADTile = tileHashMap.find(ADstringSoFar);
-                                parsedWordTileArray.add(ADTile);
-                            }
-                            vowelTile = tileHashMap.find(vowelStringSoFar);
-                            parsedWordTileArray.add(vowelTile);
+                        switch (vowelTypeSoFar) {
+                            case "LV":
+                                vowelTile = tileHashMap.find(vowelStringSoFar);
+                                parsedWordTileArray.add(vowelTile);
+                                parsedWordTileArray.add(currentConsonant);
+                                if (!ADstringSoFar.isEmpty()) {
+                                    ADTile = tileHashMap.find(ADstringSoFar);
+                                    parsedWordTileArray.add(ADTile);
+                                }
+                                break;
+                            case "AV":
+                            case "BV":
+                            case "V":
+                                vowelTile = tileHashMap.find(vowelStringSoFar);
+                                parsedWordTileArray.add(currentConsonant);
+                                parsedWordTileArray.add(vowelTile);
+                                if (!ADstringSoFar.isEmpty()) {
+                                    ADTile = tileHashMap.find(ADstringSoFar);
+                                    parsedWordTileArray.add(ADTile);
+                                }
+                                break;
+                            case "FV":
+                                parsedWordTileArray.add(currentConsonant);
+                                if (!ADstringSoFar.isEmpty()) {
+                                    ADTile = tileHashMap.find(ADstringSoFar);
+                                    parsedWordTileArray.add(ADTile);
+                                }
+                                vowelTile = tileHashMap.find(vowelStringSoFar);
+                                parsedWordTileArray.add(vowelTile);
+                                break;
                         }
                     } else { // No vowel between current and (next) consonants
                         parsedWordTileArray.add(currentConsonant);
-                        if (!ADstringSoFar.equals("")) {
+                        if (!ADstringSoFar.isEmpty()) {
                             ADTile = tileHashMap.find(ADstringSoFar);
                             parsedWordTileArray.add(ADTile);
                         }
@@ -1541,7 +1555,7 @@ public class Start extends AppCompatActivity {
 
             // Parse the reference word first
             String refString = referenceWord.wordInLOP;
-            int charBlock;
+            int charBlockLength;
             String next1Chars;
             String next2Chars;
             String next3Chars;
@@ -1573,30 +1587,36 @@ public class Start extends AppCompatActivity {
 
                 // See if the blocks of length one, two, three or four Unicode characters matches game tiles
                 // Choose the longest block that matches a game tile and add that as the next segment in the parsed word array
-                charBlock = 0;
-                if (tileHashMap.containsKey(next1Chars)) {
-                    // If charBlock is already assigned 2 or 3 or 4, it should not overwrite with 1
-                    charBlock = 1;
+                charBlockLength = 0;
+                if (tileHashMap.containsKey(next1Chars) || tileHashMap.containsKey("◌" + next1Chars) || tileHashMap.containsKey(next1Chars + "◌")) {
+                    // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
+                    charBlockLength = 1;
                 }
                 if (tileHashMap.containsKey(next2Chars)) {
                     // The value 2 can overwrite 1 but it can't overwrite 3 or 4
-                    charBlock = 2;
+                    charBlockLength = 2;
                 }
                 if (tileHashMap.containsKey(next3Chars)) {
                     // The value 3 can overwrite 1 or 2 but it can't overwrite 4
-                    charBlock = 3;
+                    charBlockLength = 3;
                 }
                 if (tileHashMap.containsKey(next4Chars)) {
                     // The value 4 can overwrite 1 or 2 or 3
-                    charBlock = 4;
+                    charBlockLength = 4;
                 }
 
 
                 // Add the selected game tile (the longest selected from the previous loop) to the parsed word array
                 String tileString = "";
-                switch (charBlock) {
+                switch (charBlockLength) {
                     case 1:
-                        tileString = next1Chars;
+                        if (tileHashMap.containsKey(next1Chars)){
+                            tileString = next1Chars;
+                        } else if (tileHashMap.containsKey("◌" + next1Chars)) { // For AV/BV/FV/AD stored with ◌
+                            tileString = "◌" + next1Chars;
+                        } else if (tileHashMap.containsKey(next1Chars + "◌")) { // For LV stored with ◌
+                            tileString = next1Chars + "◌";
+                        }
                         break;
                     case 2:
                         tileString = next2Chars;
@@ -1613,7 +1633,7 @@ public class Start extends AppCompatActivity {
                     default:
                         break;
                 }
-                if(!tileString.equals("")) {
+                if(!tileString.isEmpty()) {
                     Tile nextTile = tileHashMap.find(tileString);
                     referenceWordStringPreliminaryTileArray.add(nextTile);
                 }
@@ -1672,28 +1692,28 @@ public class Start extends AppCompatActivity {
 
                     // See if the blocks of length one, two, three or four Unicode characters matches game tiles
                     // Choose the longest block that matches a game tile and add that as the next segment in the parsed word array
-                    charBlock = 0;
+                    charBlockLength = 0;
                     if (tileHashMap.containsKey(next1Chars)) {
-                        // If charBlock is already assigned 2 or 3 or 4, it should not overwrite with 1
-                        charBlock = 1;
+                        // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
+                        charBlockLength = 1;
                     }
                     if (tileHashMap.containsKey(next2Chars)) {
                         // The value 2 can overwrite 1 but it can't overwrite 3 or 4
-                        charBlock = 2;
+                        charBlockLength = 2;
                     }
                     if (tileHashMap.containsKey(next3Chars)) {
                         // The value 3 can overwrite 1 or 2 but it can't overwrite 4
-                        charBlock = 3;
+                        charBlockLength = 3;
                     }
                     if (tileHashMap.containsKey(next4Chars)) {
                         // The value 4 can overwrite 1 or 2 or 3
-                        charBlock = 4;
+                        charBlockLength = 4;
                     }
 
 
                     // Add the selected game tile (the longest selected from the previous loop) to the parsed word array
                     String tileString = "";
-                    switch (charBlock) {
+                    switch (charBlockLength) {
                         case 1:
                             tileString = next1Chars;
                             break;
