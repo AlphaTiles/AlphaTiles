@@ -574,4 +574,9 @@ public class Japan extends GameActivity {
         currentViews.remove(linkButton);
 
     }
+
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
 }

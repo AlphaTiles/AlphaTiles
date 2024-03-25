@@ -316,4 +316,9 @@ public class ChoosePlayer extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
+
 }

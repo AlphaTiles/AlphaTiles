@@ -34,5 +34,10 @@ public class Celebration extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
+
 
 }

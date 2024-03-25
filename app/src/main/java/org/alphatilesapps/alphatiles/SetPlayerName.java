@@ -365,4 +365,9 @@ public class SetPlayerName extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
+
 }

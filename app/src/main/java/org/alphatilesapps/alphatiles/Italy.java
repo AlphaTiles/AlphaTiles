@@ -305,4 +305,8 @@ public class Italy extends GameActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
 }

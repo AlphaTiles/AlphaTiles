@@ -645,4 +645,9 @@ public class Brazil extends GameActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
+
 }
