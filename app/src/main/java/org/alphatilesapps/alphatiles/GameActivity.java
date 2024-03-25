@@ -114,12 +114,22 @@ public abstract class GameActivity extends AppCompatActivity {
         for(Start.Word thisWord : wordList){
             ArrayList<Start.Tile> thisParsedTileArray = tileList.parseWordIntoTiles(thisWord.wordInLOP, thisWord);
             ArrayList<Start.Tile> thisPreliminaryParsedTileArray = tileList.parseWordIntoTilesPreliminary(thisWord.wordInLOP, thisWord);
-            data += thisWord.wordInLOP + "\t" + thisParsedTileArray.toString() + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n";
+            ArrayList<String> thisParsedTileArrayStrings = new ArrayList();
+            ArrayList<String> thisPreliminaryParsedTileArrayStrings = new ArrayList();
+            for(Start.Tile tile : thisParsedTileArray) {
+                thisParsedTileArrayStrings.add(tile.text);
+            }
+            for(Start.Tile tile : thisPreliminaryParsedTileArray) {
+                thisPreliminaryParsedTileArrayStrings.add(tile.text);
+            }
+
+            data += thisWord.wordInLOP + "\t" + thisParsedTileArrayStrings + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n";
             if(!wordInLOPWithStandardizedSequenceOfCharacters(thisWord).equals(combineTilesToMakeWord(thisParsedTileArray, thisWord, -1))){
-                LOGGER.info("Parsing/combining error: " + thisWord.wordInLOP + "\t" + thisParsedTileArray + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n");
+                LOGGER.info("Parsing/combining error: " + wordInLOPWithStandardizedSequenceOfCharacters(thisWord) + "\t" + thisParsedTileArrayStrings + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n");
             }
             if(!wordInLOPWithStandardizedSequenceOfCharacters(thisWord).equals(combineTilesToMakeWord(thisPreliminaryParsedTileArray, thisWord, -1))){
-                LOGGER.info("Preliminary parsing/combining error: " + thisWord.wordInLOP + "\t" + thisPreliminaryParsedTileArray + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n");
+                String combinedTiles = combineTilesToMakeWord(thisPreliminaryParsedTileArray, thisWord, -1);
+                LOGGER.info("Preliminary parsing/combining error: " + wordInLOPWithStandardizedSequenceOfCharacters(thisWord) + "\t" + thisPreliminaryParsedTileArrayStrings + "\t" + thisParsedTileArrayStrings + "\t" + combineTilesToMakeWord(thisPreliminaryParsedTileArray, thisWord, -1) + "\n");
             }
         }
         //LOGGER.info(data);
@@ -174,7 +184,7 @@ public abstract class GameActivity extends AppCompatActivity {
         }
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        // testParsingAndCombining(); // Helpful runtime check for complex tile parsing
+        testParsingAndCombining(); // Helpful runtime check for complex tile parsing
         super.onCreate(state);
     }
 
@@ -809,7 +819,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 previousString = stringToAppend;
                 previousTile = tileHashMap.find(previousString);
             } else if (replacingOtherVwithLV && index==indexOfReplacedTile) {
-                builder.append(stringToAppend); // Add the LV first
+                builder.append(stringToAppend.replace("◌", "")); // Add the LV first, remove ◌ if there is any
                 builder.append(previousString); // Now add the C
                 previousString = stringToAppend;
                 previousTile = tileHashMap.find(previousString);
@@ -823,7 +833,7 @@ public abstract class GameActivity extends AppCompatActivity {
                         base = previousConsonant + previousAboveOrBelowVowel.replace("◌", "");
                         stringToAppend = stringToAppend.replace("◌", base);
                     } else if (thisTile.typeOfThisTileInstance.matches("(AV|BV|FV|V)")){
-                        base = previousConsonant + previousDiacritics.replace("◌", "");
+                        base = previousConsonant + previousAboveOrBelowVowel.replace("◌", "") + previousDiacritics.replace("◌", "");
                         stringToAppend = stringToAppend.replace("◌", base);
                     } else if (thisTile.typeOfThisTileInstance.equals("LV")) { // Can happen in the sequence if we are replacing a vowel
                         base = previousConsonant + previousDiacritics.replace("◌", "");
@@ -851,12 +861,12 @@ public abstract class GameActivity extends AppCompatActivity {
      */
     public static String stackInProperSequence(String assembledWordInProgress, Start.Word wordListWord) {
 
-        if (assembledWordInProgress.length() > 0) {
+        if (!assembledWordInProgress.isEmpty()) {
 
             String correctlyStackedString = assembledWordInProgress;
             ArrayList<String> prohibitedCharSequences = generateProhibitedCharSequences(wordListWord); // Check on the bad combinations in the target word
 
-            if (prohibitedCharSequences.size() > 0) {
+            if (!prohibitedCharSequences.isEmpty()) {
                 for (int c1 = assembledWordInProgress.length()-2; c1 > -1; c1--) { // Start with the second to last char and last char, work backwards
                     int c2 = c1 + 1;
                     String this2CharSequence = String.valueOf(correctlyStackedString.charAt(c1)) + String.valueOf(correctlyStackedString.charAt(c2));
@@ -885,8 +895,8 @@ public abstract class GameActivity extends AppCompatActivity {
 
         // Since we're going char by char, it's important that teams store their ADs by themselves (single chars) in the gametiles list, even if they also store them
         // attached to consonants.
-        for (int i = 0; i < wordListWord.wordInLOP.length(); i++) {
-            Start.Tile thisTile = tileHashMap.get(String.valueOf(wordListWord.wordInLOP.charAt(i)));
+        for (int i = 0; i < wordListWord.wordInLOP.replace(".", "").length(); i++) {
+            Start.Tile thisTile = tileHashMap.get(String.valueOf(wordListWord.wordInLOP.replace(".", "").charAt(i)));
             if (!(thisTile == null)) {
                 String thisTileChar = thisTile.text;
                 String typeOfThisInstanceOfThisTile = "";
@@ -895,8 +905,8 @@ public abstract class GameActivity extends AppCompatActivity {
 
                     int preliminaryTileIndex = -1;
                     int cumulativeCharIndex = -1;
-                    for (Start.Tile tile : parsedWordListWordTileArrayPreliminary) { // Figure out which tile this is
-                        cumulativeCharIndex += tile.text.length();
+                    for (Start.Tile preliminaryTile : parsedWordListWordTileArrayPreliminary) { // Figure out which instance (0th, 1st, 2nd) of this char it is
+                        cumulativeCharIndex += preliminaryTile.text.length();
                         preliminaryTileIndex++;
                         if(cumulativeCharIndex==i) {
                             break;
