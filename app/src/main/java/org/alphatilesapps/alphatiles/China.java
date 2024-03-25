@@ -369,4 +369,9 @@ public class China extends GameActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
+
 }

@@ -327,4 +327,9 @@ public class Earth extends AppCompatActivity {
             child.setClickable(true);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
 }
