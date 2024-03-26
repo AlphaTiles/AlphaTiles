@@ -160,7 +160,11 @@ public class UnitedStates extends GameActivity {
             parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
             parsedLengthOfRefWord = parsedRefWordSyllableArray.size();
         } else {
+            Tile emptyTile = new Tile("", new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "");
             tileSelections = new Tile[parsedLengthOfRefWord];
+            for (int t = 0; t<parsedLengthOfRefWord; t++) {
+                tileSelections[t] = new Tile(emptyTile);
+            }
             tileOptions.clear();
         }
 
@@ -261,9 +265,7 @@ public class UnitedStates extends GameActivity {
         } else {
             ArrayList<Tile> tilesSelected = new ArrayList<>();
             for (Tile tile : tileSelections) {
-                if(!Objects.isNull(tile)) { // In the process of building the word, there will be some null tiles at the end of the array
-                    tilesSelected.add(tile);
-                }
+                tilesSelected.add(tile);
             }
             displayedWord = combineTilesToMakeWord(tilesSelected, refWord, lastSelectedIndex);
             constructedWord.setText(displayedWord);
@@ -292,18 +294,18 @@ public class UnitedStates extends GameActivity {
     }
 
     public void onBtnClick(View view) {
-        int justClickedTile = Integer.parseInt((String) view.getTag());
-        int selectionIndex = justClickedTile - 1; //  justClickedTile uses 1 to 10 (or 14 or 18), tileNo uses the array ID (between [0] and [9] (or [13] or [17])
-        int otherOptionIndex; // the corresponding tile that is above or below the justClickedTile
-        if (justClickedTile % 2 == 0) {
+        int justClickedGameButton = Integer.parseInt((String) view.getTag());
+        int selectionIndex = justClickedGameButton - 1; //  justClickedGameButton uses 1 to 10 (or 14 or 18), tileNo uses the array ID (between [0] and [9] (or [13] or [17])
+        int otherOptionIndex; // the corresponding gameButton that is above or below the justClickedGameButton
+        if (justClickedGameButton % 2 == 0) {
             otherOptionIndex = selectionIndex - 1;
         } else {
             otherOptionIndex = selectionIndex + 1;
         }
 
-        Button tile = findViewById(GAME_BUTTONS[selectionIndex]);
-        Button otherTile = findViewById(GAME_BUTTONS[otherOptionIndex]);
-        selections[selectionIndex] = tile.getText().toString();
+        Button gameButton = findViewById(GAME_BUTTONS[selectionIndex]);
+        Button otherGameButton = findViewById(GAME_BUTTONS[otherOptionIndex]);
+        selections[selectionIndex] = gameButton.getText().toString();
         selections[otherOptionIndex] = "";
         if(syllableGame.equals("T")) {
             tileSelections[selectionIndex/2] = tileOptions.get(selectionIndex);
@@ -311,13 +313,13 @@ public class UnitedStates extends GameActivity {
 
         String tileColorStr = COLORS.get((selectionIndex / 2) % 5);
         int tileColorNo = Color.parseColor(tileColorStr);
-        tile.setBackgroundColor(tileColorNo);
-        tile.setTextColor(Color.parseColor("#FFFFFF")); // white
+        gameButton.setBackgroundColor(tileColorNo);
+        gameButton.setTextColor(Color.parseColor("#FFFFFF")); // white
 
         String tileColorStr2 = "#A9A9A9"; // dark gray
         int tileColorNo2 = Color.parseColor(tileColorStr2);
-        otherTile.setBackgroundColor(tileColorNo2);
-        otherTile.setTextColor(Color.parseColor("#000000")); // black
+        otherGameButton.setBackgroundColor(tileColorNo2);
+        otherGameButton.setTextColor(Color.parseColor("#000000")); // black
 
         buildWord(selectionIndex);
 

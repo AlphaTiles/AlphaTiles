@@ -793,7 +793,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 previousAboveOrBelowVowel = thisTile.text;
             }
 
-            if(Objects.isNull(replacedTile)){
+            if(Objects.isNull(replacedTile) || replacedTile.text.equals("")){
                 replacingLVwithOtherV = false;
                 replacingOtherVwithLV = false;
             } else {
