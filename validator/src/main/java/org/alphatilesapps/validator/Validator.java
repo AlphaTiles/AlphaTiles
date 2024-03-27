@@ -23,7 +23,10 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
+
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -54,11 +57,15 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Validator {
 
@@ -76,12 +83,6 @@ public class Validator {
     private static final int NUM_TIMES_TILES_WANTED_IN_WORDS = 5;
 
     /**
-     * For app builders to customize. Validator will add notify if is a key is used less than this
-     * number of times.
-     */
-    private static final boolean SHOW_RECOMMENDATIONS = true;
-
-    /**
      * main method for running the validator. Prompts user for the URL of the google drive folder.
      * Constructs a Validator object using the URL. Calls the validate method.  Prints out
      * a list fatal errors, warnings, project notes and recommendations. Prompts the to decide whether to download
@@ -95,11 +96,21 @@ public class Validator {
         jf.setUndecorated(true);
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
+
         try {
-            String url = JOptionPane.showInputDialog(jf, "Enter the URL for the Google Drive folder of your " +
-                    "language pack", "AlphaTiles", JOptionPane.PLAIN_MESSAGE);
-           Validator myValidator = new Validator(url);
-           myValidator.validate();
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            JTextField urlInput = new JTextField();
+            String message = "Enter the URL for the Google Drive folder of your " +
+                    "language pack";
+            panel.add(new JLabel(message));
+            panel.add(urlInput);
+            // Might need to pass this to the validator itself once more checks are added, see Checks class at the bottom of the file
+            Checks checks = new Checks(panel);
+            int ignored = JOptionPane.showConfirmDialog(jf, panel, "AlphaTiles", JOptionPane.DEFAULT_OPTION);
+            String url = urlInput.getText();
+            Validator myValidator = new Validator(url);
+            myValidator.validate();
 
             System.out.println("\n\nList of Fatal Errors\n********");
             int n = 0;
@@ -120,7 +131,7 @@ public class Validator {
                 System.out.println(n + ". " + note);
             }
             n = 0;
-            if (SHOW_RECOMMENDATIONS) {
+            if (checks.showRecommendations) {
                 System.out.println("\nList of Recommendations\n********");
                 for (String recommendation : myValidator.getRecommendations()) {
                     n++;
@@ -153,6 +164,7 @@ public class Validator {
     //</editor-fold>
 
     //<editor-fold desc="Validator fields">
+
     /**
      * A LinkedHashSet of fatal errors found by the validator (is Set to avoid duplicate messages). Printed by main.
      */
@@ -2618,6 +2630,19 @@ public class Validator {
         public ValidatorException(String errorMessage) {
             super(errorMessage);
         }
+    }
+    public static class Checks {
+        public boolean showRecommendations = true;
+        public Checks(JPanel dialog) {
+            addCheck(dialog, "Show recommendations", (ActionEvent e) -> showRecommendations = !showRecommendations);
+        }
+        private void addCheck(JPanel dialog, String message, ActionListener listener) {
+            JCheckBox check = new JCheckBox(message);
+            check.setSelected(true);
+            check.addActionListener(listener);
+            dialog.add(check);
+        }
+
     }
     //</editor-fold>
 
