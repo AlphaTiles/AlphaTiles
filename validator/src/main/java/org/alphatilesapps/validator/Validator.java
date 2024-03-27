@@ -952,7 +952,7 @@ public class Validator {
 
         //checks for a google_services.json file and copies it to a temporary location before deleting
         //old language pack
-        Path pathToServices = pathToLangPack.resolve("google_services.json");
+        Path pathToServices = pathToLangPack.resolve("google-services.json");
         Path pathToTempServices = Paths.get("src", "TEMP_google_services.json");
         if (Files.exists(pathToServices)) {
             Files.copy(pathToServices, pathToTempServices);
@@ -967,7 +967,7 @@ public class Validator {
 
         // If a temporary services.json file was created, moves it into the new language pack.
         if (Files.exists(pathToTempServices)){
-            Files.move(pathToTempServices, pathToLangPack.resolve("google_services.json"));
+            Files.move(pathToTempServices, pathToLangPack.resolve("google-services.json"));
         }
 
         writeNewBuildGradle(pathToApp);
@@ -1116,6 +1116,9 @@ public class Validator {
                 }
                 if(subFolderName.equals("font")) {
                     outputFolderPath = pathToLangPack.resolve("res").resolve("font");
+                    if(!Files.exists(outputFolderPath)) {
+                        Files.createDirectory(outputFolderPath);
+                    }
                 }
 
                 for (GoogleDriveItem driveResource : folderContents) {
