@@ -713,16 +713,11 @@ public class Validator {
                 fatalErrors.add(e.getMessage());
             }
         }
-        try {
-            langPackDriveFolder.getFolderFromName("font");
-        } catch (ValidatorException e) {
-            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("font");
-        }
-        // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
+       // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
         // that the the given column lists file names (anything other than X or naWhileMPOnly)
         // and the referenced drive folder contains files
+        boolean hasFont = decideIfFontAttempted();
         boolean hasInstructionAudio = decideIfAudioAttempted("games", 4, "audio_instructions_optional");
-
         //tile and syllable audio have the extra step of checking against settings to see if the checks should be run
         boolean syllableAudioAttempted = decideIfAudioAttempted("syllables", 4, "audio_syllables_optional");
         boolean syllableAudioSetting = false;
@@ -1128,9 +1123,10 @@ public class Validator {
                 }
                 if(subFolderName.equals("font")) {
                     outputFolderPath = pathToLangPack.resolve("res").resolve("font");
-                    if(!Files.exists(outputFolderPath)) {
-                        Files.createDirectory(outputFolderPath);
+                    if(Files.exists(outputFolderPath)) {
+                        deleteDirectory(outputFolderPath);
                     }
+                    Files.createDirectory(outputFolderPath);
                 }
 
                 for (GoogleDriveItem driveResource : folderContents) {
@@ -1735,7 +1731,37 @@ public class Validator {
     //</editor-fold>
 
     //<editor-fold desc="helper methods">
-
+    private boolean decideIfFontAttempted() {
+        try {
+            GoogleDriveFolder fontFolder = langPackDriveFolder.getFolderFromName("font");
+            boolean hasXml = false;
+            boolean allCorrect = true;
+            int nFonts = 0;
+            for (GoogleDriveItem item : fontFolder.folderContents) {
+                if(item.getMimeType().equals("text/xml")) {
+                    hasXml = true;
+                    continue;
+                }
+                allCorrect &= DESIRED_FILETYPE_FROM_SUBFOLDERS.get("font").contains(item.getMimeType());
+                if(allCorrect) {
+                    nFonts += 1;
+                }
+            }
+            boolean success = true;
+            if(!hasXml) {
+                fatalErrors.add("Missing font xml in font folder");
+                success = false;
+            }
+            if(nFonts < 2) {
+                fatalErrors.add("Missing one or both required fonts (regular and bold)");
+                success = false;
+            }
+            return success;
+        } catch (ValidatorException e) {
+            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("font");
+            return false;
+        }
+    }
     /**
      * Private helper function to evaluate if an optional audio feature is being attempted. Returns true
      * if the tab contains any audio names in the given colum AND the subfolder with the given name
