@@ -1321,7 +1321,7 @@ public class Validator {
                     return item;
                 }
             }
-            throw new ValidatorException("was not able to find " + inName + " in the drive folder \"" + this.getName() + "\"");
+            throw new ValidatorException("was not able to find the " + inName + " folder in the drive folder \"" + this.getName() + "\"");
         }
 
 
