@@ -9,9 +9,15 @@ android {
         applicationId "org.alphatilesapps.alphatiles"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 126
-        versionName "1.7.2"
+        versionCode 129
+        versionName "1.7.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    android {
+        buildFeatures {
+            buildConfig = true
+        }
     }
 
     buildTypes {

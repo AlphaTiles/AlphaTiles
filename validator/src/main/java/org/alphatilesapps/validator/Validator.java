@@ -23,7 +23,10 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
+
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -54,9 +57,15 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Validator {
 
@@ -74,12 +83,6 @@ public class Validator {
     private static final int NUM_TIMES_TILES_WANTED_IN_WORDS = 5;
 
     /**
-     * For app builders to customize. Validator will add notify if is a key is used less than this
-     * number of times.
-     */
-    private static final boolean SHOW_RECOMMENDATIONS = true;
-
-    /**
      * main method for running the validator. Prompts user for the URL of the google drive folder.
      * Constructs a Validator object using the URL. Calls the validate method.  Prints out
      * a list fatal errors, warnings, project notes and recommendations. Prompts the to decide whether to download
@@ -93,11 +96,21 @@ public class Validator {
         jf.setUndecorated(true);
         jf.setLocationRelativeTo(null);
         jf.setVisible(true);
+
         try {
-            String url = JOptionPane.showInputDialog(jf, "Enter the URL for the Google Drive folder of your " +
-                    "language pack", "AlphaTiles", JOptionPane.PLAIN_MESSAGE);
-           Validator myValidator = new Validator(url);
-           myValidator.validate();
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            JTextField urlInput = new JTextField();
+            String message = "Enter the URL for the Google Drive folder of your " +
+                    "language pack";
+            panel.add(new JLabel(message));
+            panel.add(urlInput);
+            // Might need to pass this to the validator itself once more checks are added, see Checks class at the bottom of the file
+            Checks checks = new Checks(panel);
+            int ignored = JOptionPane.showConfirmDialog(jf, panel, "AlphaTiles", JOptionPane.DEFAULT_OPTION);
+            String url = urlInput.getText();
+            Validator myValidator = new Validator(url);
+            myValidator.validate();
 
             System.out.println("\n\nList of Fatal Errors\n********");
             int n = 0;
@@ -118,7 +131,7 @@ public class Validator {
                 System.out.println(n + ". " + note);
             }
             n = 0;
-            if (SHOW_RECOMMENDATIONS) {
+            if (checks.showRecommendations) {
                 System.out.println("\nList of Recommendations\n********");
                 for (String recommendation : myValidator.getRecommendations()) {
                     n++;
@@ -151,6 +164,7 @@ public class Validator {
     //</editor-fold>
 
     //<editor-fold desc="Validator fields">
+
     /**
      * A LinkedHashSet of fatal errors found by the validator (is Set to avoid duplicate messages). Printed by main.
      */
@@ -668,7 +682,13 @@ public class Validator {
         }
 
     }
-
+    Set<String> SPECIAL_AUDIO_INSTRUCTIONS = Set.of(
+            "zzz_earth.mp3",
+            "zzz_about.mp3",
+            "zzz_choose_player.mp3",
+            "zzz_resources.mp3",
+            "zzz_set_player_name.mp3"
+    );
     /**
      * Executes checks on the resource folders langPackGoogleDrive.
      * Includes default checks based on DESIRED_FILETYPE_FROM_SUBFOLDERS.
@@ -693,11 +713,11 @@ public class Validator {
                 fatalErrors.add(e.getMessage());
             }
         }
-        // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
+       // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
         // that the the given column lists file names (anything other than X or naWhileMPOnly)
         // and the referenced drive folder contains files
+        boolean hasFont = decideIfFontAttempted();
         boolean hasInstructionAudio = decideIfAudioAttempted("games", 4, "audio_instructions_optional");
-
         //tile and syllable audio have the extra step of checking against settings to see if the checks should be run
         boolean syllableAudioAttempted = decideIfAudioAttempted("syllables", 4, "audio_syllables_optional");
         boolean syllableAudioSetting = false;
@@ -710,7 +730,7 @@ public class Validator {
         boolean hasSyllableAudio = syllableAudioAttempted && syllableAudioSetting;
         if (!hasSyllableAudio){
             if (syllableAudioAttempted){
-                warnings.add("Although it appears you spread up your language pack for syllable audio, the \"Has syllable audio\" " +
+                warnings.add("Although it appears you set up your language pack for syllable audio, the \"Has syllable audio\" " +
                         "row in the settings tab is not set to \"TRUE\"");
             }
             if (syllableAudioSetting){
@@ -731,7 +751,7 @@ public class Validator {
         boolean hasTileAudio = tileAudioSetting && tileAudioAttempted;
         if (!hasTileAudio){
             if (tileAudioAttempted){
-                warnings.add("Although it appears you spread up your language pack for tile audio, \"has tile audio\" " +
+                warnings.add("Although it appears you set up your language pack for tile audio, \"has tile audio\" " +
                         " in the settings tab is not set to \"TRUE\"");
             }
             if (tileAudioSetting){
@@ -854,17 +874,7 @@ public class Validator {
                 GoogleDriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("audio_instructions_optional");
                 ArrayList<String> instructions = langPackGoogleSheet.getTabFromName("games").getCol(4);
                 ArrayList<String> names = langPackGoogleSheet.getTabFromName("games").getCol(1);
-                String[] special = new String[] {
-                        "zzz_earth",
-                        "zzz_about",
-                        "zzz_choose_player",
-                        "zzz_resources",
-                        "zzz_set_player_name",
-                };
-                for(String s : special) {
-                    // Stupid hacky solution but maybe works
-                    instructionAudio.folderContents.add(new GoogleDriveItem("", s, ""));
-                }
+
                 for (int idx = 0; idx < names.size();) {
                     String instruction = instructions.get(idx);
                     if(instruction.equals("X") || instruction.equals("naWhileMPOnly")) {
@@ -874,7 +884,7 @@ public class Validator {
                         idx++;
                     }
                 }
-                instructionAudio.checkItemNamesAgainstList(instructions, true);
+                instructionAudio.checkItemNamesAgainstList(instructions, true, SPECIAL_AUDIO_INSTRUCTIONS);
                 HashMap<String, String> map = new HashMap<>();
                 for (int idx = 0; idx < names.size(); idx++) {
                     if (!map.containsKey(instructions.get(idx))) {
@@ -949,7 +959,7 @@ public class Validator {
 
         //checks for a google_services.json file and copies it to a temporary location before deleting
         //old language pack
-        Path pathToServices = pathToLangPack.resolve("google_services.json");
+        Path pathToServices = pathToLangPack.resolve("google-services.json");
         Path pathToTempServices = Paths.get("src", "TEMP_google_services.json");
         if (Files.exists(pathToServices)) {
             Files.copy(pathToServices, pathToTempServices);
@@ -964,7 +974,7 @@ public class Validator {
 
         // If a temporary services.json file was created, moves it into the new language pack.
         if (Files.exists(pathToTempServices)){
-            Files.move(pathToTempServices, pathToLangPack.resolve("google_services.json"));
+            Files.move(pathToTempServices, pathToLangPack.resolve("google-services.json"));
         }
 
         writeNewBuildGradle(pathToApp);
@@ -1113,6 +1123,10 @@ public class Validator {
                 }
                 if(subFolderName.equals("font")) {
                     outputFolderPath = pathToLangPack.resolve("res").resolve("font");
+                    if(Files.exists(outputFolderPath)) {
+                        deleteDirectory(outputFolderPath);
+                    }
+                    Files.createDirectory(outputFolderPath);
                 }
 
                 for (GoogleDriveItem driveResource : folderContents) {
@@ -1307,7 +1321,7 @@ public class Validator {
                     return item;
                 }
             }
-            throw new ValidatorException("was not able to find " + inName + " in the drive folder \"" + this.getName() + "\"");
+            throw new ValidatorException("was not able to find the " + inName + " folder in the drive folder \"" + this.getName() + "\"");
         }
 
 
@@ -1319,8 +1333,12 @@ public class Validator {
          * @param namesList an ArrayList of Strings which are the names to be compared against folderContents
          */
         protected void checkItemNamesAgainstList(ArrayList<String> namesList, boolean allowRepeats) {
+            checkItemNamesAgainstList(namesList, allowRepeats, Set.of());
+        }
+        protected void checkItemNamesAgainstList(ArrayList<String> namesList, boolean allowRepeats, Set<String> optional) {
 
             ArrayList<String> namesNotYetFound = new ArrayList<>(namesList);
+            namesNotYetFound.addAll(optional);
             ArrayList<GoogleDriveItem> filesNotYetMatched = new ArrayList<>(this.folderContents);
 
             for (String name : namesList){
@@ -1335,16 +1353,17 @@ public class Validator {
             }
 
             for (String shouldHaveFound : namesNotYetFound) {
+                if (optional.contains(shouldHaveFound)) continue;
                 fatalErrors.add(shouldHaveFound + " does not have a corresponding file in " + this.getName() +
                         " of the correct file type");
             }
 
             for (GoogleDriveItem shouldHaveMatched: filesNotYetMatched) {
+                if (optional.contains(shouldHaveMatched.name)) continue;
                 warnings.add("the file " + shouldHaveMatched.getName() + " in " + this.getName() + " may be excess " +
                         "or duplicate and will be ignored");
                 folderContents.remove(shouldHaveMatched);
             }
-
         }
 
         /**
@@ -1712,7 +1731,37 @@ public class Validator {
     //</editor-fold>
 
     //<editor-fold desc="helper methods">
-
+    private boolean decideIfFontAttempted() {
+        try {
+            GoogleDriveFolder fontFolder = langPackDriveFolder.getFolderFromName("font");
+            boolean hasXml = false;
+            boolean allCorrect = true;
+            int nFonts = 0;
+            for (GoogleDriveItem item : fontFolder.folderContents) {
+                if(item.getMimeType().equals("text/xml")) {
+                    hasXml = true;
+                    continue;
+                }
+                allCorrect &= DESIRED_FILETYPE_FROM_SUBFOLDERS.get("font").contains(item.getMimeType());
+                if(allCorrect) {
+                    nFonts += 1;
+                }
+            }
+            boolean success = true;
+            if(!hasXml) {
+                fatalErrors.add("Missing font xml in font folder");
+                success = false;
+            }
+            if(nFonts < 2) {
+                fatalErrors.add("Missing one or both required fonts (regular and bold)");
+                success = false;
+            }
+            return success;
+        } catch (ValidatorException e) {
+            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("font");
+            return false;
+        }
+    }
     /**
      * Private helper function to evaluate if an optional audio feature is being attempted. Returns true
      * if the tab contains any audio names in the given colum AND the subfolder with the given name
@@ -1732,6 +1781,14 @@ public class Validator {
 
         try {
             GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(subFolderName);
+            // Don't include special instructions in this check.
+            // (will need to change this if the special instructions stop being hardcoded
+            for (GoogleDriveItem item : subFolder.folderContents) {
+                if (SPECIAL_AUDIO_INSTRUCTIONS.contains(item.name)) {
+                    someAudioNames = true;
+                    break; // Override name check
+                }
+            }
             if (subFolder.getName().equals(subFolderName) && subFolder.size() > 0) {
                 someAudioFiles = true;
             }
@@ -2599,6 +2656,19 @@ public class Validator {
         public ValidatorException(String errorMessage) {
             super(errorMessage);
         }
+    }
+    public static class Checks {
+        public boolean showRecommendations = true;
+        public Checks(JPanel dialog) {
+            addCheck(dialog, "Show recommendations", (ActionEvent e) -> showRecommendations = !showRecommendations);
+        }
+        private void addCheck(JPanel dialog, String message, ActionListener listener) {
+            JCheckBox check = new JCheckBox(message);
+            check.setSelected(true);
+            check.addActionListener(listener);
+            dialog.add(check);
+        }
+
     }
     //</editor-fold>
 
