@@ -150,9 +150,9 @@ public class Brazil extends GameActivity {
 
         }
 
-        if (MULTITYPE_TILES.isEmpty()) {  // Makes sure MULTIFUNCTIONS is populated only once when the app is running
+        if (MULTITYPE_TILES.isEmpty()) {  // Makes sure MULTITYPE_TILES is populated only once when the app is running
             for (int d = 0; d < tileList.size(); d++) {
-                if (!tileList.get(d).typeOfThisTileInstance.equals("none")) {
+                if (!tileList.get(d).tileTypeB.equals("none")) {
                     MULTITYPE_TILES.add(tileList.get(d).text);
                 }
             }
@@ -360,6 +360,19 @@ public class Brazil extends GameActivity {
         } else { // Tile game
             Start.Tile blankTile = new Start.Tile("__", new ArrayList<>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, correctTile.typeOfThisTileInstance, 1, "");
             parsedRefWordTileArray.set(index_to_remove, blankTile);
+            if (scriptType.equals("Khmer") && correctTile.typeOfThisTileInstance.equals("C")){
+                if(index_to_remove < parsedRefWordTileArray.size()-1 && parsedRefWordTileArray.get(index_to_remove + 1).typeOfThisTileInstance.matches("(V|AV|BV|D)")) {
+                    blankTile.text = "\u200B"; // The word will default to containing a placeholder circle. Add zero-width space, instead of line.
+                    parsedRefWordTileArray.set(index_to_remove, blankTile);
+                } else {
+                    blankTile.text = "◌"; // Since Khmer has lots of placeholder circles, we'll use them for all consonant blanks.
+                    parsedRefWordTileArray.set(index_to_remove, blankTile);
+                }
+            }
+            if (scriptType.matches("(Thai|Lao)") && correctTile.typeOfThisTileInstance.equals("C")){
+                blankTile.text = "◌";
+                parsedRefWordTileArray.set(index_to_remove, blankTile);
+            }
             word = combineTilesToMakeWord(parsedRefWordTileArray, refWord, index_to_remove);
         }
         constructedWord.setText(word);

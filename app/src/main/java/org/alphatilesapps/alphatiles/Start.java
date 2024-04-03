@@ -84,7 +84,11 @@ public class Start extends AppCompatActivity {
     public static TileList VOWELS = new TileList();
     public static TileList CorV = new TileList();
     public static TileList TONES = new TileList();
+
     public static TileList ADs = new TileList();
+
+    public static TileList Ds = new TileList();
+
     public static TileList SAD = new TileList();
     public static List<String> SYLLABLES = new ArrayList<>();
     public static List<String> SAD_STRINGS = new ArrayList<>();
@@ -168,7 +172,7 @@ public class Start extends AppCompatActivity {
         buildTileList();
         for (int d = 0; d < tileList.size(); d++) {
             Tile thisTile = tileList.get(d);
-            String thisTileType = thisTile.tileType;
+            String thisTileType = thisTile.typeOfThisTileInstance;
             if (!thisTile.tileTypeB.equals("none")) {
                 MULTITYPE_TILES.add(thisTile.text);
             } else {
@@ -185,6 +189,8 @@ public class Start extends AppCompatActivity {
                 }
                 else if (thisTileType.equals("T")) {
                     TONES.add(thisTile);
+                } else if (thisTileType.equals("D")) {
+                    Ds.add(thisTile);
                 } else if (thisTileType.equals("AD")) {
                     ADs.add(thisTile);
                 }
@@ -481,7 +487,7 @@ public class Start extends AppCompatActivity {
         WordList wordListStage7 = new WordList();
         wordStagesLists.add(wordListStage7);
 
-        Boolean firstLetterStageCorrespondence = false;
+        boolean firstLetterStageCorrespondence = false;
         int stage1and2MaxWordLength = Integer.MAX_VALUE;
         if(!settingsList.find("First letter stage correspondence").equals("")){
            firstLetterStageCorrespondence = Boolean.parseBoolean(settingsList.find("First letter stage correspondence"));
@@ -520,7 +526,7 @@ public class Start extends AppCompatActivity {
                     Tile aTileInThisWord = tilesInThisWord.get(t);
                     for(int a=0; a<cumulativeCorrespondingTiles.size(); a++) {
                         Tile aTileInTheStage = cumulativeCorrespondingTiles.get(a);
-                        if(aTileInThisWord==null){
+                        if(aTileInThisWord==null || aTileInThisWord.hasNull()){
                             LOGGER.info("problematic word: " + word.wordInLOP + "; index of problematic tile is " + a);
                         }
                         if(aTileInThisWord.text.equals(aTileInTheStage.text)){
@@ -1419,10 +1425,10 @@ public class Start extends AppCompatActivity {
                 // Find vowel symbols that occur between previous and current consonants
                 Tile vowelTile = null;
                 ArrayList<Tile> SADTiles = new ArrayList<>();
-                Tile ADTile;
+                Tile diacriticTile;
                 String vowelStringSoFar = "";
                 String vowelTypeSoFar = "";
-                String ADstringSoFar = "";
+                String diacriticStringSoFar = "";
                 Tile nonCombiningVowelFromPreviousSyllable = null;
                 for (int b = previousConsonantIndex + 1; b < currentConsonantIndex; b++) {
                     currentTile = parsedWordArrayPreliminary.get(b);
@@ -1441,7 +1447,7 @@ public class Start extends AppCompatActivity {
                 }
 
                 // Find vowel, diacritic, space, and dash symbols that occur between current and next consonants
-                Tile vowelToStartTheNextSyllable = null;
+                Tile nonComplexV = null;
                 for (int a = currentConsonantIndex + 1; a < nextConsonantIndex; a++) {
                     currentTile = parsedWordArrayPreliminary.get(a);
                     currentTileString = currentTile.text;
@@ -1465,18 +1471,18 @@ public class Start extends AppCompatActivity {
                         } else if (tileHashMap.containsKey(vowelStringSoFar)) { // complex tiles do not get multityping
                             vowelTypeSoFar = tileHashMap.find(vowelStringSoFar).tileType;
                         }
-                    } else if (currentTileType.equals("AD")) { // Save any diacritics that come between syllables
-                        if(!ADstringSoFar.isEmpty() && !ADstringSoFar.contains("◌")){
-                            ADstringSoFar = "◌" + ADstringSoFar; // For complex diacritics
+                    } else if (currentTileType.matches("(AD|D)")) { // Save any AD (Above/After Diacritics) or other Diacritics between consonants
+                        if(!diacriticStringSoFar.isEmpty() && !diacriticStringSoFar.contains("◌")){
+                            diacriticStringSoFar = "◌" + diacriticStringSoFar; // For complex diacritics
                         }
-                        if(ADstringSoFar.contains("◌") && currentTileString.contains("◌")) { // Just want one ◌
+                        if(diacriticStringSoFar.contains("◌") && currentTileString.contains("◌")) { // Just want one ◌
                             currentTileString = currentTileString.replace("◌", "");
                         }
-                        ADstringSoFar+=currentTileString;
+                        diacriticStringSoFar+=currentTileString;
                     } else if (currentTileType.equals("SAD")) { // Save any Space-And-Dash chars that comes between syllables.
                         SADTiles.add(currentTile);
                     } else if (!foundNextConsonant && currentTileType.equals("V")){ // There is a V (not LV/FV/AV/BV) on the end of the word
-                        vowelToStartTheNextSyllable = currentTile;
+                        nonComplexV = currentTile;
                     }
                 }
 
@@ -1486,10 +1492,10 @@ public class Start extends AppCompatActivity {
                     parsedWordTileArray.add(nonCombiningVowelFromPreviousSyllable);
                 }
                 if (!(currentConsonant==null)) {
-                    // Combine ADSymbols with consonant if that combination is in the tileList. Ex:บ๋
-                    if (!ADstringSoFar.isEmpty() && tileHashMap.containsKey(currentConsonant.text + ADstringSoFar.replace("◌", ""))) {
-                        currentConsonant = tileHashMap.find(currentConsonant.text + ADstringSoFar.replace("◌", ""));
-                        ADstringSoFar = "";
+                    // Combine diacritics with consonant if that combination is in the tileList. Ex:บ๋
+                    if (!diacriticStringSoFar.isEmpty() && tileHashMap.containsKey(currentConsonant.text + diacriticStringSoFar.replace("◌", ""))) {
+                        currentConsonant = tileHashMap.find(currentConsonant.text + diacriticStringSoFar.replace("◌", ""));
+                        diacriticStringSoFar = "";
                     }
 
                     if (!vowelStringSoFar.isEmpty()) {
@@ -1499,9 +1505,9 @@ public class Start extends AppCompatActivity {
                                 vowelTile = tileHashMap.find(vowelStringSoFar);
                                 parsedWordTileArray.add(vowelTile);
                                 parsedWordTileArray.add(currentConsonant);
-                                if (!ADstringSoFar.isEmpty()) {
-                                    ADTile = tileHashMap.find(ADstringSoFar);
-                                    parsedWordTileArray.add(ADTile);
+                                if (!diacriticStringSoFar.isEmpty()) {
+                                    diacriticTile = tileHashMap.find(diacriticStringSoFar);
+                                    parsedWordTileArray.add(diacriticTile);
                                 }
                                 break;
                             case "AV":
@@ -1510,36 +1516,49 @@ public class Start extends AppCompatActivity {
                                 vowelTile = tileHashMap.find(vowelStringSoFar);
                                 parsedWordTileArray.add(currentConsonant);
                                 parsedWordTileArray.add(vowelTile);
-                                if (!ADstringSoFar.isEmpty()) {
-                                    ADTile = tileHashMap.find(ADstringSoFar);
-                                    parsedWordTileArray.add(ADTile);
+                                if (!diacriticStringSoFar.isEmpty()) {
+                                    diacriticTile = tileHashMap.find(diacriticStringSoFar);
+                                    parsedWordTileArray.add(diacriticTile);
                                 }
                                 break;
                             case "FV":
                                 parsedWordTileArray.add(currentConsonant);
-                                if (!ADstringSoFar.isEmpty()) {
-                                    ADTile = tileHashMap.find(ADstringSoFar);
-                                    parsedWordTileArray.add(ADTile);
+                                if (!diacriticStringSoFar.isEmpty()) {
+                                    diacriticTile = tileHashMap.find(diacriticStringSoFar);
+                                    parsedWordTileArray.add(diacriticTile);
                                 }
                                 vowelTile = tileHashMap.find(vowelStringSoFar);
                                 parsedWordTileArray.add(vowelTile);
                                 break;
                         }
-                    } else { // No vowel between current and (next) consonants
+                    } else { // No vowel left to add after this consonant and before adding ADs
                         parsedWordTileArray.add(currentConsonant);
-                        if (!ADstringSoFar.isEmpty()) {
-                            ADTile = tileHashMap.find(ADstringSoFar);
-                            parsedWordTileArray.add(ADTile);
+                        if (!diacriticStringSoFar.isEmpty()) {
+                            diacriticTile = tileHashMap.find(diacriticStringSoFar);
+                            if (diacriticTile.tileType.equals("AD")) {
+                                parsedWordTileArray.add(diacriticTile);
+                            }
                         }
                     }
+
+                    // If a V is found before the (next) consonant, add it. It is syllable-initial or -mid.
+                    if (!(nonComplexV == null)) {
+                        parsedWordTileArray.add(nonComplexV);
+                    }
+
+                    // Add any other diacritics after any Vs.
+                    if (!diacriticStringSoFar.isEmpty()) {
+                        diacriticTile = tileHashMap.find(diacriticStringSoFar);
+                        if (diacriticTile.tileType.equals("D")) {
+                            parsedWordTileArray.add(diacriticTile);
+                        }
+                    }
+
                     // Add any spaces or dashes that come between syllables
                     if (!(SADTiles.isEmpty())) {
                         parsedWordTileArray.addAll(SADTiles);
                     }
-                    // If a vowel of type V was found before the next consonant, add it. It is syllable-initial or mid.
-                    if (!(vowelToStartTheNextSyllable == null)) {
-                        parsedWordTileArray.add(vowelToStartTheNextSyllable);
-                    }
+
                     previousConsonantIndex = currentConsonantIndex;
                 }
                 consonantScanIndex = nextConsonantIndex;
@@ -1612,7 +1631,7 @@ public class Start extends AppCompatActivity {
                     case 1:
                         if (tileHashMap.containsKey(next1Chars)){
                             tileString = next1Chars;
-                        } else if (tileHashMap.containsKey("◌" + next1Chars)) { // For AV/BV/FV/AD stored with ◌
+                        } else if (tileHashMap.containsKey("◌" + next1Chars)) { // For AV/BV/FV/AD/D stored with ◌
                             tileString = "◌" + next1Chars;
                         } else if (tileHashMap.containsKey(next1Chars + "◌")) { // For LV stored with ◌
                             tileString = next1Chars + "◌";
@@ -1868,7 +1887,7 @@ public class Start extends AppCompatActivity {
 
             String mixedDefinitionInfoString = wordListWord.mixedDefs;
             String instanceType = null;
-            ArrayList<String> types = new ArrayList<String>(Arrays.asList("C", "PC", "V", "X", "T", "-", "SAD", "LV", "AV", "BV", "FV", "AD"));
+            ArrayList<String> types = new ArrayList<String>(Arrays.asList("C", "PC", "V", "X", "T", "-", "SAD", "LV", "AV", "BV", "FV", "D", "AD"));
 
             if (!types.contains(mixedDefinitionInfoString)) { // if it's not just one mixed-type definition,...
 

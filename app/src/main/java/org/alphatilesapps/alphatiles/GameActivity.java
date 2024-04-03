@@ -123,16 +123,17 @@ public abstract class GameActivity extends AppCompatActivity {
                 thisPreliminaryParsedTileArrayStrings.add(tile.text);
             }
 
-            data += thisWord.wordInLOP + "\t" + thisParsedTileArrayStrings + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n";
+            String wordInLOPNoSyllableBreaks = thisWord.wordInLOP.replace(".", "");
+            data += wordInLOPNoSyllableBreaks + "\t" + thisParsedTileArrayStrings + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n";
             if(!wordInLOPWithStandardizedSequenceOfCharacters(thisWord).equals(combineTilesToMakeWord(thisParsedTileArray, thisWord, -1))){
-                LOGGER.info("Parsing/combining error: " + wordInLOPWithStandardizedSequenceOfCharacters(thisWord) + "\t" + thisParsedTileArrayStrings + "\t" + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n");
+                LOGGER.info("Parsing/combining error:  Wordlist word: " + wordInLOPNoSyllableBreaks + "\tTiles: " + thisParsedTileArrayStrings + "\tTiles combined: " + combineTilesToMakeWord(thisParsedTileArray, thisWord, -1) + "\n");
             }
             if(!wordInLOPWithStandardizedSequenceOfCharacters(thisWord).equals(combineTilesToMakeWord(thisPreliminaryParsedTileArray, thisWord, -1))){
                 String combinedTiles = combineTilesToMakeWord(thisPreliminaryParsedTileArray, thisWord, -1);
-                LOGGER.info("Preliminary parsing/combining error: " + wordInLOPWithStandardizedSequenceOfCharacters(thisWord) + "\t" + thisPreliminaryParsedTileArrayStrings + "\t" + thisParsedTileArrayStrings + "\t" + combineTilesToMakeWord(thisPreliminaryParsedTileArray, thisWord, -1) + "\n");
+                LOGGER.info("Preliminary parsing/combining error:  Final tiles combined: " + wordInLOPWithStandardizedSequenceOfCharacters(thisWord) + "\tFinal parsing: " + thisParsedTileArrayStrings + "\tFirst parsing: " + thisPreliminaryParsedTileArrayStrings + "\tPreliminary tiles combined: " + combineTilesToMakeWord(thisPreliminaryParsedTileArray, thisWord, -1) + "\n");
             }
         }
-        //LOGGER.info(data);
+        LOGGER.info(data);
     }
 
     @Override
@@ -184,7 +185,7 @@ public abstract class GameActivity extends AppCompatActivity {
         }
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        testParsingAndCombining(); // Helpful runtime check for complex tile parsing
+        // testParsingAndCombining(); // Helpful runtime check for complex tile parsing
         super.onCreate(state);
     }
 
@@ -786,7 +787,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 previousAboveOrBelowVowel = ""; // Reset; new syllable
                 previousDiacritics = ""; // Reset; new syllable
             }
-            if(thisTile.typeOfThisTileInstance.equals("AD")){
+            if(thisTile.typeOfThisTileInstance.matches("(D|AD)")) {
                 previousDiacritics = thisTile.text;
             }
             if(thisTile.typeOfThisTileInstance.matches("(AV|BV)")){
@@ -829,7 +830,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     // Or consonant and diacritics as the base of a vowel with a placeholder
                     // The stackInProperSequence() method will make some more fixes later if necessary
                     String base = "";
-                    if(thisTile.typeOfThisTileInstance.equals("AD")){
+                    if(thisTile.typeOfThisTileInstance.matches("(D|AD)")){
                         base = previousConsonant + previousAboveOrBelowVowel.replace("◌", "");
                         stringToAppend = stringToAppend.replace("◌", base);
                     } else if (thisTile.typeOfThisTileInstance.matches("(AV|BV|FV|V)")){
