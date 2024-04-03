@@ -664,7 +664,18 @@ public class Validator {
                             "code color 5 (yellow). Check game door " + row.get(0) + " in the games tab");
                 }
             }
-
+            int i = 0;
+            for (String row : langPackGoogleSheet.getTabFromName("games").getCol(0)) {
+                i++;
+                try {
+                    int n = Integer.parseInt(row);
+                    if (n != i) {
+                        fatalErrors.add("Cell in row " + i + ", column A of the games tab must be "+  i + ", was " + row);
+                    }
+                } catch(NumberFormatException e) {
+                    fatalErrors.add("Cell in row " + i + ", column A of the games tab must be "+  i + ", was " + row);
+                }
+            }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the wordlist tab or the games tab");
         }
