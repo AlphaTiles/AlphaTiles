@@ -359,7 +359,24 @@ public class Validator {
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the wordlist tab");
         }
-
+        try {
+            float numWithSpaces = 0;
+            float total = 0;
+            ArrayList<String> words = langPackGoogleSheet.getTabFromName("wordlist").getCol(1);
+            for (String word : words) {
+                if (word.contains(" ")) {
+                    numWithSpaces++;
+                }
+                if(!word.isBlank()) {
+                    total++;
+                }
+            }
+            if (numWithSpaces / total < 0.05f) {
+                recommendations.add("Less than 5% of words contain spaces, consider removing them");
+            }
+        } catch (ValidatorException e) {
+            warnings.add(FAILED_CHECK_WARNING + "the wordlist tab");
+        }
         try {
             Tab keyboardTab = langPackGoogleSheet.getTabFromName("keyboard");
             Tab colorTab = langPackGoogleSheet.getTabFromName("colors");
