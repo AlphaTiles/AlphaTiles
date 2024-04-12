@@ -371,8 +371,8 @@ public class Validator {
                     total++;
                 }
             }
-            if (numWithSpaces / total < 0.05f) {
-                recommendations.add("Less than 5% of words contain spaces, consider removing them");
+            if (numWithSpaces / total < 0.05f && numWithSpaces != 0) {
+                recommendations.add("Less than 5% of words contain spaces, consider removing those that do have spaces");
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the wordlist tab");
