@@ -209,6 +209,7 @@ public class Validator {
      */
     private final GoogleSheet langPackGoogleSheet;
 
+    private final FilePresence filePresence = new FilePresence();
     /**
      * A Map of the names of the tabs needed for validation to the ranges of cells needed from each tab
      * (in A1 notation). The validator automatically checks for these tabs in the langPackGoogleSheet,
@@ -726,7 +727,7 @@ public class Validator {
         for (Map.Entry<String, String> nameToMimeType : DESIRED_FILETYPE_FROM_SUBFOLDERS.entrySet()){
             try {
                 GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(nameToMimeType.getKey());
-                subFolder.filterByMimeTypes(nameToMimeType.getValue().split(","));
+                //subFolder.filterByMimeTypes(nameToMimeType.getValue().split(","));
                 for (GoogleDriveItem itemInFolder : langPackDriveFolder.getFolderFromName(nameToMimeType.getKey()).folderContents){
                     // make sure the file names use valid
                     if (!itemInFolder.getName().matches("[a-z0-9_]+\\.+[a-z0-9_]+")) {
@@ -742,7 +743,10 @@ public class Validator {
        // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
         // that the the given column lists file names (anything other than X or naWhileMPOnly)
         // and the referenced drive folder contains files
-        decideIfFontAttempted();
+        checkFontPresence();
+        filePresence.check(langPackDriveFolder);
+        warnings.addAll(filePresence.warnings);
+        fatalErrors.addAll(filePresence.fatalErrors);
         boolean hasInstructionAudio = decideIfAudioAttempted("games", 4, "audio_instructions_optional");
         //tile and syllable audio have the extra step of checking against settings to see if the checks should be run
         boolean syllableAudioAttempted = decideIfAudioAttempted("syllables", 4, "audio_syllables_optional");
@@ -1214,7 +1218,7 @@ public class Validator {
      * Represents any item in google drive. Extended by GoogleDriveFolder and GoogleSheet,
      * and directly instantiated for files that are not folders or spreadsheets (example images and audio files).
      */
-    private static class GoogleDriveItem{
+    public static class GoogleDriveItem{
 
         /**
          * the mimeType of any GoogleDriveItem instance.
@@ -1262,7 +1266,7 @@ public class Validator {
      * recursively populates the folderContents field with all the contents of the folder
      * (constructing GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects as appropriate).
      */
-    private class GoogleDriveFolder extends GoogleDriveItem {
+    public class GoogleDriveFolder extends GoogleDriveItem {
 
         /**
          * ArrayList of all the GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects in the folder.
@@ -1758,36 +1762,11 @@ public class Validator {
     //</editor-fold>
 
     //<editor-fold desc="helper methods">
-    private boolean decideIfFontAttempted() {
-        try {
-            GoogleDriveFolder fontFolder = langPackDriveFolder.getFolderFromName("font");
-            boolean hasXml = false;
-            boolean allCorrect = true;
-            int nFonts = 0;
-            for (GoogleDriveItem item : fontFolder.folderContents) {
-                if(item.getMimeType().equals("text/xml")) {
-                    hasXml = true;
-                    continue;
-                }
-                allCorrect &= DESIRED_FILETYPE_FROM_SUBFOLDERS.get("font").contains(item.getMimeType());
-                if(allCorrect) {
-                    nFonts += 1;
-                }
-            }
-            boolean success = true;
-            if(!hasXml) {
-                fatalErrors.add("Missing font xml in font folder");
-                success = false;
-            }
-            if(nFonts < 2) {
-                fatalErrors.add("Missing one or both required fonts (regular and bold)");
-                success = false;
-            }
-            return success;
-        } catch (ValidatorException e) {
-            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("font");
-            return false;
-        }
+    private void checkFontPresence() {
+        filePresence.add("font", "font", "", "text/xml", false);
+        filePresence.add("font", "font", "", "font/ttf", false);
+        filePresence.add("font", "font", "", "font/ttf", false);
+
     }
     /**
      * Private helper function to evaluate if an optional audio feature is being attempted. Returns true
