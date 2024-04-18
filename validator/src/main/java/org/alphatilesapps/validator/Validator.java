@@ -957,7 +957,7 @@ public class Validator {
             try {
                 GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(nameToMimeType.getKey());
                 subFolder.filterByMimeTypes(nameToMimeType.getValue().split(","));
-                for (GoogleDriveItem itemInFolder : langPackDriveFolder.getFolderFromName(nameToMimeType.getKey()).folderContents) {
+                for (GoogleDriveItem itemInFolder : langPackDriveFolder.getFolderFromName(nameToMimeType.getKey()).folderContents){
                     // make sure the file names use valid
                     if (!itemInFolder.getName().matches("[a-z0-9_]+\\.+[a-z0-9_]+")) {
                         fatalErrors.add("In " + nameToMimeType.getKey() + ", the file \"" + itemInFolder.getName() +
@@ -973,12 +973,28 @@ public class Validator {
         // that the the given column lists file names (anything other than X or naWhileMPOnly)
         // and the referenced drive folder contains files
         checkFontPresence();
+        checkAudioPresence("syllable_audio", "syllables", 4, "audio_syllables_optional");
+        checkAudioPresence("tile_audio", "gametiles", 5, "audio_tiles_optional");
+        checkAudioPresence("tile_audio", "gametiles", 8, "audio_tiles_optional");
+        checkAudioPresence("tile_audio", "gametiles", 10, "audio_tiles_optional");
+        checkAudioPresence("audio_instruction", "games", 4, "audio_instructions_optional");
+        for(String special : SPECIAL_AUDIO_INSTRUCTIONS) {
+            filePresence.add(
+                    "audio_instruction",
+                    "audio_instructions_optional",
+                    special,
+                    "audio/mpeg",
+                    "",
+                    true
+            );
+        }
         filePresence.check(langPackDriveFolder);
         warnings.addAll(filePresence.warnings);
         fatalErrors.addAll(filePresence.fatalErrors);
-        boolean hasInstructionAudio = decideIfAudioAttempted("games", 4, "audio_instructions_optional");
+
+        boolean hasInstructionAudio = filePresence.success("audio_instruction");
         //tile and syllable audio have the extra step of checking against settings to see if the checks should be run
-        boolean syllableAudioAttempted = decideIfAudioAttempted("syllables", 4, "audio_syllables_optional");
+        boolean syllableAudioAttempted = filePresence.success("syllable_audio");
         boolean syllableAudioSetting = false;
         try {
             if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has syllable audio").get(1).equals("TRUE")) {
@@ -998,7 +1014,7 @@ public class Validator {
             }
         }
 
-        boolean tileAudioAttempted = decideIfAudioAttempted("gametiles", 5, "audio_tiles_optional");
+        boolean tileAudioAttempted = filePresence.success("tile_audio");
         boolean tileAudioSetting = false;
         try {
             if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has tile audio").get(1).equals("TRUE")) {
@@ -1128,7 +1144,6 @@ public class Validator {
 
         try {
             if (hasInstructionAudio) {
-                GoogleDriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("audio_instructions_optional");
                 ArrayList<String> instructions = langPackGoogleSheet.getTabFromName("games").getCol(4);
                 ArrayList<String> names = langPackGoogleSheet.getTabFromName("games").getCol(1);
 
@@ -1141,7 +1156,6 @@ public class Validator {
                         idx++;
                     }
                 }
-                instructionAudio.checkItemNamesAgainstList(instructions, true, SPECIAL_AUDIO_INSTRUCTIONS);
                 HashMap<String, String> map = new HashMap<>();
                 for (int idx = 0; idx < names.size(); idx++) {
                     if (!map.containsKey(instructions.get(idx))) {
@@ -1612,13 +1626,7 @@ public class Validator {
          * @param namesList an ArrayList of Strings which are the names to be compared against folderContents
          */
         protected void checkItemNamesAgainstList(ArrayList<String> namesList) {
-            checkItemNamesAgainstList(namesList, false, Set.of());
-        }
-
-        protected void checkItemNamesAgainstList(ArrayList<String> namesList, boolean allowRepeats, Set<String> optional) {
-
             ArrayList<String> namesNotYetFound = new ArrayList<>(namesList);
-            namesNotYetFound.addAll(optional);
             ArrayList<GoogleDriveItem> filesNotYetMatched = new ArrayList<>(this.folderContents);
 
             for (String name : namesList) {
@@ -1626,20 +1634,16 @@ public class Validator {
                 if (itemWithName != null) {
                     namesNotYetFound.remove(name);
                     filesNotYetMatched.remove(itemWithName);
-                    if (namesNotYetFound.contains(name) && !allowRepeats) {
+                    if (namesNotYetFound.contains(name)) {
                         warnings.add("The file name " + name + " in " + this.getName() + " is asked for in multiple places ");
                     }
                 }
             }
-
             for (String shouldHaveFound : namesNotYetFound) {
-                if (optional.contains(shouldHaveFound)) continue;
                 fatalErrors.add(shouldHaveFound + " does not have a corresponding file in " + this.getName() +
                         " of the correct file type");
             }
-
-            for (GoogleDriveItem shouldHaveMatched : filesNotYetMatched) {
-                if (optional.contains(shouldHaveMatched.name)) continue;
+            for (GoogleDriveItem shouldHaveMatched: filesNotYetMatched) {
                 warnings.add("the file " + shouldHaveMatched.getName() + " in " + this.getName() + " may be excess " +
                         "or duplicate and will be ignored");
                 folderContents.remove(shouldHaveMatched);
@@ -2020,70 +2024,33 @@ public class Validator {
 
     //<editor-fold desc="helper methods">
     private void checkFontPresence() {
-        filePresence.add("font", "font", "", "text/xml", false);
-        filePresence.add("font", "font", "", "font/ttf", false);
-        filePresence.add("font", "font", "", "font/ttf", false);
-
+        filePresence.add("font", "font", "", "text/xml", "", false);
+        filePresence.add("font", "font", "", "font/ttf, application/x-font-ttf", "", false);
+        filePresence.add("font", "font", "", "font/ttf, application/x-font-ttf", "", false);
     }
 
-    /**
-     * Private helper function to evaluate if an optional audio feature is being attempted. Returns true
-     * if the tab contains any audio names in the given colum AND the subfolder with the given name
-     * is not empty. Returns false otherwise, removing the subfolder from DESIRED_FILETYPE_FROM_SUBFOLDER
-     * and adding a warning if one of the two conditions is met.
-     * (skips cells containing "X" or "naWhileMPOnly" when evaluating a tab).
-     *
-     * @param tabName       a String that is the name of the tab with the audio names
-     * @param colNum        the column number of the tab with the audio names
-     * @param subFolderName a String that is the name of the subfolder in the drive folder with the audio files
-     * @return True if the tab contains any audio names in the given colum AND the subfolder with the given name
-     * is not empty. False otherwise.
-     */
-    private boolean decideIfAudioAttempted(String tabName, int colNum, String subFolderName) {
-
-        boolean someAudioFiles = false;
-        boolean someAudioNames = false;
-
+    /** Adds a column of audio files of the google sheet to the file checker, ignoring X's and naWhileMPOnly
+     * @param tag The tag of the file in the file checker
+     * @param tab The tab of the google sheet to look for the files
+     * @param colNum the column of the google sheet to check
+     * @param subFolderName the folder to look for the files in
+    */
+    private void checkAudioPresence(String tag, String tab, int colNum, String subFolderName) {
         try {
-            GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(subFolderName);
-            // Don't include special instructions in this check.
-            // (will need to change this if the special instructions stop being hardcoded
-            for (GoogleDriveItem item : subFolder.folderContents) {
-                if (SPECIAL_AUDIO_INSTRUCTIONS.contains(item.name)) {
-                    someAudioNames = true;
-                    break; // Override name check
-                }
+            ArrayList<String> audioNames = langPackGoogleSheet.getTabFromName(tab).getCol(colNum);
+            audioNames.removeAll(Set.of("naWhileMPOnly", "X"));
+            for(String name : audioNames) {
+                filePresence.add(
+                        tag,
+                        subFolderName,
+                        name,
+                        "audio/mpeg",
+                        "it is listed in column " + (char)(colNum + 'A') + " of the tab \"" + tab + "\"",
+                        false
+                );
             }
-            if (subFolder.getName().equals(subFolderName) && subFolder.size() > 0) {
-                someAudioFiles = true;
-            }
-        } catch (ValidatorException ignored) {
-        }
-
-        try {
-            ArrayList<String> AudioNames = langPackGoogleSheet.getTabFromName(tabName).getCol(colNum);
-            AudioNames.removeAll(Set.of("X", "naWhileMPOnly"));
-            if (!AudioNames.isEmpty()) {
-                someAudioNames = true;
-            }
-        } catch (ValidatorException ignored) {
-        }
-
-        if (someAudioNames && someAudioFiles) {
-            return true;
-        } else if (someAudioNames) {
-            warnings.add("you list names of audio files in the column " + (char) (colNum + 65) + " of  the tab " + tabName
-                    + " (ie you have text in the column that is not 'X') but the folder " + subFolderName + " is empty. "
-                    + "Please add matching audio files to the folder " + subFolderName + " if you want to use this feature");
-        } else if (someAudioFiles) {
-            warnings.add("you have audio files in the folder " + subFolderName + " but column"
-                    + " of the tab " + tabName + " doesn't list any audio file names"
-                    + " please add matching audio file names to the tab " + tabName + " if you want to use this feature");
-        }
-        DESIRED_FILETYPE_FROM_SUBFOLDERS.remove(subFolderName);
-        return false;
+        } catch (ValidatorException ignored) {}
     }
-
     /**
      * Private helper function to evaluate if an optional syllables feature is being attempted. Returns true
      * if the tab contains more than six words parsed into syllables (they contain periods) AND the syllables tab is not

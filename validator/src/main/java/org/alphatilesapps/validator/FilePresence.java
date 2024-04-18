@@ -3,7 +3,7 @@ package org.alphatilesapps.validator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /// A class to manage checks for whether files exist
 public class FilePresence {
@@ -13,9 +13,9 @@ public class FilePresence {
     public ArrayList<String> fatalErrors = new ArrayList<>();
     public ArrayList<String> warnings = new ArrayList<>();
     /// Add a required file with subfolder and tag
-    public void add(String tag, String subfolder, String file, String mimeType, boolean optional) {
+    public void add(String tag, String subfolder, String file, String mimeType, String reason, boolean optional) {
         folders.add(subfolder);
-        files.add(new File(tag, subfolder, file, mimeType, optional));
+        files.add(new File(tag, subfolder, file, mimeType, reason, optional));
         tagData.putIfAbsent(tag, new TagData());
     }
     public void check(Validator.GoogleDriveFolder langPack) {
@@ -27,9 +27,9 @@ public class FilePresence {
                     boolean excess = true;
                     for(File file : files) {
                         if(!file.folderName.equals(folderName) || !file.incorrect) continue;
-                        boolean nameMatches = !file.hasName || file.name.equals(item.getName());
-                        if(nameMatches && file.mimeType.equals(item.getMimeType())) {
-                            System.out.println(item.getName());
+                        String stripped = item.getName().split("\\.")[0];
+                        boolean nameMatches = !file.hasName || file.name.equals(stripped);
+                        if(nameMatches && file.mimeTypes.contains(item.getMimeType())) {
                             excess = false;
                             file.incorrect = false;
                             break;
@@ -51,9 +51,14 @@ public class FilePresence {
             } else if(!file.optional) {
                 data.failed = true;
                 if(file.hasName) {
-                    fatalErrors.add("Required item " + file.name + " is missing from folder " + file.folderName + " or has the wrong mime type");
+                    if(!file.reason.isEmpty()) {
+                        fatalErrors.add("Item " + file.name + ", which is required because "
+                                + file.reason + ", is missing from folder " + file.folderName + " or has the wrong mime type");
+                    } else {
+                        fatalErrors.add("Required item " + file.name + " is missing from folder " + file.folderName + " or has the wrong mime type");
+                    }
                 } else {
-                    fatalErrors.add("Required item of type " + file.mimeType + " is missing from folder " + file.folderName);
+                    fatalErrors.add("Required item of type " + file.mimeTypes + " is missing from folder " + file.folderName);
                 }
             }
         }
@@ -67,10 +72,11 @@ public class FilePresence {
         boolean incorrect = true;
         boolean hasName = true;
         String tag;
-        String mimeType;
+        Set<String> mimeTypes;
         String folderName;
         String name;
-        File(String tag, String folderName, String name, String mimeType, boolean optional) {
+        String reason;
+        File(String tag, String folderName, String name, String mimeTypes, String reason, boolean optional) {
             this.tag = tag;
             this.name = name;
             if(name.isBlank()) {
@@ -78,7 +84,12 @@ public class FilePresence {
             }
             this.folderName = folderName;
             this.optional = optional;
-            this.mimeType = mimeType;
+            String[] split = mimeTypes.split(",");
+            this.mimeTypes = new HashSet<>();
+            for(String type : split) {
+                this.mimeTypes.add(type.strip());
+            }
+            this.reason = reason;
         }
     }
     static class TagData {
