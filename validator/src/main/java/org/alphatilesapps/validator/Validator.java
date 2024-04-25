@@ -209,7 +209,7 @@ public class Validator {
      */
     private final GoogleSheet langPackGoogleSheet;
 
-    private final FilePresence filePresence = new FilePresence();
+    private FilePresence filePresence = new FilePresence();
     /**
      * A Map of the names of the tabs needed for validation to the ranges of cells needed from each tab
      * (in A1 notation). The validator automatically checks for these tabs in the langPackGoogleSheet,
@@ -320,7 +320,7 @@ public class Validator {
     private void validateGoogleSheet(){
 
         // this first step is looks at the desired data from tabs field set at the top of the
-        // code, searches for a tab that has the matching name, and shrinks the internal representation
+        // code, searches for a tab that has the matching name, an;resentation
         // of those tabs to only be what is specified
         try{
             String appName = langPackGoogleSheet
@@ -740,7 +740,7 @@ public class Validator {
                 fatalErrors.add(e.getMessage());
             }
         }
-       // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
+        // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
         // that the the given column lists file names (anything other than X or naWhileMPOnly)
         // and the referenced drive folder contains files
         checkFontPresence();
@@ -749,6 +749,8 @@ public class Validator {
         checkAudioPresence("tile_audio", "gametiles", 8, "audio_tiles_optional");
         checkAudioPresence("tile_audio", "gametiles", 10, "audio_tiles_optional");
         checkAudioPresence("audio_instruction", "games", 4, "audio_instructions_optional");
+        checkAudioPresence("word_audio", "wordlist", 0, "audio_words");
+
         for(String special : SPECIAL_AUDIO_INSTRUCTIONS) {
             filePresence.add(
                     "audio_instruction",
@@ -762,7 +764,7 @@ public class Validator {
         filePresence.check(langPackDriveFolder);
         warnings.addAll(filePresence.warnings);
         fatalErrors.addAll(filePresence.fatalErrors);
-
+        recommendations.addAll(filePresence.recommendations);
         boolean hasInstructionAudio = filePresence.success("audio_instruction");
         //tile and syllable audio have the extra step of checking against settings to see if the checks should be run
         boolean syllableAudioAttempted = filePresence.success("syllable_audio");
@@ -805,22 +807,10 @@ public class Validator {
                         "column F of gameTiles and/or folder \"audio_tiles_optional\" are empty");
             }
         }
-
-        try {
-            GoogleDriveFolder resourceImages = langPackDriveFolder.getFolderFromName("images_resources_optional");
-            ArrayList<String> resourceImageNames = langPackGoogleSheet.getTabFromName("resources").getCol(2);
-            resourceImages.checkItemNamesAgainstList(resourceImageNames);
-        } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the images_resources_optional folder or the resources tab");
-        }
-
-        try {
-            GoogleDriveFolder wordImages = langPackDriveFolder.getFolderFromName("images_words");
-            ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordImages.checkItemNamesAgainstList(wordsInLWC);
-        } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the images_words folder or the wordlist tab");
-        }
+        // Reset for image checks
+        filePresence = new FilePresence();
+        checkImagePresence("images_resources_optional", "resources", 2, "images_resources_optional");
+        checkImagePresence("images_words", "wordlist", 0, "images_words");
         try{
             GoogleDriveFolder lowResWordImages = langPackDriveFolder.getFolderFromName("images_words_low_res");
             // if lowResWordImages is not empty, we assume the user is trying to provide their own low res images
@@ -828,7 +818,7 @@ public class Validator {
             if (lowResWordImages.size() > 0) {
                 ArrayList<String> TwoAppendedWordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
                 TwoAppendedWordsInLWC.replaceAll(s -> s + "2");
-                lowResWordImages.checkItemNamesAgainstList(TwoAppendedWordsInLWC);
+                filePresence.addAll("images_low_res", "images_words_low_res", TwoAppendedWordsInLWC, "image/", "", false);
             }
             else {
                 warnings.add("Since the folder images_words_low_res is empty, the validator will automatically generate " +
@@ -837,36 +827,11 @@ public class Validator {
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_words_low_res folder or the wordlist tab");
         }
+        filePresence.check(langPackDriveFolder);
+        warnings.addAll(filePresence.warnings);
+        fatalErrors.addAll(filePresence.fatalErrors);
+        recommendations.addAll(filePresence.recommendations);
 
-        try {
-            GoogleDriveFolder wordAudio = langPackDriveFolder.getFolderFromName("audio_words");
-            ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordAudio.checkItemNamesAgainstList(wordsInLWC);
-        } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the audio_words folder or the wordlist tab");
-        }
-
-        try {
-            if (hasTileAudio) {
-                GoogleDriveFolder tileAudio = langPackDriveFolder.getFolderFromName("audio_tiles_optional");
-                ArrayList<String> tiles = langPackGoogleSheet.getTabFromName("gametiles").getCol(5);
-                ArrayList<String> tilesType2 = langPackGoogleSheet.getTabFromName("gametiles").getCol(8);
-                for (String tileB : tilesType2){
-                    if (!tileB.equals("X")){
-                        tiles.add(tileB);
-                    }
-                }
-                ArrayList<String> tilesType3 = langPackGoogleSheet.getTabFromName("gametiles").getCol(10);
-                for (String tileC : tilesType3){
-                    if (!tileC.equals("X")){
-                        tiles.add(tileC);
-                    }
-                }
-                tileAudio.checkItemNamesAgainstList(tiles);
-            }
-        } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the audio_tiles_optional folder or the gametiles tab");
-        }
         try {
             Tab gamesTab = langPackGoogleSheet.getTabFromName("games");
             boolean hasSudanForTiles = false;
@@ -885,15 +850,6 @@ public class Validator {
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the games tab");
-        }
-        try {
-            if (hasSyllableAudio) {
-                GoogleDriveFolder syllableAudio = langPackDriveFolder.getFolderFromName("audio_syllables_optional");
-                ArrayList<String> syllables = langPackGoogleSheet.getTabFromName("syllables").getCol(4);
-                syllableAudio.checkItemNamesAgainstList(syllables);
-            }
-        } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the audio_syllables_optional folder or the syllables tab");
         }
         try {
             Tab gamesTab = langPackGoogleSheet.getTabFromName("games");
@@ -1359,47 +1315,13 @@ public class Validator {
          * @return a GoogleDriveFolder object with the given name if found, throws exception otherwise
          * @throws ValidatorException if no GoogleDriveFolder object with the given name is found
          */
-        protected GoogleDriveFolder getFolderFromName(String inName) throws ValidatorException{
-            for (GoogleDriveFolder item : this.<GoogleDriveFolder>getAllOfMimeType("vnd.google-apps.folder")){
-                if (item.getName().equals(inName)){
+        protected GoogleDriveFolder getFolderFromName(String inName) throws ValidatorException {
+            for (GoogleDriveFolder item : this.<GoogleDriveFolder>getAllOfMimeType("vnd.google-apps.folder")) {
+                if (item.getName().equals(inName)) {
                     return item;
                 }
             }
             throw new ValidatorException("was not able to find the " + inName + " folder in the drive folder \"" + this.getName() + "\"");
-        }
-
-
-        //todo this method can be made cleaner with the getItemFromName
-        /**
-         * Takes a list of names of the items that should be in the folder. Removes any items from folderContents
-         * that do not match one of the names in the list (adding a warning as it does). Also adds a warning for any
-         * name that does not match to an item.
-         *
-         * @param namesList an ArrayList of Strings which are the names to be compared against folderContents
-         */
-        protected void checkItemNamesAgainstList(ArrayList<String> namesList) {
-            ArrayList<String> namesNotYetFound = new ArrayList<>(namesList);
-            ArrayList<GoogleDriveItem> filesNotYetMatched = new ArrayList<>(this.folderContents);
-
-            for (String name : namesList){
-                GoogleDriveItem itemWithName = this.getItemWithName(name);
-                if (itemWithName != null) {
-                    namesNotYetFound.remove(name);
-                    filesNotYetMatched.remove(itemWithName);
-                    if (namesNotYetFound.contains(name)) {
-                        warnings.add("The file name " + name + " in " + this.getName() + " is asked for in multiple places ");
-                    }
-                }
-            }
-            for (String shouldHaveFound : namesNotYetFound) {
-                fatalErrors.add(shouldHaveFound + " does not have a corresponding file in " + this.getName() +
-                        " of the correct file type");
-            }
-            for (GoogleDriveItem shouldHaveMatched: filesNotYetMatched) {
-                warnings.add("the file " + shouldHaveMatched.getName() + " in " + this.getName() + " may be excess " +
-                        "or duplicate and will be ignored");
-                folderContents.remove(shouldHaveMatched);
-            }
         }
 
         /**
@@ -1793,7 +1715,23 @@ public class Validator {
                         false
                 );
             }
-        } catch (ValidatorException ignored) {}
+        } catch (ValidatorException e) {
+            warnings.add(FAILED_CHECK_WARNING + "tab '" + tab + "'");
+        }
+    }
+    private void checkImagePresence(String tag, String tab, int colNum, String subFolderName) {
+        try {
+            ArrayList<String> imageNames = langPackGoogleSheet.getTabFromName(tab).getCol(colNum);
+            filePresence.addAll(
+                    tag,
+                    subFolderName,
+                    imageNames,
+                    "image/", "it is listed in column " + (char)(colNum + 'A') + " of the tab \"" + tab + "\"",
+                    false
+            );
+        } catch(ValidatorException e) {
+            warnings.add(FAILED_CHECK_WARNING + "tab '" + tab + "'");
+        }
     }
     /**
      * Private helper function to evaluate if an optional syllables feature is being attempted. Returns true
