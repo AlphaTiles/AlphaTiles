@@ -18,7 +18,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.Collections;
 
-import static org.alphatilesapps.alphatiles.Start.COLORS;
+import static org.alphatilesapps.alphatiles.Start.colorList;
 
 public class Italy extends GameActivity {
     Start.TileList sortableTilesArray;
@@ -206,7 +206,7 @@ public class Italy extends GameActivity {
             boardCards.add(gameCards.get(tileNumber));
             TextView thisCardText = (TextView) findViewById(GAME_BUTTONS[tileNumber]);
             thisCardText.setText(wordList.stripInstructionCharacters(gameCards.get(tileNumber).wordInLOP));
-            String tileColorStr = COLORS.get(tileNumber % 5);
+            String tileColorStr = colorList.get(tileNumber % 5);
             int tileColor = Color.parseColor(tileColorStr);
             thisCardText.setTextColor(tileColor); // resets as in previous round some text fields set to black
             ImageView thisCardImage = (ImageView) findViewById(WORD_IMAGES[tileNumber]);

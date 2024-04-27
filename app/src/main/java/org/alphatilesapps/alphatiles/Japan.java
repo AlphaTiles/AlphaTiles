@@ -219,7 +219,7 @@ public class Japan extends GameActivity {
             thisTileView.setText(parsedRefWordTileArray.get(tileIndex).text);
             thisTileView.setClickable(false);
             thisTileView.setVisibility(View.VISIBLE);
-            thisTileView.setBackgroundColor(Color.parseColor(COLORS.get(v % 5)));
+            thisTileView.setBackgroundColor(Color.parseColor(colorList.get(v % 5)));
             thisTileView.setTextColor(Color.parseColor("#FFFFFF")); // white;
             tileIndex++;
         }
@@ -306,9 +306,9 @@ public class Japan extends GameActivity {
 
                 Random rand = new Random();
                 int randomColorIndex = rand.nextInt(10);
-                nextTile.setBackgroundColor(Color.parseColor(COLORS.get(randomColorIndex % 5)));
+                nextTile.setBackgroundColor(Color.parseColor(colorList.get(randomColorIndex % 5)));
                 randomColorIndex = rand.nextInt(10);
-                clickedTile.setBackgroundColor(Color.parseColor(COLORS.get(randomColorIndex % 5)));
+                clickedTile.setBackgroundColor(Color.parseColor(colorList.get(randomColorIndex % 5)));
                 clickedTile.setClickable(false);
 
                 currentViews.add(1, restoredLinkButton);
@@ -339,9 +339,9 @@ public class Japan extends GameActivity {
 
                 Random rand = new Random();
                 int randomColorIndex = rand.nextInt(10);
-                previousTile.setBackgroundColor(Color.parseColor(COLORS.get(randomColorIndex % 5)));
+                previousTile.setBackgroundColor(Color.parseColor(colorList.get(randomColorIndex % 5)));
                 randomColorIndex = rand.nextInt(10);
-                clickedTile.setBackgroundColor(Color.parseColor(COLORS.get(randomColorIndex % 5)));
+                clickedTile.setBackgroundColor(Color.parseColor(colorList.get(randomColorIndex % 5)));
                 clickedTile.setClickable(false);
 
                 currentViews.add(indexOfClickedTile, restoredLinkButton);
@@ -373,9 +373,9 @@ public class Japan extends GameActivity {
 
                 Random rand = new Random();
                 int randomColorIndex = rand.nextInt(10);
-                previousTile.setBackgroundColor(Color.parseColor(COLORS.get(randomColorIndex % 5)));
+                previousTile.setBackgroundColor(Color.parseColor(colorList.get(randomColorIndex % 5)));
                 randomColorIndex = rand.nextInt(10);
-                clickedTile.setBackgroundColor(Color.parseColor(COLORS.get(randomColorIndex % 5)));
+                clickedTile.setBackgroundColor(Color.parseColor(colorList.get(randomColorIndex % 5)));
                 clickedTile.setClickable(false);
 
                 currentViews.add(indexOfClickedTile, restoredButton);
@@ -409,10 +409,10 @@ public class Japan extends GameActivity {
 
                     rand = new Random();
                     randomColorIndex = rand.nextInt(10);
-                    nextTile.setBackgroundColor(Color.parseColor(COLORS.get(randomColorIndex % 5)));
+                    nextTile.setBackgroundColor(Color.parseColor(colorList.get(randomColorIndex % 5)));
                     nextTile.setClickable(false);
                     randomColorIndex = rand.nextInt(10);
-                    clickedTile.setBackgroundColor(Color.parseColor(COLORS.get(randomColorIndex % 5)));
+                    clickedTile.setBackgroundColor(Color.parseColor(colorList.get(randomColorIndex % 5)));
                     clickedTile.setClickable(false);
 
                     currentViews.add(indexOfClickedTile, restoredButton);
@@ -446,9 +446,9 @@ public class Japan extends GameActivity {
 
                 Random rand = new Random();
                 int randomColorIndex = rand.nextInt(10);
-                nextTile.setBackgroundColor(Color.parseColor(COLORS.get(randomColorIndex % 5)));
+                nextTile.setBackgroundColor(Color.parseColor(colorList.get(randomColorIndex % 5)));
                 randomColorIndex = rand.nextInt(10);
-                clickedTile.setBackgroundColor(Color.parseColor(COLORS.get(randomColorIndex % 5)));
+                clickedTile.setBackgroundColor(Color.parseColor(colorList.get(randomColorIndex % 5)));
                 clickedTile.setClickable(false);
 
                 int newIndex = currentViews.indexOf(clickedTile) + 1;

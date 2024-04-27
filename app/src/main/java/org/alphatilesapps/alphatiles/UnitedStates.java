@@ -8,10 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -193,7 +189,7 @@ public class UnitedStates extends GameActivity {
             Button gameButtonA = (Button) findViewById(GAME_BUTTONS[buttonPair]);
             Button gameButtonB = (Button) findViewById(GAME_BUTTONS[buttonPair + 1]);
 
-            String tileColorStr = COLORS.get((buttonPair % 5) / 2);
+            String tileColorStr = colorList.get((buttonPair % 5) / 2);
             int tileColor = Color.parseColor(tileColorStr);
             gameButtonA.setBackgroundColor(tileColor);
             gameButtonB.setBackgroundColor(tileColor);
@@ -311,7 +307,7 @@ public class UnitedStates extends GameActivity {
             tileSelections[selectionIndex/2] = tileOptions.get(selectionIndex);
         }
 
-        String tileColorStr = COLORS.get((selectionIndex / 2) % 5);
+        String tileColorStr = colorList.get((selectionIndex / 2) % 5);
         int tileColorNo = Color.parseColor(tileColorStr);
         gameButton.setBackgroundColor(tileColorNo);
         gameButton.setTextColor(Color.parseColor("#FFFFFF")); // white

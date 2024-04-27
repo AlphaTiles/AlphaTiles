@@ -606,7 +606,7 @@ public class Myanmar extends GameActivity {
 
                 TextView tile = findViewById(GAME_BUTTONS[tileY * 7 + tileX]);
 
-                String tileColorStr = COLORS.get(wordsCompleted % 5);
+                String tileColorStr = colorList.get(wordsCompleted % 5);
                 int tileColor = Color.parseColor(tileColorStr);
                 tile.setBackgroundColor(tileColor); // theme color
                 tile.setTextColor(Color.parseColor("#FFFFFF")); // white

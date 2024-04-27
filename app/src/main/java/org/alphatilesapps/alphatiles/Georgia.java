@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import static org.alphatilesapps.alphatiles.Start.COLORS;
+import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.CorV;
 
 //level 1: 6 visible tiles, random wrong choices
@@ -277,7 +277,7 @@ public class Georgia extends GameActivity {
                 correctSyllableRepresented = true;
             }
 
-            int buttonColor = Color.parseColor(COLORS.get(t % 5));
+            int buttonColor = Color.parseColor(colorList.get(t % 5));
 
             if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { // random alternatives
                 if (t < visibleGameButtons) {
@@ -370,7 +370,7 @@ public class Georgia extends GameActivity {
                 correctTileRepresented = true;
             }
 
-            String tileColorStr = COLORS.get(t % 5);
+            String tileColorStr = colorList.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
             if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { // alternatives are random

@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -189,7 +188,7 @@ public class Colombia extends GameActivity {
                         key.setText(syllableKeysList.get(k).text);
                         Random rand = new Random();
                         int index = rand.nextInt(4);
-                        int tileColor = Color.parseColor(COLORS.get(index));
+                        int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
 
@@ -203,7 +202,7 @@ public class Colombia extends GameActivity {
                         key.setText(tileKeysList.get(k).text);
                         Random rand = new Random();
                         int colorInt = rand.nextInt(4);
-                        String tileColorStr = COLORS.get(colorInt);
+                        String tileColorStr = colorList.get(colorInt);
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
@@ -239,7 +238,7 @@ public class Colombia extends GameActivity {
                         key.setText(syllableKeysList.get(k).text);
                         Random rand = new Random();
                         int index = rand.nextInt(4);
-                        int tileColor = Color.parseColor(COLORS.get(index));
+                        int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
 
@@ -257,7 +256,7 @@ public class Colombia extends GameActivity {
                         key.setText(tileKeysList.get(k).text);
                         Random rand = new Random();
                         int colorInt = rand.nextInt(4);
-                        String tileColorStr = COLORS.get(colorInt);
+                        String tileColorStr = colorList.get(colorInt);
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
@@ -289,7 +288,7 @@ public class Colombia extends GameActivity {
                         key.setText(syllableKeysList.get(k).text);
                         Random rand = new Random();
                         int index = rand.nextInt(4);
-                        int tileColor = Color.parseColor(COLORS.get(index));
+                        int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
 
@@ -313,7 +312,7 @@ public class Colombia extends GameActivity {
                     for (int k = 0; k < visibleGameButtons; k++) {
                         TextView key = findViewById(GAME_BUTTONS[k]);
                         key.setText(keyList.get(k).text); // KRP
-                        String tileColorStr = COLORS.get(Integer.parseInt(keyList.get(k).color));
+                        String tileColorStr = colorList.get(Integer.parseInt(keyList.get(k).color));
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
@@ -560,7 +559,7 @@ public class Colombia extends GameActivity {
             key.setText(keyList.get(keyIndex).text); // KP
             key.setVisibility(View.VISIBLE);
 
-            String tileColorStr = COLORS.get(Integer.parseInt(keyList.get(keyIndex).color)); // Added on May 15th, 2021, so that second and following screens use their own color coding
+            String tileColorStr = colorList.get(Integer.parseInt(keyList.get(keyIndex).color)); // Added on May 15th, 2021, so that second and following screens use their own color coding
             int tileColor = Color.parseColor(tileColorStr);
             key.setBackgroundColor(tileColor);
         }

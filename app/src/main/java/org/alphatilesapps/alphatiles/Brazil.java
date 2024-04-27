@@ -403,7 +403,7 @@ public class Brazil extends GameActivity {
                 containsCorrectSyllable = true;
             }
 
-            String tileColorStr = COLORS.get(t % 5);
+            String tileColorStr = colorList.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
             if (challengeLevel == 1) {
@@ -474,7 +474,7 @@ public class Brazil extends GameActivity {
                     }
                 }
 
-                String tileColorStr = COLORS.get(t % 5);
+                String tileColorStr = colorList.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setBackgroundColor(tileColor);
@@ -497,7 +497,7 @@ public class Brazil extends GameActivity {
                     correctTileRepresented = true;
                 }
 
-                String tileColorStr = COLORS.get(t % 5);
+                String tileColorStr = colorList.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setText(VOWELS.get(t).text);
@@ -517,7 +517,7 @@ public class Brazil extends GameActivity {
                     correctTileRepresented = true;
                 }
 
-                String tileColorStr = COLORS.get(t % 5);
+                String tileColorStr = colorList.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setText(CONSONANTS.get(t).text);
@@ -536,7 +536,7 @@ public class Brazil extends GameActivity {
                     correctTileRepresented = true;
                 }
 
-                String tileColorStr = COLORS.get(t % 5);
+                String tileColorStr = colorList.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setText(TONES.get(t).text);
@@ -560,7 +560,7 @@ public class Brazil extends GameActivity {
             for (int t = 0; t < visibleGameButtons; t++) {
                 TextView gameTile = findViewById(GAME_BUTTONS[t]);
 
-                String tileColorStr = COLORS.get(t % 5);
+                String tileColorStr = colorList.get(t % 5);
                 int tileColor = Color.parseColor(tileColorStr);
 
                 gameTile.setBackgroundColor(tileColor);

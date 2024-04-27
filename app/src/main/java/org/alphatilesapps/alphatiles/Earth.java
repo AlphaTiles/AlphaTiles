@@ -145,7 +145,7 @@ public class Earth extends AppCompatActivity {
                             ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
                         } else { // >= 12
                             String textColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).color;
-                            ((TextView) child).setTextColor(Color.parseColor(COLORS.get(Integer.parseInt(textColor))));
+                            ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(textColor))));
                         }
 
                         boolean changeColor = true;
@@ -169,7 +169,7 @@ public class Earth extends AppCompatActivity {
                         Drawable unwrappedDrawable = AppCompatResources.getDrawable(context, resId);
                         Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
                         if (changeColor) {
-                            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(COLORS.get(
+                            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(colorList.get(
                                     Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage)
                                             + doorIndex).color))));
                         }

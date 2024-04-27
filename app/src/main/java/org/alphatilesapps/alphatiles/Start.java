@@ -7,13 +7,9 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.format.Time;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -64,7 +60,7 @@ public class Start extends AppCompatActivity {
     public static HashMap<String, Integer> syllableAudioIDs; //JP
     public static int correctSoundDuration;
     public static HashMap<String, Integer> tileDurations;
-    public static final ArrayList<String> COLORS = new ArrayList<>();
+    public static final ArrayList<String> colorList = new ArrayList<>();
     public static int totalAudio; //JP: the total number of audio files to be loaded into the soundpool
 
     public static Boolean hasTileAudio;
@@ -112,7 +108,7 @@ public class Start extends AppCompatActivity {
         LOGGER.info("LoadProgress: completed buildKeyList()");
         buildSettingsList();
         LOGGER.info("LoadProgress: completed buildSettingsList()");
-        buildColorsArray();
+        buildColorList();
         LOGGER.info("LoadProgress: completed buildColorsList()");
 
         String hasAudioSetting = settingsList.find("Has tile audio");
@@ -252,7 +248,7 @@ public class Start extends AppCompatActivity {
 
     }
 
-    private void buildColorsArray() {
+    private void buildColorList() {
         Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_colors));
 
         boolean header = true;
@@ -263,7 +259,7 @@ public class Start extends AppCompatActivity {
             if (header) {
                 header = false;
             } else {
-                COLORS.add(thisLineArray[2]);
+                colorList.add(thisLineArray[2]);
             }
         }
     }
@@ -311,20 +307,29 @@ public class Start extends AppCompatActivity {
             } else {
                 // Sort information for staged introduction, including among potential second or third types of a tile
                 int stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3;
-                if(thisLineArray[14].equals("-")) { // Add all first types of tiles to "stage 1" if stages aren't being used
+                if(!thisLineArray[14].matches("[0-9]+")) { // Add all first types of tiles to "stage 1" if stages aren't being used
                     stageOfFirstAppearance = 1;
                 } else {
                     stageOfFirstAppearance = Integer.parseInt(thisLineArray[14]);
+                    if (!(stageOfFirstAppearance >= 1 && stageOfFirstAppearance <= 7)) {
+                        stageOfFirstAppearance = 1;
+                    }
                 }
-                if(thisLineArray[15].equals("-")) {
+                if(!thisLineArray[15].matches("[0-9]+")) {
                     stageOfFirstAppearanceType2 = 1;
                 } else {
                     stageOfFirstAppearanceType2 = Integer.parseInt(thisLineArray[15]);
+                    if (!(stageOfFirstAppearanceType2 >= 1 && stageOfFirstAppearanceType2 <= 7)) {
+                        stageOfFirstAppearance = 1;
+                    }
                 }
-                if(thisLineArray[16].equals("-")) {
+                if(!thisLineArray[16].matches("[0-9]+")) {
                     stageOfFirstAppearanceType3 = 1;
                 } else {
                     stageOfFirstAppearanceType3 = Integer.parseInt(thisLineArray[16]);
+                    if (!(stageOfFirstAppearanceType3 >= 1 && stageOfFirstAppearanceType3 <= 7)) {
+                        stageOfFirstAppearance = 1;
+                    }
                 }
                 // Create tile(s) and add to list; may add up to three tiles from the same line if it has multiple types
                 ArrayList<String> distractors = new ArrayList<>();
@@ -577,8 +582,11 @@ public class Start extends AppCompatActivity {
 
         // Then override for any words that have explicit first stage info in the wordlist
         for (Word word : wordList){
-            if(!word.stageOfFirstAppearance.equals("-")){
-                stagesOfFirstAppearance.put(word, Integer.parseInt(word.stageOfFirstAppearance));
+            if(word.stageOfFirstAppearance.matches("[0-9]+")){
+                int stage = Integer.parseInt(word.stageOfFirstAppearance);
+                if (stage >=1 && stage <= 7) {
+                    stagesOfFirstAppearance.put(word, stage);
+                }
             }
         }
 
@@ -1712,7 +1720,7 @@ public class Start extends AppCompatActivity {
                     // See if the blocks of length one, two, three or four Unicode characters matches game tiles
                     // Choose the longest block that matches a game tile and add that as the next segment in the parsed word array
                     charBlockLength = 0;
-                    if (tileHashMap.containsKey(next1Chars)) {
+                    if (tileHashMap.containsKey(next1Chars) || tileHashMap.containsKey("◌" + next1Chars) || tileHashMap.containsKey(next1Chars + "◌")) {
                         // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
                         charBlockLength = 1;
                     }
@@ -1734,7 +1742,13 @@ public class Start extends AppCompatActivity {
                     String tileString = "";
                     switch (charBlockLength) {
                         case 1:
-                            tileString = next1Chars;
+                            if (tileHashMap.containsKey(next1Chars)){
+                                tileString = next1Chars;
+                            } else if (tileHashMap.containsKey("◌" + next1Chars)) { // For AV/BV/FV/AD/D stored with ◌
+                                tileString = "◌" + next1Chars;
+                            } else if (tileHashMap.containsKey(next1Chars + "◌")) { // For LV stored with ◌
+                                tileString = next1Chars + "◌";
+                            }
                             break;
                         case 2:
                             tileString = next2Chars;
@@ -1881,7 +1895,7 @@ public class Start extends AppCompatActivity {
             // to disambiguate, e.g. niwan', where...
             // first n is a C and second n is a X (nasality indicator), and we would code as C234X6
 
-            // JP: these types come from the wordlist
+            // JP: these types come from the gametiles
             // In the wordlist, "-" means "no multifunction symbols in this word"
             // The types in the wordlist come from the same set of types as found in gametiles
 

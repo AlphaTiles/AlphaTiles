@@ -229,7 +229,7 @@ public class Romania extends GameActivity {
             }
 
             int alphabetPosition = tileList.returnPositionInAlphabet(activeTile);
-            String tileColorStr = COLORS.get(alphabetPosition % 5);
+            String tileColorStr = colorList.get(alphabetPosition % 5);
             int tileColor = Color.parseColor(tileColorStr);
             gameTile = (TextView) findViewById(R.id.tileBoxTextView);
             gameTile.setBackgroundColor(tileColor);
@@ -285,7 +285,7 @@ public class Romania extends GameActivity {
             }
 
             int alphabetPosition = tileList.returnPositionInAlphabet(activeTile);
-            String tileColorStr = COLORS.get(alphabetPosition % 5);
+            String tileColorStr = colorList.get(alphabetPosition % 5);
             int tileColor = Color.parseColor(tileColorStr);
             TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
             gameTile.setBackgroundColor(tileColor);
@@ -342,7 +342,7 @@ public class Romania extends GameActivity {
             }
 
             int alphabetPosition = tileList.returnPositionInAlphabet(activeTile);
-            String tileColorStr = COLORS.get(alphabetPosition % 5);
+            String tileColorStr = colorList.get(alphabetPosition % 5);
             int tileColor = Color.parseColor(tileColorStr);
             TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
             gameTile.setBackgroundColor(tileColor);

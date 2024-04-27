@@ -301,7 +301,7 @@ public class Mexico extends GameActivity {
             cardA.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitA)[1]));
             cardB.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitB)[1]));
 
-            String tileColorStr = COLORS.get(cardHitA % 5);
+            String tileColorStr = colorList.get(cardHitA % 5);
             int tileColor = Color.parseColor(tileColorStr);
             cardA.setTextColor(tileColor); // theme color
             cardB.setTextColor(tileColor); // theme color

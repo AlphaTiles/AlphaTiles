@@ -200,16 +200,16 @@ public class Sudan extends GameActivity {
             String typeColor;
             switch (type) {
                 case "C":
-                    typeColor = COLORS.get(1);
+                    typeColor = colorList.get(1);
                     break;
                 case "V":
-                    typeColor = COLORS.get(2);
+                    typeColor = colorList.get(2);
                     break;
                 case "T":
-                    typeColor = COLORS.get(3);
+                    typeColor = colorList.get(3);
                     break;
                 default:
-                    typeColor = COLORS.get(4);
+                    typeColor = colorList.get(4);
                     break;
             }
             int tileColor = Color.parseColor(typeColor);
@@ -236,7 +236,7 @@ public class Sudan extends GameActivity {
             TextView tile = findViewById(GAME_BUTTONS[i]);
             tile.setText(syllablePagesLists.get(page).get(i).text);
             String color = syllablePagesLists.get(page).get(i).color;
-            String typeColor = COLORS.get(Integer.parseInt(color));
+            String typeColor = colorList.get(Integer.parseInt(color));
             int tileColor = Color.parseColor(typeColor);
             tile.setBackgroundColor(tileColor);
         }

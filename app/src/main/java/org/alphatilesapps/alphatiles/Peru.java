@@ -117,7 +117,7 @@ public class Peru extends GameActivity {
         // Set thematic colors for four word choice TextViews, also make clickable
         for (int i = 0; i < GAME_BUTTONS.length; i++) {
             TextView nextWord = (TextView) findViewById(GAME_BUTTONS[i]);
-            String wordColorStr = COLORS.get(i);
+            String wordColorStr = colorList.get(i);
             int wordColorNo = Color.parseColor(wordColorStr);
             nextWord.setBackgroundColor(wordColorNo);
             nextWord.setTextColor(Color.parseColor("#FFFFFF")); // white

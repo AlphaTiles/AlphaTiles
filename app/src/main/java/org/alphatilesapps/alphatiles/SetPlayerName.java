@@ -21,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import static org.alphatilesapps.alphatiles.Start.keyList;
-import static org.alphatilesapps.alphatiles.Start.COLORS;
+import static org.alphatilesapps.alphatiles.Start.colorList;
 
 public class SetPlayerName extends AppCompatActivity {
 
@@ -173,7 +173,7 @@ public class SetPlayerName extends AppCompatActivity {
         for (int k = 0; k < visibleKeys; k++) {
             TextView key = findViewById(KEYS[k]);
             key.setText(keyList.get(k).text);
-            String tileColorStr = COLORS.get(Integer.parseInt(keyList.get(k).color));
+            String tileColorStr = colorList.get(Integer.parseInt(keyList.get(k).color));
             int tileColor = Color.parseColor(tileColorStr);
             key.setBackgroundColor(tileColor);
         }
@@ -288,7 +288,7 @@ public class SetPlayerName extends AppCompatActivity {
             key.setText(keyList.get(keyIndex).text); // KP
             key.setVisibility(View.VISIBLE);
             // Added on May 15th, 2021, so that second and following screens use their own color coding
-            String tileColorStr = COLORS.get(Integer.parseInt(keyList.get(keyIndex).color));
+            String tileColorStr = colorList.get(Integer.parseInt(keyList.get(keyIndex).color));
             int tileColor = Color.parseColor(tileColorStr);
             key.setBackgroundColor(tileColor);
         }

@@ -357,7 +357,7 @@ public class Ecuador extends GameActivity {
         for (int w = 0; w < GAME_BUTTONS.length; w++) {
 
             TextView wordTile = findViewById(GAME_BUTTONS[w]);
-            String tileColorStr = COLORS.get(w % 5);
+            String tileColorStr = colorList.get(w % 5);
             int tileColor = Color.parseColor(tileColorStr);
             wordTile.setBackgroundColor(tileColor);
             wordTile.setTextColor(Color.parseColor("#FFFFFF")); // white

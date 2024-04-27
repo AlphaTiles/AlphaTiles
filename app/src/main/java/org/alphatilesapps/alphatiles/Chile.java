@@ -26,12 +26,12 @@ public class Chile extends GameActivity {
     static int minWordLength = 3;
     static int maxKeyboardSize = 50;
     static int baseGuessCount = 8;
-    static final int GREEN = Color.parseColor(Start.COLORS.get(3));
-    static final int BLUE = Color.parseColor(Start.COLORS.get(1));
-    static final int EMPTY = Color.parseColor(Start.COLORS.get(6));
-    static final int YELLOW = Color.parseColor(Start.COLORS.get(5));
-    static final int GRAY = Color.parseColor(Start.COLORS.get(8));
-    static final int KEY_COLOR = Color.parseColor(Start.COLORS.get(0));
+    static final int GREEN = Color.parseColor(Start.colorList.get(3));
+    static final int BLUE = Color.parseColor(Start.colorList.get(1));
+    static final int EMPTY = Color.parseColor(Start.colorList.get(6));
+    static final int YELLOW = Color.parseColor(Start.colorList.get(5));
+    static final int GRAY = Color.parseColor(Start.colorList.get(8));
+    static final int KEY_COLOR = Color.parseColor(Start.colorList.get(0));
     boolean finished = false;
     int currentRow;
 
