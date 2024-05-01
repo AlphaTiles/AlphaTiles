@@ -318,6 +318,11 @@ public class Validator {
      */
     private void validateGoogleSheet(){
 
+
+        System.out.println();
+        System.out.println();
+        System.out.println("This report is for " + langPackGoogleSheet.getName() + ".");
+
         // this first step is looks at the desired data from tabs field set at the top of the
         // code, searches for a tab that has the matching name, and shrinks the internal representation
         // of those tabs to only be what is specified
