@@ -685,10 +685,10 @@ public class Validator {
                 try {
                     int n = Integer.parseInt(row);
                     if (n != i) {
-                        fatalErrors.add("Cell in row " + i + ", column A of the games tab must be "+  i + ", was " + row);
+                        fatalErrors.add("Cell in row " + (i + 1) + ", column A of the games tab must be " +  i + ", was " + row);
                     }
                 } catch(NumberFormatException e) {
-                    fatalErrors.add("Cell in row " + i + ", column A of the games tab must be "+  i + ", was " + row);
+                    fatalErrors.add("Cell in row " + (i + 1) + ", column A of the games tab must be " +  i + ", was " + row);
                 }
             }
         } catch (ValidatorException e) {
