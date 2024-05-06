@@ -318,6 +318,11 @@ public class Validator {
      */
     private void validateGoogleSheet(){
 
+
+        System.out.println();
+        System.out.println();
+        System.out.println("This report is for " + langPackGoogleSheet.getName() + ".");
+
         // this first step is looks at the desired data from tabs field set at the top of the
         // code, searches for a tab that has the matching name, and shrinks the internal representation
         // of those tabs to only be what is specified
@@ -359,7 +364,24 @@ public class Validator {
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the wordlist tab");
         }
-
+        try {
+            float numWithSpaces = 0;
+            float total = 0;
+            ArrayList<String> words = langPackGoogleSheet.getTabFromName("wordlist").getCol(1);
+            for (String word : words) {
+                if (word.contains(" ")) {
+                    numWithSpaces++;
+                }
+                if(!word.isBlank()) {
+                    total++;
+                }
+            }
+            if (numWithSpaces / total < 0.05f && numWithSpaces != 0) {
+                recommendations.add("Less than 5% of words contain spaces, consider removing those that do have spaces");
+            }
+        } catch (ValidatorException e) {
+            warnings.add(FAILED_CHECK_WARNING + "the wordlist tab");
+        }
         try {
             Tab keyboardTab = langPackGoogleSheet.getTabFromName("keyboard");
             Tab colorTab = langPackGoogleSheet.getTabFromName("colors");
@@ -579,9 +601,7 @@ public class Validator {
         try {
             Tab notesTab = langPackGoogleSheet.getTabFromName("notes");
             ArrayList<String> notesCol = notesTab.getCol(1);
-            for (String custom_note : notesCol) {
-                project_notes.add(custom_note);
-            }
+            project_notes.addAll(notesCol);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the notes tab");
         }
@@ -664,7 +684,18 @@ public class Validator {
                             "code color 5 (yellow). Check game door " + row.get(0) + " in the games tab");
                 }
             }
-
+            int i = 0;
+            for (String row : langPackGoogleSheet.getTabFromName("games").getCol(0)) {
+                i++;
+                try {
+                    int n = Integer.parseInt(row);
+                    if (n != i) {
+                        fatalErrors.add("Cell in row " + (i + 1) + ", column A of the games tab must be " +  i + ", was " + row);
+                    }
+                } catch(NumberFormatException e) {
+                    fatalErrors.add("Cell in row " + (i + 1) + ", column A of the games tab must be " +  i + ", was " + row);
+                }
+            }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the wordlist tab or the games tab");
         }
@@ -675,7 +706,7 @@ public class Validator {
                 try{
                     parseTypeSpecification(row.get(1), row.get(3));
                 }
-                catch (ValidatorException e){}
+                catch (ValidatorException ignored){}
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the gametiles tab, the wordlist tab, or the langinfo setting \"Script type\"");
@@ -716,7 +747,7 @@ public class Validator {
        // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
         // that the the given column lists file names (anything other than X or naWhileMPOnly)
         // and the referenced drive folder contains files
-        boolean hasFont = decideIfFontAttempted();
+        decideIfFontAttempted();
         boolean hasInstructionAudio = decideIfAudioAttempted("games", 4, "audio_instructions_optional");
         //tile and syllable audio have the extra step of checking against settings to see if the checks should be run
         boolean syllableAudioAttempted = decideIfAudioAttempted("syllables", 4, "audio_syllables_optional");
@@ -726,7 +757,7 @@ public class Validator {
                 syllableAudioSetting = true;
             }
         }
-        catch (Exception e){}
+        catch (Exception ignored){}
         boolean hasSyllableAudio = syllableAudioAttempted && syllableAudioSetting;
         if (!hasSyllableAudio){
             if (syllableAudioAttempted){
@@ -763,7 +794,7 @@ public class Validator {
         try {
             GoogleDriveFolder resourceImages = langPackDriveFolder.getFolderFromName("images_resources_optional");
             ArrayList<String> resourceImageNames = langPackGoogleSheet.getTabFromName("resources").getCol(2);
-            resourceImages.checkItemNamesAgainstList(resourceImageNames, false);
+            resourceImages.checkItemNamesAgainstList(resourceImageNames);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_resources_optional folder or the resources tab");
         }
@@ -771,7 +802,7 @@ public class Validator {
         try {
             GoogleDriveFolder wordImages = langPackDriveFolder.getFolderFromName("images_words");
             ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordImages.checkItemNamesAgainstList(wordsInLWC, false);
+            wordImages.checkItemNamesAgainstList(wordsInLWC);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_words folder or the wordlist tab");
         }
@@ -782,7 +813,7 @@ public class Validator {
             if (lowResWordImages.size() > 0) {
                 ArrayList<String> TwoAppendedWordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
                 TwoAppendedWordsInLWC.replaceAll(s -> s + "2");
-                lowResWordImages.checkItemNamesAgainstList(TwoAppendedWordsInLWC, false);
+                lowResWordImages.checkItemNamesAgainstList(TwoAppendedWordsInLWC);
             }
             else {
                 warnings.add("Since the folder images_words_low_res is empty, the validator will automatically generate " +
@@ -795,7 +826,7 @@ public class Validator {
         try {
             GoogleDriveFolder wordAudio = langPackDriveFolder.getFolderFromName("audio_words");
             ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordAudio.checkItemNamesAgainstList(wordsInLWC, false);
+            wordAudio.checkItemNamesAgainstList(wordsInLWC);
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_words folder or the wordlist tab");
         }
@@ -816,7 +847,7 @@ public class Validator {
                         tiles.add(tileC);
                     }
                 }
-                tileAudio.checkItemNamesAgainstList(tiles, false);
+                tileAudio.checkItemNamesAgainstList(tiles);
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_tiles_optional folder or the gametiles tab");
@@ -844,7 +875,7 @@ public class Validator {
             if (hasSyllableAudio) {
                 GoogleDriveFolder syllableAudio = langPackDriveFolder.getFolderFromName("audio_syllables_optional");
                 ArrayList<String> syllables = langPackGoogleSheet.getTabFromName("syllables").getCol(4);
-                syllableAudio.checkItemNamesAgainstList(syllables, false);
+                syllableAudio.checkItemNamesAgainstList(syllables);
             }
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the audio_syllables_optional folder or the syllables tab");
@@ -1017,7 +1048,7 @@ public class Validator {
         boolean reachedProductFlavors = false;
         boolean reachedFirstLangPack = false;
         String line = "";
-        while (!reachedFirstLangPack && line != null) {
+        while (!reachedFirstLangPack) {
             beforeLangPacks.append(line).append("\n");
             line = readBuildGradle.readLine();
             if (line.matches("\\s*productFlavors\\s*\\{.*")) {
@@ -1188,7 +1219,7 @@ public class Validator {
      * Represents any item in google drive. Extended by GoogleDriveFolder and GoogleSheet,
      * and directly instantiated for files that are not folders or spreadsheets (example images and audio files).
      */
-    private class GoogleDriveItem{
+    private static class GoogleDriveItem{
 
         /**
          * the mimeType of any GoogleDriveItem instance.
@@ -1330,10 +1361,11 @@ public class Validator {
          * Takes a list of names of the items that should be in the folder. Removes any items from folderContents
          * that do not match one of the names in the list (adding a warning as it does). Also adds a warning for any
          * name that does not match to an item.
+         *
          * @param namesList an ArrayList of Strings which are the names to be compared against folderContents
          */
-        protected void checkItemNamesAgainstList(ArrayList<String> namesList, boolean allowRepeats) {
-            checkItemNamesAgainstList(namesList, allowRepeats, Set.of());
+        protected void checkItemNamesAgainstList(ArrayList<String> namesList) {
+            checkItemNamesAgainstList(namesList, false, Set.of());
         }
         protected void checkItemNamesAgainstList(ArrayList<String> namesList, boolean allowRepeats, Set<String> optional) {
 
@@ -1498,7 +1530,7 @@ public class Validator {
                         .get(inSpreadsheetId, name + "!A1:Z")
                         .setValueRenderOption("FORMATTED_VALUE")
                         .execute();
-                for (List row : response.getValues()) {
+                for (List<Object> row : response.getValues()) {
                     ArrayList<String> newRow = new ArrayList<>();
                     for (Object cell : row) {
                         // to allow a single white space cell
@@ -1531,7 +1563,7 @@ public class Validator {
          */
         private void sizeTabUsingRange(String inRange) {
 
-            Integer rowLen = rowLenFromRange(inRange);
+            int rowLen = rowLenFromRange(inRange);
             Integer colLen = colLenFromRange(inRange);
 
             ArrayList<Integer> toRemove = new ArrayList<>();
@@ -1792,7 +1824,7 @@ public class Validator {
             if (subFolder.getName().equals(subFolderName) && subFolder.size() > 0) {
                 someAudioFiles = true;
             }
-        } catch (ValidatorException e) {
+        } catch (ValidatorException ignored) {
         }
 
         try {
@@ -1801,7 +1833,7 @@ public class Validator {
             if (AudioNames.size() > 0) {
                 someAudioNames = true;
             }
-        } catch (ValidatorException e){
+        } catch (ValidatorException ignored){
         }
 
         if (someAudioNames && someAudioFiles){
@@ -1850,7 +1882,7 @@ public class Validator {
             if (langPackGoogleSheet.getTabFromName("syllables").size() > 1) {
                 syllTabNotEmpty = true;
             }
-        }catch (ValidatorException e){
+        }catch (ValidatorException ignored){
         }
 
         if (syllTabNotEmpty && numerousWordsSpliced) {
@@ -2144,10 +2176,10 @@ public class Validator {
             // Combine vowel symbols into complex vowels that occur around the current consonant, as applicable. Find diacritics, spaces, and dashes that occur on/after this syllable.
 
             // Find vowel symbols that occur between previous and current consonants
-            String vowel = "";
-            String typeSADSymbols = "";
-            String ADSymbols = "";
-            String nonCombiningVowelFromPreviousSyllable = "";
+            StringBuilder vowel = new StringBuilder();
+            StringBuilder typeSADSymbols = new StringBuilder();
+            StringBuilder ADSymbols = new StringBuilder();
+            StringBuilder nonCombiningVowelFromPreviousSyllable = new StringBuilder();
             for (int b = previousConsonantIndex + 1; b < currentConsonantIndex; b++) {
                 currentTileString = parsedWordArrayPreliminary.get(b);
                 if (currentTileString.equals("")){
@@ -2163,9 +2195,9 @@ public class Validator {
                     currentTileType = currentTile.get(4);
                 }
                 if (currentTileType.equals("LV")) {
-                    vowel += currentTileString;
+                    vowel.append(currentTileString);
                 } else if (currentTileType.equals("V")){
-                    nonCombiningVowelFromPreviousSyllable += currentTileString;
+                    nonCombiningVowelFromPreviousSyllable.append(currentTileString);
                 }
             }
 
@@ -2173,7 +2205,7 @@ public class Validator {
             ArrayList<String> vowelTile;
             String vowelTileString;
             String vowelTileType;
-            String vowelToStartTheNextSyllable = "";
+            StringBuilder vowelToStartTheNextSyllable = new StringBuilder();
             int indexOfLastFoundMultitypeVowel = -1;
             for (int a = currentConsonantIndex + 1; a < nextConsonantIndex; a++) {
                 currentTileString = parsedWordArrayPreliminary.get(a);
@@ -2193,11 +2225,11 @@ public class Validator {
                     currentTileType = currentTile.get(4);
                 }
                 if (currentTileType.equals("AV") || currentTileType.equals("BV") || currentTileType.equals("FV")) { // Prepare to add current AV/BV/FV to vowel-so-far
-                    if (vowel.isEmpty()){
+                    if (vowel.length() == 0){
                         vowelTile = null;
                     }
                     else {
-                        vowelTile = gameTiles.getRowFromFirstCell(vowel);
+                        vowelTile = gameTiles.getRowFromFirstCell(vowel.toString());
                     }
                     if(!Objects.isNull(vowelTile)){ // Vowel composite so far is parsable as one tile in the tile list
                         vowelTileString = vowelTile.get(0);
@@ -2208,36 +2240,36 @@ public class Validator {
                             vowelTileType = vowelTile.get(4);
                         }
                         if(vowelTileType.equals("LV")){
-                            vowel += "◌";
+                            vowel.append("◌");
                         } else if (vowelTileType.equals("AV") || vowelTileType.equals("BV") || vowelTileType.equals("FV")){
-                            vowel = "◌" + vowelTile.get(0); // Put the placeholder before the previous AV/BV/FV before adding current AV/BV/FV to it
+                            vowel = new StringBuilder("◌" + vowelTile.get(0)); // Put the placeholder before the previous AV/BV/FV before adding current AV/BV/FV to it
                         }
                     }
-                    vowel += currentTileString;
+                    vowel.append(currentTileString);
                 } else if (currentTileType.equals("AD")) { // Save any diacritics that come between syllables
-                    if(!ADSymbols.equals("")){
-                        ADSymbols = "◌" + ADSymbols; // For complex diacritics
+                    if(!ADSymbols.toString().equals("")){
+                        ADSymbols.insert(0, "◌"); // For complex diacritics
                     }
-                    ADSymbols+=currentTileString;
+                    ADSymbols.append(currentTileString);
                 } else if (currentTileType.equals("SAD")) { // Save any Space-And-Dash chars that come between syllables
-                    typeSADSymbols += currentTileString;
+                    typeSADSymbols.append(currentTileString);
                 } else if (!foundNextConsonant && currentTileType.equals("V")){ // There is a V (not LV/FV/AV/BV/on the end of the word)
-                    vowelToStartTheNextSyllable+=currentTileString;
+                    vowelToStartTheNextSyllable.append(currentTileString);
                 }
             }
 
 
             // Add saved items to the tile array
-            if(!nonCombiningVowelFromPreviousSyllable.equals("")){
-                parsedWordArray.add(nonCombiningVowelFromPreviousSyllable);
+            if(!nonCombiningVowelFromPreviousSyllable.toString().equals("")){
+                parsedWordArray.add(nonCombiningVowelFromPreviousSyllable.toString());
             }
             if (!currentConsonant.equals("")) {
-                if (!vowel.equals("")) {
-                    if (vowel.isEmpty()){
+                if (!vowel.toString().equals("")) {
+                    if (vowel.length() == 0){
                         vowelTile = null;
                     }
                     else {
-                        vowelTile = gameTiles.getRowFromFirstCell(vowel);
+                        vowelTile = gameTiles.getRowFromFirstCell(vowel.toString());
                     }
                     vowelTileString = vowelTile.get(0);
                     if (gameTilesMultiFunc.getCol(0).contains(vowelTileString)) { // Discern the type of the vowel
@@ -2247,38 +2279,44 @@ public class Validator {
                         vowelTileType = vowelTile.get(4);
                     }
                     // Add tiles in different orders based on the vowel's position
-                    if (vowelTileType.equals("LV")) {
-                        parsedWordArray.add(vowel);
-                        parsedWordArray.add(currentConsonant);
-                        if (!ADSymbols.equals("")) {
-                            parsedWordArray.add(ADSymbols);
-                        }
-                    } else if (vowelTileType.equals("AV") || vowelTileType.equals("BV") || vowelTileType.equals("V")) {
-                        parsedWordArray.add(currentConsonant);
-                        parsedWordArray.add(vowel);
-                        if (!ADSymbols.equals("")) {
-                            parsedWordArray.add(ADSymbols);
-                        }
-                    } else if (vowelTileType.equals("FV")){
-                        parsedWordArray.add(currentConsonant);
-                        if (!ADSymbols.equals("")) {
-                            parsedWordArray.add(ADSymbols);
-                        }
-                        parsedWordArray.add(vowel);
+                    switch (vowelTileType) {
+                        case "LV":
+                            parsedWordArray.add(vowel.toString());
+                            parsedWordArray.add(currentConsonant);
+                            if (!ADSymbols.toString().equals("")) {
+                                parsedWordArray.add(ADSymbols.toString());
+                            }
+                            break;
+                        case "AV":
+                        case "BV":
+                        case "V":
+                            parsedWordArray.add(currentConsonant);
+                            parsedWordArray.add(vowel.toString());
+                            if (!ADSymbols.toString().equals("")) {
+                                parsedWordArray.add(ADSymbols.toString());
+                            }
+                            break;
+                        case "FV":
+                            parsedWordArray.add(currentConsonant);
+                            if (!ADSymbols.toString().equals("")) {
+                                parsedWordArray.add(ADSymbols.toString());
+                            }
+                            parsedWordArray.add(vowel.toString());
+                            break;
                     }
                 } else { // No vowel between current and (next) consonants
                     parsedWordArray.add(currentConsonant);
-                    if (!ADSymbols.equals("")) {
-                        parsedWordArray.add(ADSymbols);
+                    if (!ADSymbols.toString().equals("")) {
+                        parsedWordArray.add(ADSymbols.toString());
                     }
                 }
                 // Add any spaces or dashes that come between syllables
-                if (!typeSADSymbols.equals("")) {
-                    parsedWordArray.add(typeSADSymbols);
+                if (!typeSADSymbols.toString().equals("")) {
+                    parsedWordArray.add(typeSADSymbols.toString());
                 }
                 // If a vowel of type V was found before the next consonant, add it. It is syllable-initial or mid.
-                if (!vowelToStartTheNextSyllable.equals("")) {
-                    parsedWordArray.add(vowelToStartTheNextSyllable);
+                if (!vowelToStartTheNextSyllable.toString().equals("")) {
+                    parsedWordArray.add(vowelToStartTheNextSyllable.toString());
                 }
                 previousConsonantIndex = currentConsonantIndex;
             }
@@ -2294,9 +2332,9 @@ public class Validator {
         int indexInPreliminaryArray = -1;
         int lastIndexOfThisMultifunctionTile = 0;
         int instancesBeforeTheOneWeWant = 0;
-        String previousTilesConcatenated = "";
+        StringBuilder previousTilesConcatenated = new StringBuilder();
         for(int t = 0; t<indexOfTileStringInWordArrayInProgress; t++){
-            previousTilesConcatenated+=wordArrayInProgress.get(t);
+            previousTilesConcatenated.append(wordArrayInProgress.get(t));
         }
 
         // Figure out which instance of this tile in the tile list we are looking at
@@ -2336,8 +2374,8 @@ public class Validator {
         Tab wordList = langPackGoogleSheet.getTabFromName("wordlist");
         ArrayList<String> word = wordList.getRowWithCellInCol(wordInLOP,1);
         String mixedDefinitionInfoString = word.get(3);
-        String instanceType = null;
-        ArrayList<String> types = new ArrayList<String>(Arrays.asList("C", "V", "X", "T", "-", "SAD", "LV", "AV", "BV", "FV", "AD"));
+        String instanceType;
+        ArrayList<String> types = new ArrayList<>(Arrays.asList("C", "V", "X", "T", "-", "SAD", "LV", "AV", "BV", "FV", "AD"));
 
         if (!mixedDefinitionInfoString.equals("C") && !mixedDefinitionInfoString.equals("V")
                 && !mixedDefinitionInfoString.equals("X") && !mixedDefinitionInfoString.equals("T")
@@ -2362,20 +2400,20 @@ public class Validator {
             int previousNumberEndIndex = 0;
             int nextNumberStartIndex;
             for(int i=0; i<numTilesInWord; i++){
-                String previousNumber = String.valueOf(i); // The number before this one, 1-indexed
+                // The number before this one, 1-indexed
                 String nextNumber = String.valueOf(i+2); // The number after this one, 1-indexed
                 int tilesInBetween = 1;
 
                 if(mixedDefinitionInfoArray[i] == null){ // A number wasn't filled in here, there must be type info for this tile
                     nextNumberStartIndex = mixedDefinitionInfoString.indexOf(nextNumber);
-                    int nextNumberInt = Integer.valueOf(nextNumber);
+                    int nextNumberInt = Integer.parseInt(nextNumber);
                     while(nextNumberStartIndex==-1 && nextNumberInt<=numTilesInWord){ // Maybe the number after this one is not in the array, either. Find the next one that is.
                         nextNumberInt++;
                         nextNumber = String.valueOf(nextNumberInt);
                         nextNumberStartIndex = mixedDefinitionInfoString.indexOf(nextNumber);
                         tilesInBetween++;
                     }
-                    if (nextNumberStartIndex==-1 && nextNumberInt>numTilesInWord){ // It checked to the end and didn't find any more numbers
+                    if (nextNumberStartIndex == -1){ // It checked to the end and didn't find any more numbers
                         nextNumberStartIndex = mixedDefinitionInfoString.length();
                     }
 
