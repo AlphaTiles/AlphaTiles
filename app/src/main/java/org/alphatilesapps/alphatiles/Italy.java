@@ -18,7 +18,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.Collections;
 
-import static org.alphatilesapps.alphatiles.Start.COLORS;
+import static org.alphatilesapps.alphatiles.Start.colorList;
 
 public class Italy extends GameActivity {
     Start.TileList sortableTilesArray;
@@ -27,13 +27,13 @@ public class Italy extends GameActivity {
     boolean[] boardCardsFound = new boolean[16];
     int deckIndex = 0;
 
-    protected static final int[] TILE_BUTTONS = {
+    protected static final int[] GAME_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04, R.id.choice05, R.id.choice06,
             R.id.choice07, R.id.choice08, R.id.choice09, R.id.choice10, R.id.choice11, R.id.choice12,
             R.id.choice13, R.id.choice14, R.id.choice15, R.id.choice16
     };
 
-    protected static final int[] TILE_IMAGES = {
+    protected static final int[] WORD_IMAGES = {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04, R.id.wordImage05, R.id.wordImage06,
             R.id.wordImage07, R.id.wordImage08, R.id.wordImage09, R.id.wordImage10, R.id.wordImage11, R.id.wordImage12,
             R.id.wordImage13, R.id.wordImage14, R.id.wordImage15, R.id.wordImage16
@@ -42,8 +42,8 @@ public class Italy extends GameActivity {
     protected static final int[][] LOTERIA_SEQUENCES = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}, {1, 5, 9, 13}, {2, 6, 10, 14}, {3, 7, 11, 15}, {4, 8, 12, 16}, {1, 6, 11, 16}, {4, 7, 10, 13}};
 
     @Override
-    protected int[] getTileButtons() {
-        return TILE_BUTTONS;
+    protected int[] getGameButtons() {
+        return GAME_BUTTONS;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Italy extends GameActivity {
         int audioInstructionsResID;
         try {
             audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1)
-                    .gameInstrLabel, "raw", context.getPackageName());
+                    .instructionAudioName, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -123,15 +123,9 @@ public class Italy extends GameActivity {
         updatePointsAndTrackers(0);
         playAgain();
     }
-
     @Override
-    public void onBackPressed() {
-        // no action
-    }
-
-    @Override
-    public void setAllTilesUnclickable() {
-        super.setAllTilesUnclickable();
+    public void setAllGameButtonsUnclickable() {
+        super.setAllGameButtonsUnclickable();
 
         ImageView nextWordArrow = findViewById(R.id.playNextWord);
         nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
@@ -140,15 +134,15 @@ public class Italy extends GameActivity {
         ImageView referenceItem = findViewById(R.id.referenceItem);
         referenceItem.setClickable(false);
 
-        for (int t = 0; t < visibleTiles; t++) {
-            ImageView wordImage = findViewById(TILE_IMAGES[t]);
+        for (int t = 0; t < visibleGameButtons; t++) {
+            ImageView wordImage = findViewById(WORD_IMAGES[t]);
             wordImage.setClickable(false);
         }
     }
 
     @Override
-    public void setAllTilesClickable() {
-        super.setAllTilesClickable();
+    public void setAllGameButtonsClickable() {
+        super.setAllGameButtonsClickable();
 
         ImageView nextWordArrow = findViewById(R.id.playNextWord);
         nextWordArrow.setImageResource(R.drawable.zz_forward_green);
@@ -157,8 +151,8 @@ public class Italy extends GameActivity {
         ImageView referenceItem = findViewById(R.id.referenceItem);
         referenceItem.setClickable(true);
 
-        for (int t = 0; t < visibleTiles; t++) {
-            ImageView wordImage = findViewById(TILE_IMAGES[t]);
+        for (int t = 0; t < visibleGameButtons; t++) {
+            ImageView wordImage = findViewById(WORD_IMAGES[t]);
             wordImage.setClickable(true);
         }
     }
@@ -210,13 +204,13 @@ public class Italy extends GameActivity {
         WordList boardCards = new WordList();
         for (int tileNumber = 0; tileNumber < 16; tileNumber++) {
             boardCards.add(gameCards.get(tileNumber));
-            TextView thisCardText = (TextView) findViewById(TILE_BUTTONS[tileNumber]);
-            thisCardText.setText(wordList.stripInstructionCharacters(gameCards.get(tileNumber).localWord));
-            String tileColorStr = COLORS.get(tileNumber % 5);
+            TextView thisCardText = (TextView) findViewById(GAME_BUTTONS[tileNumber]);
+            thisCardText.setText(wordList.stripInstructionCharacters(gameCards.get(tileNumber).wordInLOP));
+            String tileColorStr = colorList.get(tileNumber % 5);
             int tileColor = Color.parseColor(tileColorStr);
             thisCardText.setTextColor(tileColor); // resets as in previous round some text fields set to black
-            ImageView thisCardImage = (ImageView) findViewById(TILE_IMAGES[tileNumber]);
-            int resID = getResources().getIdentifier(gameCards.get(tileNumber).nationalWord, "drawable", getPackageName());
+            ImageView thisCardImage = (ImageView) findViewById(WORD_IMAGES[tileNumber]);
+            int resID = getResources().getIdentifier(gameCards.get(tileNumber).wordInLWC, "drawable", getPackageName());
             thisCardImage.setImageResource(0);
             thisCardImage.setImageResource(resID);
         }
@@ -244,8 +238,7 @@ public class Italy extends GameActivity {
             playAgain();
         } else { // "Call out" the next word
 
-            wordInLOP = wordList.stripInstructionCharacters(gameCards.get(deckIndex).localWord);
-            wordInLWC = gameCards.get(deckIndex).nationalWord;
+            refWord = gameCards.get(deckIndex);
             playActiveWordClip(false);
         }
     }
@@ -256,9 +249,9 @@ public class Italy extends GameActivity {
 
     public void respondToSelection(int indexOfTileJustSelected) {
 
-        TextView tileJustSelected = findViewById(TILE_BUTTONS[indexOfTileJustSelected - 1]);
+        TextView tileJustSelected = findViewById(GAME_BUTTONS[indexOfTileJustSelected - 1]);
 
-        if (((String) tileJustSelected.getText()).equals(wordInLOP)) {
+        if (tileJustSelected.getText().equals(wordList.stripInstructionCharacters(refWord.wordInLOP))) {
             respondToCorrectSelection(indexOfTileJustSelected);
         } else {
             respondToIncorrectSelection();
@@ -269,10 +262,10 @@ public class Italy extends GameActivity {
     public void respondToCorrectSelection(int indexOfTileJustSelected) {
         boardCardsFound[indexOfTileJustSelected - 1] = true;
 
-        ImageView imageJustSelected = findViewById(TILE_IMAGES[indexOfTileJustSelected - 1]);
+        ImageView imageJustSelected = findViewById(WORD_IMAGES[indexOfTileJustSelected - 1]);
         imageJustSelected.setImageResource(R.drawable.zz_bean);
 
-        TextView thisCardText = (TextView) findViewById(TILE_BUTTONS[indexOfTileJustSelected - 1]);
+        TextView thisCardText = (TextView) findViewById(GAME_BUTTONS[indexOfTileJustSelected - 1]);
         thisCardText.setTextColor(Color.BLACK);
 
         if (loteria()) {
@@ -312,4 +305,8 @@ public class Italy extends GameActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
 }

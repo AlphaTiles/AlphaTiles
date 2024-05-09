@@ -19,10 +19,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.keyList;
-import static org.alphatilesapps.alphatiles.Start.COLORS;
+import static org.alphatilesapps.alphatiles.Start.colorList;
 
 public class SetPlayerName extends AppCompatActivity {
 
@@ -112,11 +111,6 @@ public class SetPlayerName extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
     public void setTextSizes() {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -178,8 +172,8 @@ public class SetPlayerName extends AppCompatActivity {
 
         for (int k = 0; k < visibleKeys; k++) {
             TextView key = findViewById(KEYS[k]);
-            key.setText(keyList.get(k).baseKey);
-            String tileColorStr = COLORS.get(Integer.parseInt(keyList.get(k).keyColor));
+            key.setText(keyList.get(k).text);
+            String tileColorStr = colorList.get(Integer.parseInt(keyList.get(k).color));
             int tileColor = Color.parseColor(tileColorStr);
             key.setBackgroundColor(tileColor);
         }
@@ -215,7 +209,7 @@ public class SetPlayerName extends AppCompatActivity {
 
     private void respondToKeySelection(int justClickedIndex) {
 
-        String tileToAdd = keyList.get(justClickedIndex).baseKey;
+        String tileToAdd = keyList.get(justClickedIndex).text;
 
         EditText avatarName = (EditText) findViewById(R.id.avatarName);
         String currentName = avatarName.getText() + tileToAdd;
@@ -291,10 +285,10 @@ public class SetPlayerName extends AppCompatActivity {
         for (int k = 0; k < keysLimit; k++) {
             TextView key = findViewById(KEYS[k]);
             int keyIndex = (33 * (keyboardScreenNo - 1)) + k;
-            key.setText(keyList.get(keyIndex).baseKey); // KP
+            key.setText(keyList.get(keyIndex).text); // KP
             key.setVisibility(View.VISIBLE);
             // Added on May 15th, 2021, so that second and following screens use their own color coding
-            String tileColorStr = COLORS.get(Integer.parseInt(keyList.get(keyIndex).keyColor));
+            String tileColorStr = colorList.get(Integer.parseInt(keyList.get(keyIndex).color));
             int tileColor = Color.parseColor(tileColorStr);
             key.setBackgroundColor(tileColor);
         }
@@ -369,6 +363,11 @@ public class SetPlayerName extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // no action
     }
 
 }

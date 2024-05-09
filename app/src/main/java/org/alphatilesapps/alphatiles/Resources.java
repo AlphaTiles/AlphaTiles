@@ -79,11 +79,6 @@ public class Resources extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
     public void buildResourcesArray() {
 
         boolean header = true;
