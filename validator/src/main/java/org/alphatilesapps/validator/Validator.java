@@ -191,7 +191,7 @@ public class Validator {
                             "AlphaTiles", YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,null, null);
 
                     if (isSure == 0) {
-                        Path pathToApp = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("app");
+                        Path pathToApp = Paths.get(System.getProperty("user.dir")).getParent().resolve("app");
                         myValidator.writeValidatedFiles(pathToApp);
                     }
                 }
