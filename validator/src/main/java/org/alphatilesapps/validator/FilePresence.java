@@ -16,6 +16,10 @@ public class FilePresence {
     public ArrayList<String> recommendations = new ArrayList<>();
     /// Add a required file with subfolder and tag
     public void add(String tag, String subfolder, String file, String mimeType, String reason, boolean optional) {
+        for(File other : files) {
+            if(!file.isEmpty() && other.name.equals(file) && other.folderName.equals(subfolder))
+                return;
+        }
         folders.add(subfolder);
         files.add(new File(tag, subfolder, file, mimeType, reason, optional));
         tagData.putIfAbsent(tag, new TagData());
