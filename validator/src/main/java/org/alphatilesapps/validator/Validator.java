@@ -1961,8 +1961,7 @@ public class Validator {
         try {
             ArrayList<String> audioNames = langPackGoogleSheet.getTabFromName(tab).getCol(colNum);
             audioNames.removeAll(Set.of("naWhileMPOnly", "X"));
-            Set<String> dedup = Set.copyOf(audioNames);
-            for(String name : dedup) {
+            for(String name : audioNames) {
                 filePresence.add(
                         tag,
                         subFolderName,
