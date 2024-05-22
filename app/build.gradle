@@ -41,11 +41,6 @@ android {
         //Alpha Tiles internal team developers can find active product flavor definitions here:
         // https://docs.google.com/document/d/1a3satcmHFa5r6l7THrKLgxSWVCs-Mp2yOGyzk4oETsk/edit
 
-        tplTlacoapa {
-            dimension "language"
-            applicationIdSuffix ".blue.tplTlacoapa"
-            resValue "string", "app_name", 'Mu̱ꞌtsíi̱n miꞌpha̱a̱ (tpl)'
-        }
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
