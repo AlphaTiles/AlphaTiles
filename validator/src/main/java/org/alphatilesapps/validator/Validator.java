@@ -154,7 +154,7 @@ public class Validator {
                 JOptionPane.showConfirmDialog(jf, panel2, "AlphaTiles", JOptionPane.DEFAULT_OPTION);
                 confirmedPath = Paths.get(path.getText());
                 if(remember.isSelected()) {
-                    Files.writeString(userDir.resolve("pathForValidator.txt"), confirmedPath.toString());
+                    Files.writeString(userDir.resolve("pathForValidator.txt"), confirmedPath.toString(), StandardCharsets.UTF_8);
                 }
             }
             JPanel panel = new JPanel();
