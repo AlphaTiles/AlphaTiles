@@ -121,7 +121,6 @@ public class Validator {
      * Could be Roman, Thai, Lao, or Khmer. Read from langinfo
      */
     public static String scriptType;
-
     /**
      * main method for running the validator. Prompts user for the URL of the google drive folder.
      * Constructs a Validator object using the URL. Calls the validate method.  Prints out
@@ -138,6 +137,26 @@ public class Validator {
         jf.setVisible(true);
 
         try {
+
+            Path confirmedPath;
+            Path userDir = Paths.get(System.getProperty("user.dir")).getParent();
+            try {
+                confirmedPath = Paths.get(Files.readString(userDir.resolve("pathForValidator.txt"), StandardCharsets.UTF_8));
+            } catch(Exception ignored)  {
+                JPanel panel2 = new JPanel();
+                panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
+                JTextField path = new JTextField(userDir.toString());
+                String message2 = "Please check that this is the correct path to the AlphaTiles folder";
+                panel2.add(new JLabel(message2));
+                panel2.add(path);
+                JCheckBox remember = new JCheckBox("Remember this path");
+                panel2.add(remember);
+                JOptionPane.showConfirmDialog(jf, panel2, "AlphaTiles", JOptionPane.DEFAULT_OPTION);
+                confirmedPath = Paths.get(path.getText());
+                if(remember.isSelected()) {
+                    Files.writeString(userDir.resolve("pathForValidator.txt"), confirmedPath.toString(), StandardCharsets.UTF_8);
+                }
+            }
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
             JTextField urlInput = new JTextField();
@@ -150,7 +169,7 @@ public class Validator {
             int ignored = JOptionPane.showConfirmDialog(jf, panel, "AlphaTiles", JOptionPane.DEFAULT_OPTION);
             String url = urlInput.getText();
             if (!url.isEmpty()) {
-                Validator myValidator = new Validator(url);
+                Validator myValidator = new Validator(url, confirmedPath);
                 myValidator.validate();
                 System.out.println("\n\nList of Fatal Errors\n********");
                 int n = 0;
@@ -191,8 +210,7 @@ public class Validator {
                             "AlphaTiles", YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,null, null);
 
                     if (isSure == 0) {
-                        Path pathToApp = Paths.get(System.getProperty("user.dir")).getParent().resolve("app");
-                        myValidator.writeValidatedFiles(pathToApp);
+                       myValidator.writeValidatedFiles(confirmedPath.resolve("app"));
                     }
                 }
             } else {
@@ -208,6 +226,7 @@ public class Validator {
 
     //<editor-fold desc="Validator fields">
 
+    private final Path rootPath;
     /**
      * A LinkedHashSet of fatal errors found by the validator (is Set to avoid duplicate messages). Printed by main.
      */
@@ -305,7 +324,8 @@ public class Validator {
      *
      * @param driveFolderUrl a String representing the URL of the language pack folder in google drive
      */
-    public Validator(String driveFolderUrl) throws IOException, GeneralSecurityException, ValidatorException {
+    public Validator(String driveFolderUrl, Path rootPath) throws IOException, GeneralSecurityException, ValidatorException {
+        this.rootPath = rootPath;
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
         String driveFolderId = driveFolderUrl.substring(driveFolderUrl.indexOf("folders/") + 8);
         buildServices(driveFolderId);
@@ -388,7 +408,7 @@ public class Validator {
         }
 
         // Make a temp folder containing the tabs as UTF-8 encoded .txt files while they are being checked
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTempFolder = pathToValidator.resolve("temp");
         for (String desiredTabName : DESIRED_RANGE_FROM_TABS.keySet()) {
             try {
@@ -1135,7 +1155,7 @@ public class Validator {
         Files.createDirectories(pathToLangPack);
 
         // copies contents of templateTemplate into fresh language pack directory
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTemplate = Paths.get(String.valueOf(pathToValidator.resolve("templateTemplate")));
         copyDirectory(pathToTemplate, pathToLangPack);
 
@@ -2918,7 +2938,7 @@ public class Validator {
     public void buildWordList() throws IOException {
         // KP, Oct 2020 (updated by AH to allow for spaces in fields (some common nouns in some languages have spaces)
 
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTempFolder = pathToValidator.resolve("temp");
         BufferedReader wordlistFileReader = new BufferedReader(new FileReader(pathToTempFolder.resolve("wordlist.txt").toFile(), StandardCharsets.UTF_8));
         boolean header = true;
@@ -2950,7 +2970,7 @@ public class Validator {
         // AH, Nov 2020, updates to add second column (color theme)
         // AH Nov 2020, updated by AH to allow for spaces in fields (some common nouns in some languages have spaces
 
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTempFolder = pathToValidator.resolve("temp");
         BufferedReader keyboardFileReader = new BufferedReader(new FileReader(pathToTempFolder.resolve("keyboard.txt").toFile(), StandardCharsets.UTF_8));
         boolean header = true;
@@ -2978,7 +2998,7 @@ public class Validator {
      * @throws IOException if the colors tab was not downloaded into temp/colors.txt
      */
     public void buildColorList() throws IOException {
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTempFolder = pathToValidator.resolve("temp");
         BufferedReader colorsFileReader = new BufferedReader(new FileReader(pathToTempFolder.resolve("colors.txt").toFile(), StandardCharsets.UTF_8));
         boolean header = true;
@@ -3008,7 +3028,7 @@ public class Validator {
         // AH Nov 2020, updated by AH to allow for spaces in fields (some common nouns in some languages have spaces
         // AH Mar 2021, add new column for audio tile and for upper case tile
 
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTempFolder = pathToValidator.resolve("temp");
         BufferedReader gametilesFileReader = new BufferedReader(new FileReader(pathToTempFolder.resolve("gametiles.txt").toFile(), StandardCharsets.UTF_8));
         String thisLine = gametilesFileReader.readLine();
