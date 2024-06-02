@@ -3,6 +3,7 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,9 +13,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.*;
+import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
+
+import java.util.logging.Logger;
 
 public class Romania extends GameActivity {
 
+    /**
+     * Logger included for testing purposes only; delete or comment out when done with testing.
+     */
+    private static final Logger LOGGER = Logger.getLogger(GameActivity.class.getName());
     boolean failedToMatchInitialTile = false;
     Start.Tile activeTile;
     boolean directionIsForward = true;
@@ -141,7 +149,7 @@ public class Romania extends GameActivity {
         }
 
         int i = 0;
-        while(!(cumulativeStageBasedTileList.get(i).text.equals(tileToStartOn) && cumulativeStageBasedTileList.get(i).typeOfThisTileInstance.equals(typeOfTileToStartOn))){
+        while (!(cumulativeStageBasedTileList.get(i).text.equals(tileToStartOn) && cumulativeStageBasedTileList.get(i).typeOfThisTileInstance.equals(typeOfTileToStartOn))) {
             i++;
         }
         activeTile = cumulativeStageBasedTileList.get(i);
@@ -203,6 +211,9 @@ public class Romania extends GameActivity {
         TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
         magTile.setText(indexWithinGroup + 1 + " / " + String.valueOf(String.valueOf(groupCount)));
 
+        // Makes the tile text clickable (at least in theory)
+        gameTile.setClickable(true);
+
         if (!skipThisTile) { // If we DO have words in the group for this tile given the scan setting, then...
 
             // Display a word (should normally be the first word) from the group of words for the active tile
@@ -251,6 +262,35 @@ public class Romania extends GameActivity {
                 goToPreviousTile(null);
             }
         }
+
+    }
+
+    /**
+     * Should trigger when the reference tile is clicked.
+     * Makes the audio for the reference tile play.
+     */
+    public void onRefClick(View view) {
+        // Plays the audio for the tile
+        // Copied and modified from Thailand's playActiveTileClip0
+        /**if (tempSoundPoolSwitch) {
+         playActiveTileClip1(false);
+         } else {
+         playActiveTileClip0(false);
+         }**/
+        LOGGER.info("reached onRefClick method");
+        setAllGameButtonsUnclickable();
+        setOptionsRowUnclickable();
+        int resIDRefTile = getResources().getIdentifier(activeTile.audioForThisTileType, "raw", getPackageName());
+        final MediaPlayer mp1 = MediaPlayer.create(this, resIDRefTile);
+        mediaPlayerIsPlaying = true;
+        //mp1.start();
+        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp1) {
+                mpCompletion(mp1, false);
+            }
+        });
+        mp1.start();
 
     }
 

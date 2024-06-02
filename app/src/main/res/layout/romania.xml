@@ -12,6 +12,7 @@
         android:id="@+id/tileBoxTextView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:onClick="onRefClick"
         android:background="#9C27B0"
         android:gravity="center|center_vertical"
         android:text="@string/gameTileInFocus"
