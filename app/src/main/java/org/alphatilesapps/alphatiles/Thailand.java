@@ -13,13 +13,13 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
 import static org.alphatilesapps.alphatiles.Start.*;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 
 public class Thailand extends GameActivity {
-
     ArrayList<Start.Word> fourWordChoices = new ArrayList<>();
     ArrayList<Start.Tile> fourTileChoices = new ArrayList<>();
     ArrayList<Start.Syllable> fourSyllableChoices = new ArrayList<>();
@@ -669,11 +669,7 @@ public class Thailand extends GameActivity {
             case "TILE_LOWER":
             case "TILE_UPPER":
             case "TILE_AUDIO":
-                if (tempSoundPoolSwitch) {
-                    playActiveTileClip1(false);
-                } else {
-                    playActiveTileClip0(false);
-                }
+                playActiveTileClip(false);
                 break;
             case "WORD_TEXT":
             case "WORD_IMAGE":
@@ -685,11 +681,12 @@ public class Thailand extends GameActivity {
     }
 
     public void playActiveTileClip(final boolean playFinalSound) {
-        if (tempSoundPoolSwitch) {
+        Util.playActiveTileClip(playFinalSound,this,refTile);
+        /*if (tempSoundPoolSwitch) {
             playActiveTileClip1(playFinalSound);
         } else {
             playActiveTileClip0(playFinalSound);
-        }
+        }*/
     }
 
     private void playActiveSyllableClip(final boolean playFinalSound) { // We chose not to implement the Media Player option for syllable audio
@@ -726,7 +723,8 @@ public class Thailand extends GameActivity {
 
 
     public void playActiveTileClip1(final boolean playFinalSound) {     //JP: for SoundPool, for tile audio
-        setAllGameButtonsUnclickable();
+        //Util.playActiveTileClip1(playFinalSound,this,refTile);
+        /*setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
         if (tileAudioIDs.containsKey(refTile.audioForThisTileType)) {
@@ -753,13 +751,15 @@ public class Thailand extends GameActivity {
                     }
                 }
             }
-        }, tileDurations.get(refTile.audioForThisTileType));
+        }, tileDurations.get(refTile.audioForThisTileType));*/
     }
 
 
     public void playActiveTileClip0(final boolean playFinalSound) {     //JP: for Media Player; tile audio
 
-        setAllGameButtonsUnclickable();
+        //Util.playActiveTileClip0(playFinalSound,this,refTile);
+
+        /*setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         int resID = getResources().getIdentifier(refTile.audioForThisTileType, "raw", getPackageName());
         final MediaPlayer mp1 = MediaPlayer.create(this, resID);
@@ -771,7 +771,7 @@ public class Thailand extends GameActivity {
                 mpCompletion(mp1, playFinalSound);
             }
         });
-        mp1.start();
+        mp1.start();*/
     }
 
     private void playCorrectSound() {

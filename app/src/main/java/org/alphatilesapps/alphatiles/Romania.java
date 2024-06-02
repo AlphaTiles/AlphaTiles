@@ -271,26 +271,7 @@ public class Romania extends GameActivity {
      */
     public void onRefClick(View view) {
         // Plays the audio for the tile
-        // Copied and modified from Thailand's playActiveTileClip0
-        /**if (tempSoundPoolSwitch) {
-         playActiveTileClip1(false);
-         } else {
-         playActiveTileClip0(false);
-         }**/
-        LOGGER.info("reached onRefClick method");
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        int resIDRefTile = getResources().getIdentifier(activeTile.audioForThisTileType, "raw", getPackageName());
-        final MediaPlayer mp1 = MediaPlayer.create(this, resIDRefTile);
-        mediaPlayerIsPlaying = true;
-        //mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mpCompletion(mp1, false);
-            }
-        });
-        mp1.start();
+        Util.playActiveTileClip(false, this, activeTile);
 
     }
 

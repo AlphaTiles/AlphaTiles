@@ -1,7 +1,14 @@
 package org.alphatilesapps.alphatiles;
 
+import static org.alphatilesapps.alphatiles.Start.after12checkedTrackers;
+import static org.alphatilesapps.alphatiles.Start.gameSounds;
+import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.tileDurations;
+import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
+
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,6 +64,62 @@ public class Util {
         LOGGER.info("Remember: .....................................................................unallocatedMemory = " + unallocatedMemory / dataSize + " MB");
         LOGGER.info("Remember: ............................................................................................maxMemory = " + maxMemory / dataSize + " MB");
 
+    }
+
+    public static void playActiveTileClip(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {
+        if (tempSoundPoolSwitch) {
+            playActiveTileClip1(playFinalSound, activity, tile);
+        } else {
+            playActiveTileClip0(playFinalSound, activity, tile);
+        }
+    }
+
+    private static void playActiveTileClip0(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {     //JP: for Media Player; tile audio
+
+        activity.setAllGameButtonsUnclickable();
+        activity.setOptionsRowUnclickable();
+        int resID = activity.getResources().getIdentifier(tile.audioForThisTileType, "raw", activity.getPackageName());
+        final MediaPlayer mp1 = MediaPlayer.create(activity, resID);
+        activity.mediaPlayerIsPlaying = true;
+        //mp1.start();
+        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp1) {
+                activity.mpCompletion(mp1, playFinalSound);
+            }
+        });
+        mp1.start();
+    }
+
+    private static void playActiveTileClip1(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {     //JP: for SoundPool, for tile audio
+        activity.setAllGameButtonsUnclickable();
+        activity.setOptionsRowUnclickable();
+
+        if (tileAudioIDs.containsKey(tile.audioForThisTileType)) {
+            gameSounds.play(tileAudioIDs.get(tile.audioForThisTileType), 1.0f, 1.0f, 2, 0, 1.0f);
+        }
+        activity.soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                if (playFinalSound) {
+                    activity.updatePointsAndTrackers(0);
+                    activity.repeatLocked = false;
+                    activity.playCorrectFinalSound();
+                } else {
+                    if (activity.repeatLocked) {
+                        activity.setAllGameButtonsClickable();
+                    }
+                    if (after12checkedTrackers == 1){
+                        activity.setOptionsRowClickable();
+                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
+                    }
+                    else if (activity.trackerCount >0 && activity.trackerCount % 12 != 0) {
+                        activity.setOptionsRowClickable();
+                        // Otherwise, updatePointsAndTrackers will set it clickable only after
+                        // the player returns to earth (2) or sees the celebration screen (3)
+                    }
+                }
+            }
+        }, tileDurations.get(tile.audioForThisTileType));
     }
 
 }
