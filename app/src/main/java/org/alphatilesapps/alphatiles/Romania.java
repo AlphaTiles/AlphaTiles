@@ -22,7 +22,7 @@ public class Romania extends GameActivity {
     /**
      * Logger included for testing purposes only; delete or comment out when done with testing.
      */
-    private static final Logger LOGGER = Logger.getLogger(GameActivity.class.getName());
+    //private static final Logger LOGGER = Logger.getLogger(GameActivity.class.getName());
     boolean failedToMatchInitialTile = false;
     Start.Tile activeTile;
     boolean directionIsForward = true;
@@ -272,7 +272,6 @@ public class Romania extends GameActivity {
     public void onRefClick(View view) {
         // Plays the audio for the tile
         Util.playActiveTileClip(false, this, activeTile);
-
     }
 
     public void goToNextWord(Start.Tile activeTile) {

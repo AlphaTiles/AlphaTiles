@@ -682,11 +682,6 @@ public class Thailand extends GameActivity {
 
     public void playActiveTileClip(final boolean playFinalSound) {
         Util.playActiveTileClip(playFinalSound,this,refTile);
-        /*if (tempSoundPoolSwitch) {
-            playActiveTileClip1(playFinalSound);
-        } else {
-            playActiveTileClip0(playFinalSound);
-        }*/
     }
 
     private void playActiveSyllableClip(final boolean playFinalSound) { // We chose not to implement the Media Player option for syllable audio
@@ -719,59 +714,6 @@ public class Thailand extends GameActivity {
             }
         }, refSyllable.duration);
 
-    }
-
-
-    public void playActiveTileClip1(final boolean playFinalSound) {     //JP: for SoundPool, for tile audio
-        //Util.playActiveTileClip1(playFinalSound,this,refTile);
-        /*setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-
-        if (tileAudioIDs.containsKey(refTile.audioForThisTileType)) {
-            gameSounds.play(tileAudioIDs.get(refTile.audioForThisTileType), 1.0f, 1.0f, 2, 0, 1.0f);
-        }
-        soundSequencer.postDelayed(new Runnable() {
-            public void run() {
-                if (playFinalSound) {
-                    updatePointsAndTrackers(0);
-                    repeatLocked = false;
-                    playCorrectFinalSound();
-                } else {
-                    if (repeatLocked) {
-                        setAllGameButtonsClickable();
-                    }
-                    if (after12checkedTrackers == 1){
-                        setOptionsRowClickable();
-                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                    }
-                    else if (trackerCount >0 && trackerCount % 12 != 0) {
-                        setOptionsRowClickable();
-                        // Otherwise, updatePointsAndTrackers will set it clickable only after
-                        // the player returns to earth (2) or sees the celebration screen (3)
-                    }
-                }
-            }
-        }, tileDurations.get(refTile.audioForThisTileType));*/
-    }
-
-
-    public void playActiveTileClip0(final boolean playFinalSound) {     //JP: for Media Player; tile audio
-
-        //Util.playActiveTileClip0(playFinalSound,this,refTile);
-
-        /*setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(refTile.audioForThisTileType, "raw", getPackageName());
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        //mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mpCompletion(mp1, playFinalSound);
-            }
-        });
-        mp1.start();*/
     }
 
     private void playCorrectSound() {
