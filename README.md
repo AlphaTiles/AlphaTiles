@@ -15,7 +15,7 @@ Learn more on [our website](http://alphatilesapps.org/).
 # Generating the app with Alpha Tiles in Android Studio
 #### Windows 10/11
 ## Install Java and Android Studio
-The Alpha Tiles build gradle requires Android Studio Flamingo and Java JDK 17. [These instructions](https://www.makeuseof.com/windows-android-studio-setup/#:~:text=Before%20installing%20Android%20Studio%2C%20you,for%20creating%20Java%2Dbased%20applications.) cover all the steps for first-time installation of Java and Android Studio.
+[These instructions](https://www.makeuseof.com/windows-android-studio-setup/#:~:text=Before%20installing%20Android%20Studio%2C%20you,for%20creating%20Java%2Dbased%20applications.) cover all the steps for first-time installation of Java and Android Studio. If you have an older version of Android Studio or Java installed, you may be required to update one or both in order to build Alpha Tiles. You can do so by downloading and setting up this [latest Android Studio version] (https://developer.android.com/studio?gad_source=1&gclid=Cj0KCQjw6uWyBhD1ARIsAIMcADosuTHqKNFctznkHFV0iw9NPyq6fST5RWj2NalEcZ2znEge4288MykaAqzTEALw_wcB&gclsrc=aw.ds) and/or one of these recent [Java versions] (https://www.oracle.com/java/technologies/downloads/).
 
 ## Clone the source code and sample build assets
 Here is the recommended route for interacting with Alpha Tiles code and build assets through Git.
