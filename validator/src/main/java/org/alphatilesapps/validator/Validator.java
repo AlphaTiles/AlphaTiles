@@ -46,7 +46,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.text.Normalizer;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -953,9 +952,9 @@ public class Validator {
         warnings.addAll(filePresence.warnings);
         fatalErrors.addAll(filePresence.fatalErrors);
         recommendations.addAll(filePresence.recommendations);
-        boolean hasInstructionAudio = filePresence.success("audio_instruction");
+        boolean hasInstructionAudio = filePresence.okay("audio_instruction") && !filePresence.empty("audio_instruction");
         //tile and syllable audio have the extra step of checking against settings to see if the checks should be run
-        boolean syllableAudioAttempted = filePresence.success("syllable_audio");
+        boolean syllableAudioAttempted = !filePresence.empty("syllable_audio");
         boolean syllableAudioSetting = false;
         try {
             if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has syllable audio").get(1).equals("TRUE")){
@@ -975,7 +974,7 @@ public class Validator {
             }
         }
 
-        boolean tileAudioAttempted = filePresence.success("tile_audio");
+        boolean tileAudioAttempted = !filePresence.empty("tile_audio");
         boolean tileAudioSetting = false;
         try {
             if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has tile audio").get(1).equals("TRUE")){
