@@ -121,6 +121,12 @@ public class Validator {
      * Could be Roman, Thai, Lao, or Khmer. Read from langinfo
      */
     public static String scriptType;
+    /**
+     * Could be "◌", "×", etc. Read from langinfo
+     */
+    public static String placeholderCharacter;
+
+
 
     /**
      * main method for running the validator. Prompts user for the URL of the google drive folder.
@@ -138,6 +144,26 @@ public class Validator {
         jf.setVisible(true);
 
         try {
+
+            Path confirmedPath;
+            Path userDir = Paths.get(System.getProperty("user.dir")).getParent();
+            try {
+                confirmedPath = Paths.get(Files.readString(userDir.resolve("pathForValidator.txt"), StandardCharsets.UTF_8));
+            } catch(Exception ignored)  {
+                JPanel panel2 = new JPanel();
+                panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
+                JTextField path = new JTextField(userDir.toString());
+                String message2 = "Please check that this is the correct path to the AlphaTiles folder";
+                panel2.add(new JLabel(message2));
+                panel2.add(path);
+                JCheckBox remember = new JCheckBox("Remember this path");
+                panel2.add(remember);
+                JOptionPane.showConfirmDialog(jf, panel2, "AlphaTiles", JOptionPane.DEFAULT_OPTION);
+                confirmedPath = Paths.get(path.getText());
+                if(remember.isSelected()) {
+                    Files.writeString(userDir.resolve("pathForValidator.txt"), confirmedPath.toString(), StandardCharsets.UTF_8);
+                }
+            }
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
             JTextField urlInput = new JTextField();
@@ -150,7 +176,7 @@ public class Validator {
             int ignored = JOptionPane.showConfirmDialog(jf, panel, "AlphaTiles", JOptionPane.DEFAULT_OPTION);
             String url = urlInput.getText();
             if (!url.isEmpty()) {
-                Validator myValidator = new Validator(url);
+                Validator myValidator = new Validator(url, confirmedPath);
                 myValidator.validate();
                 System.out.println("\n\nList of Fatal Errors\n********");
                 int n = 0;
@@ -191,8 +217,7 @@ public class Validator {
                             "AlphaTiles", YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,null, null);
 
                     if (isSure == 0) {
-                        Path pathToApp = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("app");
-                        myValidator.writeValidatedFiles(pathToApp);
+                       myValidator.writeValidatedFiles(confirmedPath.resolve("app"));
                     }
                 }
             } else {
@@ -208,6 +233,7 @@ public class Validator {
 
     //<editor-fold desc="Validator fields">
 
+    private final Path rootPath;
     /**
      * A LinkedHashSet of fatal errors found by the validator (is Set to avoid duplicate messages). Printed by main.
      */
@@ -306,7 +332,8 @@ public class Validator {
      *
      * @param driveFolderUrl a String representing the URL of the language pack folder in google drive
      */
-    public Validator(String driveFolderUrl) throws IOException, GeneralSecurityException, ValidatorException {
+    public Validator(String driveFolderUrl, Path rootPath) throws IOException, GeneralSecurityException, ValidatorException {
+        this.rootPath = rootPath;
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
         String driveFolderId = driveFolderUrl.substring(driveFolderUrl.indexOf("folders/") + 8);
         buildServices(driveFolderId);
@@ -389,7 +416,7 @@ public class Validator {
         }
 
         // Make a temp folder containing the tabs as UTF-8 encoded .txt files while they are being checked
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTempFolder = pathToValidator.resolve("temp");
         for (String desiredTabName : DESIRED_RANGE_FROM_TABS.keySet()) {
             try {
@@ -525,6 +552,26 @@ public class Validator {
                     scriptType = langInfo.getRowFromFirstCell("Script type").get(1); // sets global variable used to determine simple/complex parse
                 } catch (ValidatorException e) {
                     fatalErrors.add("In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\". Please add a valid script type.");
+                }
+                try {
+                    Tab settings = langPackGoogleSheet.getTabFromName("settings");
+                    placeholderCharacter = settings.getRowFromFirstCell("Stand-in base for combining tiles").get(1); // sets global variable for complex parses
+                    boolean placeholderCharacterFoundInGametiles = false;
+                    for(Tile tile: tileList) {
+                        if(tile.text.contains(placeholderCharacter)) {
+                            placeholderCharacterFoundInGametiles = true;
+                        }
+                    }
+                    if (!placeholderCharacterFoundInGametiles) {
+                        fatalErrors.add("The stand-in base for combining characters in \"Settings\" is " + placeholderCharacter + " but that character is not in any of the gametiles. "
+                        + "Please add the placeholder character you are using to the settings tab.");
+                    }
+                } catch (ValidatorException e) {
+                    if(!(scriptType == null)) {
+                        if(scriptType.matches("(Thai|Lao)")){
+                            warnings.add("Since the script type is Thai or Lao, you have the option to specify the \"Stand-in base for combining tiles\" in settings. By default, it will be \"◌\".");
+                        }
+                    }
                 }
                 ArrayList<Tile> tilesInWord;
                 try{
@@ -1109,7 +1156,7 @@ public class Validator {
         Files.createDirectories(pathToLangPack);
 
         // copies contents of templateTemplate into fresh language pack directory
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTemplate = Paths.get(String.valueOf(pathToValidator.resolve("templateTemplate")));
         copyDirectory(pathToTemplate, pathToLangPack);
 
@@ -2022,30 +2069,19 @@ public class Validator {
             ArrayList<String> tileRow = gameTilesTab.getRowFromFirstCell(wordAsSimpleTileList.get(i).text);
             boolean isMultiType = !tileRow.get(7).equals("none") || !tileRow.get(9).equals("none");
             if (isMultiType) {
-                if (foundMultiTypeTile) {
-                    ArrayList<String> wordAsSimpleTileStringList = new ArrayList<>();
-                    for(Tile tile : wordAsSimpleTileList) {
-                        wordAsSimpleTileStringList.add(tile.text);
-                    }
-                    fatalErrors.add("In wordlist, the word \"" + word.wordInLOP + "\" specifies ONE multi-type tile with the " +
-                            "type specification \"" + typeSpecifications +
-                            "\" but more than one of its tiles have multiple types (its simple tiles are " + wordAsSimpleTileStringList + ")");
-                    throw new ValidatorException("In wordlist, the word \"" + word.wordInLOP + "\" specifies ONE multi-type tile with the " +
-                            "type specification \"" + typeSpecifications +
-                            "\" but more than one of its tiles have multiple types (its simple tiles are " + wordAsSimpleTileStringList + ")");
+                foundMultiTypeTile = true;
+                if (
+                    tileRow.get(7).equals(typeSpecifications) ||
+                    tileRow.get(9).equals(typeSpecifications) ||
+                    tileRow.get(4).equals(typeSpecifications)
+                ) {
+                    toReturn.add(typeSpecifications);
                 } else {
-                    if (tileRow.get(7).equals(typeSpecifications) || tileRow.get(9).equals(typeSpecifications)
-                            || tileRow.get(4).equals(typeSpecifications)) {
-                        foundMultiTypeTile = true;
-                        toReturn.add(typeSpecifications);
-                    } else {
-                        fatalErrors.add("In wordlist, the word \"" + word.wordInLOP + "\" specifies only ONE multi-type tile (with the " +
-                                "type specification \"" + typeSpecifications +
-                                "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
-                        throw new ValidatorException("In wordlist, the word \"" + word.wordInLOP + "\" specifies only ONE multi-type tile (with the " +
-                                "type specification \"" + typeSpecifications +
-                                "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
-                    }
+                    fatalErrors.add("In wordlist, the word \"" + word.wordInLOP + "\" specifies only ONE multi-type tile (with the " +
+                            "type specification \"" + typeSpecifications +
+                            "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
+                    throw new ValidatorException("In wordlist, the word \"" + word.wordInLOP + "\" specifies only ONE multi-type tile (with the " +
+                            "type specification \"" + typeSpecifications + "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
                 }
             } else {
                 toReturn.add(tileRow.get(4));
@@ -2478,15 +2514,15 @@ public class Validator {
                     if (currentTileType.matches("(AV|BV|FV)")) { // Prepare to add current AV/BV/FV to vowel-so-far
                         if (tileHashMap.containsKey(vowelStringSoFar)) { // Vowel composite so far is parsable as one tile in the tile list
                             if (vowelTypeSoFar.equals("LV")) {
-                                if (!vowelStringSoFar.endsWith("◌")) {
-                                    vowelStringSoFar += "◌";
+                                if (!vowelStringSoFar.endsWith(placeholderCharacter)) {
+                                    vowelStringSoFar += placeholderCharacter;
                                 }
-                            } else if (vowelTypeSoFar.matches("(AV|BV|FV)") && !vowelStringSoFar.startsWith("◌")) {
-                                vowelStringSoFar = "◌" + vowelStringSoFar; // Put the placeholder before the previous AV/BV/FV before adding current AV/BV/FV to it
+                            } else if (vowelTypeSoFar.matches("(AV|BV|FV)") && !vowelStringSoFar.startsWith(placeholderCharacter)) {
+                                vowelStringSoFar = placeholderCharacter + vowelStringSoFar; // Put the placeholder before the previous AV/BV/FV before adding current AV/BV/FV to it
                             }
                         }
-                        if (vowelStringSoFar.contains("◌") && currentTileString.contains("◌")) {
-                            currentTileString = currentTileString.replace("◌", ""); // Just want one ◌
+                        if (vowelStringSoFar.contains(placeholderCharacter) && currentTileString.contains(placeholderCharacter)) {
+                            currentTileString = currentTileString.replace(placeholderCharacter, ""); // Just want one placeholder
                         }
                         vowelStringSoFar += currentTileString;
                         if (vowelStringSoFar.equals(currentTileString)) { // the vowel so far is a preliminary tile
@@ -2495,11 +2531,11 @@ public class Validator {
                             vowelTypeSoFar = tileHashMap.find(vowelStringSoFar).tileType;
                         }
                     } else if (currentTileType.matches("(AD|D)")) { // Save any AD (Above/After Diacritics) or other Diacritics between consonants
-                        if (!diacriticStringSoFar.isEmpty() && !diacriticStringSoFar.contains("◌")) {
-                            diacriticStringSoFar = "◌" + diacriticStringSoFar; // For complex diacritics
+                        if (!diacriticStringSoFar.isEmpty() && !diacriticStringSoFar.contains(placeholderCharacter)) {
+                            diacriticStringSoFar = placeholderCharacter + diacriticStringSoFar; // For complex diacritics
                         }
-                        if (diacriticStringSoFar.contains("◌") && currentTileString.contains("◌")) { // Just want one ◌
-                            currentTileString = currentTileString.replace("◌", "");
+                        if (diacriticStringSoFar.contains(placeholderCharacter) && currentTileString.contains(placeholderCharacter)) { // Just want one placeholder
+                            currentTileString = currentTileString.replace(placeholderCharacter, "");
                         }
                         diacriticStringSoFar += currentTileString;
                     } else if (currentTileType.equals("SAD")) { // Save any Space-And-Dash chars that comes between syllables.
@@ -2516,8 +2552,8 @@ public class Validator {
                 }
                 if (!(currentConsonant == null)) {
                     // Combine diacritics with consonant if that combination is in the tileList. Ex:บ๋
-                    if (!diacriticStringSoFar.isEmpty() && tileHashMap.containsKey(currentConsonant.text + diacriticStringSoFar.replace("◌", ""))) {
-                        currentConsonant = tileHashMap.find(currentConsonant.text + diacriticStringSoFar.replace("◌", ""));
+                    if (!diacriticStringSoFar.isEmpty() && tileHashMap.containsKey(currentConsonant.text + diacriticStringSoFar.replace(placeholderCharacter, ""))) {
+                        currentConsonant = tileHashMap.find(currentConsonant.text + diacriticStringSoFar.replace(placeholderCharacter, ""));
                         diacriticStringSoFar = "";
                     }
 
@@ -2711,7 +2747,7 @@ public class Validator {
                 // See if the blocks of length one, two, three or four Unicode characters matches game tiles
                 // Choose the longest block that matches a game tile and add that as the next segment in the parsed word array
                 charBlockLength = 0;
-                if (tileHashMap.containsKey(next1Chars) || tileHashMap.containsKey("◌" + next1Chars) || tileHashMap.containsKey(next1Chars + "◌")) {
+                if (tileHashMap.containsKey(next1Chars) || tileHashMap.containsKey(placeholderCharacter + next1Chars) || tileHashMap.containsKey(next1Chars + placeholderCharacter)) {
                     // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
                     charBlockLength = 1;
                 }
@@ -2735,10 +2771,10 @@ public class Validator {
                     case 1:
                         if (tileHashMap.containsKey(next1Chars)) {
                             tileString = next1Chars;
-                        } else if (tileHashMap.containsKey("◌" + next1Chars)) { // For AV/BV/FV/AD/D stored with ◌
-                            tileString = "◌" + next1Chars;
-                        } else if (tileHashMap.containsKey(next1Chars + "◌")) { // For LV stored with ◌
-                            tileString = next1Chars + "◌";
+                        } else if (tileHashMap.containsKey(placeholderCharacter + next1Chars)) { // For AV/BV/FV/AD/D stored with placeholder
+                            tileString = placeholderCharacter + next1Chars;
+                        } else if (tileHashMap.containsKey(next1Chars + placeholderCharacter)) { // For LV stored with placeholder
+                            tileString = next1Chars + placeholderCharacter;
                         }
                         break;
                     case 2:
@@ -2816,7 +2852,7 @@ public class Validator {
     public void buildWordList() throws IOException {
         // KP, Oct 2020 (updated by AH to allow for spaces in fields (some common nouns in some languages have spaces)
 
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTempFolder = pathToValidator.resolve("temp");
         BufferedReader wordlistFileReader = new BufferedReader(new FileReader(pathToTempFolder.resolve("wordlist.txt").toFile(), StandardCharsets.UTF_8));
         boolean header = true;
@@ -2848,7 +2884,7 @@ public class Validator {
         // AH, Nov 2020, updates to add second column (color theme)
         // AH Nov 2020, updated by AH to allow for spaces in fields (some common nouns in some languages have spaces
 
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTempFolder = pathToValidator.resolve("temp");
         BufferedReader keyboardFileReader = new BufferedReader(new FileReader(pathToTempFolder.resolve("keyboard.txt").toFile(), StandardCharsets.UTF_8));
         boolean header = true;
@@ -2876,7 +2912,7 @@ public class Validator {
      * @throws IOException if the colors tab was not downloaded into temp/colors.txt
      */
     public void buildColorList() throws IOException {
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTempFolder = pathToValidator.resolve("temp");
         BufferedReader colorsFileReader = new BufferedReader(new FileReader(pathToTempFolder.resolve("colors.txt").toFile(), StandardCharsets.UTF_8));
         boolean header = true;
@@ -2906,7 +2942,7 @@ public class Validator {
         // AH Nov 2020, updated by AH to allow for spaces in fields (some common nouns in some languages have spaces
         // AH Mar 2021, add new column for audio tile and for upper case tile
 
-        Path pathToValidator = Paths.get(System.getProperty("user.dir")).getParent().resolve("AlphaTiles").resolve("validator");
+        Path pathToValidator = rootPath.resolve("validator");
         Path pathToTempFolder = pathToValidator.resolve("temp");
         BufferedReader gametilesFileReader = new BufferedReader(new FileReader(pathToTempFolder.resolve("gametiles.txt").toFile(), StandardCharsets.UTF_8));
         String thisLine = gametilesFileReader.readLine();
