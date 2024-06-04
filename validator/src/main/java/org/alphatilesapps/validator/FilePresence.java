@@ -96,7 +96,7 @@ public class FilePresence {
     }
     public boolean success(String tag) {
         TagData data = tagData.get(tag);
-        return data == null || (!data.failed && data.count > 0);
+        return data != null && (!data.failed && data.count > 0);
     }
     static class ExcessFile {
         String folder;
