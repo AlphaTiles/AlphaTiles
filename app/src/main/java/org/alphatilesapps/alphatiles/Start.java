@@ -447,7 +447,7 @@ public class Start extends AppCompatActivity {
     public void buildWordList() {
         // KP, Oct 2020 (updated by AH to allow for spaces in fields (some common nouns in some languages have spaces)
 
-        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_wordlist));
+        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.original_aa_wordlist));
         boolean header = true;
         wordList = new WordList();
         while (scanner.hasNext()) {
