@@ -223,6 +223,12 @@ public class Earth extends AppCompatActivity {
 
     }
 
+    public void goToShare(View view) {
+        Intent intent = getIntent();
+        intent.setClass(context, Share.class);
+        startActivity(intent);
+    }
+
     public void goToDoor(View view) {
 
         finish();
