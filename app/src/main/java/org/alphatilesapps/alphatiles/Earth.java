@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
+import java.io.File;
+
 
 public class Earth extends AppCompatActivity {
     Context context;
@@ -101,6 +103,12 @@ public class Earth extends AppCompatActivity {
             constraintSet.clone(constraintLayout);
             constraintSet.centerHorizontally(R.id.resourcePromo, R.id.earthCL);
             constraintSet.applyTo(constraintLayout);
+        }
+
+        if (context.getResources().getIdentifier("aa_share", "raw", context.getPackageName()) == 0) {
+            ImageView shareIcon = findViewById(R.id.share);
+            shareIcon.setVisibility(View.GONE);
+            shareIcon.setOnClickListener(null);
         }
 
     }
