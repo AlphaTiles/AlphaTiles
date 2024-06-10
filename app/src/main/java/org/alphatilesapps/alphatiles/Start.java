@@ -671,7 +671,11 @@ public class Start extends AppCompatActivity {
                 }
             }
         }
+
         placeholderCharacter = settingsList.find("Stand-in base for combining tiles"); // For Thai, Lao combining tiles
+        if (placeholderCharacter.equals("")) {
+            placeholderCharacter = " ";
+        }
 
     }
 

@@ -506,8 +506,8 @@ public class Validator {
                         }
 
                         if (!charIsPartOfLongerKeyString) {
-                            String unicodeString = "(Unicode) " + (int) LOPwordString.charAt(i - 1);
-                            fatalErrors.add("In wordList, the word \"" + LOPwordString + "\" contains the character \"" + LOPwordString.charAt(i - 1) +
+                            String unicodeString = "(Unicode) " + (int) LOPwordString.charAt(i);
+                            fatalErrors.add("In wordList, the word \"" + LOPwordString + "\" contains the character \"" + LOPwordString.charAt(i) +
                                     "\" which is not in the keyboard. " + unicodeString);
                         }
                     }
