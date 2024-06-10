@@ -541,7 +541,7 @@ public class Thailand extends GameActivity {
                     case "WORD_IMAGE":
                     case "WORD_AUDIO":
                         Tile firstAudibleTileInRefWord = firstAudibleTile(refWord);
-                        if (chosenItemText.equals(firstAudibleTileInRefWord.text)) {
+                        if (chosenItemText.equals(firstAudibleTileInRefWord.upper)) {
                             goodMatch = true;
                         }
                         break;
