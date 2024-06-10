@@ -23,6 +23,7 @@ import android.widget.TextView;
 import static org.alphatilesapps.alphatiles.Start.*;
 
 import java.io.File;
+import java.util.Scanner;
 
 
 public class Earth extends AppCompatActivity {
@@ -105,7 +106,9 @@ public class Earth extends AppCompatActivity {
             constraintSet.applyTo(constraintLayout);
         }
 
-        if (context.getResources().getIdentifier("aa_share", "raw", context.getPackageName()) == 0) {
+        Scanner shareScanner = new Scanner(getResources().openRawResource(R.raw.aa_share));
+        shareScanner.nextLine(); // skip the header line
+        if (!shareScanner.hasNext()) { // if aa_share does not have a second line, don't display a share icon
             ImageView shareIcon = findViewById(R.id.share);
             shareIcon.setVisibility(View.GONE);
             shareIcon.setOnClickListener(null);
