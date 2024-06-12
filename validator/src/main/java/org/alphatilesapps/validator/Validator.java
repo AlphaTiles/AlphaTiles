@@ -1133,7 +1133,26 @@ public class Validator {
         }
 
         try {
-            HashSet<String> providedSyllables = new HashSet<>(langPackGoogleSheet.getTabFromName("syllables").getCol(0));
+            Tab syllableTab = langPackGoogleSheet.getTabFromName("syllables");
+            HashSet<String> providedSyllables = new HashSet<>(syllableTab.getCol(0));
+            int rowNum = 0;
+            for (ArrayList<String> row : syllableTab) {
+                if (rowNum == 0) {
+                    rowNum++;
+                    continue;
+                }
+                rowNum++;
+                for (int col = 1; col <= 3; col++) {
+                    String distractor = row.get(col);
+                    if(!providedSyllables.contains(row.get(col))) {
+                        char c = (char)('A' + col);
+                        fatalErrors.add(
+                            "row " + rowNum + ", column " + c + " of syllables contains an invalid tile as an alternate: " + distractor
+                            + ". \nPlease add this alternate to the tile list if it is missing or replace it with a valid tile from the list"
+                        );
+                    }
+                }
+            }
             HashSet<String> parsedSyllables = new HashSet<>();
             for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1)) {
                 String[] syllablesInWord = word.split("\\.");
