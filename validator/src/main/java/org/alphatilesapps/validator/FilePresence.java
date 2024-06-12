@@ -29,7 +29,7 @@ public class FilePresence {
             add(tag, subfolder, file, mimeType, reason, optional);
         }
     }
-    public void check(Validator.GoogleDriveFolder langPack) {
+    public void check(Validator.GoogleDriveFolder langPack, boolean showExcess) {
         ArrayList<ExcessFile> excessFiles = new ArrayList<>();
         for(String folderName : folders) {
             try {
@@ -55,7 +55,8 @@ public class FilePresence {
                         }
                     }
                     if (excess) {
-                        warnings.add("Item " + item.getName() + " in folder " + folderName + " is not used and will not be downloaded");
+                        if(showExcess)
+                            warnings.add("Item " + item.getName() + " in folder " + folderName + " is not used and will not be downloaded");
                         excessFiles.add(new ExcessFile(folderName, stripped));
                         folder.getFolderContents().remove(i);
                     } else {

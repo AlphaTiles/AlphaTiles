@@ -175,7 +175,7 @@ public class Validator {
             int ignored = JOptionPane.showConfirmDialog(jf, panel, "AlphaTiles", JOptionPane.DEFAULT_OPTION);
             String url = urlInput.getText();
             if (!url.isEmpty()) {
-                Validator myValidator = new Validator(url, confirmedPath);
+                Validator myValidator = new Validator(url, confirmedPath, checks);
                 myValidator.validate();
                 System.out.println("\n\nList of Fatal Errors\n********");
                 int n = 0;
@@ -278,6 +278,7 @@ public class Validator {
     private final GoogleSheet langPackGoogleSheet;
 
     private FilePresence filePresence = new FilePresence();
+    private Checks checks;
     /**
      * A Map of the names of the tabs needed for validation to the ranges of cells needed from each tab
      * (in A1 notation). The validator automatically checks for these tabs in the langPackGoogleSheet,
@@ -331,8 +332,9 @@ public class Validator {
      *
      * @param driveFolderUrl a String representing the URL of the language pack folder in google drive
      */
-    public Validator(String driveFolderUrl, Path rootPath) throws IOException, GeneralSecurityException, ValidatorException {
+    public Validator(String driveFolderUrl, Path rootPath, Checks checks) throws IOException, GeneralSecurityException, ValidatorException {
         this.rootPath = rootPath;
+        this.checks = checks;
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
         String driveFolderId = driveFolderUrl.substring(driveFolderUrl.indexOf("folders/") + 8);
         buildServices(driveFolderId);
@@ -948,7 +950,7 @@ public class Validator {
                     true
             );
         }
-        filePresence.check(langPackDriveFolder);
+        filePresence.check(langPackDriveFolder, checks.showExcess);
         warnings.addAll(filePresence.warnings);
         fatalErrors.addAll(filePresence.fatalErrors);
         recommendations.addAll(filePresence.recommendations);
@@ -1014,7 +1016,7 @@ public class Validator {
         } catch (ValidatorException e) {
             warnings.add(FAILED_CHECK_WARNING + "the images_words_low_res folder or the wordlist tab");
         }
-        filePresence.check(langPackDriveFolder);
+        filePresence.check(langPackDriveFolder, checks.showExcess);
         warnings.addAll(filePresence.warnings);
         fatalErrors.addAll(filePresence.fatalErrors);
         recommendations.addAll(filePresence.recommendations);
@@ -2266,8 +2268,10 @@ public class Validator {
     }
     public static class Checks {
         public boolean showRecommendations = true;
+        public boolean showExcess = true;
         public Checks(JPanel dialog) {
             addCheck(dialog, "Show recommendations", (ActionEvent e) -> showRecommendations = !showRecommendations);
+            addCheck(dialog, "Show excess file warnings", (ActionEvent e) -> showExcess = !showExcess);
         }
         private void addCheck(JPanel dialog, String message, ActionListener listener) {
             JCheckBox check = new JCheckBox(message);
