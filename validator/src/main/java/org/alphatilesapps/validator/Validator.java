@@ -836,6 +836,25 @@ public class Validator {
                             "code color 5 (yellow). Check game door " + row.get(0) + " in the games tab");
                 }
             }
+            boolean hasTonal = false;
+            for(Tile tile : tileList) {
+                if(List.of(tile.tileType, tile.tileTypeB, tile.tileTypeC).contains("T")) {
+                    hasTonal = true;
+                    break;
+                }
+            }
+            boolean hasBrazil7 = false;
+            for (ArrayList<String> row : langPackGoogleSheet.getTabFromName("games")) {
+                if (row.get(1).equals("Brazil") && row.get(2).equals("7")) {
+                    hasBrazil7 = true;
+                    break;
+                }
+            }
+            if (hasTonal && !hasBrazil7) {
+                recommendations.add("It is recommended that you include Brazil at challenge level 7");
+            } else if(!hasTonal && hasBrazil7) {
+                fatalErrors.add("You cannot have Brazil at challenge level 7 without tiles of type T");
+            }
             int i = 0;
             for (String row : langPackGoogleSheet.getTabFromName("games").getCol(0)) {
                 i++;
