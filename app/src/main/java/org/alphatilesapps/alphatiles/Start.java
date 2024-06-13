@@ -93,6 +93,8 @@ public class Start extends AppCompatActivity {
 
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
+    public static GetRandomTileByFrequency getRandomTileByFrequency;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -242,6 +244,8 @@ public class Start extends AppCompatActivity {
             }
         }
         Chile.data = Chile.chilePreProcess();
+
+        getRandomTileByFrequency = new GetRandomTileByFrequency();
 
         Intent intent = new Intent(this, LoadingScreen.class);
         startActivity(intent);
@@ -2055,6 +2059,42 @@ public class Start extends AppCompatActivity {
 
         public String title;
 
+    }
+
+    /**
+     * Randomly returns a tile such that tiles frequently occuring in the word list appear more
+     * often than tiles in the word list that occur infrequently.
+     */
+    public class GetRandomTileByFrequency {
+        private Tile[] allTilesAllTimes;
+
+        HashMap<String, Integer> capDetector = new HashMap<>(); // no cappin'
+
+        public GetRandomTileByFrequency() {
+            for (Tile tile : tileList)
+                capDetector.put(tile.text, 0);
+
+            ArrayList<Tile> allTilesAllTimesList = new ArrayList<>();
+            for (Word word : wordList)
+                allTilesAllTimesList.addAll(tileList.parseWordIntoTiles(word.wordInLOP, word));
+
+            allTilesAllTimes = new Tile[allTilesAllTimesList.size()];
+            int i = 0;
+            for (Tile tile : allTilesAllTimesList)
+                allTilesAllTimes[i++] = tile;
+
+        }
+
+        public Tile get() {
+            Random randy = new Random();
+            return allTilesAllTimes[randy.nextInt(allTilesAllTimes.length)];
+        }
+
+        /*public Tile getNoCap(int cap) {
+            Tile toReturn = get();
+            capDetector.put(toReturn.text, capDetector.get(toReturn.text) + 1);
+
+        }*/
     }
 
 }

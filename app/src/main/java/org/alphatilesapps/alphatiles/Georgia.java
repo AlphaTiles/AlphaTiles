@@ -476,9 +476,5 @@ public class Georgia extends GameActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
 
 }

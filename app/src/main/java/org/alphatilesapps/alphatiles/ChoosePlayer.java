@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -76,6 +77,15 @@ public class ChoosePlayer extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // copy and pasted from https://developer.android.com/guide/navigation/custom-back#java
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                // do nothing
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         context = this;
 
@@ -316,9 +326,5 @@ public class ChoosePlayer extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
 
 }

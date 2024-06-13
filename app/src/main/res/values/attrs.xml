@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BWSquare">
+        <attr name="iIndex" format="integer" />
+        <attr name="iJndex" format="integer" />
+        <attr name="isInChain" format="boolean" />
+    </declare-styleable>
+</resources>
