@@ -304,9 +304,4 @@ public class Italy extends GameActivity {
         // TODO: Draw a thin/transparent line across the loteria?
     }
 
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
 }

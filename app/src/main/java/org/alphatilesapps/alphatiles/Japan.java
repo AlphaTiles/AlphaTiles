@@ -575,8 +575,4 @@ public class Japan extends GameActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
 }

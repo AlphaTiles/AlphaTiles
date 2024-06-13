@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -46,6 +47,15 @@ public class SetPlayerName extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         context = this;
+
+        // copy and pasted from https://developer.android.com/guide/navigation/custom-back#java
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                // do nothing
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_player_name);
@@ -365,9 +375,5 @@ public class SetPlayerName extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
 
 }
