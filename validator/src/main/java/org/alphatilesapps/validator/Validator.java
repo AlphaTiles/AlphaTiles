@@ -591,7 +591,7 @@ public class Validator {
                             placeholderCharacterFoundInGametiles = true;
                         }
                     }
-                    if (!placeholderCharacterFoundInGametiles) {
+                    if (scriptType.matches("(Thai|Lao)") && !placeholderCharacterFoundInGametiles) {
                         fatalError(Message.Tag.Etc, "The stand-in base for combining characters in \"Settings\" is " + placeholderCharacter + " but that character is not in any of the gametiles. "
                                 + "Please add the placeholder character you are using to the settings tab.");
                     }
@@ -634,13 +634,14 @@ public class Validator {
                 for (Tile tile : tileList) {
                     for (Tile tileInWord : tilesInWord) {
                         if (tileInWord == null) {
-                            ArrayList<String> tileStringsInWord = new ArrayList<String>();
-                            for (Tile t : tilesInWord) {
-                                if (!(t == null)) {
-                                    tileStringsInWord.add(t.text);
+                            ArrayList<Tile> preliminaryTilesInWord = tileList.parseWordIntoTilesPreliminary(word);
+                            ArrayList<String> preliminaryTileStringsInWord = new ArrayList<String>();
+                            for (Tile t: preliminaryTilesInWord) {
+                                if(!(t==null)) {
+                                    preliminaryTileStringsInWord.add(t.text);
                                 }
                             }
-                            fatalError(Message.Tag.Etc, "The word " + word.wordInLOP + " could not be parsed. The tiles parsed were " + tileStringsInWord);
+                            fatalError(Message.Tag.Etc, "The word " + word.wordInLOP + " could not be parsed. The tiles parsed (simple parsing) are " + preliminaryTileStringsInWord);
                             break;
                         }
                         if (tileInWord.text.equals(tile.text)) {
@@ -2135,9 +2136,6 @@ public class Validator {
             return parseAbbreviatedTypeSpecification(word);
         } else if (typeSpecifications.equals("-")) {  // No multi types info included. Build the full type specification out of index numbers
             typeSpecsList.clear();
-            for (int i = 0; i < wordAsSimpleTileList.size(); i++) {
-                typeSpecsList.add(wordAsSimpleTileList.get(i).tileType);
-            }
         } else if (typeSpecsList.size() != wordAsSimpleTileList.size()) {
             ArrayList<String> wordAsSimpleTileStringList = new ArrayList<>();
             for (Tile tile : wordAsSimpleTileList) {
@@ -2149,12 +2147,17 @@ public class Validator {
                     " tiles, but the mixed types cell has " + typeSpecsList.size() + " specifications (its tiles are " + wordAsSimpleTileStringList + ")");
         }
 
-        for (int i = 0; i < typeSpecsList.size(); i++) {
+        for (int i = 0; i < wordAsSimpleTileList.size(); i++){
             Tile currentTile = wordAsSimpleTileList.get(i);
-            String currentSpecification = typeSpecsList.get(i);
+            String currentSpecification = "";
+            if(typeSpecsList.isEmpty()) {
+                currentSpecification = "";
+            } else {
+                currentSpecification = typeSpecsList.get(i);
+            }
 
-            if (currentSpecification.matches("1?[0-9]")) {
-                if ((!currentTile.tileTypeB.equals("none") || !currentTile.tileTypeC.equals("none"))) {
+            if (currentSpecification.isEmpty() || currentSpecification.matches("1?[0-9]")){
+                if ((!(currentTile.tileTypeB.equals("none")) || !(currentTile.tileTypeC.equals("none")))){
                     fatalError(Message.Tag.Etc, "In wordlist, the word " + word.wordInLOP + " has no type specification" +
                             " for tile " + currentTile.text + " but that tile has multiple types");
                 }
@@ -2889,19 +2892,19 @@ public class Validator {
                 // See if the blocks of length one, two, three or four Unicode characters matches game tiles
                 // Choose the longest block that matches a game tile and add that as the next segment in the parsed word array
                 charBlockLength = 0;
-                if (tileHashMap.containsKey(next1Chars) || tileHashMap.containsKey(placeholderCharacter + next1Chars) || tileHashMap.containsKey(next1Chars + placeholderCharacter)) {
+                if (tileHashMap.containsKey(next1Chars) || tileHashMap.containsKey(placeholderCharacter + next1Chars) || tileHashMap.containsKey(next1Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next1Chars + placeholderCharacter)) {
                     // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
                     charBlockLength = 1;
                 }
-                if (tileHashMap.containsKey(next2Chars)) {
+                if (tileHashMap.containsKey(next2Chars) || tileHashMap.containsKey(placeholderCharacter + next2Chars) || tileHashMap.containsKey(next2Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next2Chars + placeholderCharacter)) {
                     // The value 2 can overwrite 1 but it can't overwrite 3 or 4
                     charBlockLength = 2;
                 }
-                if (tileHashMap.containsKey(next3Chars)) {
+                if (tileHashMap.containsKey(next3Chars) || tileHashMap.containsKey(placeholderCharacter + next3Chars) || tileHashMap.containsKey(next3Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next3Chars + placeholderCharacter)) {
                     // The value 3 can overwrite 1 or 2 but it can't overwrite 4
                     charBlockLength = 3;
                 }
-                if (tileHashMap.containsKey(next4Chars)) {
+                if (tileHashMap.containsKey(next4Chars) || tileHashMap.containsKey(placeholderCharacter + next4Chars) || tileHashMap.containsKey(next4Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next4Chars + placeholderCharacter)) {
                     // The value 4 can overwrite 1 or 2 or 3
                     charBlockLength = 4;
                 }
@@ -2916,18 +2919,44 @@ public class Validator {
                             tileString = placeholderCharacter + next1Chars;
                         } else if (tileHashMap.containsKey(next1Chars + placeholderCharacter)) { // For LV stored with placeholder
                             tileString = next1Chars + placeholderCharacter;
+                        } else if (tileHashMap.containsKey(placeholderCharacter + next1Chars + placeholderCharacter)) { // For medial vowel
+                            tileString = placeholderCharacter + next1Chars + placeholderCharacter;
                         }
                         break;
                     case 2:
-                        tileString = next2Chars;
+                        if (tileHashMap.containsKey(next2Chars)) {
+                            tileString = next2Chars;
+                        } else if (tileHashMap.containsKey(placeholderCharacter + next2Chars)) { // For AV/BV/FV/AD/D stored with placeholder
+                            tileString = placeholderCharacter + next2Chars;
+                        } else if (tileHashMap.containsKey(next2Chars + placeholderCharacter)) { // For LV stored with placeholder
+                            tileString = next2Chars + placeholderCharacter;
+                        } else if (tileHashMap.containsKey(placeholderCharacter + next2Chars + placeholderCharacter)) { // For medial vowel
+                            tileString = placeholderCharacter + next2Chars + placeholderCharacter;
+                        }
                         i++;
                         break;
                     case 3:
-                        tileString = next3Chars;
+                        if (tileHashMap.containsKey(next3Chars)) {
+                            tileString = next3Chars;
+                        } else if (tileHashMap.containsKey(placeholderCharacter + next3Chars)) { // For AV/BV/FV/AD/D stored with placeholder
+                            tileString = placeholderCharacter + next3Chars;
+                        } else if (tileHashMap.containsKey(next3Chars + placeholderCharacter)) { // For LV stored with placeholder
+                            tileString = next3Chars + placeholderCharacter;
+                        } else if (tileHashMap.containsKey(placeholderCharacter + next3Chars + placeholderCharacter)) { // For medial vowel
+                            tileString = placeholderCharacter + next3Chars + placeholderCharacter;
+                        }
                         i += 2;
                         break;
                     case 4:
-                        tileString = next4Chars;
+                        if (tileHashMap.containsKey(next4Chars)) {
+                            tileString = next4Chars;
+                        } else if (tileHashMap.containsKey(placeholderCharacter + next4Chars)) { // For AV/BV/FV/AD/D stored with placeholder
+                            tileString = placeholderCharacter + next4Chars;
+                        } else if (tileHashMap.containsKey(next4Chars + placeholderCharacter)) { // For LV stored with placeholder
+                            tileString = next4Chars + placeholderCharacter;
+                        } else if (tileHashMap.containsKey(placeholderCharacter + next4Chars + placeholderCharacter)) { // For medial vowel
+                            tileString = placeholderCharacter + next4Chars + placeholderCharacter;
+                        }
                         i += 3;
                         break;
                     default:
