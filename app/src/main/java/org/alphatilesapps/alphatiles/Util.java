@@ -82,7 +82,20 @@ public class Util {
 
         activity.setAllGameButtonsUnclickable();
         activity.setOptionsRowUnclickable();
-        int resID = activity.getResources().getIdentifier(tile.audioForThisTileType, "raw", activity.getPackageName());
+
+        // checks if there's audio in a similar way to how
+        // instruction audio is checked for in most games'
+        // (e.g. Thailand's)
+        // getAudioInstructionsResID() paired with
+        // its playAudioInstructions()
+        int resID;
+        try{
+            resID = activity.getResources().getIdentifier(tile.audioForThisTileType, "raw", activity.getPackageName());
+        } catch (NullPointerException e) {
+            // the audio for this tile does not exist
+            return;
+        }
+        LOGGER.info(""+resID);
         final MediaPlayer mp1 = MediaPlayer.create(activity, resID);
         activity.mediaPlayerIsPlaying = true;
         //mp1.start();
@@ -98,10 +111,14 @@ public class Util {
     private static void playActiveTileClip1(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {     //JP: for SoundPool, for tile audio
         activity.setAllGameButtonsUnclickable();
         activity.setOptionsRowUnclickable();
-
-        if (tileAudioIDs.containsKey(tile.audioForThisTileType)) {
-            gameSounds.play(tileAudioIDs.get(tile.audioForThisTileType), 1.0f, 1.0f, 2, 0, 1.0f);
+        if (!tileAudioIDs.containsKey(tile.audioForThisTileType)) {
+            // the audio for this tile does not exist
+            return;
         }
+        LOGGER.info(""+tileAudioIDs.get(tile.audioForThisTileType));
+        gameSounds.play(tileAudioIDs.get(tile.audioForThisTileType), 1.0f, 1.0f, 2, 0, 1.0f);
+
+
         activity.soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 if (playFinalSound) {
