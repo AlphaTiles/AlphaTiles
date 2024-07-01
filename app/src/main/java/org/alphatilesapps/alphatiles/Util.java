@@ -68,7 +68,7 @@ public class Util {
 
     public static void playActiveTileClip(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {
         if(activity.mediaPlayerIsPlaying) {
-
+            return;
         }
 
         if (tempSoundPoolSwitch) {
