@@ -66,19 +66,19 @@ public class Util {
 
     }
 
-    public static void playActiveTileClip(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {
+    public static void playTileAudio(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {
         if(activity.mediaPlayerIsPlaying) {
             return;
         }
 
         if (tempSoundPoolSwitch) {
-            playActiveTileClip1(playFinalSound, activity, tile);
+            playTileAudioUsingSoundPool(playFinalSound, activity, tile);
         } else {
-            playActiveTileClip0(playFinalSound, activity, tile);
+            playTileAudioUsingMediaPlayer(playFinalSound, activity, tile);
         }
     }
 
-    private static void playActiveTileClip0(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {     //JP: for Media Player; tile audio
+    private static void playTileAudioUsingMediaPlayer(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {     //JP: for Media Player; tile audio
 
         activity.setAllGameButtonsUnclickable();
         activity.setOptionsRowUnclickable();
@@ -108,7 +108,7 @@ public class Util {
         mp1.start();
     }
 
-    private static void playActiveTileClip1(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {     //JP: for SoundPool, for tile audio
+    private static void playTileAudioUsingSoundPool(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {     //JP: for SoundPool, for tile audio
         activity.setAllGameButtonsUnclickable();
         activity.setOptionsRowUnclickable();
         if (!tileAudioIDs.containsKey(tile.audioForThisTileType)) {

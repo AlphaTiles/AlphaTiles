@@ -20,4 +20,9 @@ public class UtilTest {
         assertEquals("09", Util.returnPlayerStringToAppend(9));
         assertEquals("10", Util.returnPlayerStringToAppend(10));
     }
+
+    @Test
+    public void play_tile_audio_doesnt_crash_if_tile_has_no_audio() {
+        // insert here
+    }
 }
