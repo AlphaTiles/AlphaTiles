@@ -22,10 +22,24 @@ public class UtilTest {
     }
 
     @Test
-    public void play_tile_audio_doesnt_crash_if_tile_has_no_audio() {
-        // insert here
+    public void test_playTileAudio_tileHasNoAudio() {
+        //shouldn't crash
+
+        //also, it should do nothing
     }
 
     @Test
-    public void play_tile_audio_doesnt_
+    public void test_playTileAudio_nonMultitypeSymbol() {
+        // should play its audio
+    }
+
+    @Test
+    public void test_playTileAudio_multitypeSymbol_differentiatesIsFalse() {
+        // plays the audio tile from the first audio file name column (and ignores others)
+    }
+
+    @Test
+    public void test_playTileAudio_multitypeSymbol_differentiatesIsTrue() {
+        // plays the audio tile for the active grouping
+    }
 }

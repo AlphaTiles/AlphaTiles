@@ -309,7 +309,7 @@ public class Sudan extends GameActivity {
 
         } else {
             Start.Tile thisTile = tilePagesLists.get(currentPageNumber).get(Integer.parseInt((String) view.getTag())-1);
-            audioId = tileAudioIDs.get(thisTile.audioForThisTileType);
+            audioId = tileSoundIDs.get(thisTile.audioForThisTileType);
             duration = tileDurations.get(thisTile.audioForThisTileType);
         }
 
