@@ -94,12 +94,12 @@ public class Util {
         }
     }
 
-    private static void playTileAudioUsingMediaPlayer(final boolean playFinalSound, GameActivity activity, int tileAudioResID) {     //JP: for Media Player; tile audio
+    private static void playTileAudioUsingMediaPlayer(final boolean playFinalSound, GameActivity activity, int resID) {     //JP: for Media Player; tile audio
 
         activity.setAllGameButtonsUnclickable();
         activity.setOptionsRowUnclickable();
 
-        final MediaPlayer mp1 = MediaPlayer.create(activity, tileAudioResID);
+        final MediaPlayer mp1 = MediaPlayer.create(activity, resID);
         activity.mediaPlayerIsPlaying = true;
 
         mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
