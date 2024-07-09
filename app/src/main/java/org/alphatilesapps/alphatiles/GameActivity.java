@@ -33,6 +33,8 @@ import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
+import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
@@ -700,6 +702,82 @@ public abstract class GameActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void playActiveTileClip(final boolean playFinalSound, Start.Tile tile) {
+        if(mediaPlayerIsPlaying) {
+            return;
+        }
+
+        if (tempSoundPoolSwitch) {
+            playActiveTileClip1(playFinalSound, tile);
+        } else {
+            playActiveTileClip0(playFinalSound, tile);
+        }
+    }
+
+    private void playActiveTileClip0(final boolean playFinalSound, Start.Tile tile) {     //JP: for Media Player; tile audio
+
+        setAllGameButtonsUnclickable();
+        setOptionsRowUnclickable();
+
+        // checks if there's audio in a similar way to how
+        // instruction audio is checked for in most games'
+        // (e.g. Thailand's)
+        // getAudioInstructionsResID() paired with
+        // its playAudioInstructions()
+        int resID;
+        try{
+            resID = getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
+        } catch (NullPointerException e) {
+            // the audio for this tile does not exist
+            return;
+        }
+        LOGGER.info(""+resID);
+        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
+        mediaPlayerIsPlaying = true;
+        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp1) {
+                mpCompletion(mp1, playFinalSound);
+            }
+        });
+        mp1.start();
+    }
+
+    private void playActiveTileClip1(final boolean playFinalSound, Start.Tile tile) {     //JP: for SoundPool, for tile audio
+        setAllGameButtonsUnclickable();
+        setOptionsRowUnclickable();
+        if (!tileAudioIDs.containsKey(tile.audioForThisTileType)) {
+            // the audio for this tile does not exist
+            return;
+        }
+        LOGGER.info(""+tileAudioIDs.get(tile.audioForThisTileType));
+        gameSounds.play(tileAudioIDs.get(tile.audioForThisTileType), 1.0f, 1.0f, 2, 0, 1.0f);
+
+
+        soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                if (playFinalSound) {
+                    updatePointsAndTrackers(0);
+                    repeatLocked = false;
+                    playCorrectFinalSound();
+                } else {
+                    if (repeatLocked) {
+                        setAllGameButtonsClickable();
+                    }
+                    if (after12checkedTrackers == 1){
+                        setOptionsRowClickable();
+                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
+                    }
+                    else if (trackerCount >0 && trackerCount % 12 != 0) {
+                        setOptionsRowClickable();
+                        // Otherwise, updatePointsAndTrackers will set it clickable only after
+                        // the player returns to earth (2) or sees the celebration screen (3)
+                    }
+                }
+            }
+        }, tileDurations.get(tile.audioForThisTileType));
     }
 
     protected void mpCompletion(MediaPlayer mp, boolean isFinal) {

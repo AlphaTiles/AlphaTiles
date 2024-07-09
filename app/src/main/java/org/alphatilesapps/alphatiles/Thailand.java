@@ -681,7 +681,7 @@ public class Thailand extends GameActivity {
     }
 
     public void playActiveTileClip(final boolean playFinalSound) {
-        Util.playActiveTileClip(playFinalSound,this,refTile);
+        super.playActiveTileClip(playFinalSound, refTile);
     }
 
     private void playActiveSyllableClip(final boolean playFinalSound) { // We chose not to implement the Media Player option for syllable audio

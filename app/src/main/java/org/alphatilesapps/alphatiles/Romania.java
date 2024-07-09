@@ -271,7 +271,7 @@ public class Romania extends GameActivity {
      */
     public void onRefClick(View view) {
         // Plays the audio for the tile
-        Util.playActiveTileClip(false, this, activeTile);
+        super.playActiveTileClip(false, activeTile);
     }
 
     public void goToNextWord(Start.Tile activeTile) {
