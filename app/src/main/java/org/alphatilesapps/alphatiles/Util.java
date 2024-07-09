@@ -72,36 +72,33 @@ public class Util {
         }
 
         if (tempSoundPoolSwitch) {
-            if (!tileAudioIDs.containsKey(tile.audioForThisTileType)) {
-                // the audio for this tile does not exist
-                return;
-            }
             playTileAudioUsingSoundPool(playFinalSound, activity, tile);
         } else {
-            // checks if there's audio in a similar way to how
-            // instruction audio is checked for in most games'
-            // (e.g. Thailand's)
-            // getAudioInstructionsResID() paired with
-            // its playAudioInstructions()
-            int resID;
-            try{
-                resID = activity.getResources().getIdentifier(tile.audioForThisTileType, "raw", activity.getPackageName());
-            } catch (NullPointerException e) {
-                // the audio for this tile does not exist
-                return;
-            }
-            playTileAudioUsingMediaPlayer(playFinalSound, activity, resID);
+            playTileAudioUsingMediaPlayer(playFinalSound, activity, tile);
         }
     }
 
-    private static void playTileAudioUsingMediaPlayer(final boolean playFinalSound, GameActivity activity, int resID) {     //JP: for Media Player; tile audio
+    private static void playTileAudioUsingMediaPlayer(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {     //JP: for Media Player; tile audio
 
         activity.setAllGameButtonsUnclickable();
         activity.setOptionsRowUnclickable();
 
+        // checks if there's audio in a similar way to how
+        // instruction audio is checked for in most games'
+        // (e.g. Thailand's)
+        // getAudioInstructionsResID() paired with
+        // its playAudioInstructions()
+        int resID;
+        try{
+            resID = activity.getResources().getIdentifier(tile.audioForThisTileType, "raw", activity.getPackageName());
+        } catch (NullPointerException e) {
+            // the audio for this tile does not exist
+            return;
+        }
+        LOGGER.info(""+resID);
         final MediaPlayer mp1 = MediaPlayer.create(activity, resID);
         activity.mediaPlayerIsPlaying = true;
-
+        //mp1.start();
         mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp1) {
@@ -114,7 +111,11 @@ public class Util {
     private static void playTileAudioUsingSoundPool(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {     //JP: for SoundPool, for tile audio
         activity.setAllGameButtonsUnclickable();
         activity.setOptionsRowUnclickable();
-
+        if (!tileAudioIDs.containsKey(tile.audioForThisTileType)) {
+            // the audio for this tile does not exist
+            return;
+        }
+        LOGGER.info(""+tileAudioIDs.get(tile.audioForThisTileType));
         gameSounds.play(tileAudioIDs.get(tile.audioForThisTileType), 1.0f, 1.0f, 2, 0, 1.0f);
 
 
