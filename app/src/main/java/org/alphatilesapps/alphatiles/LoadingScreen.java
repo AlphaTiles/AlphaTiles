@@ -20,7 +20,7 @@ import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.totalAudio;
-import static org.alphatilesapps.alphatiles.Start.tileSoundIDs;
+import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.hasTileAudio;
@@ -196,13 +196,13 @@ public class LoadingScreen extends AppCompatActivity {
 
     public void loadTileAudio() {
         Resources res = context.getResources();
-        tileSoundIDs = new HashMap(0);
+        tileAudioIDs = new HashMap(0);
         tileDurations = new HashMap();
 
         for (Start.Tile tile : tileList) {
             int resId = res.getIdentifier(tile.audioForThisTileType, "raw", context.getPackageName());
             int duration = getAssetDuration(resId) + 100;
-            tileSoundIDs.put(tile.audioForThisTileType, gameSounds.load(context, resId, 2));
+            tileAudioIDs.put(tile.audioForThisTileType, gameSounds.load(context, resId, 2));
             tileDurations.put(tile.audioForThisTileType, duration);
         }
         LOGGER.info("LoadProgress: completed loadTileAudio()");

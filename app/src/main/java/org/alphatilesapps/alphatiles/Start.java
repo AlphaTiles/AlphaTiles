@@ -56,7 +56,7 @@ public class Start extends AppCompatActivity {
     public static int incorrectSoundID;
     public static int correctFinalSoundID;
     public static HashMap<String, Integer> wordAudioIDs;
-    public static HashMap<String, Integer> tileSoundIDs;
+    public static HashMap<String, Integer> tileAudioIDs;
     public static HashMap<String, Integer> syllableAudioIDs; //JP
     public static int correctSoundDuration;
     public static HashMap<String, Integer> tileDurations;

@@ -2,7 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import static org.alphatilesapps.alphatiles.Start.after12checkedTrackers;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
-import static org.alphatilesapps.alphatiles.Start.tileSoundIDs;
+import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 
@@ -71,30 +71,33 @@ public class Util {
             return;
         }
 
-        // checks if the tile's audio string has a corresponding sound ID
-        if (!tileSoundIDs.containsKey(tile.audioForThisTileType)) {
-            return;
-        }
-
-        // checks if the activity contains the resource ID for the tile's audio name
-        int resID;
-        try{
-            resID = activity.getResources().getIdentifier(tile.audioForThisTileType, "raw", activity.getPackageName());
-        } catch (NullPointerException e) {
-            return;
-        }
-
-        activity.setAllGameButtonsUnclickable();
-        activity.setOptionsRowUnclickable();
-
         if (tempSoundPoolSwitch) {
+            if (!tileAudioIDs.containsKey(tile.audioForThisTileType)) {
+                // the audio for this tile does not exist
+                return;
+            }
             playTileAudioUsingSoundPool(playFinalSound, activity, tile);
         } else {
+            // checks if there's audio in a similar way to how
+            // instruction audio is checked for in most games'
+            // (e.g. Thailand's)
+            // getAudioInstructionsResID() paired with
+            // its playAudioInstructions()
+            int resID;
+            try{
+                resID = activity.getResources().getIdentifier(tile.audioForThisTileType, "raw", activity.getPackageName());
+            } catch (NullPointerException e) {
+                // the audio for this tile does not exist
+                return;
+            }
             playTileAudioUsingMediaPlayer(playFinalSound, activity, resID);
         }
     }
 
     private static void playTileAudioUsingMediaPlayer(final boolean playFinalSound, GameActivity activity, int tileAudioResID) {     //JP: for Media Player; tile audio
+
+        activity.setAllGameButtonsUnclickable();
+        activity.setOptionsRowUnclickable();
 
         final MediaPlayer mp1 = MediaPlayer.create(activity, tileAudioResID);
         activity.mediaPlayerIsPlaying = true;
@@ -109,8 +112,11 @@ public class Util {
     }
 
     private static void playTileAudioUsingSoundPool(final boolean playFinalSound, GameActivity activity, Start.Tile tile) {     //JP: for SoundPool, for tile audio
+        activity.setAllGameButtonsUnclickable();
+        activity.setOptionsRowUnclickable();
 
-        gameSounds.play(tileSoundIDs.get(tile.audioForThisTileType), 1.0f, 1.0f, 2, 0, 1.0f);
+        gameSounds.play(tileAudioIDs.get(tile.audioForThisTileType), 1.0f, 1.0f, 2, 0, 1.0f);
+
 
         activity.soundSequencer.postDelayed(new Runnable() {
             public void run() {
