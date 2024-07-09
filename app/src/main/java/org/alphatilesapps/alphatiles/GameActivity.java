@@ -704,23 +704,6 @@ public abstract class GameActivity extends AppCompatActivity {
 
     }
 
-    public void playActiveTileClip(final boolean playFinalSound, Start.Tile tile) {
-        if(!isReadyToPlayTileAudio() || !tileShouldPlayAudio(tile)) {
-            return;
-        }
-
-        if (tempSoundPoolSwitch) {
-            playActiveTileClip1(playFinalSound, tile);
-        } else {
-            playActiveTileClip0(playFinalSound, tile);
-        }
-
-        //method A + B: decide whether audio should play, based on the current activity's state and the Tile itself
-        //method C: obtain the audio info needed related to the given Tile
-        //method D: play the audio, using the audio info
-
-    }
-
     public void tileAudioPress(final boolean playFinalSound, Start.Tile tile) {
         if(!isReadyToPlayTileAudio() || !tileShouldPlayAudio(tile)) {
             return;
@@ -731,7 +714,7 @@ public abstract class GameActivity extends AppCompatActivity {
         if(!tempSoundPoolSwitch) {
             playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
         } else {
-            //playTileAudio(playFinalSound, tileAudioNumber(tile), FILL IN HERE);
+            playTileAudio(playFinalSound, tileAudioNumber(tile), tileDurations.get(tile.audioForThisTileType));
         }
     }
 
