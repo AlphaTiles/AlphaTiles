@@ -3,6 +3,7 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,6 +13,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.*;
+import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
+
+import java.util.logging.Logger;
 
 public class Romania extends GameActivity {
 
@@ -267,7 +271,7 @@ public class Romania extends GameActivity {
      */
     public void onRefClick(View view) {
         // Plays the audio for the tile
-        Util.playTileAudio(false, this, activeTile);
+        Util.playActiveTileClip(false, this, activeTile);
     }
 
     public void goToNextWord(Start.Tile activeTile) {

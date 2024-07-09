@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
 import static org.alphatilesapps.alphatiles.Start.*;
@@ -680,7 +681,7 @@ public class Thailand extends GameActivity {
     }
 
     public void playActiveTileClip(final boolean playFinalSound) {
-        Util.playTileAudio(playFinalSound,this,refTile);
+        Util.playActiveTileClip(playFinalSound,this,refTile);
     }
 
     private void playActiveSyllableClip(final boolean playFinalSound) { // We chose not to implement the Media Player option for syllable audio
