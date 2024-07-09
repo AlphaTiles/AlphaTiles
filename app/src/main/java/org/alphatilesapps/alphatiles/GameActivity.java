@@ -705,7 +705,7 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     public void playActiveTileClip(final boolean playFinalSound, Start.Tile tile) {
-        if(mediaPlayerIsPlaying) {
+        if(!isReadyToPlayTileAudio() || !tileShouldPlayAudio(tile)) {
             return;
         }
 
@@ -714,26 +714,74 @@ public abstract class GameActivity extends AppCompatActivity {
         } else {
             playActiveTileClip0(playFinalSound, tile);
         }
+
+        //method A + B: decide whether audio should play, based on the current activity's state and the Tile itself
+        //method C: obtain the audio info needed related to the given Tile
+        //method D: play the audio, using the audio info
+
     }
 
-    private void playActiveTileClip0(final boolean playFinalSound, Start.Tile tile) {     //JP: for Media Player; tile audio
+    public void tileAudioPress(final boolean playFinalSound, Start.Tile tile) {
+        if(!isReadyToPlayTileAudio() || !tileShouldPlayAudio(tile)) {
+            return;
+        }
 
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
-
-        // checks if there's audio in a similar way to how
-        // instruction audio is checked for in most games'
-        // (e.g. Thailand's)
-        // getAudioInstructionsResID() paired with
-        // its playAudioInstructions()
-        int resID;
-        try{
-            resID = getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
-        } catch (NullPointerException e) {
-            // the audio for this tile does not exist
-            return;
+        if(!tempSoundPoolSwitch) {
+            playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
+        } else {
+            //playTileAudio(playFinalSound, tileAudioNumber(tile), FILL IN HERE);
         }
-        LOGGER.info(""+resID);
+    }
+
+    protected boolean isReadyToPlayTileAudio() {
+        if(mediaPlayerIsPlaying) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean tileShouldPlayAudio(Start.Tile tile) {
+        // make sure audio can be found
+        if (tempSoundPoolSwitch) {
+            if (!tileAudioIDs.containsKey(tile.audioForThisTileType)) {
+                return false;
+            }
+        } else {
+            try{
+                getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
+            } catch (NullPointerException e) {
+                 return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected int tileAudioNumber(Start.Tile tile) {
+        if (tempSoundPoolSwitch) {
+            return tileAudioIDs.get(tile.audioForThisTileType);
+        } else {
+            return getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
+        }
+    }
+
+    protected void playTileAudio(boolean playFinalSound, int audioNumber, int audioDuration) {
+        if (tempSoundPoolSwitch) {
+            playTileAudioSoundPool(playFinalSound, audioNumber,audioDuration);
+        } else {
+            playTileAudioMediaPlayer(playFinalSound, audioNumber);
+        }
+    }
+
+
+
+
+
+    private void playTileAudioMediaPlayer(final boolean playFinalSound, int resID) {     //JP: for Media Player; tile audio
+
         final MediaPlayer mp1 = MediaPlayer.create(this, resID);
         mediaPlayerIsPlaying = true;
         mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -745,16 +793,8 @@ public abstract class GameActivity extends AppCompatActivity {
         mp1.start();
     }
 
-    private void playActiveTileClip1(final boolean playFinalSound, Start.Tile tile) {     //JP: for SoundPool, for tile audio
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        if (!tileAudioIDs.containsKey(tile.audioForThisTileType)) {
-            // the audio for this tile does not exist
-            return;
-        }
-        LOGGER.info(""+tileAudioIDs.get(tile.audioForThisTileType));
-        gameSounds.play(tileAudioIDs.get(tile.audioForThisTileType), 1.0f, 1.0f, 2, 0, 1.0f);
-
+    private void playTileAudioSoundPool(final boolean playFinalSound, int audioID, int audioDuration) {     //JP: for SoundPool, for tile audio
+        gameSounds.play(audioID, 1.0f, 1.0f, 2, 0, 1.0f);
 
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
@@ -777,7 +817,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     }
                 }
             }
-        }, tileDurations.get(tile.audioForThisTileType));
+        }, audioDuration);
     }
 
     protected void mpCompletion(MediaPlayer mp, boolean isFinal) {
