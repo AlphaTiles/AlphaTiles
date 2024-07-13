@@ -2817,7 +2817,6 @@ public class Validator {
                 consonantScanIndex = nextConsonantIndex;
             }
             return parsedWordTileArray;
-
         }
 
         /**
@@ -2958,7 +2957,6 @@ public class Validator {
                     charBlockLength = 4;
                 }
 
-
                 // Add the selected game tile (the longest selected from the previous loop) to the parsed word array
                 String tileString = "";
                 switch (charBlockLength) {
@@ -2989,6 +2987,8 @@ public class Validator {
                 if (!tileString.isEmpty()) {
                     Tile nextTile = tileHashMap.find(tileString);
                     wordPreliminaryTileArray.add(nextTile);
+                } else if (!".#".contains(next1Chars)) {
+                    return null;
                 }
             }
             for (Tile tile : wordPreliminaryTileArray) { // Set instance-specific fields
@@ -3014,7 +3014,6 @@ public class Validator {
                 }
                 tileIndex++;
             }
-
             return wordPreliminaryTileArrayFinal;
         }
 
