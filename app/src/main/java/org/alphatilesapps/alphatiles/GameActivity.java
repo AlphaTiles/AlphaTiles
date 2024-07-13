@@ -728,11 +728,11 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected boolean tileShouldPlayAudio(Start.Tile tile) {
         // make sure audio can be found
-        if (tempSoundPoolSwitch) {
-            if (!tileAudioIDs.containsKey(tile.audioForThisTileType)) {
+        if (tempSoundPoolSwitch && !tileAudioIDs.containsKey(tile.audioForThisTileType)) {
                 return false;
-            }
-        } else {
+        }
+
+        if(!tempSoundPoolSwitch) {
             try{
                 getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
             } catch (NullPointerException e) {
