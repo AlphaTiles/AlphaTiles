@@ -744,10 +744,11 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected int tileAudioNumber(Start.Tile tile) {
+        String audioName = tile.getAudioNameAccountingForMultitypeSymbols();
         if (tempSoundPoolSwitch) {
-            return tileAudioIDs.get(tile.audioForThisTileType);
+            return tileAudioIDs.get(audioName);
         } else {
-            return getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
+            return getResources().getIdentifier(audioName, "raw", getPackageName());
         }
     }
 

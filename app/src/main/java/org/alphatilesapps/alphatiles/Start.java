@@ -837,6 +837,14 @@ public class Start extends AppCompatActivity {
                 return true;
             return false;
         }
+
+        public String getAudioNameAccountingForMultitypeSymbols() {
+            if(!Start.differentiatesTileTypes) {
+                return this.audioName;
+            }
+
+            return this.audioForThisTileType;
+        }
     }
 
     public class Key {
