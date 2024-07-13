@@ -791,6 +791,29 @@ public class Validator {
             warnings.add(FAILED_CHECK_WARNING + "the settings tab");
         }
         try {
+            // not working for "cat", need to fix for comma, should report error
+            Tab settings = langPackGoogleSheet.getTabFromName("settings");
+            String scrString = settings.getRowFromFirstCell("Stage correspondence ratio").get(1);
+            if (scrString.matches("-?\\d+(\\.\\d+)?")) {
+                Double scrValue = Double.parseDouble(scrString);
+                if (scrValue < 0.1 || scrValue > 1 ) {
+                    fatalErrors.add("In settings for \"Stage correspondence ratio\", please enter a number from 0.1 to 1.");
+                }
+            } else {
+                fatalErrors.add("In settings for \"Stage correspondence ratio\", please enter a number from 0.1 to 1 using a decimal (not a comma) as the separator.");
+            }
+        } catch (ValidatorException e) {
+            warnings.add(FAILED_CHECK_WARNING + "the settings tab");
+        }
+        try {
+            Tab settings = langPackGoogleSheet.getTabFromName("settings");
+            if (settings.getRowFromFirstCell("Stage correspondence ratio").get(1).equals("1")){
+                fatalErrors.add("The stages feature is still in testing. Currently, if \"Stage correspondence ratio\" is set to 1, app games will crash. Set to 0.75 for now, as indicated in the template.");
+            }
+        } catch (ValidatorException e) {
+            warnings.add(FAILED_CHECK_WARNING + "the settings tab");
+        }
+        try {
             Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
             ArrayList<String> gamesList = langPackGoogleSheet.getTabFromName("games").getCol(1);
             if (!gamesList.contains("Italy")) {
