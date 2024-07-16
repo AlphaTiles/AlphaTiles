@@ -1017,7 +1017,7 @@ public class Start extends AppCompatActivity {
 
         public String stripInstructionCharacters(String wordInLOP) {
             // The period instructs the parseWord method to force a tile break
-            String newString = wordInLOP.replaceAll("[.]", "");
+            String newString = wordInLOP.replaceAll("[.#]", "");
             return newString;
         }
 
@@ -1221,7 +1221,8 @@ public class Start extends AppCompatActivity {
 
         public ArrayList<Syllable> parseWordIntoSyllables(Word refWord) {
             ArrayList<Syllable> parsedWordArrayTemp = new ArrayList();
-            StringTokenizer st = new StringTokenizer(refWord.wordInLOP, ".");
+            String cleaned = refWord.wordInLOP.replaceAll("#", "");
+            StringTokenizer st = new StringTokenizer(cleaned, ".");
             while (st.hasMoreTokens()) {
                 parsedWordArrayTemp.add(syllableHashMap.find(st.nextToken()));
             }
