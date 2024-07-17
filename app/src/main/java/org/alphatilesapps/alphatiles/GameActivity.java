@@ -403,7 +403,8 @@ public abstract class GameActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    if((double)correspondingTiles/nonSADtilesInThisWord >= higherCorrespondenceThreshold){
+                    boolean all = correspondingTiles >= nonSADtilesInThisWord;
+                    if((double)correspondingTiles/nonSADtilesInThisWord >= higherCorrespondenceThreshold || all){
                         higherCorrespondenceWords.add(word);
                     } else {
                         lowerCorrespondenceWords.add(word);
