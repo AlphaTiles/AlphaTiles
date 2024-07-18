@@ -647,16 +647,16 @@ public class Validator {
             List<String> thirdAlternates = gameTiles.getCol(3);
             for (int i = 0; i < validGameTiles.size(); i++) {
                 if (!validGameTiles.contains(firstAlternates.get(i))) {
-                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate: " + firstAlternates.get(i)
-                            + ". Please add this alternate to the tile list if it is missing or replace it with a valid tile from the list.");
+                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate (distractor): " + firstAlternates.get(i)
+                            + ". Please add this alternate (distractor) to the tile list if it is missing or replace it with a valid tile from the list.");
                 }
                 if (!validGameTiles.contains(secondAlternates.get(i))) {
-                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate: " + secondAlternates.get(i)
-                            + ". Please add this alternate to the tile list if it is missing or replace it with a valid tile from the list.");
+                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate (distractor): " + secondAlternates.get(i)
+                            + ". Please add this alternate (distractor) to the tile list if it is missing or replace it with a valid tile from the list.");
                 }
                 if (!validGameTiles.contains(thirdAlternates.get(i))) {
-                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate: " + thirdAlternates.get(i)
-                            + ". Please add this alternate to the tile list if it is missing or replace it with a valid tile from the list.");
+                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate (distractor): " + thirdAlternates.get(i)
+                            + ". Please add this alternate (distractor) to the tile list if it is missing or replace it with a valid tile from the list.");
                 }
             }
 
@@ -1189,8 +1189,8 @@ public class Validator {
                     if(!providedSyllables.contains(row.get(col))) {
                         char c = (char)('A' + col);
                         fatalErrors.add(
-                            "row " + rowNum + ", column " + c + " of syllables contains an invalid tile as an alternate: " + distractor
-                            + ". \nPlease add this alternate to the tile list if it is missing or replace it with a valid tile from the list"
+                            "row " + rowNum + ", column " + c + " of syllables contains an invalid tile as an alternate (distractor): " + distractor
+                            + ". \nPlease add this alternate (distractor) to the tile list if it is missing or replace it with a valid tile from the list"
                         );
                     }
                 }
