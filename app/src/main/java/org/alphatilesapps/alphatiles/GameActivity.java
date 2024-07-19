@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -139,15 +138,6 @@ public abstract class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle state) {
-        // copy and pasted from https://developer.android.com/guide/navigation/custom-back#java
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-            @Override
-            public void handleOnBackPressed() {
-                // do nothing
-            }
-        };
-        getOnBackPressedDispatcher().addCallback(this, callback);
-
         context = this;
 
         soundSequencer = new Handler(Looper.getMainLooper());

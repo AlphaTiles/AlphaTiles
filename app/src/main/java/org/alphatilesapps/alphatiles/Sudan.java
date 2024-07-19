@@ -333,4 +333,8 @@ public class Sudan extends GameActivity {
         super.goBackToEarth(view);
     }
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
 }

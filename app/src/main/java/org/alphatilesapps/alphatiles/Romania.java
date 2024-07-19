@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -69,9 +68,6 @@ public class Romania extends GameActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
         context = this;
         setContentView(R.layout.romania);
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel;
@@ -587,6 +583,9 @@ public class Romania extends GameActivity {
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
 
 }

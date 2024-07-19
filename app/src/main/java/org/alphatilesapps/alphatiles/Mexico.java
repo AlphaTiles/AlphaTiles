@@ -378,6 +378,10 @@ public class Mexico extends GameActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
 }
 
 

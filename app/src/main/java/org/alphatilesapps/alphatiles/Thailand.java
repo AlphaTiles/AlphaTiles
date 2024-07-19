@@ -882,5 +882,9 @@ public class Thailand extends GameActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
 
 }

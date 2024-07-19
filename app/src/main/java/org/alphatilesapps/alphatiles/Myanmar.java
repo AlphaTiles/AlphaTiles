@@ -674,5 +674,9 @@ public class Myanmar extends GameActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
 
 }
