@@ -33,6 +33,7 @@ import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
+import static org.alphatilesapps.alphatiles.Start.placeholderCharacter;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
@@ -777,16 +778,16 @@ public abstract class GameActivity extends AppCompatActivity {
         if(indexOfReplacedTile>0){
             previousTile = tilesInThisWordOption.get(indexOfReplacedTile-1);
             previousString = previousTile.text;
-            if(previousString.contains("◌") && previousString.length()==2) { // Filter these placeholders out; keep the complex tile ones
-                previousString = previousString.replace("◌", "");
+            if(previousString.contains(placeholderCharacter) && previousString.length()==2) { // Filter these placeholders out; keep the complex tile ones
+                previousString = previousString.replace(placeholderCharacter, "");
             }
         }
 
         int index = 0;
         for (Start.Tile thisTile : tilesInThisWordOption) {
             String stringToAppend = thisTile.text;
-            if(stringToAppend.contains("◌") && stringToAppend.length() == 2) { // Filter these placeholders out; keep the complex tile ones
-                stringToAppend = stringToAppend.replace("◌", "");
+            if(stringToAppend.contains(placeholderCharacter) && stringToAppend.length() == 2) { // Filter these placeholders out; keep the complex tile ones
+                stringToAppend = stringToAppend.replace(placeholderCharacter, "");
             }
             if (thisTile.typeOfThisTileInstance.matches("(C|PC)")){
                 previousConsonant = thisTile.text;
@@ -795,14 +796,14 @@ public abstract class GameActivity extends AppCompatActivity {
             }
             if(thisTile.typeOfThisTileInstance.matches("(D|AD)")) {
                 previousDiacritics = thisTile.text;
-                if(previousDiacritics.contains("◌") && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
-                    previousDiacritics = previousDiacritics.replace("◌", "");
+                if(previousDiacritics.contains(placeholderCharacter) && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
+                    previousDiacritics = previousDiacritics.replace(placeholderCharacter, "");
                 }
             }
             if(thisTile.typeOfThisTileInstance.matches("(AV|BV)")){
                 previousAboveOrBelowVowel = thisTile.text;
-                if(previousAboveOrBelowVowel.contains("◌") && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
-                    previousAboveOrBelowVowel = previousAboveOrBelowVowel.replace("◌", "");
+                if(previousAboveOrBelowVowel.contains(placeholderCharacter) && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
+                    previousAboveOrBelowVowel = previousAboveOrBelowVowel.replace(placeholderCharacter, "");
                 }
             }
 
@@ -825,26 +826,26 @@ public abstract class GameActivity extends AppCompatActivity {
                 // ^Now it's in the right place.
                 builder.append(stringToAppend);
             } else if (replacingLVwithOtherV && index == (indexOfReplacedTile + 1) && previousTile.typeOfThisTileInstance.equals("V")){
-                stringToAppend = previousString.replace("◌", stringToAppend); // [LV+◌+FV], replace the ◌ with the consonant tile you are adding now
+                stringToAppend = previousString.replace(placeholderCharacter, stringToAppend); // [LV+◌+FV], replace the placeholder with the consonant tile you are adding now
                 builder.append(stringToAppend);
             } else if (replacingOtherVwithLV && index==indexOfReplacedTile) {
                 builder.append(stringToAppend); // Add the LV first
                 builder.append(previousString); // Now add the C
             } else {
-                if (stringToAppend.contains("◌")) {
+                if (stringToAppend.contains(placeholderCharacter)) {
                     // Put the previous consonant and (optional) above/below vowel as the base of diacritics
                     // Or consonant and diacritics as the base of a vowel with a placeholder
                     // The stackInProperSequence() method will make some more fixes later if necessary
                     String base = "";
                     if(thisTile.typeOfThisTileInstance.matches("(D|AD)")){
-                        base = previousConsonant + previousAboveOrBelowVowel.replace("◌", "");
-                        stringToAppend = stringToAppend.replace("◌", base);
+                        base = previousConsonant + previousAboveOrBelowVowel.replace(placeholderCharacter, "");
+                        stringToAppend = stringToAppend.replace(placeholderCharacter, base);
                     } else if (thisTile.typeOfThisTileInstance.matches("(AV|BV|FV|V)")){
-                        base = previousConsonant + previousAboveOrBelowVowel.replace("◌", "") + previousDiacritics.replace("◌", "");
-                        stringToAppend = stringToAppend.replace("◌", base);
+                        base = previousConsonant + previousAboveOrBelowVowel.replace(placeholderCharacter, "") + previousDiacritics.replace(placeholderCharacter, "");
+                        stringToAppend = stringToAppend.replace(placeholderCharacter, base);
                     } else if (thisTile.typeOfThisTileInstance.equals("LV")) { // Can happen in the sequence if we are replacing a vowel
-                        base = previousConsonant + previousDiacritics.replace("◌", "");
-                        stringToAppend = stringToAppend.replace("◌", "") + base;
+                        base = previousConsonant + previousDiacritics.replace(placeholderCharacter, "");
+                        stringToAppend = stringToAppend.replace(placeholderCharacter, "") + base;
                     }
                     builder.delete(builder.length() - base.length(), builder.length());
                 }
@@ -884,10 +885,10 @@ public abstract class GameActivity extends AppCompatActivity {
                 }
             }
             if (tileHashMap.containsKey(String.valueOf(correctlyStackedString.charAt(0)))
-             || tileHashMap.containsKey("◌" + String.valueOf(correctlyStackedString.charAt(0)))) {
+             || tileHashMap.containsKey(placeholderCharacter + String.valueOf(correctlyStackedString.charAt(0)))) {
                 Start.Tile firstCharAsTile = tileHashMap.get(String.valueOf(correctlyStackedString.charAt(0)));
                 if (firstCharAsTile==null) {
-                    firstCharAsTile = tileHashMap.get("◌" + String.valueOf(correctlyStackedString.charAt(0)));
+                    firstCharAsTile = tileHashMap.get(placeholderCharacter + String.valueOf(correctlyStackedString.charAt(0)));
                 }
                 if(firstCharAsTile.tileType.matches("(AV|BV|FV|AD)")) {
                     String wonkyBeginningSequence = String.valueOf(correctlyStackedString.charAt(0)) + String.valueOf(correctlyStackedString.charAt(1));
@@ -917,10 +918,10 @@ public abstract class GameActivity extends AppCompatActivity {
         for (int i = 0; i < wordListWord.wordInLOP.replace(".", "").length(); i++) {
             Start.Tile thisTile = tileHashMap.get(String.valueOf(wordListWord.wordInLOP.replace(".", "").charAt(i)));
             if (thisTile == null) { // try with a placeholder prefix
-                thisTile = tileHashMap.get("◌" + String.valueOf(wordListWord.wordInLOP.replace(".", "").charAt(i)));
+                thisTile = tileHashMap.get(placeholderCharacter + String.valueOf(wordListWord.wordInLOP.replace(".", "").charAt(i)));
             }
             if (thisTile == null) { // try with a placeholder suffix
-                thisTile = tileHashMap.get(String.valueOf(wordListWord.wordInLOP.replace(".", "").charAt(i)) + "◌");
+                thisTile = tileHashMap.get(String.valueOf(wordListWord.wordInLOP.replace(".", "").charAt(i)) + placeholderCharacter);
             }
             if (!(thisTile == null)) {
                 String thisTileString = thisTile.text;
@@ -931,7 +932,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     int preliminaryTileIndex = -1;
                     int cumulativeCharIndex = -1;
                     for (Start.Tile preliminaryTile : parsedWordListWordTileArrayPreliminary) { // Figure out which instance (0th, 1st, 2nd) of this char it is
-                        cumulativeCharIndex += preliminaryTile.text.replace("◌", "").length();
+                        cumulativeCharIndex += preliminaryTile.text.replace(placeholderCharacter, "").length();
                         preliminaryTileIndex++;
                         if(cumulativeCharIndex==i) {
                             break;
@@ -941,7 +942,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 } else {
                     typeOfThisInstanceOfThisTile = thisTile.tileType;
                 }
-                thisTileString = thisTileString.replace("◌", ""); // Remove any placeholders stored with single-char tiles
+                thisTileString = thisTileString.replace(placeholderCharacter, ""); // Remove any placeholders stored with single-char tiles
                 if (typeOfThisInstanceOfThisTile.equals("AV")) {
                     AVs.add(thisTileString);
                 } else if (typeOfThisInstanceOfThisTile.equals("AD")) {
@@ -957,8 +958,8 @@ public abstract class GameActivity extends AppCompatActivity {
         // Add other non-ambiguous AV, AD, FV, and BV tiles to avoid
         for(Start.Tile tile : tileList) {
             if (!MULTITYPE_TILES.contains(tile.text) && tile.text.length()==1
-            || (tile.text.contains("◌") && tile.text.length()==2)) {
-                String thisTileString = tile.text.replace("◌", "");
+            || (tile.text.contains(placeholderCharacter) && tile.text.length()==2)) {
+                String thisTileString = tile.text.replace(placeholderCharacter, "");
                 if (tile.tileType.equals("AV")) {
                     AVs.add(thisTileString);
                 } else if (tile.tileType.equals("AD")) {
@@ -984,7 +985,7 @@ public abstract class GameActivity extends AppCompatActivity {
         }
         for (int f = 0; f < FVs.size(); f++) {
             for (int d = 0; d < ADs.size(); d++) {
-                if(!tileHashMap.containsKey(FVs.get(f) + ADs.get(d)) && !tileHashMap.containsKey("◌" + FVs.get(f) + ADs.get(d))){
+                if(!tileHashMap.containsKey(FVs.get(f) + ADs.get(d)) && !tileHashMap.containsKey(placeholderCharacter + FVs.get(f) + ADs.get(d))){
                     prohibitedCharSequences.add(FVs.get(f) + ADs.get(d));
                 }
             }
