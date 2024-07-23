@@ -19,10 +19,6 @@ import java.util.logging.Logger;
 
 public class Romania extends GameActivity {
 
-    /**
-     * Logger included for testing purposes only; delete or comment out when done with testing.
-     */
-    //private static final Logger LOGGER = Logger.getLogger(GameActivity.class.getName());
     boolean failedToMatchInitialTile = false;
     Start.Tile activeTile;
     boolean directionIsForward = true;
@@ -211,7 +207,6 @@ public class Romania extends GameActivity {
         TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
         magTile.setText(indexWithinGroup + 1 + " / " + String.valueOf(String.valueOf(groupCount)));
 
-        // Makes the tile text clickable (at least in theory)
         gameTile.setClickable(true);
 
         if (!skipThisTile) { // If we DO have words in the group for this tile given the scan setting, then...
