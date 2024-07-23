@@ -1,14 +1,7 @@
 package org.alphatilesapps.alphatiles;
 
-import static org.alphatilesapps.alphatiles.Start.after12checkedTrackers;
-import static org.alphatilesapps.alphatiles.Start.gameSounds;
-import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
-import static org.alphatilesapps.alphatiles.Start.tileDurations;
-import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
-
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.MediaPlayer;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

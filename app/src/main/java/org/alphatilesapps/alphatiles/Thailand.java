@@ -13,7 +13,6 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import static android.graphics.Color.WHITE;
 import static org.alphatilesapps.alphatiles.Start.*;

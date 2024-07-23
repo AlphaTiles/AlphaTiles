@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,9 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.*;
-import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
-
-import java.util.logging.Logger;
 
 public class Romania extends GameActivity {
 
@@ -260,12 +256,7 @@ public class Romania extends GameActivity {
 
     }
 
-    /**
-     * Should trigger when the reference tile is clicked.
-     * Makes the audio for the reference tile play.
-     */
     public void onRefClick(View view) {
-        // Plays the audio for the tile
         super.tileAudioPress(false, activeTile);
     }
 
