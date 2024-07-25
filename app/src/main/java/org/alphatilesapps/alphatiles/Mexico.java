@@ -31,13 +31,13 @@ public class Mexico extends GameActivity {
     int cardHitB = 0;
     Handler handler; // KP
 
-    protected static final int[] GAME_BUTTONS = {
+    protected static final int[] TILE_BUTTONS = {
             R.id.card01, R.id.card02, R.id.card03, R.id.card04, R.id.card05, R.id.card06, R.id.card07, R.id.card08, R.id.card09, R.id.card10,
             R.id.card11, R.id.card12, R.id.card13, R.id.card14, R.id.card15, R.id.card16, R.id.card17, R.id.card18, R.id.card19, R.id.card20
     };
 
-    protected int[] getGameButtons() {
-        return GAME_BUTTONS;
+    protected int[] getTileButtons() {
+        return TILE_BUTTONS;
     }
 
     protected int[] getWordImages() {
@@ -49,7 +49,7 @@ public class Mexico extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -100,19 +100,19 @@ public class Mexico extends GameActivity {
         // Level 5: 10 pairs = 20
         switch (challengeLevel) {
             case 2:
-                visibleGameButtons = 8;
+                visibleTiles = 8;
                 break;
             case 3:
-                visibleGameButtons = 12;
+                visibleTiles = 12;
                 break;
             case 4:
-                visibleGameButtons = 16;
+                visibleTiles = 16;
                 break;
             case 5:
-                visibleGameButtons = 20;
+                visibleTiles = 20;
                 break;
             default:
-                visibleGameButtons = 6;
+                visibleTiles = 6;
         }
 
 
@@ -122,6 +122,11 @@ public class Mexico extends GameActivity {
 
         updatePointsAndTrackers(0);
         playAgain();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // no action
     }
 
     public void repeatGame(View View) {
@@ -154,10 +159,10 @@ public class Mexico extends GameActivity {
 
     public void setCardTextToEmpty() {
 
-        for (int i = 0; i < GAME_BUTTONS.length; i++) {    // RR
-            TextView card = findViewById(GAME_BUTTONS[i]); // RR
+        for (int i = 0; i < TILE_BUTTONS.length; i++) {    // RR
+            TextView card = findViewById(TILE_BUTTONS[i]); // RR
 
-            if (i < visibleGameButtons) {
+            if (i < visibleTiles) {
                 card.setText("");
                 card.setTextColor(BLACK); // KP
                 card.setBackgroundResource(R.drawable.zz_alphatileslogo2);
@@ -171,13 +176,13 @@ public class Mexico extends GameActivity {
 
     public void chooseMemoryWords() {
         // KP, Oct 2020
-        int cardsToSetUp = visibleGameButtons / 2;   // this is half the number of cards
+        int cardsToSetUp = visibleTiles / 2;   // this is half the number of cards
 
         for (int i = 0; i < cardsToSetUp; i++) {
             boolean wordAcceptable = true;
             chooseWord();
             for (int j = 0; j < i; j++) {
-                if (refWord.wordInLWC.equals(memoryCollection.get(j*2)[0])) {
+                if (wordInLWC.equals(memoryCollection.get(j*2)[0])) {
                     wordAcceptable = false;
                     j=i;
                 }
@@ -189,23 +194,23 @@ public class Mexico extends GameActivity {
             if (wordAcceptable) {
                 String[] content = new String[]
                         {
-                                refWord.wordInLWC,
-                                refWord.wordInLOP,
+                                wordInLWC,
+                                wordInLOP,
                                 "TEXT",
                                 "UNSELECTED",
-                                String.valueOf(lwcWordHashMap.get(refWord.wordInLWC).duration),    // audio clip duration in seconds
-                                lwcWordHashMap.get(refWord.wordInLWC).adjustment,    // font adjustment
+                                String.valueOf(wordHashMap.get(wordInLWC).duration),    // audio clip duration in seconds
+                                wordHashMap.get(wordInLWC).adjustment,    // font adjustment
 
                         };
                 memoryCollection.add(content);
                 content = new String[]
                         {
-                                refWord.wordInLWC,
-                                refWord.wordInLOP,
+                                wordInLWC,
+                                wordInLOP,
                                 "IMAGE",
                                 "UNSELECTED",
-                                String.valueOf(lwcWordHashMap.get(refWord.wordInLWC).duration),    // audio clip duration in seconds
-                                lwcWordHashMap.get(refWord.wordInLWC).adjustment,    // font adjustment
+                                String.valueOf(wordHashMap.get(wordInLWC).duration),    // audio clip duration in seconds
+                                wordHashMap.get(wordInLWC).adjustment,    // font adjustment
 
                         };
                 memoryCollection.add(content);
@@ -218,13 +223,13 @@ public class Mexico extends GameActivity {
         int t = justClickedCard - 1; //  justClickedCard uses 1 to 12/16/20 (dep. on challengeLevel), t uses the array ID: between [0] and [11] / [15] / [19]
 
         if (memoryCollection.get(t)[3].equals("PAIRED")) {
-            setAllGameButtonsClickable();
+            setAllTilesClickable();
             setOptionsRowClickable();
             return;
         }
 
         if (justClickedCard == priorClickedCard && activeSelections == 1) {
-            setAllGameButtonsClickable();
+            setAllTilesClickable();
             setOptionsRowClickable();
             return;
         }
@@ -232,7 +237,7 @@ public class Mexico extends GameActivity {
         activeSelections++;
         String[] currentItem = memoryCollection.get(t); // KP
         currentItem[3] = "SELECTED"; // KP
-        TextView card = findViewById(GAME_BUTTONS[t]);
+        TextView card = findViewById(TILE_BUTTONS[t]);
         int resID = getResources().getIdentifier(currentItem[0], "drawable", getPackageName()); // KP
         String wordInLOP = currentItem[1]; // KP
         String appearance = currentItem[2]; // KP
@@ -253,7 +258,7 @@ public class Mexico extends GameActivity {
 
         if (activeSelections == 2) {
             setOptionsRowUnclickable();
-            setAllGameButtonsUnclickable();
+            setAllTilesUnclickable();
 
             handler = new Handler();
             handler.postDelayed(quickViewDelay, Long.valueOf(800));
@@ -270,7 +275,7 @@ public class Mexico extends GameActivity {
         boolean secondHit = false;
         cardHitA = 0;
         cardHitB = 0;
-        for (int i = 0; i < visibleGameButtons; i++) {
+        for (int i = 0; i < visibleTiles; i++) {
 
             // Scan through CARDS to find which two items are selected
             if (memoryCollection.get(i)[3].equals("SELECTED")) {
@@ -293,27 +298,27 @@ public class Mexico extends GameActivity {
             memoryCollection.get(cardHitB)[3] = "PAIRED";
             pairsCompleted++;
 
-            final TextView cardA = findViewById(GAME_BUTTONS[cardHitA]); // RR
-            final TextView cardB = findViewById(GAME_BUTTONS[cardHitB]); // RR
+            final TextView cardA = findViewById(TILE_BUTTONS[cardHitA]); // RR
+            final TextView cardB = findViewById(TILE_BUTTONS[cardHitB]); // RR
             cardA.setBackgroundResource(0);
             cardB.setBackgroundResource(0);
 
             cardA.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitA)[1]));
             cardB.setText(Start.wordList.stripInstructionCharacters(memoryCollection.get(cardHitB)[1]));
 
-            String tileColorStr = colorList.get(cardHitA % 5);
+            String tileColorStr = COLORS.get(cardHitA % 5);
             int tileColor = Color.parseColor(tileColorStr);
             cardA.setTextColor(tileColor); // theme color
             cardB.setTextColor(tileColor); // theme color
 
-            refWord.wordInLWC = memoryCollection.get(cardHitA)[0];
+            wordInLWC = memoryCollection.get(cardHitA)[0];
 
-            if (pairsCompleted == (visibleGameButtons / 2)) {
-                updatePointsAndTrackers((visibleGameButtons / 2));
+            if (pairsCompleted == (visibleTiles / 2)) {
+                updatePointsAndTrackers((visibleTiles / 2));
                 setAdvanceArrowToBlue();
             }
 
-            playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleGameButtons / 2));
+            playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleTiles / 2));
 
         } else {
             // The two cards do NOT match
@@ -344,15 +349,15 @@ public class Mexico extends GameActivity {
     };
 
     public void resetAfterIncorrectGuess() {
-        TextView cardA = findViewById(GAME_BUTTONS[cardHitA]); // RR
-        TextView cardB = findViewById(GAME_BUTTONS[cardHitB]); // RR
+        TextView cardA = findViewById(TILE_BUTTONS[cardHitA]); // RR
+        TextView cardB = findViewById(TILE_BUTTONS[cardHitB]); // RR
         cardA.setText("");
         cardB.setText("");
         cardA.setBackgroundResource(R.drawable.zz_alphatileslogo2);
         cardB.setBackgroundResource(R.drawable.zz_alphatileslogo2);
         memoryCollection.get(cardHitA)[3] = "UNSELECTED"; // KP
         memoryCollection.get(cardHitB)[3] = "UNSELECTED"; // KP
-        setAllGameButtonsClickable();
+        setAllTilesClickable();
         setOptionsRowClickable();
     }
 
@@ -376,11 +381,6 @@ public class Mexico extends GameActivity {
         if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // no action
     }
 }
 

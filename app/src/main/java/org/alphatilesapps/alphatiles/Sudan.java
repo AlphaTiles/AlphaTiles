@@ -1,5 +1,7 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,16 +22,21 @@ public class Sudan extends GameActivity {
     // will contain, for example:
     // List page 1 (which will contain <= 35 tiles or syllables)
     // List page 2, etc.
-    List<List<Start.Tile>> tilePagesLists = new ArrayList<>();
-    List<List<Start.Syllable>> syllablePagesLists = new ArrayList<>();
-    List<Start.Tile> tilePage = new ArrayList<>();
-    List<Start.Syllable> syllablePage = new ArrayList<>();
+    List<List<String>> pagesList = new ArrayList<List<String>>();
+    List<String> page = new ArrayList<>();
+
     int numPages = 0;
     int currentPageNumber = 0;
 
-    final int syllablesPerPage = 35;
-    final int tilesPerPage = 63;
-    protected static final int[] GAME_BUTTONS = {
+
+    protected static final int[] SYLL_BUTTONS = {
+            R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
+            R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16, R.id.tile17, R.id.tile18, R.id.tile19, R.id.tile20,
+            R.id.tile21, R.id.tile22, R.id.tile23, R.id.tile24, R.id.tile25, R.id.tile26, R.id.tile27, R.id.tile28, R.id.tile29, R.id.tile30,
+            R.id.tile31, R.id.tile32, R.id.tile33, R.id.tile34, R.id.tile35
+    };
+
+    protected static final int[] TILE_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16, R.id.tile17, R.id.tile18, R.id.tile19, R.id.tile20,
             R.id.tile21, R.id.tile22, R.id.tile23, R.id.tile24, R.id.tile25, R.id.tile26, R.id.tile27, R.id.tile28, R.id.tile29, R.id.tile30,
@@ -40,8 +47,8 @@ public class Sudan extends GameActivity {
     };
 
     @Override
-    protected int[] getGameButtons() {
-        return GAME_BUTTONS;
+    protected int[] getTileButtons() {
+        return TILE_BUTTONS;
     }
 
     @Override
@@ -54,7 +61,7 @@ public class Sudan extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -120,7 +127,6 @@ public class Sudan extends GameActivity {
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
-        showOrHideScrollingArrows();
     }
 
     private void fixConstraintsRTLSudan(int gameID) {
@@ -138,88 +144,94 @@ public class Sudan extends GameActivity {
 
     public void determineNumPages() {
 
-        tilePagesLists.add(tilePage);
-        syllablePagesLists.add(syllablePage);
+        pagesList.add(page);
         if (syllableGame.equals("S")) {
-            int total = syllableList.size() - syllablesPerPage; // 1 page is accounted for in numPages init
+            int total = syllableList.size() - SYLL_BUTTONS.length; // 1 page is accounted for in numPages init
             while (total >= 0) {
                 numPages++;
-                List<Start.Syllable> page = new ArrayList<>();
-                syllablePagesLists.add(page); //add another page(list of syllables) to list
-                total = total - syllablesPerPage;
+                List<String> page = new ArrayList<>();
+                pagesList.add(page); //add another page(list of syllables) to list
+                total = total - SYLL_BUTTONS.length;
             }
         } else {
-            int total = cumulativeStageBasedTileList.size() - SAD.size() - SILENT_PLACEHOLDER_CONSONANTS.size() - tilesPerPage;
+            int total = 0;
+            total = cumulativeStageBasedTileList.size() - TILE_BUTTONS.length;
             while (total >= 0) {
                 numPages++;
-                List<Start.Tile> page = new ArrayList<>();
-                tilePagesLists.add(page); //add another page(list of tiles) to list
-                total = total - tilesPerPage;
+                List<String> page = new ArrayList<>();
+                pagesList.add(page); //add another page(list of tiles) to list
+                total = total - TILE_BUTTONS.length;
             }
         }
     }
 
     public void splitTileListAcrossPages() {
 
-        int numTiles = cumulativeStageBasedTileList.size() - SAD.size() - SILENT_PLACEHOLDER_CONSONANTS.size();
-        int tileIndex = 0;
-        for (int i = 0; i <= numPages; i++) {
-            for (int j = 0; j < tilesPerPage; j++) {
-                if(tileIndex < numTiles) {
-                    Tile thisTile = cumulativeStageBasedTileList.get(tileIndex);
-                    if (!SAD.contains(thisTile) && !SILENT_PLACEHOLDER_CONSONANTS.contains(thisTile)) {
-                        tilePagesLists.get(i).add(thisTile);
-                    }
-                    tileIndex++;
+        int numTiles = cumulativeStageBasedTileList.size() - SAD.size();
+        int cont = 0;
+        for (int i = 0; i < numPages + 1; i++) {
+            for (int j = 0; j < TILE_BUTTONS.length; j++) {
+                if (cont < numTiles && !SAD.contains(cumulativeStageBasedTileList.get(cont))) {
+                    pagesList.get(i).add(cumulativeStageBasedTileList.get(cont));
                 }
+                cont++;
             }
         }
 
     }
 
     public void splitSyllablesListAcrossPages() {
-        int numSyllables = syllableList.size();
-        int syllableIndex = 0;
+        int numSylls = syllableList.size();
+        int cont = 0;
         for (int i = 0; i < numPages + 1; i++) {
-            for (int j = 0; j < syllablesPerPage; j++) {
-                if (syllableIndex < numSyllables) {
-                    syllablePagesLists.get(i).add(syllableList.get(syllableIndex));
+            for (int j = 0; j < SYLL_BUTTONS.length; j++) {
+                if (cont < numSylls) {
+                    pagesList.get(i).add(syllableList.get(cont).syllable);
                 }
-                syllableIndex++;
+                cont++;
             }
         }
     }
     public void showCorrectNumTiles(int page) {
 
-        visibleGameButtons = tilePagesLists.get(page).size();
+        visibleTiles = pagesList.get(page).size();
 
-        for (int k = 0; k < visibleGameButtons; k++) {
-            TextView tileView = findViewById(GAME_BUTTONS[k]);
-            tileView.setText(tilePagesLists.get(page).get(k).text);
-            String type = tilePagesLists.get(page).get(k).typeOfThisTileInstance;
+        for (int k = 0; k < visibleTiles; k++) {
+            TextView tileView = findViewById(TILE_BUTTONS[k]);
+            if (pagesList.get(page).get(k).endsWith("B") || pagesList.get(page).get(k).endsWith("C")) {
+                tileView.setText(pagesList.get(page).get(k).substring(0, pagesList.get(page).get(k).length() - 1));
+            } else {
+                tileView.setText(pagesList.get(page).get(k));
+            }
+            String type;
+            if (differentiateTypes) {
+                type = tileTypeHashMapWithMultipleTypesNoSAD.get(pagesList.get(page).get(k));
+            } else {
+                type = tileHashMapNoSAD.find(pagesList.get(page).get(k)).tileType;
+            }
             String typeColor;
             switch (type) {
                 case "C":
-                    typeColor = colorList.get(1);
+                    typeColor = COLORS.get(1);
                     break;
                 case "V":
-                    typeColor = colorList.get(2);
+                    typeColor = COLORS.get(2);
                     break;
                 case "T":
-                    typeColor = colorList.get(3);
+                    typeColor = COLORS.get(3);
                     break;
                 default:
-                    typeColor = colorList.get(4);
+                    typeColor = COLORS.get(4);
                     break;
             }
             int tileColor = Color.parseColor(typeColor);
             tileView.setBackgroundColor(tileColor);
         }
 
-        for (int k = 0; k < tilesPerPage; k++) {
+        for (int k = 0; k < TILE_BUTTONS.length; k++) {
 
-            TextView key = findViewById(GAME_BUTTONS[k]);
-            if (k < visibleGameButtons) {
+            TextView key = findViewById(TILE_BUTTONS[k]);
+            if (k < visibleTiles) {
                 key.setVisibility(View.VISIBLE);
                 key.setClickable(true);
             } else {
@@ -230,20 +242,22 @@ public class Sudan extends GameActivity {
     }
 
     public void showCorrectNumSyllables(int page) {
-        visibleGameButtons = syllablePagesLists.get(page).size();
 
-        for (int i = 0; i < visibleGameButtons; i++) {
-            TextView tile = findViewById(GAME_BUTTONS[i]);
-            tile.setText(syllablePagesLists.get(page).get(i).text);
-            String color = syllablePagesLists.get(page).get(i).color;
-            String typeColor = colorList.get(Integer.parseInt(color));
+        visibleTiles = pagesList.get(page).size();
+
+        for (int i = 0; i < visibleTiles; i++) {
+            TextView tile = findViewById(SYLL_BUTTONS[i]);
+            tile.setText(pagesList.get(page).get(i));
+            String color = syllableHashMap.find(pagesList.get(page).get(i)).color;
+            String typeColor = COLORS.get(Integer.parseInt(color));
             int tileColor = Color.parseColor(typeColor);
             tile.setBackgroundColor(tileColor);
         }
 
-        for (int k = 0; k < syllablesPerPage; k++) {
-            TextView key = findViewById(GAME_BUTTONS[k]);
-            if (k < visibleGameButtons) {
+        for (int k = 0; k < SYLL_BUTTONS.length; k++) {
+
+            TextView key = findViewById(SYLL_BUTTONS[k]);
+            if (k < visibleTiles) {
                 key.setVisibility(View.VISIBLE);
                 if (hasSyllableAudio) {
                     key.setClickable(true);
@@ -265,7 +279,6 @@ public class Sudan extends GameActivity {
             } else {
                 showCorrectNumTiles(currentPageNumber);
             }
-            showOrHideScrollingArrows();
         }
     }
 
@@ -277,47 +290,30 @@ public class Sudan extends GameActivity {
             } else {
                 showCorrectNumTiles(currentPageNumber);
             }
-            showOrHideScrollingArrows();
-        }
-    }
-
-    public void showOrHideScrollingArrows() {
-        ImageView nextPageArrow = findViewById(R.id.repeatImage);
-        ImageView prevPageArrow = findViewById(R.id.repeatImage2);
-        if (currentPageNumber == numPages) {
-            nextPageArrow.setVisibility(View.INVISIBLE);
-        } else {
-            nextPageArrow.setVisibility(View.VISIBLE);
-        }
-        if(currentPageNumber == 0) {
-            prevPageArrow.setVisibility(View.INVISIBLE);
-        } else {
-            prevPageArrow.setVisibility(View.VISIBLE);
         }
     }
 
     public void onBtnClick(View view) {
-        setAllGameButtonsUnclickable();
+        setAllTilesUnclickable();
         setOptionsRowUnclickable();
 
-        int audioId;
-        int duration;
+        String viewText = pagesList.get(currentPageNumber).get(Integer.parseInt((String) view.getTag())-1);
+        int audioId = 0;
+        int duration = 0;
         if (syllableGame.equals("S")) {
-            Start.Syllable thisSyllable = syllablePagesLists.get(currentPageNumber).get(Integer.parseInt((String) view.getTag())-1);
-            audioId = syllableAudioIDs.get(thisSyllable.audioName);
-            duration = thisSyllable.duration;
+            audioId = syllableAudioIDs.get(viewText);
+            duration = syllableDurations.get(viewText);
 
         } else {
-            Start.Tile thisTile = tilePagesLists.get(currentPageNumber).get(Integer.parseInt((String) view.getTag())-1);
-            audioId = tileAudioIDs.get(thisTile.audioForThisTileType);
-            duration = tileDurations.get(thisTile.audioForThisTileType);
+            audioId = tileAudioIDs.get(viewText);
+            duration = tileDurations.get(viewText);
         }
 
         gameSounds.play(audioId, 1.0f, 1.0f, 2, 0, 1.0f);
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 if (repeatLocked) {
-                    setAllGameButtonsClickable();
+                    setAllTilesClickable();
                 }
                 setOptionsRowClickable();
             }
@@ -331,10 +327,5 @@ public class Sudan extends GameActivity {
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
-    }
-
-    @Override
-    public void onBackPressed() {
-        // no action
     }
 }
