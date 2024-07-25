@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Scanner;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -34,17 +35,20 @@ public class Ecuador extends GameActivity {
 
     int[][] boxCoordinates;   // Will be 8 boxes, defined by 4 parameters each: x1, y1, x2, y2
     int justClickedWord = 0;
+    String lastWord = "";
+    String secondToLastWord = "";
+    String thirdToLastWord = "";
     // # 1 memoryCollection[LWC word, e.g. Spanish]
     // # 2 [LOP word, e.g. Me'phaa]
     // # 3 [state: "TEXT" or "IMAGE"]
     // # 4 [state: "SELECTED" or "UNSELECTED" or "PAIRED"]
 
-    protected static final int[] GAME_BUTTONS = {
+    protected static final int[] TILE_BUTTONS = {
             R.id.word01, R.id.word02, R.id.word03, R.id.word04, R.id.word05, R.id.word06, R.id.word07, R.id.word08
     };
 
-    protected int[] getGameButtons() {
-        return GAME_BUTTONS;
+    protected int[] getTileButtons() {
+        return TILE_BUTTONS;
     }
 
     protected int[] getWordImages() {
@@ -74,7 +78,7 @@ public class Ecuador extends GameActivity {
         int audioInstructionsResID;
         try {
 //          audioInstructionsResID = res.getIdentifier("ecuador_" + challengeLevel, "raw", context.getPackageName());
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -105,9 +109,14 @@ public class Ecuador extends GameActivity {
             centerGamesHomeImage();
         }
 
-        visibleGameButtons = GAME_BUTTONS.length;
+        visibleTiles = TILE_BUTTONS.length;
         updatePointsAndTrackers(0);
         playAgain();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // no action
     }
 
     public void repeatGame(View View) {
@@ -126,7 +135,7 @@ public class Ecuador extends GameActivity {
         setTextBoxColors();
         Collections.shuffle(wordList); // KP
         setWords();
-        setAllGameButtonsClickable();
+        setAllTilesClickable();
         setOptionsRowClickable();
 
     }
@@ -191,7 +200,7 @@ public class Ecuador extends GameActivity {
         Random rand = new Random();
 
         int extraLoops = 0;
-        for (int currentBoxIndex = 0; currentBoxIndex < GAME_BUTTONS.length; currentBoxIndex++) {
+        for (int currentBoxIndex = 0; currentBoxIndex < TILE_BUTTONS.length; currentBoxIndex++) {
 
             int coordX1 = rand.nextInt((maxStartX - minStartX) + 1) + minStartX;
             int coordY1 = rand.nextInt((maxStartY - minStartY) + 1) + minStartY;
@@ -278,9 +287,9 @@ public class Ecuador extends GameActivity {
             }
         }
 
-        for (int c = 0; c < GAME_BUTTONS.length; c++) {
+        for (int c = 0; c < TILE_BUTTONS.length; c++) {
 
-            final TextView wordTile = findViewById(GAME_BUTTONS[c]);
+            final TextView wordTile = findViewById(TILE_BUTTONS[c]);
 
             final int finalC = c;
             wordTile.post(new Runnable() {
@@ -312,8 +321,8 @@ public class Ecuador extends GameActivity {
         constraintSet.clone(constraintLayout);
         Random rand = new Random();
         int randInt = 0;
-        for (int c = 0; c < GAME_BUTTONS.length; c++) {
-            int wordTile = GAME_BUTTONS[c];
+        for (int c = 0; c < TILE_BUTTONS.length; c++) {
+            int wordTile = TILE_BUTTONS[c];
             if (c == 0) { // first word tile
                 randInt = rand.nextInt(100);
                 constraintSet.connect(wordTile, ConstraintSet.END, R.id.parent, ConstraintSet.END, randInt);
@@ -325,13 +334,13 @@ public class Ecuador extends GameActivity {
                 constraintSet.connect(wordTile, ConstraintSet.BOTTOM, R.id.word02, ConstraintSet.TOP, randInt);
                 constraintSet.centerHorizontally(wordTile, gameID);
                 constraintSet.applyTo(constraintLayout);
-            } else if (c == GAME_BUTTONS.length - 1) { // last word tile
+            } else if (c == TILE_BUTTONS.length - 1) { // last word tile
                 randInt = rand.nextInt(100);
                 constraintSet.connect(wordTile, ConstraintSet.END, R.id.parent, ConstraintSet.END, randInt);
                 randInt = rand.nextInt(100);
                 constraintSet.connect(wordTile, ConstraintSet.START, R.id.parent, ConstraintSet.START, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile, ConstraintSet.TOP, GAME_BUTTONS[c - 1], ConstraintSet.BOTTOM, randInt);
+                constraintSet.connect(wordTile, ConstraintSet.TOP, TILE_BUTTONS[c - 1], ConstraintSet.BOTTOM, randInt);
                 randInt = rand.nextInt(100);
                 constraintSet.connect(wordTile, ConstraintSet.BOTTOM, R.id.guidelineHSys1, ConstraintSet.TOP, randInt);
                 constraintSet.centerHorizontally(wordTile, gameID);
@@ -342,9 +351,9 @@ public class Ecuador extends GameActivity {
                 randInt = rand.nextInt(100);
                 constraintSet.connect(wordTile, ConstraintSet.START, R.id.parent, ConstraintSet.START, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile, ConstraintSet.TOP, GAME_BUTTONS[c - 1], ConstraintSet.BOTTOM, randInt);
+                constraintSet.connect(wordTile, ConstraintSet.TOP, TILE_BUTTONS[c - 1], ConstraintSet.BOTTOM, randInt);
                 randInt = rand.nextInt(100);
-                constraintSet.connect(wordTile, ConstraintSet.BOTTOM, GAME_BUTTONS[c + 1], ConstraintSet.TOP, randInt);
+                constraintSet.connect(wordTile, ConstraintSet.BOTTOM, TILE_BUTTONS[c + 1], ConstraintSet.TOP, randInt);
                 constraintSet.centerHorizontally(wordTile, gameID);
                 constraintSet.applyTo(constraintLayout);
             }
@@ -354,10 +363,10 @@ public class Ecuador extends GameActivity {
 
     public void setTextBoxColors() {
 
-        for (int w = 0; w < GAME_BUTTONS.length; w++) {
+        for (int w = 0; w < TILE_BUTTONS.length; w++) {
 
-            TextView wordTile = findViewById(GAME_BUTTONS[w]);
-            String tileColorStr = colorList.get(w % 5);
+            TextView wordTile = findViewById(TILE_BUTTONS[w]);
+            String tileColorStr = COLORS.get(w % 5);
             int tileColor = Color.parseColor(tileColorStr);
             wordTile.setBackgroundColor(tileColor);
             wordTile.setTextColor(Color.parseColor("#FFFFFF")); // white
@@ -370,26 +379,26 @@ public class Ecuador extends GameActivity {
         chooseWord();
 
         TextView rightWordTile = findViewById(R.id.activeWordTextView);
-        rightWordTile.setText(wordList.stripInstructionCharacters(refWord.wordInLOP));
+        rightWordTile.setText(wordList.stripInstructionCharacters(wordInLOP));
         ImageView image = (ImageView) findViewById(R.id.wordImage);
-        int resID = getResources().getIdentifier(refWord.wordInLWC + "2", "drawable", getPackageName());
+        int resID = getResources().getIdentifier(wordInLWC + "2", "drawable", getPackageName());
         image.setImageResource(resID);
 
         Random rand = new Random();
-        int rightWordIndex = rand.nextInt(GAME_BUTTONS.length);
-        TextView correctMatchTile = findViewById(GAME_BUTTONS[rightWordIndex]);
-        correctMatchTile.setText(wordList.stripInstructionCharacters(refWord.wordInLOP));
+        int rightWordIndex = rand.nextInt(TILE_BUTTONS.length);
+        TextView correctMatchTile = findViewById(TILE_BUTTONS[rightWordIndex]);
+        correctMatchTile.setText(wordList.stripInstructionCharacters(wordInLOP));
 
         ArrayList<String> wordsAlreadyOnTheBoard = new ArrayList<String>();
-        wordsAlreadyOnTheBoard.add(refWord.wordInLOP);
-        for (int w = 0; w < GAME_BUTTONS.length; w++) {
-            TextView wordTile = findViewById(GAME_BUTTONS[w]);
+        wordsAlreadyOnTheBoard.add(wordInLOP);
+        for (int w = 0; w < TILE_BUTTONS.length; w++) {
+            TextView wordTile = findViewById(TILE_BUTTONS[w]);
             if (w != rightWordIndex) {
                 boolean duplicate = true;
                 while (duplicate){
                     int randomIndexOfOtherWord = rand.nextInt(cumulativeStageBasedWordList.size());
-                    String randomOtherWordInLOP = cumulativeStageBasedWordList.get(randomIndexOfOtherWord).wordInLOP;
-                    if (!randomOtherWordInLOP.equals(refWord.wordInLOP)){
+                    String randomOtherWordInLOP = cumulativeStageBasedWordList.get(randomIndexOfOtherWord).localWord;
+                    if (!randomOtherWordInLOP.equals(wordInLOP)){
                         wordTile.setText(wordList.stripInstructionCharacters(randomOtherWordInLOP));
                         duplicate = false;
                     }
@@ -449,18 +458,18 @@ public class Ecuador extends GameActivity {
     private void respondToWordSelection() {
 
         int t = justClickedWord - 1; //  justClickedWord uses 1 to 8, t uses the array ID (between [0] and [7]
-        TextView chosenWord = findViewById(GAME_BUTTONS[t]);
+        TextView chosenWord = findViewById(TILE_BUTTONS[t]);
         String chosenWordText = chosenWord.getText().toString();
 
-        if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(refWord.wordInLOP))) {
+        if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(wordInLOP))) {
             // Good job!
             repeatLocked = false;
             setAdvanceArrowToBlue();
 
             updatePointsAndTrackers(2);
 
-            for (int w = 0; w < GAME_BUTTONS.length; w++) {
-                TextView nextWord = findViewById(GAME_BUTTONS[w]);
+            for (int w = 0; w < TILE_BUTTONS.length; w++) {
+                TextView nextWord = findViewById(TILE_BUTTONS[w]);
                 nextWord.setClickable(false);
                 if (w != t) {
                     String wordColorStr = "#A9A9A9"; // dark gray
@@ -494,11 +503,6 @@ public class Ecuador extends GameActivity {
         if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // no action
     }
 
 }

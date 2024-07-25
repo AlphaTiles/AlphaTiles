@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.wordDurations;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.totalAudio;
@@ -26,6 +27,7 @@ import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.hasTileAudio;
 import static org.alphatilesapps.alphatiles.Start.syllableAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.syllableList;
+import static org.alphatilesapps.alphatiles.Start.syllableDurations;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
@@ -171,11 +173,13 @@ public class LoadingScreen extends AppCompatActivity {
         // load speech sounds
         Resources res = context.getResources();
         wordAudioIDs = new HashMap();
+        wordDurations = new HashMap();
 
         for (Start.Word word : wordList) {
-            int resId = res.getIdentifier(word.wordInLWC, "raw", context.getPackageName());
+            int resId = res.getIdentifier(word.nationalWord, "raw", context.getPackageName());
             int duration = getAssetDuration(resId) + 100;
-            wordAudioIDs.put(word.wordInLWC, gameSounds.load(context, resId, 1));
+            wordAudioIDs.put(word.nationalWord, gameSounds.load(context, resId, 1));
+            wordDurations.put(word.nationalWord, duration);
             word.duration = duration;
         }
         LOGGER.info("LoadProgress: completed loadWordAudio()");
@@ -184,12 +188,14 @@ public class LoadingScreen extends AppCompatActivity {
     public void loadSyllableAudio() {
         Resources res = context.getResources();
         syllableAudioIDs = new HashMap();
+        syllableDurations = new HashMap();
 
-        for (Start.Syllable syllable : syllableList) {
-            int resId = res.getIdentifier(syllable.audioName, "raw", context.getPackageName());
+        for (Start.Syllable syll : syllableList) {
+            int resId = res.getIdentifier(syll.syllableAudioName, "raw", context.getPackageName());
             int duration = getAssetDuration(resId) + 100;
-            syllableAudioIDs.put(syllable.audioName, gameSounds.load(context, resId, 2));
-            syllable.duration = duration;
+            syllableAudioIDs.put(syll.syllable, gameSounds.load(context, resId, 2));
+            syllableDurations.put(syll.syllable, duration);
+            syll.syllableDuration = duration;
         }
         LOGGER.info("LoadProgress: completed loadSyllableAudio()");
     }
@@ -200,10 +206,33 @@ public class LoadingScreen extends AppCompatActivity {
         tileDurations = new HashMap();
 
         for (Start.Tile tile : tileList) {
-            int resId = res.getIdentifier(tile.audioForThisTileType, "raw", context.getPackageName());
+            int resId = res.getIdentifier(tile.audioForTile, "raw", context.getPackageName());
             int duration = getAssetDuration(resId) + 100;
-            tileAudioIDs.put(tile.audioForThisTileType, gameSounds.load(context, resId, 2));
-            tileDurations.put(tile.audioForThisTileType, duration);
+            tileAudioIDs.put(tile.baseTile, gameSounds.load(context, resId, 2));
+            tileDurations.put(tile.baseTile, duration);
+            tile.tileDuration1 = duration;
+
+            if (!tile.tileTypeB.equals("none")) {
+                if (!tile.audioForTileB.equals("X")) {
+                    resId = res.getIdentifier(tile.audioForTileB, "raw", context.getPackageName());
+                    duration = getAssetDuration(resId) + 100;
+                    tileAudioIDs.put(tile.baseTile + "B", gameSounds.load(context, resId, 2));
+                    tileDurations.put(tile.baseTile + "B", duration);
+                    tile.tileDuration2 = duration;
+                    totalAudio++;
+                }
+            }
+            if (tile.tileTypeC.compareTo("none") != 0) {
+                if (tile.audioForTileC.compareTo("X") != 0) {
+                    resId = res.getIdentifier(tile.audioForTileC, "raw", context.getPackageName());
+                    duration = getAssetDuration(resId) + 100;
+                    tileAudioIDs.put(tile.baseTile + "C", gameSounds.load(context, resId, 2));
+                    tileDurations.put(tile.baseTile + "C", duration);
+                    tile.tileDuration3 = duration;
+                    totalAudio++;
+                }
+            }
+
         }
         LOGGER.info("LoadProgress: completed loadTileAudio()");
     }
@@ -231,7 +260,7 @@ public class LoadingScreen extends AppCompatActivity {
     public void loadPixelWidthAdjustments() {
 
         for (Start.Word word : wordList) {
-            word.adjustment = String.valueOf(calculatedPixelWidthAdjustment(word.wordInLOP));
+            word.adjustment = String.valueOf(calculatedPixelWidthAdjustment(word.localWord));
         }
     }
 

@@ -242,6 +242,12 @@ public class ChoosePlayer extends AppCompatActivity {
             playername12.setVisibility(View.GONE);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
+
     public void goToEarthFromAvatar(View view) {
 
         playerNumber = Integer.parseInt((String) view.getTag());
@@ -314,11 +320,6 @@ public class ChoosePlayer extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // no action
     }
 
 }
