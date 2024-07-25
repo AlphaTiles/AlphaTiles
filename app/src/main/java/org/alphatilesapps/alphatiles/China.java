@@ -7,6 +7,7 @@ import static org.alphatilesapps.alphatiles.Start.wordList;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +23,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 //Game of 15
 public class China extends GameActivity {
     ArrayList<Start.Word> threeFourTileWords = new ArrayList<>();
+    private ArrayList<Start.Word> threeTileWords = new ArrayList<>();
+    private ArrayList<Start.Word> fourTileWords = new ArrayList<>();
     Start.Word oneThreeTileWord;
     Boolean[] solvedLines = new Boolean[4];
     TextView blankTile;
@@ -135,20 +138,44 @@ public class China extends GameActivity {
     }
 
     private void chooseWords() {
-        // Find three four-tile words
-        while (threeFourTileWords.size()<3){
-            chooseWord();
-            if(tileList.parseWordIntoTilesPreliminary(refWord.wordInLOP, refWord).size() == 4){
-                threeFourTileWords.add(refWord);
+        // Ensure words are preprocessed
+        if (threeTileWords.isEmpty() || fourTileWords.isEmpty()) {
+            preprocessWords();
+        }
+
+        // Check if there are enough words to choose from
+        if (threeTileWords.isEmpty()) {
+            Log.e("China", "No 3-tile words available");
+            return;
+        }
+        if (fourTileWords.size() < 3) {
+            Log.e("China", "Not enough 4-tile words available, required: 3, available: " + fourTileWords.size());
+            return;
+        }
+
+        // Randomly choose one 3-tile word
+        oneThreeTileWord = threeTileWords.get(new Random().nextInt(threeTileWords.size()));
+
+        // Clear previous selection of 4-tile words
+        threeFourTileWords.clear();
+
+        // Randomly choose three 4-tile words
+        for (int i = 0; i < 3; i++) {
+            threeFourTileWords.add(fourTileWords.remove(new Random().nextInt(fourTileWords.size())));
+        }
+    }
+
+
+    private void preprocessWords() {
+        for (Start.Word word : wordList) {
+            if (word.wordInLWC.length() == 3) {
+                threeTileWords.add(word);
+            } else if (word.wordInLWC.length() == 4) {
+                fourTileWords.add(word);
             }
         }
-
-
-        // Find one three-tile word
-        while (tileList.parseWordIntoTilesPreliminary(refWord.wordInLOP, refWord).size()!=3) {
-            chooseWord();
-        }
-        oneThreeTileWord = refWord;
+        Log.d("China", "threeTileWords size: " + threeTileWords.size());
+        Log.d("China", "fourTileWords size: " + fourTileWords.size());
     }
 
     private void setUpTiles() {
