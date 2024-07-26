@@ -11,9 +11,9 @@ public class FilePresence {
     ArrayList<File> files = new ArrayList<>();
     HashSet<String> folders = new HashSet<>();
     HashMap<String, TagData> tagData = new HashMap<>();
-    public ArrayList<String> fatalErrors = new ArrayList<>();
-    public ArrayList<String> warnings = new ArrayList<>();
-    public ArrayList<String> recommendations = new ArrayList<>();
+    public ArrayList<Message> fatalErrors = new ArrayList<>();
+    public ArrayList<Message> warnings = new ArrayList<>();
+    public ArrayList<Message> recommendations = new ArrayList<>();
     /// Add a required file with subfolder and tag
     public void add(String tag, String subfolder, String file, String mimeType, String reason, boolean optional) {
         for(File other : files) {
@@ -56,7 +56,7 @@ public class FilePresence {
                     }
                     if (excess) {
                         if(showExcess)
-                            warnings.add("Item " + item.getName() + " in folder " + folderName + " is not used and will not be downloaded");
+                            warnings.add(new Message(Message.Tag.FilePresence, "Item " + item.getName() + " in folder " + folderName + " is not used and will not be downloaded"));
                         excessFiles.add(new ExcessFile(folderName, stripped));
                         folder.getFolderContents().remove(i);
                     } else {
@@ -81,16 +81,16 @@ public class FilePresence {
                     }
                 }
                 if(closestMatch != null)
-                    recommendations.add("Unused item " + closestMatch.name + " and missing item " + file.name + " are similar, did you make a typo?");
+                    recommendations.add(new Message(Message.Tag.FilePresence, "Unused item " + closestMatch.name + " and missing item " + file.name + " are similar, did you make a typo?"));
                 if(file.hasName) {
                     if(!file.reason.isEmpty()) {
-                        fatalErrors.add("Item " + file.name + ", which is required because "
-                                + file.reason + ", is missing from folder " + file.folderName + " or has the wrong mime type");
+                        fatalErrors.add(new Message(Message.Tag.FilePresence, "Item " + file.name + ", which is required because "
+                                + file.reason + ", is missing from folder " + file.folderName + " or has the wrong mime type"));
                     } else {
-                        fatalErrors.add("Required item " + file.name + " is missing from folder " + file.folderName + " or has the wrong mime type");
+                        fatalErrors.add(new Message(Message.Tag.FilePresence, "Required item " + file.name + " is missing from folder " + file.folderName + " or has the wrong mime type"));
                     }
                 } else {
-                    fatalErrors.add("Required item of type " + file.mimeTypes + " is missing from folder " + file.folderName);
+                    fatalErrors.add(new Message(Message.Tag.FilePresence, "Required item of type " + file.mimeTypes + " is missing from folder " + file.folderName));
                 }
             }
         }
