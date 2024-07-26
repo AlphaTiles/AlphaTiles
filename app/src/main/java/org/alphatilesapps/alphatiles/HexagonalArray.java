@@ -5,22 +5,25 @@ import java.util.LinkedList;
 
 public class HexagonalArray<T> {
 
+    private int height, width;
+
     T[][] hexArray;
     @SuppressWarnings("unchecked")
     public HexagonalArray(int width, int height) {
         hexArray = (T[][]) new Object[width][height];
+        this.height = height;
+        this.width = width;
     }
 
     @SuppressWarnings("unchecked")
     public HexagonalArray(T[][] array) {
         hexArray = array;
-        /*hexArray = (T[][]) new Object[array.length][array[0].length];
-        for (int i = 0; i < hexArray.length; i++) {
-            for (int j = 0; j < hexArray[0].length; j++) {
-                hexArray[i][j] = array[i][j];
-            }
-        }*/
+        this.height = array[0].length;
+        this.width = array.length;
     }
+
+    int getHeight() { return height; }
+    int getWidth() { return width; }
 
     public T get(int x, int y) {
         return hexArray[x][y];

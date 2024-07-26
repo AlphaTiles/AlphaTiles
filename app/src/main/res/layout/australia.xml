@@ -31,14 +31,13 @@
 
     <LinearLayout
         android:id="@+id/replacementPopup"
-        android:layout_width="409dp"
+        android:layout_width="0dip"
         android:layout_height="75dp"
-        android:background="#CDCDCD"
+        android:background="#D8D8D8"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/rl"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rl"></LinearLayout>
+        app:layout_constraintTop_toTopOf="@+id/wordPreview"></LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

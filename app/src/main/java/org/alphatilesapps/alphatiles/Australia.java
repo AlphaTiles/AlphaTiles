@@ -134,9 +134,9 @@ public class Australia extends GameActivity {
 
         void onClick() {
             if (chain.isWord()) {
-                // do one thing
+                System.out.println("That's a word!");
             } else {
-                // do a different thing
+                System.out.println("Not a word. Please just do better.");
             }
         }
 
@@ -164,27 +164,59 @@ public class Australia extends GameActivity {
 
         private boolean popupup = false;
 
+        private TextView square;
+
         public ReplacementPopup() {
 
         }
 
+        void onReplacementClick(TextView v) {
+            square.setText(v.getText());
+            closePopup();
+        }
+
         void openPopup(TextView v) {
+            // store the view so that when a replacement is selected, the view can be changed
+            square = v;
+
+            square.animate().z(30);
+
+            int[] pos = idToSquinfo.get(square.getId()).pos;
+            for (int i = 0; i < hex.getWidth(); i++) {
+                for (int j = 0; j < hex.getHeight(); j++) {
+                    if (i == pos[0] && j == pos[1])
+                        continue;
+                    hex.get(i, j).animate().alpha(0.5F);
+                }
+            }
+
             LinearLayout popupLayout = findViewById(R.id.replacementPopup);
+            popupLayout.setGravity(Gravity.CENTER);
             popupLayout.removeAllViews();
             popupLayout.setVisibility(View.VISIBLE);
             Start.Tile squareContentsTile = Start.tileHashMap.find((String) v.getText());
             ArrayList<String> distractors = squareContentsTile.distractors;
             for (String distractor : distractors) {
                 TextView option = new TextView(context);
-                option.setLayoutParams(
-                        new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                1
-                        )
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        bwSquareDim + bwSquareMargin,
+                        bwSquareDim + bwSquareMargin,
+                        1
                 );
+                layoutParams.setMargins(5,5,5,5);
+                option.setLayoutParams(layoutParams);
+
                 option.setText(distractor);
                 option.setGravity(Gravity.CENTER);
+                option.setZ(30);
+                option.setBackgroundColor(Color.argb(255, 0, 204, 0));
+
+                option.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onReplacementClick((TextView) v);
+                    }
+                });
                 popupLayout.addView(option);
                 popupup = true;
             }
@@ -194,12 +226,23 @@ public class Australia extends GameActivity {
             LinearLayout popupLayout = findViewById(R.id.replacementPopup);
             popupLayout.removeAllViews();
             popupLayout.setVisibility(View.GONE);
+
+            if (square != null) {
+                square.animate().z(0);
+                int[] pos = idToSquinfo.get(square.getId()).pos;
+                for (int i = 0; i < hex.getWidth(); i++) {
+                    for (int j = 0; j < hex.getHeight(); j++) {
+                        if (i == pos[0] && j == pos[1])
+                            continue;
+                        hex.get(i, j).animate().alpha(1.0F);
+                    }
+                }
+            }
+
             popupup = false;
         }
 
-        boolean isPopupup() {
-            return popupup;
-        }
+        boolean isPopupup() { return popupup; }
     }
 
     ReplacementPopup poppy = new ReplacementPopup();
@@ -250,7 +293,6 @@ public class Australia extends GameActivity {
                     System.out.println("Action Down");
                     squinfo.didSwap = false;
                     poppy.closePopup();
-                    //return true;
                     break;
                 case MotionEvent.ACTION_MOVE:
                     System.out.println("Action Move");
@@ -287,8 +329,6 @@ public class Australia extends GameActivity {
 
                             chain.clear();
 
-                            poppy.closePopup();
-
                             return false;
                         }
                     }
@@ -303,9 +343,6 @@ public class Australia extends GameActivity {
                         chain.add((TextView) v);
                     }
 
-                    /*if (touchY > v.getY() && touchX > v.getX() && touchY < v.getY() + bwSquareDim - bwSquareMargin && touchX < v.getX() + bwSquareDim - bwSquareMargin) {
-                        chain.add((TextView) v);
-                    }*/
                     System.out.println("Chain: " + chain.word());
                     submitAndPreview.update();
 
@@ -396,6 +433,14 @@ public class Australia extends GameActivity {
         }
 
         submitAndPreview.update();
+        TextView wordPreview = findViewById(R.id.wordPreview);
+        wordPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitAndPreview.onClick();
+            }
+        });
+
         poppy.closePopup();
 
     }
