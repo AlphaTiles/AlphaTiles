@@ -210,7 +210,7 @@ public class Italy extends GameActivity {
             int tileColor = Color.parseColor(tileColorStr);
             thisCardText.setTextColor(tileColor); // resets as in previous round some text fields set to black
             ImageView thisCardImage = (ImageView) findViewById(WORD_IMAGES[tileNumber]);
-            int resID = getResources().getIdentifier(gameCards.get(tileNumber).wordInLWC, "drawable", getPackageName());
+            int resID = getResources().getIdentifier(gameCards.get(tileNumber).wordInLWC +"2", "drawable", getPackageName());
             thisCardImage.setImageResource(0);
             thisCardImage.setImageResource(resID);
         }
