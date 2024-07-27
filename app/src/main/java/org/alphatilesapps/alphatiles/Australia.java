@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -260,7 +264,18 @@ public class Australia extends GameActivity {
 
     protected int getAudioInstructionsResID() { return 0; }
 
-    protected void centerGamesHomeImage() {}
+    protected void centerGamesHomeImage() {
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintlayout);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, R.id.constraintlayout);
+        constraintSet.applyTo(constraintLayout);
+    }
 
     private void swap(int[] arr1, int[] arr2) {
         assert arr1.length == arr2.length;
@@ -440,10 +455,21 @@ public class Australia extends GameActivity {
                 submitAndPreview.onClick();
             }
         });
+        ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
+        gamesHomeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { goBackToEarth(v); }
+        });
 
         poppy.closePopup();
 
+        if (getAudioInstructionsResID() == 0) {
+            centerGamesHomeImage();
+        }
+
     }
 
-
+    public void goBackToEarth(View view) {
+        super.goBackToEarth(view);
+    }
 }
