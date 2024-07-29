@@ -53,15 +53,12 @@ public class Malaysia extends GameActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.malaysia);
         context = this;
         int gameID = R.id.malaysiaCL;
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         determineNumPages(); // JP
-        //visibleGameButtons = 22;
         setContentView(R.layout.malaysia);
-        //gameID = R.id.malaysiaCL;
         assignPages();
         displayWords(0);
 
@@ -77,14 +74,14 @@ public class Malaysia extends GameActivity {
         while (total >= 0) {
             numPages++;
             List<Start.Word> page = new ArrayList<Start.Word>();
-            wordPagesLists.add(page); //add another page(list of syllables) to list
+            wordPagesLists.add(page);
             total -= wordsPerPage;
         }
         LOGGER.info("(NumPages = " + numPages + ")");
     }
 
     public void assignPages() {
-        int numWords = wordList.size();//cumulativeStageBasedWordList.size();//234; //FIX THIS!!!
+        int numWords = wordList.size();
         int wordIndex = 0;
         for (int i = 0; i <= numPages; i++)
             for (int j = 0; j < wordsPerPage; j++)
@@ -98,12 +95,8 @@ public class Malaysia extends GameActivity {
         visibleGameButtons = wordPagesLists.get(page).size();
         for(int i = 0; i < visibleGameButtons; i++){
             TextView word = findViewById(GAME_BUTTONS[i]);
-            //word.setText(wordPagesLists.get(page).get(i).wordInLWC); //IS THIS THE RIGHT PART? (wordInLWC)
-            Log.d("Malaysia", word.toString());
-            LOGGER.info("showCorrectNumWords: " + wordInLOPWithStandardizedSequenceOfCharacters(wordPagesLists.get(page).get(i)));
             word.setText(wordInLOPWithStandardizedSequenceOfCharacters(wordPagesLists.get(page).get(i)));
-            Log.e("Malaysia", "Word is still null");
-            String color = ""+(i%11+2==5?1:i%11+2);//wordPagesLists.get(page).get(i).; //FIX THIS!
+            String color = ""+(i%11+2==5?1:i%11+2);
             String typeColor = colorList.get(Integer.parseInt(color));
             int wordColor = Color.parseColor(typeColor);
             word.setBackgroundColor(wordColor);
@@ -195,48 +188,22 @@ public class Malaysia extends GameActivity {
     }
 
     public void onWordClick(View view) {
-        LOGGER.info("KAUUBUNGU 1");
         setAllGameButtonsUnclickable(); //remove these lines to enable faster listening
         setAllGameImagesClickable(false);
-        LOGGER.info("KAUUBUNGU 2");
-        //setOptionsRowUnclickable();
-        LOGGER.info("KAUUBUNGU 3");
-        //Yowza, kauubungu, geronimo, lookoutbelow,
-        int audioId;
-        int duration;
-//        if (syllableGame.equals("S")) {
-//            Start.Syllable thisSyllable = syllablePagesLists.get(currentPageNumber).get(Integer.parseInt((String) view.getTag())-1);
-//            audioId = syllableAudioIDs.get(thisSyllable.audioName);
-//            duration = thisSyllable.duration;
-//
-//        } else {
-//            Start.Tile thisTile = tilePagesLists.get(currentPageNumber).get(Integer.parseInt((String) view.getTag())-1);
-//            audioId = tileAudioIDs.get(thisTile.audioForThisTileType);
-//            duration = tileDurations.get(thisTile.audioForThisTileType);
-//        }
-        LOGGER.info("KAUUBUNGU 4");
-        Start.Word thisWord = wordPagesLists.get(currentPageNumber).get(Integer.parseInt((String) view.getTag())-1); //This casting makes me antsy
-        //Start.Word thisWord = wordPagesLists.get(currentPageNumber).get(Integer.parseInt(((String) view.get.getId()).substring(4)-1); //This casting makes me antsy
-        LOGGER.info("KAUUBUNGU 5");
-        audioId = wordAudioIDs.get(thisWord.wordInLWC); //FIX THIS!!! //wait... how is it allowing a word object where an integer goes?
-//R.id.something for the wordID? IDK!!!
-        LOGGER.info("KAUUBUNGU 6");
-        duration = thisWord.duration;
-        LOGGER.info("KAUUBUNGU 7");
+
+        Start.Word thisWord = wordPagesLists.get(currentPageNumber).get(Integer.parseInt((String) view.getTag())-1);
+        int audioId = wordAudioIDs.get(thisWord.wordInLWC);
+        int duration = thisWord.duration;
         gameSounds.play(audioId, 1.0f, 1.0f, 2, 0, 1.0f);
-        LOGGER.info("KAUUBUNGU 8");
+
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 if (repeatLocked) {
                     setAllGameButtonsClickable(); //remove these lines to enable faster listening
                     setAllGameImagesClickable(true);
                 }
-                LOGGER.info("KAUUBUNGU 9");
-                //setOptionsRowClickable();
-                LOGGER.info("KAUUBUNGU 10");
             }
         }, duration);
-        LOGGER.info("KAUUBUNGU 11");
     }
 
     public void clickPicHearAudio(View view) {
@@ -252,5 +219,4 @@ public class Malaysia extends GameActivity {
             else imageView.setClickable(false);
         }
     }
-
 }
