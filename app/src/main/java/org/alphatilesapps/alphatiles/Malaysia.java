@@ -26,22 +26,22 @@ public class Malaysia extends GameActivity {
     List<Start.Word> wordPage = new ArrayList<>();
     int numPages = 0;
     int currentPageNumber = 0;
-    final int wordsPerPage = 11;
+    boolean colorless = false;
+    //final int wordsPerPage = 11;
 
     protected static final int[] GAME_BUTTONS = {
             R.id.word01, R.id.word02, R.id.word03, R.id.word04,
             R.id.word05, R.id.word06, R.id.word07, R.id.word08,
             R.id.word09, R.id.word10, R.id.word11,
-            //R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04,
-            //R.id.wordImage05, R.id.wordImage06, R.id.wordImage07, R.id.wordImage08,
-            //R.id.wordImage09, R.id.wordImage10, R.id.wordImage11
     };
+    final int wordsPerPage = GAME_BUTTONS.length;
 
     protected static final int[] WORD_IMAGES = {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04,
             R.id.wordImage05, R.id.wordImage06, R.id.wordImage07, R.id.wordImage08,
             R.id.wordImage09, R.id.wordImage10, R.id.wordImage11
     };
+    //maybe have some check here to see if (GAME_BUTTONS.length!=WORD_IMAGES.length)?
     @Override
     protected int[] getGameButtons() {
         return GAME_BUTTONS;
@@ -49,7 +49,7 @@ public class Malaysia extends GameActivity {
     @Override
     protected int[] getWordImages() { return WORD_IMAGES; }
 
-    private static final Logger LOGGER = Logger.getLogger(Malaysia.class.getName() );
+    //private static final Logger LOGGER = Logger.getLogger(Malaysia.class.getName() );
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +57,7 @@ public class Malaysia extends GameActivity {
         int gameID = R.id.malaysiaCL;
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-        determineNumPages(); // JP
+        determineNumPages();
         setContentView(R.layout.malaysia);
         assignPages();
         displayWords(0);
@@ -65,6 +65,7 @@ public class Malaysia extends GameActivity {
         if (scriptDirection.equals("RTL")) fixConstraintsRTLMalaysia(gameID);
         if (getAudioInstructionsResID() == 0) centerGamesHomeImage();
         showOrHideScrollingArrows();
+        setAllImagesBlank();
         setAllGameButtonsClickable();
     }
 
@@ -77,7 +78,6 @@ public class Malaysia extends GameActivity {
             wordPagesLists.add(page);
             total -= wordsPerPage;
         }
-        LOGGER.info("(NumPages = " + numPages + ")");
     }
 
     public void assignPages() {
@@ -90,20 +90,35 @@ public class Malaysia extends GameActivity {
                     wordIndex++;
                 }
     }
+    public void setAllImagesBlank(){
+        for(int i = 0; i < WORD_IMAGES.length; i++){
+            ImageView image = findViewById(WORD_IMAGES[i]);
+            image.setImageDrawable(null);
+        }
+    }
 
     public void displayWords(int page){
         visibleGameButtons = wordPagesLists.get(page).size();
+        if(page >= numPages - 1)
+            for(int i = visibleGameButtons; i < wordsPerPage; i++)
+                findViewById(WORD_IMAGES[i]).setBackgroundResource(0);
+                //could put this in the bigger loop but just in case the optimizer misses this (it takes maybe 0.1s longer per page)
+
         for(int i = 0; i < visibleGameButtons; i++){
             TextView word = findViewById(GAME_BUTTONS[i]);
             word.setText(wordInLOPWithStandardizedSequenceOfCharacters(wordPagesLists.get(page).get(i)));
-            String color = ""+(i%11+2==5?1:i%11+2);
-            String typeColor = colorList.get(Integer.parseInt(color));
-            int wordColor = Color.parseColor(typeColor);
+            //String color = "" + (i<5?i:i>5?10-i:7); //this theme works well with the Me'phaa colors, but might not for all types. Is this ok?
+            //if(colorless) color = "8";
+            //String typeColor = colorList.get(Integer.parseInt(color));
+            int color = i<5?i:i>5?10-i:7;
+            //String typeColor = colorList.get(colorless?8:color);
+            int wordColor = Color.parseColor(colorList.get(colorless?8:color));//typeColor);
             word.setBackgroundColor(wordColor);
+            findViewById(WORD_IMAGES[i]).setBackgroundResource(getResources().getIdentifier(wordPagesLists.get(page).get(i).wordInLWC, "drawable", getPackageName())); //thailand 365
         }
-        for(int k = 0; k < wordsPerPage; k++){
-            TextView key = findViewById(GAME_BUTTONS[k]);
-            if(k < visibleGameButtons){
+        for(int i = 0; i < wordsPerPage; i++){
+            TextView key = findViewById(GAME_BUTTONS[i]);
+            if(i < visibleGameButtons){
                 key.setVisibility(View.VISIBLE);
                 //if (hasWordAudio)
                 key.setClickable(true);
@@ -114,6 +129,12 @@ public class Malaysia extends GameActivity {
             }
         }
         //add in two loops here to make the images load in.
+        //LOGGER.info("JIRANIMO 1");
+        for(int i = 0; i < wordsPerPage; i++) {
+            //findViewById(WORD_IMAGES[i]).setBackgroundResource(getResources().getIdentifier(wordPagesLists.get(page).get(i).wordInLWC, "drawable", getPackageName())); //thailand 365
+            //LOGGER.info("JIRANIMO 4");
+            //image.setImageDrawable(null);
+        }
     }
 
     @Override
@@ -189,7 +210,7 @@ public class Malaysia extends GameActivity {
 
     public void onWordClick(View view) {
         setAllGameButtonsUnclickable(); //remove these lines to enable faster listening
-        setAllGameImagesClickable(false);
+        setAllGameImagesClickable(false); //
 
         Start.Word thisWord = wordPagesLists.get(currentPageNumber).get(Integer.parseInt((String) view.getTag())-1);
         int audioId = wordAudioIDs.get(thisWord.wordInLWC);
@@ -200,7 +221,7 @@ public class Malaysia extends GameActivity {
             public void run() {
                 if (repeatLocked) {
                     setAllGameButtonsClickable(); //remove these lines to enable faster listening
-                    setAllGameImagesClickable(true);
+                    setAllGameImagesClickable(true); //
                 }
             }
         }, duration);
