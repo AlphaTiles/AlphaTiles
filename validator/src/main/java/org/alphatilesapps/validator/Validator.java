@@ -25,6 +25,9 @@ import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -58,6 +61,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -177,6 +181,9 @@ public class Validator {
             if (!url.isEmpty()) {
                 Validator myValidator = new Validator(url, confirmedPath, checks);
                 myValidator.validate();
+                if(checks.copySyllables) {
+                    myValidator.copySyllablesDraft();
+                }
                 Set<Message.Tag> tagsToShow;
                 if (checks.preWorkshop) {
                     tagsToShow = Set.of(Message.Tag.FilePresence);
@@ -1216,6 +1223,32 @@ public class Validator {
 
     //<editor-fold desc="writing-app-resources methods">
 
+    public void copySyllablesDraft() {
+        try {
+            HashSet<String> parsedSyllables = new HashSet<>();
+            for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1)) {
+                String[] syllablesInWord = word.split("\\.");
+                parsedSyllables.addAll(Arrays.asList(syllablesInWord));
+            }
+            String[] sorted = parsedSyllables.toArray(new String[0]);
+            Arrays.sort(sorted);
+            StringBuilder builder = new StringBuilder();
+            for(int i = 0; i < sorted.length; i++) {
+                builder.append(sorted[i]);
+                builder.append("\t");
+                builder.append(sorted[(i + 1) % sorted.length]);
+                builder.append("\t");
+                builder.append(sorted[(i + 2) % sorted.length]);
+                builder.append("\t");
+                builder.append(sorted[(i + 3) % sorted.length]);
+                builder.append("\n");
+            }
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(new StringSelection(builder.toString()), null);
+        } catch (ValidatorException e) {
+            warn(Message.Tag.Etc,"Couldn't load the wordlist tab to generate syllable draft");
+        }
+    }
     /**
      * Writes an android language pack to be used in the AlphaTiles app, including adjustments to build.gradle.
      * Bases language pack template on local device in PublicLanguageAssets repo that should be sister to AlphaTiles.
@@ -2368,10 +2401,12 @@ public class Validator {
         public boolean showRecommendations = true;
         public boolean showExcess = true;
         public boolean preWorkshop = false;
+        public boolean copySyllables = false;
         public Checks(JPanel dialog) {
             addCheck(dialog, "Pre-workshop check", (ActionEvent e) -> preWorkshop = !preWorkshop, false);
             addCheck(dialog, "Show recommendations", (ActionEvent e) -> showRecommendations = !showRecommendations);
             addCheck(dialog, "Show excess file warnings", (ActionEvent e) -> showExcess = !showExcess);
+            addCheck(dialog, "Copy syllables draft to clipboard", (ActionEvent e) -> copySyllables = !copySyllables, false);
         }
         private void addCheck(JPanel dialog, String message, ActionListener listener) {
             addCheck(dialog, message, listener, true);
