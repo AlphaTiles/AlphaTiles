@@ -83,11 +83,16 @@ public class FilePresence {
                 if(closestMatch != null)
                     recommendations.add(new Message(Message.Tag.FilePresence, "Unused item " + closestMatch.name + " and missing item " + file.name + " are similar, did you make a typo?"));
                 if(file.hasName) {
+                    String extensionNote = "";
+                    if(file.name.contains(".")) {
+                        String actual = file.name.split("\\.")[0];
+                        extensionNote = ". Don't use file extensions in the google sheet, try changing " + file.name + " to " + actual + " there";
+                    }
                     if(!file.reason.isEmpty()) {
                         fatalErrors.add(new Message(Message.Tag.FilePresence, "Item " + file.name + ", which is required because "
-                                + file.reason + ", is missing from folder " + file.folderName + " or has the wrong mime type"));
+                                + file.reason + ", is missing from folder " + file.folderName + " or has the wrong mime type" + extensionNote));
                     } else {
-                        fatalErrors.add(new Message(Message.Tag.FilePresence, "Required item " + file.name + " is missing from folder " + file.folderName + " or has the wrong mime type"));
+                        fatalErrors.add(new Message(Message.Tag.FilePresence, "Required item " + file.name + " is missing from folder " + file.folderName + " or has the wrong mime type" + extensionNote));
                     }
                 } else {
                     fatalErrors.add(new Message(Message.Tag.FilePresence, "Required item of type " + file.mimeTypes + " is missing from folder " + file.folderName));
