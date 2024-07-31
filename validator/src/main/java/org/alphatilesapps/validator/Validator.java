@@ -25,6 +25,9 @@ import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -46,7 +49,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.text.Normalizer;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -59,6 +61,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -172,22 +175,36 @@ public class Validator {
             panel.add(urlInput);
             // Might need to pass this to the validator itself once more checks are added, see Checks class at the bottom of the file
             Checks checks = new Checks(panel);
+
             int ignored = JOptionPane.showConfirmDialog(jf, panel, "AlphaTiles", JOptionPane.DEFAULT_OPTION);
             String url = urlInput.getText();
             if (!url.isEmpty()) {
-                Validator myValidator = new Validator(url, confirmedPath);
+                Validator myValidator = new Validator(url, confirmedPath, checks);
                 myValidator.validate();
+                if(checks.copySyllables) {
+                    myValidator.copySyllablesDraft();
+                }
+                Set<Message.Tag> tagsToShow;
+                if (checks.preWorkshop) {
+                    tagsToShow = Set.of(Message.Tag.FilePresence);
+                } else {
+                    tagsToShow = Message.allTags();
+                }
                 System.out.println("\n\nList of Fatal Errors\n********");
                 int n = 0;
-                for (String error : myValidator.getFatalErrors()) {
-                    n++;
-                    System.out.println(n + ". " + error);
+                for (Message error : myValidator.getFatalErrors()) {
+                    if(tagsToShow.contains(error.tag)) {
+                        n++;
+                        System.out.println(n + ". " + error.content);
+                    }
                 }
                 n = 0;
                 System.out.println("\nList of Warnings\n********");
-                for (String warning : myValidator.getWarnings()) {
-                    n++;
-                    System.out.println(n + ". " + warning);
+                for (Message warning : myValidator.getWarnings()) {
+                    if(tagsToShow.contains(warning.tag)) {
+                        n++;
+                        System.out.println(n + ". " + warning.content);
+                    }
                 }
                 n = 0;
                 System.out.println("\nProject Notes\n********");
@@ -198,9 +215,11 @@ public class Validator {
                 n = 0;
                 if (checks.showRecommendations) {
                     System.out.println("\nList of Recommendations\n********");
-                    for (String recommendation : myValidator.getRecommendations()) {
-                        n++;
-                        System.out.println(n + ". " + recommendation);
+                    for (Message recommendation : myValidator.getRecommendations()) {
+                        if(tagsToShow.contains(recommendation.tag)) {
+                            n++;
+                            System.out.println(n + ". " + recommendation.content);
+                        }
                     }
                 }
 
@@ -235,12 +254,12 @@ public class Validator {
     /**
      * A LinkedHashSet of fatal errors found by the validator (is Set to avoid duplicate messages). Printed by main.
      */
-    private final Set<String> fatalErrors = new LinkedHashSet<>();
+    private final Set<Message> fatalErrors = new LinkedHashSet<>();
 
     /**
      * A LinkedHashSet of warnings found by the validator (is Set to avoid duplicate messages). Printed by main.
      */
-    private final Set<String> warnings = new LinkedHashSet<>();
+    private final Set<Message> warnings = new LinkedHashSet<>();
 
     /**
      * A LinkedHashSet of project notes found by the validator (is Set to avoid duplicate messages). Printed by main.
@@ -250,7 +269,7 @@ public class Validator {
     /**
      * A LinkedHashSet of recommendations found by the validator (is Set to avoid duplicate messages). Printed by main.
      */
-    private final Set<String> recommendations = new LinkedHashSet<>();
+    private final Set<Message> recommendations = new LinkedHashSet<>();
 
     /**
      * A com.google.api.services.drive.Drive object used to populate the Validator's google drive data structures.
@@ -276,6 +295,8 @@ public class Validator {
      */
     private final GoogleSheet langPackGoogleSheet;
 
+    private FilePresence filePresence = new FilePresence();
+    private Checks checks;
     /**
      * A Map of the names of the tabs needed for validation to the ranges of cells needed from each tab
      * (in A1 notation). The validator automatically checks for these tabs in the langPackGoogleSheet,
@@ -330,8 +351,9 @@ public class Validator {
      *
      * @param driveFolderUrl a String representing the URL of the language pack folder in google drive
      */
-    public Validator(String driveFolderUrl, Path rootPath) throws IOException, GeneralSecurityException, ValidatorException {
+    public Validator(String driveFolderUrl, Path rootPath, Checks checks) throws IOException, GeneralSecurityException, ValidatorException {
         this.rootPath = rootPath;
+        this.checks = checks;
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
         String driveFolderId = driveFolderUrl.substring(driveFolderUrl.indexOf("folders/") + 8);
         buildServices(driveFolderId);
@@ -342,11 +364,11 @@ public class Validator {
         this.langPackGoogleSheet = langPackDriveFolder.getOnlyGoogleSheet();
     }
 
-    public Set<String> getFatalErrors() {
+    public Set<Message> getFatalErrors() {
         return this.fatalErrors;
     }
 
-    public Set<String> getWarnings() {
+    public Set<Message> getWarnings() {
         return this.warnings;
     }
 
@@ -354,8 +376,17 @@ public class Validator {
         return this.project_notes;
     }
 
-    public Set<String> getRecommendations() {
+    public Set<Message> getRecommendations() {
         return this.recommendations;
+    }
+    private void warn(Message.Tag tag, String warning) {
+        warnings.add (new Message(tag, warning));
+    }
+    private void fatalError(Message.Tag tag, String error) {
+        fatalErrors.add(new Message(tag, error));
+    }
+    private void recommend(Message.Tag tag, String recommendation) {
+        recommendations.add(new Message(tag, recommendation));
     }
     //</editor-fold>
 
@@ -392,7 +423,7 @@ public class Validator {
         System.out.println("This report is for " + langPackGoogleSheet.getName() + ".");
 
         // this first step is looks at the desired data from tabs field set at the top of the
-        // code, searches for a tab that has the matching name, and shrinks the internal representation
+        // code, searches for a tab that has the matching name, an;resentation
         // of those tabs to only be what is specified
         try {
             String appName = langPackGoogleSheet
@@ -401,7 +432,7 @@ public class Validator {
                     .get(1)
                     .replace("'", "ꞌ");
             if (appName.length() > 30) {
-                warnings.add("App name '" + appName + "' is too long, should be less than 30 characters to be compatible with Play Store limits.");
+                warn(Message.Tag.Etc, "App name '" + appName + "' is too long, should be less than 30 characters to be compatible with Play Store limits.");
             }
         } catch (Exception ignored) {
         }
@@ -410,7 +441,7 @@ public class Validator {
                 Tab desiredTab = langPackGoogleSheet.getTabFromName(nameAndRange.getKey());
                 desiredTab.sizeTabUsingRange(nameAndRange.getValue());
             } catch (ValidatorException e) {
-                fatalErrors.add("the tab " + nameAndRange.getKey() + " does not appear in the language pack Google sheet.");
+                fatalError(Message.Tag.Etc, "the tab " + nameAndRange.getKey() + " does not appear in the language pack Google sheet.");
             }
         }
 
@@ -426,7 +457,7 @@ public class Validator {
                 writer.write(desiredTab.toString());
                 writer.close();
             } catch (ValidatorException | IOException e) {
-                fatalErrors.add("FAILED TO DOWNLOAD data from tab \"" + desiredTabName + "\"");
+                fatalError(Message.Tag.Etc, "FAILED TO DOWNLOAD data from tab \"" + desiredTabName + "\"");
             }
         }
 
@@ -434,17 +465,17 @@ public class Validator {
         try {
             buildWordList();
         } catch (IOException e) {
-            fatalErrors.add("FAILED TO DOWNLOAD OR READ \"wordlist\"");
+            fatalError(Message.Tag.Etc, "FAILED TO DOWNLOAD OR READ \"wordlist\"");
         }
         try {
             buildColorList();
         } catch (IOException e) {
-            fatalErrors.add("FAILED TO DOWNLOAD OR READ \"colors\"");
+            fatalError(Message.Tag.Etc, "FAILED TO DOWNLOAD OR READ \"colors\"");
         }
         try {
             buildKeyList();
         } catch (IOException e) {
-            fatalErrors.add("FAILED TO DOWNLOAD OR READ \"keyboard\"");
+            fatalError(Message.Tag.Etc, "FAILED TO DOWNLOAD OR READ \"keyboard\"");
         }
         try {
             buildTileList();
@@ -455,7 +486,7 @@ public class Validator {
                 }
             }
         } catch (IOException e) {
-            fatalErrors.add("FAILED TO DOWNLOAD OR READ \"gametiles\"");
+            fatalError(Message.Tag.Etc, "FAILED TO DOWNLOAD OR READ \"gametiles\"");
         }
 
 
@@ -467,12 +498,12 @@ public class Validator {
         try {
             for (String cell : langPackGoogleSheet.getTabFromName("wordlist").getCol(0)) {
                 if (!cell.matches("[a-z0-9_]+")) {
-                    fatalErrors.add("In the first column of wordList, the word \"" + cell + "\" contains non-alphanumeric " +
+                    fatalError(Message.Tag.Etc, "In the first column of wordList, the word \"" + cell + "\" contains non-alphanumeric " +
                             "characters. " + "Please remove them. (The only allowed characters are a-z, 0-9, and _)");
                 }
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the wordlist tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the wordlist tab");
         }
 
         try {
@@ -480,7 +511,7 @@ public class Validator {
             ArrayList<String> available = colorList;
             for (Key key : keyList) {
                 if (!available.contains(key.color)) {
-                    fatalErrors.add("Keyboard uses color id " + key.color + ", which is not defined in the colors tab");
+                    fatalError(Message.Tag.Etc, "Keyboard uses color id " + key.color + ", which is not defined in the colors tab");
                 }
             }
 
@@ -506,14 +537,14 @@ public class Validator {
                         }
                         if (!charIsPartOfLongerKeyString) {
                             String unicodeString = "(Unicode) " + (int) LOPwordString.charAt(i);
-                            fatalErrors.add("In wordList, the word \"" + LOPwordString + "\" contains the character \"" + LOPwordString.charAt(i) +
+                            fatalError(Message.Tag.Etc, "In wordList, the word \"" + LOPwordString + "\" contains the character \"" + LOPwordString.charAt(i) +
                                     "\" which is not in the keyboard. " + unicodeString);
                         }
                     }
                 }
             }
             if (numWordsWithSpaces / wordList.size() < 0.05f && numWordsWithSpaces != 0) {
-                recommendations.add("Less than 5% of words contain spaces; consider removing those with spaces");
+                recommend(Message.Tag.Etc, "Less than 5% of words contain spaces; consider removing those with spaces");
             }
 
             for (Map.Entry<String, Integer> entry : keyUsage.entrySet()) {
@@ -523,13 +554,13 @@ public class Validator {
                     if (!key.isEmpty()) {
                         unicodeString = " (Unicode " + (int) key.charAt(0) + ")";
                     }
-                    recommendations.add("In wordList.txt, the key \"" + entry.getKey() + "\"" + unicodeString +
+                    recommend(Message.Tag.Etc, "In wordList.txt, the key \"" + entry.getKey() + "\"" + unicodeString +
                             " is only used in " + entry.getValue() + " words. It is recommended that each key be" +
                             " used in at least " + NUM_TIMES_KEYS_WANTED_IN_WORDS + " times");
                 }
             }
         } catch (NullPointerException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the keyboard tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the keyboard tab");
         }
         // China game requires words with three tiles or four tiles
         int fourTileWords = 0;
@@ -549,7 +580,7 @@ public class Validator {
                     Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
                     scriptType = langInfo.getRowFromFirstCell("Script type").get(1); // sets global variable used to determine simple/complex parse
                 } catch (ValidatorException e) {
-                    fatalErrors.add("In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\". Please add a valid script type.");
+                    fatalError(Message.Tag.Etc, "In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\". Please add a valid script type.");
                 }
                 try {
                     Tab settings = langPackGoogleSheet.getTabFromName("settings");
@@ -561,13 +592,13 @@ public class Validator {
                         }
                     }
                     if (!placeholderCharacterFoundInGametiles) {
-                        fatalErrors.add("The stand-in base for combining characters in \"Settings\" is " + placeholderCharacter + " but that character is not in any of the gametiles. "
+                        fatalError(Message.Tag.Etc, "The stand-in base for combining characters in \"Settings\" is " + placeholderCharacter + " but that character is not in any of the gametiles. "
                                 + "Please add the placeholder character you are using to the settings tab.");
                     }
                 } catch (ValidatorException e) {
                     if (!(scriptType == null)) {
                         if (scriptType.matches("(Thai|Lao)")) {
-                            warnings.add("Since the script type is Thai or Lao, you have the option to specify the \"Stand-in base for combining tiles\" in settings. By default, it will be \"◌\".");
+                            warn(Message.Tag.Etc, "Since the script type is Thai or Lao, you have the option to specify the \"Stand-in base for combining tiles\" in settings. By default, it will be \"◌\".");
                         }
                     }
                 }
@@ -582,7 +613,7 @@ public class Validator {
                     }
                     if (numTiles >= 9) {
                         if (numTiles > 15) {
-                            fatalErrors.add("the word \"" + word.wordInLOP + "\" in wordlist takes more than 15 tiles to build");
+                            fatalError(Message.Tag.Etc, "the word \"" + word.wordInLOP + "\" in wordlist takes more than 15 tiles to build");
                         } else {
                             longWords += 1;
                         }
@@ -590,12 +621,12 @@ public class Validator {
                 }
                 // go to the next word if this one cannot be parsed
                 catch (NullPointerException e) {
-                    fatalErrors.add("Cannot parse word \"" + word.wordInLOP + "\" in wordlist into tiles from gametiles.");
+                    fatalError(Message.Tag.Etc, "Cannot parse word \"" + word.wordInLOP + "\" in wordlist into tiles from gametiles.");
                 }
 
             }
             if (longWords > 0) {
-                recommendations.add("the wordlist has " + longWords + " long words (10 to 15 game tiles);" +
+                recommend(Message.Tag.Etc, "the wordlist has " + longWords + " long words (10 to 15 game tiles);" +
                         " shorter words are preferable in an early literacy game. Consider removing longer words ");
             }
             for (Word word : wordList) {
@@ -609,7 +640,7 @@ public class Validator {
                                     tileStringsInWord.add(t.text);
                                 }
                             }
-                            fatalErrors.add("The word " + word.wordInLOP + " could not be parsed. The tiles parsed were " + tileStringsInWord);
+                            fatalError(Message.Tag.Etc, "The word " + word.wordInLOP + " could not be parsed. The tiles parsed were " + tileStringsInWord);
                             break;
                         }
                         if (tileInWord.text.equals(tile.text)) {
@@ -620,13 +651,13 @@ public class Validator {
             }
             for (Map.Entry<String, Integer> tile : tileUsage.entrySet()) {
                 if (tile.getValue() < NUM_TIMES_TILES_WANTED_IN_WORDS) {
-                    recommendations.add("the tile \"" + tile.getKey() + "\" in gametiles only appears in words " + tile.getValue()
+                    recommend(Message.Tag.Etc, "the tile \"" + tile.getKey() + "\" in gametiles only appears in words " + tile.getValue()
                             + " times. It is recommended that each tile be used in at least " + NUM_TIMES_TILES_WANTED_IN_WORDS + " times");
                 }
             }
 
         } catch (NullPointerException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the gametiles tab, the wordlist tab, or the langinfo setting \"Script type\"");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the gametiles tab, the wordlist tab, or the langinfo setting \"Script type\"");
         }
         try {
             Tab gameTiles = langPackGoogleSheet.getTabFromName("gametiles");
@@ -636,7 +667,7 @@ public class Validator {
             for (ArrayList<String> row : gameTiles) {
                 List<String> alternates = row.subList(0, 4);
                 if (new HashSet<>(alternates).size() < alternates.size()) {
-                    warnings.add("the row " + row + " in gametiles has the same tile appearing in multiple places");
+                    warn(Message.Tag.Etc, "the row " + row + " in gametiles has the same tile appearing in multiple places");
                 }
             }
 
@@ -647,16 +678,16 @@ public class Validator {
             List<String> thirdAlternates = gameTiles.getCol(3);
             for (int i = 0; i < validGameTiles.size(); i++) {
                 if (!validGameTiles.contains(firstAlternates.get(i))) {
-                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate: " + firstAlternates.get(i)
-                            + ". Please add this alternate to the tile list if it is missing or replace it with a valid tile from the list.");
+                    fatalError(Message.Tag.Etc, "row " + (i + 2) + " of gametiles contains an invalid tile as an alternate (distractor): " + firstAlternates.get(i)
+                            + ". Please add this alternate (distractor) to the tile list if it is missing or replace it with a valid tile from the list.");
                 }
                 if (!validGameTiles.contains(secondAlternates.get(i))) {
-                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate: " + secondAlternates.get(i)
-                            + ". Please add this alternate to the tile list if it is missing or replace it with a valid tile from the list.");
+                    fatalError(Message.Tag.Etc, "row " + (i + 2) + " of gametiles contains an invalid tile as an alternate (distractor): " + secondAlternates.get(i)
+                            + ". Please add this alternate (distractor) to the tile list if it is missing or replace it with a valid tile from the list.");
                 }
                 if (!validGameTiles.contains(thirdAlternates.get(i))) {
-                    fatalErrors.add("row " + (i + 2) + " of gametiles contains an invalid tile as an alternate: " + thirdAlternates.get(i)
-                            + ". Please add this alternate to the tile list if it is missing or replace it with a valid tile from the list.");
+                    fatalError(Message.Tag.Etc, "row " + (i + 2) + " of gametiles contains an invalid tile as an alternate (distractor): " + thirdAlternates.get(i)
+                            + ". Please add this alternate (distractor) to the tile list if it is missing or replace it with a valid tile from the list.");
                 }
             }
 
@@ -665,7 +696,7 @@ public class Validator {
             HashSet<String> validTypes = new HashSet<>(Set.of("C", "PC", "V", "X", "D", "AD", "AV", "BV", "FV", "LV", "T", "SAD"));
             for (int i = 0; i < gameTileTypes.size(); i++) {
                 if (!validTypes.contains(gameTileTypes.get(i))) {
-                    fatalErrors.add("row " + (i + 2) + " of gametiles does not specify a valid type in the types column. Valid" +
+                    fatalError(Message.Tag.Etc, "row " + (i + 2) + " of gametiles does not specify a valid type in the types column. Valid" +
                             " types are " + validTypes);
                 }
             }
@@ -708,7 +739,7 @@ public class Validator {
                 int numExamplesFullUpper = Math.min(fullUpperCaseOnly.size(), 5);
                 int numExamplesProper = Math.min(properCaseOnly.size(), 5);
                 int numExamplesOther = Math.min(other.size(), 5);
-                warnings.add("The column Upper in the gametiles tab doesn't appear to consistently stick with proper case " +
+                warn(Message.Tag.Etc, "The column Upper in the gametiles tab doesn't appear to consistently stick with proper case " +
                         "(the first key being upper case) or full upper case (the whole tile is upper case) " +
                         "\n\tExamples of tiles that seem to use full uppercase are " + fullUpperCaseOnly.subList(0, numExamplesFullUpper) +
                         "\n\tExamples of tiles that seem to use proper case are " + properCaseOnly.subList(0, numExamplesProper) +
@@ -716,79 +747,79 @@ public class Validator {
             }
 
             if (!fullUpperCaseOnly.isEmpty()) {
-                warnings.add("You use full upper case in the Upper column in the gametiles tab. This may lead to unintended" +
+                warn(Message.Tag.Etc, "You use full upper case in the Upper column in the gametiles tab. This may lead to unintended" +
                         " formatting. For example if you had a tile \"ch\" with the uppercase value \"CH\", users could" +
                         " see the word CHildren");
             }
 
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the gametiles tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the gametiles tab");
         }
         try {
             langPackGoogleSheet.getTabFromName("wordlist").checkColForDuplicates(0);
             langPackGoogleSheet.getTabFromName("wordlist").checkColForDuplicates(1);
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the wordlist tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the wordlist tab");
         }
         try {
             langPackGoogleSheet.getTabFromName("settings").checkColForDuplicates(0);
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the settings tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the settings tab");
         }
         try {
             Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
             if (!langInfo.getRowFromFirstCell("Script direction (LTR or RTL)").get(1).matches("(LTR|RTL)")) {
-                fatalErrors.add("In langinfo \"script direction\" must be either \"LTR\" or \"RTL\"");
+                fatalError(Message.Tag.Etc, "In langinfo \"script direction\" must be either \"LTR\" or \"RTL\"");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the langinfo tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the langinfo tab");
         }
         try {
             Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
             if (!langInfo.getRowFromFirstCell("Script type").get(1).matches("(Arabic|Devanagari|Khmer|Lao|Roman|Thai|)")) {
-                fatalErrors.add("In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\"");
+                fatalError(Message.Tag.Etc, "In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\"");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the langinfo tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the langinfo tab");
         }
         try {
             Tab notesTab = langPackGoogleSheet.getTabFromName("notes");
             ArrayList<String> notesCol = notesTab.getCol(1);
             project_notes.addAll(notesCol);
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the notes tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the notes tab");
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
             if (!settings.getRowFromFirstCell("Has tile audio").get(1).matches("(TRUE|FALSE)")) {
-                fatalErrors.add("In settings \"Has tile audio\" must be either \"TRUE\" or \"FALSE\"");
+                fatalError(Message.Tag.Etc, "In settings \"Has tile audio\" must be either \"TRUE\" or \"FALSE\"");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the settings tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the settings tab");
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
             if (!settings.getRowFromFirstCell("Has syllable audio").get(1).matches("(TRUE|FALSE)")) {
-                fatalErrors.add("In settings \"Has syllable audio\" must be either \"TRUE\" or \"FALSE\"");
+                fatalError(Message.Tag.Etc, "In settings \"Has syllable audio\" must be either \"TRUE\" or \"FALSE\"");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the settings tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the settings tab");
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
             if (!settings.getRowFromFirstCell("Differentiates types of multitype symbols").get(1).matches("(TRUE|FALSE)")) {
-                fatalErrors.add("In settings \"Differentiates types of multitype symbols\" must be either \"TRUE\" or \"FALSE\"");
+                fatalError(Message.Tag.Etc, "In settings \"Differentiates types of multitype symbols\" must be either \"TRUE\" or \"FALSE\"");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the settings tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the settings tab");
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
             if (!settings.getRowFromFirstCell("First letter stage correspondence").get(1).matches("(TRUE|FALSE)")) {
-                fatalErrors.add("In settings \"First letter stage correspondence\" must be either \"TRUE\" or \"FALSE\")");
+                fatalError(Message.Tag.Etc, "In settings \"First letter stage correspondence\" must be either \"TRUE\" or \"FALSE\")");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the settings tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the settings tab");
         }
         try {
             // not working for "cat", need to fix for comma, should report error
@@ -797,42 +828,42 @@ public class Validator {
             if (scrString.matches("-?\\d+(\\.\\d+)?")) {
                 Double scrValue = Double.parseDouble(scrString);
                 if (scrValue < 0.1 || scrValue > 1 ) {
-                    fatalErrors.add("In settings for \"Stage correspondence ratio\", please enter a number from 0.1 to 1.");
+                    fatalError(Message.Tag.Etc, "In settings for \"Stage correspondence ratio\", please enter a number from 0.1 to 1.");
                 }
             } else {
-                fatalErrors.add("In settings for \"Stage correspondence ratio\", please enter a number from 0.1 to 1 using a decimal (not a comma) as the separator.");
+                fatalError(Message.Tag.Etc, "In settings for \"Stage correspondence ratio\", please enter a number from 0.1 to 1 using a decimal (not a comma) as the separator.");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the settings tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the settings tab");
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
             if (settings.getRowFromFirstCell("Stage correspondence ratio").get(1).equals("1")){
-                fatalErrors.add("The stages feature is still in testing. Currently, if \"Stage correspondence ratio\" is set to 1, app games will crash. Set to 0.75 for now, as indicated in the template.");
+                fatalError(Message.Tag.Etc, "The stages feature is still in testing. Currently, if \"Stage correspondence ratio\" is set to 1, app games will crash. Set to 0.75 for now, as indicated in the template.");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the settings tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the settings tab");
         }
         try {
             Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
             ArrayList<String> gamesList = langPackGoogleSheet.getTabFromName("games").getCol(1);
             if (!gamesList.contains("Italy")) {
-                recommendations.add("It is recommended that you include the Italy game");
+                recommend(Message.Tag.Etc, "It is recommended that you include the Italy game");
             } else if (wordlist.size() < 55) {
-                fatalErrors.add("the Italy game requires at least 54 words, you only provide " + wordlist.size());
+                fatalError(Message.Tag.Etc, "the Italy game requires at least 54 words, you only provide " + wordlist.size());
             }
 
             if (gamesList.size() < 7) {
-                recommendations.add("it is recommended that you have more than 6 games");
+                recommend(Message.Tag.Etc, "it is recommended that you have more than 6 games");
             }
             if (wordlist.size() < 21) {
-                recommendations.add("it is recommended that you have 20 or more words");
+                recommend(Message.Tag.Etc, "it is recommended that you have 20 or more words");
             }
             if (!gamesList.contains("China")) {
-                recommendations.add("it is recommended that you include the China game");
+                recommend(Message.Tag.Etc, "it is recommended that you include the China game");
             }
             if ((fourTileWords < 3 || threeTileWords < 1) && gamesList.contains("China")) {
-                fatalErrors.add("the China game requires at least 3 four tile words and 1 three tile word, you only " +
+                fatalError(Message.Tag.Etc, "the China game requires at least 3 four tile words and 1 three tile word, you only " +
                         "provide " + fourTileWords + " four tile words and " + threeTileWords + " three tile words");
             }
             HashSet<String> mexicoLevels = new HashSet<>();
@@ -842,7 +873,7 @@ public class Validator {
                 }
             }
             if (mexicoLevels.size() < 5) {
-                warnings.add("It is recommended that you have the game Mexico with 5 levels");
+                warn(Message.Tag.Etc, "It is recommended that you have the game Mexico with 5 levels");
             }
             HashSet<String> myanmarLevels = new HashSet<>();
             for (ArrayList<String> row : langPackGoogleSheet.getTabFromName("games")) {
@@ -851,11 +882,11 @@ public class Validator {
                 }
             }
             if (myanmarLevels.size() < 3) {
-                warnings.add("It is recommended you have the game Myanmar with 3 levels");
+                warn(Message.Tag.Etc, "It is recommended you have the game Myanmar with 3 levels");
             }
             for (ArrayList<String> row : langPackGoogleSheet.getTabFromName("games")) {
                 if ((row.get(1).equals("Sudan") || row.get(1).equals("Romania")) && !row.get(3).equals("5")) {
-                    warnings.add("Games like Romania and Sudan (no right or wrong answers) should use " +
+                    warn(Message.Tag.Etc, "Games like Romania and Sudan (no right or wrong answers) should use " +
                             "code color 5 (yellow). Check game door " + row.get(0) + " in the games tab");
                 }
             }
@@ -874,9 +905,9 @@ public class Validator {
                 }
             }
             if (hasTonal && !hasBrazil7) {
-                recommendations.add("It is recommended that you include Brazil at challenge level 7");
+                recommend(Message.Tag.Etc, "It is recommended that you include Brazil at challenge level 7");
             } else if(!hasTonal && hasBrazil7) {
-                fatalErrors.add("You cannot have Brazil at challenge level 7 without tiles of type T");
+                fatalError(Message.Tag.Etc, "You cannot have Brazil at challenge level 7 without tiles of type T");
             }
             int i = 0;
             for (String row : langPackGoogleSheet.getTabFromName("games").getCol(0)) {
@@ -884,15 +915,15 @@ public class Validator {
                 try {
                     int n = Integer.parseInt(row);
                     if (n != i) {
-                        fatalErrors.add("Cell in row " + (i + 1) + ", column A of the games tab must be " + i + ", was " + row);
+                        fatalError(Message.Tag.Etc, "Cell in row " + (i + 1) + ", column A of the games tab must be " + i + ", was " + row);
                     }
                 } catch (NumberFormatException e) {
-                    fatalErrors.add("Cell in row " + (i + 1) + ", column A of the games tab must be " + i + ", was " + row);
+                    fatalError(Message.Tag.Etc, "Cell in row " + (i + 1) + ", column A of the games tab must be " + i + ", was " + row);
                 }
             }
 
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the wordlist tab or the games tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the wordlist tab or the games tab");
         }
         try {
             for (Word word : wordList) {
@@ -902,7 +933,7 @@ public class Validator {
                 }
             }
         } catch (NullPointerException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the gametiles tab, the wordlist tab, or the langinfo setting \"Script type\"");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the gametiles tab, the wordlist tab, or the langinfo setting \"Script type\"");
         }
 
         // Delete temp files used for securing the right encodings before testing
@@ -956,25 +987,46 @@ public class Validator {
             try {
                 GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(nameToMimeType.getKey());
                 subFolder.filterByMimeTypes(nameToMimeType.getValue().split(","));
-                for (GoogleDriveItem itemInFolder : langPackDriveFolder.getFolderFromName(nameToMimeType.getKey()).folderContents) {
+                for (GoogleDriveItem itemInFolder : langPackDriveFolder.getFolderFromName(nameToMimeType.getKey()).folderContents){
                     // make sure the file names use valid
                     if (!itemInFolder.getName().matches("[a-z0-9_]+\\.+[a-z0-9_]+")) {
-                        fatalErrors.add("In " + nameToMimeType.getKey() + ", the file \"" + itemInFolder.getName() +
+                        fatalError(Message.Tag.Etc, "In " + nameToMimeType.getKey() + ", the file \"" + itemInFolder.getName() +
                                 "\" must be in the format name.type, where both name and type only use characters" +
                                 " a-z, 0-9, and _");
                     }
                 }
             } catch (ValidatorException e) {
-                fatalErrors.add(e.getMessage());
+                fatalError(Message.Tag.Etc, e.getMessage());
             }
         }
         // in the validateResourceSubfolders() methods these booleans are set to true if it is determined
         // that the the given column lists file names (anything other than X or naWhileMPOnly)
         // and the referenced drive folder contains files
-        decideIfFontAttempted();
-        boolean hasInstructionAudio = decideIfAudioAttempted("games", 4, "audio_instructions_optional");
+        checkFontPresence();
+        checkAudioPresence("syllable_audio", "syllables", 4, "audio_syllables_optional");
+        checkAudioPresence("tile_audio", "gametiles", 5, "audio_tiles_optional");
+        checkAudioPresence("tile_audio", "gametiles", 8, "audio_tiles_optional");
+        checkAudioPresence("tile_audio", "gametiles", 10, "audio_tiles_optional");
+        checkAudioPresence("audio_instruction", "games", 4, "audio_instructions_optional");
+        checkAudioPresence("word_audio", "wordlist", 0, "audio_words");
+
+        for(String special : SPECIAL_AUDIO_INSTRUCTIONS) {
+            filePresence.add(
+                    "audio_instruction",
+                    "audio_instructions_optional",
+                    special,
+                    "audio/mpeg",
+                    "",
+                    true
+            );
+        }
+        filePresence.check(langPackDriveFolder, checks.showExcess);
+        warnings.addAll(filePresence.warnings);
+        fatalErrors.addAll(filePresence.fatalErrors);
+        recommendations.addAll(filePresence.recommendations);
+        boolean hasInstructionAudio = filePresence.okay("audio_instruction") && !filePresence.empty("audio_instruction");
         //tile and syllable audio have the extra step of checking against settings to see if the checks should be run
-        boolean syllableAudioAttempted = decideIfAudioAttempted("syllables", 4, "audio_syllables_optional");
+        boolean syllableAudioAttempted = !filePresence.empty("syllable_audio");
         boolean syllableAudioSetting = false;
         try {
             if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has syllable audio").get(1).equals("TRUE")) {
@@ -985,97 +1037,61 @@ public class Validator {
         boolean hasSyllableAudio = syllableAudioAttempted && syllableAudioSetting;
         if (!hasSyllableAudio) {
             if (syllableAudioAttempted) {
-                warnings.add("Although it appears you set up your language pack for syllable audio, the \"Has syllable audio\" " +
+                warn(Message.Tag.Etc, "Although it appears you set up your language pack for syllable audio, the \"Has syllable audio\" " +
                         "row in the settings tab is not set to \"TRUE\"");
             }
             if (syllableAudioSetting) {
-                warnings.add("Although you entered \"TRUE\" for \"has syllable audio\" in the settings tab, " +
+                warn(Message.Tag.Etc, "Although you entered \"TRUE\" for \"has syllable audio\" in the settings tab, " +
                         "column E of syllables and/or folder \"audio_syllables_optional\" are empty");
             }
         }
 
-        boolean tileAudioAttempted = decideIfAudioAttempted("gametiles", 5, "audio_tiles_optional");
+        boolean tileAudioAttempted = !filePresence.empty("tile_audio");
         boolean tileAudioSetting = false;
         try {
             if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has tile audio").get(1).equals("TRUE")) {
                 tileAudioSetting = true;
             }
         } catch (Exception e) {
-            warnings.add(FAILED_CHECK_WARNING + "the settings tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the settings tab");
         }
 
         boolean hasTileAudio = tileAudioSetting && tileAudioAttempted;
         if (!hasTileAudio) {
             if (tileAudioAttempted) {
-                warnings.add("Although it appears you set up your language pack for tile audio, \"has tile audio\" " +
+                warn(Message.Tag.Etc, "Although it appears you set up your language pack for tile audio, \"has tile audio\" " +
                         " in the settings tab is not set to \"TRUE\"");
             }
             if (tileAudioSetting) {
-                warnings.add("Although you entered \"TRUE\" for \"has tile audio\" in the settings tab, " +
+                warn(Message.Tag.Etc, "Although you entered \"TRUE\" for \"has tile audio\" in the settings tab, " +
                         "column F of gameTiles and/or folder \"audio_tiles_optional\" are empty");
             }
         }
-
-        try {
-            GoogleDriveFolder resourceImages = langPackDriveFolder.getFolderFromName("images_resources_optional");
-            ArrayList<String> resourceImageNames = langPackGoogleSheet.getTabFromName("resources").getCol(2);
-            resourceImages.checkItemNamesAgainstList(resourceImageNames);
-        } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the images_resources_optional folder or the resources tab");
-        }
-
-        try {
-            GoogleDriveFolder wordImages = langPackDriveFolder.getFolderFromName("images_words");
-            ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordImages.checkItemNamesAgainstList(wordsInLWC);
-        } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the images_words folder or the wordlist tab");
-        }
-        try {
+        // Reset for image checks
+        filePresence = new FilePresence();
+        checkImagePresence("images_resources_optional", "resources", 2, "images_resources_optional");
+        checkImagePresence("images_words", "wordlist", 0, "images_words");
+        try{
             GoogleDriveFolder lowResWordImages = langPackDriveFolder.getFolderFromName("images_words_low_res");
             // if lowResWordImages is not empty, we assume the user is trying to provide their own low res images
             //otherwise we will generate these in writeImageAndAudioFiles
             if (lowResWordImages.size() > 0) {
                 ArrayList<String> TwoAppendedWordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
                 TwoAppendedWordsInLWC.replaceAll(s -> s + "2");
-                lowResWordImages.checkItemNamesAgainstList(TwoAppendedWordsInLWC);
-            } else {
-                warnings.add("Since the folder images_words_low_res is empty, the validator will automatically generate " +
+                filePresence.addAll("images_low_res", "images_words_low_res", TwoAppendedWordsInLWC, "image/", "", false);
+            }
+            else {
+                warn(Message.Tag.Etc, "Since the folder images_words_low_res is empty, the validator will automatically generate " +
                         "smaller versions of all images if asked to download language data from google drive.");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the images_words_low_res folder or the wordlist tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the images_words_low_res folder or the wordlist tab");
         }
+        filePresence.check(langPackDriveFolder, checks.showExcess);
+        warnings.addAll(filePresence.warnings);
+        fatalErrors.addAll(filePresence.fatalErrors);
+        recommendations.addAll(filePresence.recommendations);
 
-        try {
-            GoogleDriveFolder wordAudio = langPackDriveFolder.getFolderFromName("audio_words");
-            ArrayList<String> wordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
-            wordAudio.checkItemNamesAgainstList(wordsInLWC);
-        } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the audio_words folder or the wordlist tab");
-        }
-
-        try {
-            if (hasTileAudio) {
-                GoogleDriveFolder tileAudio = langPackDriveFolder.getFolderFromName("audio_tiles_optional");
-                ArrayList<String> tiles = langPackGoogleSheet.getTabFromName("gametiles").getCol(5);
-                ArrayList<String> tilesType2 = langPackGoogleSheet.getTabFromName("gametiles").getCol(8);
-                for (String tileB : tilesType2) {
-                    if (!tileB.equals("X")) {
-                        tiles.add(tileB);
-                    }
-                }
-                ArrayList<String> tilesType3 = langPackGoogleSheet.getTabFromName("gametiles").getCol(10);
-                for (String tileC : tilesType3) {
-                    if (!tileC.equals("X")) {
-                        tiles.add(tileC);
-                    }
-                }
-                tileAudio.checkItemNamesAgainstList(tiles);
-            }
-        } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the audio_tiles_optional folder or the gametiles tab");
-        }
         try {
             Tab gamesTab = langPackGoogleSheet.getTabFromName("games");
             boolean hasSudanForTiles = false;
@@ -1087,21 +1103,12 @@ public class Validator {
             }
 
             if (hasTileAudio && !hasSudanForTiles) {
-                recommendations.add("It is recommended you add Sudan for tiles to the games tab if you have tile audio");
+                recommend(Message.Tag.Etc, "It is recommended you add Sudan for tiles to the games tab if you have tile audio");
             } else if (!hasTileAudio && hasSudanForTiles) {
-                fatalErrors.add("You cannot have Sudan for tiles in the games tab if you do not have tile audio");
+                fatalError(Message.Tag.Etc, "You cannot have Sudan for tiles in the games tab if you do not have tile audio");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the games tab");
-        }
-        try {
-            if (hasSyllableAudio) {
-                GoogleDriveFolder syllableAudio = langPackDriveFolder.getFolderFromName("audio_syllables_optional");
-                ArrayList<String> syllables = langPackGoogleSheet.getTabFromName("syllables").getCol(4);
-                syllableAudio.checkItemNamesAgainstList(syllables);
-            }
-        } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the audio_syllables_optional folder or the syllables tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the games tab");
         }
         try {
             Tab gamesTab = langPackGoogleSheet.getTabFromName("games");
@@ -1114,17 +1121,16 @@ public class Validator {
             }
 
             if (hasSyllableAudio && !hasSudanForSyllables) {
-                recommendations.add("It is recommended you add Sudan for syllables to the games tab if you have syllable audio");
+                recommend(Message.Tag.Etc, "It is recommended you add Sudan for syllables to the games tab if you have syllable audio");
             } else if (!hasSyllableAudio && hasSudanForSyllables) {
-                fatalErrors.add("You cannot have Sudan for syllables in the games tab if you do not have syllable audio");
+                fatalError(Message.Tag.Etc, "You cannot have Sudan for syllables in the games tab if you do not have syllable audio");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the games tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the games tab");
         }
 
         try {
             if (hasInstructionAudio) {
-                GoogleDriveFolder instructionAudio = langPackDriveFolder.getFolderFromName("audio_instructions_optional");
                 ArrayList<String> instructions = langPackGoogleSheet.getTabFromName("games").getCol(4);
                 ArrayList<String> names = langPackGoogleSheet.getTabFromName("games").getCol(1);
 
@@ -1137,18 +1143,17 @@ public class Validator {
                         idx++;
                     }
                 }
-                instructionAudio.checkItemNamesAgainstList(instructions, true, SPECIAL_AUDIO_INSTRUCTIONS);
                 HashMap<String, String> map = new HashMap<>();
                 for (int idx = 0; idx < names.size(); idx++) {
                     if (!map.containsKey(instructions.get(idx))) {
                         map.put(instructions.get(idx), names.get(idx));
                     } else if (!map.get(instructions.get(idx)).equals(names.get(idx))) {
-                        warnings.add("Instruction audio " + instructions.get(idx) + " is used in more than one game.");
+                        warn(Message.Tag.Etc, "Instruction audio " + instructions.get(idx) + " is used in more than one game.");
                     }
                 }
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the audio_instructions_optional folder or the games tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the audio_instructions_optional folder or the games tab");
         }
     }
 
@@ -1167,11 +1172,11 @@ public class Validator {
             for (ArrayList<String> row : syllables) {
                 List<String> alternates = row.subList(0, 4);
                 if (new HashSet<>(alternates).size() < alternates.size()) {
-                    warnings.add("the row " + row + " in syllables has the same cell appearing in multiple places");
+                    warn(Message.Tag.Etc, "the row " + row + " in syllables has the same cell appearing in multiple places");
                 }
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the syllables tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the syllables tab");
         }
 
         try {
@@ -1188,9 +1193,9 @@ public class Validator {
                     String distractor = row.get(col);
                     if(!providedSyllables.contains(row.get(col))) {
                         char c = (char)('A' + col);
-                        fatalErrors.add(
-                            "row " + rowNum + ", column " + c + " of syllables contains an invalid tile as an alternate: " + distractor
-                            + ". \nPlease add this alternate to the tile list if it is missing or replace it with a valid tile from the list"
+                        fatalError(Message.Tag.Etc, 
+                            "row " + rowNum + ", column " + c + " of syllables contains an invalid tile as an alternate (distractor): " + distractor
+                            + ". \nPlease add this alternate (distractor) to the tile list if it is missing or replace it with a valid tile from the list"
                         );
                     }
                 }
@@ -1204,13 +1209,13 @@ public class Validator {
             providedSyllCopy.removeAll(parsedSyllables);
             parsedSyllables.removeAll(providedSyllables);
             for (String notInParsed : providedSyllCopy) {
-                fatalErrors.add("Syllable " + notInParsed + " is never used in a word in wordlist");
+                fatalError(Message.Tag.Etc, "Syllable " + notInParsed + " is never used in a word in wordlist");
             }
             for (String notInProvided : parsedSyllables) {
-                fatalErrors.add("Syllable " + notInProvided + " is used in wordlist but not in the syllables tab");
+                fatalError(Message.Tag.Etc, "Syllable " + notInProvided + " is used in wordlist but not in the syllables tab");
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the syllables tab or the wordlist tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the syllables tab or the wordlist tab");
         }
 
     }
@@ -1218,6 +1223,32 @@ public class Validator {
 
     //<editor-fold desc="writing-app-resources methods">
 
+    public void copySyllablesDraft() {
+        try {
+            HashSet<String> parsedSyllables = new HashSet<>();
+            for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1)) {
+                String[] syllablesInWord = word.split("\\.");
+                parsedSyllables.addAll(Arrays.asList(syllablesInWord));
+            }
+            String[] sorted = parsedSyllables.toArray(new String[0]);
+            Arrays.sort(sorted);
+            StringBuilder builder = new StringBuilder();
+            for(int i = 0; i < sorted.length; i++) {
+                builder.append(sorted[i]);
+                builder.append("\t");
+                builder.append(sorted[(i + 1) % sorted.length]);
+                builder.append("\t");
+                builder.append(sorted[(i + 2) % sorted.length]);
+                builder.append("\t");
+                builder.append(sorted[(i + 3) % sorted.length]);
+                builder.append("\n");
+            }
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(new StringSelection(builder.toString()), null);
+        } catch (ValidatorException e) {
+            warn(Message.Tag.Etc,"Couldn't load the wordlist tab to generate syllable draft");
+        }
+    }
     /**
      * Writes an android language pack to be used in the AlphaTiles app, including adjustments to build.gradle.
      * Bases language pack template on local device in PublicLanguageAssets repo that should be sister to AlphaTiles.
@@ -1459,7 +1490,7 @@ public class Validator {
      * Represents any item in google drive. Extended by GoogleDriveFolder and GoogleSheet,
      * and directly instantiated for files that are not folders or spreadsheets (example images and audio files).
      */
-    private static class GoogleDriveItem {
+    public static class GoogleDriveItem{
 
         /**
          * the mimeType of any GoogleDriveItem instance.
@@ -1508,7 +1539,7 @@ public class Validator {
      * recursively populates the folderContents field with all the contents of the folder
      * (constructing GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects as appropriate).
      */
-    private class GoogleDriveFolder extends GoogleDriveItem {
+    public class GoogleDriveFolder extends GoogleDriveItem {
 
         /**
          * ArrayList of all the GoogleDriveFolder, GoogleSheet, and GoogleDriveItem objects in the folder.
@@ -1597,51 +1628,6 @@ public class Validator {
             throw new ValidatorException("was not able to find the " + inName + " folder in the drive folder \"" + this.getName() + "\"");
         }
 
-
-        //todo this method can be made cleaner with the getItemFromName
-
-        /**
-         * Takes a list of names of the items that should be in the folder. Removes any items from folderContents
-         * that do not match one of the names in the list (adding a warning as it does). Also adds a warning for any
-         * name that does not match to an item.
-         *
-         * @param namesList an ArrayList of Strings which are the names to be compared against folderContents
-         */
-        protected void checkItemNamesAgainstList(ArrayList<String> namesList) {
-            checkItemNamesAgainstList(namesList, false, Set.of());
-        }
-
-        protected void checkItemNamesAgainstList(ArrayList<String> namesList, boolean allowRepeats, Set<String> optional) {
-
-            ArrayList<String> namesNotYetFound = new ArrayList<>(namesList);
-            namesNotYetFound.addAll(optional);
-            ArrayList<GoogleDriveItem> filesNotYetMatched = new ArrayList<>(this.folderContents);
-
-            for (String name : namesList) {
-                GoogleDriveItem itemWithName = this.getItemWithName(name);
-                if (itemWithName != null) {
-                    namesNotYetFound.remove(name);
-                    filesNotYetMatched.remove(itemWithName);
-                    if (namesNotYetFound.contains(name) && !allowRepeats) {
-                        warnings.add("The file name " + name + " in " + this.getName() + " is asked for in multiple places ");
-                    }
-                }
-            }
-
-            for (String shouldHaveFound : namesNotYetFound) {
-                if (optional.contains(shouldHaveFound)) continue;
-                fatalErrors.add(shouldHaveFound + " does not have a corresponding file in " + this.getName() +
-                        " of the correct file type");
-            }
-
-            for (GoogleDriveItem shouldHaveMatched : filesNotYetMatched) {
-                if (optional.contains(shouldHaveMatched.name)) continue;
-                warnings.add("the file " + shouldHaveMatched.getName() + " in " + this.getName() + " may be excess " +
-                        "or duplicate and will be ignored");
-                folderContents.remove(shouldHaveMatched);
-            }
-        }
-
         /**
          * returns a list of all items in the folderContents field that are of the given type.
          * WARNING the mimeType parameter must ensure items can be cast to the type parameter type
@@ -1675,7 +1661,7 @@ public class Validator {
                 }
                 if (!success) {
                     folderContents.remove(item);
-                    warnings.add(item.getName() + " will be ignored in " + this.getName() +
+                    warn(Message.Tag.Etc, item.getName() + " will be ignored in " + this.getName() +
                             " as it was not of any of these types: " + Arrays.toString(mimeTypes) + ", it was of type " + item.getMimeType());
                 }
             }
@@ -1795,7 +1781,7 @@ public class Validator {
                     this.add(newRow);
                 }
             } catch (Exception e) {
-                fatalErrors.add("not able to find information in the tab \"" + this.name +
+                fatalError(Message.Tag.Etc, "not able to find information in the tab \"" + this.name +
                         "\" or software was unable to access the sheet");
             }
 
@@ -1829,31 +1815,31 @@ public class Validator {
 
                         if (defaultValInTemplateTxt(this.name, j) != null) {
                             this.get(i).add(defaultValInTemplateTxt(this.name, j));
-                            warnings.add("The tab \"" + this.getName() + "\" is missing cells/columns which could be replaced " +
+                            warn(Message.Tag.Etc, "The tab \"" + this.getName() + "\" is missing cells/columns which could be replaced " +
                                     "by default values found in the latest language pack template. " +
                                     "Validation and downloading will proceed as if missing information was filled " +
                                     "in with default values.");
                         } else {
                             this.get(i).add("");
-                            fatalErrors.add("The row " + (i + 1) + " in " + this.name + " is too short. It should have " +
+                            fatalError(Message.Tag.Etc, "The row " + (i + 1) + " in " + this.name + " is too short. It should have " +
                                     rowLen + " cells.");
                         }
                     }
                 } else {
                     for (int j = 0; j < this.get(i).size(); j++) {
                         if (this.get(i).get(j).contains("\n")) {
-                            fatalErrors.add("The cell at row " + (i + 1) + " column " + (j + 1) + " in " + this.name +
+                            fatalError(Message.Tag.Etc, "The cell at row " + (i + 1) + " column " + (j + 1) + " in " + this.name +
                                     " contains multiple lines. Please delete the 'enter' character ");
                         } else if (this.get(i).get(j).isEmpty()) {
                             if (defaultValInTemplateTxt(this.name, j) != null) {
                                 this.get(i).set(j, defaultValInTemplateTxt(this.name, j));
-                                warnings.add("The tab \"" + this.getName() + "\" is missing cells/columns which could be replaced " +
+                                warn(Message.Tag.Etc, "The tab \"" + this.getName() + "\" is missing cells/columns which could be replaced " +
                                         "by default values found in the latest language pack template. " +
                                         "Validation and downloading will proceed as if missing information was filled " +
                                         "in with default values.");
 
                             } else {
-                                fatalErrors.add("The cell at row " + (i + 1) + " column " + (j + 1) + " in " + this.name +
+                                fatalError(Message.Tag.Etc, "The cell at row " + (i + 1) + " column " + (j + 1) + " in " + this.name +
                                         " is empty. Please add info to this cell.");
                             }
                         }
@@ -1862,7 +1848,7 @@ public class Validator {
             }
             for (int i = toRemove.size() - 1; i >= 0; i--) {
                 if (!(toRemove.contains(toRemove.get(i) + 1) || toRemove.get(i) + 1 == this.size())) {
-                    warnings.add("The row " + (toRemove.get(i) + 2) + " in " + this.name + " appears to have empty rows above it." +
+                    warn(Message.Tag.Etc, "The row " + (toRemove.get(i) + 2) + " in " + this.name + " appears to have empty rows above it." +
                             " The validator will behave as if these empty row(s) were deleted");
                 }
                 this.remove((int) toRemove.get(i));
@@ -1870,7 +1856,7 @@ public class Validator {
 
             if (colLen != null) {
                 if (this.size() < colLen) {
-                    fatalErrors.add("the tab " + this.name + " does not have enough rows. It should " +
+                    fatalError(Message.Tag.Etc, "the tab " + this.name + " does not have enough rows. It should " +
                             "have " + colLen);
                     for (int i = this.size(); i < colLen; i++) {
                         ArrayList<String> newRow = new ArrayList<>();
@@ -1905,7 +1891,7 @@ public class Validator {
                 toReturn.remove(0);
                 return toReturn;
             } catch (IndexOutOfBoundsException e) {
-                fatalErrors.add(("the tab " + this.getName() + " is completely empty"));
+                fatalError(Message.Tag.Etc, ("the tab " + this.getName() + " is completely empty"));
                 throw new ValidatorException("the tab " + this.getName() + " is completely empty");
             }
         }
@@ -1941,7 +1927,7 @@ public class Validator {
                     return row;
                 }
             }
-            fatalErrors.add("cannot find a row in " + this.getName() + " that contains \"" + cell + "\" in column " + col);
+            fatalError(Message.Tag.Etc, "cannot find a row in " + this.getName() + " that contains \"" + cell + "\" in column " + col);
             throw new ValidatorException("cannot find a row in " + this.getName() + " that contains \"" + cell + "\" in column " + col);
         }
 
@@ -1954,7 +1940,7 @@ public class Validator {
             Set<String> colSet = new HashSet<>();
             for (String cell : this.getCol(colNum)) {
                 if (!colSet.add(cell)) {
-                    fatalErrors.add("\"" + cell + "\"" + " appears more than once in column " + (colNum + 1) + " of " + this.getName());
+                    fatalError(Message.Tag.Etc, "\"" + cell + "\"" + " appears more than once in column " + (colNum + 1) + " of " + this.getName());
                 }
             }
         }
@@ -2015,96 +2001,50 @@ public class Validator {
     //</editor-fold>
 
     //<editor-fold desc="helper methods">
-    private boolean decideIfFontAttempted() {
+    private void checkFontPresence() {
+        filePresence.add("font", "font", "", "text/xml", "", false);
+        filePresence.add("font", "font", "", "font/ttf, application/x-font-ttf", "", false);
+        filePresence.add("font", "font", "", "font/ttf, application/x-font-ttf", "", false);
+    }
+
+    /** Adds a column of audio files of the google sheet to the file checker, ignoring X's and naWhileMPOnly
+     * @param tag The tag of the file in the file checker
+     * @param tab The tab of the google sheet to look for the files
+     * @param colNum the column of the google sheet to check
+     * @param subFolderName the folder to look for the files in
+    */
+    private void checkAudioPresence(String tag, String tab, int colNum, String subFolderName) {
         try {
-            GoogleDriveFolder fontFolder = langPackDriveFolder.getFolderFromName("font");
-            boolean hasXml = false;
-            boolean allCorrect = true;
-            int nFonts = 0;
-            for (GoogleDriveItem item : fontFolder.folderContents) {
-                if (item.getMimeType().equals("text/xml")) {
-                    hasXml = true;
-                    continue;
-                }
-                allCorrect &= DESIRED_FILETYPE_FROM_SUBFOLDERS.get("font").contains(item.getMimeType());
-                if (allCorrect) {
-                    nFonts += 1;
-                }
+            ArrayList<String> audioNames = langPackGoogleSheet.getTabFromName(tab).getCol(colNum);
+            audioNames.removeAll(Set.of("naWhileMPOnly", "X"));
+            for(String name : audioNames) {
+                filePresence.add(
+                        tag,
+                        subFolderName,
+                        name,
+                        "audio/mpeg",
+                        "it is listed in column " + (char)(colNum + 'A') + " of the tab \"" + tab + "\"",
+                        false
+                );
             }
-            boolean success = true;
-            if (!hasXml) {
-                fatalErrors.add("Missing font xml in font folder");
-                success = false;
-            }
-            if (nFonts < 2) {
-                fatalErrors.add("Missing one or both required fonts (regular and bold)");
-                success = false;
-            }
-            return success;
         } catch (ValidatorException e) {
-            DESIRED_FILETYPE_FROM_SUBFOLDERS.remove("font");
-            return false;
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "tab '" + tab + "'");
         }
     }
-
-    /**
-     * Private helper function to evaluate if an optional audio feature is being attempted. Returns true
-     * if the tab contains any audio names in the given colum AND the subfolder with the given name
-     * is not empty. Returns false otherwise, removing the subfolder from DESIRED_FILETYPE_FROM_SUBFOLDER
-     * and adding a warning if one of the two conditions is met.
-     * (skips cells containing "X" or "naWhileMPOnly" when evaluating a tab).
-     *
-     * @param tabName       a String that is the name of the tab with the audio names
-     * @param colNum        the column number of the tab with the audio names
-     * @param subFolderName a String that is the name of the subfolder in the drive folder with the audio files
-     * @return True if the tab contains any audio names in the given colum AND the subfolder with the given name
-     * is not empty. False otherwise.
-     */
-    private boolean decideIfAudioAttempted(String tabName, int colNum, String subFolderName) {
-
-        boolean someAudioFiles = false;
-        boolean someAudioNames = false;
-
+    private void checkImagePresence(String tag, String tab, int colNum, String subFolderName) {
         try {
-            GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(subFolderName);
-            // Don't include special instructions in this check.
-            // (will need to change this if the special instructions stop being hardcoded
-            for (GoogleDriveItem item : subFolder.folderContents) {
-                if (SPECIAL_AUDIO_INSTRUCTIONS.contains(item.name)) {
-                    someAudioNames = true;
-                    break; // Override name check
-                }
-            }
-            if (subFolder.getName().equals(subFolderName) && subFolder.size() > 0) {
-                someAudioFiles = true;
-            }
-        } catch (ValidatorException ignored) {
+            ArrayList<String> imageNames = langPackGoogleSheet.getTabFromName(tab).getCol(colNum);
+            filePresence.addAll(
+                    tag,
+                    subFolderName,
+                    imageNames,
+                    "image/", "it is listed in column " + (char)(colNum + 'A') + " of the tab \"" + tab + "\"",
+                    false
+            );
+        } catch(ValidatorException e) {
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "tab '" + tab + "'");
         }
-
-        try {
-            ArrayList<String> AudioNames = langPackGoogleSheet.getTabFromName(tabName).getCol(colNum);
-            AudioNames.removeAll(Set.of("X", "naWhileMPOnly"));
-            if (!AudioNames.isEmpty()) {
-                someAudioNames = true;
-            }
-        } catch (ValidatorException ignored) {
-        }
-
-        if (someAudioNames && someAudioFiles) {
-            return true;
-        } else if (someAudioNames) {
-            warnings.add("you list names of audio files in the column " + (char) (colNum + 65) + " of  the tab " + tabName
-                    + " (ie you have text in the column that is not 'X') but the folder " + subFolderName + " is empty. "
-                    + "Please add matching audio files to the folder " + subFolderName + " if you want to use this feature");
-        } else if (someAudioFiles) {
-            warnings.add("you have audio files in the folder " + subFolderName + " but column"
-                    + " of the tab " + tabName + " doesn't list any audio file names"
-                    + " please add matching audio file names to the tab " + tabName + " if you want to use this feature");
-        }
-        DESIRED_FILETYPE_FROM_SUBFOLDERS.remove(subFolderName);
-        return false;
     }
-
     /**
      * Private helper function to evaluate if an optional syllables feature is being attempted. Returns true
      * if the tab contains more than six words parsed into syllables (they contain periods) AND the syllables tab is not
@@ -2129,7 +2069,7 @@ public class Validator {
                 numerousWordsSpliced = true;
             }
         } catch (ValidatorException e) {
-            warnings.add(FAILED_CHECK_WARNING + "the wordlist tab");
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the wordlist tab");
         }
 
         try {
@@ -2142,11 +2082,11 @@ public class Validator {
         if (syllTabNotEmpty && numerousWordsSpliced) {
             return true;
         } else if (numerousWordsSpliced) {
-            warnings.add("you have more than 6 words in wordlist that are spliced with periods"
+            warn(Message.Tag.Etc, "you have more than 6 words in wordlist that are spliced with periods"
                     + " but the syllables tab is empty."
                     + " Please add syllables to the syllables tab if you want to use syllable games");
         } else if (syllTabNotEmpty) {
-            warnings.add("your syllables tab is not empty but your words in wordlist aren't " +
+            warn(Message.Tag.Etc, "your syllables tab is not empty but your words in wordlist aren't " +
                     "spliced with periods. Please splice words into syllables with a period in wordlist" +
                     " if you want to use syllable games");
         }
@@ -2201,7 +2141,7 @@ public class Validator {
             for (Tile tile : wordAsSimpleTileList) {
                 wordAsSimpleTileStringList.add(tile.text);
             }
-            fatalErrors.add("In wordlist, the word " + word.wordInLOP + " has " + wordAsSimpleTileList.size() +
+            fatalError(Message.Tag.Etc, "In wordlist, the word " + word.wordInLOP + " has " + wordAsSimpleTileList.size() +
                     " tiles, but the mixed types cell has " + typeSpecsList.size() + " specifications (its tiles are " + wordAsSimpleTileStringList + ")");
             throw new ValidatorException("In wordlist, the word " + word.wordInLOP + " has " + wordAsSimpleTileList.size() +
                     " tiles, but the mixed types cell has " + typeSpecsList.size() + " specifications (its tiles are " + wordAsSimpleTileStringList + ")");
@@ -2213,14 +2153,14 @@ public class Validator {
 
             if (currentSpecification.matches("1?[0-9]")) {
                 if ((!currentTile.tileTypeB.equals("none") || !currentTile.tileTypeC.equals("none"))) {
-                    fatalErrors.add("In wordlist, the word " + word.wordInLOP + " has no type specification" +
+                    fatalError(Message.Tag.Etc, "In wordlist, the word " + word.wordInLOP + " has no type specification" +
                             " for tile " + currentTile.text + " but that tile has multiple types");
                 }
                 toReturn.add(currentTile.tileType);
             } else if (currentSpecification.equals(currentTile.tileType) || currentSpecification.equals(currentTile.tileTypeB) || currentSpecification.equals(currentTile.tileTypeC)) {
                 toReturn.add(currentSpecification);
             } else {
-                fatalErrors.add("In wordlist, the word \"" + word.wordInLOP + "\" has type specification \"" + currentSpecification +
+                fatalError(Message.Tag.Etc, "In wordlist, the word \"" + word.wordInLOP + "\" has type specification \"" + currentSpecification +
                         "\" for tile \"" + currentTile.text + "\" but that tile does not have that type specification");
                 throw new ValidatorException("In wordlist, the word \"" + word.wordInLOP + "\" has type specification \"" + currentSpecification +
                         "\" for tile " + currentTile.text + "\" but that tile does not have that type specification");
@@ -2266,7 +2206,7 @@ public class Validator {
                 ) {
                     toReturn.add(typeSpecifications);
                 } else {
-                    fatalErrors.add("In wordlist, the word \"" + word.wordInLOP + "\" specifies only ONE multi-type tile (with the " +
+                    fatalError(Message.Tag.Etc, "In wordlist, the word \"" + word.wordInLOP + "\" specifies only ONE multi-type tile (with the " +
                             "type specification \"" + typeSpecifications +
                             "\") but the tile with row " + tileRow + " is a multi-type tile without a match to this specification");
                     throw new ValidatorException("In wordlist, the word \"" + word.wordInLOP + "\" specifies only ONE multi-type tile (with the " +
@@ -2281,7 +2221,7 @@ public class Validator {
             for (Tile tile : wordAsSimpleTileList) {
                 wordAsSimpleTileStringList.add(tile.text);
             }
-            fatalErrors.add("In wordlist, the word \"" + word.wordInLOP + "\" specifies ONE multi-type tile with the " +
+            fatalError(Message.Tag.Etc, "In wordlist, the word \"" + word.wordInLOP + "\" specifies ONE multi-type tile with the " +
                     "type specification \"" + typeSpecifications +
                     "\" but none of its tiles have multiple types (its simple tiles are " + wordAsSimpleTileStringList + ")");
             throw new ValidatorException("In wordlist, the word \"" + word.wordInLOP + "\" specifies ONE multi-type tile with the " +
@@ -2380,7 +2320,7 @@ public class Validator {
                 .setDataStoreFactory(new FileDataStoreFactory(new java.io.File("tokens")))
                 .setAccessType("offline")
                 .build();
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(-1).build();
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
@@ -2459,14 +2399,21 @@ public class Validator {
 
     public static class Checks {
         public boolean showRecommendations = true;
-
+        public boolean showExcess = true;
+        public boolean preWorkshop = false;
+        public boolean copySyllables = false;
         public Checks(JPanel dialog) {
+            addCheck(dialog, "Pre-workshop check", (ActionEvent e) -> preWorkshop = !preWorkshop, false);
             addCheck(dialog, "Show recommendations", (ActionEvent e) -> showRecommendations = !showRecommendations);
+            addCheck(dialog, "Show excess file warnings", (ActionEvent e) -> showExcess = !showExcess);
+            addCheck(dialog, "Copy syllables draft to clipboard", (ActionEvent e) -> copySyllables = !copySyllables, false);
         }
-
         private void addCheck(JPanel dialog, String message, ActionListener listener) {
+            addCheck(dialog, message, listener, true);
+        }
+        private void addCheck(JPanel dialog, String message, ActionListener listener, boolean checked) {
             JCheckBox check = new JCheckBox(message);
-            check.setSelected(true);
+            check.setSelected(checked);
             check.addActionListener(listener);
             dialog.add(check);
         }
