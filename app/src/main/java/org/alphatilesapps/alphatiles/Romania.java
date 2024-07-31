@@ -105,7 +105,7 @@ public class Romania extends GameActivity {
         }
 
         scanSetting = Integer.parseInt(Start.settingsList.find("Game 001 Scan Setting"));
-        scanSetting = 3;
+
         switch (scanSetting) {
             case 2:
                 setInitialPlusGaps();
@@ -160,12 +160,6 @@ public class Romania extends GameActivity {
         String lowercaseWord = word.toLowerCase();
         String lowercaseActiveLetter = activeTile.toLowerCase();
         int startIndex = 0;
-
-        //for(int i = 0; i < lowercaseWord.length(); i++) {
-            //Log.i("Yipiikaiyo", lowercaseWord.substring(i) + " " + boolToChar(isCombiningCharacterStr(lowercaseWord.substring(i))) + "\n");
-            //Log.i("Yipiikaiyo", lowercaseWord.substring(i) + " " + boolToChar(oo(lowercaseWord.substring(i), activeTile, i))+ "\n");
-        //}
-        //Log.i("Yipiikaiei", "\n" + lowercaseWord + " = " + lowercaseWord.length() + "\n\n");
 
         while (startIndex < lowercaseWord.length()) {
             int index = lowercaseWord.indexOf(lowercaseActiveLetter, startIndex);
