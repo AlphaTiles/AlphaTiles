@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -104,7 +105,7 @@ public class Romania extends GameActivity {
         }
 
         scanSetting = Integer.parseInt(Start.settingsList.find("Game 001 Scan Setting"));
-
+        scanSetting = 3;
         switch (scanSetting) {
             case 2:
                 setInitialPlusGaps();
@@ -154,24 +155,46 @@ public class Romania extends GameActivity {
         setUpBasedOnGameTile(activeTile);
     }
 
-    private SpannableStringBuilder boldActiveLetterInWord(String word, String activeLetter) {
+    private SpannableStringBuilder boldActiveLetterInWord(String word, String activeTile) {
         SpannableStringBuilder result = new SpannableStringBuilder(word);
         String lowercaseWord = word.toLowerCase();
-        String lowercaseActiveLetter = activeLetter.toLowerCase();
+        String lowercaseActiveLetter = activeTile.toLowerCase();
         int startIndex = 0;
+
+        //for(int i = 0; i < lowercaseWord.length(); i++) {
+            //Log.i("Yipiikaiyo", lowercaseWord.substring(i) + " " + boolToChar(isCombiningCharacterStr(lowercaseWord.substring(i))) + "\n");
+            //Log.i("Yipiikaiyo", lowercaseWord.substring(i) + " " + boolToChar(oo(lowercaseWord.substring(i), activeTile, i))+ "\n");
+        //}
+        //Log.i("Yipiikaiei", "\n" + lowercaseWord + " = " + lowercaseWord.length() + "\n\n");
 
         while (startIndex < lowercaseWord.length()) {
             int index = lowercaseWord.indexOf(lowercaseActiveLetter, startIndex);
             if (index == -1) break;
 
             boolean isInitial = (index == 0);
-            if ((isInitial && boldInitialFocusTiles) || (!isInitial && boldNonInitialFocusTiles)) {
-                result.setSpan(new StyleSpan(Typeface.BOLD), index, index + activeLetter.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            startIndex = index + 1;
+            if ((isInitial && boldInitialFocusTiles) || (!isInitial && boldNonInitialFocusTiles))
+                if(instanceIsNotSubstringOfAnotherTile(word, index, activeTile))
+                    result.setSpan(new StyleSpan(Typeface.BOLD), index, index + activeTile.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            //startIndex = index + 1;
+            startIndex = index + activeTile.length();
         }
 
         return result;
+    }
+
+    public static boolean instanceIsNotSubstringOfAnotherTile(String word, int index, String activeTile){
+        if(activeTile.length() > 1) return true;
+        if(index + 1 >= word.length()) return true;
+        if(word.charAt(index) == activeTile.charAt(0) && isCombiningCharacter(word.charAt(index + 1))) return false;
+        return true;
+    }
+
+    public static boolean isCombiningCharacter(char ch) {
+        int charType = Character.getType(ch);
+        return charType == Character.NON_SPACING_MARK ||
+                charType == Character.COMBINING_SPACING_MARK ||
+                charType == Character.ENCLOSING_MARK;
     }
 
     private void setUpBasedOnGameTile(Start.Tile activeTile) {
