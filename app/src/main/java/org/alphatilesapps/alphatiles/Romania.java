@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -155,10 +156,10 @@ public class Romania extends GameActivity {
         setUpBasedOnGameTile(activeTile);
     }
 
-    private SpannableStringBuilder boldActiveLetterInWord(String word, String activeLetter) {
+    private SpannableStringBuilder boldActiveLetterInWord(String word, String activeTile) {
         SpannableStringBuilder result = new SpannableStringBuilder(word);
         String lowercaseWord = word.toLowerCase();
-        String lowercaseActiveLetter = activeLetter.toLowerCase();
+        String lowercaseActiveLetter = activeTile.toLowerCase();
         int startIndex = 0;
 
         while (startIndex < lowercaseWord.length()) {
@@ -166,13 +167,29 @@ public class Romania extends GameActivity {
             if (index == -1) break;
 
             boolean isInitial = (index == 0);
-            if ((isInitial && boldInitialFocusTiles) || (!isInitial && boldNonInitialFocusTiles)) {
-                result.setSpan(new StyleSpan(Typeface.BOLD), index, index + activeLetter.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            startIndex = index + 1;
+            if ((isInitial && boldInitialFocusTiles) || (!isInitial && boldNonInitialFocusTiles))
+                if(instanceIsNotSubstringOfAnotherTile(word, index, activeTile))
+                    result.setSpan(new StyleSpan(Typeface.BOLD), index, index + activeTile.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            //startIndex = index + 1;
+            startIndex = index + activeTile.length();
         }
 
         return result;
+    }
+
+    public static boolean instanceIsNotSubstringOfAnotherTile(String word, int index, String activeTile){
+        if(activeTile.length() > 1) return true;
+        if(index + 1 >= word.length()) return true;
+        if(word.charAt(index) == activeTile.charAt(0) && isCombiningCharacter(word.charAt(index + 1))) return false;
+        return true;
+    }
+
+    public static boolean isCombiningCharacter(char ch) {
+        int charType = Character.getType(ch);
+        return charType == Character.NON_SPACING_MARK ||
+                charType == Character.COMBINING_SPACING_MARK ||
+                charType == Character.ENCLOSING_MARK;
     }
 
     private void setUpBasedOnGameTile(Start.Tile activeTile) {
