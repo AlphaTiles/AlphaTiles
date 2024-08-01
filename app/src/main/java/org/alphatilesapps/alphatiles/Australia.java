@@ -1,5 +1,8 @@
 package org.alphatilesapps.alphatiles;
 
+import static org.alphatilesapps.alphatiles.Start.colorList;
+import static org.alphatilesapps.alphatiles.Start.tileList;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -14,28 +17,26 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 public class Australia extends GameActivity {
 
-    int boardWidth = 7;
-    int boardHeight = 7;
-    TextView[][] buttons = new TextView[boardWidth][boardHeight];
-    int[] GAME_BUTTONS = new int[boardWidth * boardHeight];
+    private int boardWidth = 5;
+    private int boardHeight = 5;
+    private TextView[][] buttons = new TextView[boardWidth][boardHeight];
+    private int[] GAME_BUTTONS = new int[boardWidth * boardHeight];
+    private HexagonalArray<TextView> hex = new HexagonalArray<>(buttons);
 
+    private LinkedList<TextView> wordBeingBuilt = new LinkedList<>();
 
-
-    HexagonalArray<TextView> hex = new HexagonalArray<>(buttons);
-
-    LinkedList<TextView> wordBeingBuilt = new LinkedList<>();
-
-    String[] tileStrings;
-    String allCharacters = "";
-
-    int bwSquareDim;
-    int bwSquareMargin;
+    private int bwSquareDim;
+    private int bwSquareMargin;
+    private Random randy = new Random();
 
     private int prettyColor(int color) {
         Random rnd = new Random();
@@ -47,17 +48,139 @@ public class Australia extends GameActivity {
                 return 0;
         }
     }
-
-    HashMap<Integer, BWSquareInfo> idToSquinfo = new HashMap<>();
+    private HashMap<Integer, BWSquareInfo> idToSquinfo = new HashMap<>();
     private class BWSquareInfo {
         public int[] pos;
         public int[] originalScreenPos;
         boolean didSwap;
-        TextView swappedWith;
-        public int lowX, highX, lowY, highY;
+        public int backgroundColor;
+        public int textColor = Color.WHITE;
+        public int z = 0;
+        public boolean squareHasBeenUsed = false;
     }
 
-    class CorrectWordSet {
+    private class Visual {
+        public static final int SELECT = 0;
+        public static final int DESELECT = 1;
+        public static final int FOCUS = 2;
+        public static final int UNFOCUS = 3;
+        public static final int SET_USED = 4;
+        public static final int RESET = 5;
+
+        public void action(TextView v, int action) {
+            if (v == null)
+                return;
+            BWSquareInfo squinfo = idToSquinfo.get(v.getId());
+            switch (action) {
+                case SELECT:
+                    v.setBackgroundColor(Color.WHITE);
+                    v.setTextColor(Color.BLACK);
+                    v.setZ(30);
+                    //v.setBackgroundColor(Color.YELLOW);
+                    //v.setTextColor(Color.BLACK);
+                    break;
+                case DESELECT:
+                    v.setBackgroundColor(squinfo.backgroundColor);
+                    v.setTextColor(squinfo.textColor);
+                    v.setZ(squinfo.z);
+                    break;
+                case FOCUS: {
+                    v.animate().z(30);
+                    int[] pos = squinfo.pos;
+                    for (int i = 0; i < hex.getWidth(); i++) {
+                        for (int j = 0; j < hex.getHeight(); j++) {
+                            if (i == pos[0] && j == pos[1])
+                                continue;
+                            hex.get(i, j).animate().alpha(0.5F);
+                        }
+                    }
+                    break;
+                }
+                case UNFOCUS: {
+                    v.animate().z(squinfo.z);
+                    int[] pos = squinfo.pos;
+                    for (int i = 0; i < hex.getWidth(); i++) {
+                        for (int j = 0; j < hex.getHeight(); j++) {
+                            if (i == pos[0] && j == pos[1])
+                                continue;
+                            hex.get(i, j).animate().alpha(1.0F);
+                        }
+                    }
+                    break;
+                }
+                case SET_USED:
+                    squinfo.squareHasBeenUsed = true;
+                    //squinfo.backgroundColor = Color.WHITE;
+                    squinfo.backgroundColor = Color.YELLOW;
+                    squinfo.textColor = Color.BLACK;
+                    //squinfo.z = 30;
+                    v.setBackgroundColor(squinfo.backgroundColor);
+                    v.setTextColor(squinfo.textColor);
+                    v.setZ(squinfo.z);
+                    break;
+                case RESET:
+                    squinfo.squareHasBeenUsed = false;
+                    squinfo.backgroundColor = Color.parseColor(colorList.get(randy.nextInt(4)));
+                    squinfo.textColor = Color.WHITE;
+                    squinfo.z = 0;
+                    v.setBackgroundColor(squinfo.backgroundColor);
+                    v.setTextColor(squinfo.textColor);
+                    v.setZ(squinfo.z);
+                    break;
+                default:
+                    System.out.println("Not a thing, nerd.");
+            }
+        }
+    }
+
+    private Visual visual = new Visual();
+
+    private class BoardFiller {
+        int neededTiles = boardWidth * boardHeight;
+        ArrayList<Start.Tile> tilePool = new ArrayList<>();
+        ArrayList<TextView> squares = new ArrayList<>();
+        public void fillBoard() {
+            // first clear the tile pool
+            if (!tilePool.isEmpty())
+                tilePool.clear();
+
+            // then fill the tile pool with at least as many tiles as needed
+            while (tilePool.size() < neededTiles) {
+                Start.Word word = Start.wordList.get(randy.nextInt(Start.wordList.size()));
+                tilePool.addAll(tileList.parseWordIntoTiles(word.wordInLOP, word));
+            }
+
+            // randomize the order of the squares
+            for (int i = 0; i < boardWidth; i++)
+                for (int j = 0; j < boardHeight; j++)
+                    squares.add(buttons[i][j]);
+            Collections.shuffle(squares);
+
+            // make sure nothing crashes (it shouldn't)
+            assert squares.size() <= tilePool.size();
+
+            // fill the board
+            Iterator<Start.Tile> tileIterator = tilePool.iterator();
+            Iterator<TextView> squareIterator = squares.iterator();
+            while (squareIterator.hasNext()) {
+                TextView square = squareIterator.next();
+                square.setText(tileIterator.next().text);
+                visual.action(square, Visual.RESET);
+            }
+
+        }
+    }
+
+    private BoardFiller boardFiller = new BoardFiller();
+
+    private boolean allSquaresUsed() {
+        for (BWSquareInfo squinfo : idToSquinfo.values())
+            if (!squinfo.squareHasBeenUsed)
+                return false;
+        return true;
+    }
+
+    private class CorrectWordSet {
         HashSet<String> correctWords;
 
         public CorrectWordSet() {
@@ -66,7 +189,6 @@ public class Australia extends GameActivity {
             for (Start.Word word : Start.wordList) {
                 String wordToAdd = wordInLOPWithStandardizedSequenceOfCharacters(word);
                 correctWords.add(wordToAdd);
-                allCharacters += wordToAdd;
             }
         }
 
@@ -79,9 +201,27 @@ public class Australia extends GameActivity {
         }
     }
 
-    CorrectWordSet correctWordSet = new CorrectWordSet();
+    private CorrectWordSet correctWordSet = new CorrectWordSet();
 
-    class BWSquareChain {
+    private class WordsFoundSet {
+        HashSet<String> wordsFound = new HashSet<>();
+        public WordsFoundSet() {}
+
+        void add(String word) {
+            wordsFound.add(word);
+        }
+
+        void clear() {
+            wordsFound.clear();
+        }
+
+        int score() {
+            return wordsFound.size();
+        }
+    }
+    private WordsFoundSet wordsFoundSet = new WordsFoundSet();
+
+    private class BWSquareChain {
         LinkedList<TextView> textViewLinkedList = new LinkedList<>();
 
         String word = "";
@@ -109,17 +249,35 @@ public class Australia extends GameActivity {
             return false;
         }
 
+        void select(TextView v) {
+            visual.action(v, Visual.SELECT);
+        }
+
+        void deselect(TextView v) {
+            visual.action(v, Visual.DESELECT);
+        }
+
         void add(TextView v) {
             if (isAddable(v)) {
                 textViewLinkedList.add(v);
-                v.setBackgroundColor(Color.RED);
+                select(v);
                 word += v.getText();
             }
         }
 
+        TextView backspace() {
+            if (!textViewLinkedList.isEmpty()) {
+                TextView removed = textViewLinkedList.removeLast();
+                deselect(removed);
+                word = word.substring(0, word.length() - removed.getText().length());
+                return removed;
+            } else {
+                return null;
+            }
+        }
+
         void clear() {
-            while (!textViewLinkedList.isEmpty())
-                textViewLinkedList.remove().setBackgroundColor(prettyColor(Color.GREEN));
+            while (backspace() != null);
             word = "";
         }
 
@@ -127,20 +285,71 @@ public class Australia extends GameActivity {
             return word;
         }
 
+        String refreshWord() {
+            word = "";
+            for (TextView v : textViewLinkedList)
+                word += v.getText();
+            return word;
+        }
+
         boolean isWord() {
             return correctWordSet.contains(word());
         }
+        List<TextView> list() { return textViewLinkedList; }
+
+        void collapseColumns() {
+            // make every square in the chain invisible
+            for (TextView v : textViewLinkedList)
+                v.setAlpha(0.0F);
+
+            // make every square above the squares of the chain fall
+            for (int k = 0; k < boardHeight - 1; k++) {
+                boolean swapOccured = false;
+                for (int i = 0; i < boardWidth; i++) {
+                    for (int j = 0; j < boardHeight - 1; j++) {
+                        if (buttons[i][j + 1].getAlpha() == 0.0F) {
+                            swap(buttons[i][j], buttons[i][j + 1]);
+                            swapOccured = true;
+                        }
+                    }
+                }
+                if (!swapOccured) break;
+            }
+
+            // make the invisible squares reappear with new tiles in them
+            for (TextView v : textViewLinkedList) {
+                v.setText(fillBoardSquare());
+                v.animate().alpha(1.0F).setDuration(500).setStartDelay(500);
+            }
+
+            // clear the chain
+            clear();
+            submitAndPreview.update();
+        }
+
+        void setSquaresToUsed() {
+            for (TextView v : textViewLinkedList) {
+                visual.action(v, Visual.SET_USED);
+            }
+        }
     }
 
-    BWSquareChain chain = new BWSquareChain();
+    private BWSquareChain chain = new BWSquareChain();
 
-    class SubmitAndPreview {
+    private class SubmitAndPreview {
 
         void onClick() {
             if (chain.isWord()) {
-                System.out.println("That's a word!");
+                wordsFoundSet.add(chain.word());
+                chain.setSquaresToUsed();
+                if (allSquaresUsed()) {
+                    System.out.println("You win! Yahoo!");
+                    setAdvanceArrowToBlue();
+                    updatePointsAndTrackers(wordsFoundSet.score());
+                    repeatLocked = false;
+                }
             } else {
-                System.out.println("Not a word. Please just do better.");
+                playIncorrectSound();
             }
         }
 
@@ -153,18 +362,12 @@ public class Australia extends GameActivity {
             } else {
                 wordView.setBackgroundColor(Color.LTGRAY);
             }
-
-            if (chain.word().isEmpty()) {
-                wordView.setVisibility(View.INVISIBLE);
-            } else {
-                wordView.setVisibility(View.VISIBLE);
-            }
         }
     }
 
-    SubmitAndPreview submitAndPreview = new SubmitAndPreview();
+    private SubmitAndPreview submitAndPreview = new SubmitAndPreview();
 
-    class ReplacementPopup {
+    private class ReplacementPopup {
 
         private boolean popupup = false;
 
@@ -176,6 +379,8 @@ public class Australia extends GameActivity {
 
         void onReplacementClick(TextView v) {
             square.setText(v.getText());
+            chain.refreshWord();
+            submitAndPreview.update();
             closePopup();
         }
 
@@ -183,7 +388,8 @@ public class Australia extends GameActivity {
             // store the view so that when a replacement is selected, the view can be changed
             square = v;
 
-            square.animate().z(30);
+            visual.action(v, Visual.FOCUS);
+            /*square.animate().z(30);
 
             int[] pos = idToSquinfo.get(square.getId()).pos;
             for (int i = 0; i < hex.getWidth(); i++) {
@@ -192,7 +398,7 @@ public class Australia extends GameActivity {
                         continue;
                     hex.get(i, j).animate().alpha(0.5F);
                 }
-            }
+            }*/
 
             LinearLayout popupLayout = findViewById(R.id.replacementPopup);
             popupLayout.setGravity(Gravity.CENTER);
@@ -231,7 +437,9 @@ public class Australia extends GameActivity {
             popupLayout.removeAllViews();
             popupLayout.setVisibility(View.GONE);
 
-            if (square != null) {
+            visual.action(square, Visual.UNFOCUS);
+
+            /*if (square != null) {
                 square.animate().z(0);
                 int[] pos = idToSquinfo.get(square.getId()).pos;
                 for (int i = 0; i < hex.getWidth(); i++) {
@@ -241,7 +449,7 @@ public class Australia extends GameActivity {
                         hex.get(i, j).animate().alpha(1.0F);
                     }
                 }
-            }
+            }*/
 
             popupup = false;
         }
@@ -249,14 +457,16 @@ public class Australia extends GameActivity {
         boolean isPopupup() { return popupup; }
     }
 
-    ReplacementPopup poppy = new ReplacementPopup();
+    private ReplacementPopup poppy = new ReplacementPopup();
+
+
 
     /**
      * if square being dragged is {-1, -1}, then no square is being dragged
      * if it is not {-1, -1}, then square dragging is locked until the current
      *  square being dragged is done being dragged
      */
-    int[] squareBeingDragged = new int[] {-1, -1};
+    private int[] squareBeingDragged = new int[] {-1, -1};
 
     protected int[] getGameButtons() { return GAME_BUTTONS; }
 
@@ -287,6 +497,23 @@ public class Australia extends GameActivity {
     }
 
     int parity(int num) { return (num < 0) ? -1 : 1; }
+
+    private void swap(TextView v1, TextView v2) {
+        BWSquareInfo squinfo = idToSquinfo.get(v1.getId());
+        BWSquareInfo swapSquinfo = idToSquinfo.get(v2.getId());
+        hex.swap(squinfo.pos[0], squinfo.pos[1], swapSquinfo.pos[0], swapSquinfo.pos[1]);
+        swap(squinfo.pos, swapSquinfo.pos);
+        swap(squinfo.originalScreenPos, swapSquinfo.originalScreenPos);
+
+        v2.animate()
+                .x(swapSquinfo.originalScreenPos[0])
+                .y(swapSquinfo.originalScreenPos[1])
+                .setDuration(125);
+        v1.animate()
+                .x(squinfo.originalScreenPos[0])
+                .y(squinfo.originalScreenPos[1])
+                .setDuration(125);
+    }
 
     private View.OnTouchListener bwSquareOnClick = new View.OnTouchListener() {
         public boolean onTouch(View v, MotionEvent e) {
@@ -328,19 +555,7 @@ public class Australia extends GameActivity {
                         if (doSwapX && doSwapY && !squinfo.didSwap) {
                             System.out.println("Swap");
                             squinfo.didSwap = true;
-                            BWSquareInfo swapSquinfo = idToSquinfo.get(adj.getId());
-                            hex.swap(squinfo.pos[0], squinfo.pos[1], swapSquinfo.pos[0], swapSquinfo.pos[1]);
-                            swap(squinfo.pos, swapSquinfo.pos);
-                            swap(squinfo.originalScreenPos, swapSquinfo.originalScreenPos);
-
-                            adj.animate()
-                                    .x(swapSquinfo.originalScreenPos[0])
-                                    .y(swapSquinfo.originalScreenPos[1])
-                                    .setDuration(125);
-                            v.animate()
-                                    .x(squinfo.originalScreenPos[0])
-                                    .y(squinfo.originalScreenPos[1])
-                                    .setDuration(125);
+                            swap((TextView)v, adj);
 
                             chain.clear();
 
@@ -382,18 +597,29 @@ public class Australia extends GameActivity {
      * Call this each time you want to fill a board square with a letter
      * @return The next letter to fill the board with
      */
-    String fillBoardSquare() {
+    private String fillBoardSquare() {
         return Start.getRandomTileByFrequency.get().text;
+    }
+
+    private void fillBoardWithTiles() {
+        Random randy = new Random();
+        for (int i = 0; i < boardWidth; i++) {
+            for (int j = 0; j < boardHeight; j++) {
+                buttons[i][j].setText(fillBoardSquare());
+                visual.action(buttons[i][j], Visual.RESET);
+                /*buttons[i][j].setTextColor(Color.WHITE);
+
+                String wordColorStr = colorList.get(randy.nextInt(5));
+                int wordColorNo = Color.parseColor(wordColorStr);
+                idToSquinfo.get(buttons[i][j].getId()).backgroundColor = wordColorNo;
+                buttons[i][j].setBackgroundColor(wordColorNo);*/
+
+            }
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        int tileStringsFillIndex = 0;
-        tileStrings = new String[Start.tileList.size()];
-        for (Start.Tile tile : Start.tileList) {
-                tileStrings[tileStringsFillIndex++] = tile.text;
-        }
 
         super.onCreate(savedInstanceState);
         context = this;
@@ -409,15 +635,12 @@ public class Australia extends GameActivity {
         bwSquareDim = screenWidth / boardWidth;
         bwSquareMargin = bwSquareDim / 10;
 
+
         for (int i = 0; i < boardWidth; i++) {
             for (int j = 0; j < boardHeight; j++) {
                 int xPos = (i * screenWidth) / boardWidth;
                 int yPos = (j * screenWidth) / boardHeight;
                 buttons[i][j] = new TextView(this);
-                buttons[i][j].setText(fillBoardSquare());
-
-                int color = prettyColor(Color.GREEN);
-                buttons[i][j].setBackgroundColor(color);
 
                 buttons[i][j].setGravity(Gravity.CENTER);
                 buttons[i][j].setOnTouchListener(bwSquareOnClick);
@@ -434,7 +657,7 @@ public class Australia extends GameActivity {
                 RelativeLayout.LayoutParams params;
                 params = new RelativeLayout.LayoutParams(bwSquareDim - bwSquareMargin, bwSquareDim - bwSquareMargin);
                 params.leftMargin = xPos;
-                params.topMargin = yPos + (hex.isUp(i) ? 0 : bwSquareDim / 2 );
+                params.topMargin = yPos + (hex.isUp(i) ? 0 : bwSquareDim / 2 ); // stagger the heights of the columns
                 squinfo.originalScreenPos = new int[] {params.leftMargin, params.topMargin};
                 rl.addView(buttons[i][j], params);
             }
@@ -448,28 +671,64 @@ public class Australia extends GameActivity {
         }
 
         submitAndPreview.update();
-        TextView wordPreview = findViewById(R.id.wordPreview);
-        wordPreview.setOnClickListener(new View.OnClickListener() {
+
+        ImageView submit = findViewById(R.id.submit);
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitAndPreview.onClick();
             }
         });
+
+        ImageView deleteText = findViewById(R.id.deleteText);
+        deleteText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chain.backspace();
+                submitAndPreview.update();
+            }
+        });
+
         ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
         gamesHomeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { goBackToEarth(v); }
         });
 
+        //ImageView repeatImage = findViewById(R.id.repeatImage);
+        //repeatImage.bringToFront();
+
         poppy.closePopup();
 
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
+        updatePointsAndTrackers(0);
+        playAgain();
+    }
 
+    public void repeatGame(View view) {
+        System.out.println("Arrow has been pressed");
+        if (!repeatLocked) {
+            System.out.println("Game has been played again");
+            playAgain();
+        }
+
+    }
+
+    void playAgain() {
+        repeatLocked = true;
+        setAdvanceArrowToGray();
+        boardFiller.fillBoard();
     }
 
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
+    }
+
+    public void playAudioInstructions(View view) {
+        if (getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
     }
 }

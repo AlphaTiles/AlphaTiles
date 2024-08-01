@@ -5,7 +5,7 @@
     android:id="@+id/constraintlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Brazil">
+    tools:context=".Australia">
 
     <ImageView
         android:id="@+id/tracker01"
@@ -152,8 +152,8 @@
 
     <RelativeLayout
         android:id="@+id/rl"
-        android:layout_width="404dp"
-        android:layout_height="459dp"
+        android:layout_width="409dp"
+        android:layout_height="450dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -163,14 +163,16 @@
 
     <TextView
         android:id="@+id/wordPreview"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="#C5C5C5"
         android:padding="5sp"
         android:text="wrench"
         android:textAlignment="center"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/submit"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rl" />
 
@@ -181,9 +183,9 @@
         android:background="#D8D8D8"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/wordPreview"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/wordPreview"></LinearLayout>
 
     <ImageView
         android:id="@+id/pointsImage"
@@ -289,5 +291,26 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.98" />
+
+    <ImageView
+        android:id="@+id/submit"
+        android:layout_width="56dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="44dp"
+        app:layout_constraintEnd_toStartOf="@+id/deleteText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/wordPreview"
+        app:layout_constraintTop_toBottomOf="@+id/rl"
+        app:srcCompat="@drawable/zz_complete" />
+
+    <ImageView
+        android:id="@+id/deleteText"
+        android:layout_width="59dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/submit"
+        app:layout_constraintTop_toBottomOf="@+id/rl"
+        app:srcCompat="@drawable/zz_deletetext" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
