@@ -37,8 +37,8 @@ public class Romania extends GameActivity {
     Start.Word[] groupOfWordsForActiveTile;
     String tileToStartOn;
     String typeOfTileToStartOn;
-    String boldNonIntialFocusTilesTest =  Start.settingsList.find("boldNonInitialFocusTiles");
-    String boldInitialfocusTilesTest = settingsList.find("boldInitialFocusTiles");
+    String boldNonIntialFocusTilesTest =  Start.settingsList.find("Bold Non-Initial Focus Tiles");
+    String boldInitialfocusTilesTest = settingsList.find("Bold Initial Focus Tiles");
     // settings to see tiles in focus bolded or not
     boolean boldNonInitialFocusTiles = Boolean.parseBoolean(boldNonIntialFocusTilesTest); // bold non-initial tiles that are in focus
     boolean boldInitialFocusTiles = Boolean.parseBoolean(boldInitialfocusTilesTest);     // bold initial tiles that are in focus
