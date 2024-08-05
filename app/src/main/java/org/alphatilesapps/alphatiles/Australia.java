@@ -30,24 +30,23 @@ public class Australia extends GameActivity {
     private int boardHeight = 5;
     private TextView[][] buttons = new TextView[boardWidth][boardHeight];
     private int[] GAME_BUTTONS = new int[boardWidth * boardHeight];
-    private HexagonalArray<TextView> hex = new HexagonalArray<>(buttons);
 
-    private LinkedList<TextView> wordBeingBuilt = new LinkedList<>();
+    /**
+     * This hexagonal array is used to keep track of which squares on the screen are
+     * adjacent to one another
+     */
+    private HexagonalArray<TextView> board = new HexagonalArray<>(buttons);
 
+    /**
+     * The width (in pixels) of each square is bwSquareDim - bwSquareMargin
+     */
     private int bwSquareDim;
     private int bwSquareMargin;
     private Random randy = new Random();
 
-    private int prettyColor(int color) {
-        Random rnd = new Random();
-        switch (color) {
-            case Color.GREEN:
-                return Color.argb(255, 0, 204, 0);
-                //return Color.argb(255, rnd.nextInt(32), rnd.nextInt(128 - 16) + 64 + 16, rnd.nextInt(64));
-            default:
-                return 0;
-        }
-    }
+    /**
+     * This hashmap is used to store information about each square on the screen
+     */
     private HashMap<Integer, BWSquareInfo> idToSquinfo = new HashMap<>();
     private class BWSquareInfo {
         public int[] pos;
@@ -59,6 +58,9 @@ public class Australia extends GameActivity {
         public boolean squareHasBeenUsed = false;
     }
 
+    /**
+     * This class handles all of the ways a square can change its appearance
+     */
     private class Visual {
         public static final int SELECT = 0;
         public static final int DESELECT = 1;
@@ -87,11 +89,11 @@ public class Australia extends GameActivity {
                 case FOCUS: {
                     v.animate().z(30);
                     int[] pos = squinfo.pos;
-                    for (int i = 0; i < hex.getWidth(); i++) {
-                        for (int j = 0; j < hex.getHeight(); j++) {
+                    for (int i = 0; i < board.getWidth(); i++) {
+                        for (int j = 0; j < board.getHeight(); j++) {
                             if (i == pos[0] && j == pos[1])
                                 continue;
-                            hex.get(i, j).animate().alpha(0.5F);
+                            board.get(i, j).animate().alpha(0.5F);
                         }
                     }
                     break;
@@ -99,11 +101,11 @@ public class Australia extends GameActivity {
                 case UNFOCUS: {
                     v.animate().z(squinfo.z);
                     int[] pos = squinfo.pos;
-                    for (int i = 0; i < hex.getWidth(); i++) {
-                        for (int j = 0; j < hex.getHeight(); j++) {
+                    for (int i = 0; i < board.getWidth(); i++) {
+                        for (int j = 0; j < board.getHeight(); j++) {
                             if (i == pos[0] && j == pos[1])
                                 continue;
-                            hex.get(i, j).animate().alpha(1.0F);
+                            board.get(i, j).animate().alpha(1.0F);
                         }
                     }
                     break;
@@ -135,6 +137,10 @@ public class Australia extends GameActivity {
 
     private Visual visual = new Visual();
 
+    /**
+     * This class is used to fill each square with text. Until the board is completely filled,
+     * it will repeatedly choose a random word and scatter the tiles of that word across the board
+     */
     private class BoardFiller {
         int neededTiles = boardWidth * boardHeight;
         ArrayList<Start.Tile> tilePool = new ArrayList<>();
@@ -156,7 +162,8 @@ public class Australia extends GameActivity {
                     squares.add(buttons[i][j]);
             Collections.shuffle(squares);
 
-            // make sure nothing crashes (it shouldn't)
+            // make absolutely certain that there are more tiles in the tile pool than
+            // there are squares on the board.
             assert squares.size() <= tilePool.size();
 
             // fill the board
@@ -173,6 +180,9 @@ public class Australia extends GameActivity {
 
     private BoardFiller boardFiller = new BoardFiller();
 
+    /**
+     * checks whether or not all of the squares on the board have been used to form a word
+     */
     private boolean allSquaresUsed() {
         for (BWSquareInfo squinfo : idToSquinfo.values())
             if (!squinfo.squareHasBeenUsed)
@@ -190,10 +200,6 @@ public class Australia extends GameActivity {
                 String wordToAdd = wordInLOPWithStandardizedSequenceOfCharacters(word);
                 correctWords.add(wordToAdd);
             }
-        }
-
-        void add(String word) {
-            correctWords.add(word);
         }
 
         boolean contains(String word) {
@@ -241,7 +247,7 @@ public class Australia extends GameActivity {
                 return false;
             TextView endOfWord = textViewLinkedList.getLast();
             int[] pos = idToSquinfo.get(endOfWord.getId()).pos;
-            for (TextView w : hex.getAdjacents(pos[0], pos[1])) {
+            for (TextView w : board.getAdjacents(pos[0], pos[1])) {
                 if (w.getId() == v.getId())
                     return true;
             }
@@ -293,6 +299,7 @@ public class Australia extends GameActivity {
         }
 
         boolean isWord() {
+            //return Start.lopWordHashMap.get(word) != null;
             return correctWordSet.contains(word());
         }
         List<TextView> list() { return textViewLinkedList; }
@@ -346,6 +353,7 @@ public class Australia extends GameActivity {
                     System.out.println("You win! Yahoo!");
                     setAdvanceArrowToBlue();
                     updatePointsAndTrackers(wordsFoundSet.score());
+                    wordsFoundSet.clear();
                     repeatLocked = false;
                 }
             } else {
@@ -459,15 +467,6 @@ public class Australia extends GameActivity {
 
     private ReplacementPopup poppy = new ReplacementPopup();
 
-
-
-    /**
-     * if square being dragged is {-1, -1}, then no square is being dragged
-     * if it is not {-1, -1}, then square dragging is locked until the current
-     *  square being dragged is done being dragged
-     */
-    private int[] squareBeingDragged = new int[] {-1, -1};
-
     protected int[] getGameButtons() { return GAME_BUTTONS; }
 
     protected  int[] getWordImages() { return null; }
@@ -501,7 +500,7 @@ public class Australia extends GameActivity {
     private void swap(TextView v1, TextView v2) {
         BWSquareInfo squinfo = idToSquinfo.get(v1.getId());
         BWSquareInfo swapSquinfo = idToSquinfo.get(v2.getId());
-        hex.swap(squinfo.pos[0], squinfo.pos[1], swapSquinfo.pos[0], swapSquinfo.pos[1]);
+        board.swap(squinfo.pos[0], squinfo.pos[1], swapSquinfo.pos[0], swapSquinfo.pos[1]);
         swap(squinfo.pos, swapSquinfo.pos);
         swap(squinfo.originalScreenPos, swapSquinfo.originalScreenPos);
 
@@ -521,7 +520,7 @@ public class Australia extends GameActivity {
             BWSquareInfo squinfo = idToSquinfo.get(v.getId());
 
             // get all squares swappable with the dragged square
-            LinkedList<TextView> swappableAdjacents = hex.getSwappableAdjacents(squinfo.pos[0], squinfo.pos[1]);
+            LinkedList<TextView> swappableAdjacents = board.getSwappableAdjacents(squinfo.pos[0], squinfo.pos[1]);
 
             int[] offset = new int[2];
             findViewById(R.id.rl).getLocationOnScreen(offset);
@@ -657,7 +656,7 @@ public class Australia extends GameActivity {
                 RelativeLayout.LayoutParams params;
                 params = new RelativeLayout.LayoutParams(bwSquareDim - bwSquareMargin, bwSquareDim - bwSquareMargin);
                 params.leftMargin = xPos;
-                params.topMargin = yPos + (hex.isUp(i) ? 0 : bwSquareDim / 2 ); // stagger the heights of the columns
+                params.topMargin = yPos + (board.isUp(i) ? 0 : bwSquareDim / 2 ); // stagger the heights of the columns
                 squinfo.originalScreenPos = new int[] {params.leftMargin, params.topMargin};
                 rl.addView(buttons[i][j], params);
             }
