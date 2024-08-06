@@ -26,8 +26,10 @@ import java.util.List;
 import java.util.Random;
 public class Australia extends GameActivity {
 
-    private int boardWidth = 5;
-    private int boardHeight = 5;
+    private boolean FAST_TESTING = true;
+
+    private int boardWidth = 2;
+    private int boardHeight = 2;
     private TextView[][] buttons = new TextView[boardWidth][boardHeight];
     private int[] GAME_BUTTONS = new int[boardWidth * boardHeight];
 
@@ -147,12 +149,19 @@ public class Australia extends GameActivity {
         ArrayList<TextView> squares = new ArrayList<>();
         public void fillBoard() {
             // first clear the tile pool
-            if (!tilePool.isEmpty())
+            if (!tilePool.isEmpty()) {
                 tilePool.clear();
+                squares.clear();
+            }
 
             // then fill the tile pool with at least as many tiles as needed
             while (tilePool.size() < neededTiles) {
-                Start.Word word = Start.wordList.get(randy.nextInt(Start.wordList.size()));
+                Start.Word word;
+                if (FAST_TESTING) {
+                    word = Start.wordList.get(2);
+                } else {
+                    word = Start.wordList.get(randy.nextInt(Start.wordList.size()));
+                }
                 tilePool.addAll(tileList.parseWordIntoTiles(word.wordInLOP, word));
             }
 
@@ -516,6 +525,8 @@ public class Australia extends GameActivity {
 
     private View.OnTouchListener bwSquareOnClick = new View.OnTouchListener() {
         public boolean onTouch(View v, MotionEvent e) {
+            v.performClick();
+
             // get the square being dragged
             BWSquareInfo squinfo = idToSquinfo.get(v.getId());
 
@@ -694,15 +705,18 @@ public class Australia extends GameActivity {
             public void onClick(View v) { goBackToEarth(v); }
         });
 
-        //ImageView repeatImage = findViewById(R.id.repeatImage);
-        //repeatImage.bringToFront();
+        ImageView repeatImage = findViewById(R.id.repeatImage);
+        repeatImage.bringToFront();
 
         poppy.closePopup();
 
         if (getAudioInstructionsResID() == 0) {
             centerGamesHomeImage();
         }
+
+
         updatePointsAndTrackers(0);
+        setOptionsRowClickable();
         playAgain();
     }
 
