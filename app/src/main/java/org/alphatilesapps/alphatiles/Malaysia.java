@@ -174,12 +174,12 @@ public class Malaysia extends GameActivity {
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.repeatImage2, ConstraintSet.END, R.id.gamesHomeImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.START, R.id.repeatImage2, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.backwardArrowImage, ConstraintSet.END, R.id.gamesHomeImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.START, R.id.backwardArrowImage, ConstraintSet.END, 0);
         constraintSet.connect(R.id.instructions, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
         constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.instructions, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.instructions, ConstraintSet.END, 0);
-        constraintSet.connect(R.id.instructions, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.forwardArrowImage, ConstraintSet.START, R.id.instructions, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.instructions, ConstraintSet.END, R.id.forwardArrowImage, ConstraintSet.START, 0);
         constraintSet.applyTo(constraintLayout);
     }
 
