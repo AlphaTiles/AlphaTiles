@@ -306,7 +306,17 @@ public class Mexico extends GameActivity {
             cardA.setTextColor(tileColor); // theme color
             cardB.setTextColor(tileColor); // theme color
 
-            refWord.wordInLWC = memoryCollection.get(cardHitA)[0];
+            // necessary so that playCorrectSoundThenActiveWordClip below plays the right audio file (via refWord)
+            // TODO: calls to play audio in all games should include the LWC word value, not just trust that the active refWord.wordInLWC value is correct
+            // TODO: this is because there are many multi-word games (Italy, Mexico, Myanmar, China, others?) that can call many different audio files
+            refWord = new Start.Word(
+                    memoryCollection.get(cardHitA)[0],
+                    "",
+                    0,
+                    "",
+                    "",
+                    ""
+            );
 
             if (pairsCompleted == (visibleGameButtons / 2)) {
                 updatePointsAndTrackers((visibleGameButtons / 2));
