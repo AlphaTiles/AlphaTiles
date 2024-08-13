@@ -17,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,7 +32,8 @@ public class Australia extends GameActivity {
     private int boardWidth = 2;
     private int boardHeight = 2;
     private TextView[][] buttons = new TextView[boardWidth][boardHeight];
-    private int[] GAME_BUTTONS = new int[boardWidth * boardHeight];
+    private int[] GAME_BUTTONS;
+    private ArrayList<Integer> gameButtons = new ArrayList<>();
 
     /**
      * This hexagonal array is used to keep track of which squares on the screen are
@@ -358,12 +360,25 @@ public class Australia extends GameActivity {
             if (chain.isWord()) {
                 wordsFoundSet.add(chain.word());
                 chain.setSquaresToUsed();
+                chain.clear();
+                submitAndPreview.update();
                 if (allSquaresUsed()) {
                     System.out.println("You win! Yahoo!");
-                    setAdvanceArrowToBlue();
+
+                    //update points and trackers
                     updatePointsAndTrackers(wordsFoundSet.score());
-                    wordsFoundSet.clear();
+
+                    // prepare repeatGame arrow to be clicked
+                    setAdvanceArrowToBlue();
                     repeatLocked = false;
+                    setOptionsRowClickable();
+
+                    // clear the list of words the user has found
+                    wordsFoundSet.clear();
+
+                    // stop the player from repeatedly clicking the submit
+                    // button and cheesing the game
+                    findViewById(R.id.submit).setClickable(false);
                 }
             } else {
                 playIncorrectSound();
@@ -476,7 +491,14 @@ public class Australia extends GameActivity {
 
     private ReplacementPopup poppy = new ReplacementPopup();
 
-    protected int[] getGameButtons() { return GAME_BUTTONS; }
+    protected int[] getGameButtons() {
+        Integer[] game_buttons = new Integer[gameButtons.size()];
+        gameButtons.toArray(game_buttons);
+        int[] GAME_BUTTONS = new int[game_buttons.length];
+        for (int i = 0; i < game_buttons.length; i++)
+            GAME_BUTTONS[i] = game_buttons[i];
+        return GAME_BUTTONS;
+    }
 
     protected  int[] getWordImages() { return null; }
 
@@ -670,9 +692,12 @@ public class Australia extends GameActivity {
                 params.topMargin = yPos + (board.isUp(i) ? 0 : bwSquareDim / 2 ); // stagger the heights of the columns
                 squinfo.originalScreenPos = new int[] {params.leftMargin, params.topMargin};
                 rl.addView(buttons[i][j], params);
+
+                gameButtons.add(buttons[i][j].getId());
             }
         }
 
+        GAME_BUTTONS = new int[boardWidth * boardHeight];
         // initialize GAME_BUTTONS array
         for (int i = 0; i < boardWidth; i++) {
             for (int j = 0; j < boardHeight; j++) {
@@ -689,6 +714,7 @@ public class Australia extends GameActivity {
                 submitAndPreview.onClick();
             }
         });
+        gameButtons.add(R.id.submit);
 
         ImageView deleteText = findViewById(R.id.deleteText);
         deleteText.setOnClickListener(new View.OnClickListener() {
@@ -698,6 +724,8 @@ public class Australia extends GameActivity {
                 submitAndPreview.update();
             }
         });
+        gameButtons.add(R.id.deleteText);
+
 
         ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
         gamesHomeImage.setOnClickListener(new View.OnClickListener() {
