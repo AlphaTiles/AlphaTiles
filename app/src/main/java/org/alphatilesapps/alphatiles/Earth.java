@@ -107,12 +107,16 @@ public class Earth extends AppCompatActivity {
         }
 
         Scanner shareScanner = new Scanner(getResources().openRawResource(R.raw.aa_share));
-        shareScanner.nextLine(); // skip the header line
         boolean noShareIcon = false;
-        if (!shareScanner.hasNext())
+        if (shareScanner.hasNext()) {
+            shareScanner.nextLine(); // skip the header line
+            if (!shareScanner.hasNext())
+                noShareIcon = true;
+            else if (shareScanner.next().isEmpty())
+                noShareIcon = true;
+        } else {
             noShareIcon = true;
-        else if (shareScanner.next().isEmpty())
-            noShareIcon = true;
+        }
         if (noShareIcon) { // if aa_share does not have a second line, don't display a share icon
         //if (true) {
             ImageView shareIcon = findViewById(R.id.share);
