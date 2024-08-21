@@ -6,6 +6,7 @@ import java.util.Set;
 public class Message {
     public enum Tag {
         FilePresence,
+        PreWorkshop,
         Etc
     }
     public String content;
@@ -15,7 +16,7 @@ public class Message {
         this.content = content;
     }
     public static Set<Tag> allTags() {
-        return Set.of(Tag.FilePresence, Tag.Etc);
+        return Set.of(Tag.FilePresence, Tag.Etc, Tag.PreWorkshop);
     }
 
     @Override

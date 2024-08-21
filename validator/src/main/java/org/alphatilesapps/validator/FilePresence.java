@@ -11,6 +11,7 @@ public class FilePresence {
     ArrayList<File> files = new ArrayList<>();
     HashSet<String> folders = new HashSet<>();
     HashMap<String, TagData> tagData = new HashMap<>();
+    HashMap<String, Message.Tag> folderTags = new HashMap<>();
     public ArrayList<Message> fatalErrors = new ArrayList<>();
     public ArrayList<Message> warnings = new ArrayList<>();
     public ArrayList<Message> recommendations = new ArrayList<>();
@@ -28,6 +29,13 @@ public class FilePresence {
         for(String file : files) {
             add(tag, subfolder, file, mimeType, reason, optional);
         }
+    }
+    /// Use the given Message.Tag for errors about the given file tag
+    public void folderMessageTag(String folder, Message.Tag messageTag) {
+        folderTags.putIfAbsent(folder, messageTag);
+    }
+    private Message.Tag fileMessageTag(File file) {
+        return folderTags.getOrDefault(file.folderName, Message.Tag.FilePresence);
     }
     public void check(Validator.GoogleDriveFolder langPack, boolean showExcess) {
         ArrayList<ExcessFile> excessFiles = new ArrayList<>();
@@ -55,8 +63,9 @@ public class FilePresence {
                         }
                     }
                     if (excess) {
+                        Message.Tag tag = folderTags.getOrDefault(folderName, Message.Tag.FilePresence);
                         if(showExcess)
-                            warnings.add(new Message(Message.Tag.FilePresence, "Item " + item.getName() + " in folder " + folderName + " is not used and will not be downloaded"));
+                            warnings.add(new Message(tag, "Item " + item.getName() + " in folder " + folderName + " is not used and will not be downloaded"));
                         excessFiles.add(new ExcessFile(folderName, stripped));
                         folder.getFolderContents().remove(i);
                     } else {
@@ -80,8 +89,9 @@ public class FilePresence {
                         closestMatch = excess;
                     }
                 }
+                Message.Tag tag = fileMessageTag(file);
                 if(closestMatch != null)
-                    recommendations.add(new Message(Message.Tag.FilePresence, "Unused item " + closestMatch.name + " and missing item " + file.name + " are similar, did you make a typo?"));
+                    recommendations.add(new Message(tag, "Unused item " + closestMatch.name + " and missing item " + file.name + " are similar, did you make a typo?"));
                 if(file.hasName) {
                     String extensionNote = "";
                     if(file.name.contains(".")) {
@@ -89,13 +99,13 @@ public class FilePresence {
                         extensionNote = ". Don't use file extensions in the google sheet, try changing " + file.name + " to " + actual + " there";
                     }
                     if(!file.reason.isEmpty()) {
-                        fatalErrors.add(new Message(Message.Tag.FilePresence, "Item " + file.name + ", which is required because "
+                        fatalErrors.add(new Message(tag, "Item " + file.name + ", which is required because "
                                 + file.reason + ", is missing from folder " + file.folderName + " or has the wrong mime type" + extensionNote));
                     } else {
-                        fatalErrors.add(new Message(Message.Tag.FilePresence, "Required item " + file.name + " is missing from folder " + file.folderName + " or has the wrong mime type" + extensionNote));
+                        fatalErrors.add(new Message(tag, "Required item " + file.name + " is missing from folder " + file.folderName + " or has the wrong mime type" + extensionNote));
                     }
                 } else {
-                    fatalErrors.add(new Message(Message.Tag.FilePresence, "Required item of type " + file.mimeTypes + " is missing from folder " + file.folderName));
+                    fatalErrors.add(new Message(tag, "Required item of type " + file.mimeTypes + " is missing from folder " + file.folderName));
                 }
             }
         }
@@ -145,6 +155,7 @@ public class FilePresence {
     static class TagData {
         int count = 0;
         boolean failed = false;
+        Message.Tag messageTag;
     }
     // Word distance algorithm from https://www.baeldung.com/java-levenshtein-distance
     public static int costOfSubstitution(char a, char b) {

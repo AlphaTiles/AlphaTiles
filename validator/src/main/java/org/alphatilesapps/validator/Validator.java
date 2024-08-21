@@ -186,7 +186,7 @@ public class Validator {
                 }
                 Set<Message.Tag> tagsToShow;
                 if (checks.preWorkshop) {
-                    tagsToShow = Set.of(Message.Tag.FilePresence);
+                    tagsToShow = Set.of(Message.Tag.PreWorkshop);
                 } else {
                     tagsToShow = Message.allTags();
                 }
@@ -1020,6 +1020,7 @@ public class Validator {
                     true
             );
         }
+        filePresence.folderMessageTag("audio_words", Message.Tag.PreWorkshop);
         filePresence.check(langPackDriveFolder, checks.showExcess);
         warnings.addAll(filePresence.warnings);
         fatalErrors.addAll(filePresence.fatalErrors);
@@ -1087,6 +1088,7 @@ public class Validator {
         } catch (ValidatorException e) {
             warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the images_words_low_res folder or the wordlist tab");
         }
+        filePresence.folderMessageTag("images_words", Message.Tag.PreWorkshop);
         filePresence.check(langPackDriveFolder, checks.showExcess);
         warnings.addAll(filePresence.warnings);
         fatalErrors.addAll(filePresence.fatalErrors);
