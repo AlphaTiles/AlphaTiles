@@ -2403,7 +2403,7 @@ public class Validator {
         public boolean preWorkshop = false;
         public boolean copySyllables = false;
         public Checks(JPanel dialog) {
-            addCheck(dialog, "Pre-workshop check", (ActionEvent e) -> preWorkshop = !preWorkshop, false);
+            addCheck(dialog, "Pre-workshop checks only", (ActionEvent e) -> preWorkshop = !preWorkshop, false);
             addCheck(dialog, "Show recommendations", (ActionEvent e) -> showRecommendations = !showRecommendations);
             addCheck(dialog, "Show excess file warnings", (ActionEvent e) -> showExcess = !showExcess);
             addCheck(dialog, "Copy syllables draft to clipboard", (ActionEvent e) -> copySyllables = !copySyllables, false);
