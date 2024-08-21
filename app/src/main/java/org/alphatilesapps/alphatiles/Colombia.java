@@ -153,7 +153,8 @@ public class Colombia extends GameActivity {
     private void setWord() {
         clickedKeys.clear();
         tilesInBuiltWord.clear();
-        chooseWord();
+        refWord = chooseWord();
+        addToHistory(refWord);
         ImageView image = (ImageView) findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);

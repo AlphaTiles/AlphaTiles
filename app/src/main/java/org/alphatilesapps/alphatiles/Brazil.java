@@ -234,7 +234,8 @@ public class Brazil extends GameActivity {
 
     private void setWord() {
 
-        chooseWord();
+        refWord = chooseWord();
+        addToHistory(refWord);
         ImageView image = findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);

@@ -366,12 +366,11 @@ public abstract class GameActivity extends AppCompatActivity {
         }
     }
 
-    protected void chooseWord() {
+    protected Start.Word chooseWord() {
         boolean freshWord = false;
-
+        Start.Word candidate = null;
         while (!freshWord) { // Generates a new word if it got one of the last three tested words
             Random rand = new Random();
-
             if(stage == 1) { // Weight toward words with the highest correspondence ratio to stage 1 tiles
                 double higherCorrespondenceThreshold  = stageCorrespondenceRatio + (1-stageCorrespondenceRatio)/2;
                 Start.WordList higherCorrespondenceWords = new Start.WordList();
@@ -413,33 +412,32 @@ public abstract class GameActivity extends AppCompatActivity {
                 int randomNumberForWeightingTowardHighCorrespondence = rand.nextInt(wordStagesLists.get(0).size());
                 if (randomNumberForWeightingTowardHighCorrespondence < wordStagesLists.get(0).size() * 0.5 || lowerCorrespondenceWords.size()==0) { // Select a word with higher correspondence to stage 1 tiles (only tiles introduced so far)
                     int randomNumberForChoosingAHighCorrespondenceWord = rand.nextInt(higherCorrespondenceWords.size());
-                    refWord = higherCorrespondenceWords.get(randomNumberForChoosingAHighCorrespondenceWord);
+                    candidate = higherCorrespondenceWords.get(randomNumberForChoosingAHighCorrespondenceWord);
                 } else { // Select a word that corresponds to stage 1 at a lower ratio
                     int randomNumberForChoosingALowCorrespondenceWord = rand.nextInt(lowerCorrespondenceWords.size());
-                    refWord = lowerCorrespondenceWords.get(randomNumberForChoosingALowCorrespondenceWord);
+                    candidate = lowerCorrespondenceWords.get(randomNumberForChoosingALowCorrespondenceWord);
                 }
             } else { // If stage > 1, weight toward words that are new in this stage
                 int randomNumberForWeightingTowardNewWords = rand.nextInt(cumulativeStageBasedWordList.size());
                 if (randomNumberForWeightingTowardNewWords < cumulativeStageBasedWordList.size() * 0.5) { // Select a word that's added in the current stage 50% of the time
                     int randomNumberForChoosingANewWord = rand.nextInt(wordStagesLists.get(stage - 1).size());
-                    refWord = wordStagesLists.get(stage - 1).get(randomNumberForChoosingANewWord);
+                    candidate = wordStagesLists.get(stage - 1).get(randomNumberForChoosingANewWord);
                 } else { // Select a word that was added in any previous stage
                     int randomNumberForChoosingAnOlderWord = rand.nextInt(previousStagesWordList.size());
-                    refWord = previousStagesWordList.get(randomNumberForChoosingAnOlderWord);
+                    candidate = previousStagesWordList.get(randomNumberForChoosingAnOlderWord);
                 }
             }
 
             // If this word isn't one of the 12 previously tested words, we're good
-            if (!last12Words.contains(refWord.wordInLOP)) {
-                freshWord = true;
-                if(last12Words.size()==12){ // Remove first word added
-                    last12Words.poll();
-                }
-                last12Words.add(refWord.wordInLOP);
-            } else {
-                freshWord = false;
-            }
+            freshWord = !last12Words.contains(refWord.wordInLOP);
         }
+        return candidate;
+    }
+    protected void addToHistory(Start.Word word) {
+        if(last12Words.size() == 12) {
+            last12Words.poll();
+        }
+        last12Words.add(word.wordInLOP);
     }
     protected void setAllGameButtonsUnclickable() {
         for (int t = 0; t < visibleGameButtons; t++) {

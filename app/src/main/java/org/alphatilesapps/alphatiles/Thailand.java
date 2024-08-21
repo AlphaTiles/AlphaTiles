@@ -155,13 +155,13 @@ public class Thailand extends GameActivity {
         refColor = Color.parseColor(refColorStr);
 
         // If either or both elements are word-based, then three IF statements, but if both elements are tile-based, then WHILE LOOP
-
+        Start.Word chosen = null;
         if (refType.contains("WORD") || (choiceType.contains("WORD") && !refType.contains("SYLLABLE"))) {
             if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO") || choiceType.equals("TILE_LOWER")) {
                 boolean freshTile = false;
                 int freshChecks = 0;
                 while (!freshTile) {
-                    chooseWord();
+                    chosen = chooseWord();
                     freshChecks++;
                     parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
                     refTile = firstAudibleTile(refWord);
@@ -169,7 +169,7 @@ public class Thailand extends GameActivity {
                     refTileType = refTile.typeOfThisTileInstance;
                     while (challengeLevelThai == 1 && refTileType.equals("T")) {
                         // JP: disallow tone marker from being reference in level 1
-                        chooseWord();
+                        chosen = chooseWord();
                         parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
                         refTile = firstAudibleTile(refWord);
                         refString = refTile.text;
@@ -190,7 +190,7 @@ public class Thailand extends GameActivity {
                 boolean freshTile = false;
                 int freshChecks = 0;
                 while (!freshTile) {
-                    chooseWord();
+                    chosen = chooseWord();
                     freshChecks++;
                     parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
                     refTile = firstAudibleTile(refWord);
@@ -198,7 +198,7 @@ public class Thailand extends GameActivity {
                     refTileType = refTile.typeOfThisTileInstance;
                     while (challengeLevelThai == 1 && refTileType.equals("T")) {
                         // JP: disallow tone marker from being reference in level 1
-                        chooseWord();
+                        chosen = chooseWord();
                         parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
                         refTile = firstAudibleTile(refWord);
                         refString = refTile.upper;
@@ -220,14 +220,14 @@ public class Thailand extends GameActivity {
                 boolean freshTile = false;
                 int freshChecks = 0;
                 while (!freshTile) {
-                    chooseWord();
+                    chosen = chooseWord();
                     parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
                     refTile = firstAudibleTile(refWord);
                     refString = refTile.text;
                     refTileType = refTile.typeOfThisTileInstance;
                     while (challengeLevelThai == 1 && refTileType.equals("T")) {
                         // JP: disallow tone marker from being reference in level 1
-                        chooseWord();
+                        chosen = chooseWord();
                         freshChecks++;
                         parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
                         refTile = firstAudibleTile(refWord);
@@ -266,7 +266,7 @@ public class Thailand extends GameActivity {
         } else if (choiceType.contains("WORD") && refType.contains("SYLLABLE")) {
             boolean freshSyllable = false;
             while (!freshSyllable) {
-                chooseWord();
+                chosen = chooseWord();
                 parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
                 refSyllable = parsedRefWordSyllableArray.get(0);
                 refString = parsedRefWordSyllableArray.get(0).text;
@@ -341,6 +341,8 @@ public class Thailand extends GameActivity {
                 }
             }
         }
+        addToHistory(chosen);
+        refWord = chosen;
         switch (refType) {
             case "SYLLABLE_TEXT":
             case "TILE_LOWER":

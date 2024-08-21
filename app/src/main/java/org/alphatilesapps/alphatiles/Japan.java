@@ -132,12 +132,13 @@ public class Japan extends GameActivity {
     private void play() {
         repeatLocked = true;
         setAdvanceArrowToGray();
-        chooseWord();
+        Start.Word chosen = chooseWord();
 
-        while(tileList.parseWordIntoTiles(refWord.wordInLOP, refWord).size() > MAX_TILES) {
-            chooseWord();
+        while(tileList.parseWordIntoTiles(chosen.wordInLOP, chosen).size() > MAX_TILES) {
+            chosen = chooseWord();
         }
-
+        addToHistory(chosen);
+        refWord = chosen;
         parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
         parsedRefWordTileArray.removeAll(SAD);
         parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);

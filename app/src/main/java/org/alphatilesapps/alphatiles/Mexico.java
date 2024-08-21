@@ -175,9 +175,9 @@ public class Mexico extends GameActivity {
 
         for (int i = 0; i < cardsToSetUp; i++) {
             boolean wordAcceptable = true;
-            chooseWord();
+            Start.Word chosen = chooseWord();
             for (int j = 0; j < i; j++) {
-                if (refWord.wordInLWC.equals(memoryCollection.get(j*2)[0])) {
+                if (chosen.wordInLWC.equals(memoryCollection.get(j*2)[0])) {
                     wordAcceptable = false;
                     j=i;
                 }
@@ -185,12 +185,12 @@ public class Mexico extends GameActivity {
             if (!wordAcceptable) {
                 i--;
             }
-
+            addToHistory(chosen);
             if (wordAcceptable) {
                 String[] content = new String[]
                         {
-                                refWord.wordInLWC,
-                                refWord.wordInLOP,
+                                chosen.wordInLWC,
+                                chosen.wordInLOP,
                                 "TEXT",
                                 "UNSELECTED",
                                 String.valueOf(lwcWordHashMap.get(refWord.wordInLWC).duration),    // audio clip duration in seconds
@@ -200,8 +200,8 @@ public class Mexico extends GameActivity {
                 memoryCollection.add(content);
                 content = new String[]
                         {
-                                refWord.wordInLWC,
-                                refWord.wordInLOP,
+                                chosen.wordInLWC,
+                                chosen.wordInLOP,
                                 "IMAGE",
                                 "UNSELECTED",
                                 String.valueOf(lwcWordHashMap.get(refWord.wordInLWC).duration),    // audio clip duration in seconds

@@ -367,8 +367,8 @@ public class Ecuador extends GameActivity {
     }
 
     public void setWords() {
-        chooseWord();
-
+        refWord = chooseWord();
+        addToHistory(refWord);
         TextView rightWordTile = findViewById(R.id.activeWordTextView);
         rightWordTile.setText(wordList.stripInstructionCharacters(refWord.wordInLOP));
         ImageView image = (ImageView) findViewById(R.id.wordImage);

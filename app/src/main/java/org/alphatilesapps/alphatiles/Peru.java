@@ -110,7 +110,8 @@ public class Peru extends GameActivity {
     public void playAgain() {
         repeatLocked = true;
         setAdvanceArrowToGray();
-        chooseWord();
+        refWord = chooseWord();
+        addToHistory(refWord);
         parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
         int tileLength = parsedRefWordTileArray.size();
 

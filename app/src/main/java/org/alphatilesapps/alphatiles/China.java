@@ -2,7 +2,6 @@ package org.alphatilesapps.alphatiles;
 
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
-import static org.alphatilesapps.alphatiles.Start.wordList;
 
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -137,18 +136,21 @@ public class China extends GameActivity {
     private void chooseWords() {
         // Find three four-tile words
         while (threeFourTileWords.size()<3){
-            chooseWord();
-            if(tileList.parseWordIntoTilesPreliminary(refWord.wordInLOP, refWord).size() == 4){
-                threeFourTileWords.add(refWord);
+            Start.Word chosen = chooseWord();
+            if(tileList.parseWordIntoTilesPreliminary(chosen.wordInLOP, chosen).size() == 4){
+                addToHistory(chosen);
+                threeFourTileWords.add(chosen);
             }
         }
 
 
         // Find one three-tile word
-        while (tileList.parseWordIntoTilesPreliminary(refWord.wordInLOP, refWord).size()!=3) {
-            chooseWord();
+        Start.Word threeTile = chooseWord();
+        while (tileList.parseWordIntoTilesPreliminary(threeTile.wordInLOP, threeTile).size()!=3) {
+            threeTile = chooseWord();
         }
-        oneThreeTileWord = refWord;
+        addToHistory(threeTile);
+        oneThreeTileWord = threeTile;
     }
 
     private void setUpTiles() {

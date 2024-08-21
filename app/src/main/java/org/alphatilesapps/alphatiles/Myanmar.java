@@ -201,13 +201,11 @@ public class Myanmar extends GameActivity {
     private void chooseWords() {
 
         for (int i = 0; i < 7; i++) {
-
-            chooseWord();
-            sevenWords[i] = refWord;
+            sevenWords[i] = chooseWord();
 
             int tileLength = 0;
             tileLength = tileList.parseWordIntoTilesPreliminary(sevenWords[i].wordInLOP, sevenWords[i]).size();
-
+            int before = i;
             if (tileLength < 3 || tileLength > 7) { // Limit game to words of tile length 3 to 7
                 i--;
             } else {
@@ -216,6 +214,10 @@ public class Myanmar extends GameActivity {
                         i--;
                     }
                 }
+            }
+            // Did not discard
+            if(i == before) {
+                addToHistory(sevenWords[i]);
             }
         }
     }

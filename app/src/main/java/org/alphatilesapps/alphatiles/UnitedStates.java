@@ -144,13 +144,14 @@ public class UnitedStates extends GameActivity {
         setAdvanceArrowToGray();
         selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
         int parsedLengthOfRefWord = Integer.MAX_VALUE;
-
+        Start.Word chosen = null;
         while(parsedLengthOfRefWord > wordLengthLimitInTiles) {
-            chooseWord();
-            parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
-            parsedLengthOfRefWord = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord).size();
+            chosen = chooseWord();
+            parsedRefWordTileArray = tileList.parseWordIntoTiles(chosen.wordInLOP, chosen);
+            parsedLengthOfRefWord = tileList.parseWordIntoTiles(chosen.wordInLOP, chosen).size();
         }
-
+        addToHistory(chosen);
+        refWord = chosen;
         // Set up additional structures
         if (syllableGame.equals("S")) {
             parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);

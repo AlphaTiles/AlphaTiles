@@ -194,7 +194,8 @@ public class Georgia extends GameActivity {
     }
 
     private void setWord() {
-        chooseWord();
+        refWord = chooseWord();
+        addToHistory(refWord);
         if (syllableGame.equals("S")) {
             parsedRefWordSyllableArray = Start.syllableList.parseWordIntoSyllables(refWord); // JP
             initialSyllable = parsedRefWordSyllableArray.get(0);
