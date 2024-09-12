@@ -1736,6 +1736,9 @@ public class Validator {
         protected Tab getTabFromName(String inName) throws ValidatorException {
             for (Tab tab : tabList) {
                 if (tab.getName().equals(inName)) {
+                    if(tab.failedToLoad) {
+                        throw new ValidatorException("Tab " + inName + " exists, but didn't load correctly");
+                    }
                     return tab;
                 }
             }
@@ -1753,7 +1756,7 @@ public class Validator {
          * The name of this tab.
          */
         private final String name;
-
+        boolean failedToLoad;
         /**
          * Constructor for a tab object. Uses sheetsService to populate itself with the cells in the actual google
          * sheets tab. Automatically strips all leading and trailing white space from the cells.
@@ -1783,11 +1786,9 @@ public class Validator {
                     }
                     this.add(newRow);
                 }
-            } catch (Exception e) {
-                fatalError(Message.Tag.Etc, "not able to find information in the tab \"" + this.name +
-                        "\" or software was unable to access the sheet");
+            } catch (Exception ignored) {
+                failedToLoad = true;
             }
-
         }
 
         protected String getName() {
