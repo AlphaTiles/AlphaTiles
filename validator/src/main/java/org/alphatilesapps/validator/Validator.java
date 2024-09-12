@@ -949,7 +949,32 @@ public class Validator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        try {
+            Tab gametiles = langPackGoogleSheet.getTabFromName("gametiles");
+            Tab syllable = langPackGoogleSheet.getTabFromName("syllables");
+            for(String item : gametiles.getCol(5)) {
+                if(item.equals("x")) {
+                    fatalError(Message.Tag.Etc, "Placeholder in column F of gametiles should be an uppercase X, not lowercase x");
+                }
+            }
+            for(String item : gametiles.getCol(8)) {
+                if(item.equals("x")) {
+                    fatalError(Message.Tag.Etc, "Placeholder in column I of gametiles should be an uppercase X, not lowercase x");
+                }
+            }
+            for(String item : gametiles.getCol(10)) {
+                if(item.equals("x")) {
+                    fatalError(Message.Tag.Etc, "Placeholder in column K of gametiles should be an uppercase X, not lowercase x");
+                }
+            }
+            for(String item : syllable.getCol(4)) {
+                if(item.equals("x")) {
+                    fatalError(Message.Tag.Etc, "Placeholder in column E of syllables should be an uppercase X, not lowercase x");
+                }
+            }
+        } catch(Exception e) {
+            fatalError(Message.Tag.Etc, FAILED_CHECK_WARNING + "the gametiles or syllables tab");
+        }
     }
 
     private static Map<String, Integer> getKeyUsage() {
