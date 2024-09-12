@@ -524,7 +524,7 @@ public class Validator {
                     numWordsWithSpaces++;
                 }
 
-                String LOPwordString = word.wordInLOP.replace(".", "");
+                String LOPwordString = word.wordInLOP.replace(".", "").replace("#", "");
                 for (int i = 0; i < LOPwordString.length(); i++) {
                     if (!(keyUsage.containsKey(String.valueOf(LOPwordString.charAt(i))))) { // Flag chars that aren't in the keyboard
 
