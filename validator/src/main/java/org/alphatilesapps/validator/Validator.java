@@ -2054,7 +2054,7 @@ public class Validator {
     private void checkAudioPresence(String tag, String tab, int colNum, String subFolderName) {
         try {
             ArrayList<String> audioNames = langPackGoogleSheet.getTabFromName(tab).getCol(colNum);
-            audioNames.removeAll(Set.of("naWhileMPOnly", "X"));
+            audioNames.removeAll(Set.of("naWhileMPOnly", "X", "zz_no_audio_needed"));
             for(String name : audioNames) {
                 filePresence.add(
                         tag,
