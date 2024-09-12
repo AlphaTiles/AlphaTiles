@@ -2446,15 +2446,13 @@ public class Validator {
     public static class Word {
         public String wordInLWC;
         public String wordInLOP;
-        public int duration;
         public String mixedDefs;
         public String adjustment;
         public String stageOfFirstAppearance;
 
-        public Word(String wordInLWC, String wordInLOP, int duration, String mixedDefs, String adjustment, String stageOfFirstAppearance) {
+        public Word(String wordInLWC, String wordInLOP, String mixedDefs, String adjustment, String stageOfFirstAppearance) {
             this.wordInLWC = wordInLWC;
             this.wordInLOP = wordInLOP;
-            this.duration = duration;
             this.mixedDefs = mixedDefs;
             this.adjustment = adjustment;
             this.stageOfFirstAppearance = stageOfFirstAppearance;
@@ -3046,7 +3044,7 @@ public class Validator {
                 header = false;
             } else {
                 try {
-                    Word word = new Word(thisLineArray[0], thisLineArray[1], Integer.parseInt(thisLineArray[2]), thisLineArray[3], "", thisLineArray[5]);
+                    Word word = new Word(thisLineArray[0], thisLineArray[1], thisLineArray[3], "", thisLineArray[5]);
                     wordList.add(word);
                 } catch (IndexOutOfBoundsException e) {
                     // this row in wordlist.txt is empty at some columns and cannot be assessed
