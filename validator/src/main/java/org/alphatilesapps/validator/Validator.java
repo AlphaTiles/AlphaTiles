@@ -410,7 +410,7 @@ public class Validator {
         this.validateResourceSubfolders();
 
     }
-
+    
     /**
      * Executes checks langPackGoogleSheet, including default checks based on DESIRED_RANGE_FROM_TABS.
      * Checks are wrapped in try catch blocks so that if one check fails, the rest of the checks can still be run.
@@ -975,7 +975,7 @@ public class Validator {
             "zzz_resources.mp3",
             "zzz_set_player_name.mp3"
     );
-
+    boolean hasFont = false;
     /**
      * Executes checks on the resource folders langPackGoogleDrive.
      * Includes default checks based on DESIRED_FILETYPE_FROM_SUBFOLDERS.
@@ -1023,6 +1023,7 @@ public class Validator {
         }
         filePresence.folderMessageTag("audio_words", Message.Tag.PreWorkshop);
         filePresence.check(langPackDriveFolder, checks.showExcess);
+        hasFont = filePresence.okay("font");
         warnings.addAll(filePresence.warnings);
         fatalErrors.addAll(filePresence.fatalErrors);
         recommendations.addAll(filePresence.recommendations);
@@ -1279,7 +1280,15 @@ public class Validator {
         Path pathToValidator = rootPath.resolve("validator");
         Path pathToTemplate = Paths.get(String.valueOf(pathToValidator.resolve("templateTemplate")));
         copyDirectory(pathToTemplate, pathToLangPack);
-
+        if (hasFont) {
+            Path fontFolder = pathToLangPack.resolve("res").resolve("font");
+            java.io.File[] files = fontFolder.toFile().listFiles();
+            if(files != null) {
+                for (java.io.File file : files) {
+                    boolean ignored = file.delete();
+                }
+            }
+        }
         // If a temporary services.json file was created, moves it into the new language pack.
         if (Files.exists(pathToTempServices)) {
             Files.move(pathToTempServices, pathToLangPack.resolve("google-services.json"));
