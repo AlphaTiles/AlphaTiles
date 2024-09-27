@@ -1016,11 +1016,14 @@ public class Start extends AppCompatActivity {
         }
 
         public String stripInstructionCharacters(String wordInLOP) {
-            // The period instructs the parseWord method to force a tile break
-            String newString = wordInLOP.replaceAll("[.]", "");
+            // The period represents a syllable break, e.g. sun.burn
+            // The hashtag represents a (intra-syllable) tile break, e.g. in Mixtec...
+            // k#uun, "four", and kuaan, "armadillo", are both monosyllabic words...
+            // and so the sequence "ku" is ambiguous
+            // Note that older language packs without syllable break setup (e.g. periods in the wordlist tab) can still follow the old setup of period for tile breaks
+            String newString = wordInLOP.replaceAll("[.#]", "");
             return newString;
         }
-
 
         public int returnPositionInWordList(String someLWCWord) {
             int wordPosition = 0;
@@ -1221,7 +1224,8 @@ public class Start extends AppCompatActivity {
 
         public ArrayList<Syllable> parseWordIntoSyllables(Word refWord) {
             ArrayList<Syllable> parsedWordArrayTemp = new ArrayList();
-            StringTokenizer st = new StringTokenizer(refWord.wordInLOP, ".");
+            String noHashWord = refWord.wordInLOP.replaceAll("[#]", "");
+            StringTokenizer st = new StringTokenizer(noHashWord, ".");
             while (st.hasMoreTokens()) {
                 parsedWordArrayTemp.add(syllableHashMap.find(st.nextToken()));
             }
