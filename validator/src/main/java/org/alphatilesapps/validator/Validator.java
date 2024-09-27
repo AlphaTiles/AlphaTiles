@@ -1231,7 +1231,7 @@ public class Validator {
             }
             HashSet<String> parsedSyllables = new HashSet<>();
             for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1)) {
-                String[] syllablesInWord = word.split("\\.");
+                String[] syllablesInWord = word.split("[.#]");
                 parsedSyllables.addAll(Arrays.asList(syllablesInWord));
             }
             HashSet<String> providedSyllCopy = new HashSet<>(providedSyllables);
