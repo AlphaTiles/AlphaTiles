@@ -410,7 +410,7 @@ public class Validator {
         this.validateResourceSubfolders();
 
     }
-
+    
     /**
      * Executes checks langPackGoogleSheet, including default checks based on DESIRED_RANGE_FROM_TABS.
      * Checks are wrapped in try catch blocks so that if one check fails, the rest of the checks can still be run.
@@ -524,7 +524,7 @@ public class Validator {
                     numWordsWithSpaces++;
                 }
 
-                String LOPwordString = word.wordInLOP.replace(".", "");
+                String LOPwordString = word.wordInLOP.replace(".", "").replace("#", "");
                 for (int i = 0; i < LOPwordString.length(); i++) {
                     if (!(keyUsage.containsKey(String.valueOf(LOPwordString.charAt(i))))) { // Flag chars that aren't in the keyboard
 
@@ -949,7 +949,32 @@ public class Validator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        try {
+            Tab gametiles = langPackGoogleSheet.getTabFromName("gametiles");
+            Tab syllable = langPackGoogleSheet.getTabFromName("syllables");
+            for(String item : gametiles.getCol(5)) {
+                if(item.equals("x")) {
+                    fatalError(Message.Tag.Etc, "Placeholder in column F of gametiles should be an uppercase X, not lowercase x");
+                }
+            }
+            for(String item : gametiles.getCol(8)) {
+                if(item.equals("x")) {
+                    fatalError(Message.Tag.Etc, "Placeholder in column I of gametiles should be an uppercase X, not lowercase x");
+                }
+            }
+            for(String item : gametiles.getCol(10)) {
+                if(item.equals("x")) {
+                    fatalError(Message.Tag.Etc, "Placeholder in column K of gametiles should be an uppercase X, not lowercase x");
+                }
+            }
+            for(String item : syllable.getCol(4)) {
+                if(item.equals("x")) {
+                    fatalError(Message.Tag.Etc, "Placeholder in column E of syllables should be an uppercase X, not lowercase x");
+                }
+            }
+        } catch(Exception e) {
+            fatalError(Message.Tag.Etc, FAILED_CHECK_WARNING + "the gametiles or syllables tab");
+        }
     }
 
     private static Map<String, Integer> getKeyUsage() {
@@ -975,7 +1000,7 @@ public class Validator {
             "zzz_resources.mp3",
             "zzz_set_player_name.mp3"
     );
-
+    boolean hasFont = false;
     /**
      * Executes checks on the resource folders langPackGoogleDrive.
      * Includes default checks based on DESIRED_FILETYPE_FROM_SUBFOLDERS.
@@ -1023,6 +1048,7 @@ public class Validator {
         }
         filePresence.folderMessageTag("audio_words", Message.Tag.PreWorkshop);
         filePresence.check(langPackDriveFolder, checks.showExcess);
+        hasFont = filePresence.okay("font");
         warnings.addAll(filePresence.warnings);
         fatalErrors.addAll(filePresence.fatalErrors);
         recommendations.addAll(filePresence.recommendations);
@@ -1205,7 +1231,7 @@ public class Validator {
             }
             HashSet<String> parsedSyllables = new HashSet<>();
             for (String word : langPackGoogleSheet.getTabFromName("wordlist").getCol(1)) {
-                String[] syllablesInWord = word.split("\\.");
+                String[] syllablesInWord = word.replace("#", "").split("[.]");
                 parsedSyllables.addAll(Arrays.asList(syllablesInWord));
             }
             HashSet<String> providedSyllCopy = new HashSet<>(providedSyllables);
@@ -1279,7 +1305,15 @@ public class Validator {
         Path pathToValidator = rootPath.resolve("validator");
         Path pathToTemplate = Paths.get(String.valueOf(pathToValidator.resolve("templateTemplate")));
         copyDirectory(pathToTemplate, pathToLangPack);
-
+        if (hasFont) {
+            Path fontFolder = pathToLangPack.resolve("res").resolve("font");
+            java.io.File[] files = fontFolder.toFile().listFiles();
+            if(files != null) {
+                for (java.io.File file : files) {
+                    boolean ignored = file.delete();
+                }
+            }
+        }
         // If a temporary services.json file was created, moves it into the new language pack.
         if (Files.exists(pathToTempServices)) {
             Files.move(pathToTempServices, pathToLangPack.resolve("google-services.json"));
@@ -1736,6 +1770,9 @@ public class Validator {
         protected Tab getTabFromName(String inName) throws ValidatorException {
             for (Tab tab : tabList) {
                 if (tab.getName().equals(inName)) {
+                    if(tab.failedToLoad) {
+                        throw new ValidatorException("Tab " + inName + " exists, but didn't load correctly");
+                    }
                     return tab;
                 }
             }
@@ -1753,7 +1790,7 @@ public class Validator {
          * The name of this tab.
          */
         private final String name;
-
+        boolean failedToLoad;
         /**
          * Constructor for a tab object. Uses sheetsService to populate itself with the cells in the actual google
          * sheets tab. Automatically strips all leading and trailing white space from the cells.
@@ -1783,11 +1820,9 @@ public class Validator {
                     }
                     this.add(newRow);
                 }
-            } catch (Exception e) {
-                fatalError(Message.Tag.Etc, "not able to find information in the tab \"" + this.name +
-                        "\" or software was unable to access the sheet");
+            } catch (Exception ignored) {
+                failedToLoad = true;
             }
-
         }
 
         protected String getName() {
@@ -2019,7 +2054,7 @@ public class Validator {
     private void checkAudioPresence(String tag, String tab, int colNum, String subFolderName) {
         try {
             ArrayList<String> audioNames = langPackGoogleSheet.getTabFromName(tab).getCol(colNum);
-            audioNames.removeAll(Set.of("naWhileMPOnly", "X"));
+            audioNames.removeAll(Set.of("naWhileMPOnly", "X", "zz_no_audio_needed"));
             for(String name : audioNames) {
                 filePresence.add(
                         tag,
@@ -2436,15 +2471,13 @@ public class Validator {
     public static class Word {
         public String wordInLWC;
         public String wordInLOP;
-        public int duration;
         public String mixedDefs;
         public String adjustment;
         public String stageOfFirstAppearance;
 
-        public Word(String wordInLWC, String wordInLOP, int duration, String mixedDefs, String adjustment, String stageOfFirstAppearance) {
+        public Word(String wordInLWC, String wordInLOP, String mixedDefs, String adjustment, String stageOfFirstAppearance) {
             this.wordInLWC = wordInLWC;
             this.wordInLOP = wordInLOP;
-            this.duration = duration;
             this.mixedDefs = mixedDefs;
             this.adjustment = adjustment;
             this.stageOfFirstAppearance = stageOfFirstAppearance;
@@ -3036,7 +3069,7 @@ public class Validator {
                 header = false;
             } else {
                 try {
-                    Word word = new Word(thisLineArray[0], thisLineArray[1], Integer.parseInt(thisLineArray[2]), thisLineArray[3], "", thisLineArray[5]);
+                    Word word = new Word(thisLineArray[0], thisLineArray[1], thisLineArray[3], "", thisLineArray[5]);
                     wordList.add(word);
                 } catch (IndexOutOfBoundsException e) {
                     // this row in wordlist.txt is empty at some columns and cannot be assessed
