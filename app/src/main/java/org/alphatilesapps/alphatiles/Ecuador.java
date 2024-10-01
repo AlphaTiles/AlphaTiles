@@ -110,8 +110,8 @@ public class Ecuador extends GameActivity {
 
         visibleGameButtons = GAME_BUTTONS.length;
         updatePointsAndTrackers(0);
-        incorrectAnswersSelected = new ArrayList<>(visibleTiles-1);
-        for (int i = 0; i < visibleTiles-1; i++) {
+        incorrectAnswersSelected = new ArrayList<>(visibleGameButtons-1);
+        for (int i = 0; i < visibleGameButtons-1; i++) {
             incorrectAnswersSelected.add("");
         }
         playAgain();
@@ -135,7 +135,7 @@ public class Ecuador extends GameActivity {
         setWords();
         setAllGameButtonsClickable();
         setOptionsRowClickable();
-        for (int i = 0; i < visibleTiles-1; i++) {
+        for (int i = 0; i < visibleGameButtons-1; i++) {
             incorrectAnswersSelected.set(i, "");
         }
         incorrectOnLevel = 0;
@@ -473,7 +473,7 @@ public class Ecuador extends GameActivity {
                     .putValue("Number Incorrect", incorrectOnLevel)
                     .putValue("Correct Answer", chosenWordText)
                     .putValue("Grade", studentGrade);
-            for (int i = 0; i < visibleTiles-1; i++) {
+            for (int i = 0; i < visibleGameButtons-1; i++) {
                 if (!incorrectAnswersSelected.get(i).equals("")) {
                     info.putValue("Incorrect_"+(i+1), incorrectAnswersSelected.get(i));
                 }
@@ -500,7 +500,7 @@ public class Ecuador extends GameActivity {
 
         } else {
             incorrectOnLevel += 1;
-            for (int i = 0; i < visibleTiles-1; i++) {
+            for (int i = 0; i < visibleGameButtons-1; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(chosenWordText)) break;  // this incorrect answer already selected
                 if (item.equals("")) {
