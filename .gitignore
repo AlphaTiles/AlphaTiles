@@ -33,3 +33,5 @@
 *output-metadata.json
 /.idea/.name
 /.idea/.gitignore
+*baselineProfiles
+*/tokens/*

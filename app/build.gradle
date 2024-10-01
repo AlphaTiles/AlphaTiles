@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdk 34
@@ -9,9 +9,15 @@ android {
         applicationId "org.alphatilesapps.alphatiles"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 113
-        versionName "1.5.5"
+        versionCode 147
+        versionName "2.1.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    android {
+        buildFeatures {
+            buildConfig = true
+        }
     }
 
     buildTypes {
@@ -38,7 +44,7 @@ android {
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
-            resValue "string", "app_name", 'Mu̱ꞌtsíin meꞌphaa'
+            resValue "string", "app_name", 'Mu̱ꞌtsíin meꞌphaa (tpxTEO)'
         }
     }
     namespace 'org.alphatilesapps.alphatiles'
@@ -46,14 +52,14 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation platform('com.google.firebase:firebase-bom:33.1.2')
+    implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.segment.analytics.android:analytics:4.+'
-//    implementation platform('com.google.firebase:firebase-bom:25.12.0')
-//    implementation 'com.google.firebase:firebase-analytics'
-    testImplementation 'androidx.test.ext:junit:1.1.5'
-    testImplementation 'androidx.test.ext:junit:1.1.5'
+    testImplementation 'androidx.test.ext:junit:1.2.1'
+    testImplementation 'androidx.test.ext:junit:1.2.1'
     testImplementation 'org.robolectric:robolectric:4.10.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }

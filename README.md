@@ -15,7 +15,7 @@ Learn more on [our website](http://alphatilesapps.org/).
 # Generating the app with Alpha Tiles in Android Studio
 #### Windows 10/11
 ## Install Java and Android Studio
-The Alpha Tiles build gradle requires Android Studio Flamingo and Java JDK 17. [These instructions](https://www.makeuseof.com/windows-android-studio-setup/#:~:text=Before%20installing%20Android%20Studio%2C%20you,for%20creating%20Java%2Dbased%20applications.) cover all the steps for first-time installation of Java and Android Studio.
+[These instructions](https://www.makeuseof.com/windows-android-studio-setup/#:~:text=Before%20installing%20Android%20Studio%2C%20you,for%20creating%20Java%2Dbased%20applications.) cover all the steps for first-time installation of Java and Android Studio. If you have an older version of Android Studio or Java installed, you may be required to update one or both in order to build Alpha Tiles. You can do so by downloading and setting up this [latest Android Studio version](https://developer.android.com/studio) and/or one of these recent [JAVA versions](https://www.oracle.com/java/technologies/downloads/).
 
 ## Clone the source code and sample build assets
 Here is the recommended route for interacting with Alpha Tiles code and build assets through Git.
@@ -43,18 +43,18 @@ In [app/build.gradle](app/build.gradle), remove or comment out any flavors in `p
 Lastly, select `File > Sync Project with Gradle Files`. Once the project syncs, try out the app in an emulator or connected device by clicking the green 'play' icon in the top menu. Export an apk or app bundle using the `Build` menu.
 
 ### Detailed processing steps
-For a detailed guide to assembling, validating and building a new app, follow these detailed [processing steps](https://docs.google.com/document/d/1q8P81o_3eIw2dJHbx4smEWO_pT8_q5Svxvh_dHzJTEY).
+For a detailed guide to assembling, validating and building a new app, follow these detailed [processing steps](https://docs.google.com/document/d/1C93cJrd83B5Cn97azkj34eBQ_bWDTBKHotcCSPQ78uY).
 
 ## Analytics
 To use [Firebase Analytics](https://firebase.google.com/), add a valid `google-services.json` file at the root of the build assets folder. Unless you are part of the Alpha Tiles development team, generate a google-services.json file using [this tutorial](https://cloud.google.com/firestore/docs/client/get-firebase) from Firebase. 
 
-Then, in [app/build.gradle](app/build.gradle), add this line to the top:
+Or, if not including this file, go to [app/build.gradle](app/build.gradle) and comment out the following three lines:
 
 * `apply plugin: 'com.google.gms.google-services'`
 
-and add these lines to `dependencies {}`:
+and under `dependencies {}`:
 
-* `implementation platform('com.google.firebase:firebase-bom:25.12.0')`
+* `implementation platform('com.google.firebase:firebase-bom:32.7.4')`
 * `implementation 'com.google.firebase:firebase-analytics'`
 
 ## Minimum API levels

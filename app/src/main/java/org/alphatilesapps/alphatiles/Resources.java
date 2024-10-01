@@ -54,6 +54,11 @@ public class Resources extends AppCompatActivity {
         loadResources();
 
         if (scriptDirection.equals("RTL")) {
+            ImageView backwardImage = (ImageView) findViewById(R.id.backward);
+            ImageView forwardImage = (ImageView) findViewById(R.id.forward);
+
+            backwardImage.setRotationY(180);
+            forwardImage.setRotationY(180);
             forceRTLIfSupported();
         } else {
             forceLTRIfSupported();
@@ -74,17 +79,12 @@ public class Resources extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
     public void buildResourcesArray() {
 
         boolean header = true;
         Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_resources));
 
-        String[][] tempResourcesList = new String[8][3];      // 7 = hard-coded at six until you make a scrollable window for more links
+        String[][] tempResourcesList = new String[30][3];      // arbitrary upper limit of 30 resources
 
         resourcesArraySize = 0;     // is this necessary?
         while (scanner.hasNext()) {

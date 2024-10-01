@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,10 +12,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -27,33 +24,27 @@ public class Colombia extends GameActivity {
     // syllables level 2: necessary syllables + 1 distractor syllable per syllable, scrambled
     // syllables level 3: necessary syllables + all 3 distractor syllables per syllable
     // (filter out any repeats), scrambled
-
-    String initial = "";
-    Set<String> keys = new HashSet<String>();
     int keysInUse; // Number of keys in the language's total keyboard
     int keyboardScreenNo; // For languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
     int totalScreens; // Total number of screens required to show all keys
     int partial; // Number of visible keys on final partial screen
-    String lastWord = "";
-    String secondToLastWord = "";
-    String thirdToLastWord = "";
-    static List<String> keysList = new ArrayList<>();
-    static List<String> keysClicked = new ArrayList<>(); // Keys clicked, in order
+    static List<Start.Tile> tileKeysList = new ArrayList<>();
+    static List<Start.Syllable> syllableKeysList = new ArrayList<>();
+    static List<WordPiece> clickedKeys = new ArrayList<>(); // Keys clicked, in order
+    static ArrayList<Start.Tile> tilesInBuiltWord = new ArrayList<>();
 
-    protected static final int[] TILE_BUTTONS = {
+    final int tilesPerPage = 35;
+    final int syllablesPerPage = 18;
+
+    protected static final int[] GAME_BUTTONS = {
             R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
             R.id.key11, R.id.key12, R.id.key13, R.id.key14, R.id.key15, R.id.key16, R.id.key17, R.id.key18, R.id.key19, R.id.key20,
             R.id.key21, R.id.key22, R.id.key23, R.id.key24, R.id.key25, R.id.key26, R.id.key27, R.id.key28, R.id.key29, R.id.key30,
             R.id.key31, R.id.key32, R.id.key33, R.id.key34, R.id.key35
     };
 
-    protected static final int[] SYLL_BUTTONS = {
-            R.id.key01, R.id.key02, R.id.key03, R.id.key04, R.id.key05, R.id.key06, R.id.key07, R.id.key08, R.id.key09, R.id.key10,
-            R.id.key11, R.id.key12, R.id.key13, R.id.key14, R.id.key15, R.id.key16, R.id.key17, R.id.key18
-    };
-
-    protected int[] getTileButtons() {
-        return TILE_BUTTONS;
+    protected int[] getGameButtons() {
+        return GAME_BUTTONS;
     }
 
     protected int[] getWordImages() {
@@ -65,7 +56,7 @@ public class Colombia extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).gameInstrLabel, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -130,12 +121,6 @@ public class Colombia extends GameActivity {
         updatePointsAndTrackers(0);
         playAgain();
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
     public void repeatGame(View View) {
 
         if (!repeatLocked) {
@@ -163,65 +148,61 @@ public class Colombia extends GameActivity {
         ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
         wordImage.setClickable(true);
 
+    }
+
+    private void setWord() {
+        clickedKeys.clear();
+        tilesInBuiltWord.clear();
+        chooseWord();
+        ImageView image = (ImageView) findViewById(R.id.wordImage);
+        int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
+        image.setImageResource(resID);
+
+        if (syllableGame.equals("S")) {
+            parsedRefWordSyllableArray = Start.syllableList.parseWordIntoSyllables(refWord); // KP
+        } else {
+            parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
+        }
+
         loadKeyboard();
 
     }
 
-    private void setWord() {
-        keysClicked.clear();
-        chooseWord();
-        ImageView image = (ImageView) findViewById(R.id.wordImage);
-        int resID = getResources().getIdentifier(wordInLWC, "drawable", getPackageName());
-        image.setImageResource(resID);
-
-        if (syllableGame.equals("S")) {
-            parsedWordArrayFinal = Start.syllableList.parseWordIntoSyllables(wordInLOP); // KP
-        } else {
-            parsedWordArrayFinal = Start.tileList.parseWordIntoTiles(wordInLOP); // KP
-        }
-        initial = parsedWordArrayFinal.get(0); // KP
-    }
-
     public void loadKeyboard() {
-        if (!keys.isEmpty()) {
-            keys.clear();
-        }
-        if (!keysList.isEmpty()) {
-            keysList.clear();
-        }
+        tileKeysList.clear();
+        syllableKeysList.clear();
 
         switch (challengeLevel) {
             case 1:
                 // Build an array of only the required tiles
-                // Will it list <a> twice if <a> is needed twice? Yes, that's what it does
+                // Will list <a> twice if <a> is needed twice
                 // The limited set keyboard is built with GAME TILES not with KEYS
 
-                keys.addAll(parsedWordArrayFinal);
-
-                /*
-                if (hasSAD && syllableGame.equals("S")){
-                    keys.addAll(SAD);
-                }
-                 */
-
-                keysList = new ArrayList<>(keys);
-                Collections.shuffle(keysList); // KRP
-                visibleTiles = keysList.size();
-                for (int k = 0; k < visibleTiles; k++) {
+                if (syllableGame.equals("S")) {
+                    syllableKeysList = new ArrayList<>(parsedRefWordSyllableArray);
+                    Collections.shuffle(syllableKeysList);
+                    visibleGameButtons = syllableKeysList.size();
                     TextView key;
-                    if (syllableGame.equals("S")) {
-                        key = findViewById(SYLL_BUTTONS[k]);
-                        key.setText(keysList.get(k));
+                    for(int k = 0; k< visibleGameButtons; k++){
+                        key = findViewById(GAME_BUTTONS[k]);
+                        key.setText(syllableKeysList.get(k).text);
                         Random rand = new Random();
                         int index = rand.nextInt(4);
-                        int tileColor = Color.parseColor(COLORS.get(index));
+                        int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
-                    } else {
-                        key = findViewById(TILE_BUTTONS[k]);
-                        key.setText(keysList.get(k));
+                    }
+
+                } else {
+                    tileKeysList = new ArrayList<>(parsedRefWordTileArray);
+                    Collections.shuffle(tileKeysList);
+                    visibleGameButtons = tileKeysList.size();
+                    TextView key;
+                    for(int k = 0; k< visibleGameButtons; k++){
+                        key = findViewById(GAME_BUTTONS[k]);
+                        key.setText(tileKeysList.get(k).text);
                         Random rand = new Random();
                         int colorInt = rand.nextInt(4);
-                        String tileColorStr = COLORS.get(colorInt);
+                        String tileColorStr = colorList.get(colorInt);
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
@@ -232,137 +213,132 @@ public class Colombia extends GameActivity {
                 // Build an array of the required tiles plus a corresponding tile from the distractor trio for each tile
                 // So, for a five tile word, there will be 10 tiles
                 // The limited-set keyboard is built with GAME TILES not with KEYS
-
-                keys.addAll(parsedWordArrayFinal);
-
-                int unique_keys = keys.size();
-                int a = 0;
-                int a_mod = 0;
-                while (keys.size() < unique_keys * 2) {
-                    if (syllableGame.equals("S") && !SAD.contains(parsedWordArrayFinal.get(a_mod))) {
-                        keys.add(syllableList.returnRandomCorrespondingSyllable(parsedWordArrayFinal.get(a_mod))); // JP
-                    } else {
-                        keys.add(tileList.returnRandomCorrespondingTile(parsedWordArrayFinal.get(a_mod))); // KRP
+                if (syllableGame.equals("S")) {
+                    syllableKeysList = new ArrayList<>(parsedRefWordSyllableArray);
+                    int numberOfCorrectKeys = parsedRefWordSyllableArray.size();
+                    for (int n=0; n<numberOfCorrectKeys; n++) {
+                        Start.Syllable syllableInTheList = syllableKeysList.get(n);
+                        if(SAD_STRINGS.contains(syllableInTheList.text)){
+                            Start.Syllable distractorSADSyllable = syllableInTheList;
+                            distractorSADSyllable.text = tileList.returnRandomDistractorTile(tileHashMap.find(syllableInTheList.text)).text;
+                            if (distractorSADSyllable.distractors.contains(distractorSADSyllable.text)) {
+                                distractorSADSyllable.distractors.remove(distractorSADSyllable.text);
+                                distractorSADSyllable.distractors.add(syllableInTheList.text);
+                            }
+                            syllableKeysList.add(distractorSADSyllable);
+                        } else {
+                            syllableKeysList.add(syllableList.returnRandomDistractorSyllable(syllableInTheList));
+                        }
                     }
-
-                    a++;
-                    a_mod = a % parsedWordArrayFinal.size();
-                }
-                keysList = new ArrayList<>(keys);
-                Collections.shuffle(keysList); // KRP
-                visibleTiles = keysList.size();
-                for (int k = 0; k < visibleTiles; k++) {
+                    Collections.shuffle(syllableKeysList);
+                    visibleGameButtons = syllableKeysList.size();
                     TextView key;
-                    if (syllableGame.equals("S")) {
-                        key = findViewById(SYLL_BUTTONS[k]);
-                        key.setText(keysList.get(k));
+                    for(int k = 0; k< visibleGameButtons; k++){
+                        key = findViewById(GAME_BUTTONS[k]);
+                        key.setText(syllableKeysList.get(k).text);
                         Random rand = new Random();
                         int index = rand.nextInt(4);
-                        int tileColor = Color.parseColor(COLORS.get(index));
+                        int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
-                    } else {
-                        key = findViewById(TILE_BUTTONS[k]);
-                        key.setText(keysList.get(k));
+                    }
+
+                } else {
+                    tileKeysList = new ArrayList<>(parsedRefWordTileArray);
+                    int numberOfCorrectKeys = parsedRefWordTileArray.size();
+                    for (int n=0; n<numberOfCorrectKeys; n++) {
+                        tileKeysList.add(tileList.returnRandomDistractorTile(tileKeysList.get(n)));
+                    }
+                    Collections.shuffle(tileKeysList);
+                    visibleGameButtons = tileKeysList.size();
+                    TextView key;
+                    for(int k = 0; k< visibleGameButtons; k++){
+                        key = findViewById(GAME_BUTTONS[k]);
+                        key.setText(tileKeysList.get(k).text);
                         Random rand = new Random();
                         int colorInt = rand.nextInt(4);
-                        String tileColorStr = COLORS.get(colorInt);
+                        String tileColorStr = colorList.get(colorInt);
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
 
-
                 }
                 break;
             case 3:
-
-                if (syllableGame.equals("S")) { // All distractor syllables up to 18
-
-                    Start.SyllableList sortableSyllArray = (Start.SyllableList) Start.syllableList.clone();
-                    Collections.shuffle(sortableSyllArray);
-
-                    for (String syll : parsedWordArrayFinal) {
-                        keys.add(syll);
-                        if (keys.size() < 18) {
-                            if (SAD.contains(syll)) {
-                                keys.add(tileHashMap.find(syll).altTiles[0]);
-                            } else {
-                                keys.add(syllableHashMap.find(syll).distractors[0]);
+                if (syllableGame.equals("S")) { // 18 tiles; distractors for the wrong answers
+                    syllableKeysList = new ArrayList<>(parsedRefWordSyllableArray);
+                    for (int n=0; n<(18-parsedRefWordSyllableArray.size()); n++) {
+                        Start.Syllable syllableInTheList = syllableKeysList.get(n);
+                        if(SAD_STRINGS.contains(syllableInTheList.text)){
+                            Start.Syllable distractorSADSyllable = syllableInTheList;
+                            distractorSADSyllable.text = tileList.returnRandomDistractorTile(tileHashMap.find(syllableInTheList.text)).text;
+                            if(distractorSADSyllable.distractors.contains(distractorSADSyllable.text)){
+                                distractorSADSyllable.distractors.remove(distractorSADSyllable.text);
+                                distractorSADSyllable.distractors.add(syllableInTheList.text);
                             }
-                        }
-                        if (keys.size() < 18) {
-                            if (SAD.contains(syll)) {
-                                keys.add(tileHashMap.find(syll).altTiles[1]);
-                            } else {
-                                keys.add(syllableHashMap.find(syll).distractors[1]);
-                            }
-                        }
-                        if (keys.size() < 18) {
-                            if (SAD.contains(syll)) {
-                                keys.add(tileHashMap.find(syll).altTiles[1]);
-                            } else {
-                                keys.add(syllableHashMap.find(syll).distractors[1]);
-                            }
+                            syllableKeysList.add(distractorSADSyllable);
+                        } else {
+                            syllableKeysList.add(syllableList.returnRandomDistractorSyllable(syllableInTheList));
                         }
                     }
-
-                    visibleTiles = keys.size();
-                    keysList = new ArrayList<>(keys);
-                    Collections.shuffle(keysList); // KRP
-
-                    for (int k = 0; k < visibleTiles; k++) {
-                        String syllKey = keysList.get(k);
-                        TextView key = findViewById(SYLL_BUTTONS[k]);
-                        key.setText(syllKey); // JP
+                    Collections.shuffle(syllableKeysList);
+                    visibleGameButtons = syllableKeysList.size();
+                    TextView key;
+                    for(int k = 0; k< visibleGameButtons; k++){
+                        key = findViewById(GAME_BUTTONS[k]);
+                        key.setText(syllableKeysList.get(k).text);
                         Random rand = new Random();
                         int index = rand.nextInt(4);
-                        int tileColor = Color.parseColor(COLORS.get(index));
+                        int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
-                } else {
+
+                } else { // Full key list
+                    for (Start.Key key: keyList) {
+                        tileKeysList.add(tileHashMap.find(key.text));
+                    }
                     keysInUse = keyList.size(); // KP
-                    partial = keysInUse % (TILE_BUTTONS.length - 2);
-                    totalScreens = keysInUse / (TILE_BUTTONS.length - 2);
+                    partial = keysInUse % (GAME_BUTTONS.length - 2);
+                    totalScreens = keysInUse / (GAME_BUTTONS.length - 2);
 
                     if (partial != 0) {
                         totalScreens++;
                     }
 
-                    if (keysInUse > TILE_BUTTONS.length) {
-                        visibleTiles = TILE_BUTTONS.length;
+                    if (keysInUse > GAME_BUTTONS.length) {
+                        visibleGameButtons = GAME_BUTTONS.length;
                     } else {
-                        visibleTiles = keysInUse;
+                        visibleGameButtons = keysInUse;
                     }
-                    for (int k = 0; k < visibleTiles; k++) {
-                        TextView key = findViewById(TILE_BUTTONS[k]);
-                        key.setText(keyList.get(k).baseKey); // KRP
-                        String tileColorStr = COLORS.get(Integer.parseInt(keyList.get(k).keyColor));
+                    for (int k = 0; k < visibleGameButtons; k++) {
+                        TextView key = findViewById(GAME_BUTTONS[k]);
+                        key.setText(keyList.get(k).text); // KRP
+                        String tileColorStr = colorList.get(Integer.parseInt(keyList.get(k).color));
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
-                    if (keysInUse > TILE_BUTTONS.length) {
-                        TextView key34 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 2]);
+                    if (keysInUse > GAME_BUTTONS.length) {
+                        TextView key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
                         key34.setBackgroundResource(R.drawable.zz_backward_green);
                         if (scriptDirection.equals("RTL")) {
                             key34.setRotationY(180);
                         }
                         key34.setText("");
-                        TextView key35 = findViewById(TILE_BUTTONS[TILE_BUTTONS.length - 1]);
+                        TextView key35 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 1]);
                         key35.setBackgroundResource(R.drawable.zz_forward_green);
                         if (scriptDirection.equals("RTL")) {
                             key35.setRotationY(180);
                         }
                         key35.setText("");
                     }
-
                 }
                 break;
             default:
         }
 
         if (syllableGame.equals("S")) {
-            for (int k = 0; k < SYLL_BUTTONS.length; k++) {
-                TextView key = findViewById(SYLL_BUTTONS[k]);
-                if (k < visibleTiles) {
+            for (int k = 0; k < syllablesPerPage; k++) {
+                TextView key = findViewById(GAME_BUTTONS[k]);
+                if (k < visibleGameButtons) {
                     key.setVisibility(View.VISIBLE);
                     key.setClickable(true);
                 } else {
@@ -371,9 +347,9 @@ public class Colombia extends GameActivity {
                 }
             }
         } else {
-            for (int k = 0; k < TILE_BUTTONS.length; k++) {
-                TextView key = findViewById(TILE_BUTTONS[k]);
-                if (k < visibleTiles) {
+            for (int k = 0; k < GAME_BUTTONS.length; k++) {
+                TextView key = findViewById(GAME_BUTTONS[k]);
+                if (k < visibleGameButtons) {
                     key.setVisibility(View.VISIBLE);
                     key.setClickable(true);
                 } else {
@@ -386,58 +362,58 @@ public class Colombia extends GameActivity {
 
     private void respondToKeySelection(int justClickedIndex) {
 
-        String tileToAdd = "";
+        WordPiece clickedKey;
+        Tile typedTile;
+        String currentWord = "";
+        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
+        if (syllableGame.equals("S")) {
+            clickedKey = syllableKeysList.get(justClickedIndex);
+            clickedKeys.add(clickedKey);
+            for(WordPiece key : clickedKeys) {
+                currentWord+= key.text;
+            }
+        } else {
+            if(!(challengeLevel==3)){
+                clickedKey = tileKeysList.get(justClickedIndex);
+                typedTile = tileKeysList.get(justClickedIndex);
+                tilesInBuiltWord.add(typedTile);
+                clickedKeys.add(clickedKey);
+                currentWord = combineTilesToMakeWord(tilesInBuiltWord, refWord, -1);
+            } else {
+                clickedKey = new WordPiece(keyList.get(justClickedIndex).text);
+                clickedKeys.add(clickedKey);
+                currentWord = wordToBuild.getText() + clickedKey.text;
+            }
 
-        switch (challengeLevel) {
-            case 3:
-                if (syllableGame.equals("S")) {
-                    tileToAdd = keysList.get(justClickedIndex);
-                } else {
-                    tileToAdd = Start.keyList.get(justClickedIndex).baseKey;
-                }
-                keysClicked.add(tileToAdd);
-
-                break;
-            default:
-                tileToAdd = keysList.get(justClickedIndex); // KP (case 1)
-                keysClicked.add(tileToAdd);
         }
 
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-        String currentWord = wordToBuild.getText() + tileToAdd;     // RR
-        wordToBuild.setText(currentWord);                           // RR
-
+        wordToBuild.setText(currentWord);
         evaluateStatus();
-
     }
 
     private void evaluateStatus() {
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
 
-        if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP))) { // Word spelled correctly!
+        String correctString = wordInLOPWithStandardizedSequenceOfCharacters(refWord);
+        String currentAttempt;
+        if (syllableGame.equals("S") || (syllableGame.equals("T") && challengeLevel == 3)) {
+            currentAttempt = wordToBuild.getText().toString();
+        } else {
+            currentAttempt = combineTilesToMakeWord(tilesInBuiltWord, refWord, -1);
+        }
+
+        if (currentAttempt.equals(correctString)) { // Word spelled correctly!
             wordToBuild.setBackgroundColor(Color.parseColor("#4CAF50"));      // theme green
             wordToBuild.setTextColor(Color.parseColor("#FFFFFF")); // white
-
-            if (syllableGame.equals("S")) {
-                for (int i : SYLL_BUTTONS) {
-                    TextView key = findViewById(i);
-                    key.setClickable(false);
-                }
-            } else {
-                for (int i : TILE_BUTTONS) {                    // RR
-                    TextView key = findViewById(i);     // RR
-                    key.setClickable(false);
-                }
+            for (int i=0; i<visibleGameButtons; i++) {
+                TextView key = findViewById(GAME_BUTTONS[i]);
+                key.setClickable(false);
             }
-
             ImageView deleteArrow = (ImageView) findViewById(R.id.deleteImage);
             deleteArrow.setClickable(false);
-
             updatePointsAndTrackers(4);
-
             playCorrectSoundThenActiveWordClip(false);
-
             repeatLocked = false;
             setAdvanceArrowToBlue();
 
@@ -445,26 +421,37 @@ public class Colombia extends GameActivity {
             wordToBuild.setBackgroundColor(Color.parseColor("#A9A9A9")); // gray for wrong
             wordToBuild.setTextColor(Color.parseColor("#000000")); // black
 
-            if (Start.wordList.stripInstructionCharacters(wordInLOP).length() > wordToBuild.getText().length()) {
-                if (wordToBuild.getText().equals(Start.wordList.stripInstructionCharacters(wordInLOP)
-                        .substring(0, wordToBuild.getText().length()))) {
-                    // yes this is still an issue:
-                    // problem when what's in textbox is longer than the correct word??
-                    // doesn't prev if statement take care of that?
-                    // specifically on level 3 syllables ??
-
-                    // Word, so far, spelled correctly, but a less than complete match
-                    // orange=true if there is no tile/key option that would allow you to continue correctly
+            if (correctString.length() > currentAttempt.length()) {
+                ArrayList<WordPiece> firstNCorrectTiles = new ArrayList<>();
+                for (int t=0; t<clickedKeys.size(); t++) {
+                    if (syllableGame.equals("S")) {
+                        if (t<parsedRefWordSyllableArray.size()){
+                            firstNCorrectTiles.add(parsedRefWordSyllableArray.get(t));
+                        }
+                    } else {
+                        if (t<parsedRefWordTileArray.size()) {
+                            firstNCorrectTiles.add(parsedRefWordTileArray.get(t));
+                        }
+                    }
+                }
+                if (currentAttempt.equals(correctString.substring(0, currentAttempt.length()))
+                || clickedKeys.equals(firstNCorrectTiles)) { // Word is incomplete but spelled correctly so far
+                    // orange=true if there is no key option that would allow the player to continue correctly
                     if (challengeLevel == 1 || challengeLevel == 2 || syllableGame.equals("S")) {
                         boolean orange = false;
-                        for (int i = 0; i < keysClicked.size(); i++) {
-
-                            if (!keysClicked.get(i).equals(parsedWordArrayFinal.get(i))) {
-                                orange = true;
-                                break;
+                        for (int i = 0; i < clickedKeys.size(); i++) {
+                            if (syllableGame.equals("S")) {
+                                if (!clickedKeys.get(i).text.equals(parsedRefWordSyllableArray.get(i).text)) {
+                                    orange = true;
+                                    break;
+                                }
+                            } else {
+                                if (!clickedKeys.get(i).text.equals(parsedRefWordTileArray.get(i).text)) {
+                                    orange = true;
+                                    break;
+                                }
                             }
                         }
-
                         if (orange) {
                             wordToBuild.setBackgroundColor(Color.parseColor("#F44336")); // orange
                         } else {
@@ -481,37 +468,26 @@ public class Colombia extends GameActivity {
         }
     }
 
-    public void deleteLastKeyedLetter(View view) {
+    public void deleteLastKeyed(View view) {
 
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
 
         String typedLettersSoFar = wordToBuild.getText().toString();
-        String nowWithOneLessChar = "";
+        String nowWithOneLessWordPiece = "";
 
-        if (typedLettersSoFar.length() > 0) {       // RR
-            nowWithOneLessChar = typedLettersSoFar.substring(0, typedLettersSoFar.length() - 1);
-            keysClicked.remove(keysClicked.size() - 1);
+        if (typedLettersSoFar.length() > 0) {
+            if (syllableGame.equals("S")) {
+                nowWithOneLessWordPiece = typedLettersSoFar.substring(0, typedLettersSoFar.length() - clickedKeys.get(clickedKeys.size()-1).text.length());
+            } else if (syllableGame.equals("T") && challengeLevel == 3) { // Using keyboard keys, not tiles
+                nowWithOneLessWordPiece = typedLettersSoFar.substring(0, typedLettersSoFar.length() - 1);
+            } else if (syllableGame.equals("T")) {
+                tilesInBuiltWord.remove(tilesInBuiltWord.size() - 1);
+                nowWithOneLessWordPiece = combineTilesToMakeWord(tilesInBuiltWord, refWord, -1);
+            }
+            clickedKeys.remove(clickedKeys.size() - 1);
         }
 
-        wordToBuild.setText(nowWithOneLessChar);
-        evaluateStatus();
-
-    }
-
-    public void deleteLastKeyed(View view) { // JP
-
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-
-        String typedLettersSoFar = wordToBuild.getText().toString();
-        String nowWithOneLessSyll = "";
-
-        if (typedLettersSoFar.length() > 0) {       // RR
-            int shortenFromThisIndex = typedLettersSoFar.lastIndexOf(keysClicked.get(keysClicked.size() - 1));
-            nowWithOneLessSyll = typedLettersSoFar.substring(0, shortenFromThisIndex);
-            keysClicked.remove(keysClicked.size() - 1);
-        }
-
-        wordToBuild.setText(nowWithOneLessSyll);
+        wordToBuild.setText(nowWithOneLessWordPiece);
         evaluateStatus();
 
     }
@@ -521,18 +497,18 @@ public class Colombia extends GameActivity {
         int justClickedKey = Integer.parseInt((String) view.getTag());
         // Next line says ... if a basic keyboard (which all fits on one screen) or (even when on a complex keyboard) if something other than the last two buttons (the two arrows) are tapped...
         if (syllableGame.equals("S")) {
-            if (keysInUse <= SYLL_BUTTONS.length || justClickedKey <= (SYLL_BUTTONS.length - 2)) {
+            if (keysInUse <= syllablesPerPage || justClickedKey <= (syllablesPerPage - 2)) {
                 int keyIndex = (33 * (keyboardScreenNo - 1)) + justClickedKey - 1;
                 respondToKeySelection(keyIndex);
             } else {
                 // This branch = when a backward or forward arrow is clicked on
-                if (justClickedKey == SYLL_BUTTONS.length - 1) {
+                if (justClickedKey == syllablesPerPage - 1) {
                     keyboardScreenNo--;
                     if (keyboardScreenNo < 1) {
                         keyboardScreenNo = 1;
                     }
                 }
-                if (justClickedKey == SYLL_BUTTONS.length) {
+                if (justClickedKey == syllablesPerPage) {
                     keyboardScreenNo++;
                     if (keyboardScreenNo > totalScreens) {
                         keyboardScreenNo = totalScreens;
@@ -541,18 +517,18 @@ public class Colombia extends GameActivity {
                 updateKeyboard();
             }
         } else {
-            if (keysInUse <= TILE_BUTTONS.length || justClickedKey <= (TILE_BUTTONS.length - 2)) {
+            if (keysInUse <= tilesPerPage || justClickedKey <= (tilesPerPage - 2)) {
                 int keyIndex = (33 * (keyboardScreenNo - 1)) + justClickedKey - 1;
                 respondToKeySelection(keyIndex);
             } else {
                 // This branch = when a backward or forward arrow is clicked on
-                if (justClickedKey == TILE_BUTTONS.length - 1) {
+                if (justClickedKey == tilesPerPage - 1) {
                     keyboardScreenNo--;
                     if (keyboardScreenNo < 1) {
                         keyboardScreenNo = 1;
                     }
                 }
-                if (justClickedKey == TILE_BUTTONS.length) {
+                if (justClickedKey == tilesPerPage) {
                     keyboardScreenNo++;
                     if (keyboardScreenNo > totalScreens) {
                         keyboardScreenNo = totalScreens;
@@ -564,32 +540,29 @@ public class Colombia extends GameActivity {
 
     }
 
-    private void updateKeyboard() {
-
-        // This routine will only be called from complex keyboards (more keys than will fit on the basic 35-key layout)
+    private void updateKeyboard() { // This routine is only called when there are more keys than will fit on the basic 35-key layout
 
         int keysLimit;
         if (totalScreens == keyboardScreenNo) {
             keysLimit = partial;
-            for (int k = keysLimit; k < (TILE_BUTTONS.length - 2); k++) {
-                TextView key = findViewById(TILE_BUTTONS[k]);
+            for (int k = keysLimit; k < (tilesPerPage - 2); k++) {
+                TextView key = findViewById(GAME_BUTTONS[k]);
                 key.setVisibility(View.INVISIBLE);
             }
         } else {
-            keysLimit = TILE_BUTTONS.length - 2;
+            keysLimit = tilesPerPage - 2;
         }
 
         for (int k = 0; k < keysLimit; k++) {
-            TextView key = findViewById(TILE_BUTTONS[k]);
+            TextView key = findViewById(GAME_BUTTONS[k]);
             int keyIndex = (33 * (keyboardScreenNo - 1)) + k;
-            key.setText(keyList.get(keyIndex).baseKey); // KP
+            key.setText(keyList.get(keyIndex).text); // KP
             key.setVisibility(View.VISIBLE);
 
-            String tileColorStr = COLORS.get(Integer.parseInt(keyList.get(keyIndex).keyColor)); // Added on May 15th, 2021, so that second and following screens use their own color coding
+            String tileColorStr = colorList.get(Integer.parseInt(keyList.get(keyIndex).color)); // Added on May 15th, 2021, so that second and following screens use their own color coding
             int tileColor = Color.parseColor(tileColorStr);
             key.setBackgroundColor(tileColor);
         }
-
     }
 
     public void clickPicHearAudio(View view) {
@@ -604,6 +577,11 @@ public class Colombia extends GameActivity {
         if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // no action
     }
 
 }
