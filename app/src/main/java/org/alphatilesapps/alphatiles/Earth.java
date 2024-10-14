@@ -162,7 +162,7 @@ public class Earth extends AppCompatActivity {
                         // So we are forcing this game's door to initialize with a start
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                        if (country.equals("Romania") || country.equals("Sudan")) {
+                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")) {
                             trackerCount = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
                         } else if (trackerCount < 12) {
@@ -174,7 +174,7 @@ public class Earth extends AppCompatActivity {
 
                         boolean changeColor = true;
                         String doorStyle = "";
-                        if (country.equals("Sudan") || country.equals("Romania")) {
+                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")) {
                             doorStyle = "_inprocess";
                         } else if (trackerCount > 0 && trackerCount < 12) {
                             doorStyle = "_inprocess";

@@ -46,6 +46,7 @@
         <activity android:name=".Thailand" />
         <activity android:name=".UnitedStates" />
         <activity android:name=".Chile"/>
+        <activity android:name=".Malaysia"/>
     </application>
 
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
