@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
+import java.util.Scanner;
+
 
 public class Earth extends AppCompatActivity {
     Context context;
@@ -101,6 +103,28 @@ public class Earth extends AppCompatActivity {
             constraintSet.clone(constraintLayout);
             constraintSet.centerHorizontally(R.id.resourcePromo, R.id.earthCL);
             constraintSet.applyTo(constraintLayout);
+        }
+
+        boolean noShareIcon = false;
+        if (context.getResources().getIdentifier("aa_share", "raw", context.getPackageName()) == 0) {
+            noShareIcon = true;
+        } else {
+            Scanner shareScanner = new Scanner(getResources().openRawResource(R.raw.aa_share));
+            if (shareScanner.hasNext()) {
+                shareScanner.nextLine(); // skip the header line
+                if (!shareScanner.hasNext())
+                    noShareIcon = true;
+                else if (shareScanner.next().isEmpty())
+                    noShareIcon = true;
+            } else {
+                noShareIcon = true;
+            }
+        }
+        if (noShareIcon) { // if aa_share does not have a second line, don't display a share icon
+        //if (true) {
+            ImageView shareIcon = findViewById(R.id.share);
+            shareIcon.setVisibility(View.GONE);
+            shareIcon.setOnClickListener(null);
         }
 
     }
@@ -221,6 +245,12 @@ public class Earth extends AppCompatActivity {
         intent.setClass(context, Resources.class);
         startActivity(intent);
 
+    }
+
+    public void goToShare(View view) {
+        Intent intent = getIntent();
+        intent.setClass(context, Share.class);
+        startActivity(intent);
     }
 
     public void goToDoor(View view) {
