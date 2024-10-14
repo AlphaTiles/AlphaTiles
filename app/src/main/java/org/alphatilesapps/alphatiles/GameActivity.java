@@ -780,6 +780,9 @@ public abstract class GameActivity extends AppCompatActivity {
             previousString = previousTile.text;
             if(previousString.contains(placeholderCharacter) && previousString.length()==2) { // Filter these placeholders out; keep the complex tile ones
                 previousString = previousString.replace(placeholderCharacter, "");
+            } else if (previousString.endsWith(placeholderCharacter) &&
+                    (previousString.length() - previousString.replaceAll(placeholderCharacter, "").length()) > 1) { // More than one placeholder character in this tile, to portray medial complex vowel
+                previousString = previousString.substring(0, previousString.length()-1);
             }
         }
 

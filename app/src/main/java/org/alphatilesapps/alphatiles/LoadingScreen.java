@@ -200,10 +200,15 @@ public class LoadingScreen extends AppCompatActivity {
         tileDurations = new HashMap();
 
         for (Start.Tile tile : tileList) {
-            int resId = res.getIdentifier(tile.audioForThisTileType, "raw", context.getPackageName());
-            int duration = getAssetDuration(resId) + 100;
-            tileAudioIDs.put(tile.audioForThisTileType, gameSounds.load(context, resId, 2));
-            tileDurations.put(tile.audioForThisTileType, duration);
+            if(!tile.audioForThisTileType.equals("zz_no_audio_needed")) {
+                int resId = res.getIdentifier(tile.audioForThisTileType, "raw", context.getPackageName());
+                int duration = getAssetDuration(resId) + 100;
+                tileAudioIDs.put(tile.audioForThisTileType, gameSounds.load(context, resId, 2));
+                tileDurations.put(tile.audioForThisTileType, duration);
+            } else {
+                totalAudio--;
+            }
+
         }
         LOGGER.info("LoadProgress: completed loadTileAudio()");
     }
