@@ -365,12 +365,12 @@ public class Brazil extends GameActivity {
                     blankTile.text = "\u200B"; // The word will default to containing a placeholder circle. Add zero-width space, instead of line.
                     parsedRefWordTileArray.set(index_to_remove, blankTile);
                 } else {
-                    blankTile.text = "◌"; // Since Khmer has lots of placeholder circles, we'll use them for all consonant blanks.
+                    blankTile.text = placeholderCharacter; // Since Khmer has lots of placeholder circles, we'll use them for all consonant blanks.
                     parsedRefWordTileArray.set(index_to_remove, blankTile);
                 }
             }
             if (scriptType.matches("(Thai|Lao)") && correctTile.typeOfThisTileInstance.equals("C")){
-                blankTile.text = "◌";
+                blankTile.text = placeholderCharacter;
                 parsedRefWordTileArray.set(index_to_remove, blankTile);
             }
             word = combineTilesToMakeWord(parsedRefWordTileArray, refWord, index_to_remove);
