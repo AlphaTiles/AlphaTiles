@@ -162,12 +162,8 @@ public class Romania extends GameActivity {
 
     private SpannableStringBuilder boldActiveLetterInWord(Start.Word word, Start.Tile tile) {
         String activeWord = Start.wordList.stripInstructionCharacters(refWord.wordInLOP);
-        //String activeTile = tile.text;
         ArrayList<Tile> tempList = tileList.parseWordIntoTiles(word.wordInLOP, refWord);
         SpannableStringBuilder result = new SpannableStringBuilder(activeWord);
-        //String lowercaseWord = activeWord.toLowerCase();
-        //String lowercaseActiveLetter = activeTile.toLowerCase();
-        //int startIndex = 0;
         int index = 0;
 
         boolean isInitial = false;
@@ -180,42 +176,15 @@ public class Romania extends GameActivity {
                 }
                 if (i != 0 && boldNonInitialFocusTiles) {
                     result.setSpan(new StyleSpan(Typeface.BOLD), index, index + tile.text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    result.setSpan(new ForegroundColorSpan(isInitial?Color.YELLOW:Color.RED), index, index + tile.text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    result.setSpan(new ForegroundColorSpan(Color.YELLOW), index, index + tile.text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     //Color.YELLOW is identical to regular theme yellow (FFFF00).
                 }
             }
             index = index + tempList.get(i).text.length();
         }
 
-//        while (startIndex < lowercaseWord.length()) {
-//            index = lowercaseWord.indexOf(lowercaseActiveLetter, startIndex);
-//            if (index == -1) break;
-//
-//            boolean isInitial = (index == 0);
-//            if ((isInitial && boldInitialFocusTiles) || (!isInitial && boldNonInitialFocusTiles))
-//                if(instanceIsNotSubstringOfAnotherTile(activeWord, index, activeTile))
-//                    result.setSpan(new StyleSpan(Typeface.BOLD), index, index + activeTile.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//            //startIndex = index + 1;
-//            startIndex = index + activeTile.length();
-//        }
-
         return result;
     }
-
-//    public static boolean instanceIsNotSubstringOfAnotherTile(String word, int index, String activeTile){
-//        if(activeTile.length() > 1) return true;
-//        if(index + 1 >= word.length()) return true;
-//        if(word.charAt(index) == activeTile.charAt(0) && isCombiningCharacter(word.charAt(index + 1))) return false;
-//        return true;
-//    }
-
-//    public static boolean isCombiningCharacter(char ch) {
-//        int charType = Character.getType(ch);
-//        return charType == Character.NON_SPACING_MARK ||
-//                charType == Character.COMBINING_SPACING_MARK ||
-//                charType == Character.ENCLOSING_MARK;
-//    }
 
     private void setUpBasedOnGameTile(Start.Tile activeTile) {
         skipThisTile = false;
