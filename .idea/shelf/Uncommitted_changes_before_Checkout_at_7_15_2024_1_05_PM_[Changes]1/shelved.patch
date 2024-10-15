@@ -1,0 +1,161 @@
+Index: app/src/main/java/org/alphatilesapps/alphatiles/WordList.java
+===================================================================
+diff --git a/app/src/main/java/org/alphatilesapps/alphatiles/WordList.java b/app/src/main/java/org/alphatilesapps/alphatiles/WordList.java
+new file mode 100644
+--- /dev/null	
++++ b/app/src/main/java/org/alphatilesapps/alphatiles/WordList.java	
+@@ -0,0 +1,112 @@
++package org.alphatilesapps.alphatiles;
++
++import android.content.Context;
++import android.media.MediaPlayer;
++import android.os.Bundle;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.ArrayAdapter;
++import android.widget.ImageView;
++import android.widget.ListView;
++import android.widget.TextView;
++
++import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
++import androidx.appcompat.app.AppCompatActivity;
++
++import java.util.ArrayList;
++import java.util.Arrays;
++import java.util.Collections;
++import java.util.List;
++
++public class WordList extends AppCompatActivity {
++
++    private ListView wordListView;
++    private List<String> wordList;
++    private int currentPage = 0;
++    private static final int WORDS_PER_PAGE = 10;
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        setContentView(R.layout.activity_dictionary);
++
++        wordListView = findViewById(R.id.wordListView);
++        wordList = new ArrayList<>(Arrays.asList(
++                "Apple", "Banana", "Cat", "Dog", "Elephant", "Frog", "Giraffe", "Horse", "Ice cream", "Jellyfish",
++                "Kangaroo", "Lion", "Monkey", "Nest", "Octopus", "Penguin", "Queen", "Rainbow", "Sun", "Tree"
++        ));
++        Collections.sort(wordList);
++
++        updateWordList();
++    }
++
++    private void updateWordList() {
++        int startIndex = currentPage * WORDS_PER_PAGE;
++        int endIndex = Math.min(startIndex + WORDS_PER_PAGE, wordList.size());
++        List<String> pageWords = wordList.subList(startIndex, endIndex);
++
++        WordAdapter adapter = new WordAdapter(this, pageWords);
++        wordListView.setAdapter(adapter);
++    }
++
++    private class WordAdapter extends ArrayAdapter<String> {
++        private Context context;
++        private List<String> words;
++
++        public WordAdapter(Context context, List<String> words) {
++            super(context, R.layout.word_item, words);
++            this.context = context;
++            this.words = words;
++        }
++
++        @NonNull
++        @Override
++        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
++            if (convertView == null) {
++                convertView = LayoutInflater.from(context).inflate(R.layout.word_item, parent, false);
++            }
++
++            TextView wordText = convertView.findViewById(R.id.wordText);
++            ImageView wordImage = convertView.findViewById(R.id.wordImage);
++
++            final String word = words.get(position);
++            wordText.setText(word);
++
++            // Set image resource (you'll need to replace R.drawable.default_image with your actual image resources)
++            wordImage.setImageResource(R.drawable.default_image);
++
++            wordText.setOnClickListener(new View.OnClickListener() {
++                @Override
++                public void onClick(View v) {
++                    playAudio(word.toLowerCase());
++                }
++            });
++
++            wordImage.setOnClickListener(new View.OnClickListener() {
++                @Override
++                public void onClick(View v) {
++                    playAudio(word.toLowerCase());
++                }
++            });
++
++            return convertView;
++        }
++
++        private void playAudio(String word) {
++            // You'll need to replace R.raw.word_audio with your actual audio resources
++            int audioResourceId = getResources().getIdentifier(word, "raw", context.getPackageName());
++            if (audioResourceId != 0) {
++                MediaPlayer mediaPlayer = MediaPlayer.create(context, audioResourceId);
++                mediaPlayer.start();
++                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
++                    @Override
++                    public void onCompletion(MediaPlayer mp) {
++                        mp.release();
++                    }
++                });
++            }
++        }
++    }
++}
+\ No newline at end of file
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:largeHeap=\"false\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/AppTheme\">\r\n        <activity\r\n            android:name=\".Japan\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".Start\"\r\n            android:exported=\"true\"\r\n            android:theme=\"@style/AppTheme.Launcher\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n        <activity\r\n            android:name=\".LoadingScreen\"\r\n            android:exported=\"false\" />\r\n        <activity android:name=\".ChoosePlayer\" />\r\n        <activity android:name=\".SetPlayerName\" />\r\n        <activity android:name=\".Earth\" />\r\n        <activity android:name=\".About\" />\r\n        <activity android:name=\".Brazil\" />\r\n        <activity android:name=\".China\" />\r\n        <activity android:name=\".Colombia\" />\r\n        <activity android:name=\".Celebration\" />\r\n        <activity android:name=\".Ecuador\" />\r\n        <activity android:name=\".Georgia\" />\r\n        <activity android:name=\".Italy\" />\r\n        <activity android:name=\".Mexico\" />\r\n        <activity android:name=\".Myanmar\" />\r\n        <activity android:name=\".Peru\" />\r\n        <activity android:name=\".Resources\" />\r\n        <activity android:name=\".Romania\" />\r\n        <activity android:name=\".Sudan\" />\r\n        <activity android:name=\".Thailand\" />\r\n        <activity android:name=\".UnitedStates\" />\r\n        <activity android:name=\".Chile\"/>\r\n    </application>\r\n\r\n    <uses-permission android:name=\"android.permission.REQUEST_DELETE_PACKAGES\" />\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	
++++ b/app/src/main/AndroidManifest.xml	
+@@ -1,6 +1,8 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+ 
++    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
++
+     <application
+         android:allowBackup="true"
+         android:icon="@mipmap/ic_launcher"
+@@ -9,6 +11,9 @@
+         android:roundIcon="@mipmap/ic_launcher_round"
+         android:supportsRtl="true"
+         android:theme="@style/AppTheme">
++        <activity
++            android:name=".WordList_activity"
++            android:exported="false" />
+         <activity
+             android:name=".Japan"
+             android:exported="false" />
+@@ -44,9 +49,7 @@
+         <activity android:name=".Sudan" />
+         <activity android:name=".Thailand" />
+         <activity android:name=".UnitedStates" />
+-        <activity android:name=".Chile"/>
++        <activity android:name=".Chile" />
+     </application>
+ 
+-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+-
+ </manifest>
+\ No newline at end of file

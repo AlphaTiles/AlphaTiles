@@ -210,7 +210,7 @@ public class Italy extends GameActivity {
             int tileColor = Color.parseColor(tileColorStr);
             thisCardText.setTextColor(tileColor); // resets as in previous round some text fields set to black
             ImageView thisCardImage = (ImageView) findViewById(WORD_IMAGES[tileNumber]);
-            int resID = getResources().getIdentifier(gameCards.get(tileNumber).wordInLWC, "drawable", getPackageName());
+            int resID = getResources().getIdentifier(gameCards.get(tileNumber).wordInLWC +"2", "drawable", getPackageName());
             thisCardImage.setImageResource(0);
             thisCardImage.setImageResource(resID);
         }
@@ -288,7 +288,14 @@ public class Italy extends GameActivity {
         // For each sequence in possibleLoteriaSequences[][], check if all the indeces inside have been marked as correctly selected
 
         for (int[] sequence : LOTERIA_SEQUENCES) {
-            if (boardCardsFound[sequence[0] - 1] && boardCardsFound[sequence[1] - 1] && boardCardsFound[sequence[2] - 1] && boardCardsFound[sequence[3] - 1]) {
+            boolean thisSequence = true; // is this sequence the loteria? true until a non-bean is found
+            for (int i = 0; i < sequence.length; i++)
+                thisSequence &= boardCardsFound[sequence[i] - 1];
+            if (thisSequence) {
+                for (int i = 0; i < sequence.length; i++) {
+                    ImageView bean = findViewById(WORD_IMAGES[sequence[i] - 1]);
+                    bean.setImageResource(R.drawable.zz_bean_loteria);
+                }
                 return true;
             }
         }
