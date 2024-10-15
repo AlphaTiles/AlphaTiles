@@ -153,7 +153,7 @@ public class Romania extends GameActivity {
         }
 
         int i = 0;
-        while(!(cumulativeStageBasedTileList.get(i).text.equals(tileToStartOn) && cumulativeStageBasedTileList.get(i).typeOfThisTileInstance.equals(typeOfTileToStartOn))){
+        while (!(cumulativeStageBasedTileList.get(i).text.equals(tileToStartOn) && cumulativeStageBasedTileList.get(i).typeOfThisTileInstance.equals(typeOfTileToStartOn))) {
             i++;
         }
         activeTile = cumulativeStageBasedTileList.get(i);
@@ -230,7 +230,11 @@ public class Romania extends GameActivity {
         TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
         magTile.setText(indexWithinGroup + 1 + " / " + String.valueOf(String.valueOf(groupCount)));
 
-        if (!skipThisTile) {
+        gameTile.setClickable(true);
+
+        if (!skipThisTile) { // If we DO have words in the group for this tile given the scan setting, then...
+
+            // Display a word (should normally be the first word) from the group of words for the active tile
             refWord = groupOfWordsForActiveTile[indexWithinGroup];
 
             if (scanSetting == 3) {
@@ -275,6 +279,10 @@ public class Romania extends GameActivity {
                 goToPreviousTile(null);
             }
         }
+    }
+
+    public void onRefClick(View view) {
+        super.tileAudioPress(false, activeTile);
     }
 
     public void goToNextWord(Start.Tile activeTile) {

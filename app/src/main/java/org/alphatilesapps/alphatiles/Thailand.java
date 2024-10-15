@@ -19,7 +19,6 @@ import static org.alphatilesapps.alphatiles.Start.*;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 
 public class Thailand extends GameActivity {
-
     ArrayList<Start.Word> fourWordChoices = new ArrayList<>();
     ArrayList<Start.Tile> fourTileChoices = new ArrayList<>();
     ArrayList<Start.Syllable> fourSyllableChoices = new ArrayList<>();
@@ -669,11 +668,7 @@ public class Thailand extends GameActivity {
             case "TILE_LOWER":
             case "TILE_UPPER":
             case "TILE_AUDIO":
-                if (tempSoundPoolSwitch) {
-                    playActiveTileClip1(false);
-                } else {
-                    playActiveTileClip0(false);
-                }
+                playActiveTileClip(false);
                 break;
             case "WORD_TEXT":
             case "WORD_IMAGE":
@@ -685,11 +680,7 @@ public class Thailand extends GameActivity {
     }
 
     public void playActiveTileClip(final boolean playFinalSound) {
-        if (tempSoundPoolSwitch) {
-            playActiveTileClip1(playFinalSound);
-        } else {
-            playActiveTileClip0(playFinalSound);
-        }
+        super.tileAudioPress(playFinalSound, refTile);
     }
 
     private void playActiveSyllableClip(final boolean playFinalSound) { // We chose not to implement the Media Player option for syllable audio
@@ -722,56 +713,6 @@ public class Thailand extends GameActivity {
             }
         }, refSyllable.duration);
 
-    }
-
-
-    public void playActiveTileClip1(final boolean playFinalSound) {     //JP: for SoundPool, for tile audio
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-
-        if (tileAudioIDs.containsKey(refTile.audioForThisTileType)) {
-            gameSounds.play(tileAudioIDs.get(refTile.audioForThisTileType), 1.0f, 1.0f, 2, 0, 1.0f);
-        }
-        soundSequencer.postDelayed(new Runnable() {
-            public void run() {
-                if (playFinalSound) {
-                    updatePointsAndTrackers(0);
-                    repeatLocked = false;
-                    playCorrectFinalSound();
-                } else {
-                    if (repeatLocked) {
-                        setAllGameButtonsClickable();
-                    }
-                    if (after12checkedTrackers == 1){
-                        setOptionsRowClickable();
-                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                    }
-                    else if (trackerCount >0 && trackerCount % 12 != 0) {
-                        setOptionsRowClickable();
-                        // Otherwise, updatePointsAndTrackers will set it clickable only after
-                        // the player returns to earth (2) or sees the celebration screen (3)
-                    }
-                }
-            }
-        }, tileDurations.get(refTile.audioForThisTileType));
-    }
-
-
-    public void playActiveTileClip0(final boolean playFinalSound) {     //JP: for Media Player; tile audio
-
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(refTile.audioForThisTileType, "raw", getPackageName());
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        //mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mpCompletion(mp1, playFinalSound);
-            }
-        });
-        mp1.start();
     }
 
     private void playCorrectSound() {
