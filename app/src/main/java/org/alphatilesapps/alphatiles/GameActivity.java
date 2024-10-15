@@ -728,7 +728,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected boolean tileShouldPlayAudio(Start.Tile tile) {
         // make sure audio can be found
-        if (tempSoundPoolSwitch && !tileAudioIDs.containsKey(tile.audioForThisTileType)) {
+        if (tempSoundPoolSwitch && tile.audioForThisTileType.equals("X")) {
                 return false;
         }
 
