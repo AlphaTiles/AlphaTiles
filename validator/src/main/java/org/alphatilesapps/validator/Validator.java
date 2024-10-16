@@ -121,7 +121,7 @@ public class Validator {
 
 
     /**
-     * Could be Roman, Thai, Lao, or Khmer. Read from langinfo
+     * Could be Roman, Thai, Lao, Khmer, Arabic. Read from langinfo
      */
     public static String scriptType;
     /**
@@ -2141,7 +2141,7 @@ public class Validator {
      */
     private ArrayList<String> parseTypeSpecification(Word word) throws ValidatorException {
         ArrayList<Tile> wordAsSimpleTileList;
-        if (scriptType.matches("(Thai|Lao|Khmer)")) { // Type specifications must map to all simple, contiguous tile pieces, and not to the final parsing, which contains any complex tiles
+        if (scriptType.matches("(Thai|Lao|Khmer|Arabic)")) { // Type specifications must map to all simple, contiguous tile pieces, and not to the final parsing, which contains any complex tiles
             wordAsSimpleTileList = tileList.parseWordIntoTilesPreliminary(word);
         } else {
             wordAsSimpleTileList = tileList.parseWordIntoTiles(word);
@@ -2219,7 +2219,7 @@ public class Validator {
     private ArrayList<String> parseAbbreviatedTypeSpecification(Word word) throws ValidatorException {
         Tab gameTilesTab = langPackGoogleSheet.getTabFromName("gametiles");
         ArrayList<Tile> wordAsSimpleTileList;
-        if (scriptType.matches("(Thai|Lao|Khmer)")) { // Type specifications must be given for all contiguous tile pieces (not mapped to the final parsing, which will get complex tiles)
+        if (scriptType.matches("(Thai|Lao|Khmer|Arabic)")) { // Type specifications must be given for all contiguous tile pieces (not mapped to the final parsing, which will get complex tiles)
             wordAsSimpleTileList = tileList.parseWordIntoTilesPreliminary(word);
         } else {
             wordAsSimpleTileList = tileList.parseWordIntoTiles(word);
@@ -2609,7 +2609,7 @@ public class Validator {
         public ArrayList<Tile> parseWordIntoTiles(Word wordListWord) {
 
             ArrayList<Tile> parsedWordArrayPreliminary = parseWordIntoTilesPreliminary(wordListWord);
-            if (!scriptType.matches("(Thai|Lao|Khmer)")) {
+            if (!scriptType.matches("(Thai|Lao|Khmer|Arabic)")) {
                 return parsedWordArrayPreliminary;
             }
 
