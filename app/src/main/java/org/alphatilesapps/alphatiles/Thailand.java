@@ -182,7 +182,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    freshTile = verifyFreshTile(refTile, freshChecks);
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
 
             } else if (refType.equals("TILE_UPPER") || choiceType.equals("TILE_UPPER")) {
@@ -204,7 +204,7 @@ public class Thailand extends GameActivity {
                         refTileType =  refTile.typeOfThisTileInstance;
                     }
                     // SAD should never be first tile linguistically, so no need to programatically filter out
-                    freshTile = verifyFreshTile(refTile, freshChecks);
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
 
             } else if (refType.contains("WORD") && choiceType.contains("WORD")) {
@@ -225,7 +225,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    freshTile = verifyFreshTile(refTile, freshChecks);
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
 
             }
@@ -283,7 +283,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    freshTile = verifyFreshTile(refTile, freshChecks);
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
             }
             if (refType.equals("TILE_UPPER")) {
@@ -304,7 +304,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.upper;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    freshTile = verifyFreshTile(refTile, freshChecks);
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
             }
         }
@@ -652,8 +652,8 @@ public class Thailand extends GameActivity {
                 case "TILE_LOWER":
                 case "TILE_UPPER":
                 case "TILE_AUDIO":
-                    if (!recentlyMissed.get(playerNumber - 1).contains(refTile)) {
-                        recentlyMissed.get(playerNumber - 1).set(index, refTile);  // set that spot to be this tile
+                    if (!recentlyMissed.get(playerNumber - 1).contains(refString)) {
+                        recentlyMissed.get(playerNumber - 1).set(index, refString);  // set that spot to be this tile
                         recentlyMissedIndex.set(playerNumber - 1,
                                 (index + 1) % recentlyMissed.get(playerNumber - 1).size()); // increment the counter, wrapping around
                     }
@@ -662,8 +662,8 @@ public class Thailand extends GameActivity {
                         case "TILE_LOWER":
                         case "TILE_UPPER":
                             // (same as above)
-                            if (!recentlyMissed.get(playerNumber - 1).contains(refTile)) {
-                                recentlyMissed.get(playerNumber - 1).set(index, refTile);
+                            if (!recentlyMissed.get(playerNumber - 1).contains(refString)) {
+                                recentlyMissed.get(playerNumber - 1).set(index, refString);
                                 recentlyMissedIndex.set(playerNumber - 1,
                                         (index + 1) % recentlyMissed.get(playerNumber - 1).size());
                             }

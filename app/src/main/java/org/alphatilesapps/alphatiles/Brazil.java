@@ -634,7 +634,7 @@ public class Brazil extends GameActivity {
             String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
             Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
                     .putValue("Number Incorrect", incorrectOnLevel)
-                    .putValue("Correct Answer", correct)
+                    .putValue("Correct Answer", correctString)
                     .putValue("Grade", studentGrade);
             for (int i = 0; i < visibleGameButtons-1; i++) {
                 if (!incorrectAnswersSelected.get(i).equals("")) {
@@ -662,9 +662,9 @@ public class Brazil extends GameActivity {
             incorrectOnLevel += 1;
             for (int i = 0; i < visibleGameButtons-1; i++) {
                 String item = incorrectAnswersSelected.get(i);
-                if (item.equals(gameTileString)) break;  // this incorrect answer already selected
+                if (item.equals(gameButtonString)) break;  // this incorrect answer already selected
                 if (item.equals("")) {
-                    incorrectAnswersSelected.set(i, gameTileString);
+                    incorrectAnswersSelected.set(i, gameButtonString);
                     break;
                 }
             }
