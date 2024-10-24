@@ -73,7 +73,7 @@ public class Start extends AppCompatActivity {
     public static int numberOfAvatars = 12;
     public static String scriptType; // LM Can be "Thai", "Lao", or "Khmer" for special tile parsing. If nothing specified, tile parsing defaults to unidirectional.
     
-    public static ArrayList<Boolean> sendAnalytics = new ArrayList<>();
+    public static Boolean sendAnalytics;
     public static ArrayList<ArrayList<String>> recentlyMissed = new ArrayList<>();
     public static ArrayList<Integer> recentlyMissedIndex = new ArrayList<>();
     
@@ -116,33 +116,17 @@ public class Start extends AppCompatActivity {
         buildColorList();
         LOGGER.info("LoadProgress: completed buildColorsList()");
 
-        String hasAudioSetting = settingsList.find("Has tile audio");
-        if (!hasAudioSetting.equals("")) {
-            hasTileAudio = Boolean.parseBoolean(hasAudioSetting);
-        } else {
-            hasTileAudio = false;
-        }
-
-        String differentiatesTileTypesSetting = settingsList.find("Differentiates types of multitype symbols");
-        if (!differentiatesTileTypesSetting.equals("")) {
-            differentiatesTileTypes = Boolean.parseBoolean(differentiatesTileTypesSetting);
-        } else {
-            differentiatesTileTypes = false;
-        }
+        hasTileAudio = getBooleanFromSettings("Has tile audio", false);
+        differentiatesTileTypes = getBooleanFromSettings("Differentiates types of multitype symbols", false);
+        //to make syllable audio optional
+        hasSyllableAudio = getBooleanFromSettings("Has syllable audio", false);
+        sendAnalytics = getBooleanFromSettings("Send analytics", false);
 
         String after12checkedTrackersSetting = settingsList.find("After 12 checked trackers");
         if (!after12checkedTrackersSetting.equals("")) {
             after12checkedTrackers = Integer.valueOf(after12checkedTrackersSetting);
         } else {
             after12checkedTrackers = 3;
-        }
-
-        //to make syllable audio optional
-        String hasSyllableAudioSetting = settingsList.find("Has syllable audio");
-        if (!hasSyllableAudioSetting.equals("")) {
-            hasSyllableAudio = Boolean.parseBoolean(hasSyllableAudioSetting);
-        } else {
-            hasSyllableAudio = false;
         }
 
         String customNumOfAvatars = settingsList.find("Number of avatars"); // Default is 12
@@ -248,6 +232,8 @@ public class Start extends AppCompatActivity {
         }
         Chile.data = Chile.chilePreProcess();
 
+        // not implemented yet -- but could be used to track recently missed letters and
+        // try to surface those tiles more frequently
         recentlyMissed = new ArrayList<>(12);
         recentlyMissedIndex = new ArrayList<>(12);
         for (int i = 0; i < 12; i++) {
@@ -258,14 +244,18 @@ public class Start extends AppCompatActivity {
             }
         }
 
-//        sendAnalytics = new ArrayList<>(12);
-//        for (int i = 0; i < 12; i++) {
-//            sendAnalytics.add(i, null);
-//        }
-
         Intent intent = new Intent(this, LoadingScreen.class);
         startActivity(intent);
 
+    }
+
+    private boolean getBooleanFromSettings(String label, boolean default_value) {
+        String desiredSetting = settingsList.find(label);
+        if (!desiredSetting.equals("")) {
+            return Boolean.parseBoolean(desiredSetting);
+        } else {
+            return default_value;
+        }
     }
 
     private void buildColorList() {
