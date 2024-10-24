@@ -843,6 +843,18 @@ public class Start extends AppCompatActivity {
                 return true;
             return false;
         }
+
+        /**
+         * NOTE: This method may or may not actually work as intended.
+         * It needs to be tested and revised.
+         */
+        public String getAudioNameAccountingForMultitypeSymbols() {
+            if(!Start.differentiatesTileTypes) {
+                return this.audioName;
+            }
+
+            return this.audioForThisTileType;
+        }
     }
 
     public class Key {
