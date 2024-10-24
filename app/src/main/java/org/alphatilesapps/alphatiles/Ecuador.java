@@ -496,5 +496,9 @@ public class Ecuador extends GameActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        // no action
+    }
 
 }
