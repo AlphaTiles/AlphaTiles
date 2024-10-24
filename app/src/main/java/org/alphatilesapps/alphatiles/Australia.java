@@ -25,12 +25,42 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
+/**
+ * Australia (Bookworm) Game
+ *
+ * How to play:
+ *
+ * The player is presented with a hexagonal grid of squares. There is a letter in each square. The
+ * player taps the squares to build a chain of squares. If the letters in the chain of squares forms
+ * a word, the user can submit that word with the green check-mark. The squares in the submitted
+ * word will then turn yellow. Once the entire board is yellow, the player wins the round. The
+ * player's score is determined by the number of unique words they build.
+ *
+ * The player has two ways of changing the board. They can swipe the squares to move them around
+ * diagonally. If they press and hold a square, a small pop-up menu containing a list of letters
+ * that are similar to the letter found inside the pressed square. They player can select any of
+ * these letters to replace the letter in the square.
+ */
 public class Australia extends GameActivity {
 
-    private boolean FAST_TESTING = true;
+    /**
+     * If FAST_TESTING is set to true, the entire board will fill up with the word
+     * agu', allowing round completion to be tested more quickly
+     */
+    private boolean FAST_TESTING = false;
 
-    private int boardWidth = 2;
-    private int boardHeight = 2;
+    /**
+     * The width, in number of squares, of the game board. (Making this number small can be useful
+     * for quick testing)
+     */
+    private int boardWidth = 7;
+
+    /**
+     * The height, in number of squares, of the game board. (Making this number small can be useful
+     * for quick testing)
+     */
+    private int boardHeight = 7;
     private TextView[][] buttons = new TextView[boardWidth][boardHeight];
     private int[] GAME_BUTTONS;
     private ArrayList<Integer> gameButtons = new ArrayList<>();
@@ -49,9 +79,16 @@ public class Australia extends GameActivity {
     private Random randy = new Random();
 
     /**
-     * This hashmap is used to store information about each square on the screen
+     * This hashmap is used to store information about each square on the screen. Squinfo is a
+     * shortening of "Square Info". This game often requires retrieving information about the state
+     * of a square based on the id of TextView of the square.
      */
     private HashMap<Integer, BWSquareInfo> idToSquinfo = new HashMap<>();
+
+    /**
+     * The Bookworm Square Info class is used to keep track of information about every square on
+     * the board.
+     */
     private class BWSquareInfo {
         public int[] pos;
         public int[] originalScreenPos;
@@ -201,6 +238,9 @@ public class Australia extends GameActivity {
         return true;
     }
 
+    /**
+     * The CorrectWordSet is used to check whether or not a given string is a valid word
+     */
     private class CorrectWordSet {
         HashSet<String> correctWords;
 
@@ -220,6 +260,10 @@ public class Australia extends GameActivity {
 
     private CorrectWordSet correctWordSet = new CorrectWordSet();
 
+    /**
+     * The WordsFoundSet keeps a record of every word that the player has found so far. The user
+     * scores points for every unique word they find.
+     */
     private class WordsFoundSet {
         HashSet<String> wordsFound = new HashSet<>();
         public WordsFoundSet() {}
@@ -238,6 +282,12 @@ public class Australia extends GameActivity {
     }
     private WordsFoundSet wordsFoundSet = new WordsFoundSet();
 
+    /**
+     * The BWSquareChain ("Bookworm Square Chain") keeps track of the chain of letters that the
+     * player creates. It keeps track of the word being formed by the player's square chain and
+     * makes sure they can only add squares that have not been added yet and that are adjacent to
+     * the most recently added square. It also handles giving some visual instructions.
+     */
     private class BWSquareChain {
         LinkedList<TextView> textViewLinkedList = new LinkedList<>();
 
@@ -251,6 +301,13 @@ public class Australia extends GameActivity {
             return false;
         }
 
+        /**
+         * Determines whether or not a square is addable to the chain based on 1. whether or not
+         * the square is adjacent to the previously added square, and 2. whether or not the square
+         * has already been added to the chain.
+         * @param v the square whose addability will be determined.
+         * @return whether or not the chosen square can be added to the square chain
+         */
         boolean isAddable(TextView v) {
             if (textViewLinkedList.isEmpty())
                 return true;
@@ -266,14 +323,26 @@ public class Australia extends GameActivity {
             return false;
         }
 
+        /**
+         * Update the visuals of a square when it is selected
+         * @param v the square that is selected
+         */
         void select(TextView v) {
             visual.action(v, Visual.SELECT);
         }
 
+        /**
+         * Update the visuals of a square when it is deselected
+         * @param v the square that is deselected
+         */
         void deselect(TextView v) {
             visual.action(v, Visual.DESELECT);
         }
 
+        /**
+         * Add a square to the chain.
+         * @param v the square to be added to the chain
+         */
         void add(TextView v) {
             if (isAddable(v)) {
                 textViewLinkedList.add(v);
@@ -282,6 +351,11 @@ public class Australia extends GameActivity {
             }
         }
 
+        /**
+         * remove the square that has most recently been added to the square chain and update the
+         * visuals
+         * @return the square that was removed from the chain
+         */
         TextView backspace() {
             if (!textViewLinkedList.isEmpty()) {
                 TextView removed = textViewLinkedList.removeLast();
@@ -315,6 +389,15 @@ public class Australia extends GameActivity {
         }
         List<TextView> list() { return textViewLinkedList; }
 
+        /**
+         * This method is like clear, except that when the chain is cleared, the squares disappear
+         * and all squares above the ones in the chain fall to fill in the gaps. Then the gaps that
+         * are left by that are filled with new squares.
+         *
+         * Right now this method isn't being used because I thought it would make sense to set the
+         * squares' background to yellow upon being submitted, giving the player a visual sense of
+         * how far into the round they are.
+         */
         void collapseColumns() {
             // make every square in the chain invisible
             for (TextView v : textViewLinkedList)
@@ -345,6 +428,10 @@ public class Australia extends GameActivity {
             submitAndPreview.update();
         }
 
+        /**
+         * Once a chain is submitted and accepted as a valid word, the squares must remember that
+         * they have been used. Once all squares have been used, the round is won.
+         */
         void setSquaresToUsed() {
             for (TextView v : textViewLinkedList) {
                 visual.action(v, Visual.SET_USED);
@@ -354,6 +441,12 @@ public class Australia extends GameActivity {
 
     private BWSquareChain chain = new BWSquareChain();
 
+    /**
+     * The SubmitAndPreview class handles displaying the word that the player is building as they
+     * are building it. It also handles what happens when the check-mark (submit) button is pressed,
+     * playing the "nuh-uh" sound if the chain they have build isn't a word and handling the points
+     * if the chain is a word.
+     */
     private class SubmitAndPreview {
 
         void onClick() {
@@ -399,6 +492,12 @@ public class Australia extends GameActivity {
 
     private SubmitAndPreview submitAndPreview = new SubmitAndPreview();
 
+    /**
+     * This code handles the pop-up that displays after the user presses and holds a square. Letters
+     * similar to the one found in the pressed square will be displayed in the pop-up. If the player
+     * selects any of the letters in the pop-up, the pressed square's letter will be replaced with
+     * the selected letter.
+     */
     private class ReplacementPopup {
 
         private boolean popupup = false;
@@ -528,6 +627,11 @@ public class Australia extends GameActivity {
 
     int parity(int num) { return (num < 0) ? -1 : 1; }
 
+    /**
+     * Swap the squares both visually and in the internal representation of the game board.
+     * @param v1 the first square to be swapped
+     * @param v2 the second square to be swapped
+     */
     private void swap(TextView v1, TextView v2) {
         BWSquareInfo squinfo = idToSquinfo.get(v1.getId());
         BWSquareInfo swapSquinfo = idToSquinfo.get(v2.getId());
@@ -658,6 +762,10 @@ public class Australia extends GameActivity {
 
         setContentView(R.layout.australia);
 
+
+        // The board is set programmatically, based on the boardWidth, boardHeight, and width of the
+        // screen. All that you need to do to change the number of squares on the board is change
+        // boardWidth and boardHeight.
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.rl);
         rl.measure(0, 0);
         int screenWidth = rl.getMeasuredWidth();
