@@ -9,8 +9,8 @@ android {
         applicationId "org.alphatilesapps.alphatiles"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 148
-        versionName "2.2.0"
+        versionCode 149
+        versionName "2.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -40,7 +40,6 @@ android {
     productFlavors {
         //Alpha Tiles internal team developers can find active product flavor definitions here:
         // https://docs.google.com/document/d/1a3satcmHFa5r6l7THrKLgxSWVCs-Mp2yOGyzk4oETsk/edit
-
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
