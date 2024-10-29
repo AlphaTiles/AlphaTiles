@@ -97,6 +97,8 @@ public class Chile extends GameActivity {
         }
         data.guesses = baseGuessCount - challengeLevel;
         int guessBoxID = R.id.guessBox;
+        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         guessBox = findViewById(guessBoxID);
         guessBox.setNumColumns(data.wordLength);
         guessAdapter = new TileAdapter(tiles);
