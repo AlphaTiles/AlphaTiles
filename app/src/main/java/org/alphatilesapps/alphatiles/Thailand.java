@@ -583,18 +583,20 @@ public class Thailand extends GameActivity {
         if (goodMatch) {
             // Good job!
 
-            // report time and number of incorrect guesses
-            String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
-                    .putValue("Number Incorrect", incorrectOnLevel)
-                    .putValue("Correct Answer", refTile)
-                    .putValue("Grade", studentGrade);
-            for (int i = 0; i < 3; i++) {
-                if (!incorrectAnswersSelected.get(i).equals("")) {
-                    info.putValue("Incorrect_"+(i+1), incorrectAnswersSelected.get(i));
+            if (sendAnalytics) {
+                // report time and number of incorrect guesses
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
+                        .putValue("Number Incorrect", incorrectOnLevel)
+                        .putValue("Correct Answer", refTile)
+                        .putValue("Grade", studentGrade);
+                for (int i = 0; i < 3; i++) {
+                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                        info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
+                    }
                 }
+                Analytics.with(context).track(gameUniqueID, info);
             }
-            Analytics.with(context).track(gameUniqueID, info);
 
             repeatLocked = false;
             setAdvanceArrowToBlue();

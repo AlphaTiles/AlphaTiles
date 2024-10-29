@@ -19,6 +19,7 @@ import java.util.Set;
 
 import static org.alphatilesapps.alphatiles.Start.recentlyMissed;
 import static org.alphatilesapps.alphatiles.Start.recentlyMissedIndex;
+import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.colorList;
@@ -457,18 +458,20 @@ public class Georgia extends GameActivity {
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
 
-            // report time and number of incorrect guesses
-            String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-            Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
-                    .putValue("Number Incorrect", incorrectOnLevel)
-                    .putValue("Correct Answer", correctString)
-                    .putValue("Grade", studentGrade);
-            for (int i = 0; i < visibleGameButtons-1; i++) {
-                if (!incorrectAnswersSelected.get(i).equals("")) {
-                    info.putValue("Incorrect_"+(i+1), incorrectAnswersSelected.get(i));
+            if (sendAnalytics) {
+                // report time and number of incorrect guesses
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
+                        .putValue("Number Incorrect", incorrectOnLevel)
+                        .putValue("Correct Answer", correctString)
+                        .putValue("Grade", studentGrade);
+                for (int i = 0; i < visibleGameButtons - 1; i++) {
+                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                        info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
+                    }
                 }
+                Analytics.with(context).track(gameUniqueID, info);
             }
-            Analytics.with(context).track(gameUniqueID, info);
 
             for (int t = 0; t < GAME_BUTTONS.length; t++) {
                 TextView gameTile = findViewById(GAME_BUTTONS[t]);
