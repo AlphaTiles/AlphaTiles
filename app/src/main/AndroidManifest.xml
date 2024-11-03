@@ -30,6 +30,7 @@
         <activity android:name=".SetPlayerName" />
         <activity android:name=".Earth" />
         <activity android:name=".About" />
+        <activity android:name=".Share" />
         <activity android:name=".Brazil" />
         <activity android:name=".China" />
         <activity android:name=".Colombia" />
@@ -46,6 +47,7 @@
         <activity android:name=".Thailand" />
         <activity android:name=".UnitedStates" />
         <activity android:name=".Chile"/>
+        <activity android:name=".Malaysia"/>
     </application>
 
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
