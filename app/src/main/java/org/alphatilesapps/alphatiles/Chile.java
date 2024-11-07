@@ -382,9 +382,4 @@ public class Chile extends GameActivity {
             this.fontScale = fontScale;
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
 }

@@ -296,9 +296,4 @@ public class Peru extends GameActivity {
             super.playAudioInstructions(view);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
 }

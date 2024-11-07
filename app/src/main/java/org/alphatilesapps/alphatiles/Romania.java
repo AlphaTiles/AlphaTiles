@@ -602,9 +602,4 @@ public class Romania extends GameActivity {
         updateBoldSettings();
         setUpBasedOnGameTile(activeTile);
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
 }

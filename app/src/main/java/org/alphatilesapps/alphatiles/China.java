@@ -395,10 +395,4 @@ public class China extends GameActivity {
         playActiveWordClip(false);
 
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
 }

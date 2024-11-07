@@ -578,10 +578,4 @@ public class Colombia extends GameActivity {
             super.playAudioInstructions(view);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
 }
