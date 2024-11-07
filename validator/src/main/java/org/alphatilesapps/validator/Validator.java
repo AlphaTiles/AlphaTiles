@@ -556,7 +556,7 @@ public class Validator {
                     }
                     recommend(Message.Tag.Etc, "In wordList.txt, the key \"" + entry.getKey() + "\"" + unicodeString +
                             " is only used in " + entry.getValue() + " words. It is recommended that each key be" +
-                            " used in at least " + NUM_TIMES_KEYS_WANTED_IN_WORDS + " times");
+                            " used at least " + NUM_TIMES_KEYS_WANTED_IN_WORDS + " times");
                 }
             }
         } catch (NullPointerException e) {
@@ -653,7 +653,7 @@ public class Validator {
             for (Map.Entry<String, Integer> tile : tileUsage.entrySet()) {
                 if (tile.getValue() < NUM_TIMES_TILES_WANTED_IN_WORDS) {
                     recommend(Message.Tag.Etc, "the tile \"" + tile.getKey() + "\" in gametiles only appears in words " + tile.getValue()
-                            + " times. It is recommended that each tile be used in at least " + NUM_TIMES_TILES_WANTED_IN_WORDS + " times");
+                            + " times. It is recommended that each tile be used at least " + NUM_TIMES_TILES_WANTED_IN_WORDS + " times");
                 }
             }
 
@@ -863,6 +863,13 @@ public class Validator {
             if (!gamesList.contains("China")) {
                 recommend(Message.Tag.Etc, "it is recommended that you include the China game");
             }
+            if (!gamesList.contains("Chile")) {
+                recommend(Message.Tag.Etc, "it is recommended that you include the Chile game");
+            }
+            if (!gamesList.contains("Malaysia")) {
+                recommend(Message.Tag.Etc, "it is recommended that you include the Malaysia game");
+            }
+
             if ((fourTileWords < 3 || threeTileWords < 1) && gamesList.contains("China")) {
                 fatalError(Message.Tag.Etc, "the China game requires at least 3 four tile words and 1 three tile word, you only " +
                         "provide " + fourTileWords + " four tile words and " + threeTileWords + " three tile words");
