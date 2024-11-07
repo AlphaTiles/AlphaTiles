@@ -8,7 +8,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         applicationId "org.alphatilesapps.alphatiles"
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 152
         versionName "2.2.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -40,7 +40,6 @@ android {
     productFlavors {
         //Alpha Tiles internal team developers can find active product flavor definitions here:
         // https://docs.google.com/document/d/1a3satcmHFa5r6l7THrKLgxSWVCs-Mp2yOGyzk4oETsk/edit
-
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
@@ -54,8 +53,9 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.zxing:core:3.2.1'
     implementation 'com.google.android.material:material:1.12.0'
-    implementation platform('com.google.firebase:firebase-bom:33.1.2')
+    implementation platform('com.google.firebase:firebase-bom:33.5.1')
     implementation 'com.google.firebase:firebase-analytics'
     testImplementation 'androidx.test.ext:junit:1.2.1'
     testImplementation 'androidx.test.ext:junit:1.2.1'

@@ -33,6 +33,8 @@ import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
+import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.placeholderCharacter;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
@@ -701,6 +703,106 @@ public abstract class GameActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void tileAudioPress(final boolean playFinalSound, Start.Tile tile) {
+        if(!isReadyToPlayTileAudio() || !tileShouldPlayAudio(tile)) {
+            return;
+        }
+
+        setAllGameButtonsUnclickable();
+        setOptionsRowUnclickable();
+        if(!tempSoundPoolSwitch) {
+            playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
+        } else {
+            playTileAudio(playFinalSound, tileAudioNumber(tile), tileDurations.get(tile.audioForThisTileType));
+        }
+    }
+
+    protected boolean isReadyToPlayTileAudio() {
+        if(mediaPlayerIsPlaying) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean tileShouldPlayAudio(Start.Tile tile) {
+        // make sure audio can be found
+        if (tempSoundPoolSwitch && tile.audioForThisTileType.equals("X")) {
+                return false;
+        }
+
+        if(!tempSoundPoolSwitch) {
+            try{
+                getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
+            } catch (NullPointerException e) {
+                 return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected int tileAudioNumber(Start.Tile tile) {
+        String audioName = tile.getAudioNameAccountingForMultitypeSymbols();
+        if (tempSoundPoolSwitch) {
+            return tileAudioIDs.get(audioName);
+        } else {
+            return getResources().getIdentifier(audioName, "raw", getPackageName());
+        }
+    }
+
+    protected void playTileAudio(boolean playFinalSound, int audioNumber, int audioDuration) {
+        if (tempSoundPoolSwitch) {
+            playTileAudioSoundPool(playFinalSound, audioNumber,audioDuration);
+        } else {
+            playTileAudioMediaPlayer(playFinalSound, audioNumber);
+        }
+    }
+
+
+
+
+
+    private void playTileAudioMediaPlayer(final boolean playFinalSound, int resID) {     //JP: for Media Player; tile audio
+
+        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
+        mediaPlayerIsPlaying = true;
+        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp1) {
+                mpCompletion(mp1, playFinalSound);
+            }
+        });
+        mp1.start();
+    }
+
+    private void playTileAudioSoundPool(final boolean playFinalSound, int audioID, int audioDuration) {     //JP: for SoundPool, for tile audio
+        gameSounds.play(audioID, 1.0f, 1.0f, 2, 0, 1.0f);
+
+        soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                if (playFinalSound) {
+                    updatePointsAndTrackers(0);
+                    repeatLocked = false;
+                    playCorrectFinalSound();
+                } else {
+                    if (repeatLocked) {
+                        setAllGameButtonsClickable();
+                    }
+                    if (after12checkedTrackers == 1){
+                        setOptionsRowClickable();
+                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
+                    }
+                    else if (trackerCount >0 && trackerCount % 12 != 0) {
+                        setOptionsRowClickable();
+                        // Otherwise, updatePointsAndTrackers will set it clickable only after
+                        // the player returns to earth (2) or sees the celebration screen (3)
+                    }
+                }
+            }
+        }, audioDuration);
     }
 
     protected void mpCompletion(MediaPlayer mp, boolean isFinal) {

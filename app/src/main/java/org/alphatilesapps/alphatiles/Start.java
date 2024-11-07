@@ -71,7 +71,7 @@ public class Start extends AppCompatActivity {
     public static Boolean hasSAD = false;
     public static double stageCorrespondenceRatio;
     public static int numberOfAvatars = 12;
-    public static String scriptType; // LM Can be "Thai", "Lao", or "Khmer" for special tile parsing. If nothing specified, tile parsing defaults to unidirectional.
+    public static String scriptType; // LM Can be "Thai", "Lao", "Khmer", or "Arabic" for special tile parsing. If nothing specified, tile parsing defaults to unidirectional.
 
     public static String placeholderCharacter; // LM Takes the place of a consonant for combining characters in complex scripts
     public static TileList CONSONANTS = new TileList();
@@ -699,7 +699,7 @@ public class Start extends AppCompatActivity {
         }
 
         localAppName = langInfoList.find("Game Name");
-        scriptType = langInfoList.find("Script type"); // If "Thai", "Lao", or "Khmer", special tile parsing occurs
+        scriptType = langInfoList.find("Script type"); // If "Thai", "Lao", "Khmer", or "Arabic", special tile parsing occurs
 
         String localWordForName = langInfoList.find("NAME in local language");
         if (localWordForName.equals("custom")) {
@@ -843,6 +843,18 @@ public class Start extends AppCompatActivity {
                 return true;
             return false;
         }
+
+        /**
+         * NOTE: This method may or may not actually work as intended.
+         * It needs to be tested and revised.
+         */
+        public String getAudioNameAccountingForMultitypeSymbols() {
+            if(!Start.differentiatesTileTypes) {
+                return this.audioName;
+            }
+
+            return this.audioForThisTileType;
+        }
     }
 
     public class Key {
@@ -900,7 +912,7 @@ public class Start extends AppCompatActivity {
 
             String activeTileType = activeTile.typeOfThisTileInstance;
 
-            if(scriptType.matches("(Thai|Lao|Khmer)") && activeTileType.matches("LV") && scanSetting==1){
+            if(scriptType.matches("(Thai|Lao|Khmer|Arabic)") && activeTileType.matches("LV") && scanSetting==1){
                 return 0;
             }
 
@@ -908,7 +920,7 @@ public class Start extends AppCompatActivity {
             for (int i = 0; i < size(); i++) {
                 ArrayList<Tile> parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).wordInLOP, get(i));
                 int t = 0;
-                if(scriptType.matches("(Thai|Lao|Khmer)") && scanSetting==1) { // Find first sound tile (not LV, which is pronounced after the consonant it precedes)
+                if(scriptType.matches("(Thai|Lao|Khmer|Arabic)") && scanSetting==1) { // Find first sound tile (not LV, which is pronounced after the consonant it precedes)
                     Tile initialTile;
                     String initialTileType = "LV";
                     t = -1;
@@ -967,7 +979,7 @@ public class Start extends AppCompatActivity {
             for (int i = 0; i < size(); i++) {
                 parsedWordArrayFinal = tileList.parseWordIntoTiles(get(i).wordInLOP, get(i));
                 int t = 0;
-                if(scriptType.matches("(Thai|Lao|Khmer)") && scanSetting==1) { // Find first sound tile (not LV, which is pronounced after the consonant it precedes)
+                if(scriptType.matches("(Thai|Lao|Khmer|Arabic)") && scanSetting==1) { // Find first sound tile (not LV, which is pronounced after the consonant it precedes)
                     Tile initialTile;
                     String initialTileType = "LV";
                     t = -1;
@@ -1389,7 +1401,7 @@ public class Start extends AppCompatActivity {
 
         public ArrayList<Tile> parseWordIntoTiles (String stringToParse, Word referenceWord) {
             ArrayList<Tile> parsedWordArrayPreliminary = parseWordIntoTilesPreliminary(stringToParse, referenceWord);
-            if (!scriptType.matches("(Thai|Lao|Khmer)")) {
+            if (!scriptType.matches("(Thai|Lao|Khmer|Arabic)")) {
                 return parsedWordArrayPreliminary;
             } else {
                 if(placeholderCharacter.isEmpty()) {
@@ -1451,7 +1463,7 @@ public class Start extends AppCompatActivity {
                 String vowelStringSoFar = "";
                 String vowelTypeSoFar = "";
                 String diacriticStringSoFar = "";
-                Tile nonCombiningVowelFromPreviousSyllable = null;
+                ArrayList<Tile> nonCombiningVowelsFromPreviousSyllable = new ArrayList<>();
                 for (int b = previousConsonantIndex + 1; b < currentConsonantIndex; b++) {
                     currentTile = parsedWordArrayPreliminary.get(b);
                     currentTileString = currentTile.text;
@@ -1464,12 +1476,12 @@ public class Start extends AppCompatActivity {
                             vowelTypeSoFar = tileHashMap.find(vowelStringSoFar).tileType; // complex tiles do not get multityping
                         }
                     } else if (currentTileType.equals("V")) {
-                        nonCombiningVowelFromPreviousSyllable = currentTile;
+                        nonCombiningVowelsFromPreviousSyllable.add(currentTile);
                     }
                 }
 
                 // Find vowel, diacritic, space, and dash symbols that occur between current and next consonants
-                Tile nonComplexV = null;
+                ArrayList<Tile> nonComplexVsorXs = new ArrayList<>();
                 for (int a = currentConsonantIndex + 1; a < nextConsonantIndex; a++) {
                     currentTile = parsedWordArrayPreliminary.get(a);
                     currentTileString = currentTile.text;
@@ -1503,15 +1515,15 @@ public class Start extends AppCompatActivity {
                         diacriticStringSoFar+=currentTileString;
                     } else if (currentTileType.equals("SAD")) { // Save any Space-And-Dash chars that comes between syllables.
                         SADTiles.add(currentTile);
-                    } else if (!foundNextConsonant && currentTileType.equals("V")){ // There is a V (not LV/FV/AV/BV) on the end of the word
-                        nonComplexV = currentTile;
+                    } else if (!foundNextConsonant && currentTileType.matches("(V|X)")){ // These don't combine and should be added in order of occurence
+                        nonComplexVsorXs.add(currentTile);
                     }
                 }
 
 
                 // Add saved items to the tile array
-                if(!(nonCombiningVowelFromPreviousSyllable==null)){
-                    parsedWordTileArray.add(nonCombiningVowelFromPreviousSyllable);
+                if(!(nonCombiningVowelsFromPreviousSyllable.isEmpty())){
+                    parsedWordTileArray.addAll(nonCombiningVowelsFromPreviousSyllable);
                 }
                 if (!(currentConsonant==null)) {
                     // Combine diacritics with consonant if that combination is in the tileList. Ex:บ๋
@@ -1564,8 +1576,8 @@ public class Start extends AppCompatActivity {
                     }
 
                     // If a V is found before the (next) consonant, add it. It is syllable-initial or -mid.
-                    if (!(nonComplexV == null)) {
-                        parsedWordTileArray.add(nonComplexV);
+                    if (!(nonComplexVsorXs.isEmpty())) {
+                        parsedWordTileArray.addAll(nonComplexVsorXs);
                     }
 
                     // Add any other diacritics after any Vs.
