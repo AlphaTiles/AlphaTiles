@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
+import java.util.Scanner;
+
 
 public class Earth extends AppCompatActivity {
     Context context;
@@ -103,6 +105,28 @@ public class Earth extends AppCompatActivity {
             constraintSet.applyTo(constraintLayout);
         }
 
+        boolean noShareIcon = false;
+        if (context.getResources().getIdentifier("aa_share", "raw", context.getPackageName()) == 0) {
+            noShareIcon = true;
+        } else {
+            Scanner shareScanner = new Scanner(getResources().openRawResource(R.raw.aa_share));
+            if (shareScanner.hasNext()) {
+                shareScanner.nextLine(); // skip the header line
+                if (!shareScanner.hasNext())
+                    noShareIcon = true;
+                else if (shareScanner.next().isEmpty())
+                    noShareIcon = true;
+            } else {
+                noShareIcon = true;
+            }
+        }
+        if (noShareIcon) { // if aa_share does not have a second line, don't display a share icon
+        //if (true) {
+            ImageView shareIcon = findViewById(R.id.share);
+            shareIcon.setVisibility(View.GONE);
+            shareIcon.setOnClickListener(null);
+        }
+
     }
 
     public void updateDoors() {
@@ -138,7 +162,7 @@ public class Earth extends AppCompatActivity {
                         // So we are forcing this game's door to initialize with a start
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                        if (country.equals("Romania") || country.equals("Sudan")) {
+                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")) {
                             trackerCount = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
                         } else if (trackerCount < 12) {
@@ -150,7 +174,7 @@ public class Earth extends AppCompatActivity {
 
                         boolean changeColor = true;
                         String doorStyle = "";
-                        if (country.equals("Sudan") || country.equals("Romania")) {
+                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")) {
                             doorStyle = "_inprocess";
                         } else if (trackerCount > 0 && trackerCount < 12) {
                             doorStyle = "_inprocess";
@@ -221,6 +245,12 @@ public class Earth extends AppCompatActivity {
         intent.setClass(context, Resources.class);
         startActivity(intent);
 
+    }
+
+    public void goToShare(View view) {
+        Intent intent = getIntent();
+        intent.setClass(context, Share.class);
+        startActivity(intent);
     }
 
     public void goToDoor(View view) {
