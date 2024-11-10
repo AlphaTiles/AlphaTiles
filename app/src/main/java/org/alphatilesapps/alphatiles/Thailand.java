@@ -646,32 +646,6 @@ public class Thailand extends GameActivity {
                     break;
                 }
             }
-
-            // add to "recently missed"
-            int index = recentlyMissedIndex.get(playerNumber - 1);  // least recently filled spot in your "recently missed" array
-            switch (refType) {
-                case "TILE_LOWER":
-                case "TILE_UPPER":
-                case "TILE_AUDIO":
-                    if (!recentlyMissed.get(playerNumber - 1).contains(refString)) {
-                        recentlyMissed.get(playerNumber - 1).set(index, refString);  // set that spot to be this tile
-                        recentlyMissedIndex.set(playerNumber - 1,
-                                (index + 1) % recentlyMissed.get(playerNumber - 1).size()); // increment the counter, wrapping around
-                    }
-                default:
-                    switch (choiceType) {
-                        case "TILE_LOWER":
-                        case "TILE_UPPER":
-                            // (same as above)
-                            if (!recentlyMissed.get(playerNumber - 1).contains(refString)) {
-                                recentlyMissed.get(playerNumber - 1).set(index, refString);
-                                recentlyMissedIndex.set(playerNumber - 1,
-                                        (index + 1) % recentlyMissed.get(playerNumber - 1).size());
-                            }
-                    }
-            }
-
-
         }
     }
 

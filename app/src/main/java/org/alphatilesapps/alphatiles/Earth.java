@@ -22,12 +22,7 @@ import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
-import com.segment.analytics.Analytics;
-import com.segment.analytics.Properties;
-
-import java.util.ArrayList;
 import java.util.Scanner;
-
 
 
 public class Earth extends AppCompatActivity {
@@ -117,11 +112,6 @@ public class Earth extends AppCompatActivity {
             constraintSet.centerHorizontally(R.id.resourcePromo, R.id.earthCL);
             constraintSet.applyTo(constraintLayout);
         }
-
-//        ArrayList<String> recentlyMissedArray = recentlyMissed.get(playerNumber-1);
-//        String recentlyMissedString = recentlyMissedArray.get(0) + recentlyMissedArray.get(1) +
-//                recentlyMissedArray.get(2) + recentlyMissedArray.get(3) + recentlyMissedArray.get(4);
-//        Analytics.with(context).track("recently missed", new Properties().putValue("string", recentlyMissedString));
 
         boolean noShareIcon = false;
         if (context.getResources().getIdentifier("aa_share", "raw", context.getPackageName()) == 0) {
