@@ -18,6 +18,9 @@ import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
+
 public class Peru extends GameActivity {
     private static final Logger LOGGER = Logger.getLogger(Peru.class.getName());
 
@@ -95,6 +98,10 @@ public class Peru extends GameActivity {
         }
         visibleGameButtons = GAME_BUTTONS.length;
         updatePointsAndTrackers(0);
+        incorrectAnswersSelected = new ArrayList<>(3);
+        for (int i = 0; i < 3; i++) {
+            incorrectAnswersSelected.add("");
+        }
         playAgain();
     }
 
@@ -245,6 +252,12 @@ public class Peru extends GameActivity {
                 }
             }
         }
+        for (int i = 0; i < 3; i++) {
+            incorrectAnswersSelected.set(i, "");
+        }
+        incorrectOnLevel = 0;
+        levelBegunTime = System.currentTimeMillis();
+
     }
 
     private void respondToWordSelection(int justClickedWord) {
@@ -255,10 +268,26 @@ public class Peru extends GameActivity {
 
         if (chosenWordText.equals(wordInLOPWithStandardizedSequenceOfCharacters(refWord))) {
             // Good job!
+
+            if (sendAnalytics) {
+                // report time and number of incorrect guesses
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
+                        .putValue("Number Incorrect", incorrectOnLevel)
+                        .putValue("Correct Answer", chosenWordText)
+                        .putValue("Grade", studentGrade);
+                for (int i = 0; i < 3; i++) {
+                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                        info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
+                    }
+                }
+                Analytics.with(context).track(gameUniqueID, info);
+            }
+
             repeatLocked = false;
             setAdvanceArrowToBlue();
 
-           updatePointsAndTrackers(2);
+            updatePointsAndTrackers(2);
 
             for (int w = 0; w < GAME_BUTTONS.length; w++) {
                 TextView nextWord = findViewById(GAME_BUTTONS[w]);
@@ -274,6 +303,15 @@ public class Peru extends GameActivity {
             playCorrectSoundThenActiveWordClip(false);
 
         } else {
+            incorrectOnLevel += 1;
+            for (int i = 0; i < 3; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(chosenWordText)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, chosenWordText);
+                    break;
+                }
+            }
             playIncorrectSound();
         }
     }

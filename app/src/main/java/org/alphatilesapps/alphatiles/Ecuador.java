@@ -26,6 +26,9 @@ import java.util.Random;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
+
 // JP TO DO:
 // 1. FIX SETBOXES() FUNCTION
 // 2. FILTER DUPLICATE ANSWER CHOICES
@@ -107,6 +110,10 @@ public class Ecuador extends GameActivity {
 
         visibleGameButtons = GAME_BUTTONS.length;
         updatePointsAndTrackers(0);
+        incorrectAnswersSelected = new ArrayList<>(visibleGameButtons-1);
+        for (int i = 0; i < visibleGameButtons-1; i++) {
+            incorrectAnswersSelected.add("");
+        }
         playAgain();
     }
 
@@ -128,6 +135,11 @@ public class Ecuador extends GameActivity {
         setWords();
         setAllGameButtonsClickable();
         setOptionsRowClickable();
+        for (int i = 0; i < visibleGameButtons-1; i++) {
+            incorrectAnswersSelected.set(i, "");
+        }
+        incorrectOnLevel = 0;
+        levelBegunTime = System.currentTimeMillis();
 
     }
 
@@ -454,6 +466,22 @@ public class Ecuador extends GameActivity {
 
         if (chosenWordText.equals(Start.wordList.stripInstructionCharacters(refWord.wordInLOP))) {
             // Good job!
+
+            if (sendAnalytics) {
+                // report time and number of incorrect guesses
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
+                        .putValue("Number Incorrect", incorrectOnLevel)
+                        .putValue("Correct Answer", chosenWordText)
+                        .putValue("Grade", studentGrade);
+                for (int i = 0; i < visibleGameButtons - 1; i++) {
+                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                        info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
+                    }
+                }
+                Analytics.with(context).track(gameUniqueID, info);
+            }
+
             repeatLocked = false;
             setAdvanceArrowToBlue();
 
@@ -473,6 +501,15 @@ public class Ecuador extends GameActivity {
             playCorrectSoundThenActiveWordClip(false);
 
         } else {
+            incorrectOnLevel += 1;
+            for (int i = 0; i < visibleGameButtons-1; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(chosenWordText)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, chosenWordText);
+                    break;
+                }
+            }
             playIncorrectSound();
         }
     }

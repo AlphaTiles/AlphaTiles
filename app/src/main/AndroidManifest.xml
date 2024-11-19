@@ -50,5 +50,7 @@
     </application>
 
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <!-- Required for internet. -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
