@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -149,7 +150,13 @@ public abstract class GameActivity extends AppCompatActivity {
         context = this;
 
         soundSequencer = new Handler(Looper.getMainLooper());
-
+        OnBackPressedCallback back = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                goBackToEarth(null);
+            }
+        };
+        this.getOnBackPressedDispatcher().addCallback(back);
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         stage = getIntent().getIntExtra("stage", 7);
