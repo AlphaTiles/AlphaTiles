@@ -168,9 +168,9 @@ public class China extends GameActivity {
 
     private void preprocessWords() {
         for (Start.Word word : wordList) {
-            if (word.wordInLWC.length() == 3) {
+            if (tileList.parseWordIntoTilesPreliminary(word.wordInLOP, word).size() == 3) {
                 threeTileWords.add(word);
-            } else if (word.wordInLWC.length() == 4) {
+            } else if (tileList.parseWordIntoTilesPreliminary(word.wordInLOP, word).size() == 4) {
                 fourTileWords.add(word);
             }
         }

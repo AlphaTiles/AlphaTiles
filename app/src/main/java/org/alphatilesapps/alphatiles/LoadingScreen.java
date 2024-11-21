@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -10,8 +11,10 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,6 +25,7 @@ import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.totalAudio;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileList;
+import static org.alphatilesapps.alphatiles.Start.langInfoList;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.hasTileAudio;
 import static org.alphatilesapps.alphatiles.Start.syllableAudioIDs;
@@ -56,6 +60,13 @@ public class LoadingScreen extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         progressBar = findViewById(R.id.progressBar);
+        String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
+        if (scriptDirection.equals("RTL")) {
+            forceRTLIfSupported();
+            progressBar.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        } else {
+            forceLTRIfSupported();
+        }
         context = this;
 
         String verName = BuildConfig.VERSION_NAME;
@@ -129,9 +140,11 @@ public class LoadingScreen extends AppCompatActivity {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+
                         progressBar.getProgressDrawable().setColorFilter(
                                 Color.rgb(reds[mod_color[0]], greens[mod_color[0]], blues[mod_color[0]]),
                                 android.graphics.PorterDuff.Mode.SRC_IN);
+
                     }
                 });
             }
@@ -253,6 +266,22 @@ public class LoadingScreen extends AppCompatActivity {
             return Math.round((maxWordWidthInPixels * 100.0) / (wordWidthInPixels * 100));
         }
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceRTLIfSupported() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void forceLTRIfSupported() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        }
     }
 
 

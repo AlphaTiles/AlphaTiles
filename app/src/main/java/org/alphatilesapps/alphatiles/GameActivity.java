@@ -74,6 +74,11 @@ public abstract class GameActivity extends AppCompatActivity {
     int globalPoints;
     int trackerCount = 0;
 
+    char studentGrade;
+    long levelBegunTime;
+    int incorrectOnLevel = 0;
+    ArrayList<String> incorrectAnswersSelected;
+
     Start.TileList cumulativeStageBasedTileList = new Start.TileList();
     Start.WordList cumulativeStageBasedWordList = new Start.WordList();
     Start.TileList previousStagesTileList = new Start.TileList();
@@ -160,6 +165,7 @@ public abstract class GameActivity extends AppCompatActivity {
         country = getIntent().getStringExtra("country");
         playerString = Util.returnPlayerStringToAppend(playerNumber);
         globalPoints = getIntent().getIntExtra("globalPoints", 0);
+        studentGrade = getIntent().getCharExtra("studentGrade", '0');
 
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         className = getClass().getName();

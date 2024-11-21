@@ -31,6 +31,7 @@ public class Earth extends AppCompatActivity {
 
     int playerNumber = -1;
     String playerString;
+    char grade;
     int pageNumber; // Games 001 to 023 are displayed on page 1, games 024 to 046 are displayed on page 2, etc.
     int globalPoints;
     int doorsPerPage = 23;
@@ -79,6 +80,13 @@ public class Earth extends AppCompatActivity {
             defaultName = localWordForName + " " + playerNumber;
         }
         playerName = prefs.getString("storedName" + playerString, defaultName);
+
+        // find one-digit grade level of student (ASSUMES GRADE IS ONLY ONE DIGIT LONG AND ONLY DIGIT IN NAME)
+        for (int i = 0; i < playerName.length(); i++) {
+            char nameChar = playerName.charAt(i);
+            if (Character.isDigit(nameChar)) grade = nameChar;
+        }
+
         TextView name = findViewById(R.id.avatarName);
         name.setText(playerName);
 
@@ -126,7 +134,6 @@ public class Earth extends AppCompatActivity {
             shareIcon.setVisibility(View.GONE);
             shareIcon.setOnClickListener(null);
         }
-
     }
 
     public void updateDoors() {
@@ -284,6 +291,7 @@ public class Earth extends AppCompatActivity {
         intent.putExtra("country", country);
         intent.putExtra("syllableGame", syllableGame);
         intent.putExtra("stage", stage);
+        intent.putExtra("studentGrade", grade);
         startActivity(intent);
         finish();
 
