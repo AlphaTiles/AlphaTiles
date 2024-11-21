@@ -316,7 +316,7 @@ public class Validator {
             Map.entry("colors", "A1:C"),
             Map.entry("names", "A1:B"),
             Map.entry("notes", "A1:B"),
-            Map.entry("share", "A1:A2")));
+            Map.entry("share", "A1:A")));
 
     /**
      * A Map of the names of the folders needed for validation to the file types needed in each folder (in MIME type, comma delimited).
