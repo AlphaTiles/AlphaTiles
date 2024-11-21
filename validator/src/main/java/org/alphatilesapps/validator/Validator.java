@@ -315,7 +315,8 @@ public class Validator {
             Map.entry("settings", "A1:B"),
             Map.entry("colors", "A1:C"),
             Map.entry("names", "A1:B"),
-            Map.entry("notes", "A1:B")));
+            Map.entry("notes", "A1:B"),
+            Map.entry("share", "A1:A")));
 
     /**
      * A Map of the names of the folders needed for validation to the file types needed in each folder (in MIME type, comma delimited).
@@ -2173,7 +2174,6 @@ public class Validator {
         while (specMatcher.find()) {
             typeSpecsList.add(specMatcher.group());
         }
-
         if (typeSpecsList.size() == 1 && !typeSpecifications.equals("-")) {
             return parseAbbreviatedTypeSpecification(word);
         } else if (typeSpecifications.equals("-")) {  // No multi types info included. Build the full type specification out of index numbers
