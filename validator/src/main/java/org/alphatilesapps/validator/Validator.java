@@ -121,7 +121,7 @@ public class Validator {
 
 
     /**
-     * Could be Roman, Thai, Lao, or Khmer. Read from langinfo
+     * Could be Roman, Thai, Lao, Khmer, Arabic. Read from langinfo
      */
     public static String scriptType;
     /**
@@ -315,7 +315,8 @@ public class Validator {
             Map.entry("settings", "A1:B"),
             Map.entry("colors", "A1:C"),
             Map.entry("names", "A1:B"),
-            Map.entry("notes", "A1:B")));
+            Map.entry("notes", "A1:B"),
+            Map.entry("share", "A1:A")));
 
     /**
      * A Map of the names of the folders needed for validation to the file types needed in each folder (in MIME type, comma delimited).
@@ -556,7 +557,7 @@ public class Validator {
                     }
                     recommend(Message.Tag.Etc, "In wordList.txt, the key \"" + entry.getKey() + "\"" + unicodeString +
                             " is only used in " + entry.getValue() + " words. It is recommended that each key be" +
-                            " used in at least " + NUM_TIMES_KEYS_WANTED_IN_WORDS + " times");
+                            " used at least " + NUM_TIMES_KEYS_WANTED_IN_WORDS + " times");
                 }
             }
         } catch (NullPointerException e) {
@@ -653,7 +654,7 @@ public class Validator {
             for (Map.Entry<String, Integer> tile : tileUsage.entrySet()) {
                 if (tile.getValue() < NUM_TIMES_TILES_WANTED_IN_WORDS) {
                     recommend(Message.Tag.Etc, "the tile \"" + tile.getKey() + "\" in gametiles only appears in words " + tile.getValue()
-                            + " times. It is recommended that each tile be used in at least " + NUM_TIMES_TILES_WANTED_IN_WORDS + " times");
+                            + " times. It is recommended that each tile be used at least " + NUM_TIMES_TILES_WANTED_IN_WORDS + " times");
                 }
             }
 
@@ -863,6 +864,13 @@ public class Validator {
             if (!gamesList.contains("China")) {
                 recommend(Message.Tag.Etc, "it is recommended that you include the China game");
             }
+            if (!gamesList.contains("Chile")) {
+                recommend(Message.Tag.Etc, "it is recommended that you include the Chile game");
+            }
+            if (!gamesList.contains("Malaysia")) {
+                recommend(Message.Tag.Etc, "it is recommended that you include the Malaysia game");
+            }
+
             if ((fourTileWords < 3 || threeTileWords < 1) && gamesList.contains("China")) {
                 fatalError(Message.Tag.Etc, "the China game requires at least 3 four tile words and 1 three tile word, you only " +
                         "provide " + fourTileWords + " four tile words and " + threeTileWords + " three tile words");
@@ -2141,7 +2149,7 @@ public class Validator {
      */
     private ArrayList<String> parseTypeSpecification(Word word) throws ValidatorException {
         ArrayList<Tile> wordAsSimpleTileList;
-        if (scriptType.matches("(Thai|Lao|Khmer)")) { // Type specifications must map to all simple, contiguous tile pieces, and not to the final parsing, which contains any complex tiles
+        if (scriptType.matches("(Thai|Lao|Khmer|Arabic)")) { // Type specifications must map to all simple, contiguous tile pieces, and not to the final parsing, which contains any complex tiles
             wordAsSimpleTileList = tileList.parseWordIntoTilesPreliminary(word);
         } else {
             wordAsSimpleTileList = tileList.parseWordIntoTiles(word);
@@ -2166,7 +2174,6 @@ public class Validator {
         while (specMatcher.find()) {
             typeSpecsList.add(specMatcher.group());
         }
-
         if (typeSpecsList.size() == 1 && !typeSpecifications.equals("-")) {
             return parseAbbreviatedTypeSpecification(word);
         } else if (typeSpecifications.equals("-")) {  // No multi types info included. Build the full type specification out of index numbers
@@ -2219,7 +2226,7 @@ public class Validator {
     private ArrayList<String> parseAbbreviatedTypeSpecification(Word word) throws ValidatorException {
         Tab gameTilesTab = langPackGoogleSheet.getTabFromName("gametiles");
         ArrayList<Tile> wordAsSimpleTileList;
-        if (scriptType.matches("(Thai|Lao|Khmer)")) { // Type specifications must be given for all contiguous tile pieces (not mapped to the final parsing, which will get complex tiles)
+        if (scriptType.matches("(Thai|Lao|Khmer|Arabic)")) { // Type specifications must be given for all contiguous tile pieces (not mapped to the final parsing, which will get complex tiles)
             wordAsSimpleTileList = tileList.parseWordIntoTilesPreliminary(word);
         } else {
             wordAsSimpleTileList = tileList.parseWordIntoTiles(word);
@@ -2609,7 +2616,7 @@ public class Validator {
         public ArrayList<Tile> parseWordIntoTiles(Word wordListWord) {
 
             ArrayList<Tile> parsedWordArrayPreliminary = parseWordIntoTilesPreliminary(wordListWord);
-            if (!scriptType.matches("(Thai|Lao|Khmer)")) {
+            if (!scriptType.matches("(Thai|Lao|Khmer|Arabic)")) {
                 return parsedWordArrayPreliminary;
             }
 

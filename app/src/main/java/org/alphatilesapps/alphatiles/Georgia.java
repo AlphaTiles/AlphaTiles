@@ -17,8 +17,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.CorV;
+
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
 
 //level 1: 6 visible tiles, random wrong choices
 //level 2: 12 visible tiles, random wrong choices
@@ -150,6 +154,10 @@ public class Georgia extends GameActivity {
             centerGamesHomeImage();
         }
 
+        incorrectAnswersSelected = new ArrayList<>(visibleGameButtons-1);
+        for (int i = 0; i < visibleGameButtons-1; i++) {
+            incorrectAnswersSelected.add("");
+        }
         updatePointsAndTrackers(0);
         playAgain();
     }
@@ -191,6 +199,11 @@ public class Georgia extends GameActivity {
             nextWord.setClickable(true);
         }
 
+        for (int i = 0; i < visibleGameButtons-1; i++) {
+            incorrectAnswersSelected.set(i, "");
+        }
+        incorrectOnLevel = 0;
+        levelBegunTime = System.currentTimeMillis();
     }
 
     private void setWord() {
@@ -441,6 +454,21 @@ public class Georgia extends GameActivity {
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
 
+            if (sendAnalytics) {
+                // report time and number of incorrect guesses
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
+                        .putValue("Number Incorrect", incorrectOnLevel)
+                        .putValue("Correct Answer", correctString)
+                        .putValue("Grade", studentGrade);
+                for (int i = 0; i < visibleGameButtons - 1; i++) {
+                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                        info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
+                    }
+                }
+                Analytics.with(context).track(gameUniqueID, info);
+            }
+
             for (int t = 0; t < GAME_BUTTONS.length; t++) {
                 TextView gameTile = findViewById(GAME_BUTTONS[t]);
                 gameTile.setClickable(false);
@@ -453,7 +481,16 @@ public class Georgia extends GameActivity {
             }
             playCorrectSoundThenActiveWordClip(false);
         } else {
+            incorrectOnLevel += 1;
             playIncorrectSound();
+            for (int i = 0; i < visibleGameButtons - 1; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(selectedTileString)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, selectedTileString);
+                    break;
+                }
+            }
         }
 
     }

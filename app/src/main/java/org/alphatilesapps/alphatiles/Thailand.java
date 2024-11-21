@@ -14,6 +14,9 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
+
 import static android.graphics.Color.WHITE;
 import static org.alphatilesapps.alphatiles.Start.*;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
@@ -128,6 +131,10 @@ public class Thailand extends GameActivity {
 
         visibleGameButtons = GAME_BUTTONS.length;
         updatePointsAndTrackers(0);
+        incorrectAnswersSelected = new ArrayList<>(3);
+        for (int i = 0; i < 3; i++) {
+            incorrectAnswersSelected.add("");
+        }
         playAgain();
 
     }
@@ -174,15 +181,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if ((!refString.equalsIgnoreCase(refStringLast)
-                            && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast))
-                            || freshChecks > 25) {
-                        freshTile = true;
-                        refStringThirdToLast = refStringSecondToLast;
-                        refStringSecondToLast = refStringLast;
-                        refStringLast = refTile.text;
-                    }
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
 
             } else if (refType.equals("TILE_UPPER") || choiceType.equals("TILE_UPPER")) {
@@ -203,16 +202,8 @@ public class Thailand extends GameActivity {
                         refString = refTile.upper;
                         refTileType =  refTile.typeOfThisTileInstance;
                     }
-                    // SAD should never be first tile linguistically, so no need to programmatically filter out
-                    if ((!refString.equalsIgnoreCase(refStringLast)
-                            && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast))
-                            || freshChecks > 25) {
-                        freshTile = true;
-                        refStringThirdToLast = refStringSecondToLast;
-                        refStringSecondToLast = refStringLast;
-                        refStringLast = refTile.text;
-                    }
+                    // SAD should never be first tile linguistically, so no need to programatically filter out
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
 
             } else if (refType.contains("WORD") && choiceType.contains("WORD")) {
@@ -233,15 +224,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if ((!refString.equalsIgnoreCase(refStringLast)
-                            && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast))
-                            || freshChecks > 25) {
-                        freshTile = true;
-                        refStringThirdToLast = refStringSecondToLast;
-                        refStringSecondToLast = refStringLast;
-                        refStringLast = refTile.text;
-                    }
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
 
             }
@@ -299,15 +282,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if ((!refString.equalsIgnoreCase(refStringLast)
-                            && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast))
-                            || freshChecks > 25) {
-                        freshTile = true;
-                        refStringThirdToLast = refStringSecondToLast;
-                        refStringSecondToLast = refStringLast;
-                        refStringLast = refTile.text;
-                    }
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
             }
             if (refType.equals("TILE_UPPER")) {
@@ -328,15 +303,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.upper;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if ((!refString.equalsIgnoreCase(refStringLast)
-                            && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast))
-                            || freshChecks > 25) {
-                        freshTile = true;
-                        refStringThirdToLast = refStringSecondToLast;
-                        refStringSecondToLast = refStringLast;
-                        refStringLast = refTile.text;
-                    }
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
             }
         }
@@ -466,6 +433,24 @@ public class Thailand extends GameActivity {
                 playActiveWordClip(false);
                 break;
         }
+        for (int i = 0; i < 3; i++) {
+            incorrectAnswersSelected.set(i, "");
+        }
+        incorrectOnLevel = 0;
+        levelBegunTime = System.currentTimeMillis();
+    }
+
+    private boolean verifyFreshTile(String refString, int freshChecks) {
+        if ((!refString.equalsIgnoreCase(refStringLast)
+                && !refString.equalsIgnoreCase(refStringSecondToLast)
+                && !refString.equalsIgnoreCase(refStringThirdToLast))
+                || freshChecks > 25) {
+            refStringThirdToLast = refStringSecondToLast;
+            refStringSecondToLast = refStringLast;
+            refStringLast = refTile.text;
+            return true;
+        }
+        return false;
     }
 
 
@@ -596,6 +581,22 @@ public class Thailand extends GameActivity {
 
         if (goodMatch) {
             // Good job!
+
+            if (sendAnalytics) {
+                // report time and number of incorrect guesses
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
+                        .putValue("Number Incorrect", incorrectOnLevel)
+                        .putValue("Correct Answer", refTile)
+                        .putValue("Grade", studentGrade);
+                for (int i = 0; i < 3; i++) {
+                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                        info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
+                    }
+                }
+                Analytics.with(context).track(gameUniqueID, info);
+            }
+
             repeatLocked = false;
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
@@ -634,7 +635,17 @@ public class Thailand extends GameActivity {
             }
 
         } else {
+            incorrectOnLevel += 1;
             playIncorrectSound();
+
+            for (int i = 0; i < 3; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(chosenItemText)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, chosenItemText);
+                    break;
+                }
+            }
         }
     }
 

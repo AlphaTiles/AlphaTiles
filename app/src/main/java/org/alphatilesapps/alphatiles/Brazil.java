@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -196,6 +198,10 @@ public class Brazil extends GameActivity {
         }
 
         updatePointsAndTrackers(0);
+        incorrectAnswersSelected = new ArrayList<>(visibleGameButtons-1);
+        for (int i = 0; i < visibleGameButtons-1; i++) {
+            incorrectAnswersSelected.add("");
+        }
         playAgain();
     }
 
@@ -230,6 +236,11 @@ public class Brazil extends GameActivity {
             TextView nextWord = (TextView) findViewById(GAME_BUTTONS[i]);
             nextWord.setClickable(true);
         }
+        incorrectOnLevel = 0;
+        for (int i = 0; i < visibleGameButtons-1; i++) {
+            incorrectAnswersSelected.set(i, "");
+        }
+        levelBegunTime = System.currentTimeMillis();
     }
 
     private void setWord() {
@@ -619,6 +630,21 @@ public class Brazil extends GameActivity {
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
 
+            // report time and number of incorrect guesses
+            if (sendAnalytics) {
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
+                        .putValue("Number Incorrect", incorrectOnLevel)
+                        .putValue("Correct Answer", correctString)
+                        .putValue("Grade", studentGrade);
+                for (int i = 0; i < visibleGameButtons - 1; i++) {
+                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                        info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
+                    }
+                }
+                Analytics.with(context).track(gameUniqueID, info);
+            }
+
             TextView constructedWord = findViewById(R.id.activeWordTextView);
             String word = wordInLOPWithStandardizedSequenceOfCharacters(refWord);
             constructedWord.setText(word);
@@ -635,6 +661,15 @@ public class Brazil extends GameActivity {
             }
             playCorrectSoundThenActiveWordClip(false);
         } else {
+            incorrectOnLevel += 1;
+            for (int i = 0; i < visibleGameButtons-1; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(gameButtonString)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, gameButtonString);
+                    break;
+                }
+            }
             playIncorrectSound();
         }
     }
