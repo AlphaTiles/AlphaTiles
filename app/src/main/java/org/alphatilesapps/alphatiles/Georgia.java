@@ -20,6 +20,7 @@ import java.util.Set;
 import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.CorV;
+import static org.alphatilesapps.alphatiles.Start.useContextualFormsITI;
 
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
@@ -245,154 +246,91 @@ public class Georgia extends GameActivity {
     private void setUpSyllables() {
         boolean correctSyllableRepresented = false;
 
-        // To the challengingAnswerChoices Set, first add the distractors, then syllables with same first and second unicode character,
-        // then with same last letter, then random.
+        // To the challengingAnswerChoices Set, first add the distractors, then syllables with the same initial or final characters,
+        // then random.
         // Note that duplicates will automatically be excluded because challengingAnswerChoices is a Set.
+
+        // First, add correct answer and distractors
         challengingAnswerChoices.clear();
         challengingAnswerChoices.add(initialSyllable.text);
         challengingAnswerChoices.add(initialSyllable.distractors.get(0));
         challengingAnswerChoices.add(initialSyllable.distractors.get(1));
         challengingAnswerChoices.add(initialSyllable.distractors.get(2));
 
+        // Then, add syllables with the same 2 initial characters
         int i = 0;
         while (challengingAnswerChoices.size() < visibleGameButtons && i < syllableListCopy.size()) {
             String option = syllableListCopy.get(i).text;
-            if (option.length() >= 2 && initialSyllable.text.length() >= 2) {
-                if (option.charAt(0) == initialSyllable.text.charAt(0)
+            if(option.length()>=2 && initialSyllable.text.length()>=2) {
+                if(option.charAt(0) == initialSyllable.text.charAt(0)
                         && option.charAt(1) == initialSyllable.text.charAt(1)) {
-                    challengingAnswerChoices.add(option);
-                } else if (option.charAt(0) == initialSyllable.text.charAt(0)) {
-                    challengingAnswerChoices.add(option);
-                }
-            } else {
-                if (option.charAt(0) == initialSyllable.text.charAt(0)) {
-                    challengingAnswerChoices.add(option);
-                } else if (option.charAt(option.length() - 1) == initialSyllable.text.charAt(initialSyllable.text.length() - 1)) {
                     challengingAnswerChoices.add(option);
                 }
             }
             i++;
         }
 
+        // The, add syllables with the same one initial or final character
+        i = 0;
+        while (challengingAnswerChoices.size() < visibleGameButtons && i < syllableListCopy.size()) {
+            String option = syllableListCopy.get(i).text;
+            if (option.charAt(0) == initialSyllable.text.charAt(0)) {
+                challengingAnswerChoices.add(option);
+            } else if (option.charAt(option.length() - 1) == initialSyllable.text.charAt(initialSyllable.text.length() - 1)) {
+                challengingAnswerChoices.add(option);
+            }
+            i++;
+        }
+
+        // Finally, fill any remaining empty game buttons with random syllables
         int j = 0;
         while (challengingAnswerChoices.size() < visibleGameButtons) { // Generally unlikely
-            // Fill any remaining empty game buttons with random syllables
             challengingAnswerChoices.add(syllableListCopy.get(j).text);
             j++;
         }
 
+        // Make the gameButtons contain contextual forms for some Arabic script apps
+        Set<String> contextualizedChallengingChoices = new HashSet<String>();
+        if(useContextualFormsITI){
+            for (String answerChoiceString : challengingAnswerChoices) {
+                contextualizedChallengingChoices.add(contextualizedForm_Initial(answerChoiceString));
+            }
+            challengingAnswerChoices = contextualizedChallengingChoices;
+        }
+
         List<String> challengingAnswerChoicesList = new ArrayList<>(challengingAnswerChoices); // to index the answer choices
 
-        for (int t = 0; t < GAME_BUTTONS.length; t++) {
-            TextView gameButton = findViewById(GAME_BUTTONS[t]);
-
-            if (syllableListCopy.get(t).text.equals(initialSyllable.text) && t<visibleGameButtons) {
-                correctSyllableRepresented = true;
-            }
-
-            int buttonColor = Color.parseColor(colorList.get(t % 5));
-
-            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { // random alternatives
-                if (t < visibleGameButtons) {
-                    gameButton.setText(syllableListCopy.get(t).text); // KP
-                    gameButton.setBackgroundColor(buttonColor);
-                    gameButton.setTextColor(Color.parseColor("#FFFFFF")); // white
-                    gameButton.setVisibility(View.VISIBLE);
-                } else {
-                    gameButton.setText(String.valueOf(t + 1));
-                    gameButton.setBackgroundResource(R.drawable.textview_border);
-                    gameButton.setTextColor(Color.parseColor("#000000")); // black
-                    gameButton.setClickable(false);
-                    gameButton.setVisibility(View.INVISIBLE);
-                }
-            } else { // distractor + similar alternatives
-                if (t < visibleGameButtons) {
-                    if (challengingAnswerChoicesList.get(t).equals(initialSyllable.text)) {
-                        correctSyllableRepresented = true;
-                    }
-                    gameButton.setText(challengingAnswerChoicesList.get(t)); // KP
-                    gameButton.setBackgroundColor(buttonColor);
-                    gameButton.setTextColor(Color.parseColor("#FFFFFF")); // white
-                    gameButton.setVisibility(View.VISIBLE);
-                } else {
-                    gameButton.setText(String.valueOf(t + 1));
-                    gameButton.setBackgroundResource(R.drawable.textview_border);
-                    gameButton.setTextColor(Color.parseColor("#000000")); // black
-                    gameButton.setClickable(false);
-                    gameButton.setVisibility(View.INVISIBLE);
-                }
-            }
-        }
-
-        if (!correctSyllableRepresented) { // If the correct syllable didn't randomly show up in the range, then here the correct syllable overwrites one of the others
-            Random rand = new Random();
-            int randomNum = rand.nextInt(visibleGameButtons - 1); // KP
-            TextView gameTile = findViewById(GAME_BUTTONS[randomNum]);
-            gameTile.setText(initialSyllable.text);
-        }
-
-    }
-
-    private void setUpTiles() {
-
-        boolean correctTileRepresented = false;
-
-        // For harder challenge levels, first add distractors, then add tiles that start with the same chars, then add random tiles
-        // Note that duplicates will automatically not be added because challengingAnswerChoices is a Set
-        challengingAnswerChoices.clear();
-        challengingAnswerChoices.add(initialTile.text);
-        challengingAnswerChoices.add(initialTile.distractors.get(0));
-        challengingAnswerChoices.add(initialTile.distractors.get(1));
-        challengingAnswerChoices.add(initialTile.distractors.get(2));
-
-        int i = 0;
-        while (challengingAnswerChoices.size() < visibleGameButtons && i < CorV.size()) {
-            Random rand = new Random();
-            int index = rand.nextInt(CorV.size() - 1);
-            String option = CorV.get(index).text;
-            if (option.length() >= 2 && initialTile.text.length() >= 2) {
-                if (option.charAt(0) == initialTile.text.charAt(0)
-                        && option.charAt(1) == initialTile.text.charAt(1)) {
-                    challengingAnswerChoices.add(option);
-                } else if (option.charAt(0) == initialTile.text.charAt(0)) {
-                    challengingAnswerChoices.add(option);
-                }
-            } else {
-                if (option.charAt(0) == initialTile.text.charAt(0)) {
-                    challengingAnswerChoices.add(option);
-                } else if (option.charAt(option.length() - 1) == initialTile.text.charAt(initialTile.text.length() - 1)) {
-                    challengingAnswerChoices.add(option);
-                }
-            }
-            i++;
-        }
-
-        while (challengingAnswerChoices.size() < visibleGameButtons) {
-            Random rand = new Random();
-            int index = rand.nextInt(CorV.size() - 1);
-            challengingAnswerChoices.add(CorV.get(index).text);
-        }
-
-        List<String> challengingAnswerChoicesList = new ArrayList<>(challengingAnswerChoices); // To index the answer choices
-
+        ArrayList<String> stringsAdded = new ArrayList<>();
+        Random rand = new Random();
+        int randomNum;
+        // Add them to buttons
         for (int t = 0; t < GAME_BUTTONS.length; t++) {
 
             TextView gameTile = findViewById(GAME_BUTTONS[t]);
-
-            if (CorV.get(t).equals(initialTile) && t < visibleGameButtons) {
-                correctTileRepresented = true;
-            }
-
             String tileColorStr = colorList.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
-            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { // alternatives are random
+            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { // Alternatives are random
                 if (t < visibleGameButtons) {
-                    gameTile.setText(CorV.get(t).text); // KP
+                    randomNum = rand.nextInt(syllableListCopy.size());
+                    String syllableOptionText = syllableListCopy.get(randomNum).text;
+                    while (stringsAdded.contains(syllableOptionText)) {
+                        randomNum = rand.nextInt(syllableListCopy.size());
+                        syllableOptionText = syllableListCopy.get(randomNum).text;
+                    }
+                    if (useContextualFormsITI) { // For some Arabic script apps
+                        gameTile.setText(contextualizedForm_Initial(syllableOptionText));
+                    } else {
+                        gameTile.setText(syllableOptionText);
+                    }
                     gameTile.setBackgroundColor(tileColor);
                     gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                     gameTile.setVisibility(View.VISIBLE);
                     gameTile.setClickable(true);
+                    stringsAdded.add(syllableOptionText);
+                    if (stringsAdded.contains(initialSyllable.text)) {
+                        correctSyllableRepresented = true;
+                    }
                 } else {
                     gameTile.setText(String.valueOf(t + 1));
                     gameTile.setBackgroundResource(R.drawable.textview_border);
@@ -400,11 +338,135 @@ public class Georgia extends GameActivity {
                     gameTile.setClickable(false);
                     gameTile.setVisibility(View.INVISIBLE);
                 }
-            } else { // alternatives are challenging
+            } else { // Alternatives are challenging
                 if (t < visibleGameButtons) {
-                    if (challengingAnswerChoicesList.get(t).equals(initialTile.text)) {
+                    gameTile.setText(challengingAnswerChoicesList.get(t)); // KP
+                    gameTile.setBackgroundColor(tileColor);
+                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                    gameTile.setVisibility(View.VISIBLE);
+                } else {
+                    gameTile.setText(String.valueOf(t + 1));
+                    gameTile.setBackgroundResource(R.drawable.textview_border);
+                    gameTile.setTextColor(Color.parseColor("#000000")); // black
+                    gameTile.setClickable(false);
+                    gameTile.setVisibility(View.INVISIBLE);
+                }
+            }
+        }
+
+        if (!correctSyllableRepresented) { // If the correct syllable didn't randomly come up for less-challenging levels, then here the correct syllable overwrites one of the others
+            rand = new Random();
+            randomNum = rand.nextInt(visibleGameButtons - 1); // KP
+            TextView gameButton = findViewById(GAME_BUTTONS[randomNum]);
+            gameButton.setText(initialSyllable.text);
+        }
+
+    }
+
+
+    private void setUpTiles() {
+
+        boolean correctTileRepresented = false;
+
+        // For harder challenge levels, first add distractors, then add tiles that start with the same chars, then add random tiles
+        // Duplicates will automatically not be added because challengingAnswerChoices is a Set
+        challengingAnswerChoices.clear();
+        // First add the correct answer and distractors
+        challengingAnswerChoices.add(initialTile.text);
+        challengingAnswerChoices.add(initialTile.distractors.get(0));
+        challengingAnswerChoices.add(initialTile.distractors.get(1));
+        challengingAnswerChoices.add(initialTile.distractors.get(2));
+
+
+        // Then add tiles that begin with the same two chars, if they exist
+        int i = 0;
+        while (challengingAnswerChoices.size() < visibleGameButtons && i < CorV.size()) {
+            Random rand = new Random();
+            int index = rand.nextInt(CorV.size() - 1);
+            String option = CorV.get(index).text;
+            if(option.length()>=2 && initialTile.text.length()>=2) {
+                if(option.charAt(0) == initialTile.text.charAt(0)
+                        && option.charAt(1) == initialTile.text.charAt(1)) {
+                    challengingAnswerChoices.add(option);
+                }
+            }
+            i++;
+        }
+
+        // Then add tiles that begin or end with the same char
+        i = 0;
+        while (challengingAnswerChoices.size() < visibleGameButtons && i < CorV.size()) {
+            Random rand = new Random();
+            int index = rand.nextInt(CorV.size() - 1);
+            String option = CorV.get(index).text;
+            if (option.charAt(0) == initialTile.text.charAt(0)) {
+                challengingAnswerChoices.add(option);
+            } else if (option.charAt(option.length() - 1) == initialTile.text.charAt(initialTile.text.length() - 1)) {
+                challengingAnswerChoices.add(option);
+            }
+            i++;
+        }
+
+        // Then fill the remaining options with random tiles
+        while (challengingAnswerChoices.size() < visibleGameButtons) {
+            Random rand = new Random();
+            int index = rand.nextInt(CorV.size() - 1);
+            challengingAnswerChoices.add(CorV.get(index).text);
+        }
+
+        // Make the gameButtons contain contextual forms for some Arabic script apps
+        Set<String> contextualizedChallengingChoices = new HashSet<String>();
+        if(useContextualFormsITI){
+            for (String answerChoiceString : challengingAnswerChoices) {
+                contextualizedChallengingChoices.add(contextualizedForm_Initial(answerChoiceString));
+            }
+            challengingAnswerChoices = contextualizedChallengingChoices;
+        }
+
+        // Index the answer choices
+        List<String> challengingAnswerChoicesList = new ArrayList<>(challengingAnswerChoices);
+
+
+        ArrayList<String> stringsAdded = new ArrayList<>();
+        Random rand = new Random();
+        int randomNum;
+        // Add them to buttons
+        for (int t = 0; t < GAME_BUTTONS.length; t++) {
+
+            TextView gameTile = findViewById(GAME_BUTTONS[t]);
+            String tileColorStr = colorList.get(t % 5);
+            int tileColor = Color.parseColor(tileColorStr);
+
+            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { // Alternatives are random
+                if (t < visibleGameButtons) {
+                    randomNum = rand.nextInt(CorV.size());
+                    String tileOptionText = CorV.get(randomNum).text;
+                    while (stringsAdded.contains(tileOptionText)) {
+                        randomNum = rand.nextInt(CorV.size());
+                        tileOptionText = CorV.get(randomNum).text;
+                    }
+                    if (useContextualFormsITI) { // For some Arabic script apps
+                        gameTile.setText(contextualizedForm_Initial(tileOptionText));
+                    } else {
+                        gameTile.setText(tileOptionText);
+                    }
+                    gameTile.setBackgroundColor(tileColor);
+                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                    gameTile.setVisibility(View.VISIBLE);
+                    gameTile.setClickable(true);
+                    stringsAdded.add(tileOptionText);
+                    if (stringsAdded.contains(initialTile.text)) {
                         correctTileRepresented = true;
                     }
+                } else {
+                    gameTile.setText(String.valueOf(t + 1));
+                    gameTile.setBackgroundResource(R.drawable.textview_border);
+                    gameTile.setTextColor(Color.parseColor("#000000")); // black
+                    gameTile.setClickable(false);
+                    gameTile.setVisibility(View.INVISIBLE);
+                }
+            } else { // Alternatives are challenging
+                if (t < visibleGameButtons) {
                     gameTile.setText(challengingAnswerChoicesList.get(t)); // KP
                     gameTile.setBackgroundColor(tileColor);
                     gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
@@ -420,14 +482,15 @@ public class Georgia extends GameActivity {
         }
 
         if (!correctTileRepresented) {
-            // If the correct tile didn't randomly show up in the range, then here the correct tile overwrites one of the others
-            Random rand = new Random();
-            int randomNum = rand.nextInt(visibleGameButtons - 1); // KP
+            // If the correct tile didn't randomly show up for the non-challenging choices, then here the correct tile overwrites one of the others
+            rand = new Random();
+            randomNum = rand.nextInt(visibleGameButtons - 1);
             TextView gameTile = findViewById(GAME_BUTTONS[randomNum]);
             gameTile.setText(initialTile.text);
         }
 
     }
+
 
     private void respondToTileSelection(int justClickedTile) { //for both tiles and syllables
 
