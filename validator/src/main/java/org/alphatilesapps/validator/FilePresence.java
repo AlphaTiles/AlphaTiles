@@ -16,18 +16,18 @@ public class FilePresence {
     public ArrayList<Message> warnings = new ArrayList<>();
     public ArrayList<Message> recommendations = new ArrayList<>();
     /// Add a required file with subfolder and tag
-    public void add(String tag, String subfolder, String file, String mimeType, String reason, boolean optional) {
+    public void add(String tag, String subfolder, String file, String mimeType, String reason, boolean optional, long maxSize) {
         for(File other : files) {
             if(!file.isEmpty() && other.name.equals(file) && other.folderName.equals(subfolder))
                 return;
         }
         folders.add(subfolder);
-        files.add(new File(tag, subfolder, file, mimeType, reason, optional));
+        files.add(new File(tag, subfolder, file, mimeType, reason, optional, maxSize));
         tagData.putIfAbsent(tag, new TagData());
     }
-    public void addAll(String tag, String subfolder, ArrayList<String> files, String mimeType, String reason, boolean optional) {
+    public void addAll(String tag, String subfolder, ArrayList<String> files, String mimeType, String reason, boolean optional, long maxSize) {
         for(String file : files) {
-            add(tag, subfolder, file, mimeType, reason, optional);
+            add(tag, subfolder, file, mimeType, reason, optional, maxSize);
         }
     }
     /// Use the given Message.Tag for errors about the given file tag
@@ -65,11 +65,21 @@ public class FilePresence {
                         if (nameMatches && typeMatches) {
                             excess = false;
                             file.incorrect = false;
+                            if(item.getSize() > file.maxSize) {
+                                String human = file.maxSize + " B";
+                                if(file.maxSize > 1000_000) {
+                                    human = file.maxSize / 1000_000 + " MB";
+                                } else if(file.maxSize > 1000) {
+                                    human = file.maxSize / 1000 + " KB";
+                                }
+                                warnings.add(new Message(Message.Tag.Etc, "Item " + item.getName() + " in folder " + folderName + " is too large, should be smaller than " + human));
+                            } else if(item.getSize() == 0) {
+                                fatalErrors.add(new Message(Message.Tag.Etc, "Item " + item.getName() + " in folder " + folderName + " is zero sized"));
+                            }
                             break;
                         }
                     }
                     if (excess) {
-
                         Message.Tag tag = folderTags.getOrDefault(folderName, Message.Tag.FilePresence);
                         if(showExcess) {
                             if(counts.get(stripped) <= 1) {
@@ -148,7 +158,8 @@ public class FilePresence {
         String folderName;
         String name;
         String reason;
-        File(String tag, String folderName, String name, String mimeTypes, String reason, boolean optional) {
+        long maxSize;
+        File(String tag, String folderName, String name, String mimeTypes, String reason, boolean optional, long maxSize) {
             this.tag = tag;
             this.name = name;
             if(name.isBlank()) {
@@ -162,6 +173,7 @@ public class FilePresence {
                 this.mimeTypes.add(type.strip());
             }
             this.reason = reason;
+            this.maxSize = maxSize;
         }
     }
     static class TagData {
