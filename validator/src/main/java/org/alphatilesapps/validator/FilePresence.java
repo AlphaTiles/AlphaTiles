@@ -42,6 +42,12 @@ public class FilePresence {
         for(String folderName : folders) {
             try {
                 Validator.GoogleDriveFolder folder = langPack.getFolderFromName(folderName);
+                HashMap<String, Integer> counts = new HashMap<>();
+                ArrayList<Validator.GoogleDriveItem> contents = folder.getFolderContents();
+                for(int i = 0; i < contents.size(); i++) {
+                    String key = contents.get(i).getName().split("\\.")[0];
+                    counts.merge(key, 1, Integer::sum);
+                }
                 for (int i = 0; i < folder.getFolderContents().size();) {
                     Validator.GoogleDriveItem item = folder.getFolderContents().get(i);
                     boolean excess = true;
@@ -63,9 +69,15 @@ public class FilePresence {
                         }
                     }
                     if (excess) {
+
                         Message.Tag tag = folderTags.getOrDefault(folderName, Message.Tag.FilePresence);
-                        if(showExcess)
-                            warnings.add(new Message(tag, "Item " + item.getName() + " in folder " + folderName + " is not used and will not be downloaded"));
+                        if(showExcess) {
+                            if(counts.get(stripped) <= 1) {
+                                warnings.add(new Message(tag, "Item " + item.getName() + " in folder " + folderName + " is not used and will not be downloaded"));
+                            } else {
+                                warnings.add(new Message(tag, "Item " + item.getName() + " in folder " + folderName + " is duplicated"));
+                            }
+                        }
                         excessFiles.add(new ExcessFile(folderName, stripped));
                         folder.getFolderContents().remove(i);
                     } else {
