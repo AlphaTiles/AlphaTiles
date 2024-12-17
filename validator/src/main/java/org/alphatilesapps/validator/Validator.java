@@ -1231,7 +1231,7 @@ public class Validator {
                     if(!providedSyllables.contains(row.get(col))) {
                         char c = (char)('A' + col);
                         fatalError(Message.Tag.Etc, 
-                            "row " + rowNum + ", column " + c + " of syllables contains an invalid tile as an alternate (distractor): " + distractor
+                            "row " + rowNum + ", column " + c + " of syllables contains an invalid syllable as an alternate (distractor): " + distractor
                             + ". \nPlease add this alternate (distractor) to the tile list if it is missing or replace it with a valid tile from the list"
                         );
                     }
