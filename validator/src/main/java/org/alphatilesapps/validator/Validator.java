@@ -1002,11 +1002,11 @@ public class Validator {
     }
 
     Set<String> SPECIAL_AUDIO_INSTRUCTIONS = Set.of(
-            "zzz_earth.mp3",
-            "zzz_about.mp3",
-            "zzz_choose_player.mp3",
-            "zzz_resources.mp3",
-            "zzz_set_player_name.mp3"
+            "zzz_earth",
+            "zzz_about",
+            "zzz_choose_player",
+            "zzz_resources",
+            "zzz_set_player_name"
     );
     boolean hasFont = false;
     /**
