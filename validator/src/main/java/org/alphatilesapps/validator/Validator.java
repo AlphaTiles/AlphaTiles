@@ -155,7 +155,7 @@ public class Validator {
                 JPanel panel2 = new JPanel();
                 panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
                 JTextField path = new JTextField(userDir.toString());
-                String message2 = "Please check that this is the correct path to the AlphaTiles folder";
+                String message2 = "Please check that this is the correct path to the AlphaTiles project on your local computer";
                 panel2.add(new JLabel(message2));
                 panel2.add(path);
                 JCheckBox remember = new JCheckBox("Remember this path");
