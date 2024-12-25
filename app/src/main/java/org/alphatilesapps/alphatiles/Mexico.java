@@ -79,6 +79,9 @@ public class Mexico extends GameActivity {
         context = this;
         setContentView(R.layout.mexico);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.mexicoCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = findViewById(R.id.instructions);
             ImageView repeatImage = findViewById(R.id.repeatImage);

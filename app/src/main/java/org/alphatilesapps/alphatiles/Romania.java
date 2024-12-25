@@ -81,6 +81,10 @@ public class Romania extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.romania);
+
+        ActivityLayouts.applyEdgeToEdge(this, R.id.romaniaCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel;
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 

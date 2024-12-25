@@ -91,6 +91,9 @@ public class Italy extends GameActivity {
         setContentView(R.layout.italy);
         int gameID = R.id.italyCL;
 
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);

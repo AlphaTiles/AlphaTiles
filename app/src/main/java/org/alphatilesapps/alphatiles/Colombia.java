@@ -98,6 +98,9 @@ public class Colombia extends GameActivity {
             gameID = R.id.colombiaCL;
         }
 
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);

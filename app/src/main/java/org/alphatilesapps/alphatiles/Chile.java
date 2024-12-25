@@ -89,6 +89,10 @@ public class Chile extends GameActivity {
         LOGGER.log(Level.INFO, "Chile start");
         context = this;
         setContentView(R.layout.chile);
+
+        ActivityLayouts.applyEdgeToEdge(this, R.id.chileCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         updatePointsAndTrackers(0);
         setAdvanceArrowToGray();
         if (scriptDirection.equals("RTL")) {

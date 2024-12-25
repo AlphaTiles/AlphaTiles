@@ -47,6 +47,9 @@ public class Earth extends AppCompatActivity {
         setContentView(R.layout.earth);
         earthCL = findViewById(R.id.earthCL);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.earthCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.equals("RTL")) {

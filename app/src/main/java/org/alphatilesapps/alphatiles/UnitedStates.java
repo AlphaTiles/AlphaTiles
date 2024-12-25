@@ -117,6 +117,9 @@ public class UnitedStates extends GameActivity {
                 gameID = R.id.united_states_cl1_CL;
         }
 
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);

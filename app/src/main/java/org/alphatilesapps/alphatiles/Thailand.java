@@ -3,8 +3,11 @@ package org.alphatilesapps.alphatiles;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -113,6 +116,9 @@ public class Thailand extends GameActivity {
             setContentView(R.layout.thailand);
             gameID = R.id.thailandCL;
         }
+
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
 
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
         if (scriptDirection.equals("RTL")) {

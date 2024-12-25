@@ -48,6 +48,9 @@ public class Resources extends AppCompatActivity {
 
         setContentView(R.layout.resources);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.resourcesCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         setTitle(Start.localAppName);
 
         buildResourcesArray();

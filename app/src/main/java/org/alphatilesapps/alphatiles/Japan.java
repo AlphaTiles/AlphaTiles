@@ -105,6 +105,9 @@ public class Japan extends GameActivity {
             gameID = R.id.japancl_12;
         }
 
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
 
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");

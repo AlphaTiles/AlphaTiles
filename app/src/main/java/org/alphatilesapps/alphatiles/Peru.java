@@ -71,6 +71,9 @@ public class Peru extends GameActivity {
         context = this;
         setContentView(R.layout.peru);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.peruCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);

@@ -90,6 +90,9 @@ public class Ecuador extends GameActivity {
         context = this;
         setContentView(R.layout.ecuador);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.ecuadorCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);

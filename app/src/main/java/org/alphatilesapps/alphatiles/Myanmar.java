@@ -94,6 +94,9 @@ public class Myanmar extends GameActivity {
         context = this;
         setContentView(R.layout.myanmar);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.myanmarCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);

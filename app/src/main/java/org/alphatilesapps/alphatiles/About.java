@@ -35,6 +35,9 @@ public class About extends AppCompatActivity {
 
         setContentView(R.layout.about);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.aboutCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         setTitle(Start.localAppName);
 
         TextView localName = findViewById(R.id.gameNameInLOP);

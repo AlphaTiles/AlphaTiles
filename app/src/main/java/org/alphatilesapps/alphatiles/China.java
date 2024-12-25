@@ -82,6 +82,10 @@ public class China extends GameActivity {
         context = this;
         setContentView(R.layout.china);
         int gameID = R.id.chinaCL;
+
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 

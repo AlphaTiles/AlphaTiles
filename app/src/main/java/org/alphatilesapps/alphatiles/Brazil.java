@@ -105,18 +105,22 @@ public class Brazil extends GameActivity {
             setContentView(R.layout.brazil_cl1);
         }
 
+        int gameID = 0;
+        if (challengeLevel == 3 || challengeLevel == 6) {
+            gameID = R.id.brazil_cl3_CL;
+        } else {
+            gameID = R.id.brazil_cl1_CL;
+        }
+
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
-            int gameID = 0;
-            if (challengeLevel == 3 || challengeLevel == 6) {
-                gameID = R.id.brazil_cl3_CL;
-            } else {
-                gameID = R.id.brazil_cl1_CL;
-            }
             fixConstraintsRTL(gameID);
         }
 

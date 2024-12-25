@@ -50,6 +50,9 @@ public class SetPlayerName extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_player_name);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.setPlayerNameCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.equals("RTL")) {

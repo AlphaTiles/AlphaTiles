@@ -59,6 +59,10 @@ public class Malaysia extends GameActivity {
         setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         determineNumPages();
         setContentView(R.layout.malaysia);
+
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         assignPages();
         displayWords(0);
 
