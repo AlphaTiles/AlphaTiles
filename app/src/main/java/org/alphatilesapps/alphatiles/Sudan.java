@@ -62,25 +62,10 @@ public class Sudan extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
-        // TO DO: TEST THIS WITH A LANGUAGE THAT DOESN'T HAVE INSTRUCTION AUDIO, CONNECT BACK ARROW
+    protected void hideInstructionAudioImage() {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
-        int gameID;
-        if (syllableGame.equals("S")) {
-            gameID = R.id.sudansyllCL;
-        } else {
-            gameID = R.id.sudanCL;
-        }
-
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
     }
 
     @Override
@@ -88,8 +73,6 @@ public class Sudan extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         int gameID = 0;
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         determineNumPages(); // JP
 
         if (syllableGame.equals("S")) {
@@ -121,7 +104,7 @@ public class Sudan extends GameActivity {
         }
 
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
         showOrHideScrollingArrows();
     }

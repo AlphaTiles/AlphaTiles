@@ -38,8 +38,6 @@ public class About extends AppCompatActivity {
         ActivityLayouts.applyEdgeToEdge(this, R.id.aboutCL);
         ActivityLayouts.setStatusAndNavColors(this);
 
-        setTitle(Start.localAppName);
-
         TextView localName = findViewById(R.id.gameNameInLOP);
         localName.setText(Start.localAppName);
         TextView lgNamesPlusCountry = findViewById(R.id.langNamesPlusCountry);

@@ -13,9 +13,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import java.util.Collections;
 
 import static org.alphatilesapps.alphatiles.Start.colorList;
@@ -65,22 +62,11 @@ public class Italy extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-
-        int gameID = R.id.italyCL;
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet
-                .START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet
-                .END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
-
+        
     }
 
     @Override
@@ -94,7 +80,6 @@ public class Italy extends GameActivity {
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
 
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
@@ -109,8 +94,6 @@ public class Italy extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
         if (syllableGame.equals("S")) {
             sortableSyllArray = (Start.SyllableList) syllableList.clone();
             Collections.shuffle(sortableSyllArray);
@@ -120,7 +103,7 @@ public class Italy extends GameActivity {
         }
 
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         updatePointsAndTrackers(0);

@@ -7,9 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -64,24 +61,9 @@ public class Colombia extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-
-        int gameID;
-        if (syllableGame.equals("S")) {
-            gameID = R.id.colombiaCL_syll;
-        } else {
-            gameID = R.id.colombiaCL;
-        }
-
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
 
     }
 
@@ -113,11 +95,8 @@ public class Colombia extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         keyboardScreenNo = 1;

@@ -9,14 +9,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
 import static android.graphics.Color.BLACK;
-
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -57,20 +53,11 @@ public class Mexico extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
 
         ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-
-        int gameID = R.id.mexicoCL;
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
-
+        
     }
 
     @Override
@@ -91,9 +78,6 @@ public class Mexico extends GameActivity {
 
             fixConstraintsRTL(R.id.mexicoCL);
         }
-
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         // new levels
         // Level 1: 3 pairs = 6
@@ -120,7 +104,7 @@ public class Mexico extends GameActivity {
 
 
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         updatePointsAndTrackers(0);

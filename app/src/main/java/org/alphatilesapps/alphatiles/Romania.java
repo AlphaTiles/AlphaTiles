@@ -13,8 +13,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spannable;
 import android.text.style.StyleSpan;
 import android.graphics.Typeface;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -64,16 +62,10 @@ public class Romania extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
-        int gameID = R.id.romaniaCL;
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
     }
 
     @Override
@@ -84,9 +76,6 @@ public class Romania extends GameActivity {
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.romaniaCL);
         ActivityLayouts.setStatusAndNavColors(this);
-
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         ImageView image = (ImageView) findViewById(R.id.repeatImage);
         image.setVisibility(View.INVISIBLE);
@@ -153,7 +142,7 @@ public class Romania extends GameActivity {
         }
 
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         int i = 0;

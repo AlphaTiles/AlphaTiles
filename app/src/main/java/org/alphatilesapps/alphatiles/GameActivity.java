@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.MULTITYPE_TILES;
 import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
+import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
@@ -107,7 +109,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected abstract int getAudioInstructionsResID();
 
-    protected abstract void centerGamesHomeImage();
+    protected abstract void hideInstructionAudioImage();
 
     private static final Logger LOGGER = Logger.getLogger(GameActivity.class.getName());
 
@@ -239,6 +241,14 @@ public abstract class GameActivity extends AppCompatActivity {
         points+=pointsIncrease;
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
+
+        TextView gameNumberBox = findViewById(R.id.gameNumberView);
+        gameNumberBox.setText(String.valueOf(gameNumber));
+        int gameColor = Color.parseColor(colorList.get(Integer.parseInt(gameList.get(gameNumber-1).color)));
+        gameNumberBox.setBackgroundColor(gameColor);
+        pointsEarned.setBackgroundColor(gameColor);
+        TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
+        challengeLevelBox.setText(String.valueOf(challengeLevel));
 
         // Update tracker icons
         for (int t = 0; t < TRACKERS.length; t++) {

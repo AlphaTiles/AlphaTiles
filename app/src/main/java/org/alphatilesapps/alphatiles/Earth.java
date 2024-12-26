@@ -62,8 +62,6 @@ public class Earth extends AppCompatActivity {
             activePlayerImage.setRotationY(180);
         }
 
-        setTitle(Start.localAppName);
-
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         globalPoints = getIntent().getIntExtra("globalPoints", 0);
 

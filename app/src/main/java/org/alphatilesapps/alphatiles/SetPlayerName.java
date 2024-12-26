@@ -65,8 +65,6 @@ public class SetPlayerName extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
-        setTitle(Start.localAppName);
-
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
 
         ImageView avatar = findViewById(R.id.avatar);

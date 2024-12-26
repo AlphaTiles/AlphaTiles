@@ -3,8 +3,6 @@ package org.alphatilesapps.alphatiles;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 
-import android.util.Log;
-
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,7 +17,6 @@ import static org.alphatilesapps.alphatiles.Start.*; //one new
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class Malaysia extends GameActivity {
     List<List<Start.Word>> wordPagesLists = new ArrayList<>();
@@ -55,8 +52,6 @@ public class Malaysia extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         int gameID = R.id.malaysiaCL;
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         determineNumPages();
         setContentView(R.layout.malaysia);
 
@@ -67,7 +62,7 @@ public class Malaysia extends GameActivity {
         displayWords(0);
 
         if (scriptDirection.equals("RTL")) fixConstraintsRTLMalaysia(gameID);
-        if (getAudioInstructionsResID() == 0) centerGamesHomeImage();
+        if (getAudioInstructionsResID() == 0) hideInstructionAudioImage();
         showOrHideScrollingArrows();
         setAllImagesBlank();
         setAllGameButtonsClickable();
@@ -154,19 +149,10 @@ public class Malaysia extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
-        // TO DO: TEST THIS WITH A LANGUAGE THAT DOESN'T HAVE INSTRUCTION AUDIO, CONNECT BACK ARROW
+    protected void hideInstructionAudioImage() {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
-        int gameID = R.id.malaysiaCL;
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        //constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        //constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
     }
 
     private void fixConstraintsRTLMalaysia(int gameID) {
