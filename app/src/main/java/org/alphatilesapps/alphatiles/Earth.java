@@ -32,9 +32,9 @@ public class Earth extends AppCompatActivity {
     int playerNumber = -1;
     String playerString;
     char grade;
-    int pageNumber; // Games 001 to 023 are displayed on page 1, games 024 to 046 are displayed on page 2, etc.
+    int pageNumber; // Games 001 to 033 are displayed on page 1, games 034 to 066 are displayed on page 2, etc.
     int globalPoints;
-    int doorsPerPage = 23;
+    int doorsPerPage = 33;
     ConstraintLayout earthCL;
 
 
