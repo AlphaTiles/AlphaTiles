@@ -281,7 +281,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
-        app:srcCompat="@drawable/zz_alphatileslogo" />
+        app:srcCompat="@drawable/zz_sil" />
 
     <TextView
         android:id="@+id/activeWordTextView"

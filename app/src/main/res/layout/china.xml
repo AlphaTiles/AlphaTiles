@@ -282,7 +282,7 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineV9"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
         android:contentDescription="@string/activeWordPicture"
-        app:srcCompat="@drawable/zz_alphatileslogosmall" />
+        app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
     android:id="@+id/wordImage02"
@@ -296,7 +296,7 @@
     app:layout_constraintStart_toStartOf="@+id/guidelineV9"
     app:layout_constraintTop_toTopOf="@+id/guidelineH3"
     android:contentDescription="@string/activeWordPicture"
-    app:srcCompat="@drawable/zz_alphatileslogosmall" />
+    app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
         android:id="@+id/wordImage03"
@@ -310,7 +310,7 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineV9"
         app:layout_constraintTop_toTopOf="@+id/guidelineH5"
         android:contentDescription="@string/activeWordPicture"
-        app:srcCompat="@drawable/zz_alphatileslogosmall" />
+        app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
         android:id="@+id/wordImage04"
@@ -324,7 +324,7 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineV9"
         app:layout_constraintTop_toTopOf="@+id/guidelineH7"
         android:contentDescription="@string/activeWordPicture"
-        app:srcCompat="@drawable/zz_alphatileslogosmall" />
+        app:srcCompat="@drawable/zz_sil" />
 
     <TextView
         android:id="@+id/tile01"

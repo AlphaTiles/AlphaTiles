@@ -14,49 +14,41 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="9dp"
-
         android:layout_marginTop="9dp"
         android:contentDescription="@string/activeWordPicture"
-
         android:onClick="clickPicHearAudio"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH1"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVStart"
-
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH0"
-        app:srcCompat="@drawable/zz_alphatileslogo"
-    />
-
-
+        app:srcCompat="@drawable/zz_alphatileslogo" />
 
     <TextView
         android:id="@+id/word01"
-        android:tag="1"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="9dp"
         android:background="#9C27B0"
         android:gravity="center"
+        android:maxLines="1"
         android:onClick="onWordClick"
+        android:padding="2dp"
+        android:tag="1"
         android:text="@string/word01"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-
-        app:layout_constraintStart_toEndOf="@+id/wordImage01"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVEnd"
-
-        app:layout_constraintTop_toTopOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH1"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="5sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "2dp"
-        android:maxLines="1"
-
-        android:layout_marginStart="9dp"
-        android:layout_marginEnd="9dp"
-        android:layout_marginTop="9dp"
-    />
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH1"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/wordImage01"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH0"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/wordImage02"
@@ -64,20 +56,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-
-
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVStart"
-
-
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
-
         android:layout_marginStart="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <TextView
         android:id="@+id/word02"
@@ -87,14 +73,11 @@
         android:background="#006486"
         android:gravity="center"
         android:onClick="onWordClick"
-
         android:text="@string/word02"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-
         app:layout_constraintStart_toEndOf="@+id/wordImage02"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVEnd"
-
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:autoSizeTextType="uniform"
@@ -103,12 +86,9 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"
-
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginTop="9dp"
-        />
-
+        android:layout_marginTop="9dp" />
 
     <ImageView
         android:id="@+id/wordImage03"
@@ -116,19 +96,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVStart"
-
-
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH2"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH3"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
-
         android:layout_marginStart="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <TextView
         android:id="@+id/word03"
@@ -141,10 +116,8 @@
         android:text="@string/word03"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-
         app:layout_constraintStart_toEndOf="@+id/wordImage03"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVEnd"
-
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH2"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH3"
         app:autoSizeTextType="uniform"
@@ -153,11 +126,9 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"
-
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <ImageView
         android:id="@+id/wordImage04"
@@ -165,19 +136,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVStart"
-
-
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
-
         android:layout_marginStart="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <TextView
         android:id="@+id/word04"
@@ -190,10 +156,8 @@
         android:text="@string/word04"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-
         app:layout_constraintStart_toEndOf="@+id/wordImage04"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVEnd"
-
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
         app:autoSizeTextType="uniform"
@@ -202,11 +166,9 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"
-
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <ImageView
         android:id="@+id/wordImage05"
@@ -214,19 +176,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVStart"
-
-
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
-
         android:layout_marginStart="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <TextView
         android:id="@+id/word05"
@@ -236,14 +193,11 @@
         android:background="#0C27e0"
         android:gravity="center"
         android:onClick="onWordClick"
-
         android:text="@string/word05"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-
         app:layout_constraintStart_toEndOf="@+id/wordImage05"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVEnd"
-
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:autoSizeTextType="uniform"
@@ -252,11 +206,9 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"
-
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <ImageView
         android:id="@+id/wordImage06"
@@ -264,19 +216,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVStart"
-
-
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH5"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
-
         android:layout_marginStart="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <TextView
         android:id="@+id/word06"
@@ -286,14 +233,11 @@
         android:background="#f0c40a"
         android:gravity="center"
         android:onClick="onWordClick"
-
         android:text="@string/word06"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-
         app:layout_constraintStart_toEndOf="@+id/wordImage06"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVEnd"
-
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH5"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:autoSizeTextType="uniform"
@@ -302,11 +246,9 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"
-
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
 
     <ImageView
@@ -315,19 +257,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVStart"
-
-
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
-
         android:layout_marginStart="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <TextView
         android:id="@+id/word07"
@@ -340,10 +277,8 @@
         android:text="@string/word07"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-
         app:layout_constraintStart_toEndOf="@+id/wordImage07"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVEnd"
-
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:autoSizeTextType="uniform"
@@ -352,11 +287,9 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"
-
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <ImageView
         android:id="@+id/wordImage08"
@@ -364,16 +297,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVStart"
-
-
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH7"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
-
         android:layout_marginStart="9dp"
         android:layout_marginTop="9dp"
         />
@@ -389,10 +318,8 @@
         android:text="@string/word08"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-
         app:layout_constraintStart_toEndOf="@+id/wordImage08"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVEnd"
-
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH7"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
         app:autoSizeTextType="uniform"
@@ -401,31 +328,24 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"
-
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginTop="9dp"
-        />
-
+        android:layout_marginTop="9dp" />
+    
     <ImageView
         android:id="@+id/wordImage09"
         android:tag="9"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVStart"
-
-
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH8"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
-
         android:layout_marginStart="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <TextView
         android:id="@+id/word09"
@@ -438,10 +358,8 @@
         android:text="@string/word09"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-
         app:layout_constraintStart_toEndOf="@+id/wordImage09"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVEnd"
-
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH8"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
         app:autoSizeTextType="uniform"
@@ -450,11 +368,9 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"
-
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <ImageView
         android:id="@+id/wordImage10"
@@ -462,19 +378,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVStart"
-
-
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH9"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
-
         android:layout_marginStart="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <TextView
         android:id="@+id/word10"
@@ -487,10 +398,8 @@
         android:text="@string/word10"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-
         app:layout_constraintStart_toEndOf="@+id/wordImage10"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVEnd"
-
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH9"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
         app:autoSizeTextType="uniform"
@@ -499,11 +408,9 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"
-
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <ImageView
         android:id="@+id/wordImage11"
@@ -511,19 +418,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineVStart"
-
-
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH10"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
-
         android:layout_marginStart="9dp"
-        android:layout_marginTop="9dp"
-        />
+        android:layout_marginTop="9dp" />
 
     <TextView
         android:id="@+id/word11"
@@ -533,14 +435,11 @@
         android:background="#f0e000"
         android:gravity="center"
         android:onClick="onWordClick"
-
         android:text="@string/word11"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-
         app:layout_constraintStart_toEndOf="@+id/wordImage11"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineVEnd"
-
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH10"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
         app:autoSizeTextType="uniform"
@@ -549,24 +448,32 @@
         app:autoSizeStepGranularity="2sp"
         android:padding = "2dp"
         android:maxLines="1"
-
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginTop="9dp"
-        />
-
+        android:layout_marginTop="9dp" />
 
     <ImageView
         android:id="@+id/backwardArrowImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="@+id/backwardPageArrow"
         android:onClick="prevPageArrow"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toStartOf="@+id/gamesHomeImage"
-        app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="@+id/backwardPageArrow"
+        app:layout_constraintEnd_toStartOf="@+id/bottomGamesHomeSpacer"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/zz_backward" />
+
+    <TextView
+        android:id="@+id/bottomGamesHomeSpacer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="BGHS"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintEnd_toStartOf="@+id/bottomInstructionsSpacer"
+        app:layout_constraintStart_toEndOf="@+id/backwardArrowImage"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"/>
 
     <ImageView
         android:id="@+id/gamesHomeImage"
@@ -574,11 +481,21 @@
         android:layout_height="0dp"
         android:onClick="goBackToEarth"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toStartOf="@+id/instructions"
-        app:layout_constraintStart_toEndOf="@+id/backwardArrowImage"
+        app:layout_constraintStart_toStartOf="@+id/bottomGamesHomeSpacer"
+        app:layout_constraintEnd_toEndOf="@+id/bottomGamesHomeSpacer"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         android:contentDescription="@+id/gamesHomeImage"
         app:srcCompat="@drawable/zz_games_home" />
+
+    <TextView
+        android:id="@+id/bottomInstructionsSpacer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="BIS"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintEnd_toStartOf="@+id/forwardArrowImage"
+        app:layout_constraintStart_toEndOf="@+id/bottomGamesHomeSpacer"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"/>
 
     <ImageView
         android:id="@+id/instructions"
@@ -586,8 +503,8 @@
         android:layout_height="0dp"
         android:onClick="playAudioInstructions"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toEndOf="@+id/forwardArrowImage"
-        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintEnd_toEndOf="@+id/bottomInstructionsSpacer"
+        app:layout_constraintStart_toStartOf="@+id/bottomInstructionsSpacer"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         android:contentDescription="@+id/playInstructionAudio"
         android:rotationY="0"
@@ -600,129 +517,122 @@
         android:onClick="nextPageArrow"
         android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/instructions"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV2"
+        app:layout_constraintStart_toEndOf="@+id/bottomInstructionsSpacer"
         android:contentDescription="@+id/forwardPageArrow"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         app:srcCompat="@drawable/zz_forward" />
-
-
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHSys1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.89" />
-    <!--This was set to 0.9, but since there is more room now, I moved it up.-->
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHSys2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="9dp" />
-
-
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineVStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.00" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineVEnd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="1.00" />
-
-
-
+    
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.00" />
+        app:layout_constraintGuide_percent="0.01" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.08" />
+        app:layout_constraintGuide_percent="0.09" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.16" />
+        app:layout_constraintGuide_percent="0.17" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.24" />
+        app:layout_constraintGuide_percent="0.25" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.32" />
+        app:layout_constraintGuide_percent="0.33" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.40" />
+        app:layout_constraintGuide_percent="0.41" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.48" />
+        app:layout_constraintGuide_percent="0.49" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.56" />
+        app:layout_constraintGuide_percent="0.57" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.64" />
+        app:layout_constraintGuide_percent="0.65" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.72" />
+        app:layout_constraintGuide_percent="0.73" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.80" />
+        app:layout_constraintGuide_percent="0.81" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.88" />
+        app:layout_constraintGuide_percent="0.89" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineHSys1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.93" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineHSys2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.99" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.01" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.99" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

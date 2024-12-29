@@ -14,8 +14,8 @@
         android:layout_height="0dp"
         android:contentDescription="@string/resourcePromo"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV6"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
         app:srcCompat="@drawable/zz_resource_promo" />
 
@@ -98,7 +98,7 @@
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
 
@@ -116,7 +116,7 @@
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
 
@@ -134,7 +134,7 @@
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH7" />
 
@@ -152,7 +152,7 @@
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH9" />
 
@@ -170,7 +170,7 @@
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH12"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH11" />
 
@@ -188,7 +188,7 @@
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH14"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH13" />
 
@@ -218,7 +218,6 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH14"
         app:srcCompat="@drawable/zz_forward" />
 
-
     <ImageView
         android:id="@+id/gamesHomeImage"
         android:layout_width="0dp"
@@ -227,7 +226,7 @@
         android:onClick="goBackToEarth"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
         app:layout_constraintEnd_toStartOf="@id/instructions"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH15"
         app:srcCompat="@drawable/zz_games_home" />
 
@@ -239,7 +238,7 @@
         android:onClick="playAudioInstructionsResources"
         android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV6"
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineH15"
         app:srcCompat="@drawable/zz_instructions" />
@@ -249,7 +248,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.02" />
+        app:layout_constraintGuide_percent="0.01" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH2"
@@ -354,14 +353,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.98" />
+        app:layout_constraintGuide_percent="0.99" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.02" />
+        app:layout_constraintGuide_percent="0.01" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV2"
@@ -396,6 +395,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.98" />
+        app:layout_constraintGuide_percent="0.99" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

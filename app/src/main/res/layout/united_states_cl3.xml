@@ -557,7 +557,7 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH7"
         android:contentDescription="@string/activeWordPicture"
-        app:srcCompat="@drawable/zz_alphatileslogo" />
+        app:srcCompat="@drawable/zz_sil" />
 
     <TextView
         android:id="@+id/activeWordTextView"

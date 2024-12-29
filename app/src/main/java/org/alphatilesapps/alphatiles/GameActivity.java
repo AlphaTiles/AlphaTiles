@@ -248,7 +248,15 @@ public abstract class GameActivity extends AppCompatActivity {
         gameNumberBox.setBackgroundColor(gameColor);
         pointsEarned.setBackgroundColor(gameColor);
         TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
-        challengeLevelBox.setText(String.valueOf(challengeLevel));
+
+        int displayedChallengeLevel = challengeLevel;
+        if (gameList.get(gameNumber-1).country.equals("Brazil") && challengeLevel != 7) {
+            displayedChallengeLevel = displayedChallengeLevel - 3;
+        }
+        if (gameList.get(gameNumber-1).country.equals("Georgia") && challengeLevel > 6) {
+            displayedChallengeLevel = displayedChallengeLevel - 6;
+        }
+        challengeLevelBox.setText(String.valueOf(displayedChallengeLevel));
 
         // Update tracker icons
         for (int t = 0; t < TRACKERS.length; t++) {

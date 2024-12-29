@@ -915,10 +915,11 @@
         android:onClick="playAudioInstructionsEarth"
         android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         app:layout_constraintEnd_toEndOf="@+id/bottomInstructionsSpacer"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/bottomInstructionsSpacer"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/zz_instructions" />
 
     <TextView
