@@ -77,43 +77,7 @@ public class Romania extends GameActivity {
         ActivityLayouts.applyEdgeToEdge(this, R.id.romaniaCL);
         ActivityLayouts.setStatusAndNavColors(this);
 
-        ImageView image = (ImageView) findViewById(R.id.repeatImage);
-        image.setVisibility(View.INVISIBLE);
-
-        Boolean showFilterOptions;
-        String hasFilterSetting = settingsList.find("Show filter options for Game 001");
-        if (!hasFilterSetting.equals("")) {
-            showFilterOptions = Boolean.parseBoolean(hasFilterSetting);
-        } else {
-            showFilterOptions = false;
-        }
-
-        ImageView button1 = (ImageView) findViewById(R.id.toggleInitialOnly);
-        ImageView button2 = (ImageView) findViewById(R.id.toggleInitialPlusGaps);
-        ImageView button3 = (ImageView) findViewById(R.id.toggleAllOfAll);
-
-        if (showFilterOptions) {
-            button1.setVisibility(View.VISIBLE);
-            button2.setVisibility(View.VISIBLE);
-            button3.setVisibility(View.VISIBLE);
-        } else {
-            button1.setVisibility(View.INVISIBLE);
-            button2.setVisibility(View.INVISIBLE);
-            button3.setVisibility(View.INVISIBLE);
-        }
-
         scanSetting = Integer.parseInt(Start.settingsList.find("Game 001 Scan Setting"));
-        //scanSetting = 2;
-        switch (scanSetting) {
-            case 2:
-                setInitialPlusGaps();
-                break;
-            case 3:
-                setAllOfAll();
-                break;
-            default:
-                setInitialOnly();
-        }
 
         tileToStartOn = cumulativeStageBasedTileList.get(0).text;
         typeOfTileToStartOn = cumulativeStageBasedTileList.get(0).typeOfThisTileInstance;
@@ -220,8 +184,8 @@ public class Romania extends GameActivity {
         TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
         String tileText = activeTile.text;
         gameTile.setText(tileText);
-        TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
-        magTile.setText(indexWithinGroup + 1 + " / " + String.valueOf(String.valueOf(groupCount)));
+        TextView numberOfTotal = (TextView) findViewById(R.id.numberOfTotalText);
+        numberOfTotal.setText(indexWithinGroup + 1 + " / " + String.valueOf(String.valueOf(groupCount)));
 
         gameTile.setClickable(true);
 
@@ -312,8 +276,8 @@ public class Romania extends GameActivity {
             TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
             gameTile.setBackgroundColor(tileColor);
             activeWord.setBackgroundColor(tileColor);
-            TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
-            magTile.setText(indexWithinGroup + 1 + " / " + String.valueOf(groupCount));
+            TextView numberOfTotal = (TextView) findViewById(R.id.numberOfTotalText);
+            numberOfTotal.setText(indexWithinGroup + 1 + " / " + String.valueOf(groupCount));
 
             if (failedToMatchInitialTile) {
                 tileColorStr = "#A9A9A9"; // dark gray
@@ -366,9 +330,9 @@ public class Romania extends GameActivity {
             TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
             gameTile.setBackgroundColor(tileColor);
             activeWord.setBackgroundColor(tileColor);
-            TextView magTile = (TextView) findViewById(R.id.tileInMagnifyingGlass);
+            TextView numberOfTotal = (TextView) findViewById(R.id.numberOfTotalText);
 
-            magTile.setText(indexWithinGroup + 1 + " / " + String.valueOf(groupCount));
+            numberOfTotal.setText(indexWithinGroup + 1 + " / " + String.valueOf(groupCount));
             if (failedToMatchInitialTile) {
                 tileColorStr = "#A9A9A9"; // dark gray
                 tileColor = Color.parseColor(tileColorStr);
@@ -459,66 +423,6 @@ public class Romania extends GameActivity {
         goToPreviousWord(activeTile);
     }
 
-    public void setToggleToInitialOnly(View view) {
-        setInitialOnly();
-    }
-
-    public void setInitialOnly() {
-        scanSetting = 1;
-
-        ImageView toggleOne = (ImageView) findViewById(R.id.toggleInitialOnly);
-        ImageView toggleTwo = (ImageView) findViewById(R.id.toggleInitialPlusGaps);
-        ImageView toggleThree = (ImageView) findViewById(R.id.toggleAllOfAll);
-
-        int resID1 = getResources().getIdentifier("zz_toggle_initial_only_on", "drawable", getPackageName());
-        int resID2 = getResources().getIdentifier("zz_toggle_initial_plus_gaps_off", "drawable", getPackageName());
-        int resID3 = getResources().getIdentifier("zz_toggle_all_of_all_off", "drawable", getPackageName());
-
-        toggleOne.setImageResource(resID1);
-        toggleTwo.setImageResource(resID2);
-        toggleThree.setImageResource(resID3);
-    }
-
-    public void setToggleToInitialPlusGaps(View view) {
-        setInitialPlusGaps();
-    }
-
-    public void setInitialPlusGaps() {
-        scanSetting = 2;
-
-        ImageView toggleOne = (ImageView) findViewById(R.id.toggleInitialOnly);
-        ImageView toggleTwo = (ImageView) findViewById(R.id.toggleInitialPlusGaps);
-        ImageView toggleThree = (ImageView) findViewById(R.id.toggleAllOfAll);
-
-        int resID1 = getResources().getIdentifier("zz_toggle_initial_only_off", "drawable", getPackageName());
-        int resID2 = getResources().getIdentifier("zz_toggle_initial_plus_gaps_on", "drawable", getPackageName());
-        int resID3 = getResources().getIdentifier("zz_toggle_all_of_all_off", "drawable", getPackageName());
-
-        toggleOne.setImageResource(resID1);
-        toggleTwo.setImageResource(resID2);
-        toggleThree.setImageResource(resID3);
-    }
-
-    public void setToggleToAllOfAll(View view) {
-        setAllOfAll();
-    }
-
-    public void setAllOfAll() {
-        scanSetting = 3;
-
-        ImageView toggleOne = (ImageView) findViewById(R.id.toggleInitialOnly);
-        ImageView toggleTwo = (ImageView) findViewById(R.id.toggleInitialPlusGaps);
-        ImageView toggleThree = (ImageView) findViewById(R.id.toggleAllOfAll);
-
-        int resID1 = getResources().getIdentifier("zz_toggle_initial_only_off", "drawable", getPackageName());
-        int resID2 = getResources().getIdentifier("zz_toggle_initial_plus_gaps_off", "drawable", getPackageName());
-        int resID3 = getResources().getIdentifier("zz_toggle_all_of_all_on", "drawable", getPackageName());
-
-        toggleOne.setImageResource(resID1);
-        toggleTwo.setImageResource(resID2);
-        toggleThree.setImageResource(resID3);
-    }
-
     @Override
     protected void setAllGameButtonsUnclickable() {
         TextView tileBox = findViewById(R.id.tileBoxTextView);
@@ -537,8 +441,8 @@ public class Romania extends GameActivity {
         backwardArrow.setBackgroundResource(0);
         backwardArrow.setImageResource(R.drawable.zz_backward_inactive);
 
-        TextView magTile = findViewById(R.id.tileInMagnifyingGlass);
-        magTile.setClickable(false);
+        TextView numberOfTotal = findViewById(R.id.numberOfTotalText);
+        numberOfTotal.setClickable(false);
     }
 
     @Override
@@ -559,8 +463,8 @@ public class Romania extends GameActivity {
         backwardArrow.setBackgroundResource(0);
         backwardArrow.setImageResource(R.drawable.zz_backward);
 
-        TextView magTile = findViewById(R.id.tileInMagnifyingGlass);
-        magTile.setClickable(true);
+        TextView numberOfTotal = findViewById(R.id.numberOfTotalText);
+        numberOfTotal.setClickable(true);
     }
 
     public void clickPicHearAudio(View view) {

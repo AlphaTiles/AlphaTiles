@@ -12,22 +12,19 @@
         android:id="@+id/tileBoxTextView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="onRefClick"
         android:background="#9C27B0"
         android:gravity="center|center_vertical"
+        android:onClick="onRefClick"
         android:text="@string/gameTileInFocus"
         android:textColor="#FFFFFF"
         app:autoSizeMaxTextSize="120sp"
         app:autoSizeMinTextSize="20sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
-        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
-        app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH0" />
 
     <ImageView
         android:id="@+id/backwardArrowImage"
@@ -35,12 +32,10 @@
         android:layout_height="0dp"
         android:layout_marginEnd="5dp"
         android:onClick="goToPreviousTile"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHMagTileTop"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintEnd_toStartOf="@+id/tileBoxTextView"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1andHalf"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
         android:contentDescription="@string/goBackward"
         app:srcCompat="@drawable/zz_backward"
         android:layout_marginRight="5dp"
@@ -51,32 +46,30 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="5dp"
+        android:contentDescription="@string/goForward"
         android:onClick="goToNextTile"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHMagTileTop"
+        android:rotationY="0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:layout_constraintStart_toEndOf="@+id/tileBoxTextView"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1andHalf"
-        app:srcCompat="@drawable/zz_forward"
-        android:contentDescription="@string/goForward"
-        android:layout_marginLeft="5dp"
-        android:rotationY="0"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:srcCompat="@drawable/zz_forward" />
 
     <ImageView
         android:id="@+id/wordImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo" />
 
-
     <TextView
-        android:id="@+id/tileInMagnifyingGlass"
+        android:id="@+id/numberOfTotalText"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/zz_white_border"
@@ -88,10 +81,10 @@
         app:autoSizeMinTextSize="15sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineHWhiteBorder"
-        app:layout_constraintEnd_toEndOf="@+id/tileBoxTextView"
-        app:layout_constraintStart_toStartOf="@+id/tileBoxTextView"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1"/>
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH4"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH0"/>
 
     <TextView
         android:id="@+id/activeWordTextView"
@@ -101,10 +94,10 @@
         android:gravity="center"
         android:text="@string/activeWordText"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -117,103 +110,48 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="scrollBack"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineHScrollBottom"
+        android:rotationY="0"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH3"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
         app:layout_constraintStart_toStartOf="@+id/tileBoxTextView"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHMagTop"
-        app:srcCompat="@drawable/zz_backward_white"
-        android:rotationY="0"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH2"
+        app:srcCompat="@drawable/zz_backward_white" />
 
     <ImageView
         android:id="@+id/scrollForward"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="scrollForward"
+        android:rotationY="0"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH3"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineHScrollBottom"
         app:layout_constraintEnd_toEndOf="@+id/tileBoxTextView"
         app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHMagTop"
-        app:srcCompat="@drawable/zz_forward_white"
-        android:rotationY="0"/>
-
-    <ImageView
-        android:id="@+id/toggleInitialOnly"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:onClick="setToggleToInitialOnly"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
-        app:layout_constraintEnd_toStartOf="@+id/toggleInitialPlusGaps"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
-        android:contentDescription="toggleInitialOnly"
-        app:srcCompat="@drawable/zz_toggle_initial_only_off" />
-
-    <ImageView
-        android:id="@+id/toggleInitialPlusGaps"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:onClick="setToggleToInitialPlusGaps"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
-        app:layout_constraintEnd_toStartOf="@+id/toggleAllOfAll"
-        app:layout_constraintStart_toEndOf="@+id/toggleInitialOnly"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
-        android:contentDescription="toggleInitialPlusGaps"
-        app:srcCompat="@drawable/zz_toggle_initial_plus_gaps_off" />
-
-    <ImageView
-        android:id="@+id/toggleAllOfAll"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:onClick="setToggleToAllOfAll"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/toggleInitialPlusGaps"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
-        android:contentDescription="toggle_all_of_all"
-        app:srcCompat="@drawable/zz_toggle_all_of_all_off" />
-
-    <ImageView
-        android:id="@+id/pointsImage"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/pointsImage"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toStartOf="@+id/gamesHomeImage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        app:srcCompat="@drawable/zz_pointsscored" />
-
-    <TextView
-        android:id="@+id/pointsTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:text="@string/pointsScored"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/pointsImage"
-        app:layout_constraintEnd_toEndOf="@+id/pointsImage"
-        app:layout_constraintStart_toStartOf="@+id/pointsImage"
-        app:layout_constraintTop_toTopOf="@+id/pointsImage" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineH2"
+        app:srcCompat="@drawable/zz_forward_white" />
 
     <ImageView
         android:id="@+id/gamesHomeImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:contentDescription="@string/playerAvatar"
         android:onClick="goBackToEarth"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toStartOf="@+id/instructions"
-        app:layout_constraintStart_toEndOf="@+id/pointsImage"
+        app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        app:layout_constraintVertical_bias="0.0"
+        android:contentDescription="@string/playerAvatar"
         app:srcCompat="@drawable/zz_games_home" />
+
+    <TextView
+        android:id="@+id/bottomMiddleSpacer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="BMS"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
+        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"/>
 
     <ImageView
         android:id="@+id/instructions"
@@ -221,117 +159,90 @@
         android:layout_height="0dp"
         android:onClick="playAudioInstructions"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toEndOf="@+id/repeatImage"
-        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/playAgain"
+        android:contentDescription="@string/playAudioInstructions"
         android:rotationY="0"
         app:srcCompat="@drawable/zz_instructions" />
 
-    <ImageView
-        android:id="@+id/repeatImage"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:onClick="repeatGame"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/instructions"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/playAgain"
-        android:rotationY="0"
-        app:srcCompat="@drawable/zz_forward_inactive" />
-
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH1"
+        android:id="@+id/guidelineH0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.01" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHMagTop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.03" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHScrollBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.07" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHWhiteBorder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.08" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH1andHalf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.11" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHMagTileTop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.30" />
+        app:layout_constraintGuide_percent="0.06" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.34" />
+        app:layout_constraintGuide_percent="0.07" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35" />
+        app:layout_constraintGuide_percent="0.11" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.68" />
+        app:layout_constraintGuide_percent="0.12" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.69" />
+        app:layout_constraintGuide_percent="0.135" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.82" />
+        app:layout_constraintGuide_percent="0.315" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.83" />
+        app:layout_constraintGuide_percent="0.38" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.88" />
+        app:layout_constraintGuide_percent="0.40" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.73" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.88" />
+    
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHSys1"
         android:layout_width="wrap_content"

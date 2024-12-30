@@ -92,13 +92,13 @@ public class Sudan extends GameActivity {
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+            ImageView nextSet = (ImageView) findViewById(R.id.nextSet);
 
-            ImageView repeatImage2 = (ImageView) findViewById(R.id.repeatImage2);
-            repeatImage2.setRotationY(180);
+            ImageView previousSet = (ImageView) findViewById(R.id.previousSet);
+            previousSet.setRotationY(180);
 
             instructionsImage.setRotationY(180);
-            repeatImage.setRotationY(180);
+            nextSet.setRotationY(180);
 
             fixConstraintsRTLSudan(gameID);
         }
@@ -113,12 +113,12 @@ public class Sudan extends GameActivity {
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.repeatImage2, ConstraintSet.END, R.id.gamesHomeImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.START, R.id.repeatImage2, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.previousSet, ConstraintSet.END, R.id.gamesHomeImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.START, R.id.previousSet, ConstraintSet.END, 0);
         constraintSet.connect(R.id.instructions, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
         constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.instructions, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.instructions, ConstraintSet.END, 0);
-        constraintSet.connect(R.id.instructions, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.nextSet, ConstraintSet.START, R.id.instructions, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.instructions, ConstraintSet.END, R.id.nextSet, ConstraintSet.START, 0);
         constraintSet.applyTo(constraintLayout);
     }
 
@@ -268,8 +268,8 @@ public class Sudan extends GameActivity {
     }
 
     public void showOrHideScrollingArrows() {
-        ImageView nextPageArrow = findViewById(R.id.repeatImage);
-        ImageView prevPageArrow = findViewById(R.id.repeatImage2);
+        ImageView nextPageArrow = findViewById(R.id.nextSet);
+        ImageView prevPageArrow = findViewById(R.id.previousSet);
         if (currentPageNumber == numPages) {
             nextPageArrow.setVisibility(View.INVISIBLE);
         } else {

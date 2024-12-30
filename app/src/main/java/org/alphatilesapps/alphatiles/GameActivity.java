@@ -249,8 +249,14 @@ public abstract class GameActivity extends AppCompatActivity {
         pointsEarned.setBackgroundColor(gameColor);
         TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
 
-        int displayedChallengeLevel = challengeLevel;
-        if (gameList.get(gameNumber-1).country.equals("Brazil") && challengeLevel != 7) {
+        int displayedChallengeLevel;
+        if (gameList.get(gameNumber-1).country.equals("Thailand")) {
+            displayedChallengeLevel = challengeLevel / 100;
+        }
+        else {
+            displayedChallengeLevel = challengeLevel;
+        }
+        if (gameList.get(gameNumber-1).country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
             displayedChallengeLevel = displayedChallengeLevel - 3;
         }
         if (gameList.get(gameNumber-1).country.equals("Georgia") && challengeLevel > 6) {
@@ -497,8 +503,10 @@ public abstract class GameActivity extends AppCompatActivity {
                 wordImage = findViewById(getWordImages()[i]);
                 wordImage.setClickable(false);
             }
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        repeatImage.setClickable(false);
+        if (!gameList.get(gameNumber-1).country.equals("Romania")&&!gameList.get(gameNumber-1).country.equals("Sudan")) {
+            ImageView repeatImage = findViewById(R.id.repeatImage);
+            repeatImage.setClickable(false);
+        }
     }
 
     protected void setOptionsRowClickable() {
@@ -512,8 +520,10 @@ public abstract class GameActivity extends AppCompatActivity {
                 wordImage = findViewById(getWordImages()[i]);
                 wordImage.setClickable(true);
             }
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        repeatImage.setClickable(true);
+        if (!gameList.get(gameNumber-1).country.equals("Romania")&&!gameList.get(gameNumber-1).country.equals("Sudan")) {
+            ImageView repeatImage = findViewById(R.id.repeatImage);
+            repeatImage.setClickable(true);
+        }
     }
 
     protected void setAdvanceArrowToBlue() {
