@@ -318,8 +318,7 @@
         app:autoSizeMinTextSize="12sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/pointsImage"
-        app:layout_constraintTop_toBottomOf="@id/activeWordTextView" />
+        tools:layout_editor_absoluteY="146dp" />
 
     <TextView
         android:id="@+id/word02"
@@ -337,7 +336,6 @@
         app:autoSizeMinTextSize="12sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
-        tools:layout_editor_absoluteX="151dp"
         tools:layout_editor_absoluteY="146dp" />
 
     <TextView
@@ -374,7 +372,6 @@
         app:autoSizeMinTextSize="12sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
-        tools:layout_editor_absoluteX="151dp"
         tools:layout_editor_absoluteY="146dp" />
 
     <TextView
