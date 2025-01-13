@@ -32,9 +32,9 @@ public class Earth extends AppCompatActivity {
     int playerNumber = -1;
     String playerString;
     char grade;
-    int pageNumber; // Games 001 to 023 are displayed on page 1, games 024 to 046 are displayed on page 2, etc.
+    int pageNumber; // Games 001 to 033 are displayed on page 1, games 034 to 066 are displayed on page 2, etc.
     int globalPoints;
-    int doorsPerPage = 23;
+    int doorsPerPage = 33;
     ConstraintLayout earthCL;
 
 
@@ -47,6 +47,9 @@ public class Earth extends AppCompatActivity {
         setContentView(R.layout.earth);
         earthCL = findViewById(R.id.earthCL);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.earthCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.equals("RTL")) {
@@ -58,8 +61,6 @@ public class Earth extends AppCompatActivity {
             goBackImage.setRotationY(180);
             activePlayerImage.setRotationY(180);
         }
-
-        setTitle(Start.localAppName);
 
         SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         globalPoints = getIntent().getIntExtra("globalPoints", 0);
