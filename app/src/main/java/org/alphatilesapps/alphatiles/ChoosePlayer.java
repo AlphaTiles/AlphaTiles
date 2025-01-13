@@ -83,6 +83,9 @@ public class ChoosePlayer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_player);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.choosePlayerCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.equals("RTL")) {

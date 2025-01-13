@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
@@ -60,7 +60,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     implementation 'com.google.zxing:core:3.2.1'
     implementation 'com.google.android.material:material:1.12.0'
-    implementation platform('com.google.firebase:firebase-bom:33.6.0')
+    implementation platform('com.google.firebase:firebase-bom:33.7.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.segment.analytics.android:analytics:4.+'
     testImplementation 'androidx.test.ext:junit:1.2.1'

@@ -50,6 +50,9 @@ public class SetPlayerName extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_player_name);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.setPlayerNameCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.equals("RTL")) {
@@ -61,8 +64,6 @@ public class SetPlayerName extends AppCompatActivity {
         }
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-
-        setTitle(Start.localAppName);
 
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
 

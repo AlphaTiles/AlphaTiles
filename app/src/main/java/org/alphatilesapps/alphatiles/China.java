@@ -17,9 +17,6 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Random;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 //Game of 15
 public class China extends GameActivity {
     ArrayList<Start.Word> threeFourTileWords = new ArrayList<>();
@@ -48,19 +45,11 @@ public class China extends GameActivity {
     };
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
-        int gameID = R.id.chinaCL;
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
     }
 
     @Override
@@ -82,8 +71,9 @@ public class China extends GameActivity {
         context = this;
         setContentView(R.layout.china);
         int gameID = R.id.chinaCL;
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
+
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -96,7 +86,7 @@ public class China extends GameActivity {
         }
 
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         visibleGameButtons = 16;
@@ -395,10 +385,4 @@ public class China extends GameActivity {
         playActiveWordClip(false);
 
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
 }
