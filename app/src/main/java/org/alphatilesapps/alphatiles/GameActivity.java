@@ -425,6 +425,12 @@ public abstract class GameActivity extends AppCompatActivity {
                     }
                 }
 
+                if (wordStagesLists.get(0).isEmpty()) {
+                    LOGGER.warning("chooseWord: can't proceed - stage 1 has no words");
+                } else {
+                    LOGGER.info("chooseWord: stage 1 size=" + wordStagesLists.get(0).size());
+                }
+
                 int randomNumberForWeightingTowardHighCorrespondence = rand.nextInt(wordStagesLists.get(0).size());
                 if (randomNumberForWeightingTowardHighCorrespondence < wordStagesLists.get(0).size() * 0.5 || lowerCorrespondenceWords.size()==0) { // Select a word with higher correspondence to stage 1 tiles (only tiles introduced so far)
                     int randomNumberForChoosingAHighCorrespondenceWord = rand.nextInt(higherCorrespondenceWords.size());
