@@ -22,6 +22,9 @@ public class Celebration extends AppCompatActivity {
         context = this;
         setContentView(R.layout.celebration);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.celebrationCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 2, 0, 1.0f);
 
     }

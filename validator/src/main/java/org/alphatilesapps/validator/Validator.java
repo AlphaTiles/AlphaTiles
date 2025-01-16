@@ -155,7 +155,7 @@ public class Validator {
                 JPanel panel2 = new JPanel();
                 panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
                 JTextField path = new JTextField(userDir.toString());
-                String message2 = "Please check that this is the correct path to the AlphaTiles folder";
+                String message2 = "Please check that this is the correct path to the AlphaTiles project on your local computer";
                 panel2.add(new JLabel(message2));
                 panel2.add(path);
                 JCheckBox remember = new JCheckBox("Remember this path");
@@ -537,7 +537,7 @@ public class Validator {
                             }
                         }
                         if (!charIsPartOfLongerKeyString) {
-                            String unicodeString = "(Unicode) " + (int) LOPwordString.charAt(i);
+                            String unicodeString = "(Unicode " + Integer.toHexString(LOPwordString.charAt(i)) + " / " + (int) LOPwordString.charAt(i) + ")";
                             fatalError(Message.Tag.Etc, "In wordList, the word \"" + LOPwordString + "\" contains the character \"" + LOPwordString.charAt(i) +
                                     "\" which is not in the keyboard. " + unicodeString);
                         }
@@ -553,7 +553,7 @@ public class Validator {
                     String unicodeString = "";
                     String key = entry.getKey();
                     if (!key.isEmpty()) {
-                        unicodeString = " (Unicode " + (int) key.charAt(0) + ")";
+                        unicodeString = " (Unicode " + Integer.toHexString(key.charAt(0))  + " / " + (int) key.charAt(0) + ")";
                     }
                     recommend(Message.Tag.Etc, "In wordList.txt, the key \"" + entry.getKey() + "\"" + unicodeString +
                             " is only used in " + entry.getValue() + " words. It is recommended that each key be" +
@@ -1002,11 +1002,11 @@ public class Validator {
     }
 
     Set<String> SPECIAL_AUDIO_INSTRUCTIONS = Set.of(
-            "zzz_earth.mp3",
-            "zzz_about.mp3",
-            "zzz_choose_player.mp3",
-            "zzz_resources.mp3",
-            "zzz_set_player_name.mp3"
+            "zzz_earth",
+            "zzz_about",
+            "zzz_choose_player",
+            "zzz_resources",
+            "zzz_set_player_name"
     );
     boolean hasFont = false;
     /**
@@ -1021,12 +1021,16 @@ public class Validator {
             try {
                 GoogleDriveFolder subFolder = langPackDriveFolder.getFolderFromName(nameToMimeType.getKey());
                 subFolder.filterByMimeTypes(nameToMimeType.getValue().split(","));
-                for (GoogleDriveItem itemInFolder : langPackDriveFolder.getFolderFromName(nameToMimeType.getKey()).folderContents){
+                for (GoogleDriveItem item : langPackDriveFolder.getFolderFromName(nameToMimeType.getKey()).folderContents){
                     // make sure the file names use valid
-                    if (!itemInFolder.getName().matches("[a-z0-9_]+\\.+[a-z0-9_]+")) {
-                        fatalError(Message.Tag.Etc, "In " + nameToMimeType.getKey() + ", the file \"" + itemInFolder.getName() +
+                    if (!item.getName().matches("[a-z0-9_]+\\.+[a-z0-9_]+")) {
+                        fatalError(Message.Tag.Etc, "In " + nameToMimeType.getKey() + ", the file \"" + item.getName() +
                                 "\" must be in the format name.type, where both name and type only use characters" +
                                 " a-z, 0-9, and _");
+                    }
+                    if(item.getSize() == 0) {
+                        warn(Message.Tag.Etc, "In " + nameToMimeType.getKey() + ", the file \"" + item.getName() +
+                                "\" is zero sized");
                     }
                 }
             } catch (ValidatorException e) {
@@ -1037,12 +1041,12 @@ public class Validator {
         // that the the given column lists file names (anything other than X or naWhileMPOnly)
         // and the referenced drive folder contains files
         checkFontPresence();
-        checkAudioPresence("syllable_audio", "syllables", 4, "audio_syllables_optional");
-        checkAudioPresence("tile_audio", "gametiles", 5, "audio_tiles_optional");
-        checkAudioPresence("tile_audio", "gametiles", 8, "audio_tiles_optional");
-        checkAudioPresence("tile_audio", "gametiles", 10, "audio_tiles_optional");
-        checkAudioPresence("audio_instruction", "games", 4, "audio_instructions_optional");
-        checkAudioPresence("word_audio", "wordlist", 0, "audio_words");
+        checkAudioPresence("syllable_audio", "syllables", 4, "audio_syllables_optional", 50_000);
+        checkAudioPresence("tile_audio", "gametiles", 5, "audio_tiles_optional", 50_000);
+        checkAudioPresence("tile_audio", "gametiles", 8, "audio_tiles_optional", 50_000);
+        checkAudioPresence("tile_audio", "gametiles", 10, "audio_tiles_optional", 50_000);
+        checkAudioPresence("audio_instruction", "games", 4, "audio_instructions_optional", 300_000);
+        checkAudioPresence("word_audio", "wordlist", 0, "audio_words", 50_000);
 
         for(String special : SPECIAL_AUDIO_INSTRUCTIONS) {
             filePresence.add(
@@ -1051,7 +1055,8 @@ public class Validator {
                     special,
                     "audio/mpeg",
                     "",
-                    true
+                    true,
+                    300_000
             );
         }
         filePresence.folderMessageTag("audio_words", Message.Tag.PreWorkshop);
@@ -1114,7 +1119,7 @@ public class Validator {
             if (lowResWordImages.size() > 0) {
                 ArrayList<String> TwoAppendedWordsInLWC = langPackGoogleSheet.getTabFromName("wordlist").getCol(0);
                 TwoAppendedWordsInLWC.replaceAll(s -> s + "2");
-                filePresence.addAll("images_low_res", "images_words_low_res", TwoAppendedWordsInLWC, "image/", "", false);
+                filePresence.addAll("images_low_res", "images_words_low_res", TwoAppendedWordsInLWC, "image/", "", false, 300_000);
             }
             else {
                 warn(Message.Tag.Etc, "Since the folder images_words_low_res is empty, the validator will automatically generate " +
@@ -1231,7 +1236,7 @@ public class Validator {
                     if(!providedSyllables.contains(row.get(col))) {
                         char c = (char)('A' + col);
                         fatalError(Message.Tag.Etc, 
-                            "row " + rowNum + ", column " + c + " of syllables contains an invalid tile as an alternate (distractor): " + distractor
+                            "row " + rowNum + ", column " + c + " of syllables contains an invalid syllable as an alternate (distractor): " + distractor
                             + ". \nPlease add this alternate (distractor) to the tile list if it is missing or replace it with a valid tile from the list"
                         );
                     }
@@ -1552,7 +1557,10 @@ public class Validator {
          * the file/folder/sheet name of any GoogleDriveItem instance.
          */
         private final String name;
-
+        /**
+         * the size of this item in bytes.
+         */
+        private final long size;
         /**
          * Constructor for GoogleDriveItem.
          *
@@ -1560,10 +1568,14 @@ public class Validator {
          * @param inName     a String that is the name of the item
          * @param inMimeType a String that is the mimeType of the item
          */
-        protected GoogleDriveItem(String inID, String inName, String inMimeType) {
+        protected GoogleDriveItem(String inID, String inName, String inMimeType, long size) {
             this.id = inID;
             this.name = inName;
             this.mimeType = inMimeType;
+            this.size = size;
+        }
+        protected GoogleDriveItem(String inId, String inName, String inMimeType) {
+            this(inId, inName, inMimeType, 0);
         }
 
         protected String getName() {
@@ -1576,6 +1588,10 @@ public class Validator {
 
         protected String getId() {
             return this.id;
+        }
+
+        public long getSize() {
+            return size;
         }
     }
 
@@ -1620,18 +1636,21 @@ public class Validator {
                 FileList result = driveService.files().list()
                         .setQ("parents in '" + driveFolderId + "' and trashed = false")
                         .setSpaces("drive")
-                        .setFields("nextPageToken, files(id, name, mimeType)")
+                        .setFields("nextPageToken, files(id, name, mimeType, size)")
                         .setPageToken(pageToken)
                         .execute();
 
                 for (File file : result.getFiles()) {
-
                     if (file.getMimeType().equals("application/vnd.google-apps.spreadsheet")) {
                         folderContents.add(new GoogleSheet(file.getId(), file.getName()));
                     } else if (file.getMimeType().equals("application/vnd.google-apps.folder")) {
                         folderContents.add(new GoogleDriveFolder(file.getId(), file.getName()));
                     } else {
-                        folderContents.add(new GoogleDriveItem(file.getId(), file.getName(), file.getMimeType()));
+                        Long size = file.getSize();
+                        if(size == null) {
+                            size = -1L;
+                        }
+                        folderContents.add(new GoogleDriveItem(file.getId(), file.getName(), file.getMimeType(), size));
                     }
                 }
                 pageToken = result.getNextPageToken();
@@ -2048,9 +2067,9 @@ public class Validator {
 
     //<editor-fold desc="helper methods">
     private void checkFontPresence() {
-        filePresence.add("font", "font", "", "text/xml", "", false);
-        filePresence.add("font", "font", "", "font/ttf, application/x-font-ttf", "", false);
-        filePresence.add("font", "font", "", "font/ttf, application/x-font-ttf", "", false);
+        filePresence.add("font", "font", "", "text/xml", "", false, 5_000_000);
+        filePresence.add("font", "font", "", "font/ttf, application/x-font-ttf", "", false, 5_000_000);
+        filePresence.add("font", "font", "", "font/ttf, application/x-font-ttf", "", false, 5_000_000);
     }
 
     /** Adds a column of audio files of the google sheet to the file checker, ignoring X's and naWhileMPOnly
@@ -2059,7 +2078,7 @@ public class Validator {
      * @param colNum the column of the google sheet to check
      * @param subFolderName the folder to look for the files in
     */
-    private void checkAudioPresence(String tag, String tab, int colNum, String subFolderName) {
+    private void checkAudioPresence(String tag, String tab, int colNum, String subFolderName, long maxSize) {
         try {
             ArrayList<String> audioNames = langPackGoogleSheet.getTabFromName(tab).getCol(colNum);
             audioNames.removeAll(Set.of("naWhileMPOnly", "X", "zz_no_audio_needed"));
@@ -2070,7 +2089,8 @@ public class Validator {
                         name,
                         "audio/mpeg",
                         "it is listed in column " + (char)(colNum + 'A') + " of the tab \"" + tab + "\"",
-                        false
+                        false,
+                        maxSize
                 );
             }
         } catch (ValidatorException e) {
@@ -2085,7 +2105,8 @@ public class Validator {
                     subFolderName,
                     imageNames,
                     "image/", "it is listed in column " + (char)(colNum + 'A') + " of the tab \"" + tab + "\"",
-                    false
+                    false,
+                    300_000
             );
         } catch(ValidatorException e) {
             warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "tab '" + tab + "'");
