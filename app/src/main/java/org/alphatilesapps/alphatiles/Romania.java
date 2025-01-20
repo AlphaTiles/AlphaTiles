@@ -95,14 +95,12 @@ public class Romania extends GameActivity {
             ImageView scrollForwardImage = (ImageView) findViewById(R.id.scrollForward);
             ImageView scrollBackImage = (ImageView) findViewById(R.id.scrollBack);
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
             backwardArrowImage.setRotationY(180);
             forwardArrowImage.setRotationY(180);
             scrollForwardImage.setRotationY(180);
             scrollBackImage.setRotationY(180);
             instructionsImage.setRotationY(180);
-            repeatImage.setRotationY(180);
         }
 
         if (getAudioInstructionsResID() == 0) {
