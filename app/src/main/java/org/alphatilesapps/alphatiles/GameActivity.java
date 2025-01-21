@@ -23,6 +23,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
@@ -36,6 +37,8 @@ import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
+import static org.alphatilesapps.alphatiles.Start.non_spacing_arabic_letters;
+import static org.alphatilesapps.alphatiles.Start.right_joining_arabic_letters;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
@@ -1055,14 +1058,14 @@ public abstract class GameActivity extends AppCompatActivity {
         return stackInProperSequence(processedString, wordListWord);
     }
 
-    /*
+    /**
     ADs (Above/Following Diacritics) should be placed above AVs (Above Vowels).
     If a gametiles list stores C+AD tiles, assembling these C+AD tiles with AV tiles or complex vowels
     will put ADs and AVS in the reverse order.
     This method fixes that.
 
     s: String to check and fix the stacking in, if necessary
-     */
+     **/
     public static String stackInProperSequence(String assembledWordInProgress, Start.Word wordListWord) {
 
         if (!assembledWordInProgress.isEmpty()) {
@@ -1097,11 +1100,11 @@ public abstract class GameActivity extends AppCompatActivity {
         return assembledWordInProgress;
     }
 
-    /*
+    /**
     AVs should be stacked before ADs, not the other way around.
     ADs should not be placed on top of FVs, but only on top of a C+(AV)+(AD) base.
     This initializes the prohibitedCharSequences ArrayList with the prohibited stacking combinations in wordListWord.
-     */
+     **/
     public static ArrayList<String> generateProhibitedCharSequences(Start.Word wordListWord) {
         ArrayList<String> prohibitedCharSequences = new ArrayList<>();
         ArrayList<String> AVs = new ArrayList<>();
@@ -1202,16 +1205,121 @@ public abstract class GameActivity extends AppCompatActivity {
         return prohibitedCharSequences;
     }
 
-    /*
+    /**
     Sometimes, the assembled version of words differs slightly from what's in the wordlist, because of invisible character stacking differences.
     This method takes a word and returns the parsed and reassembled version so that when compared to other assembled tile lists, it will match up.
 
     word: The word object whose wordInLOP you would like to represent in standardized assembled form
-     */
+     **/
     protected String wordInLOPWithStandardizedSequenceOfCharacters(Start.Word wordListWord) {
 
         ArrayList<Start.Tile> tilesInWordSpelledCorrectly = tileList.parseWordIntoTiles(wordListWord.wordInLOP, wordListWord);
         return combineTilesToMakeWord(tilesInWordSpelledCorrectly, wordListWord, -1);
     }
+
+
+    /**
+     * This method is used for Arabic script apps in games which have been set to use contextual forms of word pieces.
+     * @param isolateWordPieceString a String to contextualize
+     * @param indexInWord the position of that Tile or Syllable within its word or pseudo-word
+     * @param stringPieces the ArrayList of tile or syllable strings within the word or pseudo-word
+     * @return the WordPiece's text in proper contextual form
+     */
+    public static String contextualizedWordPieceString(String isolateWordPieceString, int indexInWord, ArrayList<String> stringPieces) {
+
+        if (indexInWord==0) { // WORD-INITIAL
+            return contextualizedForm_Initial(isolateWordPieceString);
+        } else { // MEDIAL or FINAL
+
+            char[] previousTwoPlusChars = new char[10];
+            String previousStringPiece = stringPieces.get(indexInWord-1);
+            String antiPreviousStringPiece;
+            if(indexInWord>1) {
+                antiPreviousStringPiece = stringPieces.get(indexInWord-2);
+            } else {
+                antiPreviousStringPiece = "";
+            }
+            int i = 0;
+            for (char c: antiPreviousStringPiece.toCharArray()) {
+                previousTwoPlusChars[i] = c;
+                i++;
+            }
+            for (char c: previousStringPiece.toCharArray()) {
+                previousTwoPlusChars[i] = c;
+                i++;
+            }
+
+            if (indexInWord==(stringPieces.size()-1)) { // WORD-FINAL
+                // Handle right-joiners:
+                if(Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))) {
+                    return isolateWordPieceString;
+                }
+                if (indexInWord>1) {
+                    if (Arrays.asList(non_spacing_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 1]))
+                            && Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 2]))) {
+                        return isolateWordPieceString;
+                    }
+                }
+                // Default:
+                return contextualizedForm_Final(isolateWordPieceString);
+            } else { // WORD-MEDIAL
+                // Handle right-joiners:
+                if(Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))) {
+                    return contextualizedForm_Initial(isolateWordPieceString);
+                }
+                if (indexInWord>1) {
+                    if (Arrays.asList(non_spacing_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 1]))
+                            && Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 2]))) {
+                        return contextualizedForm_Initial(isolateWordPieceString);
+                    }
+                }
+                // Default:
+                return contextualizedForm_Medial(isolateWordPieceString);
+            }
+        }
+    }
+
+
+    /**
+     *
+     * @param isolateForm a tile or syllable string as it appears without Arabic text beside it
+     * @return the tile or syllable string as it would appear at the beginning of a word/pseudo-word string
+     * OR as it would appear in the middle of a word/pseudo-word string following a right-joiner
+     */
+    public static String contextualizedForm_Initial(String isolateForm) {
+
+        return isolateForm + "\u200D";
+    }
+
+    /**
+     *
+     * @param isolateForm a tile or syllable string as it appears without Arabic text beside it
+     * @return the tile or syllable string as it would appear in between two joining characters
+     */
+    public static String contextualizedForm_Medial(String isolateForm) {
+
+        return "\u200D" + isolateForm + "\u200D";
+    }
+
+    /**
+     *
+     * @param isolateForm a tile or syllable string as it appears without Arabic text beside it
+     * @return the tile or syllable string as it would appear at the end of a word/pseudoword string
+     */
+    public static String contextualizedForm_Final(String isolateForm) {
+
+        return "\u200D" + isolateForm;
+    }
+
+    /**
+     *
+     * @param contextualizedForm The text of a Tile or Syllable that may have had Zero-Width-Joiner added to it for contextualization
+     * @return the text of the Tile or Syllable in its isolate form
+     */
+    public static String isolateForm(String  contextualizedForm) {
+
+        return contextualizedForm.replace("\u200D", "");
+    }
+
 
 }

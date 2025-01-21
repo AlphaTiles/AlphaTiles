@@ -41,9 +41,13 @@ import static org.alphatilesapps.alphatiles.Start.*;
 public class Brazil extends GameActivity {
     Set<String> answerChoices = new HashSet<String>();
     int numTones;
+    int index_to_remove;
     Start.Tile correctTile;
     Start.Syllable correctSyllable;
     String correctString;
+
+    ArrayList<String> parsedRefWordTileArrayStrings;
+    ArrayList<String> parsedRefWordSyllableArrayStrings;
 
     protected static final int[] GAME_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -236,8 +240,16 @@ public class Brazil extends GameActivity {
 
         if (syllableGame.equals("S")) {
             parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
+            parsedRefWordSyllableArrayStrings = new ArrayList<String>();
+            for(Syllable s: parsedRefWordSyllableArray) {
+                parsedRefWordSyllableArrayStrings.add(s.text);
+            }
         } else {
             parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
+            parsedRefWordTileArrayStrings = new ArrayList<String>();
+            for(Tile t: parsedRefWordTileArray) {
+                parsedRefWordTileArrayStrings.add(t.text);
+            }
         }
 
         boolean proceed = false;
@@ -252,9 +264,9 @@ public class Brazil extends GameActivity {
                     for (int i = 0; i < parsedRefWordTileArray.size(); i++) {
                         nextTile = parsedRefWordTileArray.get(i);
                         // Include if a simple consonant
-                       if (nextTile.typeOfThisTileInstance.equals("C")){
-                           proceed = true;
-                       }
+                        if (nextTile.typeOfThisTileInstance.equals("C")){
+                            proceed = true;
+                        }
 
                     }
                     break;
@@ -289,7 +301,7 @@ public class Brazil extends GameActivity {
 
         Random rand = new Random();
         int index = 0;
-        int index_to_remove = 0;
+        index_to_remove = 0;
 
         boolean repeat = true;
 
@@ -298,16 +310,17 @@ public class Brazil extends GameActivity {
             for (int i = 0; i < parsedRefWordTileArray.size(); i++) {
                 possibleIndices.add(i);
             }
-            while (repeat && possibleIndices.size()>0) {
+            while (repeat && !possibleIndices.isEmpty()) {
                 index = rand.nextInt(possibleIndices.size());
                 correctTile = parsedRefWordTileArray.get(possibleIndices.get(index));
                 index_to_remove = possibleIndices.get(index);
-                possibleIndices.remove(possibleIndices.get(index));
+                possibleIndices.remove((Integer)index_to_remove);
+
                 while (SAD_STRINGS.contains(correctTile.text)) { // JP: Makes sure that SAD is never chosen as missing tile
                     index = rand.nextInt(possibleIndices.size());
                     correctTile = parsedRefWordTileArray.get(possibleIndices.get(index));
                     index_to_remove = possibleIndices.get(index);
-                    possibleIndices.remove(possibleIndices.get(index));
+                    possibleIndices.remove((Integer)index_to_remove);
                 }
 
                 if (challengeLevel < 4) {
@@ -368,6 +381,11 @@ public class Brazil extends GameActivity {
                 blankTile.text = placeholderCharacter;
                 parsedRefWordTileArray.set(index_to_remove, blankTile);
             }
+            if (useContextualFormsFITB) { // Setting used by some Arabic script apps to make tiles appear in contextual forms in answer choices and around blanks
+                blankTile.text = contextualizedWordPieceString(blankTile.text, index_to_remove, parsedRefWordTileArrayStrings);
+            }
+
+
             word = combineTilesToMakeWord(parsedRefWordTileArray, refWord, index_to_remove);
         }
         constructedWord.setText(word);
@@ -447,6 +465,10 @@ public class Brazil extends GameActivity {
             int randomNum = rand.nextInt(visibleGameButtons - 1); // KP
             TextView gameTile = findViewById(GAME_BUTTONS[randomNum]);
             gameTile.setText(correctSyllable.text);
+        }
+
+        if (useContextualFormsFITB) { // Setting used by some Arabic script apps
+            produceContextualSyllableAnswerChoices();
         }
 
     }
@@ -594,6 +616,35 @@ public class Brazil extends GameActivity {
             gameTile.setText(correctTile.text);
 
         }
+
+        if (useContextualFormsFITB) { // Setting used by some Arabic script apps
+            produceContextualTileAnswerChoices();
+        }
+    }
+
+    /**
+     * For Arabic script apps
+     * Show the right form (medial, initial, final) of the missing tile choices
+     */
+    private void produceContextualTileAnswerChoices() {
+
+        for(int t = 0; t< visibleGameButtons; t++) { // For all answer choices
+            TextView answerChoiceButton = findViewById(GAME_BUTTONS[t]);
+            String contextualizedChoice = contextualizedWordPieceString(answerChoiceButton.getText().toString(), index_to_remove, parsedRefWordTileArrayStrings);
+            answerChoiceButton.setText(contextualizedChoice);
+        }
+    }
+
+    /**
+     * For Arabic script apps
+     * Show the right form (medial, initial, final) of the missing sylllable choices
+     */
+    private void produceContextualSyllableAnswerChoices() {
+        for(int t = 0; t< visibleGameButtons; t++) { // For all answer choices
+            TextView answerChoiceButton = findViewById(GAME_BUTTONS[t]);
+            String contextualizedChoice = contextualizedWordPieceString(answerChoiceButton.getText().toString(), index_to_remove, parsedRefWordSyllableArrayStrings);
+            answerChoiceButton.setText(contextualizedChoice);
+        }
     }
 
     private void respondToTileSelection(int justClickedButton) {
@@ -609,7 +660,7 @@ public class Brazil extends GameActivity {
         TextView gameButton = findViewById(GAME_BUTTONS[tileNo]);
         String gameButtonString = gameButton.getText().toString();
 
-        if (gameButtonString.equals(correctString)) {
+        if (isolateForm(gameButtonString).equals(correctString)) { // Any invisible zero-width-joiner (\u200D) is stripped
             // Good job! You chose the right gameButton
             repeatLocked = false;
             setAdvanceArrowToBlue();
@@ -658,6 +709,8 @@ public class Brazil extends GameActivity {
             playIncorrectSound();
         }
     }
+
+
 
     public void clickPicHearAudio(View view) {
         super.clickPicHearAudio(view);
