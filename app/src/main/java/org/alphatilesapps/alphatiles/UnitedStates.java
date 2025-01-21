@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import android.graphics.Typeface;
@@ -20,6 +21,9 @@ import static org.alphatilesapps.alphatiles.Start.*;
  */
 
 public class UnitedStates extends GameActivity {
+
+    ArrayList<String> parsedRefWordTileArrayStrings;
+    ArrayList<String> parsedRefWordSyllableArrayStrings;
 
     int wordLengthLimitInTiles = 5;
     int neutralFontSize;
@@ -130,13 +134,21 @@ public class UnitedStates extends GameActivity {
         while(parsedLengthOfRefWord > wordLengthLimitInTiles) {
             chooseWord();
             parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
-            parsedLengthOfRefWord = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord).size();
+            parsedLengthOfRefWord = parsedRefWordTileArray.size();
+            parsedRefWordTileArrayStrings = new ArrayList<String>();
+            for(Tile t: parsedRefWordTileArray) {
+                parsedRefWordTileArrayStrings.add(t.text);
+            }
         }
 
         // Set up additional structures
         if (syllableGame.equals("S")) {
             parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
             parsedLengthOfRefWord = parsedRefWordSyllableArray.size();
+            parsedRefWordSyllableArrayStrings = new ArrayList<String>();
+            for(Syllable s: parsedRefWordSyllableArray) {
+                parsedRefWordSyllableArrayStrings.add(s.text);
+            }
         } else {
             Tile emptyTile = new Tile("__", new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "");
             tileSelections = new Tile[parsedLengthOfRefWord];
@@ -221,8 +233,6 @@ public class UnitedStates extends GameActivity {
             parseIndex++;
 
         }
-        //TextView constructedWord = findViewById(R.id.activeWordTextView); // KP
-        //constructedWord.setText(""); // KP
 
         TextView constructedWord = findViewById(R.id.activeWordTextView);
         String initialDisplay = "";
@@ -230,7 +240,50 @@ public class UnitedStates extends GameActivity {
             initialDisplay += "__";
         constructedWord.setText(initialDisplay);
 
+
+        if (useContextualFormsBWFP) { // Option for Arabic scripts
+            if(syllableGame.equals("S")) {
+                contextualizeSyllableForms();
+            } else {
+                contextualizeTileForms();
+            }
+        }
+
         setAllGameButtonsClickable();
+    }
+
+    /**
+     * For Arabic script apps with useContextualFormsBWFP = true (BWFP = Build Word From Pairs)
+     */
+    private void contextualizeTileForms() {
+
+        for(int t=0; t<parsedRefWordTileArray.size(); t++) { // TOP ROW
+            TextView gameButton = findViewById(GAME_BUTTONS[0]);
+            String gameButtonText = contextualizedWordPieceString(String.valueOf(gameButton.getText()), t, parsedRefWordTileArrayStrings);
+            gameButton.setText(gameButtonText);
+        }
+        for(int t=parsedRefWordTileArray.size(); t<(2*parsedRefWordTileArray.size()); t++) { // BOTTOM ROW
+            TextView gameButton = findViewById(GAME_BUTTONS[0]);
+            String gameButtonText = contextualizedWordPieceString(String.valueOf(gameButton.getText()), t-parsedRefWordTileArray.size(), parsedRefWordTileArrayStrings);
+            gameButton.setText(gameButtonText);
+        }
+    }
+
+    /**
+     * For Arabic script apps with useContextualFormsBWFP = true (BWFP = Build Word From Pairs)
+     */
+    private void contextualizeSyllableForms() {
+
+        for(int t=0; t<parsedRefWordSyllableArray.size(); t++) { // TOP ROW
+            TextView gameButton = findViewById(GAME_BUTTONS[0]);
+            String gameButtonText = contextualizedWordPieceString(String.valueOf(gameButton.getText()), t, parsedRefWordSyllableArrayStrings);
+            gameButton.setText(gameButtonText);
+        }
+        for(int t=parsedRefWordTileArray.size(); t<(2*parsedRefWordTileArray.size()); t++) { // BOTTOM ROW
+            TextView gameButton = findViewById(GAME_BUTTONS[0]);
+            String gameButtonText = contextualizedWordPieceString(String.valueOf(gameButton.getText()), t-parsedRefWordSyllableArray.size(), parsedRefWordSyllableArrayStrings);
+            gameButton.setText(gameButtonText);
+        }
     }
 
     public void buildWord(int tileIndex) {
@@ -248,32 +301,22 @@ public class UnitedStates extends GameActivity {
 
         String displayedWord;
         if (syllableGame.equals("S")){
-           StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
 
-           int index = 0;
-           for (int i = 0; i < numberOfPairs; i++) {
-               if (pairHasSelection[i]) {
-                   stringBuilder.append(selections[2 * i]);
-                   stringBuilder.append(selections[2 * i + 1]);
-               } else {
-                   stringBuilder.append("__");
-               }
-           }
-
-           /*
-           for (String s : selections) {
-               stringBuilder.append(s);
-           }
-           */
+            for (int i = 0; i < numberOfPairs; i++) {
+                if (pairHasSelection[i]) {
+                    stringBuilder.append(selections[2 * i]);
+                    stringBuilder.append(selections[2 * i + 1]);
+                } else {
+                    stringBuilder.append(contextualizedWordPieceString("__", i, parsedRefWordSyllableArrayStrings));
+                }
+            }
 
             displayedWord = stringBuilder.toString();
             constructedWord.setText(displayedWord);
+
         } else {
-            Tile[] tilesSelectedArray = new Tile[numberOfPairs];
-            ArrayList<Tile> tilesSelected = new ArrayList<>();
-            for (Tile tile : tileSelections) {
-                tilesSelected.add(tile);
-            }
+            ArrayList<Tile> tilesSelected = new ArrayList<>(Arrays.asList(tileSelections));
             displayedWord = combineTilesToMakeWord(tilesSelected, refWord, lastSelectedIndex);
             constructedWord.setText(displayedWord);
         }
@@ -331,6 +374,7 @@ public class UnitedStates extends GameActivity {
         buildWord(selectionIndex);
 
     }
+
 
     protected void setAllGameButtonsUnclickable() {
         for (int t = 0; t < wordLengthLimitInTiles; t++) {
