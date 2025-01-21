@@ -75,6 +75,10 @@ public class Start extends AppCompatActivity {
     public static Boolean sendAnalytics;
     public static boolean changeArrowColor;
     public static String placeholderCharacter; // LM Takes the place of a consonant for combining characters in complex scripts
+    public static Boolean useContextualFormsFITB;
+    public static Boolean useContextualFormsBWFP;
+    public static Boolean useContextualFormsITI;
+
     public static TileList CONSONANTS = new TileList();
     public static TileList PLACEHOLDER_CONSONANTS = new TileList();
     public static TileList SILENT_PRELIMINARY_TILES = new TileList();
@@ -82,15 +86,29 @@ public class Start extends AppCompatActivity {
     public static TileList VOWELS = new TileList();
     public static TileList CorV = new TileList();
     public static TileList TONES = new TileList();
-
     public static TileList ADs = new TileList();
-
     public static TileList Ds = new TileList();
-
     public static TileList SAD = new TileList();
-    public static List<String> SYLLABLES = new ArrayList<>();
     public static List<String> SAD_STRINGS = new ArrayList<>();
     public static ArrayList<String> MULTITYPE_TILES = new ArrayList<>();
+    public static List<String> SYLLABLES = new ArrayList<>();
+    public static List<Tile> NON_JOINERS_ARABIC = new ArrayList<>();
+    public static List<Tile> RIGHT_JOINERS_ARABIC = new ArrayList<>();
+    public static List<Tile> DUAL_JOINERS_ARABIC = new ArrayList<>();
+    public static List<Tile> NON_SPACERS_ARABIC = new ArrayList<>();
+
+    protected static final String[] non_joining_arabic_letters = {
+            "\u0600", "\u0601", "\u0602", "\u0603", "\u0604", "\u0605", "\u0608", "\u060B", "\u060E", "\u060F", "\u0621", "\u0660", "\u0661", "\u0662", "\u0663", "\u0664", "\u0665", "\u0666", "\u0667", "\u0668", "\u0669", "\u0674", "\u06DD", "\u06F0", "\u06F1", "\u06F2", "\u06F3", "\u06F4", "\u06F5", "\u06F6", "\u06F7", "\u06F8", "\u06F9", "\u0887", "\u0888", "\u0890", "\u0891", "\u08AD", "\u0800", "\u200C", "\u202F"
+    };
+    protected static final String[] right_joining_arabic_letters = {
+            "\u0622", "\u0623", "\u0625", "\u0627", "\u0671", "\u0672", "\u0673", "\u0675", "\u0773", "\u0774", "\u0870", "\u0871", "\u0872", "\u0873", "\u0874", "\u0875", "\u0876", "\u0877", "\u0878", "\u0879", "\u087A", "\u087B", "\u087C", "\u087D", "\u087E", "\u087F", "\u0880", "\u0881", "\u0882", "\u0629", "\u06C0", "\u06D5", "\u06C3", "\u062F", "\u0630", "\u0688", "\u0689", "\u068A", "\u068B", "\u068C", "\u068D", "\u068E", "\u068F", "\u0690", "\u06EE", "\u0759", "\u075A", "\u08AE", "\u10EC2", "\u0631", "\u0632", "\u0691", "\u0692", "\u0693", "\u0694", "\u0695", "\u0696", "\u0697", "\u0698", "\u0699", "\u06EF", "\u075B", "\u076B", "\u076C", "\u0771", "\u08AA", "\u08B2", "\u08B9", "\u0624", "\u0648", "\u0676", "\u0677", "\u06C4", "\u06C5", "\u06C6", "\u06C7", "\u06C8", "\u06C9", "\u06CA", "\u06CB", "\u06CF", "\u0778", "\u0779", "\u08AB", "\u08B1", "\u06CD", "\u06D2", "\u06D3", "\u08AC", "\u088E"
+    };
+    protected static final String[] dual_joining_arabic_letters = {
+            "\u0628", "\u062A", "\u062B", "\u066E", "\u0679", "\u067A", "\u067B", "\u067C", "\u067D", "\u067E", "\u067F", "\u0680", "\u0750", "\u0751", "\u0752", "\u0753", "\u0754", "\u0755", "\u0756", "\u08A0", "\u08A1", "\u08B6", "\u08B7", "\u08B8", "\u08BE", "\u08BF", "\u08C0", "\u062C", "\u062D", "\u062E", "\u0681", "\u0682", "\u0683", "\u0684", "\u0685", "\u0686", "\u0687", "\u06BF", "\u0757", "\u0758", "\u076E", "\u076F", "\u0772", "\u077C", "\u088A", "\u08A2", "\u08C1", "\u08C5", "\u08C6", "\u0633", "\u0634", "\u069A", "\u069B", "\u069C", "\u06FA", "\u075C", "\u076D", "\u0770", "\u077D", "\u077E", "\u0635", "\u0636", "\u069D", "\u069E", "\u06FB", "\u08AF", "\u0637", "\u0638", "\u069F", "\u088B", "\u088C", "\u08A3", "\u10EC3", "\u0639", "\u063A", "\u06A0", "\u06FC", "\u075D", "\u075E", "\u075F", "\u08B3", "\u08C3", "\u0641", "\u06A1", "\u06A2", "\u06A3", "\u06A4", "\u06A5", "\u06A6", "\u0760", "\u0761", "\u08A4", "\u0642", "\u066F", "\u06A7", "\u06A8", "\u08A5", "\u08B5", "\u0643", "\u06AC", "\u06AD", "\u06AE", "\u077F", "\u08B4", "\u10EC4", "\u0644", "\u06B5", "\u06B6", "\u06B7", "\u06B8", "\u076A", "\u08A6", "\u08C7", "\u0645", "\u0765", "\u0766", "\u08A7", "\u0646", "\u06B9", "\u06BA", "\u06BB", "\u06BC", "\u0767", "\u0768", "\u0769", "\u0889", "\u0647", "\u0620", "\u0626", "\u0649", "\u064A", "\u0678", "\u06D0", "\u06D1", "\u0777", "\u08A8", "\u08A9", "\u08BA", "\u06AA", "\u063B", "\u063C", "\u06A9", "\u06AB", "\u06AF", "\u06B0", "\u06B1", "\u06B2", "\u06B3", "\u06B4", "\u0762", "\u0763", "\u0764", "\u088D", "\u08B0", "\u08C2", "\u08C8", "\u06BD", "\u06BE", "\u06FF", "\u06C1", "\u06C2", "\u063D", "\u063E", "\u063F", "\u06CC", "\u06CE", "\u0775", "\u0776", "\u077A", "\u077B", "\u0886", "\u08BB", "\u08BC", "\u08C4", "\u08BD"
+    };
+    protected static final String [] non_spacing_arabic_letters = {
+            "\u0610", "\u0611", "\u0612", "\u0613", "\u0614", "\u0615", "\u0616", "\u0617", "\u0618", "\u0619", "\u061A", "\u064B", "\u064C", "\u064D", "\u064E", "\u064F", "\u0650", "\u0651", "\u0652", "\u0653", "\u0654", "\u0655", "\u0656", "\u0657", "\u0658", "\u0659", "\u065A", "\u065B", "\u065C", "\u065D", "\u065E", "\u065F", "\u0670", "\u06D6", "\u06D7", "\u06D8", "\u06D9", "\u06DA", "\u06DB", "\u06DC", "\u06DF", "\u06E0", "\u06E1", "\u06E2", "\u06E3", "\u06E4", "\u06E7", "\u06E8", "\u06EA", "\u06EB", "\u06EC", "\u06ED"
+    };
 
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
@@ -113,9 +131,14 @@ public class Start extends AppCompatActivity {
         LOGGER.info("LoadProgress: completed buildColorsList()");
 
         hasTileAudio = getBooleanFromSettings("Has tile audio", false);
-        differentiatesTileTypes = getBooleanFromSettings("Differentiates types of multitype symbols", false);
-        //to make syllable audio optional
         hasSyllableAudio = getBooleanFromSettings("Has syllable audio", false);
+
+        differentiatesTileTypes = getBooleanFromSettings("Differentiates types of multitype symbols", false);
+
+        useContextualFormsFITB = getBooleanFromSettings("Use contextual forms for Fill In The Blank", false);
+        useContextualFormsBWFP = getBooleanFromSettings("Use contextual forms for Build Word From Pairs", false);
+        useContextualFormsITI = getBooleanFromSettings("Use contextual forms for Identify The Initial", false);
+
         sendAnalytics = getBooleanFromSettings("Send analytics", false);
         changeArrowColor = getBooleanFromSettings("Change arrow colors", true);
 
@@ -180,6 +203,18 @@ public class Start extends AppCompatActivity {
                     hasSAD = true;
                     SAD.add(thisTile);
                     SAD_STRINGS.add(thisTile.text);
+                }
+            }
+
+            if (scriptType.equals("Arabic")) { // Sort tiles based on joining type for contextual forms
+                if (Arrays.asList(non_joining_arabic_letters).contains(thisTile.text)) {
+                    NON_JOINERS_ARABIC.add(thisTile);
+                } else if (Arrays.asList(right_joining_arabic_letters).contains(thisTile.text)) {
+                    RIGHT_JOINERS_ARABIC.add(thisTile);
+                } else if (Arrays.asList(dual_joining_arabic_letters).contains(thisTile.text)) {
+                    DUAL_JOINERS_ARABIC.add(thisTile);
+                } else if (Arrays.asList(non_spacing_arabic_letters).contains(thisTile.text)) {
+                    NON_SPACERS_ARABIC.add(thisTile);
                 }
             }
         }
