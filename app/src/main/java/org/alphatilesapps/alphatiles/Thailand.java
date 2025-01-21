@@ -659,6 +659,12 @@ public class Thailand extends GameActivity {
                 case "TILE_AUDIO":
                 case "CONTEXTUAL":
                     playCorrectSoundThenActiveTileClip(false);
+                case "CONTEXTUAL":
+                    if (hasTileAudio) {
+                        playCorrectSoundThenActiveTileClip(false);
+                    } else {
+                        playCorrectSound();
+                    }
                     break;
                 case "TILE_LOWER":
                 case "TILE_UPPER":
