@@ -24,8 +24,10 @@ public class Thailand extends GameActivity {
     ArrayList<Start.Syllable> fourSyllableChoices = new ArrayList<>();
 
     private static final String[] TYPES = {"TILE_LOWER", "TILE_UPPER", "TILE_AUDIO", "WORD_TEXT",
-            "WORD_IMAGE", "WORD_AUDIO", "SYLLABLE_TEXT", "SYLLABLE_AUDIO"};
+            "WORD_IMAGE", "WORD_AUDIO", "SYLLABLE_TEXT", "SYLLABLE_AUDIO",
+            "CONTEXTUAL"};
 
+    private static final String[] CONTEXTUAL_TILE_POSITION = { "INITIAL", "MEDIAL", "FINAL" };
     String refType;
     Start.Tile refTile;
     Start.Syllable refSyllable;
@@ -35,6 +37,7 @@ public class Thailand extends GameActivity {
     String refStringSecondToLast = "";
     String refStringThirdToLast = "";
     String choiceType;
+    String contextualTilePosition;
     int refColor;
     int challengeLevelThai;
 
@@ -85,6 +88,9 @@ public class Thailand extends GameActivity {
         challengeLevelThai = Integer.parseInt(clString.substring(0, 1));
         refType = TYPES[Integer.parseInt(clString.substring(1, 2)) - 1];
         choiceType = TYPES[Integer.parseInt(clString.substring(2, 3)) - 1];
+        if(clString.length()>3){ // True only if contextual forms are being used
+            contextualTilePosition = CONTEXTUAL_TILE_POSITION[Integer.parseInt(clString.substring(3,4)) - 1];
+        }
 
         int gameID = 0;
         if (choiceType.equals("WORD_TEXT")) {
@@ -246,45 +252,49 @@ public class Thailand extends GameActivity {
         } else {
             // Makes sure that the reference tile chosen is not a glottal stop for ex;
             // Ensure that chosen tile is a consonant or vowel
-            if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO")) {
-                boolean freshTile = false;
-                int freshChecks = 0;
-                while (!freshTile || !(CorV.contains(refTile))) {
-                    int randomTileIndex = rand.nextInt(tileListNoSAD.size());
-                    freshChecks++;
-                    refTile = tileListNoSAD.get(randomTileIndex);
-                    refString = refTile.text;
-                    refTileType = refTile.typeOfThisTileInstance;
-                    while (challengeLevelThai == 1 && refTileType.matches("(T|AD|C|PC)")) {
-                        // JP: Disallow tone marks, diacritics, and silent consonants from being reference in level 1
-                        freshChecks++;
-                        randomTileIndex = rand.nextInt(tileListNoSAD.size());
-                        refTile = tileListNoSAD.get(randomTileIndex);
-                        refString = refTile.text;
-                        refTileType = refTile.typeOfThisTileInstance;
-                    }
-                    freshTile = verifyFreshTile(refString, freshChecks);
-                }
-            }
-            if (refType.equals("TILE_UPPER")) {
-                boolean freshTile = false;
+            if (refType.contains("TILE") || refType.equals("CONTEXTUAL")) {
+                boolean permissableTile = false;
                 int freshChecks = 0;
 
-                while (!freshTile || refTileType.equals("X")) {
-                    int randomTileIndex = rand.nextInt(tileListNoSAD.size());
+                while (!permissableTile) {
                     freshChecks++;
+                    int randomTileIndex = rand.nextInt(tileListNoSAD.size());
                     refTile = tileListNoSAD.get(randomTileIndex);
-                    refString = refTile.upper;
-                    refTileType = refTile.typeOfThisTileInstance;
-                    while (challengeLevelThai == 1 && refTileType.matches("(T|AD|D|PC)")) {
-                        // JP: Disallow tone marks, diacritics, and silent consonants from being reference in level 1
-                        randomTileIndex = rand.nextInt(tileListNoSAD.size());
-                        freshChecks++;
-                        refTile = tileListNoSAD.get(randomTileIndex);
-                        refString = refTile.upper;
-                        refTileType = refTile.typeOfThisTileInstance;
+
+                    switch(refType) { // Set refString
+                        case "TILE_LOWER":
+                        case "TILE_AUDIO":
+                            refString = refTile.text;
+                            break;
+                        case "TILE_UPPER":
+                            refString = refTile.upper;
+                            break;
+                        case "CONTEXTUAL":
+                            switch (contextualTilePosition) {
+                                case "INITIAL":
+                                    refString = contextualizedForm_Initial(refTile.text);
+                                    break;
+                                case "FINAL":
+                                    refString = contextualizedForm_Final(refTile.text);
+                                    break;
+                                default: // MEDIAL
+                                    refString = contextualizedForm_Medial(refTile.text);
+                                    break;
+                            }
+                            break;
+                        default:
+                            break;
                     }
-                    freshTile = verifyFreshTile(refString, freshChecks);
+
+                    // Disallow non-fresh reference items
+                    // Disallow placeholder consonants as reference items
+                    // Disallow non-joining and non-spacing (non-contextual) characters from contextual forms matching games (Arabic script)
+                    refTileType = refTile.typeOfThisTileInstance;
+                    permissableTile = verifyFreshTile(refString, freshChecks) && CorV.contains(refTile)
+                                        && !(refTileType.matches("(PC)")
+                                        && !(refType.matches("CONTEXTUAL")||choiceType.matches("CONTEXTUAL"))
+                            && (NON_JOINERS_ARABIC.contains(refTile) || NON_SPACERS_ARABIC.contains(refTile)));
+
                 }
             }
         }
@@ -292,6 +302,7 @@ public class Thailand extends GameActivity {
             case "SYLLABLE_TEXT":
             case "TILE_LOWER":
             case "TILE_UPPER":
+            case "CONTEXTUAL":
                 refItem.setBackgroundColor(refColor);
                 refItem.setTextColor(Color.parseColor("#FFFFFF")); // white
                 refItem.setText(refString);
@@ -319,11 +330,30 @@ public class Thailand extends GameActivity {
                 break;
         }
 
-        if (choiceType.equals("TILE_LOWER") || choiceType.equals("TILE_UPPER")) {
+        if (choiceType.matches("(TILE_LOWER|TILE_UPPER|CONTEXTUAL)")) {
             fourTileChoices = tileListNoSAD.returnFourTileChoices(refTile, challengeLevelThai, refTileType);
             // challengeLevelThai 1 = pull random tiles for wrong choices
             // challengeLevelThai 2 = pull distractor tiles for wrong choices
-        } else if ((choiceType.equals("WORD_TEXT") || choiceType.equals("WORD_IMAGE")) && (!refType.contains("SYLLABLE"))) {
+            if(choiceType.equals("CONTEXTUAL")) { // In some Arabic script apps
+                switch(contextualTilePosition) { // specified by the 4th character of the challengeLevel number
+                    case "INITIAL":
+                        for(Tile t : fourTileChoices) {
+                            t.text = contextualizedForm_Initial(t.text);
+                        }
+                        break;
+                    case "FINAL":
+                        for(Tile t : fourTileChoices) {
+                            t.text = contextualizedForm_Final(t.text);
+                        }
+                        break;
+                    default: // MEDIAL
+                        for (Tile t : fourTileChoices) {
+                            t.text = contextualizedForm_Medial(t.text);
+                        }
+                        break;
+                }
+            }
+        } else if (choiceType.matches("(WORD_TEXT|WORD_IMAGE)") && (!refType.contains("SYLLABLE"))) {
             fourWordChoices = wordList.returnFourWords(refWord, refTile, challengeLevelThai, refType);
             // challengeLevelThai 1 = pull words that begin with random tiles (not distractor, not same) for wrong choices
             // challengeLevelThai 2 = pull words that begin with distractor tiles (or if not random) for wrong choices
@@ -336,13 +366,14 @@ public class Thailand extends GameActivity {
 
         switch (choiceType) {
             case "TILE_LOWER":
+            case "CONTEXTUAL":
                 for (int t = 0; t < GAME_BUTTONS.length; t++) {
                     TextView choiceButton = findViewById(GAME_BUTTONS[t]);
                     String choiceColorStr = "#A9A9A9"; // dark gray
                     int choiceColorNo = Color.parseColor(choiceColorStr);
                     choiceButton.setBackgroundColor(choiceColorNo);
                     choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                    choiceButton.setText(fourTileChoices.get(t).text);
+                    choiceButton.setText(fourTileChoices.get(t).text); // Added ZWJ in prior if block for CONTEXTUAL; normal for TILE_LOWER
                 }
                 break;
             case "TILE_UPPER":
@@ -405,6 +436,7 @@ public class Thailand extends GameActivity {
                 break;
             case "TILE_LOWER":
             case "TILE_UPPER":
+            case "CONTEXTUAL":
             case "TILE_AUDIO":
                 playActiveTileClip(false);
                 break;
@@ -443,8 +475,9 @@ public class Thailand extends GameActivity {
             case "TILE_LOWER":
             case "TILE_UPPER":
             case "TILE_AUDIO":
+            case "CONTEXTUAL":
             case "SYLLABLE_AUDIO":
-                refItemText = refString;
+                refItemText = isolateForm(refString);
                 break;
             case "WORD_TEXT":
             case "SYLLABLE_TEXT":
@@ -464,20 +497,22 @@ public class Thailand extends GameActivity {
         if (refType.contains("SYLLABLE") && choiceType.contains("WORD")) {
             chosenItemText = fourWordChoices.get(answerChoiceIndex).wordInLOP; // don't strip periods
         } else if (!choiceType.equals("WORD_IMAGE")) {
-            chosenItemText = chosenItem.getText().toString(); // all cases except WORD_IMAGE
-        } else {
-            chosenItemText = wordList.stripInstructionCharacters(fourWordChoices.get(answerChoiceIndex).wordInLOP); // when WORD_IMAGE
+            chosenItemText = isolateForm(chosenItem.getText().toString()); // all cases except WORD_IMAGE
+        } else { // WORD_IMAGE
+            chosenItemText = wordList.stripInstructionCharacters(fourWordChoices.get(answerChoiceIndex).wordInLOP);
         }
 
         boolean goodMatch = false;
 
         switch (choiceType) {
             case "TILE_LOWER":
+            case "CONTEXTUAL":
                 switch (refType) {
                     case "TILE_LOWER":
                     case "TILE_AUDIO":
                     case "TILE_UPPER":
-                        if (refItemText != null && chosenItemText.equals(refTile.text)) {
+                    case "CONTEXTUAL":
+                        if (chosenItemText.equals(refItemText)) {
                             goodMatch = true;
                         }
                         break;
@@ -607,6 +642,7 @@ public class Thailand extends GameActivity {
                 case "TILE_LOWER":
                 case "TILE_UPPER":
                 case "TILE_AUDIO":
+                case "CONTEXTUAL":
                     playCorrectSoundThenActiveTileClip(false);
                     break;
                 case "WORD_TEXT":
@@ -629,6 +665,7 @@ public class Thailand extends GameActivity {
             }
         }
     }
+
 
     public Tile firstAudibleTile(Word word) {
         ArrayList<Tile> wordParsedIntoTiles = tileList.parseWordIntoTiles(word.wordInLOP, word);
