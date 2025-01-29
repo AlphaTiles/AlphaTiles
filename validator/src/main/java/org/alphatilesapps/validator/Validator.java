@@ -3175,9 +3175,7 @@ public class Validator {
                 header = false; // skips the header line
             } else {
                 // Sort information for staged introduction, including among potential second or third types of a tile
-                int stageOfFirstAppearance, stageOfFirstAppearanceType2 = 0, stageOfFirstAppearanceType3 = 0;
-                String tileTypeB = thisLineArray[7];
-                String tileTypeC = thisLineArray[9];
+                int stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3;
                 if (!thisLineArray[14].matches("[0-9]+")) { // Add all first types of tiles to "stage 1" if stages aren't being used
                     stageOfFirstAppearance = 1;
                 } else {
@@ -3187,8 +3185,7 @@ public class Validator {
                     }
                 }
                 if (!thisLineArray[15].matches("[0-9]+")) {
-                    if(!tileTypeB.equals("none"))
-                        stageOfFirstAppearanceType2 = 1;
+                    stageOfFirstAppearanceType2 = 1;
                 } else {
                     stageOfFirstAppearanceType2 = Integer.parseInt(thisLineArray[15]);
                     if (!(stageOfFirstAppearanceType2 >= 1 && stageOfFirstAppearanceType2 <= 7)) {
@@ -3196,8 +3193,7 @@ public class Validator {
                     }
                 }
                 if (!thisLineArray[16].matches("[0-9]+")) {
-                    if(!tileTypeB.equals("none"))
-                        stageOfFirstAppearanceType3 = 1;
+                    stageOfFirstAppearanceType3 = 1;
                 } else {
                     stageOfFirstAppearanceType3 = Integer.parseInt(thisLineArray[16]);
                     if (!(stageOfFirstAppearanceType3 >= 1 && stageOfFirstAppearanceType3 <= 7)) {
@@ -3210,7 +3206,7 @@ public class Validator {
                     distractors.add(thisLineArray[1]);
                     distractors.add(thisLineArray[2]);
                     distractors.add(thisLineArray[3]);
-                    Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], tileTypeB, thisLineArray[8], tileTypeC, thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[4], stageOfFirstAppearance, thisLineArray[5]);
+                    Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[4], stageOfFirstAppearance, thisLineArray[5]);
 
                     tileList.add(tile);
 

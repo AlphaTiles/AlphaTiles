@@ -28,21 +28,14 @@ public class StagesChecks {
         }
         int[] tileCounts = new int[7];
         for(Validator.Tile tile : tileList) {
-            if(seenTiles.contains(tile.text)) {
+            String key = tile.text + "-" + tile.typeOfThisTileInstance;
+            if(seenTiles.contains(key)) {
                 continue;
             } else {
-                seenTiles.add(tile.text);
+                seenTiles.add(key);
             }
-            int[] abc = new int[3];
-            abc[0] = tile.stageOfFirstAppearance;
-            abc[1] = tile.stageOfFirstAppearanceB;
-            abc[2] = tile.stageOfFirstAppearanceC;
-            for(int i : abc) {
-                System.out.println(tile.text);
-                if(i > 0 && i < 7) {
-                    System.out.println(i);
-                    tileCounts[i - 1]++;
-                }
+            if(tile.stageOfFirstAppearanceForThisTileType <= 7) {
+                tileCounts[tile.stageOfFirstAppearanceForThisTileType - 1]++;
             }
         }
         StringBuilder str = new StringBuilder();
