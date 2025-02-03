@@ -40,6 +40,7 @@ public class Romania extends GameActivity {
     // settings to see tiles in focus bolded or not
     boolean boldNonInitialFocusTiles = Boolean.parseBoolean(boldNonIntialFocusTilesTest); // bold non-initial tiles that are in focus
     boolean boldInitialFocusTiles = Boolean.parseBoolean(boldInitialfocusTilesTest);     // bold initial tiles that are in focus
+    private static final Logger LOGGER = Logger.getLogger(Romania.class.getName());
 
     protected int[] getGameButtons() {
         return null;
@@ -79,8 +80,9 @@ public class Romania extends GameActivity {
 
         scanSetting = Integer.parseInt(Start.settingsList.find("Game 001 Scan Setting"));
 
-        tileToStartOn = cumulativeStageBasedTileList.get(0).text;
-        typeOfTileToStartOn = cumulativeStageBasedTileList.get(0).typeOfThisTileInstance;
+        // tileToStartOn = cumulativeStageBasedTileList.get(0).text;
+        // typeOfTileToStartOn = cumulativeStageBasedTileList.get(0).typeOfThisTileInstance;
+
         String tileToStartOn = prefs.getString("lastActiveTileGame001_player" + playerString, this.tileToStartOn);
         String typeOfTileToStartOn = prefs.getString("typeOfLastActiveTileGame001_player" + playerString, this.typeOfTileToStartOn);
 
@@ -108,8 +110,15 @@ public class Romania extends GameActivity {
         }
 
         int i = 0;
-        while (!(cumulativeStageBasedTileList.get(i).text.equals(tileToStartOn) && cumulativeStageBasedTileList.get(i).typeOfThisTileInstance.equals(typeOfTileToStartOn))) {
+        while (!(cumulativeStageBasedTileList.get(i).text.equals(tileToStartOn)
+                && cumulativeStageBasedTileList.get(i).typeOfThisTileInstance.equals(typeOfTileToStartOn))) {
             i++;
+            if (i >= cumulativeStageBasedTileList.size()) {
+                // saved tile not in this stage, so start with the 0th tile
+                LOGGER.info("onCreate: saved tile=" + tileToStartOn + " not in this stage, start with tile 0");
+                i = 0;
+                break;
+            }
         }
         activeTile = cumulativeStageBasedTileList.get(i);
         setUpBasedOnGameTile(activeTile);

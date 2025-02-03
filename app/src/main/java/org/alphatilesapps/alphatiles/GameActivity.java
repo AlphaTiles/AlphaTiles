@@ -114,10 +114,10 @@ public abstract class GameActivity extends AppCompatActivity {
     private static final Logger LOGGER = Logger.getLogger(GameActivity.class.getName());
 
     /*
-    This testing method can be run from onCreate() to make sure each word is parsed correctly into tiles
-    and recombined correctly from those tiles.
-    Uncomment the LOGGER.info(data) line to log this info for all of the words in the wordlist.
-    REMOVE calls to this testing method before building an app.
+     * This testing method can be run from onCreate() to make sure each word is parsed correctly into tiles
+     * and recombined correctly from those tiles.
+     * Uncomment the LOGGER.info(data) line to log this info for all of the words in the wordlist.
+     * REMOVE calls to this testing method before building an app.
      */
     protected void testParsingAndCombining() {
 
