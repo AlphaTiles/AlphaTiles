@@ -209,7 +209,7 @@ public class Start extends AppCompatActivity {
         if (hasSyllableGames) {
             buildSyllableList();
             for (int d = 0; d < syllableList.size(); d++) {
-                SYLLABLES.add(syllableList.get(d).toString());
+                SYLLABLES.add(syllableList.get(d).text);
             }
             Collections.shuffle(SYLLABLES);
         }
