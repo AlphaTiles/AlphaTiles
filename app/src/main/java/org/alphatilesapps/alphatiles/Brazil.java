@@ -374,6 +374,7 @@ public class Brazil extends GameActivity {
     }
 
     private void setUpSyllables() {
+        Collections.shuffle(SYLLABLES);
         boolean containsCorrectSyllable = false;
         Start.Syllable answer = syllableHashMap.find(correctSyllable.text); // Find corresponding syllable object for correct answer
 
@@ -394,7 +395,7 @@ public class Brazil extends GameActivity {
         for (int t = 0; t < visibleGameButtons; t++) {
             TextView gameTile = findViewById(GAME_BUTTONS[t]);
 
-            if (syllableList.get(t).text.equals(correctSyllable.text) && t < visibleGameButtons) {
+            if (SYLLABLES.get(t).equals(correctSyllable.text) && t < visibleGameButtons) {
                 containsCorrectSyllable = true;
             }
 
@@ -403,7 +404,7 @@ public class Brazil extends GameActivity {
 
             if (challengeLevel == 1) {
                 if (t < visibleGameButtons) {
-                    gameTile.setText(syllableList.get(t).text); // KP
+                    gameTile.setText(SYLLABLES.get(t));
                     gameTile.setBackgroundColor(tileColor);
                     gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                     gameTile.setVisibility(View.VISIBLE);
