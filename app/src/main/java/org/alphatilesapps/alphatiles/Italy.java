@@ -197,11 +197,13 @@ public class Italy extends GameActivity {
         WordList wordListShuffle = cumulativeStageBasedWordList;
         Collections.shuffle(wordListShuffle);
 
-        // Quit if we don't have enough words
+        // Quit (go back to the home screen) if we don't have enough words
         if (wordListShuffle.size() < deckSize) {
-            LOGGER.warning("playAgain: can't proceed - need more than "
+            LOGGER.warning("playAgain: can't proceed - need at least "
                     + deckSize + " words");
-            // how do I quit?
+            // return to the home screen
+            goBackToEarth(null);
+            return;
         }
 
         // Add a subset of the shuffled cards to gameCards
