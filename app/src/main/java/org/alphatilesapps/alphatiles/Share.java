@@ -28,6 +28,9 @@ public class Share extends AppCompatActivity {
 
         setContentView(R.layout.share);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.shareCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         // the link is in the second line of the file.
         Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_share));
         scanner.nextLine();

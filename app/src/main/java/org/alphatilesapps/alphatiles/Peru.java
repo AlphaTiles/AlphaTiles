@@ -7,9 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,19 +46,10 @@ public class Peru extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-
-        int gameID = R.id.peruCL;
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
 
     }
 
@@ -70,6 +58,9 @@ public class Peru extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.peru);
+
+        ActivityLayouts.applyEdgeToEdge(this, R.id.peruCL);
+        ActivityLayouts.setStatusAndNavColors(this);
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -81,12 +72,8 @@ public class Peru extends GameActivity {
             fixConstraintsRTL(R.id.peruCL);
         }
 
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         if (challengeLevel == 2) {
@@ -333,10 +320,5 @@ public class Peru extends GameActivity {
         if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // no action
     }
 }

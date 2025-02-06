@@ -13,17 +13,17 @@ Learn more on [our website](http://alphatilesapps.org/).
 [Spanish instructions](https://docs.google.com/presentation/d/1pjhPZvCVU7T50IdSWVTc0GXgBd24-klR1f3yDuTFhJ0/edit#slide=id.p1)
 
 # Generating the app with Alpha Tiles in Android Studio
-#### Windows 10/11
-## Install Java and Android Studio
-[These instructions](https://www.makeuseof.com/windows-android-studio-setup/#:~:text=Before%20installing%20Android%20Studio%2C%20you,for%20creating%20Java%2Dbased%20applications.) cover all the steps for first-time installation of Java and Android Studio. If you have an older version of Android Studio or Java installed, you may be required to update one or both in order to build Alpha Tiles. You can do so by downloading and setting up this [latest Android Studio version](https://developer.android.com/studio) and/or one of these recent [JAVA versions](https://www.oracle.com/java/technologies/downloads/).
+#### Windows 11
+## Install Android Studio
+Download and setup the [latest Android Studio version](https://developer.android.com/studio).
 
 ## Clone the source code and sample build assets
-Here is the recommended route for interacting with Alpha Tiles code and build assets through Git.
-1. Have [Git installed](https://git-scm.com/download/win) on your machine.
-2. In Android Studio, select `File`>`New`> `Project from version control...`, paste in `https://github.com/AlphaTiles/AlphaTiles.git` for `URL`, and click `Clone`.
-3. For sample build assets, repeat step 2, pasting in `https://github.com/AlphaTiles/PublicLanguageAssets.git`.
-4. Going forward, click the blue down arrow in Android Studio to `Update Project...` for the latest code and/or asset changes in these repositories.
-
+Here are the recommended steps for setting up the Alpha Tiles code and loading assets through Git.
+1. Immediately after installing Android Studio, select `Clone Repository` in the `Welcome to Android Studio` window. Or, if reopening Android Studio later, click on the five vertical lines in the upper left then select `File`>`New`> `Project from version control...`.
+2. If prompted by the warning `Git is not installed`, install [Git](https://git-scm.com/download/win) by clicking on `Download and install`.
+3. Then, paste `https://github.com/AlphaTiles/AlphaTiles.git` in the `URL` field and click `Clone`.
+4. Next, paste `https://github.com/AlphaTiles/PublicLanguageAssets.git` in the `URL` field and click `Clone`.
+5. Going forward, to update the project, click on the Git Branch selector in the upper left of the screen and choose `Update Project...` for the latest code and/or asset changes in these repositories.
 
 ## Build your Alpha Tiles app
 ### Insert the language-specific assets
@@ -54,14 +54,9 @@ Or, if not including this file, go to [app/build.gradle](app/build.gradle) and c
 
 and under `dependencies {}`:
 
-* `implementation platform('com.google.firebase:firebase-bom:32.7.4')`
+* `implementation platform('com.google.firebase:firebase-bom:33.7.0')`
 * `implementation 'com.google.firebase:firebase-analytics'`
 
-## Minimum API levels
+## Minimum API level
 
-By default, Alpha Tiles apps run on devices with Android 5.0+ (API 21+). 
-
-Tailoring the features below would tailor the minimum API level required.
-* API 16 = Jelly Bean (4.1) - required for Firebase
-* API 17 = Jelly Bean MR1 (4.2) - required for forcing RTL/LTR layout direction
-* API 21 = Lollipop (5.0) - required for correct display of special characters in TextViews without Grandroid, etc.
+By default, Alpha Tiles apps run on devices with Android 5.0+ (API 21+).

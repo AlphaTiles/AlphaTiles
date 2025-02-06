@@ -10,9 +10,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Random;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import android.graphics.Typeface;
 import android.widget.Button;
 
@@ -61,40 +58,16 @@ public class UnitedStates extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-
-        int gameID = 0;
-        switch (challengeLevel) {
-            case 1:
-                gameID = R.id.united_states_cl1_CL;
-                break;
-            case 2:
-                gameID = R.id.united_states_cl2_CL;
-                break;
-            case 3:
-                gameID = R.id.united_states_cl3_CL;
-                break;
-            default:
-                break;
-        }
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
-
+        
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         int gameID = 0;
         switch (challengeLevel) {
@@ -117,6 +90,9 @@ public class UnitedStates extends GameActivity {
                 gameID = R.id.united_states_cl1_CL;
         }
 
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
@@ -128,7 +104,7 @@ public class UnitedStates extends GameActivity {
         }
 
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         updatePointsAndTrackers(0);
@@ -384,10 +360,4 @@ public class UnitedStates extends GameActivity {
             super.playAudioInstructions(view);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
 }

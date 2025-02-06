@@ -9,9 +9,6 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -68,19 +65,11 @@ public class Chile extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
         // Copied from Sudan.java
         View instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
-        int gameID = R.id.chileCL;
-
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.backspace,ConstraintSet.START,0);
-        //constraintSet.connect(R.id.backspace,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
-        constraintSet.applyTo(constraintLayout);
     }
 
     @Override
@@ -89,6 +78,10 @@ public class Chile extends GameActivity {
         LOGGER.log(Level.INFO, "Chile start");
         context = this;
         setContentView(R.layout.chile);
+
+        ActivityLayouts.applyEdgeToEdge(this, R.id.chileCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         updatePointsAndTrackers(0);
         setAdvanceArrowToGray();
         if (scriptDirection.equals("RTL")) {
@@ -97,8 +90,6 @@ public class Chile extends GameActivity {
         }
         data.guesses = baseGuessCount - challengeLevel + 1;
         int guessBoxID = R.id.guessBox;
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         guessBox = findViewById(guessBoxID);
         guessAdapter = new TileAdapter(tiles);
         guessAdapter.setFontScale(data.fontScale);
@@ -140,7 +131,7 @@ public class Chile extends GameActivity {
         currentRow = 0;
         int iID = getAudioInstructionsResID();
         if(iID == 0 || iID == -1) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
     }
     private void resetTiles() {
@@ -358,10 +349,5 @@ public class Chile extends GameActivity {
             this.words = words;
             this.fontScale = fontScale;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // no action
     }
 }

@@ -9,9 +9,6 @@ import android.widget.TextView;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import java.util.HashSet;
 import java.util.Random;
 import java.util.ArrayList;
@@ -74,24 +71,10 @@ public class Brazil extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-
-        int gameID = 0;
-        if (challengeLevel == 3 || challengeLevel == 6) {
-            gameID = R.id.brazil_cl3_CL;
-        } else {
-            gameID = R.id.brazil_cl1_CL;
-        }
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
 
     }
 
@@ -105,18 +88,22 @@ public class Brazil extends GameActivity {
             setContentView(R.layout.brazil_cl1);
         }
 
+        int gameID = 0;
+        if (challengeLevel == 3 || challengeLevel == 6) {
+            gameID = R.id.brazil_cl3_CL;
+        } else {
+            gameID = R.id.brazil_cl1_CL;
+        }
+
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
-            int gameID = 0;
-            if (challengeLevel == 3 || challengeLevel == 6) {
-                gameID = R.id.brazil_cl3_CL;
-            } else {
-                gameID = R.id.brazil_cl1_CL;
-            }
             fixConstraintsRTL(gameID);
         }
 
@@ -162,9 +149,6 @@ public class Brazil extends GameActivity {
 
         Collections.shuffle(MULTITYPE_TILES);
 
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-
-        setTitle(localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
         if (syllableGame.equals("S")) {
             visibleGameButtons = 4;
         } else {
@@ -194,7 +178,7 @@ public class Brazil extends GameActivity {
         }
 
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         updatePointsAndTrackers(0);
@@ -390,6 +374,7 @@ public class Brazil extends GameActivity {
     }
 
     private void setUpSyllables() {
+        Collections.shuffle(SYLLABLES);
         boolean containsCorrectSyllable = false;
         Start.Syllable answer = syllableHashMap.find(correctSyllable.text); // Find corresponding syllable object for correct answer
 
@@ -410,7 +395,7 @@ public class Brazil extends GameActivity {
         for (int t = 0; t < visibleGameButtons; t++) {
             TextView gameTile = findViewById(GAME_BUTTONS[t]);
 
-            if (syllableList.get(t).text.equals(correctSyllable.text) && t < visibleGameButtons) {
+            if (SYLLABLES.get(t).equals(correctSyllable.text) && t < visibleGameButtons) {
                 containsCorrectSyllable = true;
             }
 
@@ -419,7 +404,7 @@ public class Brazil extends GameActivity {
 
             if (challengeLevel == 1) {
                 if (t < visibleGameButtons) {
-                    gameTile.setText(syllableList.get(t).text); // KP
+                    gameTile.setText(SYLLABLES.get(t));
                     gameTile.setBackgroundColor(tileColor);
                     gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                     gameTile.setVisibility(View.VISIBLE);
@@ -691,11 +676,6 @@ public class Brazil extends GameActivity {
         if (getAudioInstructionsResID() > -1) {
             super.playAudioInstructions(view);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // no action
     }
 
 }

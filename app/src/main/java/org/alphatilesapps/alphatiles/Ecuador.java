@@ -55,20 +55,11 @@ public class Ecuador extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-
-        int gameID = R.id.ecuadorCL;
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
-
+        
     }
 
     @Override
@@ -90,6 +81,8 @@ public class Ecuador extends GameActivity {
         context = this;
         setContentView(R.layout.ecuador);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.ecuadorCL);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
@@ -100,12 +93,8 @@ public class Ecuador extends GameActivity {
             fixConstraintsRTL(R.id.ecuadorCL);
         }
 
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         visibleGameButtons = GAME_BUTTONS.length;
@@ -532,10 +521,4 @@ public class Ecuador extends GameActivity {
             super.playAudioInstructions(view);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
 }
