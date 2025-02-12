@@ -494,6 +494,8 @@ public class Start extends AppCompatActivity {
         if(!settingsList.find("Stage 1-2 max word length").equals("")){
             stage1and2MaxWordLength = Integer.parseInt(settingsList.find("Stage 1-2 max word length"));
         }
+        LOGGER.info("buildWordStageLists: firstLetStageCorr=" + firstLetterStageCorrespondence
+                + "; stage12MaxWordLen=" + stage1and2MaxWordLength);
 
         // Find default first stage correspondences
         // Start all off at the last possible stage to introduce the word
@@ -509,11 +511,13 @@ public class Start extends AppCompatActivity {
                 lastStage = tile.stageOfFirstAppearanceC;
             }
         }
+        LOGGER.info("buildWordStageLists: add all words to last tile stage " + lastStage);
         for(Word word : wordList){
             stagesOfFirstAppearance.put(word, lastStage);
         }
         // Keep trying to find an earlier stage that it corresponds with until knowing the earliest stage that it corresponds with.
         for(int i=5;i>-1; i--){
+            LOGGER.info("buildWordStageLists: NEW STAGE " + i);
             ArrayList<Tile> cumulativeCorrespondingTiles = new ArrayList<Tile>();
             for(int s=0; s<=i; s++){
                 cumulativeCorrespondingTiles.addAll(tileStagesLists.get(s));
@@ -541,11 +545,24 @@ public class Start extends AppCompatActivity {
                         }
                     }
                 }
-                if((double)correspondingTiles/tilesInThisWord.size() > stageCorrespondenceRatio){
+                double quotient = (double)correspondingTiles / tilesInThisWord.size();
+                if (tilesInThisWord.size() != correspondingTiles) {
+                    LOGGER.info("buildWordStageLists: word=" + word.wordInLOP
+                            + " corrTiles=" + correspondingTiles
+                            + " tilesInWord=" + tilesInThisWord.size()
+                            + " quotient=" + quotient + " Ratio=" + stageCorrespondenceRatio);
+                } else {
+                    LOGGER.info("buildWordStageLists: corrTiles==tilesInWord==" + correspondingTiles);
+                }
+                if(quotient >= stageCorrespondenceRatio){
                     if ((i==0 || i==1) && (tilesInThisWord.size()>stage1and2MaxWordLength)){
                         stagesOfFirstAppearance.put(word, i+2); // Bump words that are too long for stage 1 or 2 to the next stage
+                        LOGGER.info("buildWordStageLists: bump '" + word.wordInLOP
+                                + "' to stage " + (i+2));
                     } else {
                         stagesOfFirstAppearance.put(word, i+1);
+                        LOGGER.info("buildWordStageLists: add '" + word.wordInLOP
+                                + "' to stage " + (i+1));
                     }
                 }
             }
@@ -553,6 +570,7 @@ public class Start extends AppCompatActivity {
 
         // Then override for first letter correspondence, if set, to bring words to an earlier stage based on corresponding in first tile
         if(firstLetterStageCorrespondence){
+            LOGGER.info("buildWordStageLists: firstLetterStageCorr=" + firstLetterStageCorrespondence);
             for (Word word : wordList) {
                 ArrayList<Tile> tilesInThisWord = tileList.parseWordIntoTiles(word.wordInLOP, word);
                 Tile firstTile = tilesInThisWord.get(0);
@@ -579,6 +597,8 @@ public class Start extends AppCompatActivity {
             if(word.stageOfFirstAppearance.matches("[0-9]+")){
                 int stage = Integer.parseInt(word.stageOfFirstAppearance);
                 if (stage >=1 && stage <= 7) {
+                    LOGGER.info("buildWordStageLists: put '" + word.wordInLOP
+                            + "' into stage " + stage);
                     stagesOfFirstAppearance.put(word, stage);
                 }
             }
@@ -587,9 +607,16 @@ public class Start extends AppCompatActivity {
         // Then use the stage info found to make the sub-wordlists
         for(Word word : wordList){
             int stageOfFirstAppearance = stagesOfFirstAppearance.get(word);
+            LOGGER.info("buildWordStageLists: word=" + word.wordInLOP
+                    + "; stageOf1stApp=" + stageOfFirstAppearance);
             wordStagesLists.get(stageOfFirstAppearance-1).add(word);
         }
 
+        // print out final totals
+        for (int z = 0; z < 7; z++) {
+            LOGGER.info("buildWordStageLists: stage " + z + " has "
+                    + wordStagesLists.get(z).size() + " entries");
+        }
     }
 
     public void buildKeyList() {

@@ -114,10 +114,10 @@ public abstract class GameActivity extends AppCompatActivity {
     private static final Logger LOGGER = Logger.getLogger(GameActivity.class.getName());
 
     /*
-    This testing method can be run from onCreate() to make sure each word is parsed correctly into tiles
-    and recombined correctly from those tiles.
-    Uncomment the LOGGER.info(data) line to log this info for all of the words in the wordlist.
-    REMOVE calls to this testing method before building an app.
+     * This testing method can be run from onCreate() to make sure each word is parsed correctly into tiles
+     * and recombined correctly from those tiles.
+     * Uncomment the LOGGER.info(data) line to log this info for all of the words in the wordlist.
+     * REMOVE calls to this testing method before building an app.
      */
     protected void testParsingAndCombining() {
 
@@ -447,6 +447,12 @@ public abstract class GameActivity extends AppCompatActivity {
                     } else {
                         lowerCorrespondenceWords.add(word);
                     }
+                }
+
+                if (wordStagesLists.get(0).isEmpty()) {
+                    LOGGER.warning("chooseWord: can't proceed - stage 1 has no words");
+                } else {
+                    LOGGER.info("chooseWord: stage 1 size=" + wordStagesLists.get(0).size());
                 }
 
                 int randomNumberForWeightingTowardHighCorrespondence = rand.nextInt(wordStagesLists.get(0).size());
