@@ -509,7 +509,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 wordImage = findViewById(getWordImages()[i]);
                 wordImage.setClickable(false);
             }
-        if (!gameList.get(gameNumber-1).country.equals("Romania")&&!gameList.get(gameNumber-1).country.equals("Sudan")) {
+        if (!gameList.get(gameNumber-1).country.equals("Romania")&&!gameList.get(gameNumber-1).country.equals("Sudan")&&!gameList.get(gameNumber-1).country.equals("Malaysia")) {
             ImageView repeatImage = findViewById(R.id.repeatImage);
             repeatImage.setClickable(false);
         }
@@ -526,7 +526,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 wordImage = findViewById(getWordImages()[i]);
                 wordImage.setClickable(true);
             }
-        if (!gameList.get(gameNumber-1).country.equals("Romania")&&!gameList.get(gameNumber-1).country.equals("Sudan")) {
+        if (!gameList.get(gameNumber-1).country.equals("Romania")&&!gameList.get(gameNumber-1).country.equals("Sudan")&&!gameList.get(gameNumber-1).country.equals("Malaysia")) {
             ImageView repeatImage = findViewById(R.id.repeatImage);
             repeatImage.setClickable(true);
         }
