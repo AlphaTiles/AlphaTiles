@@ -212,9 +212,9 @@ public class Italy extends GameActivity {
         }
 
         // Add 16 (CARDS_ON_BOARD) of the gameCards to the board
-        WordList boardCards = new WordList();
+//      WordList boardCards = new WordList();
         for (int tileNumber = 0; tileNumber < CARDS_ON_BOARD; tileNumber++) {
-            boardCards.add(gameCards.get(tileNumber));
+//          boardCards.add(gameCards.get(tileNumber));
             TextView thisCardText = (TextView) findViewById(GAME_BUTTONS[tileNumber]);
             thisCardText.setText(wordList.stripInstructionCharacters(gameCards.get(tileNumber).wordInLOP));
             String tileColorStr = colorList.get(tileNumber % 5);

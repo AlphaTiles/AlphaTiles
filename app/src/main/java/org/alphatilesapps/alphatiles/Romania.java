@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -130,13 +129,13 @@ public class Romania extends GameActivity {
         SpannableStringBuilder result = new SpannableStringBuilder(activeWord);
         int index = 0;
 
-        boolean isInitial = false;
+//      boolean isInitial = false;
         for(int i = 0; i < tempList.size(); i++) {
             if (tempList.get(i).text.equals(tile.text)) {
                 if (i == 0 && boldInitialFocusTiles) {
                     result.setSpan(new StyleSpan(Typeface.BOLD), index, index + tile.text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     result.setSpan(new ForegroundColorSpan(Color.YELLOW), index, index + tile.text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    isInitial = true;
+//                  isInitial = true;
                 }
                 if (i != 0 && boldNonInitialFocusTiles) {
                     result.setSpan(new StyleSpan(Typeface.BOLD), index, index + tile.text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
