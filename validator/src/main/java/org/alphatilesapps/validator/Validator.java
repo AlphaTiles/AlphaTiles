@@ -254,7 +254,7 @@ public class Validator {
     //<editor-fold desc="Validator fields">
 
     private final Path rootPath;
-    public String stagesInformation;
+    public String stagesInformation = "";
     /**
      * A LinkedHashSet of fatal errors found by the validator (is Set to avoid duplicate messages). Printed by main.
      */
@@ -405,7 +405,11 @@ public class Validator {
     public void validate() {
 
         this.validateGoogleSheet();
-        stagesInformation = StagesChecks.check(wordList, tileList);
+        try {
+            stagesInformation = StagesChecks.check(wordList, tileList);
+        } catch (Exception ignored) {
+            // other places should catch whatever tripped this up.
+        }
         //runs syllable checks only if 6 or more words contain periods (for syllable splicing)
         boolean usesSyllables = decideIfSyllablesAttempted();
         if (usesSyllables) {

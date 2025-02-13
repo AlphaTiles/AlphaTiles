@@ -15,7 +15,11 @@ public class StagesChecks {
                 i = Integer.parseInt(word.stageOfFirstAppearance);
             } catch(Exception ignored) {
                 int max = 1;
-                for(Validator.Tile tile : tileList.parseWordIntoTiles(word)) {
+                ArrayList<Validator.Tile> tiles = tileList.parseWordIntoTiles(word);
+                if(tiles == null) {
+                    continue;
+                }
+                for(Validator.Tile tile : tiles) {
                     if(tile.stageOfFirstAppearanceForThisTileType > max) {
                         max = tile.stageOfFirstAppearanceForThisTileType;
                     }
