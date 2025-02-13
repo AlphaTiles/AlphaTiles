@@ -22,7 +22,7 @@ public class StagesChecks {
                 }
                 i = max;
             }
-            if(i > 0 && i < 7) {
+            if(i >= 1 && i <= 7) {
                 wordCounts[i - 1]++;
             }
         }
