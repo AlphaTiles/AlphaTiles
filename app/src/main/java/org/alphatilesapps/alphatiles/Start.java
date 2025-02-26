@@ -515,9 +515,11 @@ public class Start extends AppCompatActivity {
         for(Word word : wordList){
             stagesOfFirstAppearance.put(word, lastStage);
         }
-        // Keep trying to find an earlier stage that it corresponds with until knowing the earliest stage that it corresponds with.
+
+        // Keep trying to find an earlier stage that it corresponds with until knowing the earliest stage
+        // that it corresponds with.  Loop downward from Stage 6 (i==5) to Stage 1 (i==0).
         for(int i=5;i>-1; i--){
-            LOGGER.info("buildWordStageLists: NEW STAGE " + i);
+            LOGGER.info("buildWordStageLists: NEW STAGE " + (i+1));
             ArrayList<Tile> cumulativeCorrespondingTiles = new ArrayList<Tile>();
             for(int s=0; s<=i; s++){
                 cumulativeCorrespondingTiles.addAll(tileStagesLists.get(s));
@@ -556,7 +558,8 @@ public class Start extends AppCompatActivity {
                 }
                 if(quotient >= stageCorrespondenceRatio){
                     if ((i==0 || i==1) && (tilesInThisWord.size()>stage1and2MaxWordLength)){
-                        stagesOfFirstAppearance.put(word, i+2); // Bump words that are too long for stage 1 or 2 to the next stage
+                        // Bump words that are too long for stage 1 or 2 to the next stage
+                        stagesOfFirstAppearance.put(word, i+2);
                         LOGGER.info("buildWordStageLists: bump '" + word.wordInLOP
                                 + "' to stage " + (i+2));
                     } else {
@@ -568,7 +571,12 @@ public class Start extends AppCompatActivity {
             }
         }
 
-        // Then override for first letter correspondence, if set, to bring words to an earlier stage based on corresponding in first tile
+        // Then override for first letter correspondence, if set, to bring words to a later stage
+        // based on corresponding in first tile.  Example:
+        // - Assume letters a-e are in Stage 1; letters f-z are in Stage 2.
+        // - The word "faded" can be in Stage 1 if the Stage Correspondence Ratio == 80%.
+        // - But if First Letter Correspondence is enabled,  "faded" goes back to Stage 2,
+        //   because "f" doesn't belong to Stage 1.
         if(firstLetterStageCorrespondence){
             LOGGER.info("buildWordStageLists: firstLetterStageCorr=" + firstLetterStageCorrespondence);
             for (Word word : wordList) {
@@ -576,7 +584,9 @@ public class Start extends AppCompatActivity {
                 Tile firstTile = tilesInThisWord.get(0);
                 String firstTileType = "";
                 int stageFirstTileBelongsTo = firstTile.stageOfFirstAppearance;
-                if(MULTITYPE_TILES.contains(firstTile.text)) { // Check if we need to get stageOfFirstAppearance2 or stageOfFirstAppearance3 instead
+
+                // Check if we need to get stageOfFirstAppearance2 or stageOfFirstAppearance3 instead
+                if(MULTITYPE_TILES.contains(firstTile.text)) {
                     firstTileType = firstTile.typeOfThisTileInstance;
                     if(firstTile.tileTypeB.equals(firstTileType)){
                         stageFirstTileBelongsTo = firstTile.stageOfFirstAppearanceB;
@@ -585,12 +595,16 @@ public class Start extends AppCompatActivity {
                     }
                 }
 
-                if (stageFirstTileBelongsTo < stagesOfFirstAppearance.get(word)){ // Bump words to an earlier stage if their first tile matches a tile that's introduced in that stage
+                // Bump words back to a higher stage if their first tile disqualifies them
+                // from being in the stage assigned by the Stage Correspondence Ratio.
+                if (stageFirstTileBelongsTo > stagesOfFirstAppearance.get(word)){
+                    LOGGER.info("buildWordStageLists: 1st-ltr bump '" + word.wordInLOP
+                            + "' stage " + stagesOfFirstAppearance.get(word)
+                            + " back to " + stageFirstTileBelongsTo);
                     stagesOfFirstAppearance.put(word, stageFirstTileBelongsTo);
                 }
             }
         }
-
 
         // Then override for any words that have explicit first stage info in the wordlist
         for (Word word : wordList){
@@ -614,7 +628,7 @@ public class Start extends AppCompatActivity {
 
         // print out final totals
         for (int z = 0; z < 7; z++) {
-            LOGGER.info("buildWordStageLists: stage " + z + " has "
+            LOGGER.info("buildWordStageLists: stage " + (z+1) + " has "
                     + wordStagesLists.get(z).size() + " entries");
         }
     }
