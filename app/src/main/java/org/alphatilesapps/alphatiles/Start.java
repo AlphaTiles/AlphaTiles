@@ -73,6 +73,7 @@ public class Start extends AppCompatActivity {
     public static int numberOfAvatars = 12;
     public static String scriptType; // LM Can be "Thai", "Lao", "Khmer", or "Arabic" for special tile parsing. If nothing specified, tile parsing defaults to unidirectional.
     public static Boolean sendAnalytics;
+    public static boolean changeArrowColor;
     public static String placeholderCharacter; // LM Takes the place of a consonant for combining characters in complex scripts
     public static TileList CONSONANTS = new TileList();
     public static TileList PLACEHOLDER_CONSONANTS = new TileList();
@@ -90,7 +91,6 @@ public class Start extends AppCompatActivity {
     public static List<String> SYLLABLES = new ArrayList<>();
     public static List<String> SAD_STRINGS = new ArrayList<>();
     public static ArrayList<String> MULTITYPE_TILES = new ArrayList<>();
-
 
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
 
@@ -117,6 +117,7 @@ public class Start extends AppCompatActivity {
         //to make syllable audio optional
         hasSyllableAudio = getBooleanFromSettings("Has syllable audio", false);
         sendAnalytics = getBooleanFromSettings("Send analytics", false);
+        changeArrowColor = getBooleanFromSettings("Change arrow colors", true);
 
         String after12checkedTrackersSetting = settingsList.find("After 12 checked trackers");
         if (!after12checkedTrackersSetting.equals("")) {

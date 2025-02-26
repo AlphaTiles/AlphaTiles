@@ -431,13 +431,14 @@ public class Romania extends GameActivity {
 
         ImageView forwardArrow = findViewById(R.id.forwardArrowImage);
         forwardArrow.setClickable(false);
-        forwardArrow.setBackgroundResource(0);
-        forwardArrow.setImageResource(R.drawable.zz_forward_inactive);
+        setAdvanceArrowToGray();
 
         ImageView backwardArrow = findViewById(R.id.backwardArrowImage);
         backwardArrow.setClickable(false);
+        if(!Start.changeArrowColor) {
+            backwardArrow.setImageResource(R.drawable.zz_backward_inactive);
+        }
         backwardArrow.setBackgroundResource(0);
-        backwardArrow.setImageResource(R.drawable.zz_backward_inactive);
 
         TextView numberOfTotal = findViewById(R.id.numberOfTotalText);
         numberOfTotal.setClickable(false);

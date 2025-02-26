@@ -533,6 +533,9 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void setAdvanceArrowToGray() {
+        if(!Start.changeArrowColor) {
+            return;
+        }
         ImageView repeatImage = findViewById(R.id.repeatImage);
         repeatImage.setBackgroundResource(0);
         repeatImage.setImageResource(R.drawable.zz_forward_inactive);
