@@ -201,10 +201,12 @@ public abstract class GameActivity extends AppCompatActivity {
         } else {
             forceLTRIfSupported();
         }
-
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // testParsingAndCombining(); // Helpful runtime check for complex tile parsing
         super.onCreate(state);
+        if(!Start.changeArrowColor) {
+            setAdvanceArrowToBlue();
+        }
     }
 
     public void goBackToEarth(View view) {
@@ -528,6 +530,9 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected void setAdvanceArrowToBlue() {
         ImageView repeatImage = findViewById(R.id.repeatImage);
+        if(repeatImage == null) {
+            return;
+        }
         repeatImage.setBackgroundResource(0);
         repeatImage.setImageResource(R.drawable.zz_forward);
     }
@@ -537,6 +542,9 @@ public abstract class GameActivity extends AppCompatActivity {
             return;
         }
         ImageView repeatImage = findViewById(R.id.repeatImage);
+        if(repeatImage == null) {
+            return;
+        }
         repeatImage.setBackgroundResource(0);
         repeatImage.setImageResource(R.drawable.zz_forward_inactive);
     }
