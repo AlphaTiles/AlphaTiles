@@ -289,11 +289,12 @@ public class Thailand extends GameActivity {
                     // Disallow non-fresh reference items
                     // Disallow placeholder consonants as reference items
                     // Disallow non-joining and non-spacing (non-contextual) characters from contextual forms matching games (Arabic script)
+                    // Disallow tiles that are already displayed with a contextual character in the tile list
                     refTileType = refTile.typeOfThisTileInstance;
                     permissableTile = verifyFreshTile(refString, freshChecks) && CorV.contains(refTile)
                                         && !(refTileType.matches("(PC)")
                                         && !(refType.matches("CONTEXTUAL")||choiceType.matches("CONTEXTUAL"))
-                            && (NON_JOINERS_ARABIC.contains(refTile) || NON_SPACERS_ARABIC.contains(refTile)));
+                            && (NON_JOINERS_ARABIC.contains(refTile) || NON_SPACERS_ARABIC.contains(refTile)) || refTile.text.contains(contextualizingCharacter));
 
                 }
             }
@@ -331,10 +332,20 @@ public class Thailand extends GameActivity {
         }
 
         if (choiceType.matches("(TILE_LOWER|TILE_UPPER|CONTEXTUAL)")) {
-            fourTileChoices = tileListNoSAD.returnFourTileChoices(refTile, challengeLevelThai, refTileType);
             // challengeLevelThai 1 = pull random tiles for wrong choices
             // challengeLevelThai 2 = pull distractor tiles for wrong choices
             if(choiceType.equals("CONTEXTUAL")) { // In some Arabic script apps
+                boolean excludedTileChoicePicked = true;
+                while (excludedTileChoicePicked) {
+                    fourTileChoices = tileListNoSAD.returnFourTileChoices(refTile, challengeLevelThai, refTileType);
+                    excludedTileChoicePicked = false;
+                    for (Tile t: fourTileChoices) {
+                        if (t.text.contains(contextualizingCharacter)) { // Exclude the few Arabic script tiles that are already displayed with contextual characters
+                            excludedTileChoicePicked = true;
+                        }
+                    }
+                }
+
                 switch(contextualTilePosition) { // specified by the 4th character of the challengeLevel number
                     case "INITIAL":
                         for(Tile t : fourTileChoices) {
@@ -352,6 +363,8 @@ public class Thailand extends GameActivity {
                         }
                         break;
                 }
+            } else { // choiceType is TILE_LOWER or TILE_UPPER
+                fourTileChoices = tileListNoSAD.returnFourTileChoices(refTile, challengeLevelThai, refTileType);
             }
         } else if (choiceType.matches("(WORD_TEXT|WORD_IMAGE)") && (!refType.contains("SYLLABLE"))) {
             fourWordChoices = wordList.returnFourWords(refWord, refTile, challengeLevelThai, refType);
