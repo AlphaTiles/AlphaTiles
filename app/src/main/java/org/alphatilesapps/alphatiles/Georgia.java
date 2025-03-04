@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import static org.alphatilesapps.alphatiles.Start.contextualizingCharacter;
 import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.CorV;
@@ -498,9 +499,9 @@ public class Georgia extends GameActivity {
 
         int tileNo = justClickedTile - 1; // justClickedTile uses 1 to 18, t uses the array ID (between [0] and [17]
         TextView tile = findViewById(GAME_BUTTONS[tileNo]);
-        String selectedTileString = tile.getText().toString().replace("\u200D", ""); // To account for any contextual forms in Arabic script
+        String selectedTileString = tile.getText().toString().replace(contextualizingCharacter, ""); // To account for any contextual forms in Arabic script
 
-        if (correctString.equals(selectedTileString)) {
+        if (correctString.replace(contextualizingCharacter, "").equals(selectedTileString)) { // To account for any contextual forms in Arabic script
             repeatLocked = false;
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
