@@ -45,7 +45,9 @@ public class Start extends AppCompatActivity {
 
     // LM / allows us to find() a Tile object using its name
     public static TileHashMap tileHashMap;
+    public static TileHashMap tileHashMapWithoutPlaceHoldersOrContextualizers;
     public static TileHashMap tileHashMapNoSAD;
+    public static TileHashMap tileHashMapNoSADWithoutPlaceholdersOrContextualizers;
     public static WordHashMap lwcWordHashMap;
     public static WordHashMap lopWordHashMap;
 
@@ -75,6 +77,7 @@ public class Start extends AppCompatActivity {
     public static Boolean sendAnalytics;
     public static boolean changeArrowColor;
     public static String placeholderCharacter; // LM Takes the place of a consonant for combining characters in complex scripts
+    public static String contextualizingCharacter; // LM for displaying various contextual forms of Arabic characters
     public static Boolean useContextualFormsFITB;
     public static Boolean useContextualFormsBWFP;
     public static Boolean useContextualFormsITI;
@@ -402,6 +405,7 @@ public class Start extends AppCompatActivity {
             }
         }
         buildTileHashMap();
+        buildTileHashMapWithoutPlaceholdersOrContextualizers();
     }
 
 
@@ -701,9 +705,13 @@ public class Start extends AppCompatActivity {
             }
         }
 
-        placeholderCharacter = settingsList.find("Stand-in base for combining tiles"); // For Thai, Lao combining tiles
-        if (placeholderCharacter.equals("")) {
-            placeholderCharacter = " ";
+        placeholderCharacter = settingsList.find("Stand-in base for combining tiles"); // Shows relative position of combining characters
+        if (placeholderCharacter.isEmpty()) {
+            placeholderCharacter = "XYZXYZ"; // No placeholders in tiles; this variable shouldn't be matched to anything in words
+        }
+        contextualizingCharacter = settingsList.find("Contextualizing character");
+        if (contextualizingCharacter.isEmpty()) {
+            contextualizingCharacter = "XYZXYZ"; // No contextualizing characters in tiles; this variable shouldn't be matched to anything in words
         }
 
     }
@@ -768,6 +776,18 @@ public class Start extends AppCompatActivity {
             tileHashMap.put(tileList.get(i).text, tileList.get(i));
             if (!tileList.get(i).tileType.equals("SAD")) {
                 tileHashMapNoSAD.put(tileList.get(i).text, tileList.get(i));
+            }
+        }
+    }
+
+    public void buildTileHashMapWithoutPlaceholdersOrContextualizers() {
+        tileHashMapWithoutPlaceHoldersOrContextualizers = new TileHashMap();
+        tileHashMapNoSADWithoutPlaceholdersOrContextualizers = new TileHashMap();
+        for (int i = 0; i < tileList.size(); i++) {
+            String strippedTileText = tileList.get(i).text.replace(placeholderCharacter, "").replace(contextualizingCharacter, "");
+            tileHashMapWithoutPlaceHoldersOrContextualizers.put(strippedTileText, tileList.get(i));
+            if (!tileList.get(i).tileType.equals("SAD")) {
+                tileHashMapNoSADWithoutPlaceholdersOrContextualizers.put(strippedTileText, tileList.get(i));
             }
         }
     }
@@ -1670,80 +1690,46 @@ public class Start extends AppCompatActivity {
                 // See if the blocks of length one, two, three or four Unicode characters matches game tiles
                 // Choose the longest block that matches a game tile and add that as the next segment in the parsed word array
                 charBlockLength = 0;
-                if (tileHashMap.containsKey(next1Chars) || tileHashMap.containsKey(placeholderCharacter + next1Chars) || tileHashMap.containsKey(next1Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next1Chars + placeholderCharacter)) {
+                if (tileHashMapWithoutPlaceHoldersOrContextualizers.containsKey(next1Chars)) {
                     // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
                     charBlockLength = 1;
                 }
-                if (tileHashMap.containsKey(next2Chars) || tileHashMap.containsKey(placeholderCharacter + next2Chars) || tileHashMap.containsKey(next2Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next2Chars + placeholderCharacter)) {
+                if (tileHashMapWithoutPlaceHoldersOrContextualizers.containsKey(next2Chars)) {
                     // The value 2 can overwrite 1 but it can't overwrite 3 or 4
                     charBlockLength = 2;
                 }
-                if (tileHashMap.containsKey(next3Chars) || tileHashMap.containsKey(placeholderCharacter + next3Chars) || tileHashMap.containsKey(next3Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next3Chars + placeholderCharacter)) {
+                if (tileHashMapWithoutPlaceHoldersOrContextualizers.containsKey(next3Chars)) {
                     // The value 3 can overwrite 1 or 2 but it can't overwrite 4
                     charBlockLength = 3;
                 }
-                if (tileHashMap.containsKey(next4Chars) || tileHashMap.containsKey(placeholderCharacter + next4Chars) || tileHashMap.containsKey(next4Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next4Chars + placeholderCharacter)) {
+                if (tileHashMapWithoutPlaceHoldersOrContextualizers.containsKey(next4Chars)) {
                     // The value 4 can overwrite 1 or 2 or 3
                     charBlockLength = 4;
                 }
 
                 // Add the selected game tile (the longest selected from the previous loop) to the parsed word array
-                String tileString = "";
-                switch (charBlockLength) {
-                    case 1:
-                        if (tileHashMap.containsKey(next1Chars)) {
-                            tileString = next1Chars;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next1Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                            tileString = placeholderCharacter + next1Chars;
-                        } else if (tileHashMap.containsKey(next1Chars + placeholderCharacter)) { // For LV stored with placeholder
-                            tileString = next1Chars + placeholderCharacter;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next1Chars + placeholderCharacter)) { // For medial vowel
-                            tileString = placeholderCharacter + next1Chars + placeholderCharacter;
-                        }
-                        break;
-                    case 2:
-                        if (tileHashMap.containsKey(next2Chars)) {
-                            tileString = next2Chars;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next2Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                            tileString = placeholderCharacter + next2Chars;
-                        } else if (tileHashMap.containsKey(next2Chars + placeholderCharacter)) { // For LV stored with placeholder
-                            tileString = next2Chars + placeholderCharacter;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next2Chars + placeholderCharacter)) { // For medial vowel
-                            tileString = placeholderCharacter + next2Chars + placeholderCharacter;
-                        }
-                        i++;
-                        break;
-                    case 3:
-                        if (tileHashMap.containsKey(next3Chars)) {
-                            tileString = next3Chars;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next3Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                            tileString = placeholderCharacter + next3Chars;
-                        } else if (tileHashMap.containsKey(next3Chars + placeholderCharacter)) { // For LV stored with placeholder
-                            tileString = next3Chars + placeholderCharacter;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next3Chars + placeholderCharacter)) { // For medial vowel
-                            tileString = placeholderCharacter + next3Chars + placeholderCharacter;
-                        }
-                        i += 2;
-                        break;
-                    case 4:
-                        if (tileHashMap.containsKey(next4Chars)) {
-                            tileString = next4Chars;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next4Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                            tileString = placeholderCharacter + next4Chars;
-                        } else if (tileHashMap.containsKey(next4Chars + placeholderCharacter)) { // For LV stored with placeholder
-                            tileString = next4Chars + placeholderCharacter;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next4Chars + placeholderCharacter)) { // For medial vowel
-                            tileString = placeholderCharacter + next4Chars + placeholderCharacter;
-                        }
-                        i += 3;
-                        break;
-                    default:
-                        break;
-                }
-                if(!tileString.isEmpty()) {
-                    Tile nextTile = tileHashMap.find(tileString);
+                if (charBlockLength>0) {
+                    Tile nextTile;
+                    switch (charBlockLength) {
+                        case 2:
+                            nextTile = tileHashMapWithoutPlaceHoldersOrContextualizers.get(next2Chars);
+                            i++;
+                            break;
+                        case 3:
+                            nextTile = tileHashMapWithoutPlaceHoldersOrContextualizers.get(next3Chars);
+                            i += 2;
+                            break;
+                        case 4:
+                            nextTile = tileHashMapWithoutPlaceHoldersOrContextualizers.get(next4Chars);
+                            i += 3;
+                            break;
+                        default: // charBlockLength==1
+                            nextTile = tileHashMapWithoutPlaceHoldersOrContextualizers.get(next1Chars);
+                            break;
+                    }
                     referenceWordStringPreliminaryTileArray.add(nextTile);
                 }
+
             }
             for (Tile tile : referenceWordStringPreliminaryTileArray) { // Set instance-specific fields
                 Tile nextTile = new Tile(tile);
@@ -1800,83 +1786,48 @@ public class Start extends AppCompatActivity {
                     // See if the blocks of length one, two, three or four Unicode characters matches game tiles
                     // Choose the longest block that matches a game tile and add that as the next segment in the parsed word array
                     charBlockLength = 0;
-                    if (tileHashMap.containsKey(next1Chars) || tileHashMap.containsKey(placeholderCharacter + next1Chars) || tileHashMap.containsKey(next1Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next1Chars + placeholderCharacter)) {
+                    if (tileHashMapWithoutPlaceHoldersOrContextualizers.containsKey(next1Chars)) {
                         // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
                         charBlockLength = 1;
                     }
-                    if (tileHashMap.containsKey(next2Chars) || tileHashMap.containsKey(placeholderCharacter + next2Chars) || tileHashMap.containsKey(next2Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next2Chars + placeholderCharacter)) {
+                    if (tileHashMapWithoutPlaceHoldersOrContextualizers.containsKey(next2Chars)) {
                         // The value 2 can overwrite 1 but it can't overwrite 3 or 4
                         charBlockLength = 2;
                     }
-                    if (tileHashMap.containsKey(next3Chars) || tileHashMap.containsKey(placeholderCharacter + next3Chars) || tileHashMap.containsKey(next3Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next3Chars + placeholderCharacter)) {
+                    if (tileHashMapWithoutPlaceHoldersOrContextualizers.containsKey(next3Chars)) {
                         // The value 3 can overwrite 1 or 2 but it can't overwrite 4
                         charBlockLength = 3;
                     }
-                    if (tileHashMap.containsKey(next4Chars) || tileHashMap.containsKey(placeholderCharacter + next4Chars) || tileHashMap.containsKey(next4Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next4Chars + placeholderCharacter)) {
+                    if (tileHashMapWithoutPlaceHoldersOrContextualizers.containsKey(next4Chars)) {
                         // The value 4 can overwrite 1 or 2 or 3
                         charBlockLength = 4;
                     }
 
-
                     // Add the selected game tile (the longest selected from the previous loop) to the parsed word array
-                    String tileString = "";
-                    switch (charBlockLength) {
-                        case 1:
-                            if (tileHashMap.containsKey(next1Chars)) {
-                                tileString = next1Chars;
-                            } else if (tileHashMap.containsKey(placeholderCharacter + next1Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                                tileString = placeholderCharacter + next1Chars;
-                            } else if (tileHashMap.containsKey(next1Chars + placeholderCharacter)) { // For LV stored with placeholder
-                                tileString = next1Chars + placeholderCharacter;
-                            } else if (tileHashMap.containsKey(placeholderCharacter + next1Chars + placeholderCharacter)) { // For medial vowel
-                                tileString = placeholderCharacter + next1Chars + placeholderCharacter;
-                            }
-                            break;
-                        case 2:
-                            if (tileHashMap.containsKey(next2Chars)) {
-                                tileString = next2Chars;
-                            } else if (tileHashMap.containsKey(placeholderCharacter + next2Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                                tileString = placeholderCharacter + next2Chars;
-                            } else if (tileHashMap.containsKey(next2Chars + placeholderCharacter)) { // For LV stored with placeholder
-                                tileString = next2Chars + placeholderCharacter;
-                            } else if (tileHashMap.containsKey(placeholderCharacter + next2Chars + placeholderCharacter)) { // For medial vowel
-                                tileString = placeholderCharacter + next2Chars + placeholderCharacter;
-                            }
-                            i++;
-                            break;
-                        case 3:
-                            if (tileHashMap.containsKey(next3Chars)) {
-                                tileString = next3Chars;
-                            } else if (tileHashMap.containsKey(placeholderCharacter + next3Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                                tileString = placeholderCharacter + next3Chars;
-                            } else if (tileHashMap.containsKey(next3Chars + placeholderCharacter)) { // For LV stored with placeholder
-                                tileString = next3Chars + placeholderCharacter;
-                            } else if (tileHashMap.containsKey(placeholderCharacter + next3Chars + placeholderCharacter)) { // For medial vowel
-                                tileString = placeholderCharacter + next3Chars + placeholderCharacter;
-                            }
-                            i += 2;
-                            break;
-                        case 4:
-                            if (tileHashMap.containsKey(next4Chars)) {
-                                tileString = next4Chars;
-                            } else if (tileHashMap.containsKey(placeholderCharacter + next4Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                                tileString = placeholderCharacter + next4Chars;
-                            } else if (tileHashMap.containsKey(next4Chars + placeholderCharacter)) { // For LV stored with placeholder
-                                tileString = next4Chars + placeholderCharacter;
-                            } else if (tileHashMap.containsKey(placeholderCharacter + next4Chars + placeholderCharacter)) { // For medial vowel
-                                tileString = placeholderCharacter + next4Chars + placeholderCharacter;
-                            }
-                            i += 3;
-                            break;
-                        default:
-                            break;
+                    if (charBlockLength>0) {
+                        Tile nextTile;
+                        switch (charBlockLength) {
+                            case 2:
+                                nextTile = tileHashMapWithoutPlaceHoldersOrContextualizers.get(next2Chars);
+                                i++;
+                                break;
+                            case 3:
+                                nextTile = tileHashMapWithoutPlaceHoldersOrContextualizers.get(next3Chars);
+                                i += 2;
+                                break;
+                            case 4:
+                                nextTile = tileHashMapWithoutPlaceHoldersOrContextualizers.get(next4Chars);
+                                i += 3;
+                                break;
+                            default: // charBlockLength==1
+                                nextTile = tileHashMapWithoutPlaceHoldersOrContextualizers.get(next1Chars);
+                                break;
+                        }
+                        stringToParsePreliminaryTileArray.add(nextTile);
                     }
-                    Tile nextTile = tileHashMap.find(tileString);
-                    stringToParsePreliminaryTileArray.add(new Tile(nextTile));
                 }
 
                 // Compare parsed tile arrays of stringToParse and referenceWord at the same indexes
-
                 for(int parsedTileIndex = 0; parsedTileIndex<stringToParsePreliminaryTileArray.size(); parsedTileIndex++) { // Set instance-specific fields
                     Start.Tile thisParsedTile = stringToParsePreliminaryTileArray.get(parsedTileIndex);
                     if (parsedTileIndex < referenceWordStringPreliminaryTileArray.size()

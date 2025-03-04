@@ -43,6 +43,7 @@ import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.placeholderCharacter;
+import static org.alphatilesapps.alphatiles.Start.contextualizingCharacter;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
@@ -95,7 +96,6 @@ public abstract class GameActivity extends AppCompatActivity {
     int visibleGameButtons;
     Start.Word refWord;
     Queue<String> last12Words = new PriorityQueue<>();
-
 
     boolean mediaPlayerIsPlaying = false;
     boolean repeatLocked = true;
@@ -943,7 +943,7 @@ public abstract class GameActivity extends AppCompatActivity {
         }
         if(indexOfReplacedTile>0){
             previousTile = tilesInThisWordOption.get(indexOfReplacedTile-1);
-            previousString = previousTile.text;
+            previousString = previousTile.text.replace(contextualizingCharacter, "");
             if(previousString.contains(placeholderCharacter) && previousString.length()==2) { // Filter these placeholders out; keep the complex tile ones
                 previousString = previousString.replace(placeholderCharacter, "");
             } else if (previousString.endsWith(placeholderCharacter) &&
@@ -954,7 +954,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
         int index = 0;
         for (Start.Tile thisTile : tilesInThisWordOption) {
-            String stringToAppend = thisTile.text;
+            String stringToAppend = thisTile.text.replace(contextualizingCharacter, "");
             if(stringToAppend.contains(placeholderCharacter) && stringToAppend.length() == 2) { // Filter these placeholders out; keep the complex tile ones
                 stringToAppend = stringToAppend.replace(placeholderCharacter, "");
             }
@@ -964,13 +964,13 @@ public abstract class GameActivity extends AppCompatActivity {
                 previousDiacritics = ""; // Reset; new syllable
             }
             if(thisTile.typeOfThisTileInstance.matches("(D|AD)")) {
-                previousDiacritics = thisTile.text;
+                previousDiacritics = thisTile.text.replace(contextualizingCharacter, "");
                 if(previousDiacritics.contains(placeholderCharacter) && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
                     previousDiacritics = previousDiacritics.replace(placeholderCharacter, "");
                 }
             }
             if(thisTile.typeOfThisTileInstance.matches("(AV|BV)")){
-                previousAboveOrBelowVowel = thisTile.text;
+                previousAboveOrBelowVowel = thisTile.text.replace(contextualizingCharacter, "");
                 if(previousAboveOrBelowVowel.contains(placeholderCharacter) && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
                     previousAboveOrBelowVowel = previousAboveOrBelowVowel.replace(placeholderCharacter, "");
                 }
@@ -1248,7 +1248,7 @@ public abstract class GameActivity extends AppCompatActivity {
      */
     public static String contextualizedForm_Initial(String isolateForm) {
 
-        return isolateForm + "\u200D";
+        return isolateForm + contextualizingCharacter;
     }
 
     /**
@@ -1258,7 +1258,7 @@ public abstract class GameActivity extends AppCompatActivity {
      */
     public static String contextualizedForm_Medial(String isolateForm) {
 
-        return "\u200D" + isolateForm + "\u200D";
+        return contextualizingCharacter + isolateForm + contextualizingCharacter;
     }
 
     /**
@@ -1268,7 +1268,7 @@ public abstract class GameActivity extends AppCompatActivity {
      */
     public static String contextualizedForm_Final(String isolateForm) {
 
-        return "\u200D" + isolateForm;
+        return contextualizingCharacter + isolateForm;
     }
 
     /**
@@ -1278,7 +1278,7 @@ public abstract class GameActivity extends AppCompatActivity {
      */
     public static String isolateForm(String  contextualizedForm) {
 
-        return contextualizedForm.replace("\u200D", "");
+        return contextualizedForm.replace(contextualizingCharacter, "");
     }
 
 
