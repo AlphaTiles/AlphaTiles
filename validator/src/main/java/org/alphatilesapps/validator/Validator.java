@@ -255,6 +255,8 @@ public class Validator {
 
     private final Path rootPath;
     public String stagesInformation = "";
+    public double stageCorrespondenceRatio;
+    public boolean firstTileStageCorrespondence;
     /**
      * A LinkedHashSet of fatal errors found by the validator (is Set to avoid duplicate messages). Printed by main.
      */
@@ -406,7 +408,7 @@ public class Validator {
 
         this.validateGoogleSheet();
         try {
-            stagesInformation = StagesChecks.check(wordList, tileList);
+            stagesInformation = StagesChecks.check(wordList, tileList, stageCorrespondenceRatio, firstTileStageCorrespondence);
         } catch (Exception ignored) {
             // other places should catch whatever tripped this up.
         }
@@ -825,8 +827,11 @@ public class Validator {
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
-            if (!settings.getRowFromFirstCell("First letter stage correspondence").get(1).matches("(TRUE|FALSE)")) {
+            String value =settings.getRowFromFirstCell("First letter stage correspondence").get(1);
+            if (!value.matches("(TRUE|FALSE)")) {
                 fatalError(Message.Tag.Etc, "In settings \"First letter stage correspondence\" must be either \"TRUE\" or \"FALSE\")");
+            } else {
+                firstTileStageCorrespondence = value.equals("TRUE");
             }
         } catch (ValidatorException e) {
             warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the settings tab");
@@ -836,9 +841,11 @@ public class Validator {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
             String scrString = settings.getRowFromFirstCell("Stage correspondence ratio").get(1);
             if (scrString.matches("-?\\d+(\\.\\d+)?")) {
-                Double scrValue = Double.parseDouble(scrString);
+                double scrValue = Double.parseDouble(scrString);
                 if (scrValue < 0.1 || scrValue > 1 ) {
                     fatalError(Message.Tag.Etc, "In settings for \"Stage correspondence ratio\", please enter a number from 0.1 to 1.");
+                } else {
+                    stageCorrespondenceRatio = scrValue;
                 }
             } else {
                 fatalError(Message.Tag.Etc, "In settings for \"Stage correspondence ratio\", please enter a number from 0.1 to 1 using a decimal (not a comma) as the separator.");
