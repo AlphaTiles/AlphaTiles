@@ -348,21 +348,21 @@ public abstract class GameActivity extends AppCompatActivity {
                             // Get the info about the next game
                             gameNumber = gameNumber + 1;
                             if (gameNumber - 1 < gameList.size()) {
-                                challengeLevel = Integer.valueOf(gameList.get(gameNumber - 1).level);
+                                challengeLevel = Integer.parseInt(gameList.get(gameNumber - 1).level);
                                 if (gameList.get(gameNumber-1).stage.equals("-")) {
                                     stage = 1;
                                 } else {
-                                    stage = Integer.valueOf(gameList.get(gameNumber - 1).stage);
+                                    stage = Integer.parseInt(gameList.get(gameNumber - 1).stage);
                                 }
                                 syllableGame = gameList.get(gameNumber - 1).mode;
                                 country = gameList.get(gameNumber - 1).country;
                             } else {
                                 gameNumber = 1;
-                                challengeLevel = Integer.valueOf(gameList.get(0).level);
+                                challengeLevel = Integer.parseInt(gameList.get(0).level);
                                 if (gameList.get(0).stage.equals("-")) {
                                     stage = 1;
                                 } else {
-                                    stage = Integer.valueOf(gameList.get(0).stage);
+                                    stage = Integer.parseInt(gameList.get(0).stage);
                                 }
                                 syllableGame = gameList.get(0).mode;
                                 country = gameList.get(0).country;
@@ -411,7 +411,19 @@ public abstract class GameActivity extends AppCompatActivity {
         while (!freshWord) { // Generates a new word if it got one of the last three tested words
             Random rand = new Random();
 
-            if(stage == 1) { // Weight toward words with the highest correspondence ratio to stage 1 tiles
+            // The stage assigned to this game may have no words in it, either by accident,
+            // or due to the correspondence ratio or the first tile stage correspondence setting.
+            // If this happens, ratchet the stage down to the highest stage with words.
+            int local_stage = stage;
+            while (wordStagesLists.get(local_stage - 1).isEmpty()) {
+                local_stage--;
+            }
+            if (local_stage != stage) {
+                LOGGER.info("chooseWord: stage reduced from " + stage + " to " + local_stage);
+            }
+
+            if(local_stage == 1) {
+                // Weight toward words with the highest correspondence ratio to stage 1 tiles
                 double higherCorrespondenceThreshold  = stageCorrespondenceRatio + (1-stageCorrespondenceRatio)/2;
                 Start.WordList higherCorrespondenceWords = new Start.WordList();
                 Start.WordList lowerCorrespondenceWords = new Start.WordList();
@@ -456,19 +468,24 @@ public abstract class GameActivity extends AppCompatActivity {
                 }
 
                 int randomNumberForWeightingTowardHighCorrespondence = rand.nextInt(wordStagesLists.get(0).size());
-                if (randomNumberForWeightingTowardHighCorrespondence < wordStagesLists.get(0).size() * 0.5 || lowerCorrespondenceWords.size()==0) { // Select a word with higher correspondence to stage 1 tiles (only tiles introduced so far)
+                if (randomNumberForWeightingTowardHighCorrespondence < wordStagesLists.get(0).size() * 0.5 || lowerCorrespondenceWords.isEmpty()) {
+                    // Select a word with higher correspondence to stage 1 tiles (only tiles introduced so far)
                     int randomNumberForChoosingAHighCorrespondenceWord = rand.nextInt(higherCorrespondenceWords.size());
                     refWord = higherCorrespondenceWords.get(randomNumberForChoosingAHighCorrespondenceWord);
-                } else { // Select a word that corresponds to stage 1 at a lower ratio
+                } else {
+                    // Select a word that corresponds to stage 1 at a lower ratio
                     int randomNumberForChoosingALowCorrespondenceWord = rand.nextInt(lowerCorrespondenceWords.size());
                     refWord = lowerCorrespondenceWords.get(randomNumberForChoosingALowCorrespondenceWord);
                 }
-            } else { // If stage > 1, weight toward words that are new in this stage
+            } else {
+                // If stage > 1, weight toward words that are new in this stage
                 int randomNumberForWeightingTowardNewWords = rand.nextInt(cumulativeStageBasedWordList.size());
-                if (randomNumberForWeightingTowardNewWords < cumulativeStageBasedWordList.size() * 0.5) { // Select a word that's added in the current stage 50% of the time
-                    int randomNumberForChoosingANewWord = rand.nextInt(wordStagesLists.get(stage - 1).size());
-                    refWord = wordStagesLists.get(stage - 1).get(randomNumberForChoosingANewWord);
-                } else { // Select a word that was added in any previous stage
+                if (randomNumberForWeightingTowardNewWords < cumulativeStageBasedWordList.size() * 0.5) {
+                    // Select a word that's added in the current stage 50% of the time
+                    int randomNumberForChoosingANewWord = rand.nextInt(wordStagesLists.get(local_stage - 1).size());
+                    refWord = wordStagesLists.get(local_stage - 1).get(randomNumberForChoosingANewWord);
+                } else {
+                    // Select a word that was added in any previous stage
                     int randomNumberForChoosingAnOlderWord = rand.nextInt(previousStagesWordList.size());
                     refWord = previousStagesWordList.get(randomNumberForChoosingAnOlderWord);
                 }
@@ -957,7 +974,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 }
             }
 
-            if(Objects.isNull(replacedTile) || replacedTile.text.equals("")){
+            if(Objects.isNull(replacedTile) || replacedTile.text.isEmpty()){
                 replacingLVwithOtherV = false;
                 replacingOtherVwithLV = false;
             } else {
@@ -1093,14 +1110,19 @@ public abstract class GameActivity extends AppCompatActivity {
                     typeOfThisInstanceOfThisTile = thisTile.tileType;
                 }
                 thisTileString = thisTileString.replace(placeholderCharacter, ""); // Remove any placeholders stored with single-char tiles
-                if (typeOfThisInstanceOfThisTile.equals("AV")) {
-                    AVs.add(thisTileString);
-                } else if (typeOfThisInstanceOfThisTile.equals("AD")) {
-                    ADs.add(thisTileString);
-                } else if (typeOfThisInstanceOfThisTile.equals("FV")) {
-                    FVs.add(thisTileString);
-                } else if (typeOfThisInstanceOfThisTile.equals("BV")) {
-                    BVs.add(thisTileString);
+                switch (typeOfThisInstanceOfThisTile) {
+                    case "AV":
+                        AVs.add(thisTileString);
+                        break;
+                    case "AD":
+                        ADs.add(thisTileString);
+                        break;
+                    case "FV":
+                        FVs.add(thisTileString);
+                        break;
+                    case "BV":
+                        BVs.add(thisTileString);
+                        break;
                 }
             }
         }
@@ -1110,14 +1132,19 @@ public abstract class GameActivity extends AppCompatActivity {
             if (!MULTITYPE_TILES.contains(tile.text) && tile.text.length()==1
             || (tile.text.contains(placeholderCharacter) && tile.text.length()==2)) {
                 String thisTileString = tile.text.replace(placeholderCharacter, "");
-                if (tile.tileType.equals("AV")) {
-                    AVs.add(thisTileString);
-                } else if (tile.tileType.equals("AD")) {
-                    ADs.add(thisTileString);
-                } else if (tile.tileType.equals("FV")) {
-                    FVs.add(thisTileString);
-                } else if (tile.tileType.equals("BV")) {
-                    BVs.add(thisTileString);
+                switch (tile.tileType) {
+                    case "AV":
+                        AVs.add(thisTileString);
+                        break;
+                    case "AD":
+                        ADs.add(thisTileString);
+                        break;
+                    case "FV":
+                        FVs.add(thisTileString);
+                        break;
+                    case "BV":
+                        BVs.add(thisTileString);
+                        break;
                 }
             }
         }
