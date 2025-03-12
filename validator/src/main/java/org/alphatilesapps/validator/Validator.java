@@ -537,7 +537,9 @@ public class Validator {
                             }
                         }
                         if (!charIsPartOfLongerKeyString) {
-                            String unicodeString = "(Unicode " + Integer.toHexString(LOPwordString.charAt(i)) + " / " + (int) LOPwordString.charAt(i) + ")";
+                            char c = LOPwordString.charAt(i);
+                            String hex = String.format("%04x", (int)c);
+                            String unicodeString = "(U+" + hex.toUpperCase() + ")" ;
                             fatalError(Message.Tag.Etc, "In wordList, the word \"" + LOPwordString + "\" contains the character \"" + LOPwordString.charAt(i) +
                                     "\" which is not in the keyboard. " + unicodeString);
                         }
@@ -553,7 +555,9 @@ public class Validator {
                     String unicodeString = "";
                     String key = entry.getKey();
                     if (!key.isEmpty()) {
-                        unicodeString = " (Unicode " + Integer.toHexString(key.charAt(0))  + " / " + (int) key.charAt(0) + ")";
+                        char c = key.charAt(0);
+                        String hex = String.format("%04x", (int)c);
+                        unicodeString = " (U+" + hex.toUpperCase() + ")";
                     }
                     recommend(Message.Tag.Etc, "In wordList.txt, the key \"" + entry.getKey() + "\"" + unicodeString +
                             " is only used in " + entry.getValue() + " words. It is recommended that each key be" +
