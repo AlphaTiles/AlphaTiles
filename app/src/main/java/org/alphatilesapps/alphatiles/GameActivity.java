@@ -33,10 +33,12 @@ import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.MULTITYPE_TILES;
+import static org.alphatilesapps.alphatiles.Start.NON_SPACERS_ARABIC;
 import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
+import static org.alphatilesapps.alphatiles.Start.non_joining_arabic_letters;
 import static org.alphatilesapps.alphatiles.Start.non_spacing_arabic_letters;
 import static org.alphatilesapps.alphatiles.Start.right_joining_arabic_letters;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
@@ -938,6 +940,10 @@ public abstract class GameActivity extends AppCompatActivity {
         boolean replacingLVwithOtherV;
         boolean replacingOtherVwithLV;
 
+        if (tilesInWordListWord.isEmpty()) {
+            return "";
+        }
+
         if (indexOfReplacedTile>-1){
             replacedTile = tilesInWordListWord.get(indexOfReplacedTile);
         }
@@ -1188,6 +1194,35 @@ public abstract class GameActivity extends AppCompatActivity {
     public static String contextualizedWordPieceString(String isolateWordPieceString, int indexInWord, ArrayList<String> stringPieces) {
 
         if (indexInWord==0) { // WORD-INITIAL
+            // Handle subsequent non-joiners
+            char[] nextTwoPlusChars = new char[10];
+            String nextStringPiece = stringPieces.get(indexInWord + 1);
+            String stringPieceAfterNext;
+            if(indexInWord<(stringPieces.size()-2)) {
+                stringPieceAfterNext = stringPieces.get(indexInWord+2);
+            } else {
+                stringPieceAfterNext = "";
+            }
+            int i = 0;
+            for (char c: nextStringPiece.toCharArray()) {
+                nextTwoPlusChars[i] = c;
+                i++;
+            }
+            for (char c: stringPieceAfterNext.toCharArray()) {
+                nextTwoPlusChars[i] = c;
+                i++;
+            }
+
+            if(Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(nextTwoPlusChars[0]))) {
+                return isolateWordPieceString;
+            }
+            if (indexInWord<(stringPieces.size()-2)) {
+                if (Arrays.asList(non_spacing_arabic_letters).contains(String.valueOf(nextTwoPlusChars[0]))
+                        && (Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(nextTwoPlusChars[1])))) {
+                    return isolateWordPieceString;
+                }
+            }
+            // Default:
             return contextualizedForm_Initial(isolateWordPieceString);
         } else { // MEDIAL or FINAL
 
@@ -1210,31 +1245,79 @@ public abstract class GameActivity extends AppCompatActivity {
             }
 
             if (indexInWord==(stringPieces.size()-1)) { // WORD-FINAL
-                // Handle right-joiners:
-                if(Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))) {
+                // Handle previous right-joiners:
+                if(Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))
+                    || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))) {
                     return isolateWordPieceString;
                 }
                 if (indexInWord>1) {
                     if (Arrays.asList(non_spacing_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 1]))
-                            && Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 2]))) {
+                            && (Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 2]))
+                               || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 2])))
+                    ) {
                         return isolateWordPieceString;
                     }
                 }
                 // Default:
                 return contextualizedForm_Final(isolateWordPieceString);
             } else { // WORD-MEDIAL
-                // Handle right-joiners:
-                if(Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))) {
-                    return contextualizedForm_Initial(isolateWordPieceString);
+                boolean atLeastInitialNotMedial = false;
+                // Handle previous right-joiners:
+                if(Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))
+                    || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))){
+                    atLeastInitialNotMedial = true;
                 }
                 if (indexInWord>1) {
                     if (Arrays.asList(non_spacing_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 1]))
-                            && Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 2]))) {
-                        return contextualizedForm_Initial(isolateWordPieceString);
+                            && (Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 2]))
+                                || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1])))
+                    ) {
+                        atLeastInitialNotMedial = true;
                     }
                 }
-                // Default:
-                return contextualizedForm_Medial(isolateWordPieceString);
+
+                // Handle subsequent non-joiners
+                boolean atLeastFinalNotMedial = false;
+                char[] nextTwoPlusChars = new char[10];
+                String nextStringPiece = stringPieces.get(indexInWord + 1);
+                String stringPieceAfterNext;
+                if(indexInWord<(stringPieces.size()-2)) {
+                    stringPieceAfterNext = stringPieces.get(indexInWord+2);
+                } else {
+                    stringPieceAfterNext = "";
+                }
+                i = 0;
+                for (char c: nextStringPiece.toCharArray()) {
+                    nextTwoPlusChars[i] = c;
+                    i++;
+                }
+                for (char c: stringPieceAfterNext.toCharArray()) {
+                    nextTwoPlusChars[i] = c;
+                    i++;
+                }
+
+                if(Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(nextTwoPlusChars[0]))) {
+                    atLeastFinalNotMedial = true;
+                }
+                if (indexInWord<(stringPieces.size()-2)) {
+                    if (Arrays.asList(non_spacing_arabic_letters).contains(String.valueOf(nextTwoPlusChars[0]))
+                            && (Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(nextTwoPlusChars[1])))) {
+                        atLeastFinalNotMedial = true;
+                    }
+                }
+
+               // Decide on correct form based on surrounding characters
+               if (atLeastInitialNotMedial) {
+                   if (atLeastFinalNotMedial) {
+                       return isolateWordPieceString; // Doesn't join before or after
+                   } else {
+                       return contextualizedForm_Initial(isolateWordPieceString); // Only joins after
+                   }
+               } else if (atLeastFinalNotMedial) {
+                   return contextualizedForm_Final(isolateWordPieceString); // Only joins before
+               } else {
+                   return contextualizedForm_Medial(isolateWordPieceString); // joins before and after
+               }
             }
         }
     }
@@ -1248,7 +1331,12 @@ public abstract class GameActivity extends AppCompatActivity {
      */
     public static String contextualizedForm_Initial(String isolateForm) {
 
-        return isolateForm + contextualizingCharacter;
+        if(Arrays.asList(non_joining_arabic_letters).contains(isolateForm)
+        || Arrays.asList(right_joining_arabic_letters).contains(isolateForm.substring(isolateForm.length() - 1))) {
+            return isolateForm;
+        } else {
+            return isolateForm + contextualizingCharacter;
+        }
     }
 
     /**
@@ -1258,7 +1346,13 @@ public abstract class GameActivity extends AppCompatActivity {
      */
     public static String contextualizedForm_Medial(String isolateForm) {
 
-        return contextualizingCharacter + isolateForm + contextualizingCharacter;
+        if(Arrays.asList(non_joining_arabic_letters).contains(isolateForm)){
+            return isolateForm;
+        } else if (Arrays.asList(right_joining_arabic_letters).contains(isolateForm.substring(isolateForm.length() - 1))){
+            return contextualizingCharacter + isolateForm;
+        }else {
+            return contextualizingCharacter + isolateForm + contextualizingCharacter;
+        }
     }
 
     /**
@@ -1268,12 +1362,16 @@ public abstract class GameActivity extends AppCompatActivity {
      */
     public static String contextualizedForm_Final(String isolateForm) {
 
-        return contextualizingCharacter + isolateForm;
+        if(Arrays.asList(non_joining_arabic_letters).contains(isolateForm)){
+            return isolateForm;
+        } else {
+            return contextualizingCharacter + isolateForm;
+        }
     }
 
     /**
      *
-     * @param contextualizedForm The text of a Tile or Syllable that may have had Zero-Width-Joiner added to it for contextualization
+     * @param contextualizedForm The text of a Tile or Syllable that may have been contextualized in Arabic script app games
      * @return the text of the Tile or Syllable in its isolate form
      */
     public static String isolateForm(String  contextualizedForm) {

@@ -463,7 +463,7 @@ public class Colombia extends GameActivity {
 
         if (typedLettersSoFar.length() > 0) {
             if (syllableGame.equals("S")
-                    || (syllableGame.equals("T") && challengeLevel == 3)) { // Using keyboard keys, not tile texts
+            || (syllableGame.equals("T") && challengeLevel == 3)) { // Using keyboard keys, not tile texts
                 nowWithOneLessWordPiece = typedLettersSoFar.substring(0, typedLettersSoFar.length() - clickedKeys.get(clickedKeys.size()-1).text.length());
             } else if (syllableGame.equals("T")) { // Using tile texts
                 tilesInBuiltWord.remove(tilesInBuiltWord.size() - 1);
