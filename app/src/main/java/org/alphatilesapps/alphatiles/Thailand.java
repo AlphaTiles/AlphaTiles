@@ -489,13 +489,13 @@ public class Thailand extends GameActivity {
             case "TILE_UPPER":
             case "TILE_AUDIO":
             case "CONTEXTUAL":
+                refItemText = refTile.text;
+                break;
             case "SYLLABLE_AUDIO":
-                refItemText = isolateForm(refString);
+            case "SYLLABLE_TEXT":
+                refItemText = refSyllable.text;
                 break;
             case "WORD_TEXT":
-            case "SYLLABLE_TEXT":
-                refItemText = refItem.getText().toString();
-                break;
             case "WORD_IMAGE":
             case "WORD_AUDIO":
                 refItemText = wordList.stripInstructionCharacters(refWord.wordInLOP);
@@ -505,27 +505,20 @@ public class Thailand extends GameActivity {
         }
 
         int answerChoiceIndex = justClickedItem - 1; //  justClickedItem uses 1 to 4, answerChoiceIndex uses the array ID (between [0] and [3]
-        TextView chosenItem = findViewById(GAME_BUTTONS[answerChoiceIndex]);
-        String chosenItemText;
-        if (refType.contains("SYLLABLE") && choiceType.contains("WORD")) {
-            chosenItemText = fourWordChoices.get(answerChoiceIndex).wordInLOP; // don't strip periods
-        } else if (!choiceType.equals("WORD_IMAGE")) {
-            chosenItemText = isolateForm(chosenItem.getText().toString()); // all cases except WORD_IMAGE
-        } else { // WORD_IMAGE
-            chosenItemText = wordList.stripInstructionCharacters(fourWordChoices.get(answerChoiceIndex).wordInLOP);
-        }
-
         boolean goodMatch = false;
+        String chosenItemText = "";
 
         switch (choiceType) {
             case "TILE_LOWER":
             case "CONTEXTUAL":
+            case "TILE_UPPER":
+                Tile chosenTile = fourTileChoices.get(answerChoiceIndex);
                 switch (refType) {
                     case "TILE_LOWER":
                     case "TILE_AUDIO":
                     case "TILE_UPPER":
                     case "CONTEXTUAL":
-                        if (chosenItemText.equals(refItemText)) {
+                        if (chosenTile.text.equals(refTile.text)) {
                             goodMatch = true;
                         }
                         break;
@@ -533,76 +526,86 @@ public class Thailand extends GameActivity {
                     case "WORD_IMAGE":
                     case "WORD_AUDIO":
                         Tile firstAudibleTileInRefWord = firstAudibleTile(refWord);
-                        if (firstAudibleTileInRefWord.text.equals(chosenItemText)) {
+                        if (firstAudibleTileInRefWord.text.equals(chosenTile.text)) {
                             goodMatch = true;
                         }
                         break;
                     default:
                         break;
                 }
-                break;
-            case "TILE_UPPER":
-                switch (refType) {
-                    case "TILE_LOWER":
-                    case "TILE_AUDIO":
-                    case "TILE_UPPER":
-                        if (chosenItemText.equals(refTile.upper)) {
-                            goodMatch = true;
-                        }
-                        break;
-                    case "WORD_TEXT":
-                    case "WORD_IMAGE":
-                    case "WORD_AUDIO":
-                        Tile firstAudibleTileInRefWord = firstAudibleTile(refWord);
-                        if (chosenItemText.equals(firstAudibleTileInRefWord.upper)) {
-                            goodMatch = true;
-                        }
-                        break;
-                    default:
-                        break;
+
+                // Store the chosen answer choice text for analytics/teacher information
+                if (refType.equals("TILE_UPPER")) {
+                    chosenItemText = chosenTile.upper;
+                } else if (refType.equals("CONTEXTUAL")) {
+                    switch(contextualTilePosition) { // specified by the 4th character of the challengeLevel number
+                        case "INITIAL":
+                            chosenItemText = contextualizedForm_Initial(chosenTile.text);
+                            break;
+                        case "FINAL":
+                            chosenItemText = contextualizedForm_Final(chosenTile.text);
+                            break;
+                        default: // MEDIAL
+                            chosenItemText = contextualizedForm_Medial(chosenTile.text);
+                            break;
+                    }
+                } else {
+                    chosenItemText = chosenTile.text;
                 }
                 break;
-            case "WORD_TEXT":
+            case "WORD_TEXT": // CHOICE TYPEs
             case "WORD_IMAGE":
+                Word chosenWord = fourWordChoices.get(answerChoiceIndex);
                 ArrayList<Start.Syllable> parsedChosenWordSyllableArray;
                 Tile firstAudibleTileInWordChoice;
                 switch (refType) {
                     case "TILE_LOWER":
                     case "TILE_AUDIO":
-                        firstAudibleTileInWordChoice = firstAudibleTile(fourWordChoices.get(answerChoiceIndex));
-                        if (firstAudibleTileInWordChoice.text.equals(refItemText) && firstAudibleTileInWordChoice.typeOfThisTileInstance.equals(refTileType)) {
+                    case "TILE_UPPER":
+                        firstAudibleTileInWordChoice = firstAudibleTile(chosenWord);
+                        if (firstAudibleTileInWordChoice.text.equals(refTile.text) && firstAudibleTileInWordChoice.typeOfThisTileInstance.equals(refTileType)) {
                             goodMatch = true;
                         }
                         break;
                     case "SYLLABLE_TEXT":
                     case "SYLLABLE_AUDIO":
-                        parsedChosenWordSyllableArray = syllableList.parseWordIntoSyllables(lopWordHashMap.find(chosenItemText));
-                        // this needs to be word from wordlist w/the periods still in it
-                        if (parsedChosenWordSyllableArray.get(0).text.equals(refItemText)) {
-                            goodMatch = true;
-                        }
-                        break;
-                    case "TILE_UPPER":
-                        firstAudibleTileInWordChoice = firstAudibleTile(fourWordChoices.get(answerChoiceIndex));
-                        if (refItemText != null && refItemText.equals(firstAudibleTileInWordChoice.upper)) {
+                        parsedChosenWordSyllableArray = syllableList.parseWordIntoSyllables(chosenWord);
+                        if (parsedChosenWordSyllableArray.get(0).text.equals(refSyllable.text)) {
                             goodMatch = true;
                         }
                         break;
                     case "WORD_TEXT":
                     case "WORD_IMAGE":
                     case "WORD_AUDIO":
-                        if (refItemText != null && refItemText.equals(chosenItemText)) {
+                        if (chosenWord.wordInLOP.equals(refWord.wordInLOP)) {
                             goodMatch = true;
                         }
                         break;
                     default:
                         break;
                 }
+                chosenItemText = wordList.stripInstructionCharacters(chosenWord.wordInLOP);
                 break;
-            case "SYLLABLE_TEXT":
-                if (refItemText != null && refItemText.equals(chosenItemText)) {
-                    goodMatch = true;
+            case "SYLLABLE_TEXT": // CHOICE TYPE
+                Syllable chosenSyllable = fourSyllableChoices.get(answerChoiceIndex);
+                switch (refType) {
+                    case "SYLLABLE_AUDIO":
+                        if (chosenSyllable.text.equals(refSyllable.text)) {
+                            goodMatch = true;
+                        }
+                        break;
+                    case "WORD_TEXT":
+                    case "WORD_IMAGE":
+                    case "WORD_AUDIO":
+                        parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
+                        if (chosenSyllable.text.equals(parsedRefWordSyllableArray.get(0).text)) {
+                            goodMatch = true;
+                        }
+                        break;
+                    default:
+                        break;
                 }
+                chosenItemText = chosenSyllable.text;
                 break;
             default:
                 break;
