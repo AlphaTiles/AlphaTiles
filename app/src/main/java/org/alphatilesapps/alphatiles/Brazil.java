@@ -660,7 +660,7 @@ public class Brazil extends GameActivity {
         TextView gameButton = findViewById(GAME_BUTTONS[tileNo]);
         String gameButtonString = gameButton.getText().toString();
 
-        if (isolateForm(gameButtonString).equals(correctString)) { // Any invisible zero-width-joiner (\u200D) is stripped
+        if (isolateForm(gameButtonString).equals(isolateForm(correctString))) {
             // Good job! You chose the right gameButton
             repeatLocked = false;
             setAdvanceArrowToBlue();
