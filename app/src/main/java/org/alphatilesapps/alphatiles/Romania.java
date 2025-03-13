@@ -89,9 +89,9 @@ public class Romania extends GameActivity {
         boldInitialFocusTiles = prefs.getBoolean("boldInitialFocusTiles_player" + playerString, boldInitialFocusTiles);
 
         scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+        ImageView backwardArrowImage = (ImageView) findViewById(R.id.backwardArrowImage);
+        ImageView forwardArrowImage = (ImageView) findViewById(R.id.forwardArrowImage);
         if (scriptDirection.equals("RTL")) {
-            ImageView backwardArrowImage = (ImageView) findViewById(R.id.backwardArrowImage);
-            ImageView forwardArrowImage = (ImageView) findViewById(R.id.forwardArrowImage);
             ImageView scrollForwardImage = (ImageView) findViewById(R.id.scrollForward);
             ImageView scrollBackImage = (ImageView) findViewById(R.id.scrollBack);
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -102,7 +102,10 @@ public class Romania extends GameActivity {
             scrollBackImage.setRotationY(180);
             instructionsImage.setRotationY(180);
         }
-
+        if(!Start.changeArrowColor) {
+            backwardArrowImage.setImageResource(R.drawable.zz_backward);
+            forwardArrowImage.setImageResource(R.drawable.zz_forward);
+        }
         if (getAudioInstructionsResID() == 0) {
             hideInstructionAudioImage();
         }
@@ -431,13 +434,14 @@ public class Romania extends GameActivity {
 
         ImageView forwardArrow = findViewById(R.id.forwardArrowImage);
         forwardArrow.setClickable(false);
-        forwardArrow.setBackgroundResource(0);
-        forwardArrow.setImageResource(R.drawable.zz_forward_inactive);
 
         ImageView backwardArrow = findViewById(R.id.backwardArrowImage);
         backwardArrow.setClickable(false);
+        if(Start.changeArrowColor) {
+            forwardArrow.setImageResource(R.drawable.zz_forward_inactive);
+            backwardArrow.setImageResource(R.drawable.zz_backward_inactive);
+        }
         backwardArrow.setBackgroundResource(0);
-        backwardArrow.setImageResource(R.drawable.zz_backward_inactive);
 
         TextView numberOfTotal = findViewById(R.id.numberOfTotalText);
         numberOfTotal.setClickable(false);
