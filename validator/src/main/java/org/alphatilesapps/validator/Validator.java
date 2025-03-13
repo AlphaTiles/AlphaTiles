@@ -61,7 +61,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -113,6 +112,11 @@ public class Validator {
     public static TileHashMap tileHashMap;
 
     /**
+     * Hashmap of Tile texts to Tile objects from tileList
+     */
+    public static TileHashMap tileHashMapWithoutPlaceholdersOrContextualizers;
+
+    /**
      * Smaller lists of tiles based on type
      */
     public static TileList SILENT_PRELIMINARY_TILES = new TileList();
@@ -125,10 +129,14 @@ public class Validator {
      */
     public static String scriptType;
     /**
-     * Could be "◌", "×", etc. Read from langinfo
+     * Could be "◌", "×", etc. Read from settings
      */
     public static String placeholderCharacter;
 
+    /**
+     * Could be ZWJ, Kashida, etc. Read from settings
+     */
+    public static String contextualizingCharacter;
 
     /**
      * main method for running the validator. Prompts user for the URL of the google drive folder.
@@ -500,6 +508,39 @@ public class Validator {
             fatalError(Message.Tag.Etc, "FAILED TO DOWNLOAD OR READ \"gametiles\"");
         }
 
+        try {
+            try {
+                Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
+                scriptType = langInfo.getRowFromFirstCell("Script type").get(1); // sets global variable used to determine simple/complex parse
+            } catch (ValidatorException e) {
+                fatalError(Message.Tag.Etc, "In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\". Please add a valid script type.");
+            }
+            Tab settings = langPackGoogleSheet.getTabFromName("settings");
+            placeholderCharacter = settings.getRowFromFirstCell("Stand-in base for combining tiles").get(1); // sets global variable for complex parses
+            boolean placeholderCharacterFoundInGametiles = false;
+            for (Tile tile : tileList) {
+                if (tile.text.contains(placeholderCharacter)) {
+                    placeholderCharacterFoundInGametiles = true;
+                }
+            }
+            if (scriptType.matches("(Thai|Lao)") && !placeholderCharacterFoundInGametiles) {
+                fatalError(Message.Tag.Etc, "The stand-in base for combining characters in \"Settings\" is " + placeholderCharacter + " but that character is not in any of the gametiles. "
+                        + "Please add the placeholder character you are using to the settings tab.");
+            }
+
+            contextualizingCharacter = settings.getRowFromFirstCell("Contextualizing character").get(1); // sets global variable for Arabic script apps with contextual forms
+            // Used for parsing tiles which have placeholders or contextualizers from words (which don't have these)
+            buildTileHashMapWithoutPlaceholdersOrContextualizers();
+
+        } catch (ValidatorException e) {
+            if (!(scriptType == null)) {
+                if (scriptType.matches("(Thai|Lao)")) {
+                    warn(Message.Tag.Etc, "Since the script type is Thai or Lao, you have the option to specify the \"Stand-in base for combining tiles\" in settings. By default, it will be \"◌\".");
+                }
+            }
+        }
+
+
 
         //Each try catch block is essentially one check. Each check uses a catch block so that
         // that check will simply be passed over if a helper method throws a ValidatorException
@@ -590,33 +631,6 @@ public class Validator {
             }
             for (Word word : wordList) {
                 // The tileUsage dictionary counts how many times each tile occurs in the wordlist
-
-                try {
-                    Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
-                    scriptType = langInfo.getRowFromFirstCell("Script type").get(1); // sets global variable used to determine simple/complex parse
-                } catch (ValidatorException e) {
-                    fatalError(Message.Tag.Etc, "In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\". Please add a valid script type.");
-                }
-                try {
-                    Tab settings = langPackGoogleSheet.getTabFromName("settings");
-                    placeholderCharacter = settings.getRowFromFirstCell("Stand-in base for combining tiles").get(1); // sets global variable for complex parses
-                    boolean placeholderCharacterFoundInGametiles = false;
-                    for (Tile tile : tileList) {
-                        if (tile.text.contains(placeholderCharacter)) {
-                            placeholderCharacterFoundInGametiles = true;
-                        }
-                    }
-                    if (scriptType.matches("(Thai|Lao)") && !placeholderCharacterFoundInGametiles) {
-                        fatalError(Message.Tag.Etc, "The stand-in base for combining characters in \"Settings\" is " + placeholderCharacter + " but that character is not in any of the gametiles. "
-                                + "Please add the placeholder character you are using to the settings tab.");
-                    }
-                } catch (ValidatorException e) {
-                    if (!(scriptType == null)) {
-                        if (scriptType.matches("(Thai|Lao)")) {
-                            warn(Message.Tag.Etc, "Since the script type is Thai or Lao, you have the option to specify the \"Stand-in base for combining tiles\" in settings. By default, it will be \"◌\".");
-                        }
-                    }
-                }
                 ArrayList<Tile> tilesInWord;
                 try {
                     tilesInWord = tileList.parseWordIntoTilesPreliminary(word); // Complex tiles are broken into pieces for the China game
@@ -2982,81 +2996,44 @@ public class Validator {
                 // See if the blocks of length one, two, three or four Unicode characters matches game tiles
                 // Choose the longest block that matches a game tile and add that as the next segment in the parsed word array
                 charBlockLength = 0;
-                if (tileHashMap.containsKey(next1Chars) || tileHashMap.containsKey(placeholderCharacter + next1Chars) || tileHashMap.containsKey(next1Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next1Chars + placeholderCharacter)) {
+                if (tileHashMapWithoutPlaceholdersOrContextualizers.containsKey(next1Chars)) {
                     // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
                     charBlockLength = 1;
                 }
-                if (tileHashMap.containsKey(next2Chars) || tileHashMap.containsKey(placeholderCharacter + next2Chars) || tileHashMap.containsKey(next2Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next2Chars + placeholderCharacter)) {
+                if (tileHashMapWithoutPlaceholdersOrContextualizers.containsKey(next2Chars)) {
                     // The value 2 can overwrite 1 but it can't overwrite 3 or 4
                     charBlockLength = 2;
                 }
-                if (tileHashMap.containsKey(next3Chars) || tileHashMap.containsKey(placeholderCharacter + next3Chars) || tileHashMap.containsKey(next3Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next3Chars + placeholderCharacter)) {
+                if (tileHashMapWithoutPlaceholdersOrContextualizers.containsKey(next3Chars)) {
                     // The value 3 can overwrite 1 or 2 but it can't overwrite 4
                     charBlockLength = 3;
                 }
-                if (tileHashMap.containsKey(next4Chars) || tileHashMap.containsKey(placeholderCharacter + next4Chars) || tileHashMap.containsKey(next4Chars + placeholderCharacter) || tileHashMap.containsKey(placeholderCharacter + next4Chars + placeholderCharacter)) {
+                if (tileHashMapWithoutPlaceholdersOrContextualizers.containsKey(next4Chars)) {
                     // The value 4 can overwrite 1 or 2 or 3
                     charBlockLength = 4;
                 }
 
                 // Add the selected game tile (the longest selected from the previous loop) to the parsed word array
-                String tileString = "";
-                switch (charBlockLength) {
-                    case 1:
-                        if (tileHashMap.containsKey(next1Chars)) {
-                            tileString = next1Chars;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next1Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                            tileString = placeholderCharacter + next1Chars;
-                        } else if (tileHashMap.containsKey(next1Chars + placeholderCharacter)) { // For LV stored with placeholder
-                            tileString = next1Chars + placeholderCharacter;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next1Chars + placeholderCharacter)) { // For medial vowel
-                            tileString = placeholderCharacter + next1Chars + placeholderCharacter;
-                        }
-                        break;
-                    case 2:
-                        if (tileHashMap.containsKey(next2Chars)) {
-                            tileString = next2Chars;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next2Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                            tileString = placeholderCharacter + next2Chars;
-                        } else if (tileHashMap.containsKey(next2Chars + placeholderCharacter)) { // For LV stored with placeholder
-                            tileString = next2Chars + placeholderCharacter;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next2Chars + placeholderCharacter)) { // For medial vowel
-                            tileString = placeholderCharacter + next2Chars + placeholderCharacter;
-                        }
-                        i++;
-                        break;
-                    case 3:
-                        if (tileHashMap.containsKey(next3Chars)) {
-                            tileString = next3Chars;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next3Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                            tileString = placeholderCharacter + next3Chars;
-                        } else if (tileHashMap.containsKey(next3Chars + placeholderCharacter)) { // For LV stored with placeholder
-                            tileString = next3Chars + placeholderCharacter;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next3Chars + placeholderCharacter)) { // For medial vowel
-                            tileString = placeholderCharacter + next3Chars + placeholderCharacter;
-                        }
-                        i += 2;
-                        break;
-                    case 4:
-                        if (tileHashMap.containsKey(next4Chars)) {
-                            tileString = next4Chars;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next4Chars)) { // For AV/BV/FV/AD/D stored with placeholder
-                            tileString = placeholderCharacter + next4Chars;
-                        } else if (tileHashMap.containsKey(next4Chars + placeholderCharacter)) { // For LV stored with placeholder
-                            tileString = next4Chars + placeholderCharacter;
-                        } else if (tileHashMap.containsKey(placeholderCharacter + next4Chars + placeholderCharacter)) { // For medial vowel
-                            tileString = placeholderCharacter + next4Chars + placeholderCharacter;
-                        }
-                        i += 3;
-                        break;
-                    default:
-                        break;
-                }
-                if (!tileString.isEmpty()) {
-                    Tile nextTile = tileHashMap.find(tileString);
+                if (charBlockLength>0) {
+                    Tile nextTile;
+                    switch (charBlockLength) {
+                        case 2:
+                            nextTile = tileHashMapWithoutPlaceholdersOrContextualizers.get(next2Chars);
+                            i++;
+                            break;
+                        case 3:
+                            nextTile = tileHashMapWithoutPlaceholdersOrContextualizers.get(next3Chars);
+                            i += 2;
+                            break;
+                        case 4:
+                            nextTile = tileHashMapWithoutPlaceholdersOrContextualizers.get(next4Chars);
+                            i += 3;
+                            break;
+                        default: // charBlockLength==1
+                            nextTile = tileHashMapWithoutPlaceholdersOrContextualizers.get(next1Chars);
+                            break;
+                    }
                     wordPreliminaryTileArray.add(nextTile);
-                } else if (!".#".contains(next1Chars)) {
-                    return null;
                 }
             }
             for (Tile tile : wordPreliminaryTileArray) { // Set instance-specific fields
@@ -3293,6 +3270,19 @@ public class Validator {
             tileHashMap.put(tileList.get(i).text, tileList.get(i));
         }
     }
+
+    /**
+     * helper method making the HashMap of stripped tile texts to Tile objects
+     */
+    public void buildTileHashMapWithoutPlaceholdersOrContextualizers() {
+        tileHashMapWithoutPlaceholdersOrContextualizers = new TileHashMap();
+        for (int i = 0; i < tileList.size(); i++) {
+            String strippedTileText = tileList.get(i).text.replace(placeholderCharacter, "").replace(contextualizingCharacter, "");
+            tileHashMapWithoutPlaceholdersOrContextualizers.put(strippedTileText, tileList.get(i));
+        }
+    }
+
+
 
 }
 
