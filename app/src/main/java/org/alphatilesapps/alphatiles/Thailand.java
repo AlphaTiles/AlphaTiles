@@ -386,7 +386,7 @@ public class Thailand extends GameActivity {
                     int choiceColorNo = Color.parseColor(choiceColorStr);
                     choiceButton.setBackgroundColor(choiceColorNo);
                     choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                    choiceButton.setText(fourTileChoices.get(t).text); // Added ZWJ in prior if block for CONTEXTUAL; normal for TILE_LOWER
+                    choiceButton.setText(fourTileChoices.get(t).text); // Added contextualizingCharacter in prior if block for CONTEXTUAL choices; normal for TILE_LOWER
                 }
                 break;
             case "TILE_UPPER":
@@ -445,11 +445,19 @@ public class Thailand extends GameActivity {
             case "SYLLABLE_TEXT":
                 if (hasSyllableAudio) {
                     playActiveSyllableClip(false);
+                } else {
+                    setAllGameButtonsClickable();
                 }
                 break;
             case "TILE_LOWER":
             case "TILE_UPPER":
             case "CONTEXTUAL":
+                if (hasTileAudio) {
+                    playActiveTileClip(false);
+                } else {
+                    setAllGameButtonsClickable();
+                }
+                break;
             case "TILE_AUDIO":
                 playActiveTileClip(false);
                 break;
@@ -481,28 +489,6 @@ public class Thailand extends GameActivity {
 
 
     private void respondToSelection(int justClickedItem) {
-        String refItemText = null;
-        TextView refItem = findViewById(R.id.referenceItem);
-
-        switch (refType) {
-            case "TILE_LOWER":
-            case "TILE_UPPER":
-            case "TILE_AUDIO":
-            case "CONTEXTUAL":
-                refItemText = refTile.text;
-                break;
-            case "SYLLABLE_AUDIO":
-            case "SYLLABLE_TEXT":
-                refItemText = refSyllable.text;
-                break;
-            case "WORD_TEXT":
-            case "WORD_IMAGE":
-            case "WORD_AUDIO":
-                refItemText = wordList.stripInstructionCharacters(refWord.wordInLOP);
-                break;
-            default:
-                break;
-        }
 
         int answerChoiceIndex = justClickedItem - 1; //  justClickedItem uses 1 to 4, answerChoiceIndex uses the array ID (between [0] and [3]
         boolean goodMatch = false;
@@ -535,9 +521,9 @@ public class Thailand extends GameActivity {
                 }
 
                 // Store the chosen answer choice text for analytics/teacher information
-                if (refType.equals("TILE_UPPER")) {
+                if (choiceType.equals("TILE_UPPER")) {
                     chosenItemText = chosenTile.upper;
-                } else if (refType.equals("CONTEXTUAL")) {
+                } else if (choiceType.equals("CONTEXTUAL")) {
                     switch(contextualTilePosition) { // specified by the 4th character of the challengeLevel number
                         case "INITIAL":
                             chosenItemText = contextualizedForm_Initial(chosenTile.text);
@@ -655,16 +641,23 @@ public class Thailand extends GameActivity {
                         playCorrectSound();
                     }
                     break;
+                case "TILE_AUDIO":
+                    playCorrectSoundThenActiveTileClip(false);
+                    break;
                 case "TILE_LOWER":
                 case "TILE_UPPER":
-                case "TILE_AUDIO":
                 case "CONTEXTUAL":
-                    playCorrectSoundThenActiveTileClip(false);
+                    if (hasTileAudio) {
+                        playCorrectSoundThenActiveTileClip(false);
+                    } else {
+                        playCorrectSound();
+                    }
                     break;
                 case "WORD_TEXT":
                 case "WORD_IMAGE":
                 case "WORD_AUDIO":
                     playCorrectSoundThenActiveWordClip(false);
+                    break;
             }
 
         } else {
