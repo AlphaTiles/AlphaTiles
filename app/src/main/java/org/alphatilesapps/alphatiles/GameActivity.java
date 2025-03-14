@@ -1331,9 +1331,22 @@ public abstract class GameActivity extends AppCompatActivity {
      */
     public static String contextualizedForm_Initial(String isolateForm) {
 
+        String finalCharacter = isolateForm.substring(isolateForm.length() - 1);
         if(Arrays.asList(non_joining_arabic_letters).contains(isolateForm)
-        || Arrays.asList(right_joining_arabic_letters).contains(isolateForm.substring(isolateForm.length() - 1))) {
+        || Arrays.asList(right_joining_arabic_letters).contains(finalCharacter)) {
             return isolateForm;
+        } else if (Arrays.asList(non_spacing_arabic_letters).contains(finalCharacter)) {
+            if(isolateForm.length() > 1){
+                String penultimateCharacter = isolateForm.substring(isolateForm.length() - 2, isolateForm.length() - 1);
+                if (Arrays.asList(right_joining_arabic_letters).contains(penultimateCharacter)
+                || Arrays.asList(non_joining_arabic_letters).contains(penultimateCharacter)) {
+                    return isolateForm;
+                } else {
+                    return isolateForm + contextualizingCharacter;
+                }
+            } else {
+                return isolateForm;
+            }
         } else {
             return isolateForm + contextualizingCharacter;
         }
@@ -1345,12 +1358,25 @@ public abstract class GameActivity extends AppCompatActivity {
      * @return the tile or syllable string as it would appear in between two joining characters
      */
     public static String contextualizedForm_Medial(String isolateForm) {
+        String finalCharacter = isolateForm.substring(isolateForm.length() - 1);
 
         if(Arrays.asList(non_joining_arabic_letters).contains(isolateForm)){
             return isolateForm;
-        } else if (Arrays.asList(right_joining_arabic_letters).contains(isolateForm.substring(isolateForm.length() - 1))){
+        } else if (Arrays.asList(right_joining_arabic_letters).contains(finalCharacter)){
             return contextualizingCharacter + isolateForm;
-        }else {
+        } else if (Arrays.asList(non_spacing_arabic_letters).contains(finalCharacter)) {
+            if (isolateForm.length() > 1) {
+                String penultimateCharacter = isolateForm.substring(isolateForm.length()-2, isolateForm.length()-1);
+                if (Arrays.asList(right_joining_arabic_letters).contains(penultimateCharacter)
+                        || Arrays.asList(non_joining_arabic_letters).contains(penultimateCharacter)) {
+                    return contextualizingCharacter + isolateForm;
+                } else {
+                    return contextualizingCharacter + isolateForm + contextualizingCharacter;
+                }
+            } else {
+                return isolateForm; // This is a non-spacing character
+            }
+        } else {
             return contextualizingCharacter + isolateForm + contextualizingCharacter;
         }
     }
@@ -1361,9 +1387,21 @@ public abstract class GameActivity extends AppCompatActivity {
      * @return the tile or syllable string as it would appear at the end of a word/pseudoword string
      */
     public static String contextualizedForm_Final(String isolateForm) {
+        String firstCharacter = isolateForm.substring(0, 1);
 
-        if(Arrays.asList(non_joining_arabic_letters).contains(isolateForm)){
+        if(Arrays.asList(non_joining_arabic_letters).contains(firstCharacter)) {
             return isolateForm;
+        }  else if (Arrays.asList(non_spacing_arabic_letters).contains(firstCharacter)) {
+            if (isolateForm.length() >1 ){
+                String secondCharacter = isolateForm.substring(1, 2);
+                if (Arrays.asList(non_joining_arabic_letters).contains(secondCharacter)) {
+                    return isolateForm;
+                } else {
+                    return contextualizingCharacter + isolateForm;
+                }
+            } else { // This is non-spacing character
+                return isolateForm;
+            }
         } else {
             return contextualizingCharacter + isolateForm;
         }
