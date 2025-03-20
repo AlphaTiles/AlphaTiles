@@ -378,6 +378,15 @@ public class Romania extends GameActivity {
                 activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
             }
         }
+        // If we are not distinguishing between multitype tiles, and this is a multitype tile,
+        // loop until we find a new one (same text - the type will be different).
+        if (!differentiatesTileTypes && MULTITYPE_TILES.contains(activeTile.text)) {
+            while (activeTile.text.equals(oldTile.text)) {
+                LOGGER.info("goToNextTile: skip to one more after " + activeTile.text);
+                oldTile = activeTile;
+                activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
+            }
+        }
 
         indexWithinGroup = 0;
         SharedPreferences.Editor editor = prefs.edit();
@@ -403,6 +412,15 @@ public class Romania extends GameActivity {
             }
         } else {
             while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 3) == 0) {
+                oldTile = activeTile;
+                activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
+            }
+        }
+        // If we are not distinguishing between multitype tiles, and this is a multitype tile,
+        // loop until we find a new one (same text - the type will be different).
+        if (!differentiatesTileTypes && MULTITYPE_TILES.contains(activeTile.text)) {
+            while (activeTile.text.equals(oldTile.text)) {
+                LOGGER.info("goToPreviousTile: skip to one more before " + activeTile.text);
                 oldTile = activeTile;
                 activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
             }
