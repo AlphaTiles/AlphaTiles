@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -201,10 +202,18 @@ public abstract class GameActivity extends AppCompatActivity {
         } else {
             forceLTRIfSupported();
         }
-
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // testParsingAndCombining(); // Helpful runtime check for complex tile parsing
         super.onCreate(state);
+
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if(!Start.changeArrowColor) {
+            setAdvanceArrowToBlue();
+        }
     }
 
     public void goBackToEarth(View view) {
@@ -551,12 +560,21 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected void setAdvanceArrowToBlue() {
         ImageView repeatImage = findViewById(R.id.repeatImage);
+        if(repeatImage == null) {
+            return;
+        }
         repeatImage.setBackgroundResource(0);
         repeatImage.setImageResource(R.drawable.zz_forward);
     }
 
     protected void setAdvanceArrowToGray() {
+        if(!Start.changeArrowColor) {
+            return;
+        }
         ImageView repeatImage = findViewById(R.id.repeatImage);
+        if(repeatImage == null) {
+            return;
+        }
         repeatImage.setBackgroundResource(0);
         repeatImage.setImageResource(R.drawable.zz_forward_inactive);
     }

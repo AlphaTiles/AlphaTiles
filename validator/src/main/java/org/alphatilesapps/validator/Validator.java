@@ -222,7 +222,10 @@ public class Validator {
                         }
                     }
                 }
-
+                if (checks.stagesInformation) {
+                    System.out.println("\nStages information\n********");
+                    System.out.print(myValidator.stagesInformation);
+               }
                 jf.setVisible(true);
                 int wantsToDownload = JOptionPane.showOptionDialog(jf, "After reviewing errors and warnings, " +
                                 "are you ready to download the data from this language pack into android studio", "AlphaTiles",
@@ -251,6 +254,9 @@ public class Validator {
     //<editor-fold desc="Validator fields">
 
     private final Path rootPath;
+    public String stagesInformation = "";
+    public double stageCorrespondenceRatio;
+    public boolean firstTileStageCorrespondence;
     /**
      * A LinkedHashSet of fatal errors found by the validator (is Set to avoid duplicate messages). Printed by main.
      */
@@ -401,7 +407,11 @@ public class Validator {
     public void validate() {
 
         this.validateGoogleSheet();
-
+        try {
+            stagesInformation = StagesChecks.check(wordList, tileList, stageCorrespondenceRatio, firstTileStageCorrespondence);
+        } catch (Exception ignored) {
+            // other places should catch whatever tripped this up.
+        }
         //runs syllable checks only if 6 or more words contain periods (for syllable splicing)
         boolean usesSyllables = decideIfSyllablesAttempted();
         if (usesSyllables) {
@@ -537,7 +547,9 @@ public class Validator {
                             }
                         }
                         if (!charIsPartOfLongerKeyString) {
-                            String unicodeString = "(Unicode " + Integer.toHexString(LOPwordString.charAt(i)) + " / " + (int) LOPwordString.charAt(i) + ")";
+                            char c = LOPwordString.charAt(i);
+                            String hex = String.format("%04x", (int)c);
+                            String unicodeString = "(U+" + hex.toUpperCase() + ")" ;
                             fatalError(Message.Tag.Etc, "In wordList, the word \"" + LOPwordString + "\" contains the character \"" + LOPwordString.charAt(i) +
                                     "\" which is not in the keyboard. " + unicodeString);
                         }
@@ -553,7 +565,9 @@ public class Validator {
                     String unicodeString = "";
                     String key = entry.getKey();
                     if (!key.isEmpty()) {
-                        unicodeString = " (Unicode " + Integer.toHexString(key.charAt(0))  + " / " + (int) key.charAt(0) + ")";
+                        char c = key.charAt(0);
+                        String hex = String.format("%04x", (int)c);
+                        unicodeString = " (U+" + hex.toUpperCase() + ")";
                     }
                     recommend(Message.Tag.Etc, "In wordList.txt, the key \"" + entry.getKey() + "\"" + unicodeString +
                             " is only used in " + entry.getValue() + " words. It is recommended that each key be" +
@@ -817,8 +831,11 @@ public class Validator {
         }
         try {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
-            if (!settings.getRowFromFirstCell("First letter stage correspondence").get(1).matches("(TRUE|FALSE)")) {
+            String value =settings.getRowFromFirstCell("First letter stage correspondence").get(1);
+            if (!value.matches("(TRUE|FALSE)")) {
                 fatalError(Message.Tag.Etc, "In settings \"First letter stage correspondence\" must be either \"TRUE\" or \"FALSE\")");
+            } else {
+                firstTileStageCorrespondence = value.equals("TRUE");
             }
         } catch (ValidatorException e) {
             warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the settings tab");
@@ -828,9 +845,11 @@ public class Validator {
             Tab settings = langPackGoogleSheet.getTabFromName("settings");
             String scrString = settings.getRowFromFirstCell("Stage correspondence ratio").get(1);
             if (scrString.matches("-?\\d+(\\.\\d+)?")) {
-                Double scrValue = Double.parseDouble(scrString);
+                double scrValue = Double.parseDouble(scrString);
                 if (scrValue < 0.1 || scrValue > 1 ) {
                     fatalError(Message.Tag.Etc, "In settings for \"Stage correspondence ratio\", please enter a number from 0.1 to 1.");
+                } else {
+                    stageCorrespondenceRatio = scrValue;
                 }
             } else {
                 fatalError(Message.Tag.Etc, "In settings for \"Stage correspondence ratio\", please enter a number from 0.1 to 1 using a decimal (not a comma) as the separator.");
@@ -2470,10 +2489,12 @@ public class Validator {
         public boolean showExcess = true;
         public boolean preWorkshop = false;
         public boolean copySyllables = false;
+        public boolean stagesInformation = false;
         public Checks(JPanel dialog) {
             addCheck(dialog, "Pre-workshop checks only", (ActionEvent e) -> preWorkshop = !preWorkshop, false);
             addCheck(dialog, "Show recommendations", (ActionEvent e) -> showRecommendations = !showRecommendations);
             addCheck(dialog, "Show excess file warnings", (ActionEvent e) -> showExcess = !showExcess);
+            addCheck(dialog, "Show stages information", (ActionEvent e) -> stagesInformation = !stagesInformation, false);
             addCheck(dialog, "Copy syllables draft to clipboard", (ActionEvent e) -> copySyllables = !copySyllables, false);
         }
         private void addCheck(JPanel dialog, String message, ActionListener listener) {
