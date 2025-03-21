@@ -18,6 +18,8 @@ import static android.graphics.Color.WHITE;
 import static org.alphatilesapps.alphatiles.Start.*;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 
+import androidx.annotation.NonNull;
+
 public class Thailand extends GameActivity {
     ArrayList<Start.Word> fourWordChoices = new ArrayList<>();
     ArrayList<Start.Tile> fourTileChoices = new ArrayList<>();
@@ -250,18 +252,22 @@ public class Thailand extends GameActivity {
             }
 
         } else {
-            // Makes sure that the reference tile chosen is not a glottal stop for ex;
-            // Ensure that chosen tile is a consonant or vowel
-            if (refType.contains("TILE") || refType.equals("CONTEXTUAL")) {
-                boolean permissableTile = false;
+            if (refType.contains("TILE") || refType.equals("CONTEXTUAL")) { // Set a permissible refTile and set refTileType and refString
+                boolean permissibleTile = false;
                 int freshChecks = 0;
-
-                while (!permissableTile) {
+                while (!permissibleTile) {
                     freshChecks++;
                     int randomTileIndex = rand.nextInt(tileListNoSAD.size());
                     refTile = tileListNoSAD.get(randomTileIndex);
-
-                    switch(refType) { // Set refString
+                    refTileType = refTile.typeOfThisTileInstance;
+                    boolean distractorContainsContextualizer = false;
+                    for (String t : refTile.distractors) {
+                        if (t.contains(contextualizingCharacter)) {
+                            distractorContainsContextualizer = true;
+                            break;
+                        }
+                    }
+                    switch (refType) { // Set refString based on the type of tile reference
                         case "TILE_LOWER":
                         case "TILE_AUDIO":
                             refString = refTile.text;
@@ -285,16 +291,17 @@ public class Thailand extends GameActivity {
                         default:
                             break;
                     }
-
-                    // Disallow non-fresh reference items
+                    // Disallow non-fresh reference tiles
+                    // Ensure reference tiles are either consonants or vowels
                     // Disallow placeholder consonants as reference items
                     // Disallow non-joining and non-spacing (non-contextual) characters from contextual forms matching games (Arabic script)
-                    // Disallow tiles that are already displayed with a contextual character in the tile list
-                    refTileType = refTile.typeOfThisTileInstance;
-                    permissableTile = verifyFreshTile(refString, freshChecks) && CorV.contains(refTile)
-                                        && !(refTileType.matches("(PC)")
-                                        && !(refType.matches("CONTEXTUAL")||choiceType.matches("CONTEXTUAL"))
-                            && (NON_JOINERS_ARABIC.contains(refTile) || NON_SPACERS_ARABIC.contains(refTile)) || refTile.text.contains(contextualizingCharacter));
+                    // Disallow tiles that are already displayed with a contextual character in the tile list (Arabic script)
+                    // Disallow tiles with distractors that are already displayed with a contextual character, if it's challengelevel 2 (Arabic script)
+                    permissibleTile = verifyFreshTile(refString, freshChecks)
+                            && CorV.contains(refTile)
+                            && !(refTileType.matches("(PC)"))
+                            && !((refType.matches("CONTEXTUAL") || choiceType.matches("CONTEXTUAL")) && (NON_JOINERS_ARABIC.contains(refTile) || NON_SPACERS_ARABIC.contains(refTile) || refTile.text.contains(contextualizingCharacter)))
+                            && !(challengeLevel == 2 && distractorContainsContextualizer);
 
                 }
             }
@@ -334,18 +341,8 @@ public class Thailand extends GameActivity {
         if (choiceType.matches("(TILE_LOWER|TILE_UPPER|CONTEXTUAL)")) {
             // challengeLevelThai 1 = pull random tiles for wrong choices
             // challengeLevelThai 2 = pull distractor tiles for wrong choices
+            fourTileChoices = tileListNoSAD.returnFourTileChoices(refTile, challengeLevelThai, refTileType);
             if(choiceType.equals("CONTEXTUAL")) { // In some Arabic script apps
-                boolean excludedTileChoicePicked = true;
-                while (excludedTileChoicePicked) {
-                    fourTileChoices = tileListNoSAD.returnFourTileChoices(refTile, challengeLevelThai, refTileType);
-                    excludedTileChoicePicked = false;
-                    for (Tile t: fourTileChoices) {
-                        if (t.text.contains(contextualizingCharacter)) { // Exclude the few Arabic script tiles that are already displayed with contextual characters
-                            excludedTileChoicePicked = true;
-                        }
-                    }
-                }
-
                 switch(contextualTilePosition) { // specified by the 4th character of the challengeLevel number
                     case "INITIAL":
                         for(Tile t : fourTileChoices) {
@@ -363,8 +360,6 @@ public class Thailand extends GameActivity {
                         }
                         break;
                 }
-            } else { // choiceType is TILE_LOWER or TILE_UPPER
-                fourTileChoices = tileListNoSAD.returnFourTileChoices(refTile, challengeLevelThai, refTileType);
             }
         } else if (choiceType.matches("(WORD_TEXT|WORD_IMAGE)") && (!refType.contains("SYLLABLE"))) {
             fourWordChoices = wordList.returnFourWords(refWord, refTile, challengeLevelThai, refType);
@@ -658,6 +653,8 @@ public class Thailand extends GameActivity {
                 case "WORD_AUDIO":
                     playCorrectSoundThenActiveWordClip(false);
                     break;
+                default:
+                    break;
             }
 
         } else {
@@ -691,7 +688,7 @@ public class Thailand extends GameActivity {
         return tileToReturn;
     }
 
-    public void onChoiceClick(View view) {
+    public void onChoiceClick(@NonNull View view) {
         respondToSelection(Integer.parseInt((String) view.getTag())); // KP
     }
 
@@ -712,6 +709,8 @@ public class Thailand extends GameActivity {
             case "WORD_IMAGE":
             case "WORD_AUDIO":
                 playActiveWordClip(false);
+                break;
+            default:
                 break;
         }
 
@@ -747,6 +746,9 @@ public class Thailand extends GameActivity {
                         // Otherwise, updatePointsAndTrackers will set it clickable only after
                         // the player returns to earth (2) or sees the celebration screen (3)
                     }
+                    else if (trackerCount == 0){
+                        setOptionsRowClickable();
+                    }
                 }
             }
         }, refSyllable.duration);
@@ -780,22 +782,21 @@ public class Thailand extends GameActivity {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
-        gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+        gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
-                playActiveSyllableClip(playFinalSound);
-                if (repeatLocked) {
-                    setAllGameButtonsClickable();
-                }
+                setAllGameButtonsClickable();
                 if (after12checkedTrackers == 1){
                     setOptionsRowClickable();
-                    // JP: In setting 1, the player can always keep advancing to the next tile/word/image
+                    //JP: In setting 1, the player can always keep advancing to the next tile/word/image
                 }
                 else if (trackerCount >0 && trackerCount % 12 != 0) {
                     setOptionsRowClickable();
                     // Otherwise, updatePointsAndTrackers will set it clickable only after
                     // the player returns to earth (2) or sees the celebration screen (3)
                 }
+                playActiveSyllableClip(playFinalSound);
             }
         }, correctSoundDuration);
     }
@@ -812,23 +813,21 @@ public class Thailand extends GameActivity {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
-        gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+        gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
-                playActiveTileClip(playFinalSound);
-                if (repeatLocked) {
-                    setAllGameButtonsClickable();
+                setAllGameButtonsClickable();
                 if (after12checkedTrackers == 1){
-                }
                     setOptionsRowClickable();
+                    //JP: In setting 1, the player can always keep advancing to the next tile/word/image
                 }
-                    //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
                 else if (trackerCount >0 && trackerCount % 12 != 0) {
                     setOptionsRowClickable();
-                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
-                    // and we don't want the user to be able to advance before returning to earth (2) or
-                    // before seeing the celebration screen (3)
+                    // Otherwise, updatePointsAndTrackers will set it clickable only after
+                    // the player returns to earth (2) or sees the celebration screen (3)
                 }
+                playActiveTileClip(playFinalSound);
             }
         }, correctSoundDuration);
     }
