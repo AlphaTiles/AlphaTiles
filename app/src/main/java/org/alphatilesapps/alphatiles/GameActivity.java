@@ -894,6 +894,9 @@ public abstract class GameActivity extends AppCompatActivity {
                         // Otherwise, updatePointsAndTrackers will set it clickable only after
                         // the player returns to earth (2) or sees the celebration screen (3)
                     }
+                    else if (trackerCount == 0) {
+                        setOptionsRowClickable();
+                    }
                 }
             }
         }, audioDuration);
