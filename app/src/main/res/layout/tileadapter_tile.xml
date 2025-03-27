@@ -20,7 +20,6 @@
             android:textAlignment="center"
             android:bufferType="spannable"
             android:textColor="@color/WHITE"
-            android:textDirection="rtl"
             android:textSize="0sp" />
     </LinearLayout>
 
