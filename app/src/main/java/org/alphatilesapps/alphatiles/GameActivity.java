@@ -962,24 +962,44 @@ public abstract class GameActivity extends AppCompatActivity {
         }
 
         int index = 0;
-        for (Start.Tile thisTile : tilesInThisWordOption) {
-            String stringToAppend = thisTile.text.replace(contextualizingCharacter, "");
+        for (int i = 0; i < tilesInThisWordOption.size(); i++) {
+            Start.Tile thisTile = tilesInThisWordOption.get(i);
+            String stringToAppend;
+            if (i==indexOfReplacedTile && thisTile.text.contains("__")) {
+                stringToAppend = thisTile.text; // Leave any Arabic script contextualizing characters around blanks
+            } else {
+                stringToAppend = isolateForm(thisTile.text);
+            }
+
             if(stringToAppend.contains(placeholderCharacter) && stringToAppend.length() == 2) { // Filter these placeholders out; keep the complex tile ones
                 stringToAppend = stringToAppend.replace(placeholderCharacter, "");
             }
             if (thisTile.typeOfThisTileInstance.matches("(C|PC)")){
-                previousConsonant = thisTile.text;
+                if (i==indexOfReplacedTile && thisTile.text.contains("__")) {
+                    previousConsonant = thisTile.text; // Leave any Arabic script contextualizing characters around blanks
+                } else {
+                    previousConsonant = isolateForm(thisTile.text);
+                }
                 previousAboveOrBelowVowel = ""; // Reset; new syllable
                 previousDiacritics = ""; // Reset; new syllable
             }
             if(thisTile.typeOfThisTileInstance.matches("(D|AD)")) {
-                previousDiacritics = thisTile.text.replace(contextualizingCharacter, "");
+                if (i==indexOfReplacedTile && thisTile.text.contains("__")) {
+                    previousDiacritics = thisTile.text; // Leave any Arabic script contextualizing characters around blanks
+                } else {
+                    previousDiacritics = isolateForm(thisTile.text);
+                }
                 if(previousDiacritics.contains(placeholderCharacter) && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
                     previousDiacritics = previousDiacritics.replace(placeholderCharacter, "");
                 }
             }
             if(thisTile.typeOfThisTileInstance.matches("(AV|BV)")){
-                previousAboveOrBelowVowel = thisTile.text.replace(contextualizingCharacter, "");
+                if (i==indexOfReplacedTile && thisTile.text.contains("__")) {
+                    previousAboveOrBelowVowel = thisTile.text; // Leave any Arabic script contextualizing characters around blanks
+                } else {
+                    previousAboveOrBelowVowel = isolateForm(thisTile.text);
+                }
+
                 if(previousAboveOrBelowVowel.contains(placeholderCharacter) && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
                     previousAboveOrBelowVowel = previousAboveOrBelowVowel.replace(placeholderCharacter, "");
                 }
