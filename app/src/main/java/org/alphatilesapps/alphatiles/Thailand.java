@@ -295,12 +295,13 @@ public class Thailand extends GameActivity {
                     // Ensure reference tiles are either consonants or vowels
                     // Disallow placeholder consonants as reference items
                     // Disallow non-joining and non-spacing (non-contextual) characters from contextual forms matching games (Arabic script)
+                    // Disallow tiles with placeholders from contextual forms matching games (Arabic script)
                     // Disallow tiles that are already displayed with a contextual character in the tile list (Arabic script)
                     // Disallow tiles with distractors that are already displayed with a contextual character, if it's challengelevel 2 (Arabic script)
                     permissibleTile = verifyFreshTile(refString, freshChecks)
                             && CorV.contains(refTile)
                             && !(refTileType.matches("(PC)"))
-                            && !((refType.matches("CONTEXTUAL") || choiceType.matches("CONTEXTUAL")) && (NON_JOINERS_ARABIC.contains(refTile) || NON_SPACERS_ARABIC.contains(refTile) || refTile.text.contains(contextualizingCharacter)))
+                            && !((refType.matches("CONTEXTUAL") || choiceType.matches("CONTEXTUAL")) && (NON_JOINERS_ARABIC.contains(refTile) || NON_SPACERS_ARABIC.contains(refTile) || refTile.text.contains(contextualizingCharacter) || refTile.text.contains(placeholderCharacter)))
                             && !(challengeLevel == 2 && distractorContainsContextualizer);
 
                 }
