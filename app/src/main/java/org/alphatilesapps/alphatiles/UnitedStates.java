@@ -257,15 +257,15 @@ public class UnitedStates extends GameActivity {
      */
     private void contextualizeTileForms() {
 
-        for(int t=0; t<parsedRefWordTileArray.size(); t++) { // TOP ROW
-            TextView gameButton = findViewById(GAME_BUTTONS[0]);
-            String gameButtonText = contextualizedWordPieceString(String.valueOf(gameButton.getText()), t, parsedRefWordTileArrayStrings);
-            gameButton.setText(gameButtonText);
-        }
-        for(int t=parsedRefWordTileArray.size(); t<(2*parsedRefWordTileArray.size()); t++) { // BOTTOM ROW
-            TextView gameButton = findViewById(GAME_BUTTONS[0]);
-            String gameButtonText = contextualizedWordPieceString(String.valueOf(gameButton.getText()), t-parsedRefWordTileArray.size(), parsedRefWordTileArrayStrings);
-            gameButton.setText(gameButtonText);
+        int tileIndexInWord = 0;
+        for (int buttonPair = 0; buttonPair < numberOfPairs*2; buttonPair += 2) {
+            Button gameButtonA = findViewById(GAME_BUTTONS[buttonPair]);
+            Button gameButtonB = findViewById(GAME_BUTTONS[buttonPair + 1]);
+            String gameButtonAContextualizedText = contextualizedWordPieceString(String.valueOf(gameButtonA.getText()), tileIndexInWord, parsedRefWordTileArrayStrings);
+            String gameButtonBContextualizedText = contextualizedWordPieceString(String.valueOf(gameButtonB.getText()), tileIndexInWord, parsedRefWordTileArrayStrings);
+            gameButtonA.setText(gameButtonAContextualizedText);
+            gameButtonB.setText(gameButtonBContextualizedText);
+            tileIndexInWord++;
         }
     }
 
@@ -274,15 +274,15 @@ public class UnitedStates extends GameActivity {
      */
     private void contextualizeSyllableForms() {
 
-        for(int t=0; t<parsedRefWordSyllableArray.size(); t++) { // TOP ROW
-            TextView gameButton = findViewById(GAME_BUTTONS[0]);
-            String gameButtonText = contextualizedWordPieceString(String.valueOf(gameButton.getText()), t, parsedRefWordSyllableArrayStrings);
-            gameButton.setText(gameButtonText);
-        }
-        for(int t=parsedRefWordTileArray.size(); t<(2*parsedRefWordTileArray.size()); t++) { // BOTTOM ROW
-            TextView gameButton = findViewById(GAME_BUTTONS[0]);
-            String gameButtonText = contextualizedWordPieceString(String.valueOf(gameButton.getText()), t-parsedRefWordSyllableArray.size(), parsedRefWordSyllableArrayStrings);
-            gameButton.setText(gameButtonText);
+        int syllableIndexInWord = 0;
+        for (int buttonPair = 0; buttonPair < numberOfPairs*2; buttonPair += 2) {
+            Button gameButtonA = findViewById(GAME_BUTTONS[buttonPair]);
+            Button gameButtonB = findViewById(GAME_BUTTONS[buttonPair + 1]);
+            String gameButtonAContextualizedText = contextualizedWordPieceString(String.valueOf(gameButtonA.getText()), syllableIndexInWord, parsedRefWordSyllableArrayStrings);
+            String gameButtonBContextualizedText = contextualizedWordPieceString(String.valueOf(gameButtonB.getText()), syllableIndexInWord, parsedRefWordSyllableArrayStrings);
+            gameButtonA.setText(gameButtonAContextualizedText);
+            gameButtonB.setText(gameButtonBContextualizedText);
+            syllableIndexInWord++;
         }
     }
 
