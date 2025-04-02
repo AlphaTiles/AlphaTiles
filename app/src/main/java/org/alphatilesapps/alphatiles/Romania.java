@@ -363,17 +363,19 @@ public class Romania extends GameActivity {
         directionIsForward = true;
         Start.Tile oldTile = activeTile;
         activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
-
+        // LOGGER.info("goToNextTile: " + oldTile.text +"/" + activeTile.text);
         if (scanSetting == 1) {
             while (Start.wordList.numberOfWordsForActiveTile(activeTile, 1) == 0) {
                 oldTile = activeTile;
                 activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
             }
         } else if (scanSetting == 2) {
-            while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 2) == 0) {
+            while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0)))
+                    || Start.wordList.numberOfWordsForActiveTile(activeTile, 2) == 0) {
                 oldTile = activeTile;
                 activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
             }
+            // LOGGER.info("goToNextTile: " + oldTile.text +"/" + activeTile.text);
         } else {
             while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0))) ||
                     Start.wordList.numberOfWordsForActiveTile(activeTile, 3) == 0) {
@@ -396,6 +398,7 @@ public class Romania extends GameActivity {
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile.text);
         editor.putString("typeOfLastActiveTileGame001_player" + playerString, activeTile.typeOfThisTileInstance);
         editor.apply();
+        // LOGGER.info("goToNextTile: " + oldTile.text +"/" + activeTile.text);
         setUpBasedOnGameTile(activeTile);
     }
 
