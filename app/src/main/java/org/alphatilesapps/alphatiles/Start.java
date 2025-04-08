@@ -972,7 +972,12 @@ public class Start extends AppCompatActivity {
                         endingScanIndex = t+1;
                         break;
                     case 2:
-                        startingScanIndex = 1;
+                        // Scan setting 2 is a combination of scan settings 1 & 3:
+                        // - If the tile appears as a first letter, show just those words.
+                        // - If not, show all the words.
+                        // To decide whether to display this tile or skip to the next one,
+                        // check  if the tile appears anywhere in any of the words.
+                        startingScanIndex = t;  // (see comment above for "case 1")
                         endingScanIndex = parsedWordArrayFinal.size();
                         break;
                     default:
