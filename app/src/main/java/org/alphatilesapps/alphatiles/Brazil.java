@@ -111,7 +111,7 @@ public class Brazil extends GameActivity {
 
             if (VOWELS.isEmpty()) {  // Makes sure VOWELS is populated only once when the app is running
                 for (int d = 0; d < tileList.size(); d++) {
-                    if (tileList.get(d).typeOfThisTileInstance.matches("(LV|AV|BV|FV|V)")) {
+                    if (tileList.get(d).typeOfThisTileInstance.matches("(LV|AV|BV|FV|V)")) { // Regex needs to be kept in sync with validator
                         VOWELS.add(tileList.get(d));
                     }
                 }

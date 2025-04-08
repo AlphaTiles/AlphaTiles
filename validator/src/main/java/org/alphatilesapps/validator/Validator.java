@@ -926,10 +926,19 @@ public class Validator {
                 }
             }
             boolean hasBrazil7 = false;
+            boolean hasBrazilVowel = false;
             for (ArrayList<String> row : langPackGoogleSheet.getTabFromName("games")) {
-                if (row.get(1).equals("Brazil") && row.get(2).equals("7")) {
-                    hasBrazil7 = true;
-                    break;
+                if (row.get(1).equals("Brazil")) {
+                    try {
+                        int level = Integer.parseInt(row.get(2)); // Might already get checked not sure
+                        if(level == 7) {
+                            hasBrazil7 = true;
+                        } else if (level >= 1 && level <= 3) {
+                            hasBrazilVowel = true;
+                        }
+                        if(hasBrazil7 && hasBrazilVowel)
+                            break;
+                    } catch(Exception ignored) {}
                 }
             }
             if (hasTonal && !hasBrazil7) {
@@ -937,6 +946,17 @@ public class Validator {
             } else if(!hasTonal && hasBrazil7) {
                 fatalError(Message.Tag.Etc, "You cannot have Brazil at challenge level 7 without tiles of type T");
             }
+            if(hasBrazilVowel) {
+                int vowelCount = 0;
+                for(Tile tile : tileList) {
+                    if(tile.typeOfThisTileInstance.matches("(LV|AV|BV|FV|V)")) // Regex needs to be kept in sync with Brazil
+                        vowelCount += 1;
+                }
+                if(vowelCount < 4) {
+                    fatalError(Message.Tag.Etc, "You cannot have Brazil at challenge levels 1 through 3 without at least 4 vowels");
+                }
+            }
+
             int i = 0;
             for (String row : langPackGoogleSheet.getTabFromName("games").getCol(0)) {
                 i++;
