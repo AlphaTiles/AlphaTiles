@@ -421,7 +421,8 @@ public class Georgia extends GameActivity {
             String tileColorStr = colorList.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
-            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { // Alternatives are random
+            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3
+                || challengeLevel == 7 || challengeLevel == 8 || challengeLevel == 9) { // Alternatives are random
                 if (t < visibleGameButtons) {
                     randomNum = rand.nextInt(CorV.size());
                     String tileOptionText = CorV.get(randomNum).text;
