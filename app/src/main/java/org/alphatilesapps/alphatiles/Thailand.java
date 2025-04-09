@@ -39,7 +39,7 @@ public class Thailand extends GameActivity {
     String refStringSecondToLast = "";
     String refStringThirdToLast = "";
     String choiceType;
-    String contextualTilePosition;
+    String contextualTilePosition = "";
     int refColor;
     int challengeLevelThai;
 
@@ -260,13 +260,18 @@ public class Thailand extends GameActivity {
                     int randomTileIndex = rand.nextInt(tileListNoSAD.size());
                     refTile = tileListNoSAD.get(randomTileIndex);
                     refTileType = refTile.typeOfThisTileInstance;
-                    boolean distractorContainsContextualizer = false;
-                    for (String t : refTile.distractors) {
-                        if (t.contains(contextualizingCharacter)) {
-                            distractorContainsContextualizer = true;
-                            break;
+                    boolean choicesContainContextualizersOrPlaceholders = false;
+                    if (refTile.text.contains(contextualizingCharacter) || refTile.text.contains(placeholderCharacter)) {
+                        choicesContainContextualizersOrPlaceholders = true;
+                    } else {
+                        for (String t : refTile.distractors) {
+                            if (t.contains(contextualizingCharacter) || t.contains(placeholderCharacter)) {
+                                choicesContainContextualizersOrPlaceholders = true;
+                                break;
+                            }
                         }
                     }
+
                     switch (refType) { // Set refString based on the type of tile reference
                         case "TILE_LOWER":
                         case "TILE_AUDIO":
@@ -297,13 +302,12 @@ public class Thailand extends GameActivity {
                     // Disallow non-joining and non-spacing (non-contextual) characters from contextual forms matching games (Arabic script)
                     // Disallow tiles with placeholders from contextual forms matching games (Arabic script)
                     // Disallow tiles that are already displayed with a contextual character in the tile list (Arabic script)
-                    // Disallow tiles with distractors that are already displayed with a contextual character, if it's challengelevel 2 (Arabic script)
                     permissibleTile = verifyFreshTile(refString, freshChecks)
                             && CorV.contains(refTile)
                             && !(refTileType.matches("(PC)"))
-                            && !((refType.matches("CONTEXTUAL") || choiceType.matches("CONTEXTUAL")) && (NON_JOINERS_ARABIC.contains(refTile) || NON_SPACERS_ARABIC.contains(refTile) || refTile.text.contains(contextualizingCharacter) || refTile.text.contains(placeholderCharacter)))
-                            && !(challengeLevel == 2 && distractorContainsContextualizer);
-
+                            && !((refType.matches("CONTEXTUAL") || choiceType.matches("CONTEXTUAL")) && (NON_JOINERS_ARABIC.contains(refTile) || NON_SPACERS_ARABIC.contains(refTile) || choicesContainContextualizersOrPlaceholders))
+                            && !(contextualTilePosition.matches("INITIAL") && (RIGHT_JOINERS_ARABIC.contains(refTile)))
+                           ;
                 }
             }
         }
