@@ -149,12 +149,27 @@ public class Sudan extends GameActivity {
 
         int numTiles = cumulativeStageBasedTileList.size() - SAD.size() - SILENT_PLACEHOLDER_CONSONANTS.size();
         int tileIndex = 0;
+        ArrayList<String> tileStringsAddedAlready = new ArrayList<>();
         for (int i = 0; i <= numPages; i++) {
             for (int j = 0; j < tilesPerPage; j++) {
                 if(tileIndex < numTiles) {
                     Tile thisTile = cumulativeStageBasedTileList.get(tileIndex);
+                    boolean tileStringAlreadyAdded = false;
                     if (!SAD.contains(thisTile) && !SILENT_PLACEHOLDER_CONSONANTS.contains(thisTile)) {
-                        tilePagesLists.get(i).add(thisTile);
+                        if (!differentiatesTileTypes) {
+                            for (String alreadyAddedString : tileStringsAddedAlready) {
+                                if (alreadyAddedString.equals(thisTile.text)) {
+                                    tileStringAlreadyAdded = true;
+                                    break;
+                                }
+                            }
+                            if (!tileStringAlreadyAdded) {
+                                tileStringsAddedAlready.add(thisTile.text);
+                                tilePagesLists.get(i).add(thisTile);
+                            }
+                        } else {
+                            tilePagesLists.get(i).add(thisTile);
+                        }
                     }
                     tileIndex++;
                 }
