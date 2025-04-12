@@ -66,7 +66,7 @@ public class Earth extends AppCompatActivity {
         globalPoints = getIntent().getIntExtra("globalPoints", 0);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(globalPoints));
+        pointsEarned.setText(Start.convertNumeralSystem(String.valueOf((globalPoints))));
 
         ImageView avatar = findViewById(R.id.activePlayerImage);
         int resID = getResources().getIdentifier(String.valueOf(ChoosePlayer.AVATAR_JPG_IDS[playerNumber - 1]), "drawable", getPackageName());
@@ -78,7 +78,7 @@ public class Earth extends AppCompatActivity {
         if (localWordForName.equals("custom")) {
             defaultName = Start.nameList.get(playerNumber - 1);
         } else {
-            defaultName = localWordForName + " " + playerNumber;
+            defaultName = localWordForName + " " + Start.convertNumeralSystem(String.valueOf(playerNumber));
         }
         playerName = prefs.getString("storedName" + playerString, defaultName);
 
@@ -148,7 +148,8 @@ public class Earth extends AppCompatActivity {
                 try {
                     int doorIndex = Integer.parseInt((String) earthCL.getChildAt(j).getTag()) - 1;
                     String doorText = String.valueOf((pageNumber * doorsPerPage) + doorIndex + 1);
-                    ((TextView) child).setText(doorText);
+                    ((TextView) child).setText(Start.convertNumeralSystem(doorText));
+
                     if (((pageNumber * doorsPerPage) + doorIndex) >= Start.gameList.size()) {
                         ((TextView) child).setVisibility(View.INVISIBLE);
                     } else {
