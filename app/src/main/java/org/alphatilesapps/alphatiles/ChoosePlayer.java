@@ -142,7 +142,7 @@ public class ChoosePlayer extends AppCompatActivity {
             if (localWordForName.equals("custom")) {
                 defaultName = nameList.get(nameID - 1);
             } else {
-                defaultName = localWordForName + " " + nameID;
+                defaultName = localWordForName + " " + convertNumeralSystem(String.valueOf(nameID));
             }
 
             String playerString = Util.returnPlayerStringToAppend(nameID);
