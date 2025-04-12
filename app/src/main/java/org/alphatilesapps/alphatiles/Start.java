@@ -40,6 +40,7 @@ public class Start extends AppCompatActivity {
 
     public static GameList gameList; // from aa_games.text
     public static LangInfoList langInfoList; // KP / from aa_langinfo.txt
+    public static NumeralList numeralList; // AH / from aa_numerals.txt
     public static SettingsList settingsList; // KP // from aa_settings.txt
     public static AvatarNameList nameList; // KP / from aa_names.txt
 
@@ -69,6 +70,8 @@ public class Start extends AppCompatActivity {
     public static Boolean hasSyllableAudio;
     public static Boolean enhancedAudioLoadingLog;
     public static Boolean hasSyllableGames = false;
+
+    public static Boolean nonRomanNumeralSystem;
     public static int after12checkedTrackers;
     public static Boolean differentiatesTileTypes;
     public static Boolean hasSAD = false;
@@ -132,7 +135,9 @@ public class Start extends AppCompatActivity {
         buildSettingsList();
         LOGGER.info("LoadProgress: completed buildSettingsList()");
         buildColorList();
-        LOGGER.info("LoadProgress: completed buildColorsList()");
+        LOGGER.info("LoadProgress: completed buildColorList()");
+        buildNumeralList();
+        LOGGER.info("LoadProgress: completed buildNumeralList()");
 
         hasTileAudio = getBooleanFromSettings("Has tile audio", false);
         hasSyllableAudio = getBooleanFromSettings("Has syllable audio", false);
@@ -146,6 +151,7 @@ public class Start extends AppCompatActivity {
         sendAnalytics = getBooleanFromSettings("Send analytics", false);
         changeArrowColor = getBooleanFromSettings("Change arrow colors", true);
         enhancedAudioLoadingLog = getBooleanFromSettings("Enhanced Audio Loading Log", false);
+        nonRomanNumeralSystem = getBooleanFromSettings("Non-Roman Numeral System", false);
 
         String after12checkedTrackersSetting = settingsList.find("After 12 checked trackers");
         if (!after12checkedTrackersSetting.equals("")) {
@@ -283,6 +289,21 @@ public class Start extends AppCompatActivity {
         }
     }
 
+    public static String convertNumeralSystem(String someNumberAsString) {
+
+        if (nonRomanNumeralSystem) {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < someNumberAsString.length(); i++) {
+
+                builder.append(numeralList.find(someNumberAsString.substring(i, i + 1)));
+            }
+
+            return builder.toString();
+        } else {
+            return someNumberAsString;
+        }
+    }
+
     private void buildColorList() {
         Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_colors));
 
@@ -295,6 +316,25 @@ public class Start extends AppCompatActivity {
                 header = false;
             } else {
                 colorList.add(thisLineArray[2]);
+            }
+        }
+    }
+
+    private void buildNumeralList() {
+        boolean header = true;
+        Scanner scanner = new Scanner(getResources().openRawResource(R.raw.aa_numerals));
+
+        numeralList = new NumeralList();
+        while (scanner.hasNext()) {
+            if (scanner.hasNextLine()) {
+                if (header) {
+                    numeralList.title = scanner.nextLine();
+                    header = false;
+                } else {
+                    String thisLine = scanner.nextLine();
+                    String[] thisLineArray = thisLine.split("\t");
+                    numeralList.put(thisLineArray[0], thisLineArray[1]);
+                }
             }
         }
     }
@@ -2112,6 +2152,21 @@ public class Start extends AppCompatActivity {
 
         public String keysTitle;
         public String colorTitle;
+
+    }
+
+    public class NumeralList extends HashMap<String, String> {
+
+        public String title;
+
+        public String find(String keyContains) {
+            for (String k : keySet()) {
+                if (k.contains(keyContains)) {
+                    return (get(k));
+                }
+            }
+            return "";
+        }
 
     }
 

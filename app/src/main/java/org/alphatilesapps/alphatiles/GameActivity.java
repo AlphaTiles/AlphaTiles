@@ -254,10 +254,10 @@ public abstract class GameActivity extends AppCompatActivity {
         globalPoints+=pointsIncrease;
         points+=pointsIncrease;
         TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        pointsEarned.setText(Start.convertNumeralSystem(String.valueOf((points))));
 
         TextView gameNumberBox = findViewById(R.id.gameNumberView);
-        gameNumberBox.setText(String.valueOf(gameNumber));
+        gameNumberBox.setText(Start.convertNumeralSystem(String.valueOf(gameNumber)));
         int gameColor = Color.parseColor(colorList.get(Integer.parseInt(gameList.get(gameNumber-1).color)));
         gameNumberBox.setBackgroundColor(gameColor);
         pointsEarned.setBackgroundColor(gameColor);
@@ -276,7 +276,7 @@ public abstract class GameActivity extends AppCompatActivity {
         if (gameList.get(gameNumber-1).country.equals("Georgia") && challengeLevel > 6) {
             displayedChallengeLevel = displayedChallengeLevel - 6;
         }
-        challengeLevelBox.setText(String.valueOf(displayedChallengeLevel));
+        challengeLevelBox.setText(Start.convertNumeralSystem(String.valueOf(displayedChallengeLevel)));
 
         // Update tracker icons
         for (int t = 0; t < TRACKERS.length; t++) {
