@@ -111,7 +111,7 @@ public class Brazil extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-        if (challengeLevel < 4 && !syllableGame.equals("S")) {
+        if (challengeLevel < 4 && !gameMode.contains("S")) {
 
             if (VOWELS.isEmpty()) {  // Makes sure VOWELS is populated only once when the app is running
                 for (int d = 0; d < tileList.size(); d++) {
@@ -122,7 +122,7 @@ public class Brazil extends GameActivity {
             }
             Collections.shuffle(VOWELS); // AH
 
-        } else if (syllableGame.equals("S")) {
+        } else if (gameMode.contains("S")) {
             if (SYLLABLES.isEmpty()) {
                 for (int d = 0; d < syllableList.size(); d++) {
                     SYLLABLES.add(syllableList.get(d).toString());
@@ -153,7 +153,7 @@ public class Brazil extends GameActivity {
 
         Collections.shuffle(MULTITYPE_TILES);
 
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             visibleGameButtons = 4;
         } else {
             switch (challengeLevel) {
@@ -211,7 +211,7 @@ public class Brazil extends GameActivity {
         removeTile();
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             setUpSyllables();
         } else {
             setUpTiles();
@@ -238,7 +238,7 @@ public class Brazil extends GameActivity {
         int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
             parsedRefWordSyllableArrayStrings = new ArrayList<String>();
             for(Syllable s: parsedRefWordSyllableArray) {
@@ -256,7 +256,7 @@ public class Brazil extends GameActivity {
         Tile nextTile;
 
         // JP: this section is not relevant to syllable games, right?
-        if (!syllableGame.equals("S")) {
+        if (!gameMode.contains("S")) {
             switch (challengeLevel) {
                 case 4:
                 case 5:
@@ -305,7 +305,7 @@ public class Brazil extends GameActivity {
 
         boolean repeat = true;
 
-        if (!syllableGame.equals("S")) {
+        if (!gameMode.contains("S")) {
             ArrayList<Integer> possibleIndices = new ArrayList<>();
             for (int i = 0; i < parsedRefWordTileArray.size(); i++) {
                 possibleIndices.add(i);
@@ -356,7 +356,7 @@ public class Brazil extends GameActivity {
         TextView constructedWord = findViewById(R.id.activeWordTextView);
         StringBuilder wordBuilder = new StringBuilder();
         String word;
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             Start.Syllable blankSyllable = new Start.Syllable("__", new ArrayList<>(),"X", 0, correctSyllable.color);
             parsedRefWordSyllableArray.set(index_to_remove, blankSyllable);
             for (Syllable s : parsedRefWordSyllableArray) {
@@ -381,7 +381,7 @@ public class Brazil extends GameActivity {
                 blankTile.text = placeholderCharacter;
                 parsedRefWordTileArray.set(index_to_remove, blankTile);
             }
-            if (useContextualFormsFITB) { // Setting used by some Arabic script apps to make tiles appear in contextual forms in answer choices and around blanks
+            if (contextualizeWordFramesInFITB) { // Game mode included in some Arabic script apps to make tiles appear in contextual forms in answer choices
                 blankTile.text = contextualizedWordPieceString(blankTile.text, index_to_remove, parsedRefWordTileArrayStrings);
             }
 
@@ -467,7 +467,7 @@ public class Brazil extends GameActivity {
             gameTile.setText(correctSyllable.text);
         }
 
-        if (useContextualFormsFITB) { // Setting used by some Arabic script apps
+        if (gameMode.equals("CS")) { // Game mode included in some Arabic-based-script apps to make syllable answer choices appear in contextual form
             produceContextualSyllableAnswerChoices();
         }
 
@@ -617,7 +617,7 @@ public class Brazil extends GameActivity {
 
         }
 
-        if (useContextualFormsFITB) { // Setting used by some Arabic script apps
+        if (gameMode.equals("CT")) { // Game mode included in some Arabic-based-script games to make tile answer choices appear in contextual form
             produceContextualTileAnswerChoices();
         }
     }
@@ -668,7 +668,7 @@ public class Brazil extends GameActivity {
 
             // report time and number of incorrect guesses
             if (sendAnalytics) {
-                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + gameMode;
                 Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
                         .putValue("Number Incorrect", incorrectOnLevel)
                         .putValue("Correct Answer", correctString)
