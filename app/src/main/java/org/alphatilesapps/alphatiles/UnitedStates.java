@@ -142,7 +142,7 @@ public class UnitedStates extends GameActivity {
         }
 
         // Set up additional structures
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
             parsedLengthOfRefWord = parsedRefWordSyllableArray.size();
             parsedRefWordSyllableArrayStrings = new ArrayList<String>();
@@ -201,7 +201,7 @@ public class UnitedStates extends GameActivity {
                 int randomlyCorrectStringGoesBelow = rand.nextInt(2); // Choose whether correct tile goes above ( =0 ) or below ( =1 )
                 int randomDistractor = rand.nextInt(Start.ALT_COUNT); // KP // Choose which distractor will be the alternative
                 if (randomlyCorrectStringGoesBelow == 0) { // Correct string goes above
-                    if (syllableGame.equals("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
+                    if (gameMode.contains("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
                         gameButtonA.setText(parsedRefWordSyllableArray.get(parseIndex).text);
                         gameButtonB.setText(parsedRefWordSyllableArray.get(parseIndex).distractors.get(randomDistractor));
                     } else {
@@ -211,7 +211,7 @@ public class UnitedStates extends GameActivity {
                         tileOptions.add(tileHashMap.find(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor)));
                     }
                 } else { // Correct string goes below
-                    if (syllableGame.equals("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
+                    if (gameMode.contains("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
                         gameButtonB.setText(parsedRefWordSyllableArray.get(parseIndex).text);
                         gameButtonA.setText(parsedRefWordSyllableArray.get(parseIndex).distractors.get(randomDistractor));
                     } else {
@@ -241,13 +241,13 @@ public class UnitedStates extends GameActivity {
         constructedWord.setText(initialDisplay);
 
 
-        if (useContextualFormsBWFP) { // Option for Arabic scripts
-            if(syllableGame.equals("S")) {
-                contextualizeSyllableForms();
-            } else {
-                contextualizeTileForms();
-            }
+       // Game modes included in some Arabic-based-script apps to make word piece strings appear in contextual form
+        if(gameMode.equals("CS")) {
+            contextualizeSyllableForms();
+        } else if (gameMode.equals("CT")){
+            contextualizeTileForms();
         }
+
 
         setAllGameButtonsClickable();
     }
@@ -300,7 +300,7 @@ public class UnitedStates extends GameActivity {
         }
 
         String displayedWord;
-        if (syllableGame.equals("S")){
+        if (gameMode.contains("S")){
             StringBuilder stringBuilder = new StringBuilder();
 
             for (int i = 0; i < numberOfPairs; i++) {
@@ -357,7 +357,7 @@ public class UnitedStates extends GameActivity {
         Button otherGameButton = findViewById(GAME_BUTTONS[otherOptionIndex]);
         selections[selectionIndex] = gameButton.getText().toString();
         selections[otherOptionIndex] = "";
-        if(syllableGame.equals("T")) {
+        if(gameMode.contains("T")) {
             tileSelections[selectionIndex/2] = tileOptions.get(selectionIndex);
         }
 

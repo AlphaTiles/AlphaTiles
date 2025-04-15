@@ -82,10 +82,7 @@ public class Start extends AppCompatActivity {
     public static boolean changeArrowColor;
     public static String placeholderCharacter; // LM Takes the place of a consonant for combining characters in complex scripts
     public static String contextualizingCharacter; // LM for displaying various contextual forms of Arabic characters
-    public static Boolean useContextualFormsFITB;
-    public static Boolean useContextualFormsBWFP;
-    public static Boolean useContextualFormsITI;
-
+    public static Boolean contextualizeWordFramesInFITB; // LM Make Arabic letters contextual around blanks in FITB
     public static TileList CONSONANTS = new TileList();
     public static TileList PLACEHOLDER_CONSONANTS = new TileList();
     public static TileList SILENT_PRELIMINARY_TILES = new TileList();
@@ -144,9 +141,7 @@ public class Start extends AppCompatActivity {
 
         differentiatesTileTypes = getBooleanFromSettings("Differentiates types of multitype symbols", false);
 
-        useContextualFormsFITB = getBooleanFromSettings("Use contextual forms for Fill In The Blank", false);
-        useContextualFormsBWFP = getBooleanFromSettings("Use contextual forms for Build Word From Pairs", false);
-        useContextualFormsITI = getBooleanFromSettings("Use contextual forms for Identify The Initial", false);
+        contextualizeWordFramesInFITB = getBooleanFromSettings("Contextualize word frames in Fill In The Blank", false);
 
         sendAnalytics = getBooleanFromSettings("Send analytics", false);
         changeArrowColor = getBooleanFromSettings("Change arrow colors", true);
@@ -760,7 +755,7 @@ public class Start extends AppCompatActivity {
                 if (!game.hasNull()) {
                     gameList.add(game);
                 }
-                if (thisLineArray[6].equals("S")) { //JP
+                if (thisLineArray[6].contains("S")) { //JP
                     hasSyllableGames = true;
                 }
             }

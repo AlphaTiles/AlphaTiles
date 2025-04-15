@@ -72,7 +72,7 @@ public class Colombia extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         int gameID = 0;
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             setContentView(R.layout.colombia_syllables);
             gameID = R.id.colombiaCL_syll;
         } else {
@@ -140,7 +140,7 @@ public class Colombia extends GameActivity {
         int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             parsedRefWordSyllableArray = Start.syllableList.parseWordIntoSyllables(refWord); // KP
         } else {
             parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
@@ -160,7 +160,7 @@ public class Colombia extends GameActivity {
                 // Will list <a> twice if <a> is needed twice
                 // The limited set keyboard is built with GAME TILES not with KEYS
 
-                if (syllableGame.equals("S")) {
+                if (gameMode.contains("S")) {
                     syllableKeysList = new ArrayList<>(parsedRefWordSyllableArray);
                     Collections.shuffle(syllableKeysList);
                     visibleGameButtons = syllableKeysList.size();
@@ -195,7 +195,7 @@ public class Colombia extends GameActivity {
                 // Build an array of the required tiles plus a corresponding tile from the distractor trio for each tile
                 // So, for a five tile word, there will be 10 tiles
                 // The limited-set keyboard is built with GAME TILES not with KEYS
-                if (syllableGame.equals("S")) {
+                if (gameMode.contains("S")) {
                     syllableKeysList = new ArrayList<>(parsedRefWordSyllableArray);
                     int numberOfCorrectKeys = parsedRefWordSyllableArray.size();
                     for (int n=0; n<numberOfCorrectKeys; n++) {
@@ -246,7 +246,7 @@ public class Colombia extends GameActivity {
                 }
                 break;
             case 3:
-                if (syllableGame.equals("S")) { // 18 tiles; distractors for the wrong answers
+                if (gameMode.contains("S")) { // 18 tiles; distractors for the wrong answers
                     syllableKeysList = new ArrayList<>(parsedRefWordSyllableArray);
                     for (int n=0; n<(18-parsedRefWordSyllableArray.size()); n++) {
                         Start.Syllable syllableInTheList = syllableKeysList.get(n);
@@ -317,7 +317,7 @@ public class Colombia extends GameActivity {
             default:
         }
 
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             for (int k = 0; k < syllablesPerPage; k++) {
                 TextView key = findViewById(GAME_BUTTONS[k]);
                 if (k < visibleGameButtons) {
@@ -348,7 +348,7 @@ public class Colombia extends GameActivity {
         Tile typedTile;
         String currentWord = "";
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             clickedKey = syllableKeysList.get(justClickedIndex);
             clickedKeys.add(clickedKey);
             for(WordPiece key : clickedKeys) {
@@ -379,7 +379,7 @@ public class Colombia extends GameActivity {
 
         String correctString = wordInLOPWithStandardizedSequenceOfCharacters(refWord);
         String currentAttempt;
-        if (syllableGame.equals("S") || (syllableGame.equals("T") && challengeLevel == 3)) {
+        if (gameMode.contains("S") || (gameMode.contains("T") && challengeLevel == 3)) {
             currentAttempt = wordToBuild.getText().toString();
         } else {
             currentAttempt = combineTilesToMakeWord(tilesInBuiltWord, refWord, -1);
@@ -406,7 +406,7 @@ public class Colombia extends GameActivity {
             if (correctString.length() > currentAttempt.length()) {
                 ArrayList<WordPiece> firstNCorrectTiles = new ArrayList<>();
                 for (int t=0; t<clickedKeys.size(); t++) {
-                    if (syllableGame.equals("S")) {
+                    if (gameMode.contains("S")) {
                         if (t<parsedRefWordSyllableArray.size()){
                             firstNCorrectTiles.add(parsedRefWordSyllableArray.get(t));
                         }
@@ -419,10 +419,10 @@ public class Colombia extends GameActivity {
                 if (currentAttempt.equals(correctString.substring(0, currentAttempt.length()))
                 || clickedKeys.equals(firstNCorrectTiles)) { // Word is incomplete but spelled correctly so far
                     // orange=true if there is no key option that would allow the player to continue correctly
-                    if (challengeLevel == 1 || challengeLevel == 2 || syllableGame.equals("S")) {
+                    if (challengeLevel == 1 || challengeLevel == 2 || gameMode.contains("S")) {
                         boolean orange = false;
                         for (int i = 0; i < clickedKeys.size(); i++) {
-                            if (syllableGame.equals("S")) {
+                            if (gameMode.contains("S")) {
                                 if (!clickedKeys.get(i).text.equals(parsedRefWordSyllableArray.get(i).text)) {
                                     orange = true;
                                     break;
@@ -462,10 +462,10 @@ public class Colombia extends GameActivity {
         String nowWithOneLessWordPiece = "";
 
         if (typedLettersSoFar.length() > 0) {
-            if (syllableGame.equals("S")
-            || (syllableGame.equals("T") && challengeLevel == 3)) { // Using keyboard keys, not tile texts
+            if (gameMode.contains("S")
+            || (gameMode.contains("T") && challengeLevel == 3)) { // Using keyboard keys, not tile texts
                 nowWithOneLessWordPiece = typedLettersSoFar.substring(0, typedLettersSoFar.length() - clickedKeys.get(clickedKeys.size()-1).text.length());
-            } else if (syllableGame.equals("T")) { // Using tile texts
+            } else if (gameMode.contains("T")) { // Using tile texts
                 tilesInBuiltWord.remove(tilesInBuiltWord.size() - 1);
                 nowWithOneLessWordPiece = combineTilesToMakeWord(tilesInBuiltWord, refWord, -1);
             }
@@ -481,7 +481,7 @@ public class Colombia extends GameActivity {
 
         int justClickedKey = Integer.parseInt((String) view.getTag());
         // Next line says ... if a basic keyboard (which all fits on one screen) or (even when on a complex keyboard) if something other than the last two buttons (the two arrows) are tapped...
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             if (keysInUse <= syllablesPerPage || justClickedKey <= (syllablesPerPage - 2)) {
                 int keyIndex = (33 * (keyboardScreenNo - 1)) + justClickedKey - 1;
                 respondToKeySelection(keyIndex);

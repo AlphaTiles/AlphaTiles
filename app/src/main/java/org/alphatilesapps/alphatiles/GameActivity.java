@@ -33,7 +33,6 @@ import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.MULTITYPE_TILES;
-import static org.alphatilesapps.alphatiles.Start.NON_SPACERS_ARABIC;
 import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
@@ -74,7 +73,7 @@ public abstract class GameActivity extends AppCompatActivity {
     String playerString;
     int challengeLevel = -1;
     int stage = 7;
-    String syllableGame;
+    String gameMode;
 
     SharedPreferences prefs;
     String uniqueGameLevelPlayerModeStageID;
@@ -168,7 +167,7 @@ public abstract class GameActivity extends AppCompatActivity {
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         stage = getIntent().getIntExtra("stage", 7);
-        syllableGame = getIntent().getStringExtra("syllableGame");
+        gameMode = getIntent().getStringExtra("gameMode");
         gameNumber = getIntent().getIntExtra("gameNumber", 0);
         country = getIntent().getStringExtra("country");
         playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -177,7 +176,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         className = getClass().getName();
-        uniqueGameLevelPlayerModeStageID = className + challengeLevel + playerString + syllableGame + stage;
+        uniqueGameLevelPlayerModeStageID = className + challengeLevel + playerString + gameMode + stage;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
         hasChecked12Trackers = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
         points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
@@ -368,7 +367,7 @@ public abstract class GameActivity extends AppCompatActivity {
                                 } else {
                                     stage = Integer.parseInt(gameList.get(gameNumber - 1).stage);
                                 }
-                                syllableGame = gameList.get(gameNumber - 1).mode;
+                                gameMode = gameList.get(gameNumber - 1).mode;
                                 country = gameList.get(gameNumber - 1).country;
                             } else {
                                 gameNumber = 1;
@@ -378,7 +377,7 @@ public abstract class GameActivity extends AppCompatActivity {
                                 } else {
                                     stage = Integer.parseInt(gameList.get(0).stage);
                                 }
-                                syllableGame = gameList.get(0).mode;
+                                gameMode = gameList.get(0).mode;
                                 country = gameList.get(0).country;
                             }
                             String activityClass = project + country;
@@ -388,14 +387,14 @@ public abstract class GameActivity extends AppCompatActivity {
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
-                            String nextUniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + syllableGame + stage;
+                            String nextUniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + gameMode + stage;
                             hasChecked12Trackers = prefs.getBoolean(nextUniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
 
                             if (!hasChecked12Trackers) {
                                 foundNextUncompletedGame = true;
                                 intent.putExtra("challengeLevel", challengeLevel);
                                 intent.putExtra("stage", stage);
-                                intent.putExtra("syllableGame", syllableGame);
+                                intent.putExtra("gameMode", gameMode);
                                 intent.putExtra("globalPoints", globalPoints);
                                 intent.putExtra("gameNumber", gameNumber);
                                 intent.putExtra("country", country);

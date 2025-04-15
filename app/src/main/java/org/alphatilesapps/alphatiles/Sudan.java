@@ -75,7 +75,7 @@ public class Sudan extends GameActivity {
         int gameID = 0;
         determineNumPages(); // JP
 
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             setContentView(R.layout.sudan_syll);
             gameID = R.id.sudansyllCL;
             splitSyllablesListAcrossPages();
@@ -126,7 +126,7 @@ public class Sudan extends GameActivity {
 
         tilePagesLists.add(tilePage);
         syllablePagesLists.add(syllablePage);
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             int total = syllableList.size() - syllablesPerPage; // 1 page is accounted for in numPages init
             while (total >= 0) {
                 numPages++;
@@ -261,7 +261,7 @@ public class Sudan extends GameActivity {
     public void nextPageArrow(View view) {
         if (currentPageNumber < numPages) {
             currentPageNumber++;
-            if (syllableGame.equals("S")) {
+            if (gameMode.contains("S")) {
                 showCorrectNumSyllables(currentPageNumber);
             } else {
                 showCorrectNumTiles(currentPageNumber);
@@ -273,7 +273,7 @@ public class Sudan extends GameActivity {
     public void prevPageArrow(View view) {
         if (currentPageNumber > 0) {
             currentPageNumber--;
-            if (syllableGame.equals("S")) {
+            if (gameMode.contains("S")) {
                 showCorrectNumSyllables(currentPageNumber);
             } else {
                 showCorrectNumTiles(currentPageNumber);
@@ -303,7 +303,7 @@ public class Sudan extends GameActivity {
 
         int audioId;
         int duration;
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             Start.Syllable thisSyllable = syllablePagesLists.get(currentPageNumber).get(Integer.parseInt((String) view.getTag())-1);
             audioId = syllableAudioIDs.get(thisSyllable.audioName);
             duration = thisSyllable.duration;
