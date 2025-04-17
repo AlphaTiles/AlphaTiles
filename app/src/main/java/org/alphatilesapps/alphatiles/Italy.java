@@ -13,7 +13,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.colorList;
 
@@ -21,8 +23,12 @@ public class Italy extends GameActivity {
     Start.TileList sortableTilesArray;
     Start.SyllableList sortableSyllArray;
     WordList gameCards = new WordList();
-    boolean[] boardCardsFound = new boolean[16];
+    final int CARDS_ON_BOARD = 16;
+    boolean[] boardCardsFound = new boolean[CARDS_ON_BOARD];
     int deckIndex = 0;
+    final String ITALY_DECK_SIZE = "Italy Deck Size";
+    int deckSize = 54;  // 54 is the default size for the Mexican loteria game
+    private static final Logger LOGGER = Logger.getLogger(Italy.class.getName());
 
     protected static final int[] GAME_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04, R.id.choice05, R.id.choice06,
@@ -102,6 +108,17 @@ public class Italy extends GameActivity {
             Collections.shuffle(sortableTilesArray);
         }
 
+        // override default deck size setting, if configured
+        final String deckSizeSetting = Start.settingsList.find(ITALY_DECK_SIZE);
+        if (! deckSizeSetting.isEmpty()) {
+            deckSize = Integer.parseInt(deckSizeSetting);
+            // don't go below CARDS_ON_BOARD
+            if (deckSize < CARDS_ON_BOARD) {
+                deckSize = CARDS_ON_BOARD;
+            }
+        }
+        // else stay with the default deck size (54)
+
         if (getAudioInstructionsResID() == 0) {
             hideInstructionAudioImage();
         }
@@ -179,21 +196,29 @@ public class Italy extends GameActivity {
         setAdvanceArrowToGray();
         deckIndex = -1;
         gameCards.removeAll(gameCards);
-        for (int card = 0; card < 16; card++) {
-            boardCardsFound[card] = false;
-        }
+        Arrays.fill(boardCardsFound, false);
+
         WordList wordListShuffle = cumulativeStageBasedWordList;
         Collections.shuffle(wordListShuffle);
 
-        // Add 54 of the shuffled cards to gameCards
-        for (int cardNumber = 0; cardNumber < 54; cardNumber++) {
+        // Quit (go back to the home screen) if we don't have enough words
+        if (wordListShuffle.size() < deckSize) {
+            LOGGER.warning("playAgain: can't proceed - need at least "
+                    + deckSize + " words");
+            // return to the home screen
+            goBackToEarth(null);
+            return;
+        }
+
+        // Add a subset of the shuffled cards to gameCards
+        for (int cardNumber = 0; cardNumber < deckSize; cardNumber++) {
             gameCards.add(wordListShuffle.get(cardNumber));
         }
 
-        // Add 16 of the gameCards to the board
-        WordList boardCards = new WordList();
-        for (int tileNumber = 0; tileNumber < 16; tileNumber++) {
-            boardCards.add(gameCards.get(tileNumber));
+        // Add 16 (CARDS_ON_BOARD) of the gameCards to the board
+//      WordList boardCards = new WordList();
+        for (int tileNumber = 0; tileNumber < CARDS_ON_BOARD; tileNumber++) {
+//          boardCards.add(gameCards.get(tileNumber));
             TextView thisCardText = (TextView) findViewById(GAME_BUTTONS[tileNumber]);
             thisCardText.setText(wordList.stripInstructionCharacters(gameCards.get(tileNumber).wordInLOP));
             String tileColorStr = colorList.get(tileNumber % 5);
@@ -220,7 +245,7 @@ public class Italy extends GameActivity {
 
     public void nextWordFromGameSet() {
         deckIndex++;
-        if (deckIndex == 54) {
+        if (deckIndex == deckSize) {
 
             // The player went through all the cards without getting a loteria. Set up a new board
             playIncorrectSound();
