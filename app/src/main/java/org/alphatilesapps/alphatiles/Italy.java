@@ -79,11 +79,11 @@ public class Italy extends GameActivity {
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
+        ImageView playNextWordImage = (ImageView) findViewById(R.id.playNextWord);
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
-            ImageView playNextWordImage = (ImageView) findViewById(R.id.playNextWord);
             ImageView referenceItemImage = (ImageView) findViewById(R.id.referenceItem);
 
             instructionsImage.setRotationY(180);
@@ -105,7 +105,9 @@ public class Italy extends GameActivity {
         if (getAudioInstructionsResID() == 0) {
             hideInstructionAudioImage();
         }
-
+        if(!Start.changeArrowColor) {
+            playNextWordImage.setImageResource(R.drawable.zz_forward_green);
+        }
         updatePointsAndTrackers(0);
         playAgain();
     }
@@ -114,7 +116,9 @@ public class Italy extends GameActivity {
         super.setAllGameButtonsUnclickable();
 
         ImageView nextWordArrow = findViewById(R.id.playNextWord);
-        nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
+        if(Start.changeArrowColor) {
+            nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
+        }
         nextWordArrow.setClickable(false);
 
         ImageView referenceItem = findViewById(R.id.referenceItem);
