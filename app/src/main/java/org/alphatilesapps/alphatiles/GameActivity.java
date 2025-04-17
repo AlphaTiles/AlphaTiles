@@ -920,6 +920,10 @@ public abstract class GameActivity extends AppCompatActivity {
     wordInLOP: The target word string, in the language of play
      */
     public static String combineTilesToMakeWord(List<Start.Tile> tilesInThisWordOption, Start.Word wordListWord, int indexOfReplacedTile) {
+        if (tilesInThisWordOption.isEmpty()) {
+            return "";
+        }
+
         ArrayList<Start.Tile> tilesInWordListWord = tileList.parseWordIntoTiles(wordListWord.wordInLOP, wordListWord);
         StringBuilder builder = new StringBuilder();
         String previousConsonant = "";
