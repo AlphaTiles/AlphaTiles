@@ -347,25 +347,6 @@ public class Thailand extends GameActivity {
             // challengeLevelThai 1 = pull random tiles for wrong choices
             // challengeLevelThai 2 = pull distractor tiles for wrong choices
             fourTileChoices = tileListNoSAD.returnFourTileChoices(refTile, challengeLevelThai, refTileType);
-            if(choiceType.equals("CONTEXTUAL")) { // In some Arabic script apps
-                switch(contextualTilePosition) { // specified by the 4th character of the challengeLevel number
-                    case "INITIAL":
-                        for(Tile t : fourTileChoices) {
-                            t.text = contextualizedForm_Initial(t.text);
-                        }
-                        break;
-                    case "FINAL":
-                        for(Tile t : fourTileChoices) {
-                            t.text = contextualizedForm_Final(t.text);
-                        }
-                        break;
-                    default: // MEDIAL
-                        for (Tile t : fourTileChoices) {
-                            t.text = contextualizedForm_Medial(t.text);
-                        }
-                        break;
-                }
-            }
         } else if (choiceType.matches("(WORD_TEXT|WORD_IMAGE)") && (!refType.contains("SYLLABLE"))) {
             fourWordChoices = wordList.returnFourWords(refWord, refTile, challengeLevelThai, refType);
             // challengeLevelThai 1 = pull words that begin with random tiles (not distractor, not same) for wrong choices
@@ -379,14 +360,47 @@ public class Thailand extends GameActivity {
 
         switch (choiceType) {
             case "TILE_LOWER":
-            case "CONTEXTUAL":
                 for (int t = 0; t < GAME_BUTTONS.length; t++) {
                     TextView choiceButton = findViewById(GAME_BUTTONS[t]);
                     String choiceColorStr = "#A9A9A9"; // dark gray
                     int choiceColorNo = Color.parseColor(choiceColorStr);
                     choiceButton.setBackgroundColor(choiceColorNo);
                     choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                    choiceButton.setText(fourTileChoices.get(t).text); // Added contextualizingCharacter in prior if block for CONTEXTUAL choices; normal for TILE_LOWER
+                    choiceButton.setText(fourTileChoices.get(t).text);
+                }
+                break;
+            case "CONTEXTUAL":
+                switch(contextualTilePosition) { // Arabic script challengeLevel option; position specified by the 4th character of the challengeLevel number
+                    case "INITIAL":
+                        for (int t = 0; t < GAME_BUTTONS.length; t++) {
+                            TextView choiceButton = findViewById(GAME_BUTTONS[t]);
+                            String choiceColorStr = "#A9A9A9"; // dark gray
+                            int choiceColorNo = Color.parseColor(choiceColorStr);
+                            choiceButton.setBackgroundColor(choiceColorNo);
+                            choiceButton.setTextColor(Color.parseColor("#000000")); // black
+                            choiceButton.setText(contextualizedForm_Initial(fourTileChoices.get(t).text));
+                        }
+                        break;
+                    case "FINAL":
+                        for (int t = 0; t < GAME_BUTTONS.length; t++) {
+                            TextView choiceButton = findViewById(GAME_BUTTONS[t]);
+                            String choiceColorStr = "#A9A9A9"; // dark gray
+                            int choiceColorNo = Color.parseColor(choiceColorStr);
+                            choiceButton.setBackgroundColor(choiceColorNo);
+                            choiceButton.setTextColor(Color.parseColor("#000000")); // black
+                            choiceButton.setText(contextualizedForm_Final(fourTileChoices.get(t).text));
+                        }
+                        break;
+                    default: // MEDIAL
+                        for (int t = 0; t < GAME_BUTTONS.length; t++) {
+                            TextView choiceButton = findViewById(GAME_BUTTONS[t]);
+                            String choiceColorStr = "#A9A9A9"; // dark gray
+                            int choiceColorNo = Color.parseColor(choiceColorStr);
+                            choiceButton.setBackgroundColor(choiceColorNo);
+                            choiceButton.setTextColor(Color.parseColor("#000000")); // black
+                            choiceButton.setText(contextualizedForm_Medial(fourTileChoices.get(t).text));
+                        }
+                        break;
                 }
                 break;
             case "TILE_UPPER":
