@@ -261,11 +261,11 @@ public class Thailand extends GameActivity {
                     refTile = tileListNoSAD.get(randomTileIndex);
                     refTileType = refTile.typeOfThisTileInstance;
                     boolean choicesContainContextualizersOrPlaceholders = false;
-                    if (refTile.text.contains(contextualizingCharacter) || refTile.text.contains(placeholderCharacter)) {
+                    if (refTile.text.contains(contextualizer) || refTile.text.contains(placeholderCharacter)) {
                         choicesContainContextualizersOrPlaceholders = true;
                     } else {
                         for (String t : refTile.distractors) {
-                            if (t.contains(contextualizingCharacter) || t.contains(placeholderCharacter)) {
+                            if (t.contains(contextualizer) || t.contains(placeholderCharacter)) {
                                 choicesContainContextualizersOrPlaceholders = true;
                                 break;
                             }
@@ -631,7 +631,6 @@ public class Thailand extends GameActivity {
                 }
             }
 
-            //JP: Added switch statement to determine which method to call: tile or word
             switch (refType) {
                 case "SYLLABLE_TEXT":
                 case "SYLLABLE_AUDIO":
@@ -642,12 +641,7 @@ public class Thailand extends GameActivity {
                     }
                     break;
                 case "TILE_AUDIO":
-                case "CONTEXTUAL":
-                    if (hasTileAudio) {
-                        playCorrectSoundThenActiveTileClip(false);
-                    } else {
-                        playCorrectSound();
-                    }
+                    playCorrectSoundThenActiveTileClip(false);
                     break;
                 case "TILE_LOWER":
                 case "TILE_UPPER":
