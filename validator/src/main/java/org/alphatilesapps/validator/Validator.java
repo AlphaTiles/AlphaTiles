@@ -513,6 +513,18 @@ public class Validator {
             try {
                 Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
                 scriptType = langInfo.getRowFromFirstCell("Script type").get(1); // sets global variable used to determine simple/complex parse
+                if (scriptType.equals("Arabic")) {
+                    try {
+                        Tab settings = langPackGoogleSheet.getTabFromName("settings");
+                        if (!settings.getRowFromFirstCell("Contextualize word frames").get(1).matches("(TRUE|FALSE)")) {
+                            fatalError(Message.Tag.Etc, "In settings \"Contextualize word frames\" must be either \"TRUE\" or \"FALSE\"");
+                        }
+                    } catch (ValidatorException e) {
+                        recommend(Message.Tag.Etc, "For Arabic script apps: If you would like word frames to have contextual forms around blanks, set \"Contextualize word frames\" to \"TRUE\" in settings.");
+                    }
+
+
+                }
             } catch (ValidatorException e) {
                 fatalError(Message.Tag.Etc, "In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\". Please add a valid script type.");
             }
