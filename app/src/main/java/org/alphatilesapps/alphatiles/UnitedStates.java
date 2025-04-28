@@ -150,9 +150,12 @@ public class UnitedStates extends GameActivity {
                 parsedRefWordSyllableArrayStrings.add(s.text);
             }
         } else {
-            Tile emptyTile = new Tile("__", new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "");
+            Tile emptyTile = new Tile(blankForMissingWordPiece, new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "");
             tileSelections = new Tile[parsedLengthOfRefWord];
             for (int t = 0; t<parsedLengthOfRefWord; t++) {
+                if (contextualizeWordFrames){ // For some Arabic Script apps, to make edges of pieces in the word draft appear contextually
+                    emptyTile.text = contextualizedWordPieceString(blankForMissingWordPiece, t, parsedRefWordTileArrayStrings);
+                }
                 tileSelections[t] = new Tile(emptyTile);
             }
             tileOptions.clear();
@@ -237,8 +240,9 @@ public class UnitedStates extends GameActivity {
         TextView constructedWord = findViewById(R.id.activeWordTextView);
         String initialDisplay = "";
         for (int i = 0; i < numberOfPairs; i++)
-            initialDisplay += "__";
+            initialDisplay += blankForMissingWordPiece;
         constructedWord.setText(initialDisplay);
+        constructedWord.setTextColor(Color.BLACK);
 
 
        // Game modes included in some Arabic-based-script apps to make word piece strings appear in contextual form
@@ -253,7 +257,7 @@ public class UnitedStates extends GameActivity {
     }
 
     /**
-     * For Arabic script apps with useContextualFormsBWFP = true (BWFP = Build Word From Pairs)
+     * For Arabic script apps with a game in CT mode (Contextualized Tile answer choices)
      */
     private void contextualizeTileForms() {
 
@@ -270,7 +274,7 @@ public class UnitedStates extends GameActivity {
     }
 
     /**
-     * For Arabic script apps with useContextualFormsBWFP = true (BWFP = Build Word From Pairs)
+     * For Arabic script apps with games in CS mode (Contextualized Syllable answer choices)
      */
     private void contextualizeSyllableForms() {
 
@@ -308,7 +312,11 @@ public class UnitedStates extends GameActivity {
                     stringBuilder.append(selections[2 * i]);
                     stringBuilder.append(selections[2 * i + 1]);
                 } else {
-                    stringBuilder.append(contextualizedWordPieceString("__", i, parsedRefWordSyllableArrayStrings));
+                    if (contextualizeWordFrames) {
+                        stringBuilder.append(contextualizedWordPieceString(blankForMissingWordPiece, i, parsedRefWordSyllableArrayStrings));
+                    } else {
+                        stringBuilder.append(blankForMissingWordPiece);
+                    }
                 }
             }
 

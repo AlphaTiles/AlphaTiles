@@ -400,7 +400,7 @@ public class Georgia extends GameActivity {
 
         // Make the gameButtons contain contextual forms for some Arabic script apps
         Set<String> contextualizedChallengingChoices = new HashSet<String>();
-        if(useContextualFormsITI) { // For some Arabic script apps
+        if(gameMode.contains("C")) { // For some Arabic script apps; answer choices in contextual form
             for (String answerChoiceString : challengingAnswerChoices) {
                 contextualizedChallengingChoices.add(contextualizedForm_Initial(answerChoiceString));
             }
@@ -430,7 +430,7 @@ public class Georgia extends GameActivity {
                         randomNum = rand.nextInt(CorV.size());
                         tileOptionText = CorV.get(randomNum).text;
                     }
-                    if (useContextualFormsITI) { // For some Arabic script apps
+                    if (gameMode.contains("C")) { // For some Arabic script apps; answer choices in contextual form
                         gameTile.setText(contextualizedForm_Initial(tileOptionText));
                     } else {
                         gameTile.setText(tileOptionText);

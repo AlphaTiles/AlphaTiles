@@ -80,9 +80,10 @@ public class Start extends AppCompatActivity {
     public static String scriptType; // LM Can be "Thai", "Lao", "Khmer", or "Arabic" for special tile parsing. If nothing specified, tile parsing defaults to unidirectional.
     public static Boolean sendAnalytics;
     public static boolean changeArrowColor;
+    public static String blankForMissingWordPiece = "__"; // LM for FITB and BWFP
     public static String placeholderCharacter; // LM Takes the place of a consonant for combining characters in complex scripts
-    public static String contextualizingCharacter; // LM for displaying various contextual forms of Arabic characters
-    public static Boolean contextualizeWordFramesInFITB; // LM Make Arabic letters contextual around blanks in FITB
+    public static String contextualizer; // LM for displaying various contextual forms of Arabic characters
+    public static Boolean contextualizeWordFrames; // LM Make Arabic letters contextual around blanks in FITB and BWFP
     public static TileList CONSONANTS = new TileList();
     public static TileList PLACEHOLDER_CONSONANTS = new TileList();
     public static TileList SILENT_PRELIMINARY_TILES = new TileList();
@@ -141,7 +142,7 @@ public class Start extends AppCompatActivity {
 
         differentiatesTileTypes = getBooleanFromSettings("Differentiates types of multitype symbols", false);
 
-        contextualizeWordFramesInFITB = getBooleanFromSettings("Contextualize word frames in Fill In The Blank", false);
+        contextualizeWordFrames = getBooleanFromSettings("Contextualize word frames", false);
 
         sendAnalytics = getBooleanFromSettings("Send analytics", false);
         changeArrowColor = getBooleanFromSettings("Change arrow colors", true);
@@ -785,9 +786,9 @@ public class Start extends AppCompatActivity {
         if (placeholderCharacter.isEmpty()) {
             placeholderCharacter = "XYZXYZ"; // No placeholders in tiles; this variable shouldn't be matched to anything in words
         }
-        contextualizingCharacter = settingsList.find("Contextualizing character");
-        if (contextualizingCharacter.isEmpty()) {
-            contextualizingCharacter = "XYZXYZ"; // No contextualizing characters in tiles; this variable shouldn't be matched to anything in words
+        contextualizer = settingsList.find("Contextualizing character");
+        if (contextualizer.isEmpty()) {
+            contextualizer = "XYZXYZ"; // No contextualizing characters in tiles; this variable shouldn't be matched to anything in words
         }
 
     }
@@ -860,7 +861,7 @@ public class Start extends AppCompatActivity {
         tileHashMapWithoutPlaceHoldersOrContextualizers = new TileHashMap();
         tileHashMapNoSADWithoutPlaceholdersOrContextualizers = new TileHashMap();
         for (int i = 0; i < tileList.size(); i++) {
-            String strippedTileText = tileList.get(i).text.replace(placeholderCharacter, "").replace(contextualizingCharacter, "");
+            String strippedTileText = tileList.get(i).text.replace(placeholderCharacter, "").replace(contextualizer, "");
             tileHashMapWithoutPlaceHoldersOrContextualizers.put(strippedTileText, tileList.get(i));
             if (!tileList.get(i).tileType.equals("SAD")) {
                 tileHashMapNoSADWithoutPlaceholdersOrContextualizers.put(strippedTileText, tileList.get(i));

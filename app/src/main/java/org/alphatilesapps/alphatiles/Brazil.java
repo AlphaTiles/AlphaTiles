@@ -357,7 +357,7 @@ public class Brazil extends GameActivity {
         StringBuilder wordBuilder = new StringBuilder();
         String word;
         if (gameMode.contains("S")) {
-            Start.Syllable blankSyllable = new Start.Syllable("__", new ArrayList<>(),"X", 0, correctSyllable.color);
+            Start.Syllable blankSyllable = new Start.Syllable(blankForMissingWordPiece, new ArrayList<>(),"X", 0, correctSyllable.color);
             parsedRefWordSyllableArray.set(index_to_remove, blankSyllable);
             for (Syllable s : parsedRefWordSyllableArray) {
                 if (s != null) {
@@ -366,7 +366,7 @@ public class Brazil extends GameActivity {
             }
             word = wordBuilder.toString();
         } else { // Tile game
-            Start.Tile blankTile = new Start.Tile("__", new ArrayList<>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, correctTile.typeOfThisTileInstance, 1, "");
+            Start.Tile blankTile = new Start.Tile(blankForMissingWordPiece, new ArrayList<>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, correctTile.typeOfThisTileInstance, 1, "");
             parsedRefWordTileArray.set(index_to_remove, blankTile);
             if (scriptType.equals("Khmer") && correctTile.typeOfThisTileInstance.equals("C")){
                 if(index_to_remove < parsedRefWordTileArray.size()-1 && parsedRefWordTileArray.get(index_to_remove + 1).typeOfThisTileInstance.matches("(V|AV|BV|D)")) {
@@ -381,7 +381,7 @@ public class Brazil extends GameActivity {
                 blankTile.text = placeholderCharacter;
                 parsedRefWordTileArray.set(index_to_remove, blankTile);
             }
-            if (contextualizeWordFramesInFITB) { // Game mode included in some Arabic script apps to make tiles appear in contextual forms in answer choices
+            if (contextualizeWordFrames) { // Setting for some Arabic script apps, to produce contextual forms around blanks
                 blankTile.text = contextualizedWordPieceString(blankTile.text, index_to_remove, parsedRefWordTileArrayStrings);
             }
 
