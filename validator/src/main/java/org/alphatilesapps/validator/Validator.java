@@ -2214,15 +2214,23 @@ public class Validator {
         while (specMatcher.find()) {
             typeSpecsList.add(specMatcher.group());
         }
+
+        ArrayList<String> wordAsSimpleTileStringList = new ArrayList<>();
+        for (Tile tile : wordAsSimpleTileList) {
+            wordAsSimpleTileStringList.add(tile.text);
+        }
+
+        for(String typeSpec : typeSpecsList) {
+            if(typeSpec.startsWith("0")) {
+                fatalError(Message.Tag.Etc, "In wordlist, for the word " + word.wordInLOP + ", tiles are " + wordAsSimpleTileStringList + ", but the mixed types info, " + typeSpecsList + ", contains specification \"0\". Please replace \"0\" with the correct index (\"10\" is permitted)");
+            }
+        }
+
         if (typeSpecsList.size() == 1 && !typeSpecifications.equals("-")) {
             return parseAbbreviatedTypeSpecification(word);
         } else if (typeSpecifications.equals("-")) {  // No multi types info included. Build the full type specification out of index numbers
             typeSpecsList.clear();
         } else if (typeSpecsList.size() != wordAsSimpleTileList.size()) {
-            ArrayList<String> wordAsSimpleTileStringList = new ArrayList<>();
-            for (Tile tile : wordAsSimpleTileList) {
-                wordAsSimpleTileStringList.add(tile.text);
-            }
             fatalError(Message.Tag.Etc, "In wordlist, the word " + word.wordInLOP + " has " + wordAsSimpleTileList.size() +
                     " tiles, but the mixed types cell has " + typeSpecsList.size() + " specifications (its tiles are " + wordAsSimpleTileStringList + ")");
             throw new ValidatorException("In wordlist, the word " + word.wordInLOP + " has " + wordAsSimpleTileList.size() +
