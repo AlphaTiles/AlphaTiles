@@ -186,7 +186,9 @@ public class Romania extends GameActivity {
         String tileText = activeTile.text;
         gameTile.setText(tileText);
         TextView numberOfTotal = (TextView) findViewById(R.id.numberOfTotalText);
-        numberOfTotal.setText(indexWithinGroup + 1 + " / " + String.valueOf(String.valueOf(groupCount)));
+        String nthTileScrollArrows = Start.convertNumeralSystem(String.valueOf(indexWithinGroup + 1));
+        String totalTilesScrollArrows = Start.convertNumeralSystem(String.valueOf(groupCount));
+        numberOfTotal.setText(nthTileScrollArrows + " / " + totalTilesScrollArrows);
 
         gameTile.setClickable(true);
 
@@ -278,7 +280,9 @@ public class Romania extends GameActivity {
             gameTile.setBackgroundColor(tileColor);
             activeWord.setBackgroundColor(tileColor);
             TextView numberOfTotal = (TextView) findViewById(R.id.numberOfTotalText);
-            numberOfTotal.setText(indexWithinGroup + 1 + " / " + String.valueOf(groupCount));
+            String nthTileScrollArrows = Start.convertNumeralSystem(String.valueOf(indexWithinGroup + 1));
+            String totalTilesScrollArrows = Start.convertNumeralSystem(String.valueOf(groupCount));
+            numberOfTotal.setText(nthTileScrollArrows + " / " + totalTilesScrollArrows);
 
             if (failedToMatchInitialTile) {
                 tileColorStr = "#A9A9A9"; // dark gray
@@ -333,7 +337,9 @@ public class Romania extends GameActivity {
             activeWord.setBackgroundColor(tileColor);
             TextView numberOfTotal = (TextView) findViewById(R.id.numberOfTotalText);
 
-            numberOfTotal.setText(indexWithinGroup + 1 + " / " + String.valueOf(groupCount));
+            String nthTileScrollArrows = Start.convertNumeralSystem(String.valueOf(indexWithinGroup + 1));
+            String totalTilesScrollArrows = Start.convertNumeralSystem(String.valueOf(groupCount));
+            numberOfTotal.setText(nthTileScrollArrows + " / " + totalTilesScrollArrows);
             if (failedToMatchInitialTile) {
                 tileColorStr = "#A9A9A9"; // dark gray
                 tileColor = Color.parseColor(tileColorStr);
