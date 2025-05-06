@@ -37,6 +37,7 @@ public class Ecuador extends GameActivity {
 
     int[][] boxCoordinates;   // Will be 8 boxes, defined by 4 parameters each: x1, y1, x2, y2
     int justClickedWord = 0;
+    ArrayList<Word> wordPool = new ArrayList<>();
     // # 1 memoryCollection[LWC word, e.g. Spanish]
     // # 2 [LOP word, e.g. Me'phaa]
     // # 3 [state: "TEXT" or "IMAGE"]
@@ -103,6 +104,7 @@ public class Ecuador extends GameActivity {
         for (int i = 0; i < visibleGameButtons-1; i++) {
             incorrectAnswersSelected.add("");
         }
+        wordPool.addAll(cumulativeStageBasedWordList);
         playAgain();
     }
 
@@ -115,12 +117,10 @@ public class Ecuador extends GameActivity {
     }
 
     public void playAgain() {
-
         repeatLocked = true;
         setAdvanceArrowToGray();
         setBoxes();
         setTextBoxColors();
-        Collections.shuffle(wordList); // KP
         setWords();
         setAllGameButtonsClickable();
         setOptionsRowClickable();
@@ -368,11 +368,16 @@ public class Ecuador extends GameActivity {
     }
 
     public void setWords() {
-        chooseWord();
-
+        Collections.shuffle(wordPool);
+        refWord = wordPool.get(0);
+        for (int w = 0; w < GAME_BUTTONS.length; w++) {
+            TextView wordTile = findViewById(GAME_BUTTONS[w]);
+            Word word = wordPool.get(w + 1);
+            wordTile.setText(wordList.stripInstructionCharacters(word.wordInLOP));
+        }
         TextView rightWordTile = findViewById(R.id.activeWordTextView);
         rightWordTile.setText(wordList.stripInstructionCharacters(refWord.wordInLOP));
-        ImageView image = (ImageView) findViewById(R.id.wordImage);
+        ImageView image = findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(refWord.wordInLWC + "2", "drawable", getPackageName());
         image.setImageResource(resID);
 
@@ -380,23 +385,6 @@ public class Ecuador extends GameActivity {
         int rightWordIndex = rand.nextInt(GAME_BUTTONS.length);
         TextView correctMatchTile = findViewById(GAME_BUTTONS[rightWordIndex]);
         correctMatchTile.setText(wordList.stripInstructionCharacters(refWord.wordInLOP));
-
-        ArrayList<String> wordsAlreadyOnTheBoard = new ArrayList<String>();
-        wordsAlreadyOnTheBoard.add(refWord.wordInLOP);
-        for (int w = 0; w < GAME_BUTTONS.length; w++) {
-            TextView wordTile = findViewById(GAME_BUTTONS[w]);
-            if (w != rightWordIndex) {
-                boolean duplicate = true;
-                while (duplicate){
-                    int randomIndexOfOtherWord = rand.nextInt(cumulativeStageBasedWordList.size());
-                    String randomOtherWordInLOP = cumulativeStageBasedWordList.get(randomIndexOfOtherWord).wordInLOP;
-                    if (!randomOtherWordInLOP.equals(refWord.wordInLOP)){
-                        wordTile.setText(wordList.stripInstructionCharacters(randomOtherWordInLOP));
-                        duplicate = false;
-                    }
-                }
-            }
-        }
     }
 
     // https://stackoverflow.com/questions/20264268/how-do-i-get-the-height-and-width-of-the-android-navigation-bar-programmatically
