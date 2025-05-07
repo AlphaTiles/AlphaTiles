@@ -91,7 +91,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
     int visibleGameButtons;
     Start.Word refWord;
-    Queue<String> last12Words = new PriorityQueue<>();
+    Queue<String> lastXWords = new PriorityQueue<>();  // avoid reusing words too quickly
 
 
     boolean mediaPlayerIsPlaying = false;
@@ -431,6 +431,9 @@ public abstract class GameActivity extends AppCompatActivity {
                 LOGGER.info("chooseWord: stage reduced from " + stage + " to " + local_stage);
             }
 
+            // remember the size of Stage 1, for use later in this function
+            int stage1WordCount = wordStagesLists.get(0).size();
+
             if(local_stage == 1) {
                 // Weight toward words with the highest correspondence ratio to stage 1 tiles
                 double higherCorrespondenceThreshold  = stageCorrespondenceRatio + (1-stageCorrespondenceRatio)/2;
@@ -470,14 +473,14 @@ public abstract class GameActivity extends AppCompatActivity {
                     }
                 }
 
-                if (wordStagesLists.get(0).isEmpty()) {
+                if (stage1WordCount == 0) {
                     LOGGER.warning("chooseWord: can't proceed - stage 1 has no words");
                 } else {
-                    LOGGER.info("chooseWord: stage 1 size=" + wordStagesLists.get(0).size());
+                    LOGGER.info("chooseWord: stage 1 size=" + stage1WordCount);
                 }
 
-                int randomNumberForWeightingTowardHighCorrespondence = rand.nextInt(wordStagesLists.get(0).size());
-                if (randomNumberForWeightingTowardHighCorrespondence < wordStagesLists.get(0).size() * 0.5 || lowerCorrespondenceWords.isEmpty()) {
+                int randomNumberForWeightingTowardHighCorrespondence = rand.nextInt(stage1WordCount);
+                if (randomNumberForWeightingTowardHighCorrespondence < stage1WordCount * 0.5 || lowerCorrespondenceWords.isEmpty()) {
                     // Select a word with higher correspondence to stage 1 tiles (only tiles introduced so far)
                     int randomNumberForChoosingAHighCorrespondenceWord = rand.nextInt(higherCorrespondenceWords.size());
                     refWord = higherCorrespondenceWords.get(randomNumberForChoosingAHighCorrespondenceWord);
@@ -500,14 +503,23 @@ public abstract class GameActivity extends AppCompatActivity {
                 }
             }
 
-            // If this word isn't one of the 12 previously tested words, we're good
-            if (!last12Words.contains(refWord.wordInLOP)) {
+            LOGGER.info("chooseWord: candidate=" + refWord.wordInLOP);
+
+            // If this word isn't one of the X previously tested words, we're good
+            // Assume a pool of 12 "last words", but if Stage 1 is smaller than 12,
+            // use the number of words in Stage 1 less  1 so we always have a word).
+            int sizeOfLastXWords = Math.min(stage1WordCount-1, 12);
+            if (!lastXWords.contains(refWord.wordInLOP)) {
                 freshWord = true;
-                if(last12Words.size()==12){ // Remove first word added
-                    last12Words.poll();
+                if(lastXWords.size() == sizeOfLastXWords) {
+                    // Remove first word added
+                    lastXWords.poll();
+                    LOGGER.info("chooseWord: queue size now " + lastXWords.size());
                 }
-                last12Words.add(refWord.wordInLOP);
+                lastXWords.add(refWord.wordInLOP);
+                LOGGER.info("chooseWord: queue size back to " + lastXWords.size());
             } else {
+                LOGGER.info("chooseWord: not a fresh word, trying again");
                 freshWord = false;
             }
         }
