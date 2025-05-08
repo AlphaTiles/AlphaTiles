@@ -22,9 +22,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Timer;
@@ -91,7 +91,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
     int visibleGameButtons;
     Start.Word refWord;
-    Queue<String> lastXWords = new PriorityQueue<>();  // avoid reusing words too quickly
+    Queue<String> lastXWords = new LinkedList<>();  // avoid reusing words too quickly
 
 
     boolean mediaPlayerIsPlaying = false;
@@ -475,8 +475,6 @@ public abstract class GameActivity extends AppCompatActivity {
 
                 if (stage1WordCount == 0) {
                     LOGGER.warning("chooseWord: can't proceed - stage 1 has no words");
-                } else {
-                    LOGGER.info("chooseWord: stage 1 size=" + stage1WordCount);
                 }
 
                 int randomNumberForWeightingTowardHighCorrespondence = rand.nextInt(stage1WordCount);
@@ -503,7 +501,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 }
             }
 
-            LOGGER.info("chooseWord: candidate=" + refWord.wordInLOP);
+            // LOGGER.info("chooseWord: candidate=" + refWord.wordInLOP);
 
             // If this word isn't one of the X previously tested words, we're good
             // Assume a pool of 12 "last words", but if Stage 1 is smaller than 12,
@@ -513,13 +511,10 @@ public abstract class GameActivity extends AppCompatActivity {
                 freshWord = true;
                 if(lastXWords.size() == sizeOfLastXWords) {
                     // Remove first word added
-                    lastXWords.poll();
-                    LOGGER.info("chooseWord: queue size now " + lastXWords.size());
+                    lastXWords.remove();
                 }
                 lastXWords.add(refWord.wordInLOP);
-                LOGGER.info("chooseWord: queue size back to " + lastXWords.size());
             } else {
-                LOGGER.info("chooseWord: not a fresh word, trying again");
                 freshWord = false;
             }
         }
