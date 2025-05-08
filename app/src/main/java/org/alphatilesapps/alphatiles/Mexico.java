@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 import static android.graphics.Color.BLACK;
 
@@ -26,6 +27,7 @@ public class Mexico extends GameActivity {
     int cardHitA = 0;
     int cardHitB = 0;
     Handler handler; // KP
+    private static final Logger LOGGER = Logger.getLogger(Mexico.class.getName());
 
     protected static final int[] GAME_BUTTONS = {
             R.id.card01, R.id.card02, R.id.card03, R.id.card04, R.id.card05, R.id.card06, R.id.card07, R.id.card08, R.id.card09, R.id.card10,
@@ -160,6 +162,11 @@ public class Mexico extends GameActivity {
         // KP, Oct 2020
         int cardsToSetUp = visibleGameButtons / 2;   // this is half the number of cards
 
+        // Use a sanity loop counter in case the stage assigned to this version
+        // of the game has too few words (e.g., if stage 1 has 7 words, then we
+        // can only play with 8 or 12 cards, and cannot play with 16 or 20 cards.
+        int sanityCounter = 0;
+
         for (int i = 0; i < cardsToSetUp; i++) {
             boolean wordAcceptable = true;
             chooseWord();
@@ -196,6 +203,14 @@ public class Mexico extends GameActivity {
 
                         };
                 memoryCollection.add(content);
+            }
+
+            if (++sanityCounter > cardsToSetUp*3) {
+                // we've looped too many times - give up
+                LOGGER.warning("chooseMemoryWords: can't proceed - not enough words");
+                // return to the home screen
+                goBackToEarth(null);
+                return;
             }
         }
     }
