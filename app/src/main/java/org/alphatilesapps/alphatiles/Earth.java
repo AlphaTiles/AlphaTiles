@@ -156,14 +156,14 @@ public class Earth extends AppCompatActivity {
                         String project = "org.alphatilesapps.alphatiles.";
                         String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).country;
                         String challengeLevel = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).level;
-                        String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).mode;
+                        String gameMode = gameList.get((pageNumber * doorsPerPage) + doorIndex).mode;
                         String stage;
                         if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
                             stage = "1";
                         } else {
                             stage = gameList.get((pageNumber * doorsPerPage) + doorIndex).stage;
                         }
-                        String uniqueGameLevelPlayerModeStageID = project + country + challengeLevel + playerString + syllableGame + stage;
+                        String uniqueGameLevelPlayerModeStageID = project + country + challengeLevel + playerString + gameMode + stage;
 
                         trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
 
@@ -272,7 +272,7 @@ public class Earth extends AppCompatActivity {
 
         int challengeLevel = Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).level);
         int gameNumber = (pageNumber * doorsPerPage) + doorIndex + 1;
-        String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).mode;
+        String gameMode = gameList.get((pageNumber * doorsPerPage) + doorIndex).mode;
         int stage;
         if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
             stage = 1;
@@ -291,7 +291,7 @@ public class Earth extends AppCompatActivity {
         intent.putExtra("gameNumber", gameNumber);
         intent.putExtra("pageNumber", pageNumber);
         intent.putExtra("country", country);
-        intent.putExtra("syllableGame", syllableGame);
+        intent.putExtra("gameMode", gameMode);
         intent.putExtra("stage", stage);
         intent.putExtra("studentGrade", grade);
         startActivity(intent);
