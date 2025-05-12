@@ -49,7 +49,7 @@ import com.segment.analytics.Properties;
 public class Georgia extends GameActivity {
 
     Start.SyllableList syllableListCopy; //JP
-    Set<String> challengingAnswerChoices = new HashSet<String>();
+    Set<String> challengingAnswerChoices = new HashSet<>();
     Start.Tile initialTile;
     Start.Syllable initialSyllable;
 
@@ -69,7 +69,7 @@ public class Georgia extends GameActivity {
     @Override
     protected void hideInstructionAudioImage() {
 
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
     }
 
@@ -91,7 +91,7 @@ public class Georgia extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        int gameID = 0;
+        int gameID;
         if (syllableGame.equals("S")) {
             setContentView(R.layout.georgia_syll);
             gameID = R.id.georgiaCL_syll;
@@ -104,8 +104,8 @@ public class Georgia extends GameActivity {
         ActivityLayouts.setStatusAndNavColors(this);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView repeatImage =  findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
@@ -178,8 +178,8 @@ public class Georgia extends GameActivity {
         setAllGameButtonsClickable();
         setOptionsRowClickable();
 
-        for (int i = 0; i < GAME_BUTTONS.length; i++) {
-            TextView nextWord = (TextView) findViewById(GAME_BUTTONS[i]);
+        for (int gameButton : GAME_BUTTONS) {
+            TextView nextWord = findViewById(gameButton);
             nextWord.setClickable(true);
         }
 
@@ -202,17 +202,19 @@ public class Georgia extends GameActivity {
             if(challengeLevel>6 && challengeLevel<13) { // Find first non-LV tile (first sound, since LVs are pronounced after the consonants they precede)
                 Start.Tile initialLV = null;
                 int t = 0;
-                while (initialTileType.equals("LV") && t < parsedRefWordTileArray.size()) { // Unless there is a placeholder consonant, the consonant is the first sound
+                while (initialTileType.equals("LV")) {
+                    parsedRefWordTileArray.size(); // Unless there is a placeholder consonant, the consonant is the first sound
                     initialLV = initialTile;
                     t++;
                     initialTile = parsedRefWordTileArray.get(t);
                     initialTileType = initialTile.typeOfThisTileInstance;
                 }
-                if (initialTileType.equals("PC") && t < parsedRefWordTileArray.size()) { // If there is a placeholder consonant, vowel is the first sound
-                    if (!(initialLV==null)) {
+                if (initialTileType.equals("PC")) {
+                    parsedRefWordTileArray.size();// If there is a placeholder consonant, vowel is the first sound
+                    if (!(initialLV == null)) {
                         initialTile = initialLV;
                     } else {
-                        initialTile = parsedRefWordTileArray.get(t+1);
+                        initialTile = parsedRefWordTileArray.get(t + 1);
                     }
                 }
             }
@@ -221,7 +223,7 @@ public class Georgia extends GameActivity {
             }
         }
 
-        ImageView image = (ImageView) findViewById(R.id.wordImage);
+        ImageView image = findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
     }
@@ -442,7 +444,7 @@ public class Georgia extends GameActivity {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
-        String correctString = "";
+        String correctString;
         if (syllableGame.equals("S")) {
             correctString = initialSyllable.text;
         } else {
@@ -466,7 +468,7 @@ public class Georgia extends GameActivity {
                         .putValue("Correct Answer", correctString)
                         .putValue("Grade", studentGrade);
                 for (int i = 0; i < visibleGameButtons - 1; i++) {
-                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                    if (!incorrectAnswersSelected.get(i).isEmpty()) {
                         info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
                     }
                 }
@@ -490,7 +492,7 @@ public class Georgia extends GameActivity {
             for (int i = 0; i < visibleGameButtons - 1; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(selectedTileString)) break;  // this incorrect answer already selected
-                if (item.equals("")) {
+                if (item.isEmpty()) {
                     incorrectAnswersSelected.set(i, selectedTileString);
                     break;
                 }
