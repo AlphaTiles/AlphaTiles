@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -36,6 +37,7 @@ public class Myanmar extends GameActivity {
     int completionGoal = 0;
 
     Handler handler;
+    private static final Logger LOGGER = Logger.getLogger(Myanmar.class.getName());
 
     protected static final int[] GAME_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -177,6 +179,11 @@ public class Myanmar extends GameActivity {
 
     private void chooseWords() {
 
+        // Use a sanity loop counter in case the stage assigned to this version
+        // of the game has too few words (e.g., if stage 1 has just 5 words,
+        // then we don't have enough words to launch the game.).
+        int sanityCounter = 0;
+
         for (int i = 0; i < 7; i++) {
 
             chooseWord();
@@ -193,6 +200,14 @@ public class Myanmar extends GameActivity {
                         i--;
                     }
                 }
+            }
+
+            if (++sanityCounter > 21) {
+                // we've looped too many times - give up
+                LOGGER.warning("chooseWords: can't proceed - not enough words");
+                // return to the home screen
+                goBackToEarth(null);
+                return;
             }
         }
     }

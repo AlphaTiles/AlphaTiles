@@ -70,7 +70,7 @@ public class Malaysia extends GameActivity {
 
     public void determineNumPages() {
         wordPagesLists.add(wordPage);
-        int total = wordList.size() - wordsPerPage; // 1 page is accounted for in numPages init
+        int total = wordStagesLists.get(stage-1).size() - wordsPerPage; // 1 page is accounted for in numPages init
         while (total >= 0) {
             numPages++;
             List<Start.Word> page = new ArrayList<Start.Word>();
@@ -80,12 +80,12 @@ public class Malaysia extends GameActivity {
     }
 
     public void assignPages() {
-        int numWords = wordList.size();
+        int numWords = wordStagesLists.get(stage-1).size();
         int wordIndex = 0;
         for (int i = 0; i <= numPages; i++)
             for (int j = 0; j < wordsPerPage; j++)
                 if(wordIndex < numWords) {
-                    wordPagesLists.get(i).add(wordList.get(wordIndex));
+                    wordPagesLists.get(i).add(wordStagesLists.get(stage-1).get(wordIndex));
                     wordIndex++;
                 }
     }
