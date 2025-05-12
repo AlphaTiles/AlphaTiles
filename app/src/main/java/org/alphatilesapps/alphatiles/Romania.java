@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +39,7 @@ public class Romania extends GameActivity {
     // settings to see tiles in focus bolded or not
     boolean boldNonInitialFocusTiles = Boolean.parseBoolean(boldNonIntialFocusTilesTest); // bold non-initial tiles that are in focus
     boolean boldInitialFocusTiles = Boolean.parseBoolean(boldInitialfocusTilesTest);     // bold initial tiles that are in focus
+    private static final Logger LOGGER = Logger.getLogger(Romania.class.getName());
 
     protected int[] getGameButtons() {
         return null;
@@ -79,8 +79,9 @@ public class Romania extends GameActivity {
 
         scanSetting = Integer.parseInt(Start.settingsList.find("Game 001 Scan Setting"));
 
-        tileToStartOn = cumulativeStageBasedTileList.get(0).text;
-        typeOfTileToStartOn = cumulativeStageBasedTileList.get(0).typeOfThisTileInstance;
+        // tileToStartOn = cumulativeStageBasedTileList.get(0).text;
+        // typeOfTileToStartOn = cumulativeStageBasedTileList.get(0).typeOfThisTileInstance;
+
         String tileToStartOn = prefs.getString("lastActiveTileGame001_player" + playerString, this.tileToStartOn);
         String typeOfTileToStartOn = prefs.getString("typeOfLastActiveTileGame001_player" + playerString, this.typeOfTileToStartOn);
 
@@ -111,8 +112,15 @@ public class Romania extends GameActivity {
         }
 
         int i = 0;
-        while (!(cumulativeStageBasedTileList.get(i).text.equals(tileToStartOn) && cumulativeStageBasedTileList.get(i).typeOfThisTileInstance.equals(typeOfTileToStartOn))) {
+        while (!(cumulativeStageBasedTileList.get(i).text.equals(tileToStartOn)
+                && cumulativeStageBasedTileList.get(i).typeOfThisTileInstance.equals(typeOfTileToStartOn))) {
             i++;
+            if (i >= cumulativeStageBasedTileList.size()) {
+                // saved tile not in this stage, so start with the 0th tile
+                LOGGER.info("onCreate: saved tile=" + tileToStartOn + " not in this stage, start with tile 0");
+                i = 0;
+                break;
+            }
         }
         activeTile = cumulativeStageBasedTileList.get(i);
         setUpBasedOnGameTile(activeTile);
@@ -124,13 +132,13 @@ public class Romania extends GameActivity {
         SpannableStringBuilder result = new SpannableStringBuilder(activeWord);
         int index = 0;
 
-        boolean isInitial = false;
+//      boolean isInitial = false;
         for(int i = 0; i < tempList.size(); i++) {
             if (tempList.get(i).text.equals(tile.text)) {
                 if (i == 0 && boldInitialFocusTiles) {
                     result.setSpan(new StyleSpan(Typeface.BOLD), index, index + tile.text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     result.setSpan(new ForegroundColorSpan(Color.YELLOW), index, index + tile.text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    isInitial = true;
+//                  isInitial = true;
                 }
                 if (i != 0 && boldNonInitialFocusTiles) {
                     result.setSpan(new StyleSpan(Typeface.BOLD), index, index + tile.text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -355,20 +363,31 @@ public class Romania extends GameActivity {
         directionIsForward = true;
         Start.Tile oldTile = activeTile;
         activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
-
+        // LOGGER.info("goToNextTile: " + oldTile.text +"/" + activeTile.text);
         if (scanSetting == 1) {
             while (Start.wordList.numberOfWordsForActiveTile(activeTile, 1) == 0) {
                 oldTile = activeTile;
                 activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
             }
         } else if (scanSetting == 2) {
-            while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 2) == 0) {
+            while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0)))
+                    || Start.wordList.numberOfWordsForActiveTile(activeTile, 2) == 0) {
                 oldTile = activeTile;
                 activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
             }
+            // LOGGER.info("goToNextTile: " + oldTile.text +"/" + activeTile.text);
         } else {
             while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0))) ||
                     Start.wordList.numberOfWordsForActiveTile(activeTile, 3) == 0) {
+                oldTile = activeTile;
+                activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
+            }
+        }
+        // If we are not distinguishing between multitype tiles, and this is a multitype tile,
+        // loop until we find a new one (same text - the type will be different).
+        if (!differentiatesTileTypes && MULTITYPE_TILES.contains(activeTile.text)) {
+            while (activeTile.text.equals(oldTile.text)) {
+                LOGGER.info("goToNextTile: skip to one more after " + activeTile.text);
                 oldTile = activeTile;
                 activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
             }
@@ -379,6 +398,7 @@ public class Romania extends GameActivity {
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile.text);
         editor.putString("typeOfLastActiveTileGame001_player" + playerString, activeTile.typeOfThisTileInstance);
         editor.apply();
+        // LOGGER.info("goToNextTile: " + oldTile.text +"/" + activeTile.text);
         setUpBasedOnGameTile(activeTile);
     }
 
@@ -398,6 +418,15 @@ public class Romania extends GameActivity {
             }
         } else {
             while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0))) || Start.wordList.numberOfWordsForActiveTile(activeTile, 3) == 0) {
+                oldTile = activeTile;
+                activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
+            }
+        }
+        // If we are not distinguishing between multitype tiles, and this is a multitype tile,
+        // loop until we find a new one (same text - the type will be different).
+        if (!differentiatesTileTypes && MULTITYPE_TILES.contains(activeTile.text)) {
+            while (activeTile.text.equals(oldTile.text)) {
+                LOGGER.info("goToPreviousTile: skip to one more before " + activeTile.text);
                 oldTile = activeTile;
                 activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
             }
