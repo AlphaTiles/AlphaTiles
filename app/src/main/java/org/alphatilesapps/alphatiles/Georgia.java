@@ -202,19 +202,17 @@ public class Georgia extends GameActivity {
             if(challengeLevel>6 && challengeLevel<13) { // Find first non-LV tile (first sound, since LVs are pronounced after the consonants they precede)
                 Start.Tile initialLV = null;
                 int t = 0;
-                while (initialTileType.equals("LV")) {
-                    parsedRefWordTileArray.size(); // Unless there is a placeholder consonant, the consonant is the first sound
+                while (initialTileType.equals("LV") && t < parsedRefWordTileArray.size()) { // Unless there is a placeholder consonant, the consonant is the first sound
                     initialLV = initialTile;
                     t++;
                     initialTile = parsedRefWordTileArray.get(t);
                     initialTileType = initialTile.typeOfThisTileInstance;
                 }
-                if (initialTileType.equals("PC")) {
-                    parsedRefWordTileArray.size();// If there is a placeholder consonant, vowel is the first sound
-                    if (!(initialLV == null)) {
+                if (initialTileType.equals("PC") && t < parsedRefWordTileArray.size()) { // If there is a placeholder consonant, vowel is the first sound
+                    if (!(initialLV==null)) {
                         initialTile = initialLV;
                     } else {
-                        initialTile = parsedRefWordTileArray.get(t + 1);
+                        initialTile = parsedRefWordTileArray.get(t+1);
                     }
                 }
             }
