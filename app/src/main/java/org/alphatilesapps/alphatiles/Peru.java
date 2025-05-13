@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -19,7 +18,6 @@ import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
 
 public class Peru extends GameActivity {
-    private static final Logger LOGGER = Logger.getLogger(Peru.class.getName());
 
     protected static final int[] GAME_BUTTONS = {
             R.id.word1, R.id.word2, R.id.word3, R.id.word4
@@ -48,7 +46,7 @@ public class Peru extends GameActivity {
     @Override
     protected void hideInstructionAudioImage() {
 
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
     }
@@ -63,8 +61,8 @@ public class Peru extends GameActivity {
         ActivityLayouts.setStatusAndNavColors(this);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView repeatImage = findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
@@ -110,7 +108,7 @@ public class Peru extends GameActivity {
 
         // Set thematic colors for four word choice TextViews, also make clickable
         for (int i = 0; i < GAME_BUTTONS.length; i++) {
-            TextView nextWord = (TextView) findViewById(GAME_BUTTONS[i]);
+            TextView nextWord = findViewById(GAME_BUTTONS[i]);
             String wordColorStr = colorList.get(i);
             int wordColorNo = Color.parseColor(wordColorStr);
             nextWord.setBackgroundColor(wordColorNo);
@@ -118,12 +116,10 @@ public class Peru extends GameActivity {
             nextWord.setClickable(true);
         }
 
-        ImageView image = (ImageView) findViewById(R.id.wordImage);
+        ImageView image = findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
-
-        ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
-        wordImage.setClickable(true);
+        image.setClickable(true);
 
         Random rand = new Random();
         int indexOfCorrectAnswerAmongChoices = rand.nextInt(4);
@@ -132,7 +128,7 @@ public class Peru extends GameActivity {
 
         int incorrectLapNo = 0;
         for (int i = 0; i < GAME_BUTTONS.length; i++) {
-            TextView nextWord = (TextView) findViewById(GAME_BUTTONS[i]);
+            TextView nextWord = findViewById(GAME_BUTTONS[i]);
             if (i == indexOfCorrectAnswerAmongChoices) {
                 nextWord.setText(wordInLOPWithStandardizedSequenceOfCharacters(refWord)); // the correct answer (the unmodified version of the word)
             } else {
@@ -152,7 +148,7 @@ public class Peru extends GameActivity {
                             nextWord.setText(incorrectChoiceString);
                             isDuplicateAnswerChoice = false;
                             for (int j = 0; j < incorrectChoiceString.length() - 2; j++) {
-                                if (incorrectChoiceString.substring(j, j + 3).equals("للہ")) {
+                                if (incorrectChoiceString.startsWith("للہ", j)) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
@@ -194,7 +190,7 @@ public class Peru extends GameActivity {
                                 isDuplicateAnswerChoice = true;
                             }
                             for (int j = 0; j < incorrectChoice2.length() - 2; j++) {
-                                if (incorrectChoice2.substring(j, j + 3).equals("للہ")) {
+                                if (incorrectChoice2.startsWith("للہ", j)) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
@@ -208,7 +204,6 @@ public class Peru extends GameActivity {
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
                         // REPLACEMENT IS FROM DISTRACTOR TRIO
 
-                        isDuplicateAnswerChoice = true; // LM // generate answer choices until there are no duplicates
 
                         while (isDuplicateAnswerChoice) {
                             int randomIndexToReplace = rand.nextInt(tileLength - 1);       // this represents which position in word string will be replaced
@@ -225,7 +220,7 @@ public class Peru extends GameActivity {
                                 }
                             }
                             for (int j = 0; j < incorrectChoice3.length() - 2; j++) {
-                                if (incorrectChoice3.substring(j, j + 3).equals("للہ")) {
+                                if (incorrectChoice3.startsWith("للہ", j)) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
@@ -264,7 +259,7 @@ public class Peru extends GameActivity {
                         .putValue("Correct Answer", chosenWordText)
                         .putValue("Grade", studentGrade);
                 for (int i = 0; i < 3; i++) {
-                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                    if (!incorrectAnswersSelected.get(i).isEmpty()) {
                         info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
                     }
                 }
@@ -294,7 +289,7 @@ public class Peru extends GameActivity {
             for (int i = 0; i < 3; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(chosenWordText)) break;  // this incorrect answer already selected
-                if (item.equals("")) {
+                if (item.isEmpty()) {
                     incorrectAnswersSelected.set(i, chosenWordText);
                     break;
                 }
