@@ -169,11 +169,8 @@ public class Colombia extends GameActivity {
                         key = findViewById(GAME_BUTTONS[k]);
                         key.setText(syllableKeysList.get(k).text);
 
-                        Random rand = new Random();
-                        int index = rand.nextInt(4);
-                        int tileColor = Color.parseColor(colorList.get(k%5));//This line sets
-                        //background color and should be adjusted (based on what color comes next)
-
+                        int index = k%5;
+                        int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
 
