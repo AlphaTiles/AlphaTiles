@@ -211,9 +211,10 @@ public class Chile extends GameActivity {
 
             }else{
             for(int x = 0; x < row.length; x++) {
-                if (row[x].text.equals(secret[i]) && !(row[x].text.equals(secret[x]) && !frontCor[i])) {
+                if (row[x].text.equals(secret[i]) && !(row[x].text.equals(secret[x])) && !(frontCor[i]) && correct[x] == 0) {
                     frontCor[i] = true;
                     correct[x] = 2;
+                    break;
                 }
             }
             }
