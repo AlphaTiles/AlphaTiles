@@ -138,7 +138,7 @@ public class Chile extends GameActivity {
         tiles.clear();
         guessBox.setAdapter(null);
         guessBox.setAdapter(guessAdapter);
-        for(int row = 0; row < data.guesses; row++) {
+        for(int row = 0; row <  data.guesses; row++) {
             for (int col = 0; col < secret.length; col++) {
                 tiles.add(new TileAdapter.ColorTile("", EMPTY));
 
@@ -188,6 +188,8 @@ public class Chile extends GameActivity {
 
     private void completeWord() {
         if (finished) return;
+        int[] correct = new int[secret.length];
+        boolean[] frontCor = new boolean[secret.length];
         TileAdapter.ColorTile[] row = new TileAdapter.ColorTile[secret.length];
         int j = 0;
         for(int i = currentRow * secret.length; i < (currentRow + 1) * secret.length; i++) {
@@ -197,15 +199,43 @@ public class Chile extends GameActivity {
             row[j] = tiles.get(i);
             j++;
         }
-        ArrayList<String> checkedYellows = new ArrayList<>();
+       // ArrayList<String> checkedYellows = new ArrayList<>();
         int greenCount = 0;
+
         for(int i = 0; i < row.length; i++) {
 
-            if(row[i].text.equals(secret[i])) {
+            if (row[i].text.equals(secret[i])) {
+                frontCor[i] = true;
+                correct[i] = 1;
+                greenCount++;
+
+            }else{
+            for(int x = 0; x < row.length; x++) {
+                if (row[x].text.equals(secret[i]) && !(row[x].text.equals(secret[x])) && !(frontCor[i]) && correct[x] == 0) {
+                    frontCor[i] = true;
+                    correct[x] = 2;
+                    break;
+                }
+            }
+            }
+        }
+        for(int i = 0; i < row.length; i++){
+            if(correct[i] == 2){
+                row[i].color = BLUE;
+            }
+            if(correct[i] == 1){
+                row[i].color = GREEN;
+            }
+            if(correct[i] == 0){
+                row[i].color = GRAY;
+            }
+        }
+
+           /** if(row[i].text.equals(secret[i])) {
                 row[i].color = GREEN;
                 greenCount++;
             }
-            else if(Arrays.asList(secret).contains(row[i].text)) {
+            else if(Arrays.asList(tempS).contains(row[i].text)) {
                 if(!checkedYellows.contains(row[i].text)) {
                     checkedYellows.add(row[i].text);
                     row[i].color = BLUE;
@@ -216,7 +246,8 @@ public class Chile extends GameActivity {
             }
             else {
                 row[i].color = GRAY;
-            }
+            }**/
+           for(int i = 0; i < row.length; i++) {
             for(TileAdapter.ColorTile key : keys) {
                 if(key.text.equals(row[i].text)) {
                     if((key.color != BLUE && key.color != GREEN) || (key.color == BLUE && row[i].color == GREEN)) {
