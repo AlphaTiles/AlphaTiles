@@ -250,8 +250,19 @@ public class LoadingScreen extends AppCompatActivity {
 
     public void loadGameAudio() {
         // load music sounds
+        if (enhancedAudioLoadingLog) {
+            LOGGER.info("LoadProgress: next task: load game audio 1 of 3: zz_correct.mp3");
+        }
         correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
+
+        if (enhancedAudioLoadingLog) {
+            LOGGER.info("LoadProgress: next task: load game audio 2 of 3: zz_incorrect.mp3");
+        }
         incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
+
+        if (enhancedAudioLoadingLog) {
+            LOGGER.info("LoadProgress: next task: load game audio 3 of 3: zz_correct_final.mp3");
+        }
         correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
 
         correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
