@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Build;
@@ -20,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import static org.alphatilesapps.alphatiles.Start.enhancedAudioLoadingLog;
 import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.wordList;
@@ -190,7 +192,12 @@ public class LoadingScreen extends AppCompatActivity {
         Resources res = context.getResources();
         wordAudioIDs = new HashMap();
 
+        int i = 0;
         for (Start.Word word : wordList) {
+            if (enhancedAudioLoadingLog) {
+                i++;
+                LOGGER.info("LoadProgress: next task: load word audio " + i + " of " + wordList.size() + ": " + word.wordInLWC + " (" + word.wordInLOP + ")");
+            }
             int resId = res.getIdentifier(word.wordInLWC, "raw", context.getPackageName());
             int duration = getAssetDuration(resId) + 100;
             wordAudioIDs.put(word.wordInLWC, gameSounds.load(context, resId, 1));
@@ -203,7 +210,12 @@ public class LoadingScreen extends AppCompatActivity {
         Resources res = context.getResources();
         syllableAudioIDs = new HashMap();
 
+        int i = 0;
         for (Start.Syllable syllable : syllableList) {
+            if (enhancedAudioLoadingLog) {
+                i++;
+                LOGGER.info("LoadProgress: next task: load syllable audio " + i + " of " + syllableList.size() + ": " + syllable.text + " (" + syllable.audioName + ")");
+            }
             int resId = res.getIdentifier(syllable.audioName, "raw", context.getPackageName());
             int duration = getAssetDuration(resId) + 100;
             syllableAudioIDs.put(syllable.audioName, gameSounds.load(context, resId, 2));
@@ -217,7 +229,12 @@ public class LoadingScreen extends AppCompatActivity {
         tileAudioIDs = new HashMap(0);
         tileDurations = new HashMap();
 
+        int i = 0;
         for (Start.Tile tile : tileList) {
+            if (enhancedAudioLoadingLog) {
+                i++;
+                LOGGER.info("LoadProgress: next task: load tile audio " + i + " of " + tileList.size() + ": " + tile.text + " (" + tile.audioName + ")");
+            }
             if(!tile.audioForThisTileType.equals("zz_no_audio_needed")) {
                 int resId = res.getIdentifier(tile.audioForThisTileType, "raw", context.getPackageName());
                 int duration = getAssetDuration(resId) + 100;
@@ -233,8 +250,19 @@ public class LoadingScreen extends AppCompatActivity {
 
     public void loadGameAudio() {
         // load music sounds
+        if (enhancedAudioLoadingLog) {
+            LOGGER.info("LoadProgress: next task: load game audio 1 of 3: zz_correct.mp3");
+        }
         correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
+
+        if (enhancedAudioLoadingLog) {
+            LOGGER.info("LoadProgress: next task: load game audio 2 of 3: zz_incorrect.mp3");
+        }
         incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
+
+        if (enhancedAudioLoadingLog) {
+            LOGGER.info("LoadProgress: next task: load game audio 3 of 3: zz_correct_final.mp3");
+        }
         correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
 
         correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
