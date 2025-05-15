@@ -188,6 +188,9 @@ public class Georgia extends GameActivity {
         }
         incorrectOnLevel = 0;
         levelBegunTime = System.currentTimeMillis();
+        TextView fullWordTextView = findViewById(R.id.fullWordTextView);
+        fullWordTextView.setText("");
+        fullWordTextView.setVisibility(View.INVISIBLE);
     }
 
     private void setWord() {
@@ -456,6 +459,10 @@ public class Georgia extends GameActivity {
         if (correctString.equals(selectedTileString)) {
             repeatLocked = false;
             setAdvanceArrowToBlue();
+            TextView fullWordTextView = findViewById(R.id.fullWordTextView);
+
+            fullWordTextView.setText(Start.wordList.stripInstructionCharacters(refWord.wordInLOP));
+            fullWordTextView.setVisibility(View.VISIBLE);
             updatePointsAndTrackers(1);
 
             if (sendAnalytics) {
