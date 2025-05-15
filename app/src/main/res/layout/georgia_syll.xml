@@ -292,12 +292,12 @@ tools:context=".Georgia">
     android:layout_height="wrap_content"
     android:text="TextView"
     android:textColor="#000000"
-    android:textSize="30sp"
+    android:textSize="50sp"
     app:layout_constraintBottom_toTopOf="@+id/guidelineH2.5"
     app:layout_constraintDimensionRatio="1"
     app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
     app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH2"
+    app:layout_constraintTop_toTopOf="@+id/guidelineH1.5"
     tools:layout_editor_absoluteX="155dp"
     tools:layout_editor_absoluteY="377dp" />
 
@@ -775,11 +775,19 @@ tools:context=".Georgia">
     app:layout_constraintGuide_percent="0.08" />
 
 <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/guidelineH1.5"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent="0.30" />
+
+<androidx.constraintlayout.widget.Guideline
     android:id="@+id/guidelineH2"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     app:layout_constraintGuide_percent="0.33" />
+
 <androidx.constraintlayout.widget.Guideline
     android:id="@+id/guidelineH2.5"
     android:layout_width="wrap_content"
