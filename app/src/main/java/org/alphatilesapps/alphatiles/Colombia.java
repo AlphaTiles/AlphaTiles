@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -75,6 +74,10 @@ public class Colombia extends GameActivity {
         if (syllableGame.equals("S")) {
             setContentView(R.layout.colombia_syllables);
             gameID = R.id.colombiaCL_syll;
+
+            if (challengeLevel == 4){//kicks the user back to Earth if it's a syllable game with cl 4.
+                goBackToEarth(null);// Later there should be a more permanent fix to remove it
+            }// from the screen entirely.
         } else {
             setContentView(R.layout.colombia);
             gameID = R.id.colombiaCL;
@@ -168,8 +171,7 @@ public class Colombia extends GameActivity {
                     for(int k = 0; k< visibleGameButtons; k++){
                         key = findViewById(GAME_BUTTONS[k]);
                         key.setText(syllableKeysList.get(k).text);
-                        Random rand = new Random();
-                        int index = rand.nextInt(4);
+                        int index = k%5;
                         int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
@@ -182,9 +184,8 @@ public class Colombia extends GameActivity {
                     for(int k = 0; k< visibleGameButtons; k++){
                         key = findViewById(GAME_BUTTONS[k]);
                         key.setText(tileKeysList.get(k).text);
-                        Random rand = new Random();
-                        int colorInt = rand.nextInt(4);
-                        String tileColorStr = colorList.get(colorInt);
+                        int index = k%5;
+                        String tileColorStr = colorList.get(index);
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
@@ -218,8 +219,7 @@ public class Colombia extends GameActivity {
                     for(int k = 0; k< visibleGameButtons; k++){
                         key = findViewById(GAME_BUTTONS[k]);
                         key.setText(syllableKeysList.get(k).text);
-                        Random rand = new Random();
-                        int index = rand.nextInt(4);
+                        int index = k%5;
                         int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
@@ -236,9 +236,8 @@ public class Colombia extends GameActivity {
                     for(int k = 0; k< visibleGameButtons; k++){
                         key = findViewById(GAME_BUTTONS[k]);
                         key.setText(tileKeysList.get(k).text);
-                        Random rand = new Random();
-                        int colorInt = rand.nextInt(4);
-                        String tileColorStr = colorList.get(colorInt);
+                        int index = k%5;
+                        String tileColorStr = colorList.get(index);
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
@@ -268,8 +267,7 @@ public class Colombia extends GameActivity {
                     for(int k = 0; k< visibleGameButtons; k++){
                         key = findViewById(GAME_BUTTONS[k]);
                         key.setText(syllableKeysList.get(k).text);
-                        Random rand = new Random();
-                        int index = rand.nextInt(4);
+                        int index = k%5;
                         int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
@@ -312,6 +310,46 @@ public class Colombia extends GameActivity {
                         }
                         key35.setText("");
                     }
+                }
+                break;
+
+            // Sets up a scrolling keyboard with all tiles.
+            case 4:// should only be selected if !SyllableGame.equals("S")
+                tileKeysList.addAll(tileList);
+                keysInUse = tileList.size(); // KP
+                partial = keysInUse % (GAME_BUTTONS.length - 2);
+                totalScreens = keysInUse / (GAME_BUTTONS.length - 2);
+
+                if (partial != 0) {
+                    totalScreens++;
+                }
+
+                if (keysInUse > GAME_BUTTONS.length) {
+                    visibleGameButtons = GAME_BUTTONS.length;
+                } else {
+                    visibleGameButtons = keysInUse;
+                }
+                // Sets the color of each button
+                for (int k = 0; k < visibleGameButtons; k++) {
+                    TextView key = findViewById(GAME_BUTTONS[k]);
+                    key.setText(tileKeysList.get(k).text);
+                    int index = k%5;
+                    int tileColor = Color.parseColor(colorList.get(index));
+                    key.setBackgroundColor(tileColor);
+                }
+                if (keysInUse > GAME_BUTTONS.length) {
+                    TextView key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
+                    key34.setBackgroundResource(R.drawable.zz_backward_green);
+                    if (scriptDirection.equals("RTL")) {
+                        key34.setRotationY(180);
+                    }
+                    key34.setText("");
+                    TextView key35 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 1]);
+                    key35.setBackgroundResource(R.drawable.zz_forward_green);
+                    if (scriptDirection.equals("RTL")) {
+                        key35.setRotationY(180);
+                    }
+                    key35.setText("");
                 }
                 break;
             default:
@@ -541,10 +579,19 @@ public class Colombia extends GameActivity {
         for (int k = 0; k < keysLimit; k++) {
             TextView key = findViewById(GAME_BUTTONS[k]);
             int keyIndex = (33 * (keyboardScreenNo - 1)) + k;
-            key.setText(keyList.get(keyIndex).text); // KP
+
+            String tileColorStr;
+            // sets text and colors
+            if (challengeLevel == 3){// Could potentially be refactored at some point
+                key.setText(keyList.get(keyIndex).text);
+                tileColorStr = colorList.get(Integer.parseInt(keyList.get(keyIndex).color)); // Added on May 15th, 2021, so that second and following screens use their own color coding
+            } else {// challengeLevel == 4
+                key.setText(tileList.get(keyIndex).text); // KP
+                int index = k%5;
+                tileColorStr = colorList.get(index);
+            }
             key.setVisibility(View.VISIBLE);
 
-            String tileColorStr = colorList.get(Integer.parseInt(keyList.get(keyIndex).color)); // Added on May 15th, 2021, so that second and following screens use their own color coding
             int tileColor = Color.parseColor(tileColorStr);
             key.setBackgroundColor(tileColor);
         }
