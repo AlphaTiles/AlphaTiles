@@ -634,11 +634,11 @@ public class Thailand extends GameActivity {
         ArrayList<Tile> wordParsedIntoTiles = tileList.parseWordIntoTiles(word.wordInLOP, word);
         Tile tileToReturn = wordParsedIntoTiles.get(0);
         if ((tileToReturn.typeOfThisTileInstance.equals("LV") && !wordParsedIntoTiles.get(1).typeOfThisTileInstance.equals("PC"))
-                || tileToReturn.typeOfThisTileInstance.matches("(PC|AD|D|T|X)")) { // These are not first sounds, though they can be written first
+                || tileToReturn.typeOfThisTileInstance.matches("(PC|AD|D|T)")) { // These are not first sounds, though they can be written first
             tileToReturn = wordParsedIntoTiles.get(1);
         }
         int i = 2;
-        while (tileToReturn.typeOfThisTileInstance.matches("(PC|AD|D|T|X)")) {
+        while (tileToReturn.typeOfThisTileInstance.matches("(PC|AD|D|T)")) {
             tileToReturn = wordParsedIntoTiles.get(i);
             i++;
         }
