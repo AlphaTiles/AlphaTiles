@@ -13,10 +13,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.colorList;
 
@@ -24,8 +23,12 @@ public class Italy extends GameActivity {
     Start.TileList sortableTilesArray;
     Start.SyllableList sortableSyllArray;
     WordList gameCards = new WordList();
-    boolean[] boardCardsFound = new boolean[16];
+    final int CARDS_ON_BOARD = 16;
+    boolean[] boardCardsFound = new boolean[CARDS_ON_BOARD];
     int deckIndex = 0;
+    final String ITALY_DECK_SIZE = "Italy Deck Size";
+    int deckSize = 54;  // 54 is the default size for the Mexican loteria game
+    private static final Logger LOGGER = Logger.getLogger(Italy.class.getName());
 
     protected static final int[] GAME_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04, R.id.choice05, R.id.choice06,
@@ -65,22 +68,11 @@ public class Italy extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-
-        int gameID = R.id.italyCL;
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet
-                .START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet
-                .END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
-
+        
     }
 
     @Override
@@ -91,11 +83,13 @@ public class Italy extends GameActivity {
         setContentView(R.layout.italy);
         int gameID = R.id.italyCL;
 
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+        ImageView playNextWordImage = (ImageView) findViewById(R.id.playNextWord);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
-            ImageView playNextWordImage = (ImageView) findViewById(R.id.playNextWord);
             ImageView referenceItemImage = (ImageView) findViewById(R.id.referenceItem);
 
             instructionsImage.setRotationY(180);
@@ -106,8 +100,6 @@ public class Italy extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
         if (syllableGame.equals("S")) {
             sortableSyllArray = (Start.SyllableList) syllableList.clone();
             Collections.shuffle(sortableSyllArray);
@@ -116,10 +108,23 @@ public class Italy extends GameActivity {
             Collections.shuffle(sortableTilesArray);
         }
 
-        if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+        // override default deck size setting, if configured
+        final String deckSizeSetting = Start.settingsList.find(ITALY_DECK_SIZE);
+        if (! deckSizeSetting.isEmpty()) {
+            deckSize = Integer.parseInt(deckSizeSetting);
+            // don't go below CARDS_ON_BOARD
+            if (deckSize < CARDS_ON_BOARD) {
+                deckSize = CARDS_ON_BOARD;
+            }
         }
+        // else stay with the default deck size (54)
 
+        if (getAudioInstructionsResID() == 0) {
+            hideInstructionAudioImage();
+        }
+        if(!Start.changeArrowColor) {
+            playNextWordImage.setImageResource(R.drawable.zz_forward_green);
+        }
         updatePointsAndTrackers(0);
         playAgain();
     }
@@ -128,7 +133,9 @@ public class Italy extends GameActivity {
         super.setAllGameButtonsUnclickable();
 
         ImageView nextWordArrow = findViewById(R.id.playNextWord);
-        nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
+        if(Start.changeArrowColor) {
+            nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
+        }
         nextWordArrow.setClickable(false);
 
         ImageView referenceItem = findViewById(R.id.referenceItem);
@@ -189,28 +196,36 @@ public class Italy extends GameActivity {
         setAdvanceArrowToGray();
         deckIndex = -1;
         gameCards.removeAll(gameCards);
-        for (int card = 0; card < 16; card++) {
-            boardCardsFound[card] = false;
-        }
+        Arrays.fill(boardCardsFound, false);
+
         WordList wordListShuffle = cumulativeStageBasedWordList;
         Collections.shuffle(wordListShuffle);
 
-        // Add 54 of the shuffled cards to gameCards
-        for (int cardNumber = 0; cardNumber < 54; cardNumber++) {
+        // Quit (go back to the home screen) if we don't have enough words
+        if (wordListShuffle.size() < deckSize) {
+            LOGGER.warning("playAgain: can't proceed - need at least "
+                    + deckSize + " words");
+            // return to the home screen
+            goBackToEarth(null);
+            return;
+        }
+
+        // Add a subset of the shuffled cards to gameCards
+        for (int cardNumber = 0; cardNumber < deckSize; cardNumber++) {
             gameCards.add(wordListShuffle.get(cardNumber));
         }
 
-        // Add 16 of the gameCards to the board
-        WordList boardCards = new WordList();
-        for (int tileNumber = 0; tileNumber < 16; tileNumber++) {
-            boardCards.add(gameCards.get(tileNumber));
+        // Add 16 (CARDS_ON_BOARD) of the gameCards to the board
+//      WordList boardCards = new WordList();
+        for (int tileNumber = 0; tileNumber < CARDS_ON_BOARD; tileNumber++) {
+//          boardCards.add(gameCards.get(tileNumber));
             TextView thisCardText = (TextView) findViewById(GAME_BUTTONS[tileNumber]);
             thisCardText.setText(wordList.stripInstructionCharacters(gameCards.get(tileNumber).wordInLOP));
             String tileColorStr = colorList.get(tileNumber % 5);
             int tileColor = Color.parseColor(tileColorStr);
             thisCardText.setTextColor(tileColor); // resets as in previous round some text fields set to black
             ImageView thisCardImage = (ImageView) findViewById(WORD_IMAGES[tileNumber]);
-            int resID = getResources().getIdentifier(gameCards.get(tileNumber).wordInLWC, "drawable", getPackageName());
+            int resID = getResources().getIdentifier(gameCards.get(tileNumber).wordInLWC +"2", "drawable", getPackageName());
             thisCardImage.setImageResource(0);
             thisCardImage.setImageResource(resID);
         }
@@ -230,7 +245,7 @@ public class Italy extends GameActivity {
 
     public void nextWordFromGameSet() {
         deckIndex++;
-        if (deckIndex == 54) {
+        if (deckIndex == deckSize) {
 
             // The player went through all the cards without getting a loteria. Set up a new board
             playIncorrectSound();
@@ -288,7 +303,14 @@ public class Italy extends GameActivity {
         // For each sequence in possibleLoteriaSequences[][], check if all the indeces inside have been marked as correctly selected
 
         for (int[] sequence : LOTERIA_SEQUENCES) {
-            if (boardCardsFound[sequence[0] - 1] && boardCardsFound[sequence[1] - 1] && boardCardsFound[sequence[2] - 1] && boardCardsFound[sequence[3] - 1]) {
+            boolean thisSequence = true; // is this sequence the loteria? true until a non-bean is found
+            for (int i = 0; i < sequence.length; i++)
+                thisSequence &= boardCardsFound[sequence[i] - 1];
+            if (thisSequence) {
+                for (int i = 0; i < sequence.length; i++) {
+                    ImageView bean = findViewById(WORD_IMAGES[sequence[i] - 1]);
+                    bean.setImageResource(R.drawable.zz_bean_loteria);
+                }
                 return true;
             }
         }
@@ -302,11 +324,5 @@ public class Italy extends GameActivity {
         updatePointsAndTrackers(4);
 
         // TODO: Draw a thin/transparent line across the loteria?
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        // no action
     }
 }

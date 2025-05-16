@@ -9,9 +9,6 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -68,19 +65,11 @@ public class Chile extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
         // Copied from Sudan.java
         View instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
-        int gameID = R.id.chileCL;
-
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage,ConstraintSet.END,R.id.backspace,ConstraintSet.START,0);
-        //constraintSet.connect(R.id.backspace,ConstraintSet.START,R.id.gamesHomeImage,ConstraintSet.END,0);
-        constraintSet.applyTo(constraintLayout);
     }
 
     @Override
@@ -89,25 +78,22 @@ public class Chile extends GameActivity {
         LOGGER.log(Level.INFO, "Chile start");
         context = this;
         setContentView(R.layout.chile);
+
+        ActivityLayouts.applyEdgeToEdge(this, R.id.chileCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         updatePointsAndTrackers(0);
         setAdvanceArrowToGray();
         if (scriptDirection.equals("RTL")) {
             findViewById(R.id.backspace).setScaleX(-1);
             findViewById(R.id.repeatImage).setScaleX(-1);
         }
-        data.guesses = baseGuessCount - challengeLevel;
+        data.guesses = baseGuessCount - challengeLevel + 1;
         int guessBoxID = R.id.guessBox;
         guessBox = findViewById(guessBoxID);
-        guessBox.setNumColumns(data.wordLength);
         guessAdapter = new TileAdapter(tiles);
         guessAdapter.setFontScale(data.fontScale);
         guessBox.setAdapter(guessAdapter);
-
-        for(int row = 0; row < data.guesses; row++) {
-            for (int col = 0; col < data.wordLength; col++) {
-                tiles.add(new TileAdapter.ColorTile("", EMPTY));
-            }
-        }
         int keyboardID = R.id.keyboard;
         GridView keyboard = findViewById(keyboardID);
         keyboard.setNumColumns(data.keyboardWidth);
@@ -140,16 +126,30 @@ public class Chile extends GameActivity {
             wordList.set(j, tmp);
         }
         secret = wordList.remove(wordList.size() - 1);
+        resetTiles();
         LOGGER.log(Level.INFO, Arrays.toString(secret));
         currentRow = 0;
         int iID = getAudioInstructionsResID();
         if(iID == 0 || iID == -1) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
+    }
+    private void resetTiles() {
+        tiles.clear();
+        guessBox.setAdapter(null);
+        guessBox.setAdapter(guessAdapter);
+        for(int row = 0; row < data.guesses; row++) {
+            for (int col = 0; col < secret.length; col++) {
+                tiles.add(new TileAdapter.ColorTile("", EMPTY));
+
+            }
+        }
+        guessBox.setNumColumns(secret.length);
+        guessAdapter.notifyDataSetChanged();
     }
     private void backSpace() {
         if(finished) return;
-        for(int i = (currentRow + 1) * data.wordLength - 1; i >= (currentRow) * data.wordLength; i--) {
+        for(int i = (currentRow + 1) * secret.length - 1; i >= (currentRow) * secret.length; i--) {
             if(!tiles.get(i).text.equals("")) {
                 tiles.get(i).text = "";
                 guessAdapter.notifyDataSetChanged();
@@ -161,14 +161,6 @@ public class Chile extends GameActivity {
         if(!finished) return;
         guessBox.smoothScrollToPosition(0);
         setAdvanceArrowToGray();
-        while (tiles.size() > data.guesses * data.wordLength) {
-            tiles.remove(tiles.size() - 1);
-        }
-        for(int i = 0; i < tiles.size(); i++) {
-            TileAdapter.ColorTile tile = tiles.get(i);
-            tile.text = "";
-            tile.color = EMPTY;
-        }
         for(int i = 0; i < keys.size(); i++) {
             TileAdapter.ColorTile key = keys.get(i);
             key.color = KEY_COLOR;
@@ -186,6 +178,7 @@ public class Chile extends GameActivity {
             }
         }
         secret = wordList.remove(wordList.size() - 1);
+        resetTiles();
         LOGGER.log(Level.INFO, Arrays.toString(secret));
         guessAdapter.notifyDataSetChanged();
         keyAdapter.notifyDataSetChanged();
@@ -195,9 +188,9 @@ public class Chile extends GameActivity {
 
     private void completeWord() {
         if (finished) return;
-        TileAdapter.ColorTile[] row = new TileAdapter.ColorTile[data.wordLength];
+        TileAdapter.ColorTile[] row = new TileAdapter.ColorTile[secret.length];
         int j = 0;
-        for(int i = currentRow * data.wordLength; i < (currentRow + 1) * data.wordLength; i++) {
+        for(int i = currentRow * secret.length; i < (currentRow + 1) * secret.length; i++) {
             if(tiles.get(i).text.equals("")) {
                 return;
             }
@@ -234,7 +227,7 @@ public class Chile extends GameActivity {
         }
         guessAdapter.notifyDataSetChanged();
         keyAdapter.notifyDataSetChanged();
-        if(greenCount == data.wordLength && !finished) {
+        if(greenCount == secret.length && !finished) {
             finished = true;
             Start.gameSounds.play(Start.correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
             updatePointsAndTrackers(1);
@@ -260,16 +253,14 @@ public class Chile extends GameActivity {
     }
 
     private void keyPressed(View key) {
-        LOGGER.log(Level.INFO, "Key pressed");
-        guessBox.smoothScrollToPosition(currentRow * data.wordLength);
+        guessBox.smoothScrollToPosition(currentRow * secret.length);
         String text =
                 ((TextView)((LinearLayout)(((SquareConstraintLayout)key).getChildAt(0)))
                         .getChildAt(0))
                         .getText()
                         .toString(); // ._.
-        LOGGER.log(Level.INFO, text);
 
-        for(int i = currentRow * data.wordLength; i < (currentRow + 1) * data.wordLength; i++) {
+        for(int i = currentRow * secret.length; i < (currentRow + 1) * secret.length; i++) {
             if(tiles.get(i).text.equals("")) {
                 tiles.get(i).text = text;
                 guessAdapter.notifyDataSetChanged();
@@ -302,31 +293,10 @@ public class Chile extends GameActivity {
             for(Start.Tile tile : Start.tileList.parseWordIntoTiles(word.wordInLOP, word)) {
                 split.add(tile.text);
             }
-            if(split != null) {
-                splitWords.add(split.toArray(new String[0]));
+            if(split.size() > maxWordLength || split.size() < minWordLength) {
+                continue;
             }
-        }
-        LOGGER.log(Level.INFO, Integer.toString(splitWords.size()));
-        int bestLength = 0;
-        int bestCount = 0;
-        for(int i = minWordLength; i <= maxWordLength; i++) {
-            int count = 0;
-            for(String[] word : splitWords) {
-                if(word.length == i) {
-                    count++;
-                }
-            }
-            if(count > bestCount) {
-                bestLength = i;
-            }
-        }
-        for(int i = 0; i < splitWords.size();) {
-            if(splitWords.get(i).length != bestLength) {
-                splitWords.remove(i);
-            }
-            else {
-                i++;
-            }
+            splitWords.add(split.toArray(new String[0]));
         }
         HashSet<String> keyboard = new HashSet<>();
 
@@ -365,26 +335,19 @@ public class Chile extends GameActivity {
             j++;
         }
         float fontScale = Util.getMinFontSize(kbArray);
-        return new ChileData(bestLength, splitWords, kbArray, keyboardWidth, fontScale);
+        return new ChileData(splitWords, kbArray, keyboardWidth, fontScale);
     }
     public static class ChileData {
         public int guesses;
-        public int wordLength;
         public int keyboardWidth;
         public String[] keys;
         public ArrayList<String[]> words;
         public float fontScale;
-        public ChileData(int wordLength, ArrayList<String[]> words, String[] keys, int keyboardWidth, float fontScale) {
-            this.wordLength = wordLength;
+        public ChileData(ArrayList<String[]> words, String[] keys, int keyboardWidth, float fontScale) {
             this.keyboardWidth = keyboardWidth;
             this.keys = keys;
             this.words = words;
             this.fontScale = fontScale;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // no action
     }
 }

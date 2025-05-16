@@ -83,6 +83,9 @@ public class ChoosePlayer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_player);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.choosePlayerCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.equals("RTL")) {
@@ -235,7 +238,7 @@ public class ChoosePlayer extends AppCompatActivity {
             // hide audio instructions icon
             ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
             instructionsButton.setVisibility(View.GONE);
-        } else{
+        } else {
             ImageView avatar12image = (ImageView) findViewById(R.id.avatar12);
             avatar12image.setVisibility(View.GONE);
             TextView playername12 = (TextView) findViewById(R.id.playername12);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,14 +15,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Timer;
@@ -30,9 +33,13 @@ import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.MULTITYPE_TILES;
 import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
+import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
+import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.tileDurations;
+import static org.alphatilesapps.alphatiles.Start.placeholderCharacter;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
@@ -70,6 +77,11 @@ public abstract class GameActivity extends AppCompatActivity {
     int globalPoints;
     int trackerCount = 0;
 
+    char studentGrade;
+    long levelBegunTime;
+    int incorrectOnLevel = 0;
+    ArrayList<String> incorrectAnswersSelected;
+
     Start.TileList cumulativeStageBasedTileList = new Start.TileList();
     Start.WordList cumulativeStageBasedWordList = new Start.WordList();
     Start.TileList previousStagesTileList = new Start.TileList();
@@ -79,7 +91,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
     int visibleGameButtons;
     Start.Word refWord;
-    Queue<String> last12Words = new PriorityQueue<>();
+    Queue<String> lastXWords = new LinkedList<>();  // avoid reusing words too quickly
 
 
     boolean mediaPlayerIsPlaying = false;
@@ -98,15 +110,15 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected abstract int getAudioInstructionsResID();
 
-    protected abstract void centerGamesHomeImage();
+    protected abstract void hideInstructionAudioImage();
 
     private static final Logger LOGGER = Logger.getLogger(GameActivity.class.getName());
 
     /*
-    This testing method can be run from onCreate() to make sure each word is parsed correctly into tiles
-    and recombined correctly from those tiles.
-    Uncomment the LOGGER.info(data) line to log this info for all of the words in the wordlist.
-    REMOVE calls to this testing method before building an app.
+     * This testing method can be run from onCreate() to make sure each word is parsed correctly into tiles
+     * and recombined correctly from those tiles.
+     * Uncomment the LOGGER.info(data) line to log this info for all of the words in the wordlist.
+     * REMOVE calls to this testing method before building an app.
      */
     protected void testParsingAndCombining() {
 
@@ -141,7 +153,13 @@ public abstract class GameActivity extends AppCompatActivity {
         context = this;
 
         soundSequencer = new Handler(Looper.getMainLooper());
-
+        OnBackPressedCallback back = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                goBackToEarth(null);
+            }
+        };
+        this.getOnBackPressedDispatcher().addCallback(back);
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         stage = getIntent().getIntExtra("stage", 7);
@@ -150,6 +168,7 @@ public abstract class GameActivity extends AppCompatActivity {
         country = getIntent().getStringExtra("country");
         playerString = Util.returnPlayerStringToAppend(playerNumber);
         globalPoints = getIntent().getIntExtra("globalPoints", 0);
+        studentGrade = getIntent().getCharExtra("studentGrade", '0');
 
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         className = getClass().getName();
@@ -183,10 +202,18 @@ public abstract class GameActivity extends AppCompatActivity {
         } else {
             forceLTRIfSupported();
         }
-
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // testParsingAndCombining(); // Helpful runtime check for complex tile parsing
         super.onCreate(state);
+
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if(!Start.changeArrowColor) {
+            setAdvanceArrowToBlue();
+        }
     }
 
     public void goBackToEarth(View view) {
@@ -223,6 +250,28 @@ public abstract class GameActivity extends AppCompatActivity {
         points+=pointsIncrease;
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
+
+        TextView gameNumberBox = findViewById(R.id.gameNumberView);
+        gameNumberBox.setText(String.valueOf(gameNumber));
+        int gameColor = Color.parseColor(colorList.get(Integer.parseInt(gameList.get(gameNumber-1).color)));
+        gameNumberBox.setBackgroundColor(gameColor);
+        pointsEarned.setBackgroundColor(gameColor);
+        TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
+
+        int displayedChallengeLevel;
+        if (gameList.get(gameNumber-1).country.equals("Thailand")) {
+            displayedChallengeLevel = challengeLevel / 100;
+        }
+        else {
+            displayedChallengeLevel = challengeLevel;
+        }
+        if (gameList.get(gameNumber-1).country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
+            displayedChallengeLevel = displayedChallengeLevel - 3;
+        }
+        if (gameList.get(gameNumber-1).country.equals("Georgia") && challengeLevel > 6) {
+            displayedChallengeLevel = displayedChallengeLevel - 6;
+        }
+        challengeLevelBox.setText(String.valueOf(displayedChallengeLevel));
 
         // Update tracker icons
         for (int t = 0; t < TRACKERS.length; t++) {
@@ -308,21 +357,21 @@ public abstract class GameActivity extends AppCompatActivity {
                             // Get the info about the next game
                             gameNumber = gameNumber + 1;
                             if (gameNumber - 1 < gameList.size()) {
-                                challengeLevel = Integer.valueOf(gameList.get(gameNumber - 1).level);
+                                challengeLevel = Integer.parseInt(gameList.get(gameNumber - 1).level);
                                 if (gameList.get(gameNumber-1).stage.equals("-")) {
                                     stage = 1;
                                 } else {
-                                    stage = Integer.valueOf(gameList.get(gameNumber - 1).stage);
+                                    stage = Integer.parseInt(gameList.get(gameNumber - 1).stage);
                                 }
                                 syllableGame = gameList.get(gameNumber - 1).mode;
                                 country = gameList.get(gameNumber - 1).country;
                             } else {
                                 gameNumber = 1;
-                                challengeLevel = Integer.valueOf(gameList.get(0).level);
+                                challengeLevel = Integer.parseInt(gameList.get(0).level);
                                 if (gameList.get(0).stage.equals("-")) {
                                     stage = 1;
                                 } else {
-                                    stage = Integer.valueOf(gameList.get(0).stage);
+                                    stage = Integer.parseInt(gameList.get(0).stage);
                                 }
                                 syllableGame = gameList.get(0).mode;
                                 country = gameList.get(0).country;
@@ -371,7 +420,22 @@ public abstract class GameActivity extends AppCompatActivity {
         while (!freshWord) { // Generates a new word if it got one of the last three tested words
             Random rand = new Random();
 
-            if(stage == 1) { // Weight toward words with the highest correspondence ratio to stage 1 tiles
+            // The stage assigned to this game may have no words in it, either by accident,
+            // or due to the correspondence ratio or the first tile stage correspondence setting.
+            // If this happens, ratchet the stage down to the highest stage with words.
+            int local_stage = stage;
+            while (wordStagesLists.get(local_stage - 1).isEmpty()) {
+                local_stage--;
+            }
+            if (local_stage != stage) {
+                LOGGER.info("chooseWord: stage reduced from " + stage + " to " + local_stage);
+            }
+
+            // remember the size of Stage 1, for use later in this function
+            int stage1WordCount = wordStagesLists.get(0).size();
+
+            if(local_stage == 1) {
+                // Weight toward words with the highest correspondence ratio to stage 1 tiles
                 double higherCorrespondenceThreshold  = stageCorrespondenceRatio + (1-stageCorrespondenceRatio)/2;
                 Start.WordList higherCorrespondenceWords = new Start.WordList();
                 Start.WordList lowerCorrespondenceWords = new Start.WordList();
@@ -409,32 +473,47 @@ public abstract class GameActivity extends AppCompatActivity {
                     }
                 }
 
-                int randomNumberForWeightingTowardHighCorrespondence = rand.nextInt(wordStagesLists.get(0).size());
-                if (randomNumberForWeightingTowardHighCorrespondence < wordStagesLists.get(0).size() * 0.5 || lowerCorrespondenceWords.size()==0) { // Select a word with higher correspondence to stage 1 tiles (only tiles introduced so far)
+                if (stage1WordCount == 0) {
+                    LOGGER.warning("chooseWord: can't proceed - stage 1 has no words");
+                }
+
+                int randomNumberForWeightingTowardHighCorrespondence = rand.nextInt(stage1WordCount);
+                if (randomNumberForWeightingTowardHighCorrespondence < stage1WordCount * 0.5 || lowerCorrespondenceWords.isEmpty()) {
+                    // Select a word with higher correspondence to stage 1 tiles (only tiles introduced so far)
                     int randomNumberForChoosingAHighCorrespondenceWord = rand.nextInt(higherCorrespondenceWords.size());
                     refWord = higherCorrespondenceWords.get(randomNumberForChoosingAHighCorrespondenceWord);
-                } else { // Select a word that corresponds to stage 1 at a lower ratio
+                } else {
+                    // Select a word that corresponds to stage 1 at a lower ratio
                     int randomNumberForChoosingALowCorrespondenceWord = rand.nextInt(lowerCorrespondenceWords.size());
                     refWord = lowerCorrespondenceWords.get(randomNumberForChoosingALowCorrespondenceWord);
                 }
-            } else { // If stage > 1, weight toward words that are new in this stage
+            } else {
+                // If stage > 1, weight toward words that are new in this stage
                 int randomNumberForWeightingTowardNewWords = rand.nextInt(cumulativeStageBasedWordList.size());
-                if (randomNumberForWeightingTowardNewWords < cumulativeStageBasedWordList.size() * 0.5) { // Select a word that's added in the current stage 50% of the time
-                    int randomNumberForChoosingANewWord = rand.nextInt(wordStagesLists.get(stage - 1).size());
-                    refWord = wordStagesLists.get(stage - 1).get(randomNumberForChoosingANewWord);
-                } else { // Select a word that was added in any previous stage
+                if (randomNumberForWeightingTowardNewWords < cumulativeStageBasedWordList.size() * 0.5) {
+                    // Select a word that's added in the current stage 50% of the time
+                    int randomNumberForChoosingANewWord = rand.nextInt(wordStagesLists.get(local_stage - 1).size());
+                    refWord = wordStagesLists.get(local_stage - 1).get(randomNumberForChoosingANewWord);
+                } else {
+                    // Select a word that was added in any previous stage
                     int randomNumberForChoosingAnOlderWord = rand.nextInt(previousStagesWordList.size());
                     refWord = previousStagesWordList.get(randomNumberForChoosingAnOlderWord);
                 }
             }
 
-            // If this word isn't one of the 12 previously tested words, we're good
-            if (!last12Words.contains(refWord.wordInLOP)) {
+            // LOGGER.info("chooseWord: candidate=" + refWord.wordInLOP);
+
+            // If this word isn't one of the X previously tested words, we're good
+            // Assume a pool of 12 "last words", but if Stage 1 is smaller than 12,
+            // use the number of words in Stage 1 less  1 so we always have a word).
+            int sizeOfLastXWords = Math.min(stage1WordCount-1, 12);
+            if (!lastXWords.contains(refWord.wordInLOP)) {
                 freshWord = true;
-                if(last12Words.size()==12){ // Remove first word added
-                    last12Words.poll();
+                if(lastXWords.size() == sizeOfLastXWords) {
+                    // Remove first word added
+                    lastXWords.remove();
                 }
-                last12Words.add(refWord.wordInLOP);
+                lastXWords.add(refWord.wordInLOP);
             } else {
                 freshWord = false;
             }
@@ -463,8 +542,10 @@ public abstract class GameActivity extends AppCompatActivity {
                 wordImage = findViewById(getWordImages()[i]);
                 wordImage.setClickable(false);
             }
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        repeatImage.setClickable(false);
+        if (!gameList.get(gameNumber-1).country.equals("Romania")&&!gameList.get(gameNumber-1).country.equals("Sudan")&&!gameList.get(gameNumber-1).country.equals("Malaysia")) {
+            ImageView repeatImage = findViewById(R.id.repeatImage);
+            repeatImage.setClickable(false);
+        }
     }
 
     protected void setOptionsRowClickable() {
@@ -478,18 +559,29 @@ public abstract class GameActivity extends AppCompatActivity {
                 wordImage = findViewById(getWordImages()[i]);
                 wordImage.setClickable(true);
             }
-        ImageView repeatImage = findViewById(R.id.repeatImage);
-        repeatImage.setClickable(true);
+        if (!gameList.get(gameNumber-1).country.equals("Romania")&&!gameList.get(gameNumber-1).country.equals("Sudan")&&!gameList.get(gameNumber-1).country.equals("Malaysia")) {
+            ImageView repeatImage = findViewById(R.id.repeatImage);
+            repeatImage.setClickable(true);
+        }
     }
 
     protected void setAdvanceArrowToBlue() {
         ImageView repeatImage = findViewById(R.id.repeatImage);
+        if(repeatImage == null) {
+            return;
+        }
         repeatImage.setBackgroundResource(0);
         repeatImage.setImageResource(R.drawable.zz_forward);
     }
 
     protected void setAdvanceArrowToGray() {
+        if(!Start.changeArrowColor) {
+            return;
+        }
         ImageView repeatImage = findViewById(R.id.repeatImage);
+        if(repeatImage == null) {
+            return;
+        }
         repeatImage.setBackgroundResource(0);
         repeatImage.setImageResource(R.drawable.zz_forward_inactive);
     }
@@ -702,6 +794,106 @@ public abstract class GameActivity extends AppCompatActivity {
 
     }
 
+    public void tileAudioPress(final boolean playFinalSound, Start.Tile tile) {
+        if(!isReadyToPlayTileAudio() || !tileShouldPlayAudio(tile)) {
+            return;
+        }
+
+        setAllGameButtonsUnclickable();
+        setOptionsRowUnclickable();
+        if(!tempSoundPoolSwitch) {
+            playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
+        } else {
+            playTileAudio(playFinalSound, tileAudioNumber(tile), tileDurations.get(tile.audioForThisTileType));
+        }
+    }
+
+    protected boolean isReadyToPlayTileAudio() {
+        if(mediaPlayerIsPlaying) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean tileShouldPlayAudio(Start.Tile tile) {
+        // make sure audio can be found
+        if (tempSoundPoolSwitch && tile.audioForThisTileType.equals("X")) {
+                return false;
+        }
+
+        if(!tempSoundPoolSwitch) {
+            try{
+                getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
+            } catch (NullPointerException e) {
+                 return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected int tileAudioNumber(Start.Tile tile) {
+        String audioName = tile.getAudioNameAccountingForMultitypeSymbols();
+        if (tempSoundPoolSwitch) {
+            return tileAudioIDs.get(audioName);
+        } else {
+            return getResources().getIdentifier(audioName, "raw", getPackageName());
+        }
+    }
+
+    protected void playTileAudio(boolean playFinalSound, int audioNumber, int audioDuration) {
+        if (tempSoundPoolSwitch) {
+            playTileAudioSoundPool(playFinalSound, audioNumber,audioDuration);
+        } else {
+            playTileAudioMediaPlayer(playFinalSound, audioNumber);
+        }
+    }
+
+
+
+
+
+    private void playTileAudioMediaPlayer(final boolean playFinalSound, int resID) {     //JP: for Media Player; tile audio
+
+        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
+        mediaPlayerIsPlaying = true;
+        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp1) {
+                mpCompletion(mp1, playFinalSound);
+            }
+        });
+        mp1.start();
+    }
+
+    private void playTileAudioSoundPool(final boolean playFinalSound, int audioID, int audioDuration) {     //JP: for SoundPool, for tile audio
+        gameSounds.play(audioID, 1.0f, 1.0f, 2, 0, 1.0f);
+
+        soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                if (playFinalSound) {
+                    updatePointsAndTrackers(0);
+                    repeatLocked = false;
+                    playCorrectFinalSound();
+                } else {
+                    if (repeatLocked) {
+                        setAllGameButtonsClickable();
+                    }
+                    if (after12checkedTrackers == 1){
+                        setOptionsRowClickable();
+                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
+                    }
+                    else if (trackerCount >0 && trackerCount % 12 != 0) {
+                        setOptionsRowClickable();
+                        // Otherwise, updatePointsAndTrackers will set it clickable only after
+                        // the player returns to earth (2) or sees the celebration screen (3)
+                    }
+                }
+            }
+        }, audioDuration);
+    }
+
     protected void mpCompletion(MediaPlayer mp, boolean isFinal) {
         if (isFinal) {
             updatePointsAndTrackers(0);
@@ -739,10 +931,8 @@ public abstract class GameActivity extends AppCompatActivity {
         ConstraintLayout constraintLayout = findViewById(gameID);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.pointsImage, ConstraintSet.END, R.id.gamesHomeImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.START, R.id.pointsImage, ConstraintSet.END, 0);
-        constraintSet.connect(R.id.instructions, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
         constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.instructions, ConstraintSet.START, 0);
+        constraintSet.connect(R.id.instructions, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
         constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.instructions, ConstraintSet.END, 0);
         constraintSet.connect(R.id.instructions, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
         constraintSet.applyTo(constraintLayout);
@@ -760,6 +950,10 @@ public abstract class GameActivity extends AppCompatActivity {
     wordInLOP: The target word string, in the language of play
      */
     public static String combineTilesToMakeWord(List<Start.Tile> tilesInThisWordOption, Start.Word wordListWord, int indexOfReplacedTile) {
+        if (tilesInThisWordOption.isEmpty()) {
+            return "";
+        }
+
         ArrayList<Start.Tile> tilesInWordListWord = tileList.parseWordIntoTiles(wordListWord.wordInLOP, wordListWord);
         StringBuilder builder = new StringBuilder();
         String previousConsonant = "";
@@ -777,16 +971,19 @@ public abstract class GameActivity extends AppCompatActivity {
         if(indexOfReplacedTile>0){
             previousTile = tilesInThisWordOption.get(indexOfReplacedTile-1);
             previousString = previousTile.text;
-            if(previousString.contains("◌") && previousString.length()==2) { // Filter these placeholders out; keep the complex tile ones
-                previousString = previousString.replace("◌", "");
+            if(previousString.contains(placeholderCharacter) && previousString.length()==2) { // Filter these placeholders out; keep the complex tile ones
+                previousString = previousString.replace(placeholderCharacter, "");
+            } else if (previousString.endsWith(placeholderCharacter) &&
+                    (previousString.length() - previousString.replaceAll(placeholderCharacter, "").length()) > 1) { // More than one placeholder character in this tile, to portray medial complex vowel
+                previousString = previousString.substring(0, previousString.length()-1);
             }
         }
 
         int index = 0;
         for (Start.Tile thisTile : tilesInThisWordOption) {
             String stringToAppend = thisTile.text;
-            if(stringToAppend.contains("◌") && stringToAppend.length() == 2) { // Filter these placeholders out; keep the complex tile ones
-                stringToAppend = stringToAppend.replace("◌", "");
+            if(stringToAppend.contains(placeholderCharacter) && stringToAppend.length() == 2) { // Filter these placeholders out; keep the complex tile ones
+                stringToAppend = stringToAppend.replace(placeholderCharacter, "");
             }
             if (thisTile.typeOfThisTileInstance.matches("(C|PC)")){
                 previousConsonant = thisTile.text;
@@ -795,18 +992,18 @@ public abstract class GameActivity extends AppCompatActivity {
             }
             if(thisTile.typeOfThisTileInstance.matches("(D|AD)")) {
                 previousDiacritics = thisTile.text;
-                if(previousDiacritics.contains("◌") && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
-                    previousDiacritics = previousDiacritics.replace("◌", "");
+                if(previousDiacritics.contains(placeholderCharacter) && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
+                    previousDiacritics = previousDiacritics.replace(placeholderCharacter, "");
                 }
             }
             if(thisTile.typeOfThisTileInstance.matches("(AV|BV)")){
                 previousAboveOrBelowVowel = thisTile.text;
-                if(previousAboveOrBelowVowel.contains("◌") && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
-                    previousAboveOrBelowVowel = previousAboveOrBelowVowel.replace("◌", "");
+                if(previousAboveOrBelowVowel.contains(placeholderCharacter) && previousAboveOrBelowVowel.length()==2) { // Filter these placeholders out; keep the complex tile ones
+                    previousAboveOrBelowVowel = previousAboveOrBelowVowel.replace(placeholderCharacter, "");
                 }
             }
 
-            if(Objects.isNull(replacedTile) || replacedTile.text.equals("")){
+            if(Objects.isNull(replacedTile) || replacedTile.text.isEmpty()){
                 replacingLVwithOtherV = false;
                 replacingOtherVwithLV = false;
             } else {
@@ -825,26 +1022,26 @@ public abstract class GameActivity extends AppCompatActivity {
                 // ^Now it's in the right place.
                 builder.append(stringToAppend);
             } else if (replacingLVwithOtherV && index == (indexOfReplacedTile + 1) && previousTile.typeOfThisTileInstance.equals("V")){
-                stringToAppend = previousString.replace("◌", stringToAppend); // [LV+◌+FV], replace the ◌ with the consonant tile you are adding now
+                stringToAppend = previousString.replace(placeholderCharacter, stringToAppend); // [LV+◌+FV], replace the placeholder with the consonant tile you are adding now
                 builder.append(stringToAppend);
             } else if (replacingOtherVwithLV && index==indexOfReplacedTile) {
                 builder.append(stringToAppend); // Add the LV first
                 builder.append(previousString); // Now add the C
             } else {
-                if (stringToAppend.contains("◌")) {
+                if (stringToAppend.contains(placeholderCharacter)) {
                     // Put the previous consonant and (optional) above/below vowel as the base of diacritics
                     // Or consonant and diacritics as the base of a vowel with a placeholder
                     // The stackInProperSequence() method will make some more fixes later if necessary
                     String base = "";
                     if(thisTile.typeOfThisTileInstance.matches("(D|AD)")){
-                        base = previousConsonant + previousAboveOrBelowVowel.replace("◌", "");
-                        stringToAppend = stringToAppend.replace("◌", base);
+                        base = previousConsonant + previousAboveOrBelowVowel.replace(placeholderCharacter, "");
+                        stringToAppend = stringToAppend.replace(placeholderCharacter, base);
                     } else if (thisTile.typeOfThisTileInstance.matches("(AV|BV|FV|V)")){
-                        base = previousConsonant + previousAboveOrBelowVowel.replace("◌", "") + previousDiacritics.replace("◌", "");
-                        stringToAppend = stringToAppend.replace("◌", base);
+                        base = previousConsonant + previousAboveOrBelowVowel.replace(placeholderCharacter, "") + previousDiacritics.replace(placeholderCharacter, "");
+                        stringToAppend = stringToAppend.replace(placeholderCharacter, base);
                     } else if (thisTile.typeOfThisTileInstance.equals("LV")) { // Can happen in the sequence if we are replacing a vowel
-                        base = previousConsonant + previousDiacritics.replace("◌", "");
-                        stringToAppend = stringToAppend.replace("◌", "") + base;
+                        base = previousConsonant + previousDiacritics.replace(placeholderCharacter, "");
+                        stringToAppend = stringToAppend.replace(placeholderCharacter, "") + base;
                     }
                     builder.delete(builder.length() - base.length(), builder.length());
                 }
@@ -884,10 +1081,10 @@ public abstract class GameActivity extends AppCompatActivity {
                 }
             }
             if (tileHashMap.containsKey(String.valueOf(correctlyStackedString.charAt(0)))
-             || tileHashMap.containsKey("◌" + String.valueOf(correctlyStackedString.charAt(0)))) {
+             || tileHashMap.containsKey(placeholderCharacter + String.valueOf(correctlyStackedString.charAt(0)))) {
                 Start.Tile firstCharAsTile = tileHashMap.get(String.valueOf(correctlyStackedString.charAt(0)));
                 if (firstCharAsTile==null) {
-                    firstCharAsTile = tileHashMap.get("◌" + String.valueOf(correctlyStackedString.charAt(0)));
+                    firstCharAsTile = tileHashMap.get(placeholderCharacter + String.valueOf(correctlyStackedString.charAt(0)));
                 }
                 if(firstCharAsTile.tileType.matches("(AV|BV|FV|AD)")) {
                     String wonkyBeginningSequence = String.valueOf(correctlyStackedString.charAt(0)) + String.valueOf(correctlyStackedString.charAt(1));
@@ -917,10 +1114,10 @@ public abstract class GameActivity extends AppCompatActivity {
         for (int i = 0; i < wordListWord.wordInLOP.replace(".", "").length(); i++) {
             Start.Tile thisTile = tileHashMap.get(String.valueOf(wordListWord.wordInLOP.replace(".", "").charAt(i)));
             if (thisTile == null) { // try with a placeholder prefix
-                thisTile = tileHashMap.get("◌" + String.valueOf(wordListWord.wordInLOP.replace(".", "").charAt(i)));
+                thisTile = tileHashMap.get(placeholderCharacter + String.valueOf(wordListWord.wordInLOP.replace(".", "").charAt(i)));
             }
             if (thisTile == null) { // try with a placeholder suffix
-                thisTile = tileHashMap.get(String.valueOf(wordListWord.wordInLOP.replace(".", "").charAt(i)) + "◌");
+                thisTile = tileHashMap.get(String.valueOf(wordListWord.wordInLOP.replace(".", "").charAt(i)) + placeholderCharacter);
             }
             if (!(thisTile == null)) {
                 String thisTileString = thisTile.text;
@@ -931,7 +1128,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     int preliminaryTileIndex = -1;
                     int cumulativeCharIndex = -1;
                     for (Start.Tile preliminaryTile : parsedWordListWordTileArrayPreliminary) { // Figure out which instance (0th, 1st, 2nd) of this char it is
-                        cumulativeCharIndex += preliminaryTile.text.replace("◌", "").length();
+                        cumulativeCharIndex += preliminaryTile.text.replace(placeholderCharacter, "").length();
                         preliminaryTileIndex++;
                         if(cumulativeCharIndex==i) {
                             break;
@@ -941,15 +1138,20 @@ public abstract class GameActivity extends AppCompatActivity {
                 } else {
                     typeOfThisInstanceOfThisTile = thisTile.tileType;
                 }
-                thisTileString = thisTileString.replace("◌", ""); // Remove any placeholders stored with single-char tiles
-                if (typeOfThisInstanceOfThisTile.equals("AV")) {
-                    AVs.add(thisTileString);
-                } else if (typeOfThisInstanceOfThisTile.equals("AD")) {
-                    ADs.add(thisTileString);
-                } else if (typeOfThisInstanceOfThisTile.equals("FV")) {
-                    FVs.add(thisTileString);
-                } else if (typeOfThisInstanceOfThisTile.equals("BV")) {
-                    BVs.add(thisTileString);
+                thisTileString = thisTileString.replace(placeholderCharacter, ""); // Remove any placeholders stored with single-char tiles
+                switch (typeOfThisInstanceOfThisTile) {
+                    case "AV":
+                        AVs.add(thisTileString);
+                        break;
+                    case "AD":
+                        ADs.add(thisTileString);
+                        break;
+                    case "FV":
+                        FVs.add(thisTileString);
+                        break;
+                    case "BV":
+                        BVs.add(thisTileString);
+                        break;
                 }
             }
         }
@@ -957,16 +1159,21 @@ public abstract class GameActivity extends AppCompatActivity {
         // Add other non-ambiguous AV, AD, FV, and BV tiles to avoid
         for(Start.Tile tile : tileList) {
             if (!MULTITYPE_TILES.contains(tile.text) && tile.text.length()==1
-            || (tile.text.contains("◌") && tile.text.length()==2)) {
-                String thisTileString = tile.text.replace("◌", "");
-                if (tile.tileType.equals("AV")) {
-                    AVs.add(thisTileString);
-                } else if (tile.tileType.equals("AD")) {
-                    ADs.add(thisTileString);
-                } else if (tile.tileType.equals("FV")) {
-                    FVs.add(thisTileString);
-                } else if (tile.tileType.equals("BV")) {
-                    BVs.add(thisTileString);
+            || (tile.text.contains(placeholderCharacter) && tile.text.length()==2)) {
+                String thisTileString = tile.text.replace(placeholderCharacter, "");
+                switch (tile.tileType) {
+                    case "AV":
+                        AVs.add(thisTileString);
+                        break;
+                    case "AD":
+                        ADs.add(thisTileString);
+                        break;
+                    case "FV":
+                        FVs.add(thisTileString);
+                        break;
+                    case "BV":
+                        BVs.add(thisTileString);
+                        break;
                 }
             }
         }
@@ -984,7 +1191,7 @@ public abstract class GameActivity extends AppCompatActivity {
         }
         for (int f = 0; f < FVs.size(); f++) {
             for (int d = 0; d < ADs.size(); d++) {
-                if(!tileHashMap.containsKey(FVs.get(f) + ADs.get(d)) && !tileHashMap.containsKey("◌" + FVs.get(f) + ADs.get(d))){
+                if(!tileHashMap.containsKey(FVs.get(f) + ADs.get(d)) && !tileHashMap.containsKey(placeholderCharacter + FVs.get(f) + ADs.get(d))){
                     prohibitedCharSequences.add(FVs.get(f) + ADs.get(d));
                 }
             }

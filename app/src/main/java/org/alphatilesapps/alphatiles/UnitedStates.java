@@ -10,9 +10,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Random;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import android.graphics.Typeface;
 import android.widget.Button;
 
@@ -27,6 +24,11 @@ public class UnitedStates extends GameActivity {
     int wordLengthLimitInTiles = 5;
     int neutralFontSize;
     String[] selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
+
+    int numberOfPairs;
+
+    boolean[] pairHasSelection = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+
     ArrayList<Tile> tileOptions = new ArrayList<>();
     Tile[] tileSelections;
 
@@ -56,40 +58,16 @@ public class UnitedStates extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-
-        int gameID = 0;
-        switch (challengeLevel) {
-            case 1:
-                gameID = R.id.united_states_cl1_CL;
-                break;
-            case 2:
-                gameID = R.id.united_states_cl2_CL;
-                break;
-            case 3:
-                gameID = R.id.united_states_cl3_CL;
-                break;
-            default:
-                break;
-        }
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
-
+        
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         int gameID = 0;
         switch (challengeLevel) {
@@ -112,6 +90,9 @@ public class UnitedStates extends GameActivity {
                 gameID = R.id.united_states_cl1_CL;
         }
 
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
@@ -123,7 +104,7 @@ public class UnitedStates extends GameActivity {
         }
 
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         updatePointsAndTrackers(0);
@@ -143,6 +124,7 @@ public class UnitedStates extends GameActivity {
         repeatLocked = true;
         setAdvanceArrowToGray();
         selections = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}; // KP
+        pairHasSelection = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
         int parsedLengthOfRefWord = Integer.MAX_VALUE;
 
         while(parsedLengthOfRefWord > wordLengthLimitInTiles) {
@@ -156,13 +138,16 @@ public class UnitedStates extends GameActivity {
             parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
             parsedLengthOfRefWord = parsedRefWordSyllableArray.size();
         } else {
-            Tile emptyTile = new Tile("", new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "");
+            Tile emptyTile = new Tile("__", new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "");
             tileSelections = new Tile[parsedLengthOfRefWord];
             for (int t = 0; t<parsedLengthOfRefWord; t++) {
                 tileSelections[t] = new Tile(emptyTile);
             }
             tileOptions.clear();
         }
+
+        // added by Camden. Delete if this does not work!
+        numberOfPairs = parsedLengthOfRefWord;
 
         ImageView image = (ImageView) findViewById(R.id.wordImage);
         int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
@@ -234,13 +219,24 @@ public class UnitedStates extends GameActivity {
                 gameButtonB.setVisibility(View.INVISIBLE);
             }
             parseIndex++;
+
         }
-        TextView constructedWord = findViewById(R.id.activeWordTextView); // KP
-        constructedWord.setText(""); // KP
+        //TextView constructedWord = findViewById(R.id.activeWordTextView); // KP
+        //constructedWord.setText(""); // KP
+
+        TextView constructedWord = findViewById(R.id.activeWordTextView);
+        String initialDisplay = "";
+        for (int i = 0; i < numberOfPairs; i++)
+            initialDisplay += "__";
+        constructedWord.setText(initialDisplay);
+
         setAllGameButtonsClickable();
     }
 
     public void buildWord(int tileIndex) {
+
+        // added by Camden. Remove if this does not work!
+        pairHasSelection[tileIndex / 2] = true;
 
         TextView constructedWord = findViewById(R.id.activeWordTextView);
         int lastSelectedIndex;
@@ -253,12 +249,27 @@ public class UnitedStates extends GameActivity {
         String displayedWord;
         if (syllableGame.equals("S")){
            StringBuilder stringBuilder = new StringBuilder();
+
+           int index = 0;
+           for (int i = 0; i < numberOfPairs; i++) {
+               if (pairHasSelection[i]) {
+                   stringBuilder.append(selections[2 * i]);
+                   stringBuilder.append(selections[2 * i + 1]);
+               } else {
+                   stringBuilder.append("__");
+               }
+           }
+
+           /*
            for (String s : selections) {
                stringBuilder.append(s);
            }
+           */
+
             displayedWord = stringBuilder.toString();
             constructedWord.setText(displayedWord);
         } else {
+            Tile[] tilesSelectedArray = new Tile[numberOfPairs];
             ArrayList<Tile> tilesSelected = new ArrayList<>();
             for (Tile tile : tileSelections) {
                 tilesSelected.add(tile);
@@ -349,10 +360,4 @@ public class UnitedStates extends GameActivity {
             super.playAudioInstructions(view);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
 }

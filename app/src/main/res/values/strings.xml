@@ -181,6 +181,16 @@
     <string name="door021">Door 021</string>
     <string name="door022">Door 022</string>
     <string name="door023">Door 023</string>
+    <string name="door024">Door 024</string>
+    <string name="door025">Door 025</string>
+    <string name="door026">Door 026</string>
+    <string name="door027">Door 027</string>
+    <string name="door028">Door 028</string>
+    <string name="door029">Door 029</string>
+    <string name="door030">Door 030</string>
+    <string name="door031">Door 031</string>
+    <string name="door032">Door 032</string>
+    <string name="door033">Door 033</string>
     <string name="avatarIcon01">Player 01 Avatar Icon</string>
     <string name="avatarIcon02">Player 02 Avatar Icon</string>
     <string name="avatarIcon03">Player 03 Avatar Icon</string>
@@ -271,6 +281,9 @@
     <string name="word06">word06</string>
     <string name="word07">word07</string>
     <string name="word08">word08</string>
+    <string name="word09">word09</string>
+    <string name="word10">word10</string>
+    <string name="word11">word11</string>
 
     <string name="expiration_dialog_message">This app has expired.</string>
     <string name="expiration_dialog_title">Expired</string>

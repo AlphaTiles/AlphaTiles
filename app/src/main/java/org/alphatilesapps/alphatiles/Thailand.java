@@ -8,18 +8,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import java.util.ArrayList;
 import java.util.Random;
+
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
 
 import static android.graphics.Color.WHITE;
 import static org.alphatilesapps.alphatiles.Start.*;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 
 public class Thailand extends GameActivity {
-
     ArrayList<Start.Word> fourWordChoices = new ArrayList<>();
     ArrayList<Start.Tile> fourTileChoices = new ArrayList<>();
     ArrayList<Start.Syllable> fourSyllableChoices = new ArrayList<>();
@@ -65,27 +64,11 @@ public class Thailand extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-
-        int gameID;
-        if (choiceType.equals("WORD_TEXT")) {
-            gameID = R.id.thailand2CL;
-        } else {
-            gameID = R.id.thailandCL;
-        }
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet
-                .START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet
-                .END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
-
+        
     }
 
 
@@ -112,7 +95,9 @@ public class Thailand extends GameActivity {
             gameID = R.id.thailandCL;
         }
 
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
@@ -121,14 +106,16 @@ public class Thailand extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
-
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         visibleGameButtons = GAME_BUTTONS.length;
         updatePointsAndTrackers(0);
+        incorrectAnswersSelected = new ArrayList<>(3);
+        for (int i = 0; i < 3; i++) {
+            incorrectAnswersSelected.add("");
+        }
         playAgain();
 
     }
@@ -175,15 +162,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if ((!refString.equalsIgnoreCase(refStringLast)
-                            && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast))
-                            || freshChecks > 25) {
-                        freshTile = true;
-                        refStringThirdToLast = refStringSecondToLast;
-                        refStringSecondToLast = refStringLast;
-                        refStringLast = refTile.text;
-                    }
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
 
             } else if (refType.equals("TILE_UPPER") || choiceType.equals("TILE_UPPER")) {
@@ -204,16 +183,8 @@ public class Thailand extends GameActivity {
                         refString = refTile.upper;
                         refTileType =  refTile.typeOfThisTileInstance;
                     }
-                    // SAD should never be first tile linguistically, so no need to programmatically filter out
-                    if ((!refString.equalsIgnoreCase(refStringLast)
-                            && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast))
-                            || freshChecks > 25) {
-                        freshTile = true;
-                        refStringThirdToLast = refStringSecondToLast;
-                        refStringSecondToLast = refStringLast;
-                        refStringLast = refTile.text;
-                    }
+                    // SAD should never be first tile linguistically, so no need to programatically filter out
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
 
             } else if (refType.contains("WORD") && choiceType.contains("WORD")) {
@@ -234,15 +205,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if ((!refString.equalsIgnoreCase(refStringLast)
-                            && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast))
-                            || freshChecks > 25) {
-                        freshTile = true;
-                        refStringThirdToLast = refStringSecondToLast;
-                        refStringSecondToLast = refStringLast;
-                        refStringLast = refTile.text;
-                    }
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
 
             }
@@ -300,15 +263,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if ((!refString.equalsIgnoreCase(refStringLast)
-                            && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast))
-                            || freshChecks > 25) {
-                        freshTile = true;
-                        refStringThirdToLast = refStringSecondToLast;
-                        refStringSecondToLast = refStringLast;
-                        refStringLast = refTile.text;
-                    }
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
             }
             if (refType.equals("TILE_UPPER")) {
@@ -329,15 +284,7 @@ public class Thailand extends GameActivity {
                         refString = refTile.upper;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
-                    if ((!refString.equalsIgnoreCase(refStringLast)
-                            && !refString.equalsIgnoreCase(refStringSecondToLast)
-                            && !refString.equalsIgnoreCase(refStringThirdToLast))
-                            || freshChecks > 25) {
-                        freshTile = true;
-                        refStringThirdToLast = refStringSecondToLast;
-                        refStringSecondToLast = refStringLast;
-                        refStringLast = refTile.text;
-                    }
+                    freshTile = verifyFreshTile(refString, freshChecks);
                 }
             }
         }
@@ -467,6 +414,24 @@ public class Thailand extends GameActivity {
                 playActiveWordClip(false);
                 break;
         }
+        for (int i = 0; i < 3; i++) {
+            incorrectAnswersSelected.set(i, "");
+        }
+        incorrectOnLevel = 0;
+        levelBegunTime = System.currentTimeMillis();
+    }
+
+    private boolean verifyFreshTile(String refString, int freshChecks) {
+        if ((!refString.equalsIgnoreCase(refStringLast)
+                && !refString.equalsIgnoreCase(refStringSecondToLast)
+                && !refString.equalsIgnoreCase(refStringThirdToLast))
+                || freshChecks > 25) {
+            refStringThirdToLast = refStringSecondToLast;
+            refStringSecondToLast = refStringLast;
+            refStringLast = refTile.text;
+            return true;
+        }
+        return false;
     }
 
 
@@ -541,7 +506,7 @@ public class Thailand extends GameActivity {
                     case "WORD_IMAGE":
                     case "WORD_AUDIO":
                         Tile firstAudibleTileInRefWord = firstAudibleTile(refWord);
-                        if (chosenItemText.equals(firstAudibleTileInRefWord.text)) {
+                        if (chosenItemText.equals(firstAudibleTileInRefWord.upper)) {
                             goodMatch = true;
                         }
                         break;
@@ -597,6 +562,22 @@ public class Thailand extends GameActivity {
 
         if (goodMatch) {
             // Good job!
+
+            if (sendAnalytics) {
+                // report time and number of incorrect guesses
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
+                        .putValue("Number Incorrect", incorrectOnLevel)
+                        .putValue("Correct Answer", refTile)
+                        .putValue("Grade", studentGrade);
+                for (int i = 0; i < 3; i++) {
+                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                        info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
+                    }
+                }
+                Analytics.with(context).track(gameUniqueID, info);
+            }
+
             repeatLocked = false;
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
@@ -635,7 +616,17 @@ public class Thailand extends GameActivity {
             }
 
         } else {
+            incorrectOnLevel += 1;
             playIncorrectSound();
+
+            for (int i = 0; i < 3; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(chosenItemText)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, chosenItemText);
+                    break;
+                }
+            }
         }
     }
 
@@ -643,11 +634,11 @@ public class Thailand extends GameActivity {
         ArrayList<Tile> wordParsedIntoTiles = tileList.parseWordIntoTiles(word.wordInLOP, word);
         Tile tileToReturn = wordParsedIntoTiles.get(0);
         if ((tileToReturn.typeOfThisTileInstance.equals("LV") && !wordParsedIntoTiles.get(1).typeOfThisTileInstance.equals("PC"))
-                || tileToReturn.typeOfThisTileInstance.matches("(PC|AD|D|T|X)")) { // These are not first sounds, though they can be written first
+                || tileToReturn.typeOfThisTileInstance.matches("(PC|AD|D|T)")) { // These are not first sounds, though they can be written first
             tileToReturn = wordParsedIntoTiles.get(1);
         }
         int i = 2;
-        while (tileToReturn.typeOfThisTileInstance.matches("(PC|AD|D|T|X)")) {
+        while (tileToReturn.typeOfThisTileInstance.matches("(PC|AD|D|T)")) {
             tileToReturn = wordParsedIntoTiles.get(i);
             i++;
         }
@@ -669,11 +660,7 @@ public class Thailand extends GameActivity {
             case "TILE_LOWER":
             case "TILE_UPPER":
             case "TILE_AUDIO":
-                if (tempSoundPoolSwitch) {
-                    playActiveTileClip1(false);
-                } else {
-                    playActiveTileClip0(false);
-                }
+                playActiveTileClip(false);
                 break;
             case "WORD_TEXT":
             case "WORD_IMAGE":
@@ -685,11 +672,7 @@ public class Thailand extends GameActivity {
     }
 
     public void playActiveTileClip(final boolean playFinalSound) {
-        if (tempSoundPoolSwitch) {
-            playActiveTileClip1(playFinalSound);
-        } else {
-            playActiveTileClip0(playFinalSound);
-        }
+        super.tileAudioPress(playFinalSound, refTile);
     }
 
     private void playActiveSyllableClip(final boolean playFinalSound) { // We chose not to implement the Media Player option for syllable audio
@@ -722,56 +705,6 @@ public class Thailand extends GameActivity {
             }
         }, refSyllable.duration);
 
-    }
-
-
-    public void playActiveTileClip1(final boolean playFinalSound) {     //JP: for SoundPool, for tile audio
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-
-        if (tileAudioIDs.containsKey(refTile.audioForThisTileType)) {
-            gameSounds.play(tileAudioIDs.get(refTile.audioForThisTileType), 1.0f, 1.0f, 2, 0, 1.0f);
-        }
-        soundSequencer.postDelayed(new Runnable() {
-            public void run() {
-                if (playFinalSound) {
-                    updatePointsAndTrackers(0);
-                    repeatLocked = false;
-                    playCorrectFinalSound();
-                } else {
-                    if (repeatLocked) {
-                        setAllGameButtonsClickable();
-                    }
-                    if (after12checkedTrackers == 1){
-                        setOptionsRowClickable();
-                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                    }
-                    else if (trackerCount >0 && trackerCount % 12 != 0) {
-                        setOptionsRowClickable();
-                        // Otherwise, updatePointsAndTrackers will set it clickable only after
-                        // the player returns to earth (2) or sees the celebration screen (3)
-                    }
-                }
-            }
-        }, tileDurations.get(refTile.audioForThisTileType));
-    }
-
-
-    public void playActiveTileClip0(final boolean playFinalSound) {     //JP: for Media Player; tile audio
-
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(refTile.audioForThisTileType, "raw", getPackageName());
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        //mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mpCompletion(mp1, playFinalSound);
-            }
-        });
-        mp1.start();
     }
 
     private void playCorrectSound() {
@@ -881,10 +814,4 @@ public class Thailand extends GameActivity {
             super.playAudioInstructions(view);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
 }

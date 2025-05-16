@@ -7,9 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,8 +14,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.CorV;
+
+import com.segment.analytics.Analytics;
+import com.segment.analytics.Properties;
 
 //level 1: 6 visible tiles, random wrong choices
 //level 2: 12 visible tiles, random wrong choices
@@ -66,23 +67,10 @@ public class Georgia extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
 
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-        int gameID = 0;
-        if (syllableGame.equals("S")) {
-            gameID = R.id.georgiaCL_syll;
-        } else {
-            gameID = R.id.georgiaCL;
-        }
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
     }
 
     @Override
@@ -112,6 +100,9 @@ public class Georgia extends GameActivity {
             gameID = R.id.georgiaCL;
         }
 
+        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.setStatusAndNavColors(this);
+
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
             ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
@@ -121,9 +112,6 @@ public class Georgia extends GameActivity {
 
             fixConstraintsRTL(gameID);
         }
-
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         switch (challengeLevel) {
             case 11:
@@ -147,9 +135,13 @@ public class Georgia extends GameActivity {
         }
 
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
+        incorrectAnswersSelected = new ArrayList<>(visibleGameButtons-1);
+        for (int i = 0; i < visibleGameButtons-1; i++) {
+            incorrectAnswersSelected.add("");
+        }
         updatePointsAndTrackers(0);
         playAgain();
     }
@@ -191,6 +183,11 @@ public class Georgia extends GameActivity {
             nextWord.setClickable(true);
         }
 
+        for (int i = 0; i < visibleGameButtons-1; i++) {
+            incorrectAnswersSelected.set(i, "");
+        }
+        incorrectOnLevel = 0;
+        levelBegunTime = System.currentTimeMillis();
     }
 
     private void setWord() {
@@ -325,61 +322,84 @@ public class Georgia extends GameActivity {
         boolean correctTileRepresented = false;
 
         // For harder challenge levels, first add distractors, then add tiles that start with the same chars, then add random tiles
-        // Note that duplicates will automatically not be added because challengingAnswerChoices is a Set
+        // Duplicates will automatically not be added because challengingAnswerChoices is a Set
         challengingAnswerChoices.clear();
+        // First add the correct answer and distractors
         challengingAnswerChoices.add(initialTile.text);
         challengingAnswerChoices.add(initialTile.distractors.get(0));
         challengingAnswerChoices.add(initialTile.distractors.get(1));
         challengingAnswerChoices.add(initialTile.distractors.get(2));
 
+
+        // Then add tiles that begin with the same two chars, if they exist
         int i = 0;
         while (challengingAnswerChoices.size() < visibleGameButtons && i < CorV.size()) {
             Random rand = new Random();
             int index = rand.nextInt(CorV.size() - 1);
             String option = CorV.get(index).text;
-            if (option.length() >= 2 && initialTile.text.length() >= 2) {
-                if (option.charAt(0) == initialTile.text.charAt(0)
+            if(option.length()>=2 && initialTile.text.length()>=2) {
+                if(option.charAt(0) == initialTile.text.charAt(0)
                         && option.charAt(1) == initialTile.text.charAt(1)) {
-                    challengingAnswerChoices.add(option);
-                } else if (option.charAt(0) == initialTile.text.charAt(0)) {
-                    challengingAnswerChoices.add(option);
-                }
-            } else {
-                if (option.charAt(0) == initialTile.text.charAt(0)) {
-                    challengingAnswerChoices.add(option);
-                } else if (option.charAt(option.length() - 1) == initialTile.text.charAt(initialTile.text.length() - 1)) {
                     challengingAnswerChoices.add(option);
                 }
             }
             i++;
         }
 
+        // Then add tiles that begin or end with the same char
+        i = 0;
+        while (challengingAnswerChoices.size() < visibleGameButtons && i < CorV.size()) {
+            Random rand = new Random();
+            int index = rand.nextInt(CorV.size() - 1);
+            String option = CorV.get(index).text;
+            if (option.charAt(0) == initialTile.text.charAt(0)) {
+                challengingAnswerChoices.add(option);
+            } else if (option.charAt(option.length() - 1) == initialTile.text.charAt(initialTile.text.length() - 1)) {
+                challengingAnswerChoices.add(option);
+            }
+            i++;
+        }
+
+        // Then fill the remaining options with random tiles
         while (challengingAnswerChoices.size() < visibleGameButtons) {
             Random rand = new Random();
             int index = rand.nextInt(CorV.size() - 1);
             challengingAnswerChoices.add(CorV.get(index).text);
         }
 
-        List<String> challengingAnswerChoicesList = new ArrayList<>(challengingAnswerChoices); // To index the answer choices
+        // Index the answer choices set
+        List<String> challengingAnswerChoicesList = new ArrayList<>(challengingAnswerChoices);
 
+
+        ArrayList<String> stringsAdded = new ArrayList<>();
+        Random rand = new Random();
+        int randomNum;
+        // Add them to buttons
         for (int t = 0; t < GAME_BUTTONS.length; t++) {
 
             TextView gameTile = findViewById(GAME_BUTTONS[t]);
-
-            if (CorV.get(t).equals(initialTile) && t < visibleGameButtons) {
-                correctTileRepresented = true;
-            }
-
             String tileColorStr = colorList.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
-            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { // alternatives are random
+            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3
+                    || challengeLevel == 7 || challengeLevel == 8 || challengeLevel == 9) { // Alternatives are random
                 if (t < visibleGameButtons) {
-                    gameTile.setText(CorV.get(t).text); // KP
+                    randomNum = rand.nextInt(CorV.size());
+                    String tileOptionText = CorV.get(randomNum).text;
+                    while (stringsAdded.contains(tileOptionText)) {
+                        randomNum = rand.nextInt(CorV.size());
+                        tileOptionText = CorV.get(randomNum).text;
+                    }
+
+                    gameTile.setText(tileOptionText);
                     gameTile.setBackgroundColor(tileColor);
                     gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
                     gameTile.setVisibility(View.VISIBLE);
                     gameTile.setClickable(true);
+                    stringsAdded.add(tileOptionText);
+                    if (stringsAdded.contains(initialTile.text)) {
+                        correctTileRepresented = true;
+                    }
                 } else {
                     gameTile.setText(String.valueOf(t + 1));
                     gameTile.setBackgroundResource(R.drawable.textview_border);
@@ -387,11 +407,8 @@ public class Georgia extends GameActivity {
                     gameTile.setClickable(false);
                     gameTile.setVisibility(View.INVISIBLE);
                 }
-            } else { // alternatives are challenging
+            } else { // Alternatives are challenging
                 if (t < visibleGameButtons) {
-                    if (challengingAnswerChoicesList.get(t).equals(initialTile.text)) {
-                        correctTileRepresented = true;
-                    }
                     gameTile.setText(challengingAnswerChoicesList.get(t)); // KP
                     gameTile.setBackgroundColor(tileColor);
                     gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
@@ -403,17 +420,17 @@ public class Georgia extends GameActivity {
                     gameTile.setClickable(false);
                     gameTile.setVisibility(View.INVISIBLE);
                 }
+                correctTileRepresented = true;
             }
         }
 
         if (!correctTileRepresented) {
-            // If the correct tile didn't randomly show up in the range, then here the correct tile overwrites one of the others
-            Random rand = new Random();
-            int randomNum = rand.nextInt(visibleGameButtons - 1); // KP
+            // If the correct tile didn't randomly show up for the non-challenging choices, then here the correct tile overwrites one of the others
+            rand = new Random();
+            randomNum = rand.nextInt(visibleGameButtons - 1);
             TextView gameTile = findViewById(GAME_BUTTONS[randomNum]);
             gameTile.setText(initialTile.text);
         }
-
     }
 
     private void respondToTileSelection(int justClickedTile) { //for both tiles and syllables
@@ -441,6 +458,21 @@ public class Georgia extends GameActivity {
             setAdvanceArrowToBlue();
             updatePointsAndTrackers(1);
 
+            if (sendAnalytics) {
+                // report time and number of incorrect guesses
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
+                        .putValue("Number Incorrect", incorrectOnLevel)
+                        .putValue("Correct Answer", correctString)
+                        .putValue("Grade", studentGrade);
+                for (int i = 0; i < visibleGameButtons - 1; i++) {
+                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                        info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
+                    }
+                }
+                Analytics.with(context).track(gameUniqueID, info);
+            }
+
             for (int t = 0; t < GAME_BUTTONS.length; t++) {
                 TextView gameTile = findViewById(GAME_BUTTONS[t]);
                 gameTile.setClickable(false);
@@ -453,7 +485,16 @@ public class Georgia extends GameActivity {
             }
             playCorrectSoundThenActiveWordClip(false);
         } else {
+            incorrectOnLevel += 1;
             playIncorrectSound();
+            for (int i = 0; i < visibleGameButtons - 1; i++) {
+                String item = incorrectAnswersSelected.get(i);
+                if (item.equals(selectedTileString)) break;  // this incorrect answer already selected
+                if (item.equals("")) {
+                    incorrectAnswersSelected.set(i, selectedTileString);
+                    break;
+                }
+            }
         }
 
     }
@@ -475,10 +516,4 @@ public class Georgia extends GameActivity {
             super.playAudioInstructions(view);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
 }

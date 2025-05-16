@@ -9,14 +9,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 import static android.graphics.Color.BLACK;
-
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -30,6 +27,7 @@ public class Mexico extends GameActivity {
     int cardHitA = 0;
     int cardHitB = 0;
     Handler handler; // KP
+    private static final Logger LOGGER = Logger.getLogger(Mexico.class.getName());
 
     protected static final int[] GAME_BUTTONS = {
             R.id.card01, R.id.card02, R.id.card03, R.id.card04, R.id.card05, R.id.card06, R.id.card07, R.id.card08, R.id.card09, R.id.card10,
@@ -57,20 +55,11 @@ public class Mexico extends GameActivity {
     }
 
     @Override
-    protected void centerGamesHomeImage() {
+    protected void hideInstructionAudioImage() {
 
         ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-
-        int gameID = R.id.mexicoCL;
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
-        constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, gameID);
-        constraintSet.applyTo(constraintLayout);
-
+        
     }
 
     @Override
@@ -78,6 +67,9 @@ public class Mexico extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.mexico);
+
+        ActivityLayouts.applyEdgeToEdge(this, R.id.mexicoCL);
+        ActivityLayouts.setStatusAndNavColors(this);
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = findViewById(R.id.instructions);
@@ -88,9 +80,6 @@ public class Mexico extends GameActivity {
 
             fixConstraintsRTL(R.id.mexicoCL);
         }
-
-        String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
-        setTitle(Start.localAppName + ": " + gameNumber + "    (" + gameUniqueID + ")");
 
         // new levels
         // Level 1: 3 pairs = 6
@@ -117,7 +106,7 @@ public class Mexico extends GameActivity {
 
 
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
         updatePointsAndTrackers(0);
@@ -173,6 +162,11 @@ public class Mexico extends GameActivity {
         // KP, Oct 2020
         int cardsToSetUp = visibleGameButtons / 2;   // this is half the number of cards
 
+        // Use a sanity loop counter in case the stage assigned to this version
+        // of the game has too few words (e.g., if stage 1 has 7 words, then we
+        // can only play with 8 or 12 cards, and cannot play with 16 or 20 cards.
+        int sanityCounter = 0;
+
         for (int i = 0; i < cardsToSetUp; i++) {
             boolean wordAcceptable = true;
             chooseWord();
@@ -209,6 +203,14 @@ public class Mexico extends GameActivity {
 
                         };
                 memoryCollection.add(content);
+            }
+
+            if (++sanityCounter > cardsToSetUp*3) {
+                // we've looped too many times - give up
+                LOGGER.warning("chooseMemoryWords: can't proceed - not enough words");
+                // return to the home screen
+                goBackToEarth(null);
+                return;
             }
         }
     }
@@ -306,7 +308,17 @@ public class Mexico extends GameActivity {
             cardA.setTextColor(tileColor); // theme color
             cardB.setTextColor(tileColor); // theme color
 
-            refWord.wordInLWC = memoryCollection.get(cardHitA)[0];
+            // necessary so that playCorrectSoundThenActiveWordClip below plays the right audio file (via refWord)
+            // TODO: calls to play audio in all games should include the LWC word value, not just trust that the active refWord.wordInLWC value is correct
+            // TODO: this is because there are many multi-word games (Italy, Mexico, Myanmar, China, others?) that can call many different audio files
+            refWord = new Start.Word(
+                    memoryCollection.get(cardHitA)[0],
+                    "",
+                    0,
+                    "",
+                    "",
+                    ""
+            );
 
             if (pairsCompleted == (visibleGameButtons / 2)) {
                 updatePointsAndTrackers((visibleGameButtons / 2));
@@ -376,11 +388,6 @@ public class Mexico extends GameActivity {
         if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // no action
     }
 }
 
