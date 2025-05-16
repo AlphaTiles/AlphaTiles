@@ -2011,6 +2011,9 @@ public class Validator {
                     return row;
                 }
             }
+            if (scriptType.equals("Roman") && cell.contains("Stand-in base for combining tiles")){
+                return null;// suppresses the fatal errors if Roman language pack doesn't have that row
+            }
             fatalError(Message.Tag.Etc, "cannot find a row in " + this.getName() + " that contains \"" + cell + "\" in column " + col);
             throw new ValidatorException("cannot find a row in " + this.getName() + " that contains \"" + cell + "\" in column " + col);
         }
