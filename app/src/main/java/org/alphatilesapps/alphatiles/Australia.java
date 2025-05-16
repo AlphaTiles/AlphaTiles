@@ -3,6 +3,7 @@ package org.alphatilesapps.alphatiles;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -752,6 +753,14 @@ public class Australia extends GameActivity {
 
             }
         }
+    }
+
+    @Override
+    protected void hideInstructionAudioImage() {
+
+        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        instructionsButton.setVisibility(View.GONE);
+
     }
 
     @Override
