@@ -316,7 +316,18 @@ public class Colombia extends GameActivity {
             // Sets up a scrolling keyboard with all tiles.
             case 4:// should only be selected if !SyllableGame.equals("S")
                 tileKeysList.addAll(tileList);
-                keysInUse = tileList.size(); // KP
+
+                // removes all duplicate keys from tileKeysList
+                int i = 1;
+                while (i < tileKeysList.size()){
+                    //currently runs in constant time, update if tileKeysList becomes a linked list.
+                    if (tileKeysList.get(i).equals(tileKeysList.get(i - 1))){
+                        tileKeysList.remove(i-1);
+                        i--;
+                    }
+                    i++;
+                }
+                keysInUse = tileKeysList.size(); // KP
                 partial = keysInUse % (GAME_BUTTONS.length - 2);
                 totalScreens = keysInUse / (GAME_BUTTONS.length - 2);
 
