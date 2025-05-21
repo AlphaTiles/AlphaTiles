@@ -211,10 +211,11 @@ public class Resources extends AppCompatActivity {
 
         if(resourcesScreenNo == 1){ //first page only display forward arrow
             goBackward.setVisibility(View.INVISIBLE);
-
+            goForward.setVisibility(View.VISIBLE);
         } else if(resourcesScreenNo == totalScreens) { //last page only display backward arrow
+            goBackward.setVisibility(View.VISIBLE);
             goForward.setVisibility(View.INVISIBLE);
-        } else { //display both
+        } else { //display both if neither first or last page
             goBackward.setVisibility(View.VISIBLE);
             goForward.setVisibility(View.VISIBLE);
         }
