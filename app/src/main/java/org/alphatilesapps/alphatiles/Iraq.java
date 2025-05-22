@@ -289,7 +289,57 @@ public class Iraq extends GameActivity {
 
             // Step 2: Wait 0.5s, then show a random image according to the scan setting
             handler.postDelayed(() -> {
-                try {
+                 try {
+                // iconic word logic
+                if (challengeLevel == 2 && thisTile.iconicWord != null && !thisTile.iconicWord.isEmpty() && !thisTile.iconicWord.equals("-")) {
+                    // Use only the iconic word for this tile
+                    Start.Word iconicWordObj = null;
+                    for (Start.Word w : Start.wordList) {
+                        if (w.wordInLOP.equals(thisTile.iconicWord)) {
+                            iconicWordObj = w;
+                            break;
+                        }
+                    }
+                    if (iconicWordObj != null) {
+                        String wordText = Start.wordList.stripInstructionCharacters(iconicWordObj.wordInLOP);
+                        tileView.setText(wordText);
+                        tileView.setBackgroundColor(Color.LTGRAY);
+
+                        // Show the image
+                        ImageView wordImage = new ImageView(context);
+                        int resID = context.getResources().getIdentifier(iconicWordObj.wordInLWC, "drawable", context.getPackageName());
+                        if (resID != 0) {
+                            wordImage.setImageResource(resID);
+                            ConstraintLayout layout = (ConstraintLayout) tileView.getParent();
+                            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(tileView.getWidth(), tileView.getHeight());
+                            params.leftToLeft = tileView.getId();
+                            params.topToTop = tileView.getId();
+                            wordImage.setLayoutParams(params);
+                            wordImage.setId(View.generateViewId());
+                            layout.addView(wordImage);
+                            wordImage.bringToFront();
+
+                            tileView.setText("");
+
+                            handler.postDelayed(() -> {
+                                try {
+                                    layout.removeView(wordImage);
+                                    tileView.setText(wordText);
+                                } catch (Exception e) { }
+                            }, 2000);
+                        }
+
+                        // Play the word audio
+                        if (iconicWordObj.wordInLWC != null && wordAudioIDs.containsKey(iconicWordObj.wordInLWC)) {
+                            int wordAudioId = wordAudioIDs.get(iconicWordObj.wordInLWC);
+                            gameSounds.play(wordAudioId, 1.0f, 1.0f, 2, 0, 1.0f);
+                        }
+                    } else {
+                        // fallback: just show the tile text
+                        tileView.setText(originalText);
+                        tileView.setBackgroundColor(Color.LTGRAY);
+                    }
+                } else {
                     Start.Word[] groupOfWordsForActiveTile = null;
                     int groupCount;
                     boolean skipThisTile = false;
@@ -371,7 +421,8 @@ public class Iraq extends GameActivity {
                         tileView.setText(originalText);
                         tileView.setBackgroundColor(Color.LTGRAY);
                     }
-                } catch (Exception e) { }
+                } 
+            }catch (Exception e) { }
 
                 // Step 3: Wait 2 seconds, then restore tile
                 handler.postDelayed(() -> {

@@ -319,6 +319,7 @@ public class Start extends AppCompatActivity {
                         stageOfFirstAppearance = 1;
                     }
                 }
+                String iconicWord = thisLineArray[11]; //iconic word for the tile
                 // Create tile(s) and add to list; may add up to three tiles from the same line if it has multiple types
                 ArrayList<String> distractors = new ArrayList<>();
                 distractors.add(thisLineArray[1]);
@@ -819,8 +820,9 @@ public class Start extends AppCompatActivity {
         public String typeOfThisTileInstance;
         public int stageOfFirstAppearanceForThisTileType;
         public String audioForThisTileType;
+        public String iconicWord;
 
-        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType) {
+        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType, String iconicWord) {
             super(text);
             this.distractors = distractors;
             this.tileType = tileType;
@@ -839,6 +841,7 @@ public class Start extends AppCompatActivity {
             this.typeOfThisTileInstance = typeOfThisTileInstance;
             this.stageOfFirstAppearanceForThisTileType = stageOfFirstAppearanceForThisTileType;
             this.audioForThisTileType = audioForThisTileType;
+            this.iconicWord = iconicWord;
         }
 
         public Tile (Tile anotherTile) {
@@ -860,6 +863,7 @@ public class Start extends AppCompatActivity {
             this.typeOfThisTileInstance = anotherTile.typeOfThisTileInstance;
             this.stageOfFirstAppearanceForThisTileType = anotherTile.stageOfFirstAppearanceForThisTileType;
             this.audioForThisTileType = anotherTile.audioForThisTileType;
+            this.iconicWord = anotherTile.iconicWord;
         }
 
         public boolean hasNull() {
