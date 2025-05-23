@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".Romania">
+    tools:context=".Taiwan">
 
     <ImageView
         android:id="@+id/backwardArrowImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="5dp"
-        android:onClick="goToPreviousTile"
+        android:onClick="goToPreviousWord"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintEnd_toStartOf="@+id/wordImage"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
@@ -29,7 +29,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="5dp"
         android:contentDescription="@string/goForward"
-        android:onClick="goToNextTile"
+        android:onClick="goToNextWord"
         android:rotationY="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
@@ -50,9 +50,8 @@
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo" />
 
-
     <TextView
-        android:id="@+id/activeWordTextView"
+        android:id="@+id/wordTextViewDisplay"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#9C27B0"
@@ -70,17 +69,46 @@
         android:padding = "7dp"
         android:maxLines="1"/>
 
-    <GridView
-        android:id="@+id/guessBox"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tilesTextView"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"
         android:gravity="center"
+        android:background="#E0E0E0"
+        android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH8"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="7dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/syllablesTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:background="#E0E0E0"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8"
+        app:layout_constraintVertical_bias="0.0"
+        android:visibility="gone"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="7dp"
+        android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/gamesHomeImage"
@@ -89,7 +117,7 @@
         android:onClick="goBackToEarth"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
         android:contentDescription="@string/playerAvatar"
         app:srcCompat="@drawable/zz_games_home" />
@@ -116,6 +144,25 @@
         android:contentDescription="@string/playAudioInstructions"
         android:rotationY="0"
         app:srcCompat="@drawable/zz_instructions" />
+
+    <TextView
+        android:id="@+id/numberOfTotalText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="0/0"
+        android:textColor="#000000"
+        android:background="#E0E0E0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
+        app:layout_constraintStart_toEndOf="@+id/instructions"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="7dp"
+        android:maxLines="1"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH0"

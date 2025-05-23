@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.text.SpannableStringBuilder;
@@ -18,404 +19,449 @@ import static org.alphatilesapps.alphatiles.Start.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
+import static org.alphatilesapps.alphatiles.Start.wordList;
+import static org.alphatilesapps.alphatiles.Start.wordStagesLists;
 
 public class Taiwan extends GameActivity {
 
-    boolean failedToMatchInitialTile = false;
-    Start.Tile activeTile;
-    boolean directionIsForward = true;
-    static int maxWordLength = 100;
-    static int minWordLength = 3;
-    String scriptDirection; // aa_langinfo.txt value for Script Direction (LTR or RTL)
-    int groupCount; // Number of words selected for an active tile, based on settings
-    int index = 0; // Index of the word being viewed within the group of all words for the tile
-    boolean skipThisTile = false; // True when it's a gray word (a word that demonstrates the tile with a medial instance not a word-initial instance)
-    String tileToStartOn;
-    String typeOfTileToStartOn;
-
-    // settings to see tiles in focus bolded or not
     private static final Logger LOGGER = Logger.getLogger(Taiwan.class.getName());
 
-    protected int[] getGameButtons() {
-        return null;
-    }
+    // UI elements
+    private ImageView wordImageView;
+    private TextView tilesTextView; //changed to TextView
+    private TextView syllablesTextView; //changed to TextView
+    private TextView wordTextViewDisplay; //changed to TextView
+    private ImageView forwardArrow;
+    private ImageView backwardArrow;
+    private TextView numberOfTotalTextView;
 
-    protected int[] getWordImages() {
-        return null;
-    }
+    // Game data
+    private List<Start.Word> wordListInOrder; // Corrected to use Start.Word
+    private int currentWordIndex = 0;
+    private String currentWord;
+    private String[] currentTiles;
+    private String[] currentSyllables;
+    private int currentStage = 0;
+    private ArrayList<TextView> tileTextViews = new ArrayList<>();
+    private ArrayList<TextView> syllableTextViews = new ArrayList<>();
+    private TextView wordTextView; //keeping this for the word display
+    private ImageView backwardArrowImage;
+    private ImageView forwardArrowImage;
+    private ImageView wordImage;
+    private TextView numberOfTotalText;
 
-    @Override
-    protected int getAudioInstructionsResID() {
-        Resources res = context.getResources();
-        int audioInstructionsResID;
-        try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
-        } catch (Resources.NotFoundException e) {
-            audioInstructionsResID = -1;
-        }
-        return audioInstructionsResID;
-    }
+    private ImageView gamesHomeImage;
+    private ImageView instructions;
+    private Start.Word currentWordObject; // Storing the Start.Word object
+    private String currentWordString;
 
-    @Override
-    protected void hideInstructionAudioImage() {
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
-        instructionsButton.setVisibility(View.GONE);
+    private ArrayList<String> wordList; //  list of words
+    private static final Random random = new Random();
 
-    }
+
+    private int colorCounter = 0;
+    private static final int[] TILE_COLORS = {
+            Color.parseColor(colorList.get(0)),
+            Color.parseColor(colorList.get(1)),
+            Color.parseColor(colorList.get(2)),
+            Color.parseColor(colorList.get(3)),
+            Color.parseColor(colorList.get(4))
+    };
+
+    private boolean syllableAudioAvailable;
+    private int wordsCompleted = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this;
         setContentView(R.layout.taiwan);
 
-        ActivityLayouts.applyEdgeToEdge(this, R.id.taiwanCL);
-        ActivityLayouts.setStatusAndNavColors(this);
+        // Initialize UI elements
+        backwardArrowImage = findViewById(R.id.backwardArrowImage);
+        forwardArrowImage = findViewById(R.id.forwardArrowImage);
+        wordImage = findViewById(R.id.wordImage);
+        wordTextViewDisplay = findViewById(R.id.wordTextViewDisplay);
+        tilesTextView = findViewById(R.id.tilesTextView);
+        syllablesTextView = findViewById(R.id.syllablesTextView);
+        gamesHomeImage = findViewById(R.id.gamesHomeImage);
+        instructions = findViewById(R.id.instructions);
+        numberOfTotalText = findViewById(R.id.numberOfTotalText);
 
 
-        // tileToStartOn = cumulativeStageBasedTileList.get(0).text;
-        // typeOfTileToStartOn = cumulativeStageBasedTileList.get(0).typeOfThisTileInstance;
+        //hide the syllablesTextView.
+        syllablesTextView.setVisibility(View.GONE);
 
-        String tileToStartOn = prefs.getString("lastActiveTileGame001_player" + playerString, this.tileToStartOn);
-        String typeOfTileToStartOn = prefs.getString("typeOfLastActiveTileGame001_player" + playerString, this.typeOfTileToStartOn);
+        // Set listeners
+        backwardArrowImage.setOnClickListener(this::goToPreviousWord);
+        forwardArrowImage.setOnClickListener(this::goToNextWord);
+        wordImage.setOnClickListener(this::clickPicHearAudio);
+        gamesHomeImage.setOnClickListener(this::goBackToEarth);
+        instructions.setOnClickListener(this::playAudioInstructions);
 
-        // Load bold settings
+        // Get syllable audio availability
+        syllableAudioAvailable = Start.hasSyllableAudio;
 
-        scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
-        ImageView backwardArrowImage = (ImageView) findViewById(R.id.backwardArrowImage);
-        ImageView forwardArrowImage = (ImageView) findViewById(R.id.forwardArrowImage);
-        if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            backwardArrowImage.setRotationY(180);
-            forwardArrowImage.setRotationY(180);
-            instructionsImage.setRotationY(180);
+        // Populate wordListInOrder with Start.Word objects from Start.wordList
+        wordListInOrder = new ArrayList<>();
+        for (Start.Word word : Start.wordList) { // Corrected to Start.Word
+            wordListInOrder.add(word);
         }
-        if(Start.changeArrowColor) {
-            backwardArrowImage.setImageResource(R.drawable.zz_backward_inactive);
-            forwardArrowImage.setImageResource(R.drawable.zz_forward_inactive);
-        }
-        if (getAudioInstructionsResID() == 0) {
-            hideInstructionAudioImage();
+        if (wordListInOrder.isEmpty()) {
+            LOGGER.warning("Word list is empty!");
+            return;
         }
 
-        int i = 0;
-        while (!(cumulativeStageBasedTileList.get(i).text.equals(tileToStartOn)
-                && cumulativeStageBasedTileList.get(i).typeOfThisTileInstance.equals(typeOfTileToStartOn))) {
-            i++;
-            if (i >= cumulativeStageBasedTileList.size()) {
-                // saved tile not in this stage, so start with the 0th tile
-                LOGGER.info("onCreate: saved tile=" + tileToStartOn + " not in this stage, start with tile 0");
-                i = 0;
-                break;
-            }
-        }
-        activeTile = cumulativeStageBasedTileList.get(i);
-        setUp(activeTile);
+        loadNewWord();
+        updateNumberOfTotalTextView();
     }
 
+    private void loadNewWord() {
+        // Get the current Start.Word object
+        currentWordObject = wordListInOrder.get(currentWordIndex);
+        currentWordString = currentWordObject.wordInLOP; // Use wordInLOP from Start.Word
 
-
-    private void setUp(Start.Tile activeTile) {
-
-    }
-
-    public void onRefClick(View view) {
-        super.tileAudioPress(false, activeTile);
-    }
-
-    public void goToNextWord(Start.Tile activeTile) {
-        index++;
-        if (index == groupCount) {
-            index = 0;
-        }
-        refWord = groupOfWordsForActiveTile[index];
-
-        if (!skipThisTile) {
-            TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
-            //String wordToDisplay = Start.wordList.stripInstructionCharacters(refWord.wordInLOP);
-            SpannableStringBuilder boldedWord = boldActiveLetterInWord(refWord, activeTile);
-            activeWord.setText(boldedWord);
-
-            ImageView image = (ImageView) findViewById(R.id.wordImage);
-            if (groupCount > 0) {
-                int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
-                image.setImageResource(resID);
-            } else {
-                int resID2 = getResources().getIdentifier("zz_no_image_found", "drawable", getPackageName());
-                image.setImageResource(resID2);
-                activeWord.setText("");
-            }
-
-            int alphabetPosition = tileList.returnPositionInAlphabet(activeTile);
-            String tileColorStr = colorList.get(alphabetPosition % 5);
-            int tileColor = Color.parseColor(tileColorStr);
-            TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
-            gameTile.setBackgroundColor(tileColor);
-            activeWord.setBackgroundColor(tileColor);
-            TextView numberOfTotal = (TextView) findViewById(R.id.numberOfTotalText);
-            numberOfTotal.setText(index + 1 + " / " + String.valueOf(groupCount));
-
-            if (failedToMatchInitialTile) {
-                tileColorStr = "#A9A9A9"; // dark gray
-                tileColor = Color.parseColor(tileColorStr);
-                activeWord.setBackgroundColor(tileColor);
-            }
-
-            if (groupCount > 0) {
-                playActiveWordClip(false);
-            }
+        //set the image
+        int imageID = getResources().getIdentifier(currentWordString, "drawable", getPackageName());
+        if (imageID != 0) {
+            wordImage.setImageResource(imageID);
         } else {
-            if (directionIsForward) {
-                goToNextTile(null);
+            wordImage.setImageResource(R.drawable.ic_launcher_background);
+            LOGGER.warning("Missing image for word: " + currentWordString);
+        }
+
+        // Split word into tiles
+        currentTiles = getTiles(currentWordString);
+
+        // Split into syllables if audio is available
+        if (syllableAudioAvailable) {
+            currentSyllables = getSyllables(currentWordString);
+        }
+
+        currentStage = 0;
+        colorCounter = 0;
+        tileTextViews.clear();
+        tilesTextView.setText(""); // Clear textview
+        syllablesTextView.setText(""); // Clear textview
+        syllablesTextView.setVisibility(View.GONE);
+
+
+        wordTextViewDisplay.setText(""); // Clear the word textview
+        wordTextViewDisplay.setVisibility(View.GONE);
+
+        createTiles();
+        // Enable/disable backward arrow based on currentWordIndex
+        backwardArrowImage.setEnabled(currentWordIndex > 0);
+        backwardArrowImage.setImageResource(currentWordIndex > 0 ? R.drawable.zz_backward : R.drawable.zz_backward_inactive);
+        forwardArrowImage.setEnabled(false); // Disable forward arrow until word is clicked
+        forwardArrowImage.setImageResource(R.drawable.zz_forward_inactive);
+    }
+
+    private void createTiles() {
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+        tileTextViews.clear();
+
+        for (String tileText : currentTiles) { // Renamed 'tile' to 'tileText' to avoid confusion
+            final int start = ssb.length();
+            ssb.append(tileText);
+            final int end = ssb.length();
+
+            // Create a custom clickable span that also changes background color
+            ClickableTileSpan clickableSpan = new ClickableTileSpan(
+                    TILE_COLORS[colorCounter % TILE_COLORS.length],
+                    Color.GRAY, // Initial color
+                    tileText // Pass the tileText to the span
+            ) {
+                @Override
+                public void onClick(View widget) {
+                    // Only process if it's still gray (not yet clicked)
+                    if (getBackgroundColor() == Color.GRAY) {
+                        int newColor = TILE_COLORS[colorCounter % TILE_COLORS.length];
+                        setBackgroundColor(newColor); // Update the span's color
+                        // Re-set the text to force redraw of the TextView to apply new span color
+                        tilesTextView.setText(ssb, TextView.BufferType.SPANNABLE);
+                        colorCounter++;
+
+                        // Get the Start.Tile object for the clicked tileText
+                        // Use tileHashMap.find() which returns a new Tile object
+                        Start.Tile clickedTileObj = Start.tileHashMap.find(getTileText());
+                        if (clickedTileObj != null) {
+                            tileAudioPress(false, clickedTileObj); // Play tile audio using GameActivity's method
+                        } else {
+                            LOGGER.warning("Could not find Tile object for: " + getTileText() + ". Falling back to word audio.");
+                            playActiveWordClip(false); // Fallback to playing the whole word sound
+                        }
+
+
+                        // Check if all "tiles" have been clicked
+                        if (colorCounter >= currentTiles.length) {
+                            playActiveWordClip(false); // Play word audio
+                            currentStage++;
+                            if (syllableAudioAvailable) {
+                                createSyllables();
+                                syllablesTextView.setVisibility(View.VISIBLE);
+                                tilesTextView.setVisibility(View.GONE); // Hide tiles
+                            } else {
+                                currentStage++;
+                                createWordDisplay();
+                                wordTextViewDisplay.setVisibility(View.VISIBLE);
+                                tilesTextView.setVisibility(View.GONE); // Hide tiles
+                            }
+                        }
+                    }
+                }
+            };
+            ssb.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); // Make it bold
+            ssb.append(" "); // Add space between tiles
+        }
+        tilesTextView.setText(ssb, TextView.BufferType.SPANNABLE); // Set BufferType to SPANNABLE
+        tilesTextView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance()); // Make spans clickable
+    }
+
+    private void createSyllables() {
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+        syllableTextViews.clear();
+
+        for (String syllableText : currentSyllables) { // Renamed 'syllable' to 'syllableText'
+            final int start = ssb.length();
+            ssb.append(syllableText);
+            final int end = ssb.length();
+
+            ClickableTileSpan clickableSpan = new ClickableTileSpan(
+                    TILE_COLORS[colorCounter % TILE_COLORS.length],
+                    Color.GRAY, // Initial color
+                    syllableText // Pass the syllableText to the span
+            ) {
+                @Override
+                public void onClick(View widget) {
+                    if (getBackgroundColor() == Color.GRAY) {
+                        int newColor = TILE_COLORS[colorCounter % TILE_COLORS.length];
+                        setBackgroundColor(newColor);
+                        syllablesTextView.setText(ssb, TextView.BufferType.SPANNABLE); // Force redraw
+                        colorCounter++;
+
+                        // Get the Start.Syllable object for the clicked syllableText
+                        Start.Syllable clickedSyllableObj = Start.syllableHashMap.find(getTileText());
+                        if (clickedSyllableObj != null) {
+                            // Create a dummy Tile object from the Syllable's data to pass to tileAudioPress
+                            // This is a workaround since tileAudioPress expects a Start.Tile object
+                            Start.Tile dummyTileForSyllable = new Start.Tile(
+                                    clickedSyllableObj.text,
+                                    clickedSyllableObj.distractors,
+                                    "S", // Assuming a 'Syllable' type, adjust if your gametiles.txt has one
+                                    clickedSyllableObj.audioName,
+                                    "", "", "", "", "", 0, 0, 0, 0, 0, 0, "S", 0, clickedSyllableObj.audioName
+                            );
+                            tileAudioPress(false, dummyTileForSyllable); // Play syllable audio
+                        } else {
+                            LOGGER.warning("Could not find Syllable object for: " + getTileText() + ". Falling back to word audio.");
+                            playActiveWordClip(false); // Fallback to playing the whole word sound
+                        }
+
+                        if (colorCounter >= currentTiles.length + currentSyllables.length) { // Adjusted count
+                            playActiveWordClip(false); // Play word audio
+                            currentStage = 2;
+                            createWordDisplay();
+                            wordTextViewDisplay.setVisibility(View.VISIBLE);
+                            syllablesTextView.setVisibility(View.GONE); // Hide syllables
+                        }
+                    }
+                }
+            };
+            ssb.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.append(" ");
+        }
+        syllablesTextView.setText(ssb, TextView.BufferType.SPANNABLE); // Set BufferType to SPANNABLE
+        syllablesTextView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
+    }
+
+    private void createWordDisplay() {
+        wordTextViewDisplay.setText(currentWordString); // Use currentWordString
+        wordTextViewDisplay.setBackgroundColor(Color.GRAY); // Initial background
+        wordTextViewDisplay.setOnClickListener(this::onWordClick);
+        wordTextViewDisplay.setVisibility(View.VISIBLE);
+    }
+
+    // These methods are now redundant as clicks are handled by ClickableTileSpan
+    public void onTileClick(View view) {
+        // No longer directly used, clicks are handled by ClickableTileSpan
+    }
+
+    public void onSyllableClick(View view) {
+        // No longer directly used, clicks are handled by ClickableTileSpan
+    }
+
+    public void onWordClick(View view) {
+        playActiveWordClip(false); // Play word audio
+        forwardArrowImage.setEnabled(true);
+        forwardArrowImage.setImageResource(R.drawable.zz_forward);
+    }
+
+    public void goToNextWord(View view) {
+        if (forwardArrowImage.isEnabled()) {
+            wordsCompleted++;
+            updateNumberOfTotalTextView();
+            if (currentWordIndex < wordListInOrder.size() - 1) {
+                currentWordIndex++;
+                loadNewWord();
             } else {
-                goToPreviousTile(null);
+                finishGame();
             }
+            forwardArrowImage.setEnabled(false);
+            forwardArrowImage.setImageResource(R.drawable.zz_forward_inactive); // Corrected to inactive
         }
     }
-    public void goToPreviousWord(Start.Tile activeTile) {
-        index--;
-        if (index == -1) {
-            index = groupCount - 1;
+
+    public void goToPreviousWord(View view) {
+        if (currentWordIndex > 0) {
+            currentWordIndex--;
+            loadNewWord();
+            backwardArrowImage.setImageResource(currentWordIndex > 0 ? R.drawable.zz_backward : R.drawable.zz_backward_inactive); // Update backward arrow state
+            forwardArrowImage.setEnabled(false); // Disable forward arrow on backward navigation
+            forwardArrowImage.setImageResource(R.drawable.zz_forward_inactive); // Corrected to inactive
         }
-        refWord = groupOfWordsForActiveTile[index];
+    }
 
+    private void finishGame() {
+        LOGGER.info("Game finished!");
+        currentWordIndex = 0;
+        loadNewWord();
+        wordsCompleted = 0;
+        updateNumberOfTotalTextView();
+    }
 
-        if (!skipThisTile) {
-            TextView activeWord = (TextView) findViewById(R.id.activeWordTextView);
-            //String wordToDisplay = Start.wordList.stripInstructionCharacters(refWord.wordInLOP);
-            SpannableStringBuilder boldedWord = boldActiveLetterInWord(refWord, activeTile);
-            activeWord.setText(boldedWord);
+    //Helper functions
+    private String[] getTiles(String word) {
+        // Use Start.tileList.parseWordIntoTiles to get the correct tile breakdown
+        // This method expects a Start.Word object, so we use currentWordObject
+        ArrayList<Start.Tile> parsedTiles = Start.tileList.parseWordIntoTiles(word, currentWordObject);
+        String[] tileStrings = new String[parsedTiles.size()];
+        for (int i = 0; i < parsedTiles.size(); i++) {
+            tileStrings[i] = parsedTiles.get(i).text;
+        }
+        return tileStrings;
+    }
 
-            ImageView image = (ImageView) findViewById(R.id.wordImage);
-            if (groupCount > 0) {
-                int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
-                image.setImageResource(resID);
-            } else {
-                int resID2 = getResources().getIdentifier("zz_no_image_found", "drawable", getPackageName());
-                image.setImageResource(resID2);
-                activeWord.setText("");
+    private String[] getSyllables(String wordString) {
+        // Use Start.syllableList.parseWordIntoSyllables to get the correct syllable breakdown
+        // This method expects a Start.Word object, so we use currentWordObject
+        if (currentWordObject != null && Start.syllableList != null) {
+            ArrayList<Start.Syllable> parsedSyllables = Start.syllableList.parseWordIntoSyllables(currentWordObject);
+            String[] syllableStrings = new String[parsedSyllables.size()];
+            for (int i = 0; i < parsedSyllables.size(); i++) {
+                syllableStrings[i] = parsedSyllables.get(i).text;
             }
-
-            int alphabetPosition = tileList.returnPositionInAlphabet(activeTile);
-            String tileColorStr = colorList.get(alphabetPosition % 5);
-            int tileColor = Color.parseColor(tileColorStr);
-            TextView gameTile = (TextView) findViewById(R.id.tileBoxTextView);
-            gameTile.setBackgroundColor(tileColor);
-            activeWord.setBackgroundColor(tileColor);
-            TextView numberOfTotal = (TextView) findViewById(R.id.numberOfTotalText);
-
-            numberOfTotal.setText(index + 1 + " / " + String.valueOf(groupCount));
-            if (failedToMatchInitialTile) {
-                tileColorStr = "#A9A9A9"; // dark gray
-                tileColor = Color.parseColor(tileColorStr);
-                activeWord.setBackgroundColor(tileColor);
-            }
-            if (groupCount > 0) {
-                playActiveWordClip(false);
-            }
+            return syllableStrings;
         } else {
-            if (directionIsForward) {
-                goToNextTile(null);
-            } else {
-                goToPreviousTile(null);
-            }
+            LOGGER.warning("Could not parse syllables for word: " + wordString + ". Syllable list or word object not found.");
+            return getTiles(wordString); // Fallback to tiles if syllables cannot be parsed
         }
-    }
-
-    public void goToNextTile(View View) {
-        directionIsForward = true;
-        Start.Tile oldTile = activeTile;
-        activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
-        // LOGGER.info("goToNextTile: " + oldTile.text +"/" + activeTile.text);
-
-            while (Start.wordList.numberOfWordsForActiveTile(activeTile, 1) == 0) {
-                oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
-            }
-
-        // If we are not distinguishing between multitype tiles, and this is a multitype tile,
-        // loop until we find a new one (same text - the type will be different).
-        if (!differentiatesTileTypes && MULTITYPE_TILES.contains(activeTile.text)) {
-            while (activeTile.text.equals(oldTile.text)) {
-                LOGGER.info("goToNextTile: skip to one more after " + activeTile.text);
-                oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
-            }
-        }
-
-        index = 0;
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("lastActiveTileGame001_player" + playerString, activeTile.text);
-        editor.putString("typeOfLastActiveTileGame001_player" + playerString, activeTile.typeOfThisTileInstance);
-        editor.apply();
-        // LOGGER.info("goToNextTile: " + oldTile.text +"/" + activeTile.text);
-        setUp(activeTile);
-    }
-
-    public void goToPreviousTile(View View) {
-        directionIsForward = false;
-        Start.Tile oldTile = activeTile;
-        activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
-
-            while (Start.wordList.numberOfWordsForActiveTile(activeTile, 1) == 0) {
-                oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
-            }
-
-
-
-        // If we are not distinguishing between multitype tiles, and this is a multitype tile,
-        // loop until we find a new one (same text - the type will be different).
-        if (!differentiatesTileTypes && MULTITYPE_TILES.contains(activeTile.text)) {
-            while (activeTile.text.equals(oldTile.text)) {
-                LOGGER.info("goToPreviousTile: skip to one more before " + activeTile.text);
-                oldTile = activeTile;
-                activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
-            }
-        }
-
-        index = 0;
-        SharedPreferences.Editor editor = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE).edit();
-        String playerString = Util.returnPlayerStringToAppend(playerNumber);
-        editor.putString("lastActiveTileGame001_player" + playerString, activeTile.text);
-        editor.putString("typeOfLastActiveTileGame001_player" + playerString, activeTile.typeOfThisTileInstance);
-        editor.apply();
-        setUpBasedOnGameTile(activeTile);
-    }
-
-    public void repeatGame(View View) {
-        setUp(activeTile);
-    }
-
-    public void scrollForward(View view) {
-        goToNextWord(activeTile);
-    }
-
-    public void scrollBack(View view) {
-        goToPreviousWord(activeTile);
     }
 
     @Override
-    protected void setAllGameButtonsUnclickable() {
-        TextView tileBox = findViewById(R.id.tileBoxTextView);
-        tileBox.setClickable(false);
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
-        ImageView word = findViewById(R.id.wordImage);
-        word.setClickable(false);
+    private void updateNumberOfTotalTextView() {
+        String message = String.format(getResources().getString(R.string.number_of_total_words), wordsCompleted, wordListInOrder.size());
+        numberOfTotalText.setText(message);
+    }
 
-        ImageView forwardArrow = findViewById(R.id.forwardArrowImage);
-        forwardArrow.setClickable(false);
-
-        ImageView backwardArrow = findViewById(R.id.backwardArrowImage);
-        backwardArrow.setClickable(false);
-        if(Start.changeArrowColor) {
-            forwardArrow.setImageResource(R.drawable.zz_forward_inactive);
-            backwardArrow.setImageResource(R.drawable.zz_backward_inactive);
-        }
-        backwardArrow.setBackgroundResource(0);
-
-        TextView numberOfTotal = findViewById(R.id.numberOfTotalText);
-        numberOfTotal.setClickable(false);
+    //Game Activity methods
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
-    protected void setAllGameButtonsClickable() {
-        TextView tileBox = findViewById(R.id.tileBoxTextView);
-        tileBox.setClickable(true);
-
-        ImageView word = findViewById(R.id.wordImage);
-        word.setClickable(true);
-
-        ImageView forwardArrow = findViewById(R.id.forwardArrowImage);
-        forwardArrow.setClickable(true);
-        forwardArrow.setBackgroundResource(0);
-        forwardArrow.setImageResource(R.drawable.zz_forward);
-
-        ImageView backwardArrow = findViewById(R.id.backwardArrowImage);
-        backwardArrow.setClickable(true);
-        backwardArrow.setBackgroundResource(0);
-        backwardArrow.setImageResource(R.drawable.zz_backward);
-
-        TextView numberOfTotal = findViewById(R.id.numberOfTotalText);
-        numberOfTotal.setClickable(true);
+    protected void onResume() {
+        super.onResume();
     }
 
-    public void clickPicHearAudio(View view) {
-        super.clickPicHearAudio(view);
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public void goBackToEarth(View view) {
         super.goBackToEarth(view);
     }
 
+    @Override
     public void playAudioInstructions(View view) {
         if (getAudioInstructionsResID() > 0) {
             super.playAudioInstructions(view);
         }
     }
-    public static TaiwanData taiwanDataPreProcess() {
-        int keyboardWidth = 7;
-        try {
-            keyboardWidth = Integer.parseInt(Start.settingsList.find("Chile keyboard width"));
-        }
-        catch (Exception ignored) {}
-        try {
-            Chile.baseGuessCount = Integer.parseInt(Start.settingsList.find("Chile base guess count"));
-        }
-        catch (Exception ignored) {}
-        try {
-            Chile.minWordLength = Integer.parseInt(Start.settingsList.find("Chile minimum word length"));
-        }
-        catch (Exception ignored) {}
-        try {
-            Chile.maxWordLength = Integer.parseInt(Start.settingsList.find("Chile maximum word length"));
-        }
-        catch (Exception ignored) {}
-        ArrayList<String[]> splitWords = new ArrayList<>();
 
-        for(Start.Word word : Start.wordList) {
-            ArrayList<String> split = new ArrayList<>();
-            for(Start.Tile tile : Start.tileList.parseWordIntoTiles(word.wordInLOP, word)) {
-                split.add(tile.text);
-            }
-            if(split.size() > maxWordLength || split.size() < minWordLength) {
-                continue;
-            }
-            splitWords.add(split.toArray(new String[0]));
-        }
-
-        int[] indexArray = new int[kbArray.length];
-        int j = 0;
-        for (String key : kbArray) {
-            for(int idx = 0; idx < Start.tileList.size(); idx++) {
-                if (key.equals(Start.tileList.get(idx).text)) {
-                    indexArray[j] = idx;
-                    break;
-                }
-            }
-            j++;
-        }
-        Arrays.sort(indexArray);
-        j = 0;
-        for (int idx : indexArray) {
-            kbArray[j] = Start.tileList.get(idx).text;
-            j++;
-        }
-        float fontScale = Util.getMinFontSize(kbArray);
-        return new TaiwanData(splitWords, kbArray, keyboardWidth, fontScale);
+    @Override
+    public void clickPicHearAudio(View view) {
+        // This method is called when the main word image is clicked.
+        // It should play the full word audio.
+        playActiveWordClip(false);
     }
-    public static class TaiwanData {
-        public int guesses;
-        public int keyboardWidth;
-        public String[] keys;
-        public ArrayList<String[]> words;
-        public float fontScale;
-        public TaiwanData(ArrayList<String[]> words, String[] keys, int keyboardWidth, float fontScale) {
-            this.keyboardWidth = keyboardWidth;
-            this.keys = keys;
-            this.words = words;
-            this.fontScale = fontScale;
+
+    @Override
+    public int[] getGameButtons() { // Changed return type to int[]
+        // Return resource IDs of the game buttons
+        return new int[]{R.id.backwardArrowImage, R.id.forwardArrowImage, R.id.wordImage, R.id.gamesHomeImage, R.id.instructions, R.id.numberOfTotalText};
+    }
+
+    @Override
+    protected int[] getWordImages() {
+        return new int[0];
+    }
+
+    @Override
+    protected int getAudioInstructionsResID() {
+        return 0;
+    }
+
+    @Override
+    protected void hideInstructionAudioImage() {
+
+    }
+
+    // Custom ClickableSpan to handle background color changes and clicks within a TextView
+    private abstract class ClickableTileSpan extends android.text.style.ClickableSpan {
+        private int backgroundColor;
+        private final String tileText;
+
+        public ClickableTileSpan(int initialColor, int intialDefaultColor, String tileText) {
+            this.backgroundColor = intialDefaultColor; // Start with default gray
+            this.tileText = tileText;
+        }
+
+        public int getBackgroundColor() {
+            return backgroundColor;
+        }
+
+        public void setBackgroundColor(int color) {
+            this.backgroundColor = color;
+        }
+
+        public String getTileText() {
+            return tileText;
+        }
+
+        @Override
+        public void updateDrawState(android.text.TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setColor(Color.WHITE); // Text color
+            ds.bgColor = backgroundColor; // Background color
+            ds.setUnderlineText(false); // No underline
         }
     }
 }
