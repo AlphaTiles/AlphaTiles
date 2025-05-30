@@ -1002,6 +1002,86 @@ public class Validator {
         } catch(Exception e) {
             fatalError(Message.Tag.Etc, FAILED_CHECK_WARNING + "the gametiles or syllables tab");
         }
+        //Iconic word auto population
+        try {
+            Tab gametiles = langPackGoogleSheet.getTabFromName("gametiles");
+            Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
+            if (gametiles.size() > 1 && gametiles.get(0).size() > 11) {
+
+                // Build wordlist for search (column 1 = word in LOP)
+                ArrayList<String> wordLOP = new ArrayList<>();
+                for (int i = 1; i < wordlist.size(); i++) {
+                    ArrayList<String> wrow = wordlist.get(i);
+                    if (wrow.size() > 1) {
+                        wordLOP.add(wrow.get(1));
+                    }
+                }
+                int filled = 0;
+                for (int i = 1; i < gametiles.size(); i++) {
+                    ArrayList<String> row = gametiles.get(i);
+                    String tile = row.get(0).trim();
+                    if (tile.isEmpty()) continue;
+                    String tileLower = tile.toLowerCase();
+                    String iconicWord = "";
+                    // find first word starting with tile
+                    for (String w : wordLOP) {
+                        if (w != null && w.toLowerCase().startsWith(tileLower)) {
+                            iconicWord = w;
+                            break;
+                        }
+                    }
+                    // if not found, find first word containing tile
+                    if (iconicWord.isEmpty()) {
+                        for (String w : wordLOP) {
+                            if (w != null && w.toLowerCase().contains(tileLower)) {
+                                iconicWord = w;
+                                break;
+                            }
+                        }
+                    }
+                    // Set col 11 (L) to iconicWord if found
+                    if (!iconicWord.isEmpty()) {
+                        // Ensure row has enough columns
+                        while (row.size() <= 11) row.add("");
+                        row.set(11, iconicWord);
+                        filled++;
+                    }
+                }
+                if (filled > 0) {
+                    System.out.println("INFO: Auto-populated iconic words for tiles in gametiles tab.");
+                }
+
+            }
+        } catch (ValidatorException e) {
+            throw new RuntimeException(e);
+        }
+        boolean hasRequiredGame = false;
+        try {
+            ArrayList<String> gamesList = langPackGoogleSheet.getTabFromName("games").getCol(1);
+            for (String game : gamesList) {
+                if (game.equalsIgnoreCase("Iraq")) { // or whatever game name is required
+                    hasRequiredGame = true;
+                    break;
+                }
+            }
+            if (checks.copyIconicWords && hasRequiredGame) {
+                // after filling, copy draft to clipboard:
+                Tab gametiles = langPackGoogleSheet.getTabFromName("gametiles");
+                Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
+                StringBuilder builder = new StringBuilder();
+                for (int i = 1; i < gametiles.size(); i++) {
+                    ArrayList<String> row = wordlist.get(i);
+                    if (row.size() > 11) {
+                        builder.append(row.get(0)).append("\t").append(row.get(11)).append("\n");
+                    }
+                }
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(new StringSelection(builder.toString()), null);
+            }
+        } catch (ValidatorException e) {
+
+        }
+
     }
 
     private static Map<String, Integer> getKeyUsage() {
@@ -2498,12 +2578,14 @@ public class Validator {
         public boolean preWorkshop = false;
         public boolean copySyllables = false;
         public boolean stagesInformation = false;
+        public boolean copyIconicWords = false;
         public Checks(JPanel dialog) {
             addCheck(dialog, "Pre-workshop checks only", (ActionEvent e) -> preWorkshop = !preWorkshop, false);
             addCheck(dialog, "Show recommendations", (ActionEvent e) -> showRecommendations = !showRecommendations);
             addCheck(dialog, "Show excess file warnings", (ActionEvent e) -> showExcess = !showExcess);
             addCheck(dialog, "Show stages information", (ActionEvent e) -> stagesInformation = !stagesInformation, false);
             addCheck(dialog, "Copy syllables draft to clipboard", (ActionEvent e) -> copySyllables = !copySyllables, false);
+            addCheck(dialog, "Copy iconic word draft to clipboard", (ActionEvent e) -> copyIconicWords = !copyIconicWords, false);
         }
         private void addCheck(JPanel dialog, String message, ActionListener listener) {
             addCheck(dialog, message, listener, true);
