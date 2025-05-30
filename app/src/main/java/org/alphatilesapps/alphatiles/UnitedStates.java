@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import android.graphics.Typeface;
 import android.widget.Button;
@@ -21,6 +23,8 @@ import static org.alphatilesapps.alphatiles.Start.*;
  */
 
 public class UnitedStates extends GameActivity {
+
+    private static final Logger LOGGER = Logger.getLogger(UnitedStates.class.getName());
 
     ArrayList<String> parsedRefWordTileArrayStrings;
     ArrayList<String> parsedRefWordSyllableArrayStrings;
@@ -65,7 +69,7 @@ public class UnitedStates extends GameActivity {
     protected void hideInstructionAudioImage() {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-        
+
     }
 
     @Override
@@ -150,7 +154,7 @@ public class UnitedStates extends GameActivity {
                 parsedRefWordSyllableArrayStrings.add(s.text);
             }
         } else {
-            Tile emptyTile = new Tile("__", new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "");
+            Tile emptyTile = new Tile("__", new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "", "No restrictions (default)");
             tileSelections = new Tile[parsedLengthOfRefWord];
             for (int t = 0; t<parsedLengthOfRefWord; t++) {
                 tileSelections[t] = new Tile(emptyTile);
@@ -158,7 +162,6 @@ public class UnitedStates extends GameActivity {
             tileOptions.clear();
         }
 
-        // added by Camden. Delete if this does not work!
         numberOfPairs = parsedLengthOfRefWord;
 
         ImageView image = (ImageView) findViewById(R.id.wordImage);
@@ -200,27 +203,80 @@ public class UnitedStates extends GameActivity {
                 Random rand = new Random();
                 int randomlyCorrectStringGoesBelow = rand.nextInt(2); // Choose whether correct tile goes above ( =0 ) or below ( =1 )
                 int randomDistractor = rand.nextInt(Start.ALT_COUNT); // KP // Choose which distractor will be the alternative
-                if (randomlyCorrectStringGoesBelow == 0) { // Correct string goes above
-                    if (syllableGame.equals("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
-                        gameButtonA.setText(parsedRefWordSyllableArray.get(parseIndex).text);
-                        gameButtonB.setText(parsedRefWordSyllableArray.get(parseIndex).distractors.get(randomDistractor));
-                    } else {
-                        gameButtonA.setText(parsedRefWordTileArray.get(parseIndex).text);
-                        gameButtonB.setText(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor));
-                        tileOptions.add(parsedRefWordTileArray.get(parseIndex));
-                        tileOptions.add(tileHashMap.find(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor)));
+
+                if (syllableGame.equals("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
+                    Syllable correctSyllable = parsedRefWordSyllableArray.get(parseIndex);
+                    Syllable alternateSyllable = syllableHashMap.get(correctSyllable.distractors.get(randomDistractor));
+                    Collections.shuffle(SYLLABLES);
+                    for(int s=0; s<syllableList.size(); s++) {
+                        if(!alternateSyllable.canBePlacedInPosition(parsedRefWordSyllableArray, parseIndex)) {
+                            alternateSyllable = syllableHashMap.get(SYLLABLES.get(s));
+                        } else {
+                            break;
+                        }
                     }
-                } else { // Correct string goes below
-                    if (syllableGame.equals("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
-                        gameButtonB.setText(parsedRefWordSyllableArray.get(parseIndex).text);
-                        gameButtonA.setText(parsedRefWordSyllableArray.get(parseIndex).distractors.get(randomDistractor));
-                    } else {
-                        gameButtonB.setText(parsedRefWordTileArray.get(parseIndex).text);
-                        gameButtonA.setText(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor));
-                        tileOptions.add(tileHashMap.find(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor)));
-                        tileOptions.add(parsedRefWordTileArray.get(parseIndex));
+
+                    if (!alternateSyllable.canBePlacedInPosition(parsedRefWordSyllableArray, parseIndex)) {
+                        LOGGER.info("Could not find a syllable to go in the same position as " + correctSyllable.text + " in " + refWord.wordInLOP + " due to word position restrictions on syllables.");
                     }
+                    
+                    if (randomlyCorrectStringGoesBelow==0) {
+                        gameButtonA.setText(correctSyllable.text);
+                        gameButtonB.setText(alternateSyllable.text);
+                    } else {
+                        gameButtonA.setText(alternateSyllable.text);
+                        gameButtonB.setText(correctSyllable.text);
+                    }
+
+                } else {
+                    Tile correctTile = parsedRefWordTileArray.get(parseIndex);
+                    Tile alternateTile = tileHashMap.get(correctTile.distractors.get(randomDistractor));
+
+                    if(!alternateTile.canBePlacedInPosition(parsedRefWordTileArray, parseIndex)) {
+                        if(correctTile.typeOfThisTileInstance.contains("V")) {
+                            Collections.shuffle(VOWELS);
+                            for (int v = 0; v<VOWELS.size(); v++) {
+                                alternateTile = VOWELS.get(v);
+                                if (alternateTile.canBePlacedInPosition(parsedRefWordTileArray, parseIndex)) {
+                                    break;
+                                }
+                            }
+                        } else if (correctTile.typeOfThisTileInstance.contains("C")) {
+                            Collections.shuffle(CONSONANTS);
+                            for (int c = 0; c<CONSONANTS.size(); c++) {
+                                alternateTile = CONSONANTS.get(c);
+                                if (alternateTile.canBePlacedInPosition(parsedRefWordTileArray, parseIndex)) {
+                                    break;
+                                }
+                            }
+                        } else // (correctTile.typeOfThisTileInstance.matches("(X|AD|T|SAD)"))
+                            for (int t = 0; t<tileList.size(); t++) {
+                                alternateTile = tileList.get(t);
+                                if (alternateTile.typeOfThisTileInstance.matches("(X|AD|T|SAD)")
+                                        && alternateTile.canBePlacedInPosition(parsedRefWordTileArray, parseIndex)) {
+                                    break;
+                                }
+                            }
+                    }
+
+                    if (!alternateTile.canBePlacedInPosition(parsedRefWordTileArray, parseIndex)) {
+                        LOGGER.info("Could not find a tile to go in the same position as " + correctTile.text + " in " + refWord.wordInLOP + " due to word position restrictions on tiles.");
+                        goBackToEarth(null);
+                        return;
+                    }
+
+                    if (randomlyCorrectStringGoesBelow==0) {
+                        gameButtonA.setText(correctTile.text);
+                        gameButtonB.setText(alternateTile.text);
+                    } else {
+                        gameButtonA.setText(alternateTile.text);
+                        gameButtonB.setText(correctTile.text);
+                    }
+
+                    tileOptions.add(correctTile);
+                    tileOptions.add(alternateTile);
                 }
+
                 gameButtonA.setVisibility(View.VISIBLE);
                 gameButtonB.setVisibility(View.VISIBLE);
 

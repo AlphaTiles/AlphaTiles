@@ -161,45 +161,92 @@ public class Peru extends GameActivity {
                         break;
                     case 2:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
-                        // REPLACEMENT IS ANY TILE OF THE SAME TYPE (C OR V OR T) FROM THE WHOLE ARRAY
+                        // REPLACEMENT IS ANY TILE OF THE SAME TYPE (C OR V OR T) FROM THE WHOLE TILE LIST
 
-                        //fix: some accidental duplicates
                         while (isDuplicateAnswerChoice) {
                             int randomIndexToReplace = rand.nextInt(tileLength - 1);       // KP // this represents which position in word string will be replaced
                             ArrayList<Tile> tilesInIncorrectChoice = new ArrayList<>(parsedRefWordTileArray);
-                            int randomAlternateIndex;
-                            if (VOWELS.contains(tilesInIncorrectChoice.get(randomIndexToReplace))) {
-                                randomAlternateIndex = rand.nextInt(VOWELS.size());       // KP // this represents which game tile will overwrite some part of the correct wor
-                                tilesInIncorrectChoice.set(randomIndexToReplace, VOWELS.get(randomAlternateIndex)); // JP
-                            } else if (CONSONANTS.contains(tilesInIncorrectChoice.get(randomIndexToReplace))) {
-                                randomAlternateIndex = rand.nextInt(CONSONANTS.size());
-                                tilesInIncorrectChoice.set(randomIndexToReplace, CONSONANTS.get(randomAlternateIndex)); // JP
-                            } else if (TONES.contains(tilesInIncorrectChoice.get(randomIndexToReplace))) {
-                                randomAlternateIndex = rand.nextInt(TONES.size());
-                                tilesInIncorrectChoice.set(randomIndexToReplace, TONES.get(randomAlternateIndex)); // JP
-                            } else if (ADs.contains(tilesInIncorrectChoice.get(randomIndexToReplace))) {
-                                randomAlternateIndex = rand.nextInt(ADs.size());
-                                tilesInIncorrectChoice.set(randomIndexToReplace, ADs.get(randomAlternateIndex));
+                            Tile tileToReplace = tilesInIncorrectChoice.get(randomIndexToReplace);
+                            if (VOWELS.contains(tileToReplace)) {
+                                Tile randomAlternateTile = VOWELS.get(rand.nextInt(VOWELS.size()));       // KP // this represents which game tile will overwrite some part of the correct wor
+                                for (int v = 0; v<VOWELS.size(); v++) {
+                                    if (!randomAlternateTile.canBePlacedInPosition(tilesInIncorrectChoice, randomIndexToReplace)) {
+                                        randomAlternateTile = VOWELS.get(rand.nextInt(VOWELS.size()));
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                if (!randomAlternateTile.canBePlacedInPosition(tilesInIncorrectChoice, randomIndexToReplace)) {
+                                    LOGGER.info("Could not find three vowels that could replace " + tileToReplace.text + " in alternate spellings of " + refWord.wordInLOP + " due to word position restrictions.");
+                                    goBackToEarth(null);
+                                    return;
+                                }
+                                tilesInIncorrectChoice.set(randomIndexToReplace, randomAlternateTile); // JP
+                            } else if (CONSONANTS.contains(tileToReplace)) {
+                                Tile randomAlternateTile = CONSONANTS.get(rand.nextInt(rand.nextInt(CONSONANTS.size())));
+                                for (int c = 0; c<CONSONANTS.size(); c++) {
+                                    if (!randomAlternateTile.canBePlacedInPosition(tilesInIncorrectChoice, randomIndexToReplace)) {
+                                        randomAlternateTile = CONSONANTS.get(rand.nextInt(CONSONANTS.size()));
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                if (!randomAlternateTile.canBePlacedInPosition(tilesInIncorrectChoice, randomIndexToReplace)) {
+                                    LOGGER.info("Could not find three consonants that could replace " + tileToReplace.text + " in alternate spellings of " + refWord.wordInLOP + " due to word position restrictions.");
+                                    goBackToEarth(null);
+                                    return;
+                                }
+                                tilesInIncorrectChoice.set(randomIndexToReplace, randomAlternateTile); // JP
+                            } else if (TONES.contains(tileToReplace)) {
+                                Tile randomAlternateTile = TONES.get(rand.nextInt(TONES.size()));
+                                for (int t = 0; t<TONES.size(); t++) {
+                                    if (!randomAlternateTile.canBePlacedInPosition(tilesInIncorrectChoice, randomIndexToReplace)) {
+                                        randomAlternateTile = TONES.get(rand.nextInt(TONES.size()));
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                if (!randomAlternateTile.canBePlacedInPosition(tilesInIncorrectChoice, randomIndexToReplace)) {
+                                    LOGGER.info("Could not find three tones that could replace " + tileToReplace.text + " in alternate spellings of " + refWord.wordInLOP + " due to word position restrictions.");
+                                    goBackToEarth(null);
+                                    return;
+                                }
+                                tilesInIncorrectChoice.set(randomIndexToReplace, randomAlternateTile); // JP
+                            } else if (ADs.contains(tileToReplace)) {
+                                Tile randomAlternateTile = ADs.get(rand.nextInt(ADs.size()));
+                                for (int ad = 0; ad<ADs.size(); ad++) {
+                                    if (!randomAlternateTile.canBePlacedInPosition(tilesInIncorrectChoice, randomIndexToReplace)) {
+                                        randomAlternateTile = ADs.get(rand.nextInt(ADs.size()));
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                if (!randomAlternateTile.canBePlacedInPosition(tilesInIncorrectChoice, randomIndexToReplace)) {
+                                    LOGGER.info("Could not find three tiles of type AD that could replace " + tileToReplace.text + " in alternate spellings of " + refWord.wordInLOP + " due to word position restrictions.");
+                                    goBackToEarth(null);
+                                    return;
+                                }
+                                tilesInIncorrectChoice.set(randomIndexToReplace, randomAlternateTile); // JP
                             }
 
-                            String incorrectChoice2 = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, randomIndexToReplace);
+                            String incorrectChoiceCL2 = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, randomIndexToReplace);
 
                             isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
                             for (int answerChoice = 0; answerChoice < i; answerChoice++) {
-                                if (incorrectChoice2.equals(((TextView) findViewById(GAME_BUTTONS[answerChoice])).getText().toString())) {
+                                if (incorrectChoiceCL2.equals(((TextView) findViewById(GAME_BUTTONS[answerChoice])).getText().toString())) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
-                            if (incorrectChoice2.equals(wordInLOPWithStandardizedSequenceOfCharacters(refWord))) {
+                            if (incorrectChoiceCL2.equals(wordInLOPWithStandardizedSequenceOfCharacters(refWord))) {
                                 isDuplicateAnswerChoice = true;
                             }
-                            for (int j = 0; j < incorrectChoice2.length() - 2; j++) {
-                                if (incorrectChoice2.substring(j, j + 3).equals("للہ")) {
+                            for (int j = 0; j < incorrectChoiceCL2.length() - 2; j++) {
+                                if (incorrectChoiceCL2.substring(j, j + 3).equals("للہ")) {
                                     isDuplicateAnswerChoice = true;
                                 }
                             }
                             if (!isDuplicateAnswerChoice) {
-                                nextWord.setText(incorrectChoice2);
+                                nextWord.setText(incorrectChoiceCL2);
                             }
                         }
                         break;

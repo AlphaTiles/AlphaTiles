@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.colorList;
@@ -48,6 +49,8 @@ import com.segment.analytics.Properties;
 // IF A LANGUAGE HAS WORDS THAT START WITH SOMETHING OTHER THAN C OR V, THIS WILL CRASH
 
 public class Georgia extends GameActivity {
+
+    private static final Logger LOGGER = Logger.getLogger(Georgia.class.getName());
 
     Start.SyllableList syllableListCopy; //JP
     Set<String> challengingAnswerChoices = new HashSet<String>();
@@ -247,7 +250,8 @@ public class Georgia extends GameActivity {
             String option = syllableListCopy.get(i).text;
             if(option.length()>=2 && initialSyllable.text.length()>=2) {
                 if(option.charAt(0) == initialSyllable.text.charAt(0)
-                        && option.charAt(1) == initialSyllable.text.charAt(1)) {
+                        && option.charAt(1) == initialSyllable.text.charAt(1)
+                        && !syllableListCopy.get(i).positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {
                     challengingAnswerChoices.add(option);
                 }
             }
@@ -258,19 +262,30 @@ public class Georgia extends GameActivity {
         i = 0;
         while (challengingAnswerChoices.size() < visibleGameButtons && i < syllableListCopy.size()) {
             String option = syllableListCopy.get(i).text;
-            if (option.charAt(0) == initialSyllable.text.charAt(0)) {
-                challengingAnswerChoices.add(option);
-            } else if (option.charAt(option.length() - 1) == initialSyllable.text.charAt(initialSyllable.text.length() - 1)) {
-                challengingAnswerChoices.add(option);
+            if (!syllableListCopy.get(i).positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {
+                if (option.charAt(0) == initialSyllable.text.charAt(0)) {
+                    challengingAnswerChoices.add(option);
+                } else if (option.charAt(option.length() - 1) == initialSyllable.text.charAt(initialSyllable.text.length() - 1)) {
+                    challengingAnswerChoices.add(option);
+                }
             }
             i++;
         }
 
         // Finally, fill any remaining empty game buttons with random syllables
-        int j = 0;
-        while (challengingAnswerChoices.size() < visibleGameButtons) { // Generally unlikely
-            challengingAnswerChoices.add(syllableListCopy.get(j).text);
-            j++;
+        for (int j=0; j<syllableListCopy.size(); j++) { // Generally unlikely
+            if (challengingAnswerChoices.size() == visibleGameButtons) {
+                break;
+            }
+            if (!syllableListCopy.get(i).positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {
+                challengingAnswerChoices.add(syllableListCopy.get(j).text);
+            }
+        }
+
+        if (challengingAnswerChoices.size() < visibleGameButtons) {
+            LOGGER.info("Could not find enough answer choices for Identify the Initial, due to word position restrictions on syllables.");
+            goBackToEarth(null);
+            return;
         }
 
         // Make the gameButtons contain contextual forms for some Arabic script apps
@@ -298,10 +313,11 @@ public class Georgia extends GameActivity {
                 if (t < visibleGameButtons) {
                     randomNum = rand.nextInt(syllableListCopy.size());
                     String syllableOptionText = syllableListCopy.get(randomNum).text;
-                    while (stringsAdded.contains(syllableOptionText)) {
+                    while (stringsAdded.contains(syllableOptionText) || syllableListCopy.get(randomNum).positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {
                         randomNum = rand.nextInt(syllableListCopy.size());
                         syllableOptionText = syllableListCopy.get(randomNum).text;
                     }
+
                     if (useContextualFormsITI) { // For some Arabic script apps
                         gameTile.setText(contextualizedForm_Initial(syllableOptionText));
                     } else {
@@ -345,6 +361,12 @@ public class Georgia extends GameActivity {
             gameButton.setText(initialSyllable.text);
         }
 
+        if (stringsAdded.size() < 4) {
+            LOGGER.info("Could not find enough answer choices for Identify the Initial, due to word position restrictions on syllables.");
+            goBackToEarth(null);
+            return;
+        }
+
     }
 
 
@@ -370,7 +392,8 @@ public class Georgia extends GameActivity {
             String option = CorV.get(index).text;
             if(option.length()>=2 && initialTile.text.length()>=2) {
                 if(option.charAt(0) == initialTile.text.charAt(0)
-                        && option.charAt(1) == initialTile.text.charAt(1)) {
+                        && option.charAt(1) == initialTile.text.charAt(1)
+                        && !CorV.get(index).positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {
                     challengingAnswerChoices.add(option);
                 }
             }
@@ -383,22 +406,35 @@ public class Georgia extends GameActivity {
             Random rand = new Random();
             int index = rand.nextInt(CorV.size() - 1);
             String option = CorV.get(index).text;
-            if (option.charAt(0) == initialTile.text.charAt(0)) {
+            if (option.charAt(0) == initialTile.text.charAt(0)
+                    && !CorV.get(index).positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {
                 challengingAnswerChoices.add(option);
-            } else if (option.charAt(option.length() - 1) == initialTile.text.charAt(initialTile.text.length() - 1)) {
+            } else if (option.charAt(option.length() - 1) == initialTile.text.charAt(initialTile.text.length() - 1)
+                    && !CorV.get(index).positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {
                 challengingAnswerChoices.add(option);
             }
             i++;
         }
 
         // Then fill the remaining options with random tiles
-        while (challengingAnswerChoices.size() < visibleGameButtons) {
-            Random rand = new Random();
-            int index = rand.nextInt(CorV.size() - 1);
-            challengingAnswerChoices.add(CorV.get(index).text);
+        Collections.shuffle(CorV);
+        for (int j = 0; j<CorV.size(); j++) {
+            if(challengingAnswerChoices.size()==visibleGameButtons) {
+                break;
+            }
+            if (!CorV.get(j).positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {
+                challengingAnswerChoices.add(CorV.get(j).text);
+            }
         }
 
-        // Make the gameButtons contain contextual forms for some Arabic script apps
+        if (challengingAnswerChoices.size() < visibleGameButtons) {
+            LOGGER.info("Could not find enough answer choices for Identify the Initial, due to word position restrictions on tiles.");
+            goBackToEarth(null);
+            return;
+        }
+
+
+        // Make gameButtons display answers in contextual (initial) form for some Arabic script apps
         Set<String> contextualizedChallengingChoices = new HashSet<String>();
         if(useContextualFormsITI) { // For some Arabic script apps
             for (String answerChoiceString : challengingAnswerChoices) {
@@ -426,10 +462,21 @@ public class Georgia extends GameActivity {
                 if (t < visibleGameButtons) {
                     randomNum = rand.nextInt(CorV.size());
                     String tileOptionText = CorV.get(randomNum).text;
-                    while (stringsAdded.contains(tileOptionText)) {
-                        randomNum = rand.nextInt(CorV.size());
-                        tileOptionText = CorV.get(randomNum).text;
+                    for (int j = 0; j<CorV.size(); j++) {
+                        if (stringsAdded.contains(tileOptionText) || CorV.get(randomNum).positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {
+                            randomNum = rand.nextInt(CorV.size());
+                            tileOptionText = CorV.get(randomNum).text;
+                        } else {
+                            break;
+                        }
                     }
+
+                    if (stringsAdded.size()<4) {
+                        LOGGER.info("Could not find enough answer choices for Identify the Initial, due to word position restrictions on tiles.");
+                        goBackToEarth(null);
+                        return;
+                    }
+
                     if (useContextualFormsITI) { // For some Arabic script apps
                         gameTile.setText(contextualizedForm_Initial(tileOptionText));
                     } else {
