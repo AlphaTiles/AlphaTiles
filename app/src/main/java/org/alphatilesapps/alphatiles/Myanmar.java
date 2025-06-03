@@ -642,7 +642,30 @@ public class Myanmar extends GameActivity {
         return -1; // Not found — you may want to handle this case
     }
 
+    private int getDirection(int fromTile, int toTile) {
+        // Assuming tiles are arranged in a grid (you'll need to adjust based on your grid size)
+        int gridWidth = 7; // Adjust this to match your actual grid width
 
+        int fromRow = fromTile / gridWidth;
+        int fromCol = fromTile % gridWidth;
+        int toRow = toTile / gridWidth;
+        int toCol = toTile % gridWidth;
+
+        int rowDiff = toRow - fromRow;
+        int colDiff = toCol - fromCol;
+
+        if (rowDiff == 0) {
+            return 1; // Horizontal
+        } else if (colDiff == 0) {
+            return 2; // Vertical
+        } else if (rowDiff == colDiff) {
+            return 3; // Diagonal NW/SE
+        } else if (rowDiff == -colDiff) {
+            return 4; // Diagonal NE/SW
+        }
+
+        return 0; // Should not happen for adjacent tiles
+    }
 
     private boolean isAdjacent(int index1, int index2) {
         int row1 = index1 / 7; // Assuming a grid width of 7
@@ -661,6 +684,8 @@ public class Myanmar extends GameActivity {
         return (rowDiff <= 1 && colDiff <= 1) && (index1 != index2);
     }
 
+    int direction = 0; // 0=unset, 1=horizontal, 2=vertical, 3=diagonal-NW/SE, 4=diagonal-NE/SW
+
     public void respondToTileSelection2(int clickedTile){
 
         setAllGameButtonsUnclickable();
@@ -670,6 +695,9 @@ public class Myanmar extends GameActivity {
         int tileColor = ((ColorDrawable) clickedTileIndex.getBackground()).getColor();
         int textColor = clickedTileIndex.getCurrentTextColor();
 
+        if(tileColor == Color.YELLOW && selectedTileIndices.peek() != clickedTileIndex){
+            return;
+        }
 
         //if stack isn't empty, the tile selected is the last one added, and for sanity sake the tiles color is yellow
         if (!selectedTileIndices.isEmpty() && selectedTileIndices.peek() == clickedTileIndex && tileColor == Color.YELLOW) {
@@ -677,25 +705,52 @@ public class Myanmar extends GameActivity {
             selectedTileIndices.pop();
             clickedTileIndex.setBackgroundColor(Color.WHITE);
             clickedTileIndex.setTextColor(Color.BLACK);
+
+            // Reset direction if we go back to less than 2 tiles
+            if (selectedTileIndices.size() < 2) {
+                direction = 0;
+            }
             return;
         }
-        if (selectedTileIndices.isEmpty() || isAdjacent(getTileIndex(selectedTileIndices.peek()), clickedTile-1)) {
+
+        boolean canSelect = false;
+
+        if (selectedTileIndices.isEmpty()) {
+            // First tile - can select anywhere
+            canSelect = true;
+        } else if (selectedTileIndices.size() == 1) {
+            // Second tile - must be adjacent
+            canSelect = isAdjacent(getTileIndex(selectedTileIndices.peek()), clickedTile-1);
+
+            if (canSelect) {
+                // Set the direction based on first two tiles
+                direction = getDirection(getTileIndex(selectedTileIndices.peek()), clickedTile-1);
+            }
+        } else {
+            // Third tile and beyond - must be adjacent AND in the same direction
+            int lastTileIndex = getTileIndex(selectedTileIndices.peek());
+            canSelect = isAdjacent(lastTileIndex, clickedTile-1) &&
+                    getDirection(lastTileIndex, clickedTile-1) == direction;
+        }
+
+        if (canSelect) {
+            clickCount++;
             selectedTileIndices.push(clickedTileIndex);
             if(selectedTileIndices.size() == 8){ //should never be allowed to be more than 8 tiles selected if you reach 8 tiles and still no word, reset and play incorrect
                 clearStack();
                 playIncorrectSound();
+                direction = 0; // Reset direction
                 return;
             }
             clickedTileIndex.setBackgroundColor(Color.YELLOW);
             clickedTileIndex.setTextColor(Color.BLACK); // or other visible color
             checkIfCompleted();
-        } else if (!isAdjacent(getTileIndex(selectedTileIndices.peek()), clickedTile-1)){ //if tile not adjacent play incorrect sound
+        } else {
             playIncorrectSound();
         }
 
         setAllGameButtonsClickable();
         setOptionsRowClickable();
-
     }
 
     private void checkIfCompleted() {
@@ -736,6 +791,7 @@ public class Myanmar extends GameActivity {
                 for (TextView tile : selectedTileIndices) {
                     tile.setBackgroundColor(tileColor); // theme color
                     tile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                    tile.setClickable(false);
                 }
                 // Play word and "correct" sounds and then clear the image from word bank
                 refWord = sevenWords[indexOfFoundWord];
