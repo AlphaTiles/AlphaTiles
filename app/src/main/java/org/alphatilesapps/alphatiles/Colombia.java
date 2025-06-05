@@ -296,9 +296,10 @@ public class Colombia extends GameActivity {
                         int tileColor = Color.parseColor(tileColorStr);
                         key.setBackgroundColor(tileColor);
                     }
+
                     if (keysInUse > GAME_BUTTONS.length) {
                         TextView key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
-                        key34.setBackgroundResource(R.drawable.zz_backward_green);
+                        key34.setBackgroundResource(R.drawable.zz_backward_inactive);
                         if (scriptDirection.equals("RTL")) {
                             key34.setRotationY(180);
                         }
@@ -335,7 +336,7 @@ public class Colombia extends GameActivity {
                     totalScreens++;
                 }
 
-                if (keysInUse > GAME_BUTTONS.length) {
+                if (keysInUse > GAME_BUTTONS.length) {//@tag: This is where I will need to set arrows
                     visibleGameButtons = GAME_BUTTONS.length;
                 } else {
                     visibleGameButtons = keysInUse;
@@ -350,7 +351,7 @@ public class Colombia extends GameActivity {
                 }
                 if (keysInUse > GAME_BUTTONS.length) {
                     TextView key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
-                    key34.setBackgroundResource(R.drawable.zz_backward_green);
+                    key34.setBackgroundResource(R.drawable.zz_backward_inactive);//@tag
                     if (scriptDirection.equals("RTL")) {
                         key34.setRotationY(180);
                     }
@@ -577,14 +578,45 @@ public class Colombia extends GameActivity {
     private void updateKeyboard() { // This routine is only called when there are more keys than will fit on the basic 35-key layout
 
         int keysLimit;
-        if (totalScreens == keyboardScreenNo) {
+
+        TextView key34;
+        TextView key35;
+
+        // This if block accounts for the partial screen at the end, and also adjusts the arrow color.
+        if (totalScreens == keyboardScreenNo) {// on last page
+            // grey out forward arrow
+            key35 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 1]);
+            key35.setBackgroundResource(R.drawable.zz_forward_inactive);
+            // green in backward arrow
+            key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
+            key34.setBackgroundResource(R.drawable.zz_backward_green);
+
+
             keysLimit = partial;
             for (int k = keysLimit; k < (tilesPerPage - 2); k++) {
                 TextView key = findViewById(GAME_BUTTONS[k]);
                 key.setVisibility(View.INVISIBLE);
             }
-        } else {
+        } else if (keyboardScreenNo == 1){// on first page
+            // grey out backward arrow
+            key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
+            key34.setBackgroundResource(R.drawable.zz_backward_inactive);
+            // green in forward arrow
+            key35 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 1]);
+            key35.setBackgroundResource(R.drawable.zz_forward_green);
             keysLimit = tilesPerPage - 2;
+        } else {// in a middle page
+            // green in both
+            key35 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 1]);
+            key35.setBackgroundResource(R.drawable.zz_forward_green);
+            key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
+            key34.setBackgroundResource(R.drawable.zz_backward_green);
+
+            keysLimit = tilesPerPage - 2;
+        }
+        if (scriptDirection.equals("RTL")) {
+            key34.setRotationY(180);
+            key35.setRotationY(180);
         }
 
         for (int k = 0; k < keysLimit; k++) {
