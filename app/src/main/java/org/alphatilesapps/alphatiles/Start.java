@@ -295,6 +295,7 @@ public class Start extends AppCompatActivity {
 
                 header = false;
             } else {
+                String iconicWord = thisLineArray[11]; // Iconic word for the tile, if any
                 // Sort information for staged introduction, including among potential second or third types of a tile
                 int stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3;
                 if(!thisLineArray[14].matches("[0-9]+")) { // Add all first types of tiles to "stage 1" if stages aren't being used
@@ -326,7 +327,7 @@ public class Start extends AppCompatActivity {
                 distractors.add(thisLineArray[1]);
                 distractors.add(thisLineArray[2]);
                 distractors.add(thisLineArray[3]);
-                Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[4], stageOfFirstAppearance, thisLineArray[5]);
+                Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6],thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10],0, 0, 0,stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3,thisLineArray[4], stageOfFirstAppearance, thisLineArray[5],iconicWord);
                 if (!tile.hasNull()) {
                     tileList.add(tile);
                     if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -334,7 +335,7 @@ public class Start extends AppCompatActivity {
                     }
                 }
                 if(!tile.tileTypeB.equals("none")){
-                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[7], stageOfFirstAppearanceType2, thisLineArray[8]);
+                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6],thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10],0, 0, 0,stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3,thisLineArray[7], stageOfFirstAppearanceType2, thisLineArray[8],iconicWord);
                     if (!tile.hasNull()) {
                         tileList.add(tile);
                         if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -343,7 +344,7 @@ public class Start extends AppCompatActivity {
                     }
                 }
                 if(!tile.tileTypeC.equals("none")){
-                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[9], stageOfFirstAppearanceType3, thisLineArray[10]);
+                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6],thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10],0, 0, 0,stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3,thisLineArray[9], stageOfFirstAppearanceType3, thisLineArray[10],iconicWord);
                     if (!tile.hasNull()) {
                         tileList.add(tile);
                         if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -821,7 +822,7 @@ public class Start extends AppCompatActivity {
         public String typeOfThisTileInstance;
         public int stageOfFirstAppearanceForThisTileType;
         public String audioForThisTileType;
-
+        public String iconicWord;
         public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType) {
             super(text);
             this.distractors = distractors;
@@ -841,6 +842,29 @@ public class Start extends AppCompatActivity {
             this.typeOfThisTileInstance = typeOfThisTileInstance;
             this.stageOfFirstAppearanceForThisTileType = stageOfFirstAppearanceForThisTileType;
             this.audioForThisTileType = audioForThisTileType;
+            this.iconicWord = "";
+        }
+        // for testing purposes, created another constructor just for iconic words so i don't have to edit all the games
+        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType, String iconicWord) {
+            super(text);
+            this.distractors = distractors;
+            this.tileType = tileType;
+            this.audioName = audioName;
+            this.upper = upper;
+            this.tileTypeB = tileTypeB;
+            this.audioNameB = audioNameB;
+            this.tileTypeC = tileTypeC;
+            this.audioNameC = audioNameC;
+            this.tileDuration1 = tileDuration1;
+            this.tileDuration2 = tileDuration2;
+            this.tileDuration3 = tileDuration3;
+            this.stageOfFirstAppearance = stageOfFirstAppearance;
+            this.stageOfFirstAppearanceB = stageOfFirstAppearanceB;
+            this.stageOfFirstAppearanceC = stageOfFirstAppearanceC;
+            this.typeOfThisTileInstance = typeOfThisTileInstance;
+            this.stageOfFirstAppearanceForThisTileType = stageOfFirstAppearanceForThisTileType;
+            this.audioForThisTileType = audioForThisTileType;
+            this.iconicWord = iconicWord;
         }
 
         public Tile (Tile anotherTile) {
@@ -862,6 +886,7 @@ public class Start extends AppCompatActivity {
             this.typeOfThisTileInstance = anotherTile.typeOfThisTileInstance;
             this.stageOfFirstAppearanceForThisTileType = anotherTile.stageOfFirstAppearanceForThisTileType;
             this.audioForThisTileType = anotherTile.audioForThisTileType;
+            this.iconicWord = anotherTile.iconicWord;
         }
 
         public boolean hasNull() {
