@@ -69,7 +69,9 @@ public class Iraq extends GameActivity {
     @Override
     protected void hideInstructionAudioImage() {
         ImageView instructionsButton = findViewById(R.id.instructions);
-        instructionsButton.setVisibility(View.GONE);
+        if (instructionsButton != null) { //added if there is no view with this ID 
+            instructionsButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -295,7 +297,8 @@ public class Iraq extends GameActivity {
                     // Use only the iconic word for this tile
                     Start.Word iconicWordObj = null;
                     for (Start.Word w : Start.wordList) {
-                        if (w.wordInLOP.equals(thisTile.iconicWord)) {
+                        if (w.wordInLOP != null && thisTile.iconicWord != null &&
+                            w.wordInLOP.trim().equalsIgnoreCase(thisTile.iconicWord.trim())) {
                             iconicWordObj = w;
                             break;
                         }
