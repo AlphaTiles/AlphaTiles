@@ -1002,6 +1002,30 @@ public class Validator {
         } catch(Exception e) {
             fatalError(Message.Tag.Etc, FAILED_CHECK_WARNING + "the gametiles or syllables tab");
         }
+
+        //!tag. This is where I put my code to throw an error if aa_games.txt contains Columbia cl4 and tileOrSyllable is S.
+        try {
+            // The games tab
+            Tab games = langPackGoogleSheet.getTabFromName("games");
+
+            // The first column of the tab, where the headers should be.
+            ArrayList<String> headings = games.get(0);
+
+            // The indexes of the cells we're interested in
+            int gm = headings.indexOf("Country");
+            int cl = headings.indexOf("ChallengeLevel");
+            int st = headings.indexOf("SyllOrTile");
+
+            // For each row, check and ensure these three things are not simultaneously true.
+            for (ArrayList<String> row : games) {
+                System.out.println(row.get(gm) + "\t" + row.get(cl) + "\t" + row.get(st));
+                if (row.get(1).equals("Colombia") && row.get(6).equals("S") && row.get(2).equals("4")){
+                    fatalError(Message.Tag.Etc, "The games tab should not include a Columbia CL4 Syllable game.");
+                }
+            }
+        } catch (ValidatorException e) {
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the games tab");
+        }
     }
 
     private static Map<String, Integer> getKeyUsage() {
