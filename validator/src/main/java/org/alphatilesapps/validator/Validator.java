@@ -1003,7 +1003,7 @@ public class Validator {
             fatalError(Message.Tag.Etc, FAILED_CHECK_WARNING + "the gametiles or syllables tab");
         }
 
-        //!tag. This is where I put my code to throw an error if aa_games.txt contains Columbia cl4 and tileOrSyllable is S.
+        // This code ensures that games does not contain the syllable version of Columbia cl4.
         try {
             // The games tab
             Tab games = langPackGoogleSheet.getTabFromName("games");
