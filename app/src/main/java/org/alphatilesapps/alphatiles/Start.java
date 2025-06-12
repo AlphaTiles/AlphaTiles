@@ -3,9 +3,7 @@ package org.alphatilesapps.alphatiles;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -140,18 +138,13 @@ public class Start extends AppCompatActivity {
             stageCorrespondenceRatio = 0.5;
         }
 
-        // JP: the old constructor is deprecated after API 21, so account for both scenarios
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            AudioAttributes attributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_GAME)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build();
-            gameSounds = new SoundPool.Builder()
-                    .setAudioAttributes(attributes)
-                    .build();
-        } else {
-            gameSounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-        }
+        AudioAttributes attributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        gameSounds = new SoundPool.Builder()
+                .setAudioAttributes(attributes)
+                .build();
 
         buildTileList();
         for (int d = 0; d < tileList.size(); d++) {

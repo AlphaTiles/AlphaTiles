@@ -150,7 +150,7 @@ public class Chile extends GameActivity {
     private void backSpace() {
         if(finished) return;
         for(int i = (currentRow + 1) * secret.length - 1; i >= (currentRow) * secret.length; i--) {
-            if(!tiles.get(i).text.equals("")) {
+            if(!tiles.get(i).text.isEmpty()) {
                 tiles.get(i).text = "";
                 guessAdapter.notifyDataSetChanged();
                 break;
@@ -191,7 +191,7 @@ public class Chile extends GameActivity {
         TileAdapter.ColorTile[] row = new TileAdapter.ColorTile[secret.length];
         int j = 0;
         for(int i = currentRow * secret.length; i < (currentRow + 1) * secret.length; i++) {
-            if(tiles.get(i).text.equals("")) {
+            if(tiles.get(i).text.isEmpty()) {
                 return;
             }
             row[j] = tiles.get(i);
@@ -261,7 +261,7 @@ public class Chile extends GameActivity {
                         .toString(); // ._.
 
         for(int i = currentRow * secret.length; i < (currentRow + 1) * secret.length; i++) {
-            if(tiles.get(i).text.equals("")) {
+            if(tiles.get(i).text.isEmpty()) {
                 tiles.get(i).text = text;
                 guessAdapter.notifyDataSetChanged();
                 break;

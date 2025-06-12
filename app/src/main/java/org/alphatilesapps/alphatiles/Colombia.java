@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -168,8 +168,7 @@ public class Colombia extends GameActivity {
                     for(int k = 0; k< visibleGameButtons; k++){
                         key = findViewById(GAME_BUTTONS[k]);
                         key.setText(syllableKeysList.get(k).text);
-                        Random rand = new Random();
-                        int index = rand.nextInt(4);
+                        int index = k%5;
                         int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
@@ -182,10 +181,8 @@ public class Colombia extends GameActivity {
                     for(int k = 0; k< visibleGameButtons; k++){
                         key = findViewById(GAME_BUTTONS[k]);
                         key.setText(tileKeysList.get(k).text);
-                        Random rand = new Random();
-                        int colorInt = rand.nextInt(4);
-                        String tileColorStr = colorList.get(colorInt);
-                        int tileColor = Color.parseColor(tileColorStr);
+                        int index = k%5;
+                        int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
 
@@ -218,8 +215,7 @@ public class Colombia extends GameActivity {
                     for(int k = 0; k< visibleGameButtons; k++){
                         key = findViewById(GAME_BUTTONS[k]);
                         key.setText(syllableKeysList.get(k).text);
-                        Random rand = new Random();
-                        int index = rand.nextInt(4);
+                        int index = k%5;
                         int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
@@ -236,10 +232,8 @@ public class Colombia extends GameActivity {
                     for(int k = 0; k< visibleGameButtons; k++){
                         key = findViewById(GAME_BUTTONS[k]);
                         key.setText(tileKeysList.get(k).text);
-                        Random rand = new Random();
-                        int colorInt = rand.nextInt(4);
-                        String tileColorStr = colorList.get(colorInt);
-                        int tileColor = Color.parseColor(tileColorStr);
+                        int index = k%5;
+                        int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
 
@@ -268,8 +262,7 @@ public class Colombia extends GameActivity {
                     for(int k = 0; k< visibleGameButtons; k++){
                         key = findViewById(GAME_BUTTONS[k]);
                         key.setText(syllableKeysList.get(k).text);
-                        Random rand = new Random();
-                        int index = rand.nextInt(4);
+                        int index = k%5;
                         int tileColor = Color.parseColor(colorList.get(index));
                         key.setBackgroundColor(tileColor);
                     }
