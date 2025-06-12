@@ -57,7 +57,7 @@
         android:layout_height="0dp"
         android:background="#9C27B0"
         android:gravity="center"
-        android:onClick="clickPicHearAudio"
+        android:onClick="onWordTextViewClick"
         android:text="@string/activeWordText"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/instructions"
