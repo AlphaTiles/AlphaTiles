@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
-import java.util.logging.Level;
+//import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Chile extends GameActivity {
@@ -75,7 +75,7 @@ public class Chile extends GameActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LOGGER.log(Level.INFO, "Chile start");
+        LOGGER.info("Chile start");
         context = this;
         setContentView(R.layout.chile);
 
@@ -127,7 +127,7 @@ public class Chile extends GameActivity {
         }
         secret = wordList.remove(wordList.size() - 1);
         resetTiles();
-        LOGGER.log(Level.INFO, Arrays.toString(secret));
+        LOGGER.info(Arrays.toString(secret));
         currentRow = 0;
         int iID = getAudioInstructionsResID();
         if(iID == 0 || iID == -1) {
@@ -150,7 +150,7 @@ public class Chile extends GameActivity {
     private void backSpace() {
         if(finished) return;
         for(int i = (currentRow + 1) * secret.length - 1; i >= (currentRow) * secret.length; i--) {
-            if(!tiles.get(i).text.equals("")) {
+            if(!tiles.get(i).text.isEmpty()) {
                 tiles.get(i).text = "";
                 guessAdapter.notifyDataSetChanged();
                 break;
@@ -179,7 +179,7 @@ public class Chile extends GameActivity {
         }
         secret = wordList.remove(wordList.size() - 1);
         resetTiles();
-        LOGGER.log(Level.INFO, Arrays.toString(secret));
+        LOGGER.info(Arrays.toString(secret));
         guessAdapter.notifyDataSetChanged();
         keyAdapter.notifyDataSetChanged();
         findViewById(R.id.repeatImage).setVisibility(View.INVISIBLE);
@@ -191,7 +191,7 @@ public class Chile extends GameActivity {
         TileAdapter.ColorTile[] row = new TileAdapter.ColorTile[secret.length];
         int j = 0;
         for(int i = currentRow * secret.length; i < (currentRow + 1) * secret.length; i++) {
-            if(tiles.get(i).text.equals("")) {
+            if(tiles.get(i).text.isEmpty()) {
                 return;
             }
             row[j] = tiles.get(i);
@@ -261,7 +261,7 @@ public class Chile extends GameActivity {
                         .toString(); // ._.
 
         for(int i = currentRow * secret.length; i < (currentRow + 1) * secret.length; i++) {
-            if(tiles.get(i).text.equals("")) {
+            if(tiles.get(i).text.isEmpty()) {
                 tiles.get(i).text = text;
                 guessAdapter.notifyDataSetChanged();
                 break;
