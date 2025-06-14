@@ -1002,13 +1002,13 @@ public class Validator {
         } catch(Exception e) {
             fatalError(Message.Tag.Etc, FAILED_CHECK_WARNING + "the gametiles or syllables tab");
         }
-        //Iconic word auto population
+        //iconic word auto population
         try {
             Tab gametiles = langPackGoogleSheet.getTabFromName("gametiles");
             Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
             if (gametiles.size() > 1 && gametiles.get(0).size() > 11) {
 
-                // Build wordlist for search (column 1 = word in LOP)
+                // build wordlist for search (column 1 = word in LOP)
                 ArrayList<String> wordLOP = new ArrayList<>();
                 for (int i = 1; i < wordlist.size(); i++) {
                     ArrayList<String> wrow = wordlist.get(i);
@@ -1016,70 +1016,44 @@ public class Validator {
                         wordLOP.add(wrow.get(1));
                     }
                 }
-                int filled = 0;
                 for (int i = 1; i < gametiles.size(); i++) {
                     ArrayList<String> row = gametiles.get(i);
                     String tile = row.get(0).trim();
                     if (tile.isEmpty()) continue;
+                    if (row.size() > 11 && !row.get(11).trim().isEmpty()) continue; // skip if there is already an iconic word
                     String tileLower = tile.toLowerCase();
                     String iconicWord = "";
-                    // find first word starting with tile
-                    for (String w : wordLOP) {
-                        if (w != null && w.toLowerCase().startsWith(tileLower)) {
-                            iconicWord = w;
-                            break;
-                        }
-                    }
-                    // if not found, find first word containing tile
-                    if (iconicWord.isEmpty()) {
-                        for (String w : wordLOP) {
-                            if (w != null && w.toLowerCase().contains(tileLower)) {
-                                iconicWord = w;
+                    // find first word whose first tile matches this tile
+                    for (Word w : wordList) {
+                        if (w.wordInLOP == null) continue;
+                        ArrayList<Tile> tilesInWord = tileList.parseWordIntoTiles(w);
+                        if (tilesInWord != null && !tilesInWord.isEmpty()) {
+                            String firstTileText = tilesInWord.get(0).text;
+                            if (firstTileText != null && firstTileText.trim().equalsIgnoreCase(tile)) {
+                                iconicWord = w.wordInLOP;
                                 break;
                             }
                         }
                     }
-                    // Set col 11 (L) to iconicWord if found
+                    // if not found, find first word containing tile anywhere
+                    if (iconicWord.isEmpty()) {
+                        for (Word w : wordList) {
+                            if (w.wordInLOP != null && w.wordInLOP.toLowerCase().contains(tileLower)) {
+                                iconicWord = w.wordInLOP;
+                                break;
+                            }
+                        }
+                    }
+                    // set col 11 (L) to iconicWord if found
                     if (!iconicWord.isEmpty()) {
-                        // Ensure row has enough columns
                         while (row.size() <= 11) row.add("");
                         row.set(11, iconicWord);
-                        filled++;
                     }
-                }
-                if (filled > 0) {
-                    System.out.println("INFO: Auto-populated iconic words for tiles in gametiles tab.");
                 }
 
             }
         } catch (ValidatorException e) {
             throw new RuntimeException(e);
-        }
-        boolean hasRequiredGame = false;
-        try {
-            ArrayList<String> gamesList = langPackGoogleSheet.getTabFromName("games").getCol(1);
-            for (String game : gamesList) {
-                if (game.equalsIgnoreCase("Iraq")) { // or whatever game name is required
-                    hasRequiredGame = true;
-                    break;
-                }
-            }
-            if (checks.copyIconicWords && hasRequiredGame) {
-                // after filling, copy draft to clipboard:
-                Tab gametiles = langPackGoogleSheet.getTabFromName("gametiles");
-                Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
-                StringBuilder builder = new StringBuilder();
-                for (int i = 1; i < gametiles.size(); i++) {
-                    ArrayList<String> row = wordlist.get(i);
-                    if (row.size() > 11) {
-                        builder.append(row.get(0)).append("\t").append(row.get(11)).append("\n");
-                    }
-                }
-                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                clipboard.setContents(new StringSelection(builder.toString()), null);
-            }
-        } catch (ValidatorException e) {
-
         }
 
     }
@@ -1580,6 +1554,8 @@ public class Validator {
                     outputFolderPath = pathToLangPack.resolve("res").resolve("font");
                     Files.createDirectories(outputFolderPath);
                 }
+
+
 
                 for (GoogleDriveItem driveResource : folderContents) {
                     Path pathForResource = outputFolderPath.resolve(driveResource.getName());
@@ -3141,26 +3117,25 @@ public class Validator {
                     return null;
                 }
             }
-            for (Tile tile : wordPreliminaryTileArray) { // Set instance-specific fields
-                Tile nextTile = new Tile(tile);
-                if (MULTITYPE_TILES.contains(nextTile.text)) {
-                    nextTile.typeOfThisTileInstance = getInstanceTypeForMixedTilePreliminary(tileIndex, wordPreliminaryTileArray, wordListWord);
-                    if (nextTile.typeOfThisTileInstance.equals(nextTile.tileTypeB)) {
-                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearanceB;
-                        nextTile.audioForThisTileType = nextTile.audioNameB;
-                    } else if (nextTile.typeOfThisTileInstance.equals(nextTile.tileTypeC)) {
-                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearanceC;
-                        nextTile.audioForThisTileType = nextTile.audioNameC;
+            for (Tile tile : wordPreliminaryTileArray) {
+                if (MULTITYPE_TILES.contains(tile.text)) {
+                    tile.typeOfThisTileInstance = getInstanceTypeForMixedTilePreliminary(tileIndex, wordPreliminaryTileArray, wordListWord);
+                    if (tile.typeOfThisTileInstance.equals(tile.tileTypeB)) {
+                        tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearanceB;
+                        tile.audioForThisTileType = tile.audioNameB;
+                    } else if (tile.typeOfThisTileInstance.equals(tile.tileTypeC)) {
+                        tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearanceC;
+                        tile.audioForThisTileType = tile.audioNameC;
                     } else {
-                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
-                        nextTile.audioForThisTileType = nextTile.audioName;
+                        tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearance;
+                        tile.audioForThisTileType = tile.audioName;
                     }
-                    wordPreliminaryTileArrayFinal.add(nextTile);
+                    wordPreliminaryTileArrayFinal.add(tile);
                 } else {
-                    nextTile.typeOfThisTileInstance = nextTile.tileType;
-                    nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
-                    nextTile.audioForThisTileType = nextTile.audioName;
-                    wordPreliminaryTileArrayFinal.add(nextTile);
+                    tile.typeOfThisTileInstance = tile.tileType;
+                    tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearance;
+                    tile.audioForThisTileType = tile.audioName;
+                    wordPreliminaryTileArrayFinal.add(tile);
                 }
                 tileIndex++;
             }
