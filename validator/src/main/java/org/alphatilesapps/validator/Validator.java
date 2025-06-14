@@ -1002,6 +1002,60 @@ public class Validator {
         } catch(Exception e) {
             fatalError(Message.Tag.Etc, FAILED_CHECK_WARNING + "the gametiles or syllables tab");
         }
+        //iconic word auto population
+        try {
+            Tab gametiles = langPackGoogleSheet.getTabFromName("gametiles");
+            Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
+            if (gametiles.size() > 1 && gametiles.get(0).size() > 11) {
+
+                // build wordlist for search (column 1 = word in LOP)
+                ArrayList<String> wordLOP = new ArrayList<>();
+                for (int i = 1; i < wordlist.size(); i++) {
+                    ArrayList<String> wrow = wordlist.get(i);
+                    if (wrow.size() > 1) {
+                        wordLOP.add(wrow.get(1));
+                    }
+                }
+                for (int i = 1; i < gametiles.size(); i++) {
+                    ArrayList<String> row = gametiles.get(i);
+                    String tile = row.get(0).trim();
+                    if (tile.isEmpty()) continue;
+                    if (row.size() > 11 && !row.get(11).trim().isEmpty()) continue; // skip if there is already an iconic word
+                    String tileLower = tile.toLowerCase();
+                    String iconicWord = "";
+                    // find first word whose first tile matches this tile
+                    for (Word w : wordList) {
+                        if (w.wordInLOP == null) continue;
+                        ArrayList<Tile> tilesInWord = tileList.parseWordIntoTiles(w);
+                        if (tilesInWord != null && !tilesInWord.isEmpty()) {
+                            String firstTileText = tilesInWord.get(0).text;
+                            if (firstTileText != null && firstTileText.trim().equalsIgnoreCase(tile)) {
+                                iconicWord = w.wordInLOP;
+                                break;
+                            }
+                        }
+                    }
+                    // if not found, find first word containing tile anywhere
+                    if (iconicWord.isEmpty()) {
+                        for (Word w : wordList) {
+                            if (w.wordInLOP != null && w.wordInLOP.toLowerCase().contains(tileLower)) {
+                                iconicWord = w.wordInLOP;
+                                break;
+                            }
+                        }
+                    }
+                    // set col 11 (L) to iconicWord if found
+                    if (!iconicWord.isEmpty()) {
+                        while (row.size() <= 11) row.add("");
+                        row.set(11, iconicWord);
+                    }
+                }
+
+            }
+        } catch (ValidatorException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private static Map<String, Integer> getKeyUsage() {
@@ -1500,6 +1554,8 @@ public class Validator {
                     outputFolderPath = pathToLangPack.resolve("res").resolve("font");
                     Files.createDirectories(outputFolderPath);
                 }
+
+
 
                 for (GoogleDriveItem driveResource : folderContents) {
                     Path pathForResource = outputFolderPath.resolve(driveResource.getName());
@@ -2498,12 +2554,14 @@ public class Validator {
         public boolean preWorkshop = false;
         public boolean copySyllables = false;
         public boolean stagesInformation = false;
+        public boolean copyIconicWords = false;
         public Checks(JPanel dialog) {
             addCheck(dialog, "Pre-workshop checks only", (ActionEvent e) -> preWorkshop = !preWorkshop, false);
             addCheck(dialog, "Show recommendations", (ActionEvent e) -> showRecommendations = !showRecommendations);
             addCheck(dialog, "Show excess file warnings", (ActionEvent e) -> showExcess = !showExcess);
             addCheck(dialog, "Show stages information", (ActionEvent e) -> stagesInformation = !stagesInformation, false);
             addCheck(dialog, "Copy syllables draft to clipboard", (ActionEvent e) -> copySyllables = !copySyllables, false);
+            addCheck(dialog, "Copy iconic word draft to clipboard", (ActionEvent e) -> copyIconicWords = !copyIconicWords, false);
         }
         private void addCheck(JPanel dialog, String message, ActionListener listener) {
             addCheck(dialog, message, listener, true);
@@ -3059,26 +3117,25 @@ public class Validator {
                     return null;
                 }
             }
-            for (Tile tile : wordPreliminaryTileArray) { // Set instance-specific fields
-                Tile nextTile = new Tile(tile);
-                if (MULTITYPE_TILES.contains(nextTile.text)) {
-                    nextTile.typeOfThisTileInstance = getInstanceTypeForMixedTilePreliminary(tileIndex, wordPreliminaryTileArray, wordListWord);
-                    if (nextTile.typeOfThisTileInstance.equals(nextTile.tileTypeB)) {
-                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearanceB;
-                        nextTile.audioForThisTileType = nextTile.audioNameB;
-                    } else if (nextTile.typeOfThisTileInstance.equals(nextTile.tileTypeC)) {
-                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearanceC;
-                        nextTile.audioForThisTileType = nextTile.audioNameC;
+            for (Tile tile : wordPreliminaryTileArray) {
+                if (MULTITYPE_TILES.contains(tile.text)) {
+                    tile.typeOfThisTileInstance = getInstanceTypeForMixedTilePreliminary(tileIndex, wordPreliminaryTileArray, wordListWord);
+                    if (tile.typeOfThisTileInstance.equals(tile.tileTypeB)) {
+                        tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearanceB;
+                        tile.audioForThisTileType = tile.audioNameB;
+                    } else if (tile.typeOfThisTileInstance.equals(tile.tileTypeC)) {
+                        tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearanceC;
+                        tile.audioForThisTileType = tile.audioNameC;
                     } else {
-                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
-                        nextTile.audioForThisTileType = nextTile.audioName;
+                        tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearance;
+                        tile.audioForThisTileType = tile.audioName;
                     }
-                    wordPreliminaryTileArrayFinal.add(nextTile);
+                    wordPreliminaryTileArrayFinal.add(tile);
                 } else {
-                    nextTile.typeOfThisTileInstance = nextTile.tileType;
-                    nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
-                    nextTile.audioForThisTileType = nextTile.audioName;
-                    wordPreliminaryTileArrayFinal.add(nextTile);
+                    tile.typeOfThisTileInstance = tile.tileType;
+                    tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearance;
+                    tile.audioForThisTileType = tile.audioName;
+                    wordPreliminaryTileArrayFinal.add(tile);
                 }
                 tileIndex++;
             }
