@@ -285,7 +285,7 @@ public class Start extends AppCompatActivity {
                 tileList.tileTypeCTitle = thisLineArray[9];
                 tileList.audioForTileCTitle = thisLineArray[10];
                 tileList.tileDuration1Title = "";
-                tileList.tileDuration2Title = "";
+                tileList.tileColorTitle = thisLineArray[12];
                 tileList.tileDuration3Title = "";
                 tileList.stageOfFirstAppearanceTitle = thisLineArray[14];
                 tileList.stageOfFirstAppearanceTitleType2 = thisLineArray[15];
@@ -811,7 +811,7 @@ public class Start extends AppCompatActivity {
         public String tileTypeC;
         public String audioNameC;
         public int tileDuration1;
-        public int tileDuration2;
+        public int tileColor;
         public int tileDuration3;
         public int stageOfFirstAppearance;
         public int stageOfFirstAppearanceB;
@@ -820,7 +820,8 @@ public class Start extends AppCompatActivity {
         public int stageOfFirstAppearanceForThisTileType;
         public String audioForThisTileType;
 
-        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType) {
+        //update constructor to add color
+        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileColor, int tileDuration1, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType) {
             super(text);
             this.distractors = distractors;
             this.tileType = tileType;
@@ -831,7 +832,7 @@ public class Start extends AppCompatActivity {
             this.tileTypeC = tileTypeC;
             this.audioNameC = audioNameC;
             this.tileDuration1 = tileDuration1;
-            this.tileDuration2 = tileDuration2;
+            this.tileColor = tileColor;
             this.tileDuration3 = tileDuration3;
             this.stageOfFirstAppearance = stageOfFirstAppearance;
             this.stageOfFirstAppearanceB = stageOfFirstAppearanceB;
@@ -852,7 +853,7 @@ public class Start extends AppCompatActivity {
             this.tileTypeC = anotherTile.tileTypeC;
             this.audioNameC = anotherTile.audioNameC;
             this.tileDuration1 = anotherTile.tileDuration1;
-            this.tileDuration2 = anotherTile.tileDuration2;
+            this.tileColor = anotherTile.tileColor;
             this.tileDuration3 = anotherTile.tileDuration3;
             this.stageOfFirstAppearance = anotherTile.stageOfFirstAppearance;
             this.stageOfFirstAppearanceB = anotherTile.stageOfFirstAppearanceB;
@@ -1416,7 +1417,8 @@ public class Start extends AppCompatActivity {
         public String tileTypeCTitle;
         public String audioForTileCTitle;
         public String tileDuration1Title;
-        public String tileDuration2Title;
+
+        public String tileColorTitle;
         public String tileDuration3Title;
 
         public String stageOfFirstAppearanceTitle;
