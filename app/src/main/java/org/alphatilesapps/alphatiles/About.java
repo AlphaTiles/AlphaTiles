@@ -1,10 +1,8 @@
 package org.alphatilesapps.alphatiles;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -112,7 +110,7 @@ public class About extends AppCompatActivity {
 
             if (hideSILlogo) {
 
-                ImageView SILlogoImage = (ImageView) findViewById(R.id.logoSILImage);
+                ImageView SILlogoImage = findViewById(R.id.logoSILImage);
                 SILlogoImage.setVisibility(View.GONE);
 
                 ConstraintLayout constraintLayout = findViewById(R.id.aboutCL);
@@ -128,7 +126,7 @@ public class About extends AppCompatActivity {
         int resID = context.getResources().getIdentifier("zzz_about", "raw", context.getPackageName());
         if (resID == 0) {
             // hide audio instructions icon
-            ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+            ImageView instructionsButton = findViewById(R.id.instructions);
             instructionsButton.setVisibility(View.GONE);
 
             ConstraintLayout constraintLayout = findViewById(R.id.aboutCL);
@@ -185,18 +183,12 @@ public class About extends AppCompatActivity {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void forceRTLIfSupported() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        }
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void forceLTRIfSupported() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-        }
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
     }
 
 }
