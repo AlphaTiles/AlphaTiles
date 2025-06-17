@@ -76,10 +76,15 @@ public class LoadingScreen extends AppCompatActivity {
         }
         context = this;
 
-        String verName = BuildConfig.VERSION_NAME;
-        TextView versionNumberView = (TextView) findViewById(R.id.versionNumber);
-        versionNumberView.setText(getString(R.string.ver_info, verName));
+        TextView gameNameView = (TextView) findViewById(R.id.gameName);
+        String localAppName = langInfoList.find("Game Name");
+        gameNameView.setText(localAppName);
 
+        TextView langPackNameView = (TextView) findViewById(R.id.langPackName);
+        langPackNameView.setText(BuildConfig.FLAVOR);
+
+        TextView versionNoView = (TextView) findViewById(R.id.versionNo);
+        versionNoView.setText(BuildConfig.VERSION_NAME);
 
         int num_of_words = wordList.size();
 

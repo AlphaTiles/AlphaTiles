@@ -99,7 +99,7 @@ public class About extends AppCompatActivity {
 
         String verName = BuildConfig.VERSION_NAME;
         TextView verInfo = findViewById(R.id.appVersionInEnglish);
-        verInfo.setText(getString(R.string.ver_info, verName));
+        verInfo.setText(String.format("%s: %s (%s)", "Alpha Tiles", verName, BuildConfig.FLAVOR));
 
         if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
