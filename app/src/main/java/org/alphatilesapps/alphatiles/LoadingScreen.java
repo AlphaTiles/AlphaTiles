@@ -2,22 +2,17 @@ package org.alphatilesapps.alphatiles;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -52,7 +47,6 @@ public class LoadingScreen extends AppCompatActivity {
     private Handler mHandler = new Handler();
     Context context;
     ProgressBar progressBar;
-    int maxWordWidthInPixels = 39;
 
     private static final Logger LOGGER = Logger.getLogger( LoadingScreen.class.getName() );
 
@@ -76,12 +70,15 @@ public class LoadingScreen extends AppCompatActivity {
         }
         context = this;
 
-        String verName = BuildConfig.VERSION_NAME;
-        TextView versionNumberView = (TextView) findViewById(R.id.versionNumber);
-        versionNumberView.setText(getString(R.string.ver_info, verName));
+        TextView gameNameView = findViewById(R.id.gameName);
+        String localAppName = langInfoList.find("Game Name");
+        gameNameView.setText(localAppName);
 
+        TextView langPackNameView = findViewById(R.id.langPackName);
+        langPackNameView.setText(BuildConfig.FLAVOR);
 
-        int num_of_words = wordList.size();
+        TextView versionNoView = findViewById(R.id.versionNo);
+        versionNoView.setText(BuildConfig.VERSION_NAME);
 
         Intent intent = new Intent(this, ChoosePlayer.class);
 
@@ -118,13 +115,6 @@ public class LoadingScreen extends AppCompatActivity {
                 }
             }).start();
         }
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loadPixelWidthAdjustments();
-            }
-        }).start();
 
         //JP: alpha tiles colors separated into r,g,b
         //ex: the first color 6200EE corresponds to 98, 0, 1 in the 0 index of each array
@@ -279,44 +269,13 @@ public class LoadingScreen extends AppCompatActivity {
         return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
 
-    public void loadPixelWidthAdjustments() {
-
-        for (Start.Word word : wordList) {
-            word.adjustment = String.valueOf(calculatedPixelWidthAdjustment(word.wordInLOP));
-        }
-    }
-
-    private double calculatedPixelWidthAdjustment(String word) {
-        TextView wordView = new TextView(this);
-        wordView.setText(word);
-        wordView.setTextSize(11);
-        wordView.measure(0, 0);
-        int wordWidthInPixels = wordView.getMeasuredWidth();
-
-        if (wordWidthInPixels <= maxWordWidthInPixels) {
-            return 1;
-        } else {
-            return Math.round((maxWordWidthInPixels * 100.0) / (wordWidthInPixels * 100));
-        }
-
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void forceRTLIfSupported() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        }
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void forceLTRIfSupported() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-        }
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
     }
-
 
 }
 
