@@ -336,7 +336,7 @@ public class Colombia extends GameActivity {
                     totalScreens++;
                 }
 
-                if (keysInUse > GAME_BUTTONS.length) {//@tag: This is where I will need to set arrows
+                if (keysInUse > GAME_BUTTONS.length) {
                     visibleGameButtons = GAME_BUTTONS.length;
                 } else {
                     visibleGameButtons = keysInUse;
@@ -345,10 +345,27 @@ public class Colombia extends GameActivity {
                 for (int k = 0; k < visibleGameButtons; k++) {
                     TextView key = findViewById(GAME_BUTTONS[k]);
                     key.setText(tileKeysList.get(k).text);
-                    int index = k%5;
-                    int tileColor = Color.parseColor(colorList.get(index));
+                    // To change the color, go to gametiles Or3
+                    String type = tileKeysList.get(k).typeOfThisTileInstance;
+                    String typeColor;
+                    switch (type) {
+                        case "C":
+                            typeColor = colorList.get(1);
+                            break;
+                        case "V":
+                            typeColor = colorList.get(2);
+                            break;
+                        case "T":
+                            typeColor = colorList.get(3);
+                            break;
+                        default:
+                            typeColor = colorList.get(4);
+                            break;
+                    }
+                    int tileColor = Color.parseColor(typeColor);
                     key.setBackgroundColor(tileColor);
                 }
+
                 if (keysInUse > GAME_BUTTONS.length) {
                     TextView key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
                     key34.setBackgroundResource(R.drawable.zz_backward_inactive);//@tag
@@ -618,25 +635,43 @@ public class Colombia extends GameActivity {
             key34.setRotationY(180);
             key35.setRotationY(180);
         }
-
-        for (int k = 0; k < keysLimit; k++) {
-            TextView key = findViewById(GAME_BUTTONS[k]);
-            int keyIndex = (33 * (keyboardScreenNo - 1)) + k;
-
-            String tileColorStr;
-            // sets text and colors
-            if (challengeLevel == 3){// Could potentially be refactored at some point
-                key.setText(keyList.get(keyIndex).text);
-                tileColorStr = colorList.get(Integer.parseInt(keyList.get(keyIndex).color)); // Added on May 15th, 2021, so that second and following screens use their own color coding
-            } else {// challengeLevel == 4
-                key.setText(tileList.get(keyIndex).text); // KP
-                int index = k%5;
-                tileColorStr = colorList.get(index);
+        // This if block resets text and color. It can be refactored,
+        // but is more easily worked on this way
+        if (challengeLevel == 3) {
+            for (int k = 0; k < keysLimit; k++) {
+                TextView key = findViewById(GAME_BUTTONS[k]);
+                int keyIndex = (33 * (keyboardScreenNo - 1)) + k;
+                key.setText(keyList.get(keyIndex).text); // KRP
+                String tileColorStr = colorList.get(Integer.parseInt(keyList.get(keyIndex).color));
+                int tileColor = Color.parseColor(tileColorStr);
+                key.setBackgroundColor(tileColor);
+                key.setVisibility(View.VISIBLE);
             }
-            key.setVisibility(View.VISIBLE);
-
-            int tileColor = Color.parseColor(tileColorStr);
-            key.setBackgroundColor(tileColor);
+        } else {// challengeLevel == 4
+            for(int k = 0; k < keysLimit; k++) {
+                TextView key = findViewById(GAME_BUTTONS[k]);
+                int keyIndex = (33 * (keyboardScreenNo - 1)) + k;
+                key.setText(tileKeysList.get(keyIndex).text);
+                String type = tileKeysList.get(keyIndex).typeOfThisTileInstance;
+                String typeColor;
+                switch (type) {
+                    case "C":
+                        typeColor = colorList.get(1);
+                        break;
+                    case "V":
+                        typeColor = colorList.get(2);
+                        break;
+                    case "T":
+                        typeColor = colorList.get(3);
+                        break;
+                    default:
+                        typeColor = colorList.get(4);
+                        break;
+                }
+                int tileColor = Color.parseColor(typeColor);
+                key.setBackgroundColor(tileColor);
+                key.setVisibility(View.VISIBLE);
+            }
         }
     }
 
