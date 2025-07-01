@@ -248,7 +248,7 @@ public class Taiwan extends GameActivity {
     }
 
     private void playWordAudioAndRevealWordRow() {
-        playActiveWordClip(false);
+
 
         for (int i = 0; i < visibleTileButtons; i++) {
             TextView tileButton = findViewById(GAME_BUTTONS[i]);
