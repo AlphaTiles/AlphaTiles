@@ -597,8 +597,10 @@ public class Validator {
                 } catch (ValidatorException e) {
                     fatalError(Message.Tag.Etc, "In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\". Please add a valid script type.");
                 }
+
                 try {
                     Tab settings = langPackGoogleSheet.getTabFromName("settings");
+                    // The below line may cause the NullPointerException catch block to activate.
                     placeholderCharacter = settings.getRowFromFirstCell("Stand-in base for combining tiles").get(1); // sets global variable for complex parses
                     boolean placeholderCharacterFoundInGametiles = false;
                     for (Tile tile : tileList) {
@@ -616,8 +618,15 @@ public class Validator {
                             warn(Message.Tag.Etc, "Since the script type is Thai or Lao, you have the option to specify the \"Stand-in base for combining tiles\" in settings. By default, it will be \"◌\".");
                         }
                     }
+                } catch (NullPointerException e) {
+                    // This catch block is intended to only be triggered when the line assigning
+                    // placeholderCharacter throws an error because stand-in base is undefined in
+                    // a language. It prevents the nesting block from being triggered and bypassing
+                    // the next few sections of code.
                 }
+
                 ArrayList<Tile> tilesInWord;
+
                 try {
                     tilesInWord = tileList.parseWordIntoTilesPreliminary(word); // Complex tiles are broken into pieces for the China game
                     int numTiles = tilesInWord.size();
@@ -2010,6 +2019,9 @@ public class Validator {
                 if (row.get(col).matches("([0-9]+\\.)?\\s*" + Pattern.quote(cell))) {
                     return row;
                 }
+            }
+            if (scriptType.equals("Roman") && cell.contains("Stand-in base for combining tiles")){
+                return null;// suppresses the fatal errors if Roman language pack doesn't have that row
             }
             fatalError(Message.Tag.Etc, "cannot find a row in " + this.getName() + " that contains \"" + cell + "\" in column " + col);
             throw new ValidatorException("cannot find a row in " + this.getName() + " that contains \"" + cell + "\" in column " + col);
