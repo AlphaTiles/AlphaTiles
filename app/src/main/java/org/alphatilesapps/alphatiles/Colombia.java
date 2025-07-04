@@ -119,6 +119,7 @@ public class Colombia extends GameActivity {
         TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
 
         wordToBuild.setText("");
+        // This line will need to be changed
         wordToBuild.setBackgroundColor(Color.parseColor("#FFEB3B")); // the yellow that the xml design tab suggested
         wordToBuild.setTextColor(Color.parseColor("#000000")); // black
 

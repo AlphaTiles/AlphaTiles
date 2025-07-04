@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -92,6 +93,14 @@ public class Start extends AppCompatActivity {
     public static ArrayList<String> MULTITYPE_TILES = new ArrayList<>();
 
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
+
+    // This List stores the color options for a text box. 0=not started, 1=correct,
+    // 2=on the right track, 3=on the right track but with wrong tile (tile games only),
+    // 4=incorrect. By default, these are set to Grey, Green, Yellow, Orange, Red, but this can be
+    // adjusted in settings.
+    public static List<String> boxColors = new ArrayList<>();
+
+    // This Hashmap maps color Strings to color objects.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -781,6 +790,43 @@ public class Start extends AppCompatActivity {
         for (int i = 0; i < wordList.size(); i++) {
             lopWordHashMap.put(wordList.get(i).wordInLOP, wordList.get(i));
         }
+    }
+
+    /**
+     * A method that populates the first five elements of boxColors.
+     */
+    public void fillTextboxColors(){
+        ArrayList<String> boxes = new ArrayList<>();
+        boxes.set(0, "Color for empty text box");
+        boxes.set(1, "Color for partially filled text box");
+        boxes.set(2, "Color for \"on the right track\"");
+        boxes.set(3, "Color for correct letters but incorrect tiles (Columbia CL4 only)");
+        boxes.set(4, "Color for incorrect text box");
+
+        for (int i = 0; i < boxColors.size(); i++){
+            boxColors.set(i, settingsList.find(boxes.get(i)));
+        }
+
+        ArrayList<String> defaults = new ArrayList<>();
+        defaults.set(0, "Grey");
+        defaults.set(0, "Green");
+        defaults.set(0, "Yellow");
+        defaults.set(0, "Orange");
+        defaults.set(0, "Red");
+
+        for (int i = 0; i < boxColors.size(); i++) {
+            try {
+                // Use reflection to get the Color constant by name
+                Color color = (Color) Color.class.getField(boxColors.get(i).toUpperCase()).get(null);
+            } catch (Exception e) {
+                boxColors.set(i, defaults.get(i));
+            }
+        }
+
+
+        //0=not started, 1=correct,
+        // 2=on the right track, 3=on the right track but with wrong tile (tile games only),
+        // 4=incorrect. By default, these are set to Grey, Green, Yellow, Orange, Red,
     }
 
     public static class Word {
