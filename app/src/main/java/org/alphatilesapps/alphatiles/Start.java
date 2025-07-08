@@ -1442,7 +1442,7 @@ public class Start extends AppCompatActivity {
         }
 
         public ArrayList<Tile> parseWordIntoTiles (String stringToParse, Word referenceWord) {
-            ArrayList<Tile> parsedWordArrayPreliminary = parseWordIntoTilesPreliminary(stringToParse, referenceWord);
+            ArrayList<Tile> parsedWordArrayPreliminary = parseWordIntoTilesPreliminaryNew(referenceWord);
             if (!scriptType.matches("(Thai|Lao|Khmer|Arabic)")) {
                 return parsedWordArrayPreliminary;
             } else {
@@ -1641,6 +1641,29 @@ public class Start extends AppCompatActivity {
             }
             return parsedWordTileArray;
 
+        }
+        public ArrayList<Tile> parseWordIntoTilesPreliminaryNew(Word word) {
+            ArrayList<Tile> out = new ArrayList<>();
+            String str = word.wordInLOP;
+            while(!str.isEmpty()) {
+                if(str.startsWith("#") || str.startsWith(".")) {
+                    str = str.substring(1);
+                }
+                int len = 1;
+                Tile tile = null;
+                while(len < str.length()) {
+                    Tile candidate = tileHashMap.get(str.substring(0, len));
+                    if(candidate != null) {
+                        tile = candidate;
+                    }
+                    len += 1;
+                }
+                if(tile != null) {
+                    out.add(tile);
+                    str = str.substring(len);
+                }
+            }
+            return out;
         }
         public ArrayList<Tile> parseWordIntoTilesPreliminary (String stringToParse, Word referenceWord) {
             // Updates by KP, Oct 2020
