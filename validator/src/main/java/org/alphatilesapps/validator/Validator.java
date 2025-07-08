@@ -2665,7 +2665,7 @@ public class Validator {
 
         public ArrayList<Tile> parseWordIntoTiles(Word wordListWord) {
 
-            ArrayList<Tile> parsedWordArrayPreliminary = parseWordIntoTilesPreliminary(wordListWord);
+            ArrayList<Tile> parsedWordArrayPreliminary = parseWordIntoTilesPreliminaryNew(wordListWord);
             if (!scriptType.matches("(Thai|Lao|Khmer|Arabic)")) {
                 return parsedWordArrayPreliminary;
             }
@@ -2940,7 +2940,29 @@ public class Validator {
             return instanceType;
         }
 
-
+        public ArrayList<Tile> parseWordIntoTilesPreliminaryNew(Word word) {
+            ArrayList<Tile> out = new ArrayList<>();
+            String str = word.wordInLOP;
+            while(!str.isEmpty()) {
+                if(str.startsWith("#") || str.startsWith(".")) {
+                    str = str.substring(1);
+                }
+                int len = 1;
+                Tile tile = null;
+                while(len < str.length()) {
+                    Tile candidate = tileHashMap.get(str.substring(0, len));
+                    if(candidate != null) {
+                        tile = candidate;
+                    }
+                    len += 1;
+                }
+                if(tile != null) {
+                    out.add(tile);
+                    str = str.substring(len);
+                }
+            }
+            return out;
+        }
         public ArrayList<Tile> parseWordIntoTilesPreliminary(Word wordListWord) {
             // Updates by KP, Oct 2020
             // AH, Nov 2020, extended to check up to four characters in a game tile
