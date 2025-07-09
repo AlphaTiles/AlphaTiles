@@ -75,11 +75,11 @@ public class Taiwan extends GameActivity {
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = findViewById(R.id.instructions);
             ImageView forwardArrowImage = findViewById(R.id.forwardArrowImage);
-            ImageView backwardArrowImage = findViewById(R.id.backwardArrowImage);
+
 
             if (instructionsImage != null) instructionsImage.setRotationY(180);
             if (forwardArrowImage != null) forwardArrowImage.setRotationY(180);
-            if (backwardArrowImage != null) backwardArrowImage.setRotationY(180);
+
 
             fixConstraintsRTL(R.id.taiwanCL);
         }
@@ -183,28 +183,26 @@ public class Taiwan extends GameActivity {
 
     private void disableAdvanceArrow() {
         ImageView advanceArrow = findViewById(R.id.forwardArrowImage);
-        ImageView backArrow = findViewById(R.id.backwardArrowImage);
         if (advanceArrow != null) {
             advanceArrow.setClickable(false);
-            backArrow.setClickable(false);
+
             if (Start.changeArrowColor) {
                 advanceArrow.setImageResource(R.drawable.zz_forward_inactive);
-                backArrow.setImageResource(R.drawable.zz_backward_inactive);
+
             } else {
                 advanceArrow.setImageResource(R.drawable.zz_forward);
-                backArrow.setImageResource(R.drawable.zz_backward);
             }
         }
     }
 
     private void enableAdvanceArrow() {
         ImageView advanceArrow = findViewById(R.id.forwardArrowImage);
-        ImageView backArrow = findViewById(R.id.backwardArrowImage);
+
         if (advanceArrow != null) {
             advanceArrow.setClickable(true);
             if (Start.changeArrowColor) {
                 advanceArrow.setImageResource(R.drawable.zz_forward);
-                backArrow.setImageResource(R.drawable.zz_backward);
+
             }
         }
     }
@@ -234,13 +232,33 @@ public class Taiwan extends GameActivity {
 
     public void onWordTextViewClick(View view) {
         if (currentPhase != 1) return;
+        TextView wordText = findViewById(R.id.wordTextViewDisplay);
+        double test = Math.random() * 4;
+        switch ((int) test) {
+            case(1):
+                wordText.setBackgroundColor(Color.GREEN);
+                break;
+            case(2):
+                wordText.setBackgroundColor(Color.RED);
+                break;
+            case(3):
+                wordText.setBackgroundColor(Color.MAGENTA);
+                break;
+            case(4):
+                wordText.setBackgroundColor(Color.BLUE);
+                break;
+            default:
+                wordText.setBackgroundColor(Color.YELLOW);
+        }
 
         super.clickPicHearAudio(view);
         enableAdvanceArrow();
     }
 
     public void clickPicHearAudio(View view) {
+        ImageView wordImageView = findViewById(R.id.wordImage);
         super.clickPicHearAudio(view);
+        wordImageView.setClickable(true);
     }
 
     public void goToNextWord(View view) {
