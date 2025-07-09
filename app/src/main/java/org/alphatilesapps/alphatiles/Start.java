@@ -1648,20 +1648,47 @@ public class Start extends AppCompatActivity {
             while(!str.isEmpty()) {
                 if(str.startsWith("#") || str.startsWith(".")) {
                     str = str.substring(1);
+                    continue;
                 }
                 int len = 1;
+                int max = 1;
                 Tile tile = null;
-                while(len < str.length()) {
+                while(len <= str.length()) {
                     Tile candidate = tileHashMap.get(str.substring(0, len));
                     if(candidate != null) {
                         tile = candidate;
+                        max = len;
                     }
-                    len += 1;
+                    len++;
                 }
                 if(tile != null) {
                     out.add(tile);
-                    str = str.substring(len);
                 }
+                str = str.substring(max);
+            }
+            int tileIndex = 0;
+            for (Tile tile : out) { // Set instance-specific fields
+                Tile nextTile = new Tile(tile);
+                if (MULTITYPE_TILES.contains(nextTile.text)) {
+                    nextTile.typeOfThisTileInstance = getInstanceTypeForMixedTilePreliminary(tileIndex, out, word);
+                    if (nextTile.typeOfThisTileInstance.equals(nextTile.tileTypeB)) {
+                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearanceB;
+                        nextTile.audioForThisTileType = nextTile.audioNameB;
+                    } else if (nextTile.typeOfThisTileInstance.equals(nextTile.tileTypeC)) {
+                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearanceC;
+                        nextTile.audioForThisTileType = nextTile.audioNameC;
+                    } else {
+                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
+                        nextTile.audioForThisTileType = nextTile.audioName;
+                    }
+                    out.set(tileIndex, nextTile);
+                } else {
+                    nextTile.typeOfThisTileInstance = nextTile.tileType;
+                    nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
+                    nextTile.audioForThisTileType = nextTile.audioName;
+                    out.set(tileIndex, nextTile);
+                }
+                tileIndex++;
             }
             return out;
         }
