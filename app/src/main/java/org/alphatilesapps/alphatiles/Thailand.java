@@ -361,16 +361,6 @@ public class Thailand extends GameActivity {
         switch (choiceType) {
             case "TILE_LOWER":
             case "CONTEXTUAL":
-                for (int t = 0; t < GAME_BUTTONS.length; t++) {
-                    TextView choiceButton = findViewById(GAME_BUTTONS[t]);
-                    String choiceColorStr = "#A9A9A9"; // dark gray
-                    int choiceColorNo = Color.parseColor(choiceColorStr);
-                    choiceButton.setBackgroundColor(choiceColorNo);
-                    choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                    choiceButton.setText(fourTileChoices.get(t).text); // Added ZWJ in prior if block for CONTEXTUAL; normal for TILE_LOWER
-                }
-                break;
-            case "CONTEXTUAL":
                 switch(contextualTilePosition) { // Arabic script challengeLevel option; position specified by the 4th character of the challengeLevel number
                     case "INITIAL":
                         for (int t = 0; t < GAME_BUTTONS.length; t++) {
@@ -656,15 +646,6 @@ public class Thailand extends GameActivity {
                     }
                     break;
                 case "TILE_AUDIO":
-                case "CONTEXTUAL":
-                    playCorrectSoundThenActiveTileClip(false);
-                case "CONTEXTUAL":
-                    if (hasTileAudio) {
-                        playCorrectSoundThenActiveTileClip(false);
-                    } else {
-                        playCorrectSound();
-                    }
-                    break;
                 case "TILE_LOWER":
                 case "TILE_UPPER":
                 case "CONTEXTUAL":

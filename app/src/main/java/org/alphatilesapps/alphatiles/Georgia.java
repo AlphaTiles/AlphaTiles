@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import static org.alphatilesapps.alphatiles.Start.contextualizingCharacter;
 import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.CorV;
