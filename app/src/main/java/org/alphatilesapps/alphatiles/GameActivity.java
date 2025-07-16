@@ -32,9 +32,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
+import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
 import static org.alphatilesapps.alphatiles.Start.MULTITYPE_TILES;
 import static org.alphatilesapps.alphatiles.Start.NON_SPACERS_ARABIC;
 import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
+import static org.alphatilesapps.alphatiles.Start.TONES;
+import static org.alphatilesapps.alphatiles.Start.VOWELS;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
@@ -42,6 +45,7 @@ import static org.alphatilesapps.alphatiles.Start.non_joining_arabic_letters;
 import static org.alphatilesapps.alphatiles.Start.non_spacing_arabic_letters;
 import static org.alphatilesapps.alphatiles.Start.right_joining_arabic_letters;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
+import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.placeholderCharacter;
@@ -1478,6 +1482,129 @@ public abstract class GameActivity extends AppCompatActivity {
     public static String isolateForm(String  contextualizedForm) {
 
         return contextualizedForm.replace(contextualizingCharacter, "");
+    }
+
+
+    /**
+     * Finds a fitting alternative tile answer choice when an answer choice violates word position restrictions
+     * @param refTile the tile in the correct rendering of the word
+     * @param alreadyAddedChoices the other answer choices already selected (so we don't return a duplicate)
+     * @param tilesInRefWord
+     * @param indexInParsedRefWordTileArray
+     * @param typeMatters whether we are drawing from tiles of the same type only or all tiles
+     * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
+     */
+
+    public Start.Tile fittingTileAlternative(Start.Tile refTile, ArrayList<Start.Tile> alreadyAddedChoices, ArrayList<Start.Tile> tilesInRefWord, int indexInParsedRefWordTileArray, Boolean typeMatters) {
+
+        ArrayList<Start.Tile> tilesToDrawFrom;
+        if (typeMatters) {
+            String type = refTile.typeOfThisTileInstance;
+            switch (type) {
+                case "C":
+                    tilesToDrawFrom = CONSONANTS;
+                    break;
+                case "V":
+                    tilesToDrawFrom = VOWELS;
+                    break;
+                case "T":
+                    tilesToDrawFrom = TONES;
+                    break;
+                default:
+                    tilesToDrawFrom = cumulativeStageBasedTileList;
+            }
+        } else {
+            tilesToDrawFrom = cumulativeStageBasedTileList;
+        }
+
+        for (Start.Tile t : tilesToDrawFrom) {
+            if (!alreadyAddedChoices.contains(t) && t.canBePlacedInPosition(tilesInRefWord, indexInParsedRefWordTileArray)) {
+                return t;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Finds a fitting alternative tile answer choice when an answer choice violates word position restrictions
+     * @param refTile the tile in the correct rendering of the word
+     * @param alreadyAddedChoices the other answer choices already selected (so we don't return a duplicate)
+     * @param contextualPosition the position we want to place the tile in
+     * @param typeMatters whether we are drawing from tiles of the same type only or all tiles
+     * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
+     */
+    public Start.Tile fittingTileAlternative(Start.Tile refTile, ArrayList<Start.Tile> alreadyAddedChoices, String contextualPosition, Boolean typeMatters) {
+
+        ArrayList<Start.Tile> tilesToDrawFrom;
+        if (typeMatters) {
+            String type = refTile.typeOfThisTileInstance;
+            switch (type) {
+                case "C":
+                    tilesToDrawFrom = CONSONANTS;
+                    break;
+                case "V":
+                    tilesToDrawFrom = VOWELS;
+                    break;
+                case "T":
+                    tilesToDrawFrom = TONES;
+                    break;
+                default:
+                    tilesToDrawFrom = cumulativeStageBasedTileList;
+            }
+        } else {
+            tilesToDrawFrom = cumulativeStageBasedTileList;
+        }
+
+        for (Start.Tile t : tilesToDrawFrom) {
+            if (!alreadyAddedChoices.contains(t) && t.canBePlacedInPosition(contextualPosition)) {
+                return t;
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Finds a fitting alternative syllable answer choice when an answer choice violates word position restrictions
+     * @param refSyllable the syllable in the correct rendering of the word
+     * @param alreadyAddedChoices the other answer choices already selected (so we don't return a duplicate)
+     * @param syllablesInRefWord
+     * @param indexInParsedRefWordSyllableArray
+     * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
+     */
+
+    public Start.Syllable fittingSyllableAlternative(Start.Syllable refSyllable, ArrayList<Start.Syllable> alreadyAddedChoices, ArrayList<Start.Syllable> syllablesInRefWord, int indexInParsedRefWordSyllableArray) {
+
+
+        for (Start.Syllable s : syllableList) {
+            if (!alreadyAddedChoices.contains(s) && s.canBePlacedInPosition(syllablesInRefWord, indexInParsedRefWordSyllableArray)) {
+                return s;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Finds a fitting alternative syllable answer choice when an answer choice violates word position restrictions
+     * @param refSyllable the syllable in the correct rendering of the word
+     * @param alreadyAddedChoices the other answer choices already selected (so we don't return a duplicate)
+     * @param contextualPosition the position we want to put the syllable into
+     * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
+     */
+
+    public Start.Syllable fittingSyllableAlternative(Start.Syllable refSyllable, ArrayList<Start.Syllable> alreadyAddedChoices, String contextualPosition) {
+
+
+        for (Start.Syllable s : syllableList) {
+            if (!alreadyAddedChoices.contains(s) && s.canBePlacedInPosition(contextualPosition)) {
+                return s;
+            }
+        }
+
+        return null;
     }
 
 

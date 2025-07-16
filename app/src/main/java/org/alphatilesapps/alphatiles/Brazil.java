@@ -357,7 +357,7 @@ public class Brazil extends GameActivity {
         StringBuilder wordBuilder = new StringBuilder();
         String word;
         if (syllableGame.equals("S")) {
-            Start.Syllable blankSyllable = new Start.Syllable("__", new ArrayList<>(),"X", 0, correctSyllable.color);
+            Start.Syllable blankSyllable = new Start.Syllable("__", new ArrayList<>(),"X", 0, correctSyllable.color, "No restrictions (default)");
             parsedRefWordSyllableArray.set(index_to_remove, blankSyllable);
             for (Syllable s : parsedRefWordSyllableArray) {
                 if (s != null) {
@@ -366,7 +366,7 @@ public class Brazil extends GameActivity {
             }
             word = wordBuilder.toString();
         } else { // Tile game
-            Start.Tile blankTile = new Start.Tile("__", new ArrayList<>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, correctTile.typeOfThisTileInstance, 1, "");
+            Start.Tile blankTile = new Start.Tile("__", new ArrayList<>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, correctTile.typeOfThisTileInstance, 1, "", "No restrictions (default)");
             parsedRefWordTileArray.set(index_to_remove, blankTile);
             if (scriptType.equals("Khmer") && correctTile.typeOfThisTileInstance.equals("C")){
                 if(index_to_remove < parsedRefWordTileArray.size()-1 && parsedRefWordTileArray.get(index_to_remove + 1).typeOfThisTileInstance.matches("(V|AV|BV|D)")) {

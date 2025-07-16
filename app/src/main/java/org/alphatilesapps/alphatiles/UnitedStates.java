@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 import android.graphics.Typeface;
@@ -150,7 +151,7 @@ public class UnitedStates extends GameActivity {
                 parsedRefWordSyllableArrayStrings.add(s.text);
             }
         } else {
-            Tile emptyTile = new Tile("__", new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "");
+            Tile emptyTile = new Tile("__", new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "", "No restrictions (default)");
             tileSelections = new Tile[parsedLengthOfRefWord];
             for (int t = 0; t<parsedLengthOfRefWord; t++) {
                 tileSelections[t] = new Tile(emptyTile);
@@ -199,28 +200,60 @@ public class UnitedStates extends GameActivity {
             if (parseIndex < parsedLengthOfRefWord) {
                 Random rand = new Random();
                 int randomlyCorrectStringGoesBelow = rand.nextInt(2); // Choose whether correct tile goes above ( =0 ) or below ( =1 )
-                int randomDistractor = rand.nextInt(Start.ALT_COUNT); // KP // Choose which distractor will be the alternative
-                if (randomlyCorrectStringGoesBelow == 0) { // Correct string goes above
-                    if (syllableGame.equals("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
-                        gameButtonA.setText(parsedRefWordSyllableArray.get(parseIndex).text);
-                        gameButtonB.setText(parsedRefWordSyllableArray.get(parseIndex).distractors.get(randomDistractor));
-                    } else {
-                        gameButtonA.setText(parsedRefWordTileArray.get(parseIndex).text);
-                        gameButtonB.setText(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor));
-                        tileOptions.add(parsedRefWordTileArray.get(parseIndex));
-                        tileOptions.add(tileHashMap.find(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor)));
+
+
+                if (syllableGame.equals("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
+                    String correctSyllableString = parsedRefWordSyllableArray.get(parseIndex).text;
+                    // Shuffle the distractors, then try them. Make sure they can fit into the word in this position.
+                    Collections.shuffle(parsedRefWordSyllableArray.get(parseIndex).distractors);
+                    String distractorSyllableString = parsedRefWordSyllableArray.get(parseIndex).distractors.get(0);
+                    for (int d=1; d<4; d++) {
+                        if (!syllableHashMap.get(distractorSyllableString).canBePlacedInPosition(parsedRefWordSyllableArray, parseIndex)) {
+                            distractorSyllableString = distractorSyllableString = parsedRefWordSyllableArray.get(parseIndex).distractors.get(d);
+                        }
                     }
-                } else { // Correct string goes below
-                    if (syllableGame.equals("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
-                        gameButtonB.setText(parsedRefWordSyllableArray.get(parseIndex).text);
-                        gameButtonA.setText(parsedRefWordSyllableArray.get(parseIndex).distractors.get(randomDistractor));
-                    } else {
-                        gameButtonB.setText(parsedRefWordTileArray.get(parseIndex).text);
-                        gameButtonA.setText(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor));
-                        tileOptions.add(tileHashMap.find(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor)));
-                        tileOptions.add(parsedRefWordTileArray.get(parseIndex));
+                    // If none of the distractors happen to work in this word position, restart the game to use a different word.
+                    if (!syllableHashMap.get(distractorSyllableString).canBePlacedInPosition(parsedRefWordSyllableArray, parseIndex)) {
+                        playAgain();
+                        break;
+                    } else { // Add this syllable string and its distractor the game buttons
+                        if (randomlyCorrectStringGoesBelow == 0) { // Correct string goes above
+                            gameButtonA.setText(correctSyllableString);
+                            gameButtonB.setText(distractorSyllableString);
+                        } else {
+                            gameButtonA.setText(distractorSyllableString);
+                            gameButtonB.setText(correctSyllableString);
+                        }
+                    }
+                } else { // tile game
+                    String correctTileString = parsedRefWordTileArray.get(parseIndex).text;
+                    // Shuffle the distractors, then try them. Make sure they can fit into the word in this position.
+                    Collections.shuffle(parsedRefWordTileArray.get(parseIndex).distractors);
+                    String distractorTileString = parsedRefWordTileArray.get(parseIndex).distractors.get(0);
+                    for (int d=1; d<4; d++) {
+                        if (!tileHashMap.get(distractorTileString).canBePlacedInPosition(parsedRefWordTileArray, parseIndex)) {
+                            distractorTileString = distractorTileString = parsedRefWordTileArray.get(parseIndex).distractors.get(d);
+                        }
+                    }
+                    // If none of the distractors happen to work in this word position, restart the game to use a different word.
+                    if (!tileHashMap.get(distractorTileString).canBePlacedInPosition(parsedRefWordTileArray, parseIndex)) {
+                        playAgain();
+                        break;
+                    } else { // Add this tile string and its distractor the game buttons
+                        if (randomlyCorrectStringGoesBelow == 0) { // Correct string goes above
+                            gameButtonA.setText(correctTileString);
+                            gameButtonB.setText(distractorTileString);
+                            tileOptions.add(parsedRefWordTileArray.get(parseIndex));
+                            tileOptions.add(tileHashMap.get(distractorTileString));
+                        } else {
+                            gameButtonA.setText(distractorTileString);
+                            gameButtonB.setText(correctTileString);
+                            tileOptions.add(tileHashMap.get(distractorTileString));
+                            tileOptions.add(parsedRefWordTileArray.get(parseIndex));
+                        }
                     }
                 }
+
                 gameButtonA.setVisibility(View.VISIBLE);
                 gameButtonB.setVisibility(View.VISIBLE);
 
