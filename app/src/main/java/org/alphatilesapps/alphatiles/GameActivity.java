@@ -22,6 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.List;
@@ -1492,10 +1493,11 @@ public abstract class GameActivity extends AppCompatActivity {
      * @param tilesInRefWord
      * @param indexInParsedRefWordTileArray
      * @param typeMatters whether we are drawing from tiles of the same type only or all tiles
+     * @param usingDistractors whether we are drawing from distractor set or all tiles
      * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
      */
 
-    public Start.Tile fittingTileAlternative(Start.Tile refTile, ArrayList<Start.Tile> alreadyAddedChoices, ArrayList<Start.Tile> tilesInRefWord, int indexInParsedRefWordTileArray, Boolean typeMatters) {
+    public Start.Tile fittingTileAlternative(Start.Tile refTile, ArrayList<Start.Tile> alreadyAddedChoices, ArrayList<Start.Tile> tilesInRefWord, int indexInParsedRefWordTileArray, boolean typeMatters, boolean usingDistractors) {
 
         ArrayList<Start.Tile> tilesToDrawFrom;
         if (typeMatters) {
@@ -1513,9 +1515,16 @@ public abstract class GameActivity extends AppCompatActivity {
                 default:
                     tilesToDrawFrom = cumulativeStageBasedTileList;
             }
+        } else if (usingDistractors) {
+            tilesToDrawFrom = new ArrayList<Start.Tile>();
+            for (int i=0; i<3; i++) {
+                tilesToDrawFrom.add(tileHashMap.get(refTile.distractors.get(0)));
+            }
         } else {
             tilesToDrawFrom = cumulativeStageBasedTileList;
         }
+
+        Collections.shuffle(tilesToDrawFrom);
 
         for (Start.Tile t : tilesToDrawFrom) {
             if (!alreadyAddedChoices.contains(t) && t.canBePlacedInPosition(tilesInRefWord, indexInParsedRefWordTileArray)) {
@@ -1532,9 +1541,10 @@ public abstract class GameActivity extends AppCompatActivity {
      * @param alreadyAddedChoices the other answer choices already selected (so we don't return a duplicate)
      * @param contextualPosition the position we want to place the tile in
      * @param typeMatters whether we are drawing from tiles of the same type only or all tiles
+     * @param usingDistractors whether we are drawing from the distractor set or all tiles
      * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
      */
-    public Start.Tile fittingTileAlternative(Start.Tile refTile, ArrayList<Start.Tile> alreadyAddedChoices, String contextualPosition, Boolean typeMatters) {
+    public Start.Tile fittingTileAlternative(Start.Tile refTile, ArrayList<Start.Tile> alreadyAddedChoices, String contextualPosition, boolean typeMatters, boolean usingDistractors) {
 
         ArrayList<Start.Tile> tilesToDrawFrom;
         if (typeMatters) {
@@ -1552,9 +1562,16 @@ public abstract class GameActivity extends AppCompatActivity {
                 default:
                     tilesToDrawFrom = cumulativeStageBasedTileList;
             }
+        } else if (usingDistractors) {
+            tilesToDrawFrom = new ArrayList<Start.Tile>();
+            for (int i=0; i<3; i++) {
+                tilesToDrawFrom.add(tileHashMap.get(refTile.distractors.get(0)));
+            }
         } else {
             tilesToDrawFrom = cumulativeStageBasedTileList;
         }
+
+        Collections.shuffle(tilesToDrawFrom);
 
         for (Start.Tile t : tilesToDrawFrom) {
             if (!alreadyAddedChoices.contains(t) && t.canBePlacedInPosition(contextualPosition)) {
@@ -1577,8 +1594,8 @@ public abstract class GameActivity extends AppCompatActivity {
 
     public Start.Syllable fittingSyllableAlternative(Start.Syllable refSyllable, ArrayList<Start.Syllable> alreadyAddedChoices, ArrayList<Start.Syllable> syllablesInRefWord, int indexInParsedRefWordSyllableArray) {
 
-
-        for (Start.Syllable s : syllableList) {
+        ArrayList<Start.Syllable> syllableListCopy = (Start.SyllableList) Start.syllableList.clone();
+        for (Start.Syllable s : syllableListCopy) {
             if (!alreadyAddedChoices.contains(s) && s.canBePlacedInPosition(syllablesInRefWord, indexInParsedRefWordSyllableArray)) {
                 return s;
             }
@@ -1597,8 +1614,8 @@ public abstract class GameActivity extends AppCompatActivity {
 
     public Start.Syllable fittingSyllableAlternative(Start.Syllable refSyllable, ArrayList<Start.Syllable> alreadyAddedChoices, String contextualPosition) {
 
-
-        for (Start.Syllable s : syllableList) {
+        ArrayList<Start.Syllable> syllableListCopy = (Start.SyllableList) Start.syllableList.clone();
+        for (Start.Syllable s : syllableListCopy) {
             if (!alreadyAddedChoices.contains(s) && s.canBePlacedInPosition(contextualPosition)) {
                 return s;
             }

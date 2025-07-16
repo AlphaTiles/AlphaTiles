@@ -17,6 +17,7 @@ import java.util.Set;
 import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.CorV;
+import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
 import static org.alphatilesapps.alphatiles.Start.useContextualFormsITI;
 
 import com.segment.analytics.Analytics;
@@ -237,9 +238,11 @@ public class Georgia extends GameActivity {
         // First, add correct answer and distractors
         challengingAnswerChoices.clear();
         challengingAnswerChoices.add(initialSyllable.text);
-        challengingAnswerChoices.add(initialSyllable.distractors.get(0));
-        challengingAnswerChoices.add(initialSyllable.distractors.get(1));
-        challengingAnswerChoices.add(initialSyllable.distractors.get(2));
+        for (int d=0; d<3; d++) {
+            if(syllableHashMap.get(initialSyllable.distractors.get(d)).canBePlacedInPosition("INITIAL")) {
+                challengingAnswerChoices.add(initialSyllable.distractors.get(d));
+            }
+        }
 
         // Then, add syllables with the same 2 initial characters
         int i = 0;
@@ -247,7 +250,8 @@ public class Georgia extends GameActivity {
             String option = syllableListCopy.get(i).text;
             if(option.length()>=2 && initialSyllable.text.length()>=2) {
                 if(option.charAt(0) == initialSyllable.text.charAt(0)
-                        && option.charAt(1) == initialSyllable.text.charAt(1)) {
+                        && option.charAt(1) == initialSyllable.text.charAt(1)
+                        && syllableHashMap.get(option).canBePlacedInPosition("INITIAL")) {
                     challengingAnswerChoices.add(option);
                 }
             }
@@ -258,18 +262,22 @@ public class Georgia extends GameActivity {
         i = 0;
         while (challengingAnswerChoices.size() < visibleGameButtons && i < syllableListCopy.size()) {
             String option = syllableListCopy.get(i).text;
-            if (option.charAt(0) == initialSyllable.text.charAt(0)) {
-                challengingAnswerChoices.add(option);
-            } else if (option.charAt(option.length() - 1) == initialSyllable.text.charAt(initialSyllable.text.length() - 1)) {
-                challengingAnswerChoices.add(option);
+            if (syllableHashMap.get(option).canBePlacedInPosition("INITIAL")) {
+                if (option.charAt(0) == initialSyllable.text.charAt(0)) {
+                    challengingAnswerChoices.add(option);
+                } else if (option.charAt(option.length() - 1) == initialSyllable.text.charAt(initialSyllable.text.length() - 1)) {
+                    challengingAnswerChoices.add(option);
+                }
             }
             i++;
         }
 
         // Finally, fill any remaining empty game buttons with random syllables
         int j = 0;
-        while (challengingAnswerChoices.size() < visibleGameButtons) { // Generally unlikely
-            challengingAnswerChoices.add(syllableListCopy.get(j).text);
+        while (challengingAnswerChoices.size()<visibleGameButtons && j<syllableListCopy.size()) {
+            if (syllableListCopy.get(j).canBePlacedInPosition("INITIAL")) {
+                challengingAnswerChoices.add(syllableListCopy.get(j).text);
+            }
             j++;
         }
 
@@ -284,9 +292,7 @@ public class Georgia extends GameActivity {
 
         List<String> challengingAnswerChoicesList = new ArrayList<>(challengingAnswerChoices); // to index the answer choices
 
-        ArrayList<String> stringsAdded = new ArrayList<>();
-        Random rand = new Random();
-        int randomNum;
+        ArrayList<Start.Syllable> alreadyAddedChoices = new ArrayList<>();
         // Add them to buttons
         for (int t = 0; t < GAME_BUTTONS.length; t++) {
 
@@ -294,25 +300,34 @@ public class Georgia extends GameActivity {
             String tileColorStr = colorList.get(t % 5);
             int tileColor = Color.parseColor(tileColorStr);
 
-            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { // Alternatives are random
+            if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { // Find and add random alternatives
                 if (t < visibleGameButtons) {
-                    randomNum = rand.nextInt(syllableListCopy.size());
-                    String syllableOptionText = syllableListCopy.get(randomNum).text;
-                    while (stringsAdded.contains(syllableOptionText)) {
-                        randomNum = rand.nextInt(syllableListCopy.size());
-                        syllableOptionText = syllableListCopy.get(randomNum).text;
-                    }
-                    if (useContextualFormsITI) { // For some Arabic script apps
-                        gameTile.setText(contextualizedForm_Initial(syllableOptionText));
+                    Start.Syllable option = fittingSyllableAlternative(initialSyllable, alreadyAddedChoices, "INITIAL");
+                    if (option.hasNull()) {
+                        if (t < 3) {
+                            playAgain();
+                            return;
+                        } else {
+                            gameTile.setText(String.valueOf(t + 1));
+                            gameTile.setBackgroundResource(R.drawable.textview_border);
+                            gameTile.setTextColor(Color.parseColor("#000000")); // black
+                            gameTile.setClickable(false);
+                            gameTile.setVisibility(View.INVISIBLE);
+                        }
                     } else {
-                        gameTile.setText(syllableOptionText);
+                        String syllableOptionText = option.text;
+                        if (useContextualFormsITI) { // For some Arabic script apps
+                            gameTile.setText(contextualizedForm_Initial(syllableOptionText));
+                        } else {
+                            gameTile.setText(syllableOptionText);
+                        }
+                        gameTile.setBackgroundColor(tileColor);
+                        gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                        gameTile.setVisibility(View.VISIBLE);
+                        gameTile.setClickable(true);
+                        alreadyAddedChoices.add(option);
                     }
-                    gameTile.setBackgroundColor(tileColor);
-                    gameTile.setTextColor(Color.parseColor("#FFFFFF")); // white
-                    gameTile.setVisibility(View.VISIBLE);
-                    gameTile.setClickable(true);
-                    stringsAdded.add(syllableOptionText);
-                    if (stringsAdded.contains(initialSyllable.text)) {
+                    if (alreadyAddedChoices.contains(initialSyllable)) {
                         correctSyllableRepresented = true;
                     }
                 } else {
@@ -339,8 +354,8 @@ public class Georgia extends GameActivity {
         }
 
         if (!correctSyllableRepresented) { // If the correct syllable didn't randomly come up for less-challenging levels, then here the correct syllable overwrites one of the others
-            rand = new Random();
-            randomNum = rand.nextInt(visibleGameButtons - 1); // KP
+            Random rand = new Random();
+            int randomNum = rand.nextInt(visibleGameButtons - 1); // KP
             TextView gameButton = findViewById(GAME_BUTTONS[randomNum]);
             gameButton.setText(initialSyllable.text);
         }

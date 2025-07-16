@@ -215,7 +215,7 @@ public class UnitedStates extends GameActivity {
                     // If none of the distractors happen to work in this word position, restart the game to use a different word.
                     if (!syllableHashMap.get(distractorSyllableString).canBePlacedInPosition(parsedRefWordSyllableArray, parseIndex)) {
                         playAgain();
-                        break;
+                        return;
                     } else { // Add this syllable string and its distractor the game buttons
                         if (randomlyCorrectStringGoesBelow == 0) { // Correct string goes above
                             gameButtonA.setText(correctSyllableString);
