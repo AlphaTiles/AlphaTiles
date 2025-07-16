@@ -31,10 +31,11 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import static org.alphatilesapps.alphatiles.Start.MULTITYPE_TILES;
-import static org.alphatilesapps.alphatiles.Start.NON_SPACERS_ARABIC;
 import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
+import static org.alphatilesapps.alphatiles.Start.blankForMissingWordPiece;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
@@ -45,7 +46,7 @@ import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.placeholderCharacter;
-import static org.alphatilesapps.alphatiles.Start.contextualizingCharacter;
+import static org.alphatilesapps.alphatiles.Start.contextualizer;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
@@ -74,7 +75,7 @@ public abstract class GameActivity extends AppCompatActivity {
     String playerString;
     int challengeLevel = -1;
     int stage = 7;
-    String syllableGame;
+    String gameMode;
 
     SharedPreferences prefs;
     String uniqueGameLevelPlayerModeStageID;
@@ -168,7 +169,7 @@ public abstract class GameActivity extends AppCompatActivity {
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         stage = getIntent().getIntExtra("stage", 7);
-        syllableGame = getIntent().getStringExtra("syllableGame");
+        gameMode = getIntent().getStringExtra("gameMode");
         gameNumber = getIntent().getIntExtra("gameNumber", 0);
         country = getIntent().getStringExtra("country");
         playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -177,7 +178,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         className = getClass().getName();
-        uniqueGameLevelPlayerModeStageID = className + challengeLevel + playerString + syllableGame + stage;
+        uniqueGameLevelPlayerModeStageID = className + challengeLevel + playerString + gameMode + stage;
         trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
         hasChecked12Trackers = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
         points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
@@ -368,7 +369,7 @@ public abstract class GameActivity extends AppCompatActivity {
                                 } else {
                                     stage = Integer.parseInt(gameList.get(gameNumber - 1).stage);
                                 }
-                                syllableGame = gameList.get(gameNumber - 1).mode;
+                                gameMode = gameList.get(gameNumber - 1).mode;
                                 country = gameList.get(gameNumber - 1).country;
                             } else {
                                 gameNumber = 1;
@@ -378,7 +379,7 @@ public abstract class GameActivity extends AppCompatActivity {
                                 } else {
                                     stage = Integer.parseInt(gameList.get(0).stage);
                                 }
-                                syllableGame = gameList.get(0).mode;
+                                gameMode = gameList.get(0).mode;
                                 country = gameList.get(0).country;
                             }
                             String activityClass = project + country;
@@ -388,14 +389,14 @@ public abstract class GameActivity extends AppCompatActivity {
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
-                            String nextUniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + syllableGame + stage;
+                            String nextUniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + gameMode + stage;
                             hasChecked12Trackers = prefs.getBoolean(nextUniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
 
                             if (!hasChecked12Trackers) {
                                 foundNextUncompletedGame = true;
                                 intent.putExtra("challengeLevel", challengeLevel);
                                 intent.putExtra("stage", stage);
-                                intent.putExtra("syllableGame", syllableGame);
+                                intent.putExtra("gameMode", gameMode);
                                 intent.putExtra("globalPoints", globalPoints);
                                 intent.putExtra("gameNumber", gameNumber);
                                 intent.putExtra("country", country);
@@ -982,7 +983,7 @@ public abstract class GameActivity extends AppCompatActivity {
         }
         if(indexOfReplacedTile>0){
             previousTile = tilesInThisWordOption.get(indexOfReplacedTile-1);
-            previousString = previousTile.text.replace(contextualizingCharacter, "");
+            previousString = previousTile.text.replace(contextualizer, "");
             if(previousString.contains(placeholderCharacter) && previousString.length()==2) { // Filter these placeholders out; keep the complex tile ones
                 previousString = previousString.replace(placeholderCharacter, "");
             } else if (previousString.endsWith(placeholderCharacter) &&
@@ -995,7 +996,7 @@ public abstract class GameActivity extends AppCompatActivity {
         for (int i = 0; i < tilesInThisWordOption.size(); i++) {
             Start.Tile thisTile = tilesInThisWordOption.get(i);
             String stringToAppend;
-            if (i==indexOfReplacedTile && thisTile.text.contains("__")) {
+            if (thisTile.text.contains(blankForMissingWordPiece)) {
                 stringToAppend = thisTile.text; // Leave any Arabic script contextualizing characters around blanks
             } else {
                 stringToAppend = isolateForm(thisTile.text);
@@ -1005,7 +1006,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 stringToAppend = stringToAppend.replace(placeholderCharacter, "");
             }
             if (thisTile.typeOfThisTileInstance.matches("(C|PC)")){
-                if (i==indexOfReplacedTile && thisTile.text.contains("__")) {
+                if (thisTile.text.contains(blankForMissingWordPiece)) {
                     previousConsonant = thisTile.text; // Leave any Arabic script contextualizing characters around blanks
                 } else {
                     previousConsonant = isolateForm(thisTile.text);
@@ -1014,7 +1015,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 previousDiacritics = ""; // Reset; new syllable
             }
             if(thisTile.typeOfThisTileInstance.matches("(D|AD)")) {
-                if (i==indexOfReplacedTile && thisTile.text.contains("__")) {
+                if (thisTile.text.contains(blankForMissingWordPiece)) {
                     previousDiacritics = thisTile.text; // Leave any Arabic script contextualizing characters around blanks
                 } else {
                     previousDiacritics = isolateForm(thisTile.text);
@@ -1024,7 +1025,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 }
             }
             if(thisTile.typeOfThisTileInstance.matches("(AV|BV)")){
-                if (i==indexOfReplacedTile && thisTile.text.contains("__")) {
+                if (thisTile.text.contains(blankForMissingWordPiece)) {
                     previousAboveOrBelowVowel = thisTile.text; // Leave any Arabic script contextualizing characters around blanks
                 } else {
                     previousAboveOrBelowVowel = isolateForm(thisTile.text);
@@ -1099,7 +1100,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
         if (!assembledWordInProgress.isEmpty()) {
 
-            String correctlyStackedString = assembledWordInProgress;
+            String correctlyStackedString = removeExcessContextualizers(assembledWordInProgress); // For Arabic script, where there can initially be extra contextualizing characters left around BWFP
             ArrayList<String> prohibitedCharSequences = generateProhibitedCharSequences(wordListWord); // Check on the bad combinations in the target word
 
             if (!prohibitedCharSequences.isEmpty()) {
@@ -1232,6 +1233,40 @@ public abstract class GameActivity extends AppCompatActivity {
             prohibitedCharSequences.add("_" + ADs.get(d));
         }
         return prohibitedCharSequences;
+    }
+
+    /**
+     * This method checks for extra contextualizers around blanks which aren't connected to letters yet
+     * in Build Word From Pairs for Arabic scripts with the Contextualize Word Frames setting set to TRUE
+     * @param assembledWordInProgress
+     * @return the Word string without extra contextualizing characters between BWFP blanks
+     */
+    public static String removeExcessContextualizers (String assembledWordInProgress) {
+        String wordWithoutExcessContextualizers = assembledWordInProgress;
+
+        // Remove from beginning
+        if (assembledWordInProgress.startsWith(contextualizer)) {
+            wordWithoutExcessContextualizers = assembledWordInProgress.replaceFirst(contextualizer, "");
+        }
+
+        // Remove from middle, between blanks
+        String extraContextualizerRegex = Pattern.quote(blankForMissingWordPiece) +
+                "(" + Pattern.quote(contextualizer) + ")+" +
+                Pattern.quote(blankForMissingWordPiece); // One or more contextualizers between blanks
+        // First pass removal
+        wordWithoutExcessContextualizers = wordWithoutExcessContextualizers.replaceAll(extraContextualizerRegex, blankForMissingWordPiece + blankForMissingWordPiece);
+
+        //Second pass removal (So the regex match can start in the in-between spot and find the rest of the matches)
+        wordWithoutExcessContextualizers = wordWithoutExcessContextualizers.replaceAll(extraContextualizerRegex, blankForMissingWordPiece + blankForMissingWordPiece);
+
+
+        // Remove from end
+        if (assembledWordInProgress.endsWith(contextualizer)) {
+            wordWithoutExcessContextualizers = wordWithoutExcessContextualizers.substring(0, wordWithoutExcessContextualizers.length() - contextualizer.length());
+        }
+
+        return wordWithoutExcessContextualizers;
+
     }
 
     /**
@@ -1405,13 +1440,13 @@ public abstract class GameActivity extends AppCompatActivity {
                 || Arrays.asList(non_joining_arabic_letters).contains(penultimateCharacter)) {
                     return isolateForm;
                 } else {
-                    return isolateForm + contextualizingCharacter;
+                    return isolateForm + contextualizer;
                 }
             } else {
                 return isolateForm;
             }
         } else {
-            return isolateForm + contextualizingCharacter;
+            return isolateForm + contextualizer;
         }
     }
 
@@ -1426,21 +1461,21 @@ public abstract class GameActivity extends AppCompatActivity {
         if(Arrays.asList(non_joining_arabic_letters).contains(isolateForm)){
             return isolateForm;
         } else if (Arrays.asList(right_joining_arabic_letters).contains(finalCharacter)){
-            return contextualizingCharacter + isolateForm;
+            return contextualizer + isolateForm;
         } else if (Arrays.asList(non_spacing_arabic_letters).contains(finalCharacter)) {
             if (isolateForm.length() > 1) {
                 String penultimateCharacter = isolateForm.substring(isolateForm.length()-2, isolateForm.length()-1);
                 if (Arrays.asList(right_joining_arabic_letters).contains(penultimateCharacter)
                         || Arrays.asList(non_joining_arabic_letters).contains(penultimateCharacter)) {
-                    return contextualizingCharacter + isolateForm;
+                    return contextualizer + isolateForm;
                 } else {
-                    return contextualizingCharacter + isolateForm + contextualizingCharacter;
+                    return contextualizer + isolateForm + contextualizer;
                 }
             } else {
                 return isolateForm; // This is a non-spacing character
             }
         } else {
-            return contextualizingCharacter + isolateForm + contextualizingCharacter;
+            return contextualizer + isolateForm + contextualizer;
         }
     }
 
@@ -1460,13 +1495,13 @@ public abstract class GameActivity extends AppCompatActivity {
                 if (Arrays.asList(non_joining_arabic_letters).contains(secondCharacter)) {
                     return isolateForm;
                 } else {
-                    return contextualizingCharacter + isolateForm;
+                    return contextualizer + isolateForm;
                 }
             } else { // This is non-spacing character
                 return isolateForm;
             }
         } else {
-            return contextualizingCharacter + isolateForm;
+            return contextualizer + isolateForm;
         }
     }
 
@@ -1477,7 +1512,7 @@ public abstract class GameActivity extends AppCompatActivity {
      */
     public static String isolateForm(String  contextualizedForm) {
 
-        return contextualizedForm.replace(contextualizingCharacter, "");
+        return contextualizedForm.replace(contextualizer, "");
     }
 
 

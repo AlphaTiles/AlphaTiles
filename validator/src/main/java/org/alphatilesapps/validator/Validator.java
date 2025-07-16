@@ -513,6 +513,18 @@ public class Validator {
             try {
                 Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
                 scriptType = langInfo.getRowFromFirstCell("Script type").get(1); // sets global variable used to determine simple/complex parse
+                if (scriptType.equals("Arabic")) {
+                    try {
+                        Tab settings = langPackGoogleSheet.getTabFromName("settings");
+                        if (!settings.getRowFromFirstCell("Contextualize word frames").get(1).matches("(TRUE|FALSE)")) {
+                            fatalError(Message.Tag.Etc, "In settings \"Contextualize word frames\" must be either \"TRUE\" or \"FALSE\"");
+                        }
+                    } catch (ValidatorException e) {
+                        recommend(Message.Tag.Etc, "For Arabic script apps: If you would like word frames to have contextual forms around blanks, set \"Contextualize word frames\" to \"TRUE\" in settings.");
+                    }
+
+
+                }
             } catch (ValidatorException e) {
                 fatalError(Message.Tag.Etc, "In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\". Please add a valid script type.");
             }
@@ -1172,7 +1184,7 @@ public class Validator {
             Tab gamesTab = langPackGoogleSheet.getTabFromName("games");
             boolean hasSudanForTiles = false;
             for (int i = 0; i < gamesTab.size(); i++) {
-                if (gamesTab.get(i).get(1).equals("Sudan") && gamesTab.get(i).get(6).equals("T")) {
+                if (gamesTab.get(i).get(1).equals("Sudan") && gamesTab.get(i).get(6).contains("T")) {
                     hasSudanForTiles = true;
                     break;
                 }
@@ -1190,7 +1202,7 @@ public class Validator {
             Tab gamesTab = langPackGoogleSheet.getTabFromName("games");
             boolean hasSudanForSyllables = false;
             for (int i = 1; i < gamesTab.size(); i++) {
-                if (gamesTab.get(i).get(1).equals("Sudan") && gamesTab.get(i).get(6).equals("S")) {
+                if (gamesTab.get(i).get(1).equals("Sudan") && gamesTab.get(i).get(6).contains("S")) {
                     hasSudanForSyllables = true;
                     break;
                 }
@@ -1200,6 +1212,22 @@ public class Validator {
                 recommend(Message.Tag.Etc, "It is recommended you add Sudan for syllables to the games tab if you have syllable audio");
             } else if (!hasSyllableAudio && hasSudanForSyllables) {
                 fatalError(Message.Tag.Etc, "You cannot have Sudan for syllables in the games tab if you do not have syllable audio");
+            }
+        } catch (ValidatorException e) {
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the games tab");
+        }
+
+        try {
+            Tab gamesTab = langPackGoogleSheet.getTabFromName("games");
+            for (int i = 0; i < gamesTab.size(); i++) {
+                if (!(gamesTab.get(i).get(1).matches("(Georgia|Brazil|UnitedStates|Thailand)")) && gamesTab.get(i).get(6).contains("C")) {
+                    fatalError(Message.Tag.Etc, gamesTab.get(i).get(1) + " games do not have separate contextual forms modes. Change \"" + gamesTab.get(i).get(6) + "\" in games column SyllOrTile to \"" + gamesTab.get(i).get(6).replace("C", "") + "\" for game " + gamesTab.get(i).get(0));
+                }
+                if (gamesTab.get(i).get(1).equals("Thailand") && gamesTab.get(i).get(6).contains("C") && !(gamesTab.get(i).get(2).contains("9"))) {
+                    fatalError(Message.Tag.Etc, "Except in challenge levels with contextual mapping types (type 9), Thailand levels use isolate, not contextual forms. Change \"" + gamesTab.get(i).get(6) + "\" in games column SyllOrTile for game to \"" + gamesTab.get(i).get(6).replace("C", "") + "\" for game " + gamesTab.get(i).get(0));
+                } else if (gamesTab.get(i).get(1).equals("Thailand") && gamesTab.get(i).get(6).contains("C") && gamesTab.get(i).get(2).contains("9")) {
+                    fatalError(Message.Tag.Etc, "Although its mode is marked " + gamesTab.get(i).get(6) + ", game " + gamesTab.get(i).get(0) + "'s referent and options will be contextual or not based on the challenge level. Change \"" + gamesTab.get(i).get(6) + "\" in games column SyllOrTile  to \"" + gamesTab.get(i).get(6).replace("C", "") + "\" for game " + gamesTab.get(i).get(0));
+                }
             }
         } catch (ValidatorException e) {
             warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the games tab");

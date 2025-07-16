@@ -100,7 +100,7 @@ public class Italy extends GameActivity {
             fixConstraintsRTL(gameID);
         }
 
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             sortableSyllArray = (Start.SyllableList) syllableList.clone();
             Collections.shuffle(sortableSyllArray);
         } else {
