@@ -209,7 +209,7 @@ public class UnitedStates extends GameActivity {
                     String distractorSyllableString = parsedRefWordSyllableArray.get(parseIndex).distractors.get(0);
                     for (int d=1; d<4; d++) {
                         if (!syllableHashMap.get(distractorSyllableString).canBePlacedInPosition(parsedRefWordSyllableArray, parseIndex)) {
-                            distractorSyllableString = distractorSyllableString = parsedRefWordSyllableArray.get(parseIndex).distractors.get(d);
+                            distractorSyllableString = parsedRefWordSyllableArray.get(parseIndex).distractors.get(d);
                         }
                     }
                     // If none of the distractors happen to work in this word position, restart the game to use a different word.

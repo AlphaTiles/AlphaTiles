@@ -23,6 +23,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.List;
@@ -1488,46 +1489,20 @@ public abstract class GameActivity extends AppCompatActivity {
 
     /**
      * Finds a fitting alternative tile answer choice when an answer choice violates word position restrictions
-     * @param refTile the tile in the correct rendering of the word
-     * @param alreadyAddedChoices the other answer choices already selected (so we don't return a duplicate)
-     * @param tilesInRefWord
-     * @param indexInParsedRefWordTileArray
-     * @param typeMatters whether we are drawing from tiles of the same type only or all tiles
-     * @param usingDistractors whether we are drawing from distractor set or all tiles
+     * @param alreadyAddedChoices the other answer choices already selected and which indexes they corresponded to, se we don't duplicate answer choices
+     * @param tilesInRefWord the tiles in the reference word
+     * @param indexInParsedRefWordTileArray the index of the tile under question from the reference word
+     * @param tilesToDrawFrom the tiles from which an alternative may be selected
      * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
      */
 
-    public Start.Tile fittingTileAlternative(Start.Tile refTile, ArrayList<Start.Tile> alreadyAddedChoices, ArrayList<Start.Tile> tilesInRefWord, int indexInParsedRefWordTileArray, boolean typeMatters, boolean usingDistractors) {
-
-        ArrayList<Start.Tile> tilesToDrawFrom;
-        if (typeMatters) {
-            String type = refTile.typeOfThisTileInstance;
-            switch (type) {
-                case "C":
-                    tilesToDrawFrom = CONSONANTS;
-                    break;
-                case "V":
-                    tilesToDrawFrom = VOWELS;
-                    break;
-                case "T":
-                    tilesToDrawFrom = TONES;
-                    break;
-                default:
-                    tilesToDrawFrom = cumulativeStageBasedTileList;
-            }
-        } else if (usingDistractors) {
-            tilesToDrawFrom = new ArrayList<Start.Tile>();
-            for (int i=0; i<3; i++) {
-                tilesToDrawFrom.add(tileHashMap.get(refTile.distractors.get(0)));
-            }
-        } else {
-            tilesToDrawFrom = cumulativeStageBasedTileList;
-        }
+    public Start.Tile fittingTileAlternative(HashMap<Integer, Start.Tile> alreadyAddedChoices, ArrayList<Start.Tile> tilesInRefWord, int indexInParsedRefWordTileArray, ArrayList<Start.Tile> tilesToDrawFrom) {
 
         Collections.shuffle(tilesToDrawFrom);
 
         for (Start.Tile t : tilesToDrawFrom) {
-            if (!alreadyAddedChoices.contains(t) && t.canBePlacedInPosition(tilesInRefWord, indexInParsedRefWordTileArray)) {
+            if (!(alreadyAddedChoices.containsValue(t) && alreadyAddedChoices.containsKey(indexInParsedRefWordTileArray))
+                    && t.canBePlacedInPosition(tilesInRefWord, indexInParsedRefWordTileArray)) {
                 return t;
             }
         }
@@ -1537,41 +1512,14 @@ public abstract class GameActivity extends AppCompatActivity {
 
     /**
      * Finds a fitting alternative tile answer choice when an answer choice violates word position restrictions
-     * @param refTile the tile in the correct rendering of the word
      * @param alreadyAddedChoices the other answer choices already selected (so we don't return a duplicate)
      * @param contextualPosition the position we want to place the tile in
-     * @param typeMatters whether we are drawing from tiles of the same type only or all tiles
-     * @param usingDistractors whether we are drawing from the distractor set or all tiles
+     * @param tilesToDrawFrom the tiles from which an alternative may be selected
      * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
      */
-    public Start.Tile fittingTileAlternative(Start.Tile refTile, ArrayList<Start.Tile> alreadyAddedChoices, String contextualPosition, boolean typeMatters, boolean usingDistractors) {
+    public Start.Tile fittingTileAlternative(ArrayList<Start.Tile> alreadyAddedChoices, String contextualPosition, ArrayList<Start.Tile> tilesToDrawFrom) {
 
-        ArrayList<Start.Tile> tilesToDrawFrom;
-        if (typeMatters) {
-            String type = refTile.typeOfThisTileInstance;
-            switch (type) {
-                case "C":
-                    tilesToDrawFrom = CONSONANTS;
-                    break;
-                case "V":
-                    tilesToDrawFrom = VOWELS;
-                    break;
-                case "T":
-                    tilesToDrawFrom = TONES;
-                    break;
-                default:
-                    tilesToDrawFrom = cumulativeStageBasedTileList;
-            }
-        } else if (usingDistractors) {
-            tilesToDrawFrom = new ArrayList<Start.Tile>();
-            for (int i=0; i<3; i++) {
-                tilesToDrawFrom.add(tileHashMap.get(refTile.distractors.get(0)));
-            }
-        } else {
-            tilesToDrawFrom = cumulativeStageBasedTileList;
-        }
-
-        Collections.shuffle(tilesToDrawFrom);
+        Collections.shuffle((Start.TileList) tilesToDrawFrom.clone());
 
         for (Start.Tile t : tilesToDrawFrom) {
             if (!alreadyAddedChoices.contains(t) && t.canBePlacedInPosition(contextualPosition)) {
@@ -1586,17 +1534,18 @@ public abstract class GameActivity extends AppCompatActivity {
     /**
      * Finds a fitting alternative syllable answer choice when an answer choice violates word position restrictions
      * @param refSyllable the syllable in the correct rendering of the word
-     * @param alreadyAddedChoices the other answer choices already selected (so we don't return a duplicate)
+     * @param alreadyAddedChoices the other answer choices already selected and the indexes they correspond to (so we don't return a duplicate answer choice)
      * @param syllablesInRefWord
      * @param indexInParsedRefWordSyllableArray
      * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
      */
 
-    public Start.Syllable fittingSyllableAlternative(Start.Syllable refSyllable, ArrayList<Start.Syllable> alreadyAddedChoices, ArrayList<Start.Syllable> syllablesInRefWord, int indexInParsedRefWordSyllableArray) {
+    public Start.Syllable fittingSyllableAlternative(Start.Syllable refSyllable, HashMap<Integer, Start.Syllable> alreadyAddedChoices, ArrayList<Start.Syllable> syllablesInRefWord, int indexInParsedRefWordSyllableArray) {
 
         ArrayList<Start.Syllable> syllableListCopy = (Start.SyllableList) Start.syllableList.clone();
         for (Start.Syllable s : syllableListCopy) {
-            if (!alreadyAddedChoices.contains(s) && s.canBePlacedInPosition(syllablesInRefWord, indexInParsedRefWordSyllableArray)) {
+            if ((alreadyAddedChoices.containsValue(s) && alreadyAddedChoices.containsKey(indexInParsedRefWordSyllableArray))
+                    && s.canBePlacedInPosition(syllablesInRefWord, indexInParsedRefWordSyllableArray)) {
                 return s;
             }
         }

@@ -352,11 +352,12 @@ public class Thailand extends GameActivity {
                 for (Tile t: fourTileChoices) {
                     if (!t.canBePlacedInPosition(contextualTilePosition)) {
                         fourTileChoices.remove(t);
-                        boolean usingDistractors = false;
+                        ArrayList<Start.Tile> tilesToDrawFrom = cumulativeStageBasedTileList;
                         if(challengeLevelThai==2) {
-                            usingDistractors = true;
+                            tilesToDrawFrom.clear();
+                            tilesToDrawFrom.addAll(CorV);
                         }
-                        Tile alternativeTileChoice = fittingTileAlternative(refTile, fourTileChoices, contextualTilePosition, false, usingDistractors);
+                        Tile alternativeTileChoice = fittingTileAlternative(fourTileChoices, contextualTilePosition, tilesToDrawFrom);
                         if (alternativeTileChoice.hasNull()) {
                             // Couldn't find three fitting answer choices for this contextual tile position
                             playAgain();
