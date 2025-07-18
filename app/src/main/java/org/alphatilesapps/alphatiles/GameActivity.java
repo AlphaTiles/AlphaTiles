@@ -1533,18 +1533,17 @@ public abstract class GameActivity extends AppCompatActivity {
 
     /**
      * Finds a fitting alternative syllable answer choice when an answer choice violates word position restrictions
-     * @param refSyllable the syllable in the correct rendering of the word
      * @param alreadyAddedChoices the other answer choices already selected and the indexes they correspond to (so we don't return a duplicate answer choice)
      * @param syllablesInRefWord
      * @param indexInParsedRefWordSyllableArray
      * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
      */
 
-    public Start.Syllable fittingSyllableAlternative(Start.Syllable refSyllable, HashMap<Integer, Start.Syllable> alreadyAddedChoices, ArrayList<Start.Syllable> syllablesInRefWord, int indexInParsedRefWordSyllableArray) {
+    public Start.Syllable fittingSyllableAlternative(HashMap<Integer, Start.Syllable> alreadyAddedChoices, ArrayList<Start.Syllable> syllablesInRefWord, int indexInParsedRefWordSyllableArray) {
 
         ArrayList<Start.Syllable> syllableListCopy = (Start.SyllableList) Start.syllableList.clone();
         for (Start.Syllable s : syllableListCopy) {
-            if ((alreadyAddedChoices.containsValue(s) && alreadyAddedChoices.containsKey(indexInParsedRefWordSyllableArray))
+            if (!(alreadyAddedChoices.containsValue(s) && alreadyAddedChoices.containsKey(indexInParsedRefWordSyllableArray))
                     && s.canBePlacedInPosition(syllablesInRefWord, indexInParsedRefWordSyllableArray)) {
                 return s;
             }

@@ -948,6 +948,8 @@ public class Start extends AppCompatActivity {
         public int stageOfFirstAppearanceForThisTileType;
         public String audioForThisTileType;
 
+        public String positionRestrictions;
+
         public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType, String positionRestrictions) {
             super(text);
             this.distractors = distractors;
@@ -1032,6 +1034,11 @@ public class Start extends AppCompatActivity {
             }
         }
 
+        /**
+         * A method used to determine whether a tile can be substituted into a word for another tile, based on its ability to function word-initially, word-medially, and/or word-finally, as defined in aa_gametiles.txt under PositionRestrictions
+         * @param position either "INITIAL", "MEDIAL", or "FINAL"; else defaults to true
+         * @return true or false depending on whether this tile is allowed to be inserted into the given word position, based on any position restrictions specified for the tile
+         */
         public Boolean canBePlacedInPosition (String position) {
 
             if (position.equals("INITIAL") && this.positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {

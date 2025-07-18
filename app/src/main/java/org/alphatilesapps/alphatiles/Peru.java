@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -155,7 +156,7 @@ public class Peru extends GameActivity {
                             Tile replacementTile = tileHashMap.find(shuffledDistractorTiles.get(incorrectLapNo - 1));
                             if (!replacementTile.canBePlacedInPosition("INITIAL")) {
                                 replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, 0, cumulativeStageBasedTileList);
-                                if (replacementTile.hasNull()) { // Not enough tiles can be placed in initial position
+                                if (Objects.isNull(replacementTile)) { // Not enough tiles can be placed in initial position
                                     playAgain(); // Restart the game, to be set up with a different word
                                     return;
                                 }
@@ -197,7 +198,7 @@ public class Peru extends GameActivity {
                             tilesInIncorrectChoice.set(randomIndexToReplace, replacementTile);
                             String incorrectChoice2 = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, randomIndexToReplace);// LM // resets to true and keeps looping if a duplicate has been made:
 
-                            generateDifferentAnswerChoice = replacementTile.hasNull();
+                            generateDifferentAnswerChoice = Objects.isNull(replacementTile);
 
                             for (int j = 0; j < incorrectChoice2.length() - 2; j++) {
                                 if (incorrectChoice2.substring(j, j + 3).equals("للہ")) {
@@ -222,7 +223,7 @@ public class Peru extends GameActivity {
                             if (!replacementTile.canBePlacedInPosition(parsedRefWordTileArray, randomIndexToReplace)) {
                                 replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, 0, cumulativeStageBasedTileList);
                             }
-                            if (!replacementTile.hasNull()) {
+                            if (Objects.isNull(replacementTile)) {
                                 alreadyAddedPlacements.put(randomIndexToReplace, replacementTile);
                                 replacementTile.typeOfThisTileInstance = parsedRefWordTileArray.get(randomIndexToReplace).typeOfThisTileInstance;
                                 tilesInIncorrectChoice.set(randomIndexToReplace, replacementTile);

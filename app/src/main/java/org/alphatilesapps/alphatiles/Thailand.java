@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 import com.segment.analytics.Analytics;
@@ -358,7 +359,7 @@ public class Thailand extends GameActivity {
                             tilesToDrawFrom.addAll(CorV);
                         }
                         Tile alternativeTileChoice = fittingTileAlternative(fourTileChoices, contextualTilePosition, tilesToDrawFrom);
-                        if (alternativeTileChoice.hasNull()) {
+                        if (Objects.isNull(alternativeTileChoice)) {
                             // Couldn't find three fitting answer choices for this contextual tile position
                             playAgain();
                             return;

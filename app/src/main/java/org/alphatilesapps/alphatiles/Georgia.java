@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
@@ -230,21 +231,16 @@ public class Georgia extends GameActivity {
 
     private void setUpSyllables() {
 
-
-
-        ArrayList<Start.Syllable> alreadyAddedChoices = new ArrayList<>();
-        // Add them to buttons
-
-
-
             if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 3) { // Find and add random alternatives
+
+                ArrayList<Start.Syllable> alreadyAddedChoices = new ArrayList<>();
 
                 for (int b = 0; b < GAME_BUTTONS.length; b++) {
                     TextView gameButton = findViewById(GAME_BUTTONS[b]);
                     if (b < visibleGameButtons) {
                         Start.Syllable option = fittingSyllableAlternative(initialSyllable, alreadyAddedChoices, "INITIAL");
-                        if (option.hasNull()) {
-                            if (b < 3) { // Less then three alternatives can go in INITIAL position
+                        if (Objects.isNull(option)) {
+                            if (b < 4) { // Less then three alternatives can go in INITIAL position
                                 playAgain();
                                 return;
                             } else { // Viable alternatives beyond 3 are not found. Hide these last buttons.
@@ -376,8 +372,8 @@ public class Georgia extends GameActivity {
                     TextView gameButton = findViewById(GAME_BUTTONS[b]);
                     if (b < visibleGameButtons) {
                         Start.Tile option = fittingTileAlternative(alreadyAddedChoices, "INITIAL", CorV);
-                        if (option.hasNull()) {
-                            if (b < 3) { // Less than 4 answer choices available in word-initial position; restart with a new word
+                        if (Objects.isNull(option)) {
+                            if (b < 4) { // Less than 4 answer choices available in word-initial position; restart with a new word
                                 playAgain();
                                 return;
                             } else { // Viable answer choice beyond 4 not found
