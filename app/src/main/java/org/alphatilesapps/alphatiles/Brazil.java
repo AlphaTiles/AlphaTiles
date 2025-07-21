@@ -363,8 +363,8 @@ public class Brazil extends GameActivity {
             }
             word = wordBuilder.toString();
         } else { // Tile game
-            Start.Tile blankTile = new Start.Tile("__", new ArrayList<>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, correctTile.typeOfThisTileInstance, 1, "", "No restrictions (default)");
-            parsedRefWordTileArray.set(indexToRemove, blankTile);
+            Start.Tile blankTile = new Start.Tile("__", new ArrayList<>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, correctTile.typeOfThisTileInstance, 1, "", "No restrictions (default)", "none", "none", "none");
+            parsedRefWordTileArray.set(index_to_remove, blankTile);
             if (scriptType.equals("Khmer") && correctTile.typeOfThisTileInstance.equals("C")){
                 if(indexToRemove < parsedRefWordTileArray.size()-1 && parsedRefWordTileArray.get(indexToRemove + 1).typeOfThisTileInstance.matches("(V|AV|BV|D)")) {
                     blankTile.text = "\u200B"; // The word will default to containing a placeholder circle. Add zero-width space, instead of line.
