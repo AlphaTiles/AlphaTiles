@@ -223,7 +223,7 @@ public class Peru extends GameActivity {
                             if (!replacementTile.canBePlacedInPosition(parsedRefWordTileArray, randomIndexToReplace)) {
                                 replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, 0, cumulativeStageBasedTileList);
                             }
-                            if (Objects.isNull(replacementTile)) {
+                            if (!Objects.isNull(replacementTile)) {
                                 alreadyAddedPlacements.put(randomIndexToReplace, replacementTile);
                                 replacementTile.typeOfThisTileInstance = parsedRefWordTileArray.get(randomIndexToReplace).typeOfThisTileInstance;
                                 tilesInIncorrectChoice.set(randomIndexToReplace, replacementTile);
