@@ -2000,7 +2000,6 @@ public class Start extends AppCompatActivity {
                                 nextTile.text = next1Chars;  // The variant text becomes the main text for this word's tile array
                                 break;
                         }
-                        referenceWordStringPreliminaryTileArray.add(nextTile);
                     }
                 }
             }
@@ -2018,13 +2017,48 @@ public class Start extends AppCompatActivity {
                         nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
                         nextTile.audioForThisTileType = nextTile.audioName;
                     }
-                    referenceWordStringPreliminaryTileArrayFinal.add(nextTile);
                 } else {
                     nextTile.typeOfThisTileInstance = nextTile.tileType;
                     nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
                     nextTile.audioForThisTileType = nextTile.audioName;
-                    referenceWordStringPreliminaryTileArrayFinal.add(nextTile);
                 }
+                if (positionalVariantHashMap.containsKey(nextTile.text)) { // variants, if parsed, replaced base texts, above
+                    switch(nextTile.typeOfThisTileInstance) {
+                        case "V":
+                        case "LV":
+                        case "AV":
+                        case "BV":
+                        case "FV":
+                            VOWELS.add(nextTile);
+                            CorV.add(nextTile);
+                            break;
+                        case "C":
+                        case "PC":
+                            CONSONANTS.add(nextTile);
+                            CorV.add(nextTile);
+                            break;
+                        case "AD":
+                            ADs.add(nextTile);
+                            break;
+                        case "D":
+                            Ds.add(nextTile);
+                            break;
+                        case "T":
+                            TONES.add(nextTile);
+                        case "SAD":
+                            SAD.add(nextTile);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (!tileHashMap.containsKey(nextTile.text)) {
+                    tileHashMap.put(nextTile.text, nextTile);
+                }
+                if (!nextTile.tileType.equals("SAD") && !tileHashMapNoSAD.containsKey(nextTile.text)) {
+                    tileHashMapNoSAD.put(nextTile.text, nextTile);
+                }
+                referenceWordStringPreliminaryTileArrayFinal.add(nextTile);
                 tileIndex++;
             }
 
@@ -2142,6 +2176,43 @@ public class Start extends AppCompatActivity {
                                     nextTile = new Tile (positionalVariantHashMap.get(next1Chars));
                                     nextTile.text = next1Chars;  // The variant text becomes the main text for this word's tile array
                                     break;
+                            }
+
+                            if (positionalVariantHashMap.containsKey(nextTile.text)) { // variants, if parsed, replaced base texts, above
+                                switch (nextTile.typeOfThisTileInstance) {
+                                    case "V":
+                                    case "LV":
+                                    case "AV":
+                                    case "BV":
+                                    case "FV":
+                                        VOWELS.add(nextTile);
+                                        CorV.add(nextTile);
+                                        break;
+                                    case "C":
+                                    case "PC":
+                                        CONSONANTS.add(nextTile);
+                                        CorV.add(nextTile);
+                                        break;
+                                    case "AD":
+                                        ADs.add(nextTile);
+                                        break;
+                                    case "D":
+                                        Ds.add(nextTile);
+                                        break;
+                                    case "T":
+                                        TONES.add(nextTile);
+                                    case "SAD":
+                                        SAD.add(nextTile);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            if (!tileHashMap.containsKey(nextTile.text)) {
+                                tileHashMap.put(nextTile.text, nextTile);
+                            }
+                            if (!nextTile.tileType.equals("SAD") && !tileHashMapNoSAD.containsKey(nextTile.text)) {
+                                tileHashMapNoSAD.put(nextTile.text, nextTile);
                             }
                             stringToParsePreliminaryTileArray.add(nextTile);
                         }
