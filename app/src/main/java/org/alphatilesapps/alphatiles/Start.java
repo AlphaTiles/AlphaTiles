@@ -44,11 +44,12 @@ public class Start extends AppCompatActivity {
     public static SettingsList settingsList; // KP // from aa_settings.txt
     public static AvatarNameList nameList; // KP / from aa_names.txt
 
-    // LM / allows us to find() a Tile object using its name
-    public static TileHashMap tileHashMap;
-    public static TileHashMap tileHashMapWithoutPlaceHoldersOrContextualizers;
+    // These TileHashMaps help us to find() a Tile object via a String associated with it
+    public static TileHashMap tileHashMap; // key: tile.text
+    public static TileHashMap tileHashMapWithoutPlaceHoldersOrContextualizers; // key: tile.text stripped of all placeholders and contextualizing characters
     public static TileHashMap tileHashMapNoSAD;
     public static TileHashMap tileHashMapNoSADWithoutPlaceholdersOrContextualizers;
+    public static TileHashMap positionalVariantHashMap;
     public static WordHashMap lwcWordHashMap;
     public static WordHashMap lopWordHashMap;
 
@@ -465,6 +466,7 @@ public class Start extends AppCompatActivity {
         }
         buildTileHashMap();
         buildTileHashMapWithoutPlaceholdersOrContextualizers();
+        buildPositionalVariantHashMap();
     }
 
 
@@ -896,6 +898,22 @@ public class Start extends AppCompatActivity {
             }
         }
     }
+
+    public void buildPositionalVariantHashMap() {
+        positionalVariantHashMap = new TileHashMap();
+        for (int i = 0; i < tileList.size(); i++) {
+            if (!tileList.get(i).wordInitialVariant.equals("none")){
+                positionalVariantHashMap.put(tileList.get(i).wordInitialVariant, tileList.get(i));
+            }
+            if (!tileList.get(i).wordMedialVariant.equals("none")){
+                positionalVariantHashMap.put(tileList.get(i).wordMedialVariant, tileList.get(i));
+            }
+            if (!tileList.get(i).wordFinalVariant.equals("none")){
+                positionalVariantHashMap.put(tileList.get(i).wordFinalVariant, tileList.get(i));
+            }
+        }
+    }
+
 
     public void buildWordHashMap() {
         lwcWordHashMap = new WordHashMap();
@@ -1936,8 +1954,55 @@ public class Start extends AppCompatActivity {
                             break;
                     }
                     referenceWordStringPreliminaryTileArray.add(nextTile);
-                }
+                } else {
+                    // See if the blocks of length one, two, three or four Unicode characters matches a variant of a tile
+                    // Note: This assumes that each variant only corresponds to one Tile object
+                    // Choose the longest block that matches a variant of a game tile and add that as the next segment in the parsed word array
+                    charBlockLength = 0;
+                    if (positionalVariantHashMap.containsKey(next1Chars)) {
+                        // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
+                        charBlockLength = 1;
+                    }
+                    if (positionalVariantHashMap.containsKey(next2Chars)) {
+                        // The value 2 can overwrite 1 but it can't overwrite 3 or 4
+                        charBlockLength = 2;
+                    }
+                    if (positionalVariantHashMap.containsKey(next3Chars)) {
+                        // The value 3 can overwrite 1 or 2 but it can't overwrite 4
+                        charBlockLength = 3;
+                    }
+                    if (positionalVariantHashMap.containsKey(next4Chars)) {
+                        // The value 4 can overwrite 1 or 2 or 3
+                        charBlockLength = 4;
+                    }
 
+                    // Add the selected game tile (the longest selected from the previous loop) to the parsed word array
+                    if (charBlockLength>0) {
+                        Tile nextTile;
+                        switch (charBlockLength) {
+                            case 2:
+                                nextTile = new Tile (positionalVariantHashMap.get(next2Chars));
+                                nextTile.text = next2Chars; // The variant text becomes the main text for this word's tile array
+                                i++;
+                                break;
+                            case 3:
+                                nextTile = new Tile (positionalVariantHashMap.get(next3Chars));
+                                nextTile.text = next3Chars;  // The variant text becomes the main text for this word's tile array
+                                i += 2;
+                                break;
+                            case 4:
+                                nextTile = new Tile (positionalVariantHashMap.get(next4Chars));
+                                nextTile.text = next4Chars;  // The variant text becomes the main text for this word's tile array
+                                i += 3;
+                                break;
+                            default: // charBlockLength==1
+                                nextTile = new Tile (positionalVariantHashMap.get(next1Chars));
+                                nextTile.text = next1Chars;  // The variant text becomes the main text for this word's tile array
+                                break;
+                        }
+                        referenceWordStringPreliminaryTileArray.add(nextTile);
+                    }
+                }
             }
             for (Tile tile : referenceWordStringPreliminaryTileArray) { // Set instance-specific fields
                 Tile nextTile = new Tile(tile);
@@ -2032,6 +2097,54 @@ public class Start extends AppCompatActivity {
                                 break;
                         }
                         stringToParsePreliminaryTileArray.add(nextTile);
+                    } else {
+                        // See if the blocks of length one, two, three or four Unicode characters matches a variant of a tile
+                        // Note: This assumes that each variant only corresponds to one Tile object
+                        // Choose the longest block that matches a variant of a game tile and add that as the next segment in the parsed word array
+                        charBlockLength = 0;
+                        if (positionalVariantHashMap.containsKey(next1Chars)) {
+                            // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
+                            charBlockLength = 1;
+                        }
+                        if (positionalVariantHashMap.containsKey(next2Chars)) {
+                            // The value 2 can overwrite 1 but it can't overwrite 3 or 4
+                            charBlockLength = 2;
+                        }
+                        if (positionalVariantHashMap.containsKey(next3Chars)) {
+                            // The value 3 can overwrite 1 or 2 but it can't overwrite 4
+                            charBlockLength = 3;
+                        }
+                        if (positionalVariantHashMap.containsKey(next4Chars)) {
+                            // The value 4 can overwrite 1 or 2 or 3
+                            charBlockLength = 4;
+                        }
+
+                        // Add the variant (the longest selected from the previous loop) to the parsed word array
+                        if (charBlockLength>0) {
+                            Tile nextTile;
+                            switch (charBlockLength) {
+                                case 2:
+                                    nextTile = new Tile (positionalVariantHashMap.get(next2Chars));
+                                    nextTile.text = next2Chars; // The variant text becomes the main text for this word's tile array
+                                    i++;
+                                    break;
+                                case 3:
+                                    nextTile = new Tile (positionalVariantHashMap.get(next3Chars));
+                                    nextTile.text = next3Chars;  // The variant text becomes the main text for this word's tile array
+                                    i += 2;
+                                    break;
+                                case 4:
+                                    nextTile = new Tile (positionalVariantHashMap.get(next4Chars));
+                                    nextTile.text = next4Chars;  // The variant text becomes the main text for this word's tile array
+                                    i += 3;
+                                    break;
+                                default: // charBlockLength==1
+                                    nextTile = new Tile (positionalVariantHashMap.get(next1Chars));
+                                    nextTile.text = next1Chars;  // The variant text becomes the main text for this word's tile array
+                                    break;
+                            }
+                            stringToParsePreliminaryTileArray.add(nextTile);
+                        }
                     }
                 }
 
