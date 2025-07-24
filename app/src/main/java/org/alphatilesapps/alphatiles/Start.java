@@ -2000,6 +2000,7 @@ public class Start extends AppCompatActivity {
                                 nextTile.text = next1Chars;  // The variant text becomes the main text for this word's tile array
                                 break;
                         }
+                        referenceWordStringPreliminaryTileArray.add(nextTile);
                     }
                 }
             }
