@@ -2329,4 +2329,41 @@ public class Start extends AppCompatActivity {
 
     }
 
+    /**
+     * tracks two fields together: an index within a word to place the WordPiece into, and the WordPiece's text
+     * Used for determining that randomly generated WordPiece replacements in wrong answer choices are distinct
+     */
+    public static class WordPieceStringPosition {
+        Integer parsedWordArrayWordPieceIndex;
+        String wordPieceText;
+        public WordPieceStringPosition(Integer parsedWordArrayWordPieceIndex, String wordPieceText) {
+            this.parsedWordArrayWordPieceIndex = parsedWordArrayWordPieceIndex;
+            this.wordPieceText = wordPieceText;
+        }
+
+        public boolean equals(WordPieceStringPosition other) {
+            return (this.parsedWordArrayWordPieceIndex.intValue() == other.parsedWordArrayWordPieceIndex.intValue()
+                    && this.wordPieceText.equals(other.wordPieceText));
+        }
+    }
+
+    /**
+     * Special contains method - compares field values, rather than objects
+     * Used for gathering randomly generated WordPiece replacements for a word and finding out which ones have already been done
+     * so as to prevent duplicates
+     */
+    public static class WordPieceStringPositionSet extends ArrayList<WordPieceStringPosition> {
+
+        public boolean contains (WordPieceStringPosition aTileStringPosition) {
+            for (int p=0; p<size(); p++) {
+                if (get(p).parsedWordArrayWordPieceIndex.intValue() == aTileStringPosition.parsedWordArrayWordPieceIndex.intValue()
+                        && get(p).wordPieceText.equals(aTileStringPosition.wordPieceText)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    }
+
 }

@@ -9,9 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -135,9 +133,9 @@ public class Peru extends GameActivity {
 
         int incorrectLapNo = 0;
 
-        HashMap<Integer, Tile> alreadyAddedPlacements = new HashMap<Integer, Tile>();
+        WordPieceStringPositionSet alreadyAddedPlacements = new WordPieceStringPositionSet();
         for(int index=0; index<parsedRefWordTileArray.size(); index++) {
-            alreadyAddedPlacements.put(index, parsedRefWordTileArray.get(index));
+            alreadyAddedPlacements.add(new WordPieceStringPosition(index, parsedRefWordTileArray.get(index).text));
         }
 
         for (int i = 0; i < GAME_BUTTONS.length; i++) {
@@ -146,7 +144,7 @@ public class Peru extends GameActivity {
                 nextWordView.setText(wordInLOPWithStandardizedSequenceOfCharacters(refWord)); // the correct answer (the unmodified version of the word)
             } else {
                 incorrectLapNo++;
-                boolean generateDifferentAnswerChoice = true; // LM // generate answer choices until there are no duplicates (or dangerous combinations)
+                boolean generateDifferentAnswerChoice = true; // If needed, used to loop again to find a fitting answer choice, using a different index
                 switch (challengeLevel) {
                     case 1:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (THE FIRST TILE) REPLACED
@@ -171,7 +169,7 @@ public class Peru extends GameActivity {
                                     generateDifferentAnswerChoice = true;
                                 }
                             }
-                            alreadyAddedPlacements.put(0, replacementTile);
+                            alreadyAddedPlacements.add(new WordPieceStringPosition(0, replacementTile.text));
                         }
                         break;
                     case 2:
@@ -194,21 +192,22 @@ public class Peru extends GameActivity {
                                 replacementTile = null;
                             }
 
-                            alreadyAddedPlacements.put(randomIndexToReplace, replacementTile);
-                            tilesInIncorrectChoice.set(randomIndexToReplace, replacementTile);
-                            String incorrectChoice2 = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, randomIndexToReplace);// LM // resets to true and keeps looping if a duplicate has been made:
-
-                            generateDifferentAnswerChoice = Objects.isNull(replacementTile);
-
-                            for (int j = 0; j < incorrectChoice2.length() - 2; j++) {
-                                if (incorrectChoice2.substring(j, j + 3).equals("للہ")) {
-                                    generateDifferentAnswerChoice = true;
+                            if(!Objects.isNull(replacementTile)) {
+                                alreadyAddedPlacements.add(new WordPieceStringPosition(randomIndexToReplace, replacementTile.text));
+                                tilesInIncorrectChoice.set(randomIndexToReplace, replacementTile);
+                                String incorrectChoice2 = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, randomIndexToReplace);
+                                for (int j = 0; j < incorrectChoice2.length() - 2; j++) {
+                                    generateDifferentAnswerChoice = false;
+                                    if (incorrectChoice2.substring(j, j + 3).equals("للہ")) {
+                                        generateDifferentAnswerChoice = true;
+                                        break;
+                                    }
                                 }
-                            }
+                                if (!generateDifferentAnswerChoice) {
+                                    nextWordView.setText(incorrectChoice2);
+                                }
+                            } // else generateDifferentAnswerChoice == true
 
-                            if (!generateDifferentAnswerChoice) {
-                                nextWordView.setText(incorrectChoice2);
-                            }
                         }
                         break;
 
@@ -219,12 +218,19 @@ public class Peru extends GameActivity {
                         while (generateDifferentAnswerChoice) {
                             int randomIndexToReplace = rand.nextInt(tileLength - 1);       // this represents which position in word string will be replaced
                             ArrayList<Tile> tilesInIncorrectChoice = new ArrayList<>(parsedRefWordTileArray);
-                            Tile replacementTile = Start.tileList.returnRandomDistractorTile(parsedRefWordTileArray.get(randomIndexToReplace));
-                            if (!replacementTile.canBePlacedInPosition(parsedRefWordTileArray, randomIndexToReplace)) {
-                                replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, 0, cumulativeStageBasedTileList);
+                            Collections.shuffle(parsedRefWordTileArray.get(randomIndexToReplace).distractors);
+                            Tile replacementTile = tileHashMap.get(parsedRefWordTileArray.get(randomIndexToReplace).distractors.get(0));
+                            for (int d=1; d<3; d++) {
+                                if (alreadyAddedPlacements.contains(new WordPieceStringPosition(randomIndexToReplace, replacementTile.text))) {
+                                    replacementTile = tileHashMap.get(parsedRefWordTileArray.get(randomIndexToReplace).distractors.get(d));
+                                }
+                            }
+                            if (!(replacementTile.canBePlacedInPosition(parsedRefWordTileArray, randomIndexToReplace))
+                                    || alreadyAddedPlacements.contains(new WordPieceStringPosition(randomIndexToReplace, replacementTile.text))) {
+                                replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, randomIndexToReplace, cumulativeStageBasedTileList);
                             }
                             if (!Objects.isNull(replacementTile)) {
-                                alreadyAddedPlacements.put(randomIndexToReplace, replacementTile);
+                                alreadyAddedPlacements.add(new WordPieceStringPosition(randomIndexToReplace, replacementTile.text));
                                 replacementTile.typeOfThisTileInstance = parsedRefWordTileArray.get(randomIndexToReplace).typeOfThisTileInstance;
                                 tilesInIncorrectChoice.set(randomIndexToReplace, replacementTile);
                                 String incorrectChoice3 = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, randomIndexToReplace);
@@ -237,7 +243,7 @@ public class Peru extends GameActivity {
                                 if(!generateDifferentAnswerChoice) {
                                     nextWordView.setText(incorrectChoice3);
                                 }
-                            } // else, a good replacement tile at this index wasn't found, so loop; generateDifferentAnswerChoic = true
+                            } // else, a good replacement tile at this index wasn't found, so loop; generateDifferentAnswerChoice = true
                         }
                         break;
                     default:
@@ -250,7 +256,6 @@ public class Peru extends GameActivity {
         }
         incorrectOnLevel = 0;
         levelBegunTime = System.currentTimeMillis();
-
     }
 
     private void respondToWordSelection(int justClickedWord) {

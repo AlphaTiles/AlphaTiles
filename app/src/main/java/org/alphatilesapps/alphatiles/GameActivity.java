@@ -23,7 +23,6 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,37 +33,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
-import static org.alphatilesapps.alphatiles.Start.CONSONANTS;
-import static org.alphatilesapps.alphatiles.Start.MULTITYPE_TILES;
-import static org.alphatilesapps.alphatiles.Start.NON_SPACERS_ARABIC;
-import static org.alphatilesapps.alphatiles.Start.SILENT_PRELIMINARY_TILES;
-import static org.alphatilesapps.alphatiles.Start.TONES;
-import static org.alphatilesapps.alphatiles.Start.VOWELS;
-import static org.alphatilesapps.alphatiles.Start.colorList;
-import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
-import static org.alphatilesapps.alphatiles.Start.gameList;
-import static org.alphatilesapps.alphatiles.Start.non_joining_arabic_letters;
-import static org.alphatilesapps.alphatiles.Start.non_spacing_arabic_letters;
-import static org.alphatilesapps.alphatiles.Start.right_joining_arabic_letters;
-import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
-import static org.alphatilesapps.alphatiles.Start.syllableList;
-import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
-import static org.alphatilesapps.alphatiles.Start.tileDurations;
-import static org.alphatilesapps.alphatiles.Start.placeholderCharacter;
-import static org.alphatilesapps.alphatiles.Start.contextualizingCharacter;
-import static org.alphatilesapps.alphatiles.Start.tileHashMap;
-import static org.alphatilesapps.alphatiles.Start.tileList;
-import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
-import static org.alphatilesapps.alphatiles.Start.wordList;
-import static org.alphatilesapps.alphatiles.Start.wordStagesLists;
+
+import static org.alphatilesapps.alphatiles.Start.*;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
-import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
-import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
-import static org.alphatilesapps.alphatiles.Start.correctSoundID;
-import static org.alphatilesapps.alphatiles.Start.gameSounds;
-import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
-import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
-import static org.alphatilesapps.alphatiles.Start.after12checkedTrackers;
 
 
 public abstract class GameActivity extends AppCompatActivity {
@@ -830,14 +801,14 @@ public abstract class GameActivity extends AppCompatActivity {
     protected boolean tileShouldPlayAudio(Start.Tile tile) {
         // make sure audio can be found
         if (tempSoundPoolSwitch && tile.audioForThisTileType.equals("X")) {
-                return false;
+            return false;
         }
 
         if(!tempSoundPoolSwitch) {
             try{
                 getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
             } catch (NullPointerException e) {
-                 return false;
+                return false;
             }
         }
 
@@ -1047,11 +1018,11 @@ public abstract class GameActivity extends AppCompatActivity {
             } else {
                 replacingLVwithOtherV = replacedTile.typeOfThisTileInstance.equals("LV");
                 replacingOtherVwithLV = tilesInThisWordOption.get(indexOfReplacedTile).typeOfThisTileInstance.equals("LV")
-                                        && replacedTile.typeOfThisTileInstance.matches("(AV|BV|FV|V)");
+                        && replacedTile.typeOfThisTileInstance.matches("(AV|BV|FV|V)");
             }
 
             if ((replacingLVwithOtherV && index == indexOfReplacedTile && (thisTile.typeOfThisTileInstance.matches("(AV|BV|FV|V)")))
-            || (replacingOtherVwithLV && index==indexOfReplacedTile-1 && thisTile.typeOfThisTileInstance.matches("(C|PC)"))) {
+                    || (replacingOtherVwithLV && index==indexOfReplacedTile-1 && thisTile.typeOfThisTileInstance.matches("(C|PC)"))) {
                 previousString = stringToAppend;
                 previousTile = thisTile;
                 // Don't append this string. (That would put FV, etc. in LV position or LV in FV,etc position)
@@ -1094,12 +1065,12 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     /**
-    ADs (Above/Following Diacritics) should be placed above AVs (Above Vowels).
-    If a gametiles list stores C+AD tiles, assembling these C+AD tiles with AV tiles or complex vowels
-    will put ADs and AVS in the reverse order.
-    This method fixes that.
+     ADs (Above/Following Diacritics) should be placed above AVs (Above Vowels).
+     If a gametiles list stores C+AD tiles, assembling these C+AD tiles with AV tiles or complex vowels
+     will put ADs and AVS in the reverse order.
+     This method fixes that.
 
-    s: String to check and fix the stacking in, if necessary
+     s: String to check and fix the stacking in, if necessary
      **/
     public static String stackInProperSequence(String assembledWordInProgress, Start.Word wordListWord) {
 
@@ -1119,7 +1090,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 }
             }
             if (tileHashMap.containsKey(String.valueOf(correctlyStackedString.charAt(0)))
-             || tileHashMap.containsKey(placeholderCharacter + String.valueOf(correctlyStackedString.charAt(0)))) {
+                    || tileHashMap.containsKey(placeholderCharacter + String.valueOf(correctlyStackedString.charAt(0)))) {
                 Start.Tile firstCharAsTile = tileHashMap.get(String.valueOf(correctlyStackedString.charAt(0)));
                 if (firstCharAsTile==null) {
                     firstCharAsTile = tileHashMap.get(placeholderCharacter + String.valueOf(correctlyStackedString.charAt(0)));
@@ -1136,9 +1107,9 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     /**
-    AVs should be stacked before ADs, not the other way around.
-    ADs should not be placed on top of FVs, but only on top of a C+(AV)+(AD) base.
-    This initializes the prohibitedCharSequences ArrayList with the prohibited stacking combinations in wordListWord.
+     AVs should be stacked before ADs, not the other way around.
+     ADs should not be placed on top of FVs, but only on top of a C+(AV)+(AD) base.
+     This initializes the prohibitedCharSequences ArrayList with the prohibited stacking combinations in wordListWord.
      **/
     public static ArrayList<String> generateProhibitedCharSequences(Start.Word wordListWord) {
         ArrayList<String> prohibitedCharSequences = new ArrayList<>();
@@ -1197,7 +1168,7 @@ public abstract class GameActivity extends AppCompatActivity {
         // Add other non-ambiguous AV, AD, FV, and BV tiles to avoid
         for(Start.Tile tile : tileList) {
             if (!MULTITYPE_TILES.contains(tile.text) && tile.text.length()==1
-            || (tile.text.contains(placeholderCharacter) && tile.text.length()==2)) {
+                    || (tile.text.contains(placeholderCharacter) && tile.text.length()==2)) {
                 String thisTileString = tile.text.replace(placeholderCharacter, "");
                 switch (tile.tileType) {
                     case "AV":
@@ -1241,10 +1212,10 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     /**
-    Sometimes, the assembled version of words differs slightly from what's in the wordlist, because of invisible character stacking differences.
-    This method takes a word and returns the parsed and reassembled version so that when compared to other assembled tile lists, it will match up.
+     Sometimes, the assembled version of words differs slightly from what's in the wordlist, because of invisible character stacking differences.
+     This method takes a word and returns the parsed and reassembled version so that when compared to other assembled tile lists, it will match up.
 
-    word: The word object whose wordInLOP you would like to represent in standardized assembled form
+     word: The word object whose wordInLOP you would like to represent in standardized assembled form
      **/
     protected String wordInLOPWithStandardizedSequenceOfCharacters(Start.Word wordListWord) {
 
@@ -1316,13 +1287,13 @@ public abstract class GameActivity extends AppCompatActivity {
             if (indexInWord==(stringPieces.size()-1)) { // WORD-FINAL
                 // Handle previous right-joiners:
                 if(Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))
-                    || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))) {
+                        || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))) {
                     return isolateWordPieceString;
                 }
                 if (indexInWord>1) {
                     if (Arrays.asList(non_spacing_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 1]))
                             && (Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 2]))
-                               || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 2])))
+                            || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 2])))
                     ) {
                         return isolateWordPieceString;
                     }
@@ -1333,13 +1304,13 @@ public abstract class GameActivity extends AppCompatActivity {
                 boolean atLeastInitialNotMedial = false;
                 // Handle previous right-joiners:
                 if(Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))
-                    || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))){
+                        || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1]))){
                     atLeastInitialNotMedial = true;
                 }
                 if (indexInWord>1) {
                     if (Arrays.asList(non_spacing_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 1]))
                             && (Arrays.asList(right_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i - 2]))
-                                || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1])))
+                            || Arrays.asList(non_joining_arabic_letters).contains(String.valueOf(previousTwoPlusChars[i-1])))
                     ) {
                         atLeastInitialNotMedial = true;
                     }
@@ -1375,18 +1346,18 @@ public abstract class GameActivity extends AppCompatActivity {
                     }
                 }
 
-               // Decide on correct form based on surrounding characters
-               if (atLeastInitialNotMedial) {
-                   if (atLeastFinalNotMedial) {
-                       return isolateWordPieceString; // Doesn't join before or after
-                   } else {
-                       return contextualizedForm_Initial(isolateWordPieceString); // Only joins after
-                   }
-               } else if (atLeastFinalNotMedial) {
-                   return contextualizedForm_Final(isolateWordPieceString); // Only joins before
-               } else {
-                   return contextualizedForm_Medial(isolateWordPieceString); // joins before and after
-               }
+                // Decide on correct form based on surrounding characters
+                if (atLeastInitialNotMedial) {
+                    if (atLeastFinalNotMedial) {
+                        return isolateWordPieceString; // Doesn't join before or after
+                    } else {
+                        return contextualizedForm_Initial(isolateWordPieceString); // Only joins after
+                    }
+                } else if (atLeastFinalNotMedial) {
+                    return contextualizedForm_Final(isolateWordPieceString); // Only joins before
+                } else {
+                    return contextualizedForm_Medial(isolateWordPieceString); // joins before and after
+                }
             }
         }
     }
@@ -1402,13 +1373,13 @@ public abstract class GameActivity extends AppCompatActivity {
 
         String finalCharacter = isolateForm.substring(isolateForm.length() - 1);
         if(Arrays.asList(non_joining_arabic_letters).contains(isolateForm)
-        || Arrays.asList(right_joining_arabic_letters).contains(finalCharacter)) {
+                || Arrays.asList(right_joining_arabic_letters).contains(finalCharacter)) {
             return isolateForm;
         } else if (Arrays.asList(non_spacing_arabic_letters).contains(finalCharacter)) {
             if(isolateForm.length() > 1){
                 String penultimateCharacter = isolateForm.substring(isolateForm.length() - 2, isolateForm.length() - 1);
                 if (Arrays.asList(right_joining_arabic_letters).contains(penultimateCharacter)
-                || Arrays.asList(non_joining_arabic_letters).contains(penultimateCharacter)) {
+                        || Arrays.asList(non_joining_arabic_letters).contains(penultimateCharacter)) {
                     return isolateForm;
                 } else {
                     return isolateForm + contextualizingCharacter;
@@ -1489,19 +1460,20 @@ public abstract class GameActivity extends AppCompatActivity {
 
     /**
      * Finds a fitting alternative tile answer choice when an answer choice violates word position restrictions
-     * @param alreadyAddedChoices the other answer choices already selected and which indexes they corresponded to, se we don't duplicate answer choices
+     * @param alreadyAddedPlacements the other answer choices already selected and which indexes they corresponded to, se we don't duplicate answer choices
      * @param tilesInRefWord the tiles in the reference word
      * @param indexInParsedRefWordTileArray the index of the tile under question from the reference word
      * @param tilesToDrawFrom the tiles from which an alternative may be selected
      * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
      */
 
-    public Start.Tile fittingTileAlternative(HashMap<Integer, Start.Tile> alreadyAddedChoices, ArrayList<Start.Tile> tilesInRefWord, int indexInParsedRefWordTileArray, ArrayList<Start.Tile> tilesToDrawFrom) {
+    public Start.Tile fittingTileAlternative(WordPieceStringPositionSet alreadyAddedPlacements, ArrayList<Start.Tile> tilesInRefWord, int indexInParsedRefWordTileArray, ArrayList<Start.Tile> tilesToDrawFrom) {
 
         Collections.shuffle(tilesToDrawFrom);
 
         for (Start.Tile t : tilesToDrawFrom) {
-            if (!(alreadyAddedChoices.containsValue(t) && alreadyAddedChoices.containsKey(indexInParsedRefWordTileArray))
+            WordPieceStringPosition placement = new WordPieceStringPosition(indexInParsedRefWordTileArray, t.text);
+            if (!(alreadyAddedPlacements.contains(placement))
                     && t.canBePlacedInPosition(tilesInRefWord, indexInParsedRefWordTileArray)) {
                 return t;
             }
@@ -1533,17 +1505,17 @@ public abstract class GameActivity extends AppCompatActivity {
 
     /**
      * Finds a fitting alternative syllable answer choice when an answer choice violates word position restrictions
-     * @param alreadyAddedChoices the other answer choices already selected and the indexes they correspond to (so we don't return a duplicate answer choice)
-     * @param syllablesInRefWord
-     * @param indexInParsedRefWordSyllableArray
+     * @param alreadyAddedPlacements the other answer choices already selected and the indexes they correspond to (so we don't return a duplicate answer choice)
+     * @param syllablesInRefWord the syllables in the correctly spelled word
+     * @param indexInParsedRefWordSyllableArray the index in the reference word of the syllable under consideration
      * @return a fresh tile answer choice that complies with position restrictions OR null (in which case there is no fitting alternative)
      */
 
-    public Start.Syllable fittingSyllableAlternative(HashMap<Integer, Start.Syllable> alreadyAddedChoices, ArrayList<Start.Syllable> syllablesInRefWord, int indexInParsedRefWordSyllableArray) {
+    public Start.Syllable fittingSyllableAlternative(WordPieceStringPositionSet alreadyAddedPlacements, ArrayList<Start.Syllable> syllablesInRefWord, int indexInParsedRefWordSyllableArray) {
 
         ArrayList<Start.Syllable> syllableListCopy = (Start.SyllableList) Start.syllableList.clone();
         for (Start.Syllable s : syllableListCopy) {
-            if (!(alreadyAddedChoices.containsValue(s) && alreadyAddedChoices.containsKey(indexInParsedRefWordSyllableArray))
+            if (!(alreadyAddedPlacements.contains(new WordPieceStringPosition(indexInParsedRefWordSyllableArray, s.text)))
                     && s.canBePlacedInPosition(syllablesInRefWord, indexInParsedRefWordSyllableArray)) {
                 return s;
             }

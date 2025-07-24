@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
@@ -42,7 +41,7 @@ import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Brazil extends GameActivity {
     int numTones;
-    int index_to_remove;
+    int indexToRemove;
     Start.Tile correctTile;
     Start.Syllable correctSyllable;
     String correctString;
@@ -299,7 +298,7 @@ public class Brazil extends GameActivity {
 
         Random rand = new Random();
         int index = 0;
-        index_to_remove = 0;
+        indexToRemove = 0;
 
         boolean repeat = true;
 
@@ -311,14 +310,14 @@ public class Brazil extends GameActivity {
             while (repeat && !possibleIndices.isEmpty()) {
                 index = rand.nextInt(possibleIndices.size());
                 correctTile = parsedRefWordTileArray.get(possibleIndices.get(index));
-                index_to_remove = possibleIndices.get(index);
-                possibleIndices.remove((Integer)index_to_remove);
+                indexToRemove = possibleIndices.get(index);
+                possibleIndices.remove((Integer) indexToRemove);
 
                 while (SAD_STRINGS.contains(correctTile.text)) { // JP: Makes sure that SAD is never chosen as missing tile
                     index = rand.nextInt(possibleIndices.size());
                     correctTile = parsedRefWordTileArray.get(possibleIndices.get(index));
-                    index_to_remove = possibleIndices.get(index);
-                    possibleIndices.remove((Integer)index_to_remove);
+                    indexToRemove = possibleIndices.get(index);
+                    possibleIndices.remove((Integer) indexToRemove);
                 }
 
                 if (challengeLevel < 4) {
@@ -342,11 +341,11 @@ public class Brazil extends GameActivity {
             }
             correctString = correctTile.text;
         } else { // syllable game
-            index_to_remove = rand.nextInt(parsedRefWordSyllableArray.size());
-            correctSyllable = parsedRefWordSyllableArray.get(index_to_remove);
+            indexToRemove = rand.nextInt(parsedRefWordSyllableArray.size());
+            correctSyllable = parsedRefWordSyllableArray.get(indexToRemove);
             while (SAD_STRINGS.contains(correctSyllable.text)) { // JP: makes sure that SAD is never chosen as missing syllable
-                index_to_remove = rand.nextInt(parsedRefWordSyllableArray.size());
-                correctSyllable = parsedRefWordSyllableArray.get(index_to_remove);
+                indexToRemove = rand.nextInt(parsedRefWordSyllableArray.size());
+                correctSyllable = parsedRefWordSyllableArray.get(indexToRemove);
             }
             correctString = correctSyllable.text;
         }
@@ -356,7 +355,7 @@ public class Brazil extends GameActivity {
         String word;
         if (syllableGame.equals("S")) {
             Start.Syllable blankSyllable = new Start.Syllable("__", new ArrayList<>(),"X", 0, correctSyllable.color, "No restrictions (default)");
-            parsedRefWordSyllableArray.set(index_to_remove, blankSyllable);
+            parsedRefWordSyllableArray.set(indexToRemove, blankSyllable);
             for (Syllable s : parsedRefWordSyllableArray) {
                 if (s != null) {
                     wordBuilder.append(s.text);
@@ -365,26 +364,26 @@ public class Brazil extends GameActivity {
             word = wordBuilder.toString();
         } else { // Tile game
             Start.Tile blankTile = new Start.Tile("__", new ArrayList<>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, correctTile.typeOfThisTileInstance, 1, "", "No restrictions (default)");
-            parsedRefWordTileArray.set(index_to_remove, blankTile);
+            parsedRefWordTileArray.set(indexToRemove, blankTile);
             if (scriptType.equals("Khmer") && correctTile.typeOfThisTileInstance.equals("C")){
-                if(index_to_remove < parsedRefWordTileArray.size()-1 && parsedRefWordTileArray.get(index_to_remove + 1).typeOfThisTileInstance.matches("(V|AV|BV|D)")) {
+                if(indexToRemove < parsedRefWordTileArray.size()-1 && parsedRefWordTileArray.get(indexToRemove + 1).typeOfThisTileInstance.matches("(V|AV|BV|D)")) {
                     blankTile.text = "\u200B"; // The word will default to containing a placeholder circle. Add zero-width space, instead of line.
-                    parsedRefWordTileArray.set(index_to_remove, blankTile);
+                    parsedRefWordTileArray.set(indexToRemove, blankTile);
                 } else {
                     blankTile.text = placeholderCharacter; // Since Khmer has lots of placeholder circles, we'll use them for all consonant blanks.
-                    parsedRefWordTileArray.set(index_to_remove, blankTile);
+                    parsedRefWordTileArray.set(indexToRemove, blankTile);
                 }
             }
             if (scriptType.matches("(Thai|Lao)") && correctTile.typeOfThisTileInstance.equals("C")){
                 blankTile.text = placeholderCharacter;
-                parsedRefWordTileArray.set(index_to_remove, blankTile);
+                parsedRefWordTileArray.set(indexToRemove, blankTile);
             }
             if (useContextualFormsFITB) { // Setting used by some Arabic script apps to make tiles appear in contextual forms in answer choices and around blanks
-                blankTile.text = contextualizedWordPieceString(blankTile.text, index_to_remove, parsedRefWordTileArrayStrings);
+                blankTile.text = contextualizedWordPieceString(blankTile.text, indexToRemove, parsedRefWordTileArrayStrings);
             }
 
 
-            word = combineTilesToMakeWord(parsedRefWordTileArray, refWord, index_to_remove);
+            word = combineTilesToMakeWord(parsedRefWordTileArray, refWord, indexToRemove);
         }
         constructedWord.setText(word);
     }
@@ -392,12 +391,12 @@ public class Brazil extends GameActivity {
     private void setUpSyllables() {
         if (challengeLevel == 1) { // Find and add random alternatives
 
-            HashMap<Integer, Syllable> alreadyAddedPlacements = new HashMap<Integer, Syllable>();
+            WordPieceStringPositionSet alreadyAddedPlacements = new WordPieceStringPositionSet();
 
             for (int b = 0; b < visibleGameButtons; b++) {
                 TextView gameButton = findViewById(GAME_BUTTONS[b]);
 
-                Start.Syllable option = fittingSyllableAlternative(alreadyAddedPlacements, parsedRefWordSyllableArray, index_to_remove);
+                Syllable option = fittingSyllableAlternative(alreadyAddedPlacements, parsedRefWordSyllableArray, indexToRemove);
                 if (Objects.isNull(option)) { // Fewer than 4 viable answer choices available. 'Restart' with new word.
                     playAgain();
                     return;
@@ -407,12 +406,12 @@ public class Brazil extends GameActivity {
                     gameButton.setTextColor(Color.parseColor("#FFFFFF")); // white
                     gameButton.setVisibility(View.VISIBLE);
                     gameButton.setClickable(true);
-                    alreadyAddedPlacements.put(index_to_remove, option);
+                    alreadyAddedPlacements.add(new WordPieceStringPosition(indexToRemove, option.text));
                 }
 
             }
 
-            if (!(alreadyAddedPlacements.containsValue(correctSyllable) && alreadyAddedPlacements.containsKey(index_to_remove))) { // If the correct syllable wasn't randomly added as an answer choice, then here it overwrites one of the others
+            if (!(alreadyAddedPlacements.contains(new WordPieceStringPosition(indexToRemove, correctString)))) { // If the correct syllable wasn't randomly added as an answer choice, then here it overwrites one of the others
                 Random rand = new Random();
                 int randomNum = rand.nextInt(visibleGameButtons - 1); // KP
                 TextView gameButton = findViewById(GAME_BUTTONS[randomNum]);
@@ -425,7 +424,7 @@ public class Brazil extends GameActivity {
             Set<String> challengingAnswerChoices = new HashSet<String>(); // Duplicates will be prevented since this is a Set
             challengingAnswerChoices.add(correctSyllable.text);
             for (int d=0; d<3; d++) {
-                if(syllableHashMap.get(correctSyllable.distractors.get(d)).canBePlacedInPosition(parsedRefWordSyllableArray, index_to_remove)) {
+                if(syllableHashMap.get(correctSyllable.distractors.get(d)).canBePlacedInPosition(parsedRefWordSyllableArray, indexToRemove)) {
                     challengingAnswerChoices.add(correctSyllable.distractors.get(d));
                 }
             }
@@ -437,7 +436,7 @@ public class Brazil extends GameActivity {
                 if(option.length()>=2 && correctSyllable.text.length()>=2) {
                     if(option.charAt(0) == correctSyllable.text.charAt(0)
                             && option.charAt(1) == correctSyllable.text.charAt(1)
-                            && syllableHashMap.get(option).canBePlacedInPosition(parsedRefWordSyllableArray, index_to_remove)) {
+                            && syllableHashMap.get(option).canBePlacedInPosition(parsedRefWordSyllableArray, indexToRemove)) {
                         challengingAnswerChoices.add(option);
                     }
                 }
@@ -448,7 +447,7 @@ public class Brazil extends GameActivity {
             i = 0;
             while (challengingAnswerChoices.size() < visibleGameButtons && i < syllableListCopy.size()) {
                 String option = syllableListCopy.get(i).text;
-                if (syllableHashMap.get(option).canBePlacedInPosition(parsedRefWordSyllableArray, index_to_remove)) {
+                if (syllableHashMap.get(option).canBePlacedInPosition(parsedRefWordSyllableArray, indexToRemove)) {
                     if (option.charAt(0) == correctSyllable.text.charAt(0)) {
                         challengingAnswerChoices.add(option);
                     } else if (option.charAt(option.length() - 1) == correctSyllable.text.charAt(correctSyllable.text.length() - 1)) {
@@ -461,7 +460,7 @@ public class Brazil extends GameActivity {
             // Finally, fill any remaining empty game buttons with random syllables
             int j = 0;
             while (challengingAnswerChoices.size()<visibleGameButtons && j<syllableListCopy.size()) {
-                if (syllableListCopy.get(j).canBePlacedInPosition(parsedRefWordSyllableArray, index_to_remove)) {
+                if (syllableListCopy.get(j).canBePlacedInPosition(parsedRefWordSyllableArray, indexToRemove)) {
                     challengingAnswerChoices.add(syllableListCopy.get(j).text);
                 }
                 j++;
@@ -516,7 +515,7 @@ public class Brazil extends GameActivity {
             distractorTiles.add(distractorTile);
         }
 
-        HashMap<Integer, Tile> alreadyAddedPlacements = new HashMap<Integer, Tile>();
+        WordPieceStringPositionSet alreadyAddedPlacements = new WordPieceStringPositionSet();
         Start.Tile option;
 
         for (int b = 0; b < visibleGameButtons; b++) {
@@ -524,27 +523,27 @@ public class Brazil extends GameActivity {
             switch (challengeLevel) {
                 case 1:
                 case 3:
-                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, index_to_remove, VOWELS);
+                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, indexToRemove, VOWELS);
                     break;
                 case 2:
                 case 5:
-                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, index_to_remove, distractorTiles);
+                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, indexToRemove, distractorTiles);
                     break;
                 case 4:
                 case 6:
-                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, index_to_remove, CONSONANTS);
+                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, indexToRemove, CONSONANTS);
                     break;
                 case 7:
-                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, index_to_remove, TONES);
+                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, indexToRemove, TONES);
                     break;
                 default:
-                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, index_to_remove, cumulativeStageBasedTileList);
+                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, indexToRemove, cumulativeStageBasedTileList);
                     break;
             }
 
             if (Objects.isNull(option)) {
                 if (b < 4) {
-                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, index_to_remove, cumulativeStageBasedTileList);
+                    option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, indexToRemove, cumulativeStageBasedTileList);
                     if (Objects.isNull(option)) {
                         playAgain();
                         return;
@@ -562,7 +561,7 @@ public class Brazil extends GameActivity {
                 gameButton.setTextColor(Color.parseColor("#FFFFFF")); // white
                 gameButton.setVisibility(View.VISIBLE);
                 gameButton.setClickable(true);
-                alreadyAddedPlacements.put(index_to_remove, option);
+                alreadyAddedPlacements.add(new WordPieceStringPosition(indexToRemove, option.text));
             }
         }
 
@@ -577,7 +576,7 @@ public class Brazil extends GameActivity {
             }
         }
 
-        if (!(alreadyAddedPlacements.containsValue(correctTile) && alreadyAddedPlacements.containsKey(index_to_remove))) { // If the correct syllable wasn't randomly added as an answer choice, then here it overwrites one of the others
+        if (!(alreadyAddedPlacements.contains(new WordPieceStringPosition(indexToRemove, correctTile.text)))) { // If the correct syllable wasn't randomly added as an answer choice, then here it overwrites one of the others
             Random rand = new Random();
             int randomNum = rand.nextInt(visibleGameButtons - 1); // KP
             TextView gameButton = findViewById(GAME_BUTTONS[randomNum]);
@@ -598,7 +597,7 @@ public class Brazil extends GameActivity {
 
         for(int t = 0; t< visibleGameButtons; t++) { // For all answer choices
             TextView answerChoiceButton = findViewById(GAME_BUTTONS[t]);
-            String contextualizedChoice = contextualizedWordPieceString(answerChoiceButton.getText().toString(), index_to_remove, parsedRefWordTileArrayStrings);
+            String contextualizedChoice = contextualizedWordPieceString(answerChoiceButton.getText().toString(), indexToRemove, parsedRefWordTileArrayStrings);
             answerChoiceButton.setText(contextualizedChoice);
         }
     }
@@ -610,7 +609,7 @@ public class Brazil extends GameActivity {
     private void produceContextualSyllableAnswerChoices() {
         for(int t = 0; t< visibleGameButtons; t++) { // For all answer choices
             TextView answerChoiceButton = findViewById(GAME_BUTTONS[t]);
-            String contextualizedChoice = contextualizedWordPieceString(answerChoiceButton.getText().toString(), index_to_remove, parsedRefWordSyllableArrayStrings);
+            String contextualizedChoice = contextualizedWordPieceString(answerChoiceButton.getText().toString(), indexToRemove, parsedRefWordSyllableArrayStrings);
             answerChoiceButton.setText(contextualizedChoice);
         }
     }
