@@ -107,14 +107,27 @@ public class Validator {
     public static ArrayList<String> colorList;
 
     /**
+     * List of possible restrictions on tile-in-word positions*/
+    protected static final String [] wordPositionRestrictionOptions = {
+            "No restrictions (default)", "Anywhere EXCEPT word-initially", "Anywhere EXCEPT word-medially", "Anywhere EXCEPT word-finally", "Word-initial ONLY", "Word-medial ONLY", "Word-final ONLY"
+    };
+
+    public static final List<String> wordPositionRestrictionOptionsSet = Arrays.asList(wordPositionRestrictionOptions);
+
+    /**
      * Hashmap of Tile texts to Tile objects from tileList
      */
     public static TileHashMap tileHashMap;
 
     /**
-     * Hashmap of Tile texts to Tile objects from tileList
+     * Hashmap of Tile texts to Tile objects from tileList, stripped from placeholders or contextualizers
      */
     public static TileHashMap tileHashMapWithoutPlaceholdersOrContextualizers;
+
+    /**
+     * maps positional variants of tiles to their Tile object from the tileList
+     */
+    public static TileHashMap positionalVariantHashMap;
 
     /**
      * Smaller lists of tiles based on type
@@ -320,7 +333,7 @@ public class Validator {
      */
     private static final HashMap<String, String> DESIRED_RANGE_FROM_TABS = new HashMap<>(Map.ofEntries(
             Map.entry("langinfo", "A1:B15"),
-            Map.entry("gametiles", "A1:Q"),
+            Map.entry("gametiles", "A1:U"),
             Map.entry("wordlist", "A1:F"),
             Map.entry("keyboard", "A1:B"),
             Map.entry("games", "A1:H"),
@@ -532,6 +545,7 @@ public class Validator {
             contextualizingCharacter = settings.getRowFromFirstCell("Contextualizing character").get(1); // sets global variable for Arabic script apps with contextual forms
             // Used for parsing tiles which have placeholders or contextualizers from words (which don't have these)
             buildTileHashMapWithoutPlaceholdersOrContextualizers();
+            buildPositionalVariantHashMap();
 
         } catch (ValidatorException e) {
             if (!(scriptType == null)) {
@@ -626,9 +640,118 @@ public class Validator {
             // Compare the tiles in gameTiles to the words in wordlist
             Map<String, Integer> tileUsage = new HashMap<>();
             int longWords = 0;
+            Set<Tile> okayInInitialPosition = new HashSet<>();
+            Set<Tile> okayInMedialPosition = new HashSet<>();
+            Set<Tile> okayInFinalPosition = new HashSet<>();
+
 
             for (Tile tile : tileList) {
                 tileUsage.put(tile.text, 0);
+
+                if (tile.canBePlacedInPosition("INITIAL")) { // Keep count of how many tiles can go in each position. Games require >=4 for each.
+                    okayInInitialPosition.add(tile);
+                } else {
+                    if (!tile.wordInitialVariant.equals("none")) {
+                        fatalError(Message.Tag.Etc, "Tile " + tile.text + " is restricted from occuring in initial position, but it has Word-InitialVariant " + tile.wordInitialVariant + " specified. Please allow word-initial position in PositionRestrictions to allow this word-initial variant.");
+                    }
+                }
+                if (tile.canBePlacedInPosition("MEDIAL")) {
+                    okayInMedialPosition.add(tile);
+                } else {
+                    if (!tile.wordMedialVariant.equals("none")) {
+                        fatalError(Message.Tag.Etc, "Tile " + tile.text + " is restricted from occuring in medial position, but it has Word-MedialVariant " + tile.wordMedialVariant + " specified. Please allow word-medial position in PositionRestrictions to allow this word-medial variant.");
+                    }
+                }
+                if (tile.canBePlacedInPosition("FINAL")) {
+                    okayInFinalPosition.add(tile);
+                } else {
+                    if (!tile.wordFinalVariant.equals("none")) {
+                        fatalError(Message.Tag.Etc, "Tile " + tile.text + " is restricted from occuring in final position, but it has Word-FinalVariant " + tile.wordFinalVariant + " specified. Please allow word-final position in PositionRestrictions to allow this word-final variant.");
+                    }
+                }
+
+                for(String d : tile.distractors) { // Warn about distractors that won't be used as answer choices sometimes due to position restrictions
+                    if (!(tileHashMap.get(d).positionRestrictions.equals(tile.positionRestrictions))) {
+                        warn(Message.Tag.Etc, "Distractor " + d + " for tile " + tile.text + " in gametiles has different word-position restrictions than " + tile.text + " does. Therefore, it cannot act as a distractor for " + tile.text + " in every position, and sometimes games will generate an alternative answer choice that fits but may be less challenging. If desired, replace this distractor with one that can go in all the same positions as " + tile.text);
+                    }
+                }
+
+                switch (tile.positionRestrictions) { // Check for clashing position restrictions and tile-in-word distribution
+                    case "Anywhere EXCEPT word-initially":
+                        for (Word word : wordList) {
+                            if (tileList.parseWordIntoTiles(word).get(0).text.equals(tile.text)
+                                    && tileList.parseWordIntoTiles(word).get(0).typeOfThisTileInstance.equals(tile.tileType)) {
+                                fatalError(Message.Tag.Etc, "the tile \"" + tile.text + "\" is restricted to occurring anywhere EXCEPT word-initially (see gametiles > PositionRestrictions), but it occurs at the beginning of the word " + word.wordInLOP);
+                            }
+                        }
+                        break;
+                    case"Anywhere EXCEPT word-medially":
+                        for (Word word : wordList) {
+                            ArrayList<Tile> parsedWordArray = tileList.parseWordIntoTiles(word);
+                            for (int medialIndex = 1; medialIndex<parsedWordArray.size()-1; medialIndex++) {
+                                if (parsedWordArray.get(medialIndex).text.equals(tile.text)
+                                && parsedWordArray.get(medialIndex).typeOfThisTileInstance.equals(tile.tileType)) {
+                                    fatalError(Message.Tag.Etc, "the tile \"" + tile.text + "\" is restricted to occurring anywhere EXCEPT word-medially (see gametiles > PositionRestrictions), but it occurs medially in the word " + word.wordInLOP);
+                                }
+                            }
+
+                        }
+                        break;
+                    case "Anywhere EXCEPT word-finally":
+                        for (Word word : wordList) {
+                            if (tileList.parseWordIntoTiles(word).get(tileList.parseWordIntoTiles(word).size()-1).text.equals(tile.text)
+                            && tileList.parseWordIntoTiles(word).get(tileList.parseWordIntoTiles(word).size()-1).typeOfThisTileInstance.equals(tile.tileType)) {
+                                fatalError(Message.Tag.Etc, "the tile \"" + tile.text + "\" is restricted to occurring anywhere EXCEPT word-finally (see gametiles > PositionRestrictions), but it occurs at the end of the word " + word.wordInLOP);
+                            }
+                        }
+                        break;
+                    case "Word-initial ONLY":
+                        for (Word word : wordList) {
+                            ArrayList<Tile> parsedWordArray = tileList.parseWordIntoTiles(word);
+                            for (int nonInitialIndex = 1; nonInitialIndex<parsedWordArray.size(); nonInitialIndex++) {
+                                if (parsedWordArray.get(nonInitialIndex).text.equals(tile.text)
+                                && parsedWordArray.get(nonInitialIndex).typeOfThisTileInstance.equals(tile.typeOfThisTileInstance)) {
+                                    fatalError(Message.Tag.Etc, "the tile \"" + tile.text + "\" is restricted to occurring ONLY in word-initial position (see gametiles > PositionRestrictions), but it occurs non-initially in the word " + word.wordInLOP);
+                                }
+                            }
+
+                        }
+                        break;
+                    case "Word-medial ONLY":
+                        for (Word word : wordList) {
+                            ArrayList<Tile> parsedWordArray = tileList.parseWordIntoTiles(word);
+                            if (parsedWordArray.get(0).text.equals(tile.text) && parsedWordArray.get(0).typeOfThisTileInstance.equals(tile.tileType)
+                            || (parsedWordArray.get(parsedWordArray.size()-1)).text.equals(tile.text) && parsedWordArray.get(parsedWordArray.size()-1).typeOfThisTileInstance.equals(tile.tileType)) {
+                                fatalError(Message.Tag.Etc, "the tile \"" + tile.text + "\" is restricted to occurring ONLY in word-medial position (see gametiles > PositionRestrictions), but it occurs non-medially in the word " + word.wordInLOP);
+                            }
+
+                        }
+                        break;
+                    case "Word-final ONLY":
+                        for (Word word : wordList) {
+                            ArrayList<Tile> parsedWordArray = tileList.parseWordIntoTiles(word);
+                            for (int nonFinalIndex = 0; nonFinalIndex<parsedWordArray.size()-1; nonFinalIndex++) {
+                                if (parsedWordArray.get(nonFinalIndex).text.equals(tile.text)
+                                && parsedWordArray.get(nonFinalIndex).typeOfThisTileInstance.equals(tile.tileType)) {
+                                    fatalError(Message.Tag.Etc, "the tile \"" + tile.text + "\" is restricted to occurring ONLY in word-final position (see gametiles > PositionRestrictions), but it occurs non-initially in the word " + word.wordInLOP);
+                                }
+                            }
+
+                        }
+                        break;
+                    default: // No restrictions (default)
+                        break;
+                }
+
+                if (tile.wordInitialVariant.length()>4) {
+                    fatalError(Message.Tag.Etc, "The value of Word-InitialVariant for tile " + tile.text + " must be fewer than 5 characters long: the variation of this tile that occurs word-initially, or \"none\".");
+                }
+                if (tile.wordMedialVariant.length()>4) {
+                    fatalError(Message.Tag.Etc, "The value of Word-MedialVariant for tile " + tile.text + "must be fewer than 5 characters long: the variation of this tile that occurs word-medially, or \"none\".");
+                }
+                if (tile.wordFinalVariant.length()>4) {
+                    fatalError(Message.Tag.Etc, "The value of Word-FinalVariant for tile " + tile.text + "must be fewer than 5 characters long: the variation of this tile that occurs word-finally, or \"none\".");
+                }
             }
             for (Word word : wordList) {
                 // The tileUsage dictionary counts how many times each tile occurs in the wordlist
@@ -662,8 +785,9 @@ public class Validator {
             for (Word word : wordList) {
                 ArrayList<Tile> tilesInWord = tileList.parseWordIntoTiles(word);
                 for (Tile tile : tileList) {
-                    for (Tile tileInWord : tilesInWord) {
-                        if (tileInWord == null) {
+                    for (int indexInWord = 0; indexInWord<tilesInWord.size(); indexInWord++) {
+                        Tile tileInWord = tilesInWord.get(indexInWord);
+                        if (tileInWord== null) {
                             ArrayList<Tile> preliminaryTilesInWord = tileList.parseWordIntoTilesPreliminary(word);
                             ArrayList<String> preliminaryTileStringsInWord = new ArrayList<String>();
                             for (Tile t: preliminaryTilesInWord) {
@@ -674,7 +798,25 @@ public class Validator {
                             fatalError(Message.Tag.Etc, "The word " + word.wordInLOP + " could not be parsed. The tiles parsed (simple parsing) are " + preliminaryTileStringsInWord);
                             break;
                         }
-                        if (tileInWord.text.equals(tile.text)) {
+
+                        if (indexInWord==0 && !tileInWord.wordInitialVariant.equals("none")) {
+                            if (!word.wordInLOP.startsWith(tileInWord.wordInitialVariant)) {
+                                fatalError(Message.Tag.Etc, "For tile " + tileInWord.text + " to have variant " + tileInWord.wordInitialVariant  + " specified for word-initial position, word " + word.wordInLOP + " must begin with " + tileInWord.wordInitialVariant + "(and not " + tileInWord.text + ")");
+                            }
+                        } else if (indexInWord>0 && indexInWord<tilesInWord.size()-1 && !tileInWord.wordMedialVariant.equals("none")) {
+                            if (word.wordInLOP.substring(1, word.wordInLOP.length()-1).contains(tileInWord.text)
+                                    || !word.wordInLOP.substring(1, word.wordInLOP.length()-1).contains(tileInWord.wordMedialVariant)) {
+                                fatalError(Message.Tag.Etc, "For tile " + tileInWord.text + " to have variant " + tileInWord.wordMedialVariant  + " specified for word-initial position, word " + word.wordInLOP + " must always have " + tileInWord.wordMedialVariant + " word-medially (and not " + tileInWord.text + ")");
+                            }
+                        } else if (indexInWord==tilesInWord.size()-1 && !tileInWord.wordFinalVariant.equals("none")) {
+                            if (!word.wordInLOP.endsWith(tileInWord.wordFinalVariant)) {
+                                fatalError(Message.Tag.Etc, "For tile " + tileInWord.text + " to have variant " + tileInWord.wordFinalVariant  + " specified for word-final position, word " + word.wordInLOP + " must always have " + tileInWord.wordFinalVariant + " word-medially (and not " + tileInWord.text + ")");
+                            }
+                        }
+
+
+
+                        if (tilesInWord.get(indexInWord).text.equals(tile.text)) {
                             tileUsage.put(tile.text, tileUsage.get(tile.text) + 1);
                         }
                     }
@@ -685,6 +827,15 @@ public class Validator {
                     recommend(Message.Tag.Etc, "the tile \"" + tile.getKey() + "\" in gametiles only appears in words " + tile.getValue()
                             + " times. It is recommended that each tile be used at least " + NUM_TIMES_TILES_WANTED_IN_WORDS + " times");
                 }
+            }
+            if (okayInInitialPosition.size()<4) {
+                fatalError(Message.Tag.Etc, "There must be at least four tiles that can occur, or be substituted into, word-initial position. Please add more tiles and/or reconfigure gametiles > PositionRestrictions.");
+            }
+            if (okayInMedialPosition.size()<4) {
+                fatalError(Message.Tag.Etc, "There must be at least four tiles that can occur, or be substituted into, word-medial position. Please add more tiles and/or reconfigure gametiles > PositionRestrictions.");
+            }
+            if (okayInFinalPosition.size()<4) {
+                fatalError(Message.Tag.Etc, "There must be at least four tiles that can occur, or be substituted into, word-final position. Please add more tiles and/or reconfigure gametiles > PositionRestrictions.");
             }
 
         } catch (NullPointerException e) {
@@ -2600,7 +2751,12 @@ public class Validator {
         public int stageOfFirstAppearanceForThisTileType;
         public String audioForThisTileType;
 
-        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType) {
+        public String positionRestrictions;
+        public String wordInitialVariant;
+        public String wordMedialVariant;
+        public String wordFinalVariant;
+
+        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType, String positionRestrictions, String wordInitialVariant, String wordMedialVariant, String wordFinalVariant) {
             super(text);
             this.distractors = distractors;
             this.tileType = tileType;
@@ -2619,6 +2775,10 @@ public class Validator {
             this.typeOfThisTileInstance = typeOfThisTileInstance;
             this.stageOfFirstAppearanceForThisTileType = stageOfFirstAppearanceForThisTileType;
             this.audioForThisTileType = audioForThisTileType;
+            this.positionRestrictions = positionRestrictions;
+            this.wordInitialVariant = wordInitialVariant;
+            this.wordMedialVariant = wordMedialVariant;
+            this.wordFinalVariant = wordFinalVariant;
         }
 
         public Tile(Tile anotherTile) {
@@ -2640,6 +2800,10 @@ public class Validator {
             this.typeOfThisTileInstance = anotherTile.typeOfThisTileInstance;
             this.stageOfFirstAppearanceForThisTileType = anotherTile.stageOfFirstAppearanceForThisTileType;
             this.audioForThisTileType = anotherTile.audioForThisTileType;
+            this.positionRestrictions = anotherTile.positionRestrictions;
+            this.wordInitialVariant = anotherTile.wordInitialVariant;
+            this.wordMedialVariant = anotherTile.wordMedialVariant;
+            this.wordFinalVariant = anotherTile.wordFinalVariant;
         }
 
         public boolean hasNull() {
@@ -2649,6 +2813,44 @@ public class Validator {
                 return true;
             return false;
         }
+
+        /**
+         * A method used to determine whether a tile can be substituted into a word for another tile, based on its ability to function word-initially, word-medially, and/or word-finally, as defined in aa_gametiles.txt under PositionRestrictions
+         * @param tilesInRefWord The tiles parsed from a word into which the game is considering to insert this tile
+         * @param indexInParsedRefWordTileArray The index in the list of parsed tiles where this tile would be placed
+         * @return true or false depending on whether this tile is allowed to be inserted into the given word position, based on any position restrictions specified for the tile
+         */
+        public Boolean canBePlacedInPosition(ArrayList<Tile> tilesInRefWord, int indexInParsedRefWordTileArray) {
+
+            if (indexInParsedRefWordTileArray==0 && this.positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {
+                return false;
+            } else if (indexInParsedRefWordTileArray==tilesInRefWord.size()-1 && this.positionRestrictions.matches("(Word-initial ONLY|Word-medial ONLY|Anywhere EXCEPT word-finally)")) {
+                return false;
+            } else if (indexInParsedRefWordTileArray<tilesInRefWord.size()-1 && indexInParsedRefWordTileArray>0 && this.positionRestrictions.matches("(Word-initial ONLY|Word-final ONLY|Anywhere EXCEPT word-medially)")) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        /**
+         * A method used to determine whether a tile can be substituted into a word for another tile, based on its ability to function word-initially, word-medially, and/or word-finally, as defined in aa_gametiles.txt under PositionRestrictions
+         * @param position either "INITIAL", "MEDIAL", or "FINAL"; else defaults to true
+         * @return true or false depending on whether this tile is allowed to be inserted into the given word position, based on any position restrictions specified for the tile
+         */
+        public Boolean canBePlacedInPosition (String position) {
+
+            if (position.equals("INITIAL") && this.positionRestrictions.matches("(Word-medial ONLY|Word-final ONLY|Anywhere EXCEPT word-initially)")) {
+                return false;
+            } else if (position.equals("FINAL") && this.positionRestrictions.matches("(Word-initial ONLY|Word-medial ONLY|Anywhere EXCEPT word-finally)")) {
+                return false;
+            } else if (position.equals("MEDIAL") && this.positionRestrictions.matches("(Word-initial ONLY|Word-final ONLY|Anywhere EXCEPT word-medially)")) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
     }
 
     public class Key {
@@ -3035,7 +3237,56 @@ public class Validator {
                             break;
                     }
                     wordPreliminaryTileArray.add(nextTile);
+                } else {
+                    // See if the blocks of length one, two, three or four Unicode characters matches a variant of a tile
+                    // Note: This assumes that each variant only corresponds to one Tile object
+                    // Choose the longest block that matches a variant of a game tile and add that as the next segment in the parsed word array
+                    charBlockLength = 0;
+                    if (positionalVariantHashMap.containsKey(next1Chars)) {
+                        // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
+                        charBlockLength = 1;
+                    }
+                    if (positionalVariantHashMap.containsKey(next2Chars)) {
+                        // The value 2 can overwrite 1 but it can't overwrite 3 or 4
+                        charBlockLength = 2;
+                    }
+                    if (positionalVariantHashMap.containsKey(next3Chars)) {
+                        // The value 3 can overwrite 1 or 2 but it can't overwrite 4
+                        charBlockLength = 3;
+                    }
+                    if (positionalVariantHashMap.containsKey(next4Chars)) {
+                        // The value 4 can overwrite 1 or 2 or 3
+                        charBlockLength = 4;
+                    }
+
+                    // Add the selected game tile (the longest selected from the previous loop) to the parsed word array
+                    if (charBlockLength>0) {
+                        Tile nextTile;
+                        switch (charBlockLength) {
+                            case 2:
+                                nextTile = new Tile (positionalVariantHashMap.get(next2Chars));
+                                nextTile.text = next2Chars; // The variant text becomes the main text for this word's tile array
+                                i++;
+                                break;
+                            case 3:
+                                nextTile = new Tile (positionalVariantHashMap.get(next3Chars));
+                                nextTile.text = next3Chars;  // The variant text becomes the main text for this word's tile array
+                                i += 2;
+                                break;
+                            case 4:
+                                nextTile = new Tile (positionalVariantHashMap.get(next4Chars));
+                                nextTile.text = next4Chars;  // The variant text becomes the main text for this word's tile array
+                                i += 3;
+                                break;
+                            default: // charBlockLength==1
+                                nextTile = new Tile (positionalVariantHashMap.get(next1Chars));
+                                nextTile.text = next1Chars;  // The variant text becomes the main text for this word's tile array
+                                break;
+                        }
+                        wordPreliminaryTileArray.add(nextTile);
+                    }
                 }
+
             }
             for (Tile tile : wordPreliminaryTileArray) { // Set instance-specific fields
                 Tile nextTile = new Tile(tile);
@@ -3228,18 +3479,27 @@ public class Validator {
                     distractors.add(thisLineArray[1]);
                     distractors.add(thisLineArray[2]);
                     distractors.add(thisLineArray[3]);
-                    Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[4], stageOfFirstAppearance, thisLineArray[5]);
+
+                    // Process any position restrictions designated
+                    String positionRestrictions;
+                    if(!wordPositionRestrictionOptionsSet.contains(thisLineArray[17])) {
+                        positionRestrictions = "No restrictions (default)";
+                    } else {
+                        positionRestrictions = thisLineArray[17];
+                    }
+
+                    Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[4], stageOfFirstAppearance, thisLineArray[5], positionRestrictions, thisLineArray[18], thisLineArray[19], thisLineArray[20]);
 
                     tileList.add(tile);
 
                     if (!tile.tileTypeB.equals("none")) {
-                        tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[7], stageOfFirstAppearanceType2, thisLineArray[8]);
+                        tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[7], stageOfFirstAppearanceType2, thisLineArray[8], positionRestrictions, thisLineArray[18], thisLineArray[19], thisLineArray[20]);
                         if (!tile.hasNull()) {
                             tileList.add(tile);
                         }
                     }
                     if (!tile.tileTypeC.equals("none")) {
-                        tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[9], stageOfFirstAppearanceType3, thisLineArray[10]);
+                        tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[9], stageOfFirstAppearanceType3, thisLineArray[10], positionRestrictions, thisLineArray[18], thisLineArray[19], thisLineArray[20]);
                         if (!tile.hasNull()) {
                             tileList.add(tile);
                         }
@@ -3283,6 +3543,26 @@ public class Validator {
         }
     }
 
+
+    /**
+     * Initialize the positionalVariantHashmap and add any variant strings
+     * from gametiles columns Word-InitialVariant, Word-MedialVariant, and Word-FinalVariant
+     * as keys for the Tile objects they vary from
+     */
+    public void buildPositionalVariantHashMap() {
+        positionalVariantHashMap = new TileHashMap();
+        for (int i = 0; i < tileList.size(); i++) {
+            if (!tileList.get(i).wordInitialVariant.equals("none")){
+                positionalVariantHashMap.put(tileList.get(i).wordInitialVariant, tileList.get(i));
+            }
+            if (!tileList.get(i).wordMedialVariant.equals("none")){
+                positionalVariantHashMap.put(tileList.get(i).wordMedialVariant, tileList.get(i));
+            }
+            if (!tileList.get(i).wordFinalVariant.equals("none")){
+                positionalVariantHashMap.put(tileList.get(i).wordFinalVariant, tileList.get(i));
+            }
+        }
+    }
 
 
 }
