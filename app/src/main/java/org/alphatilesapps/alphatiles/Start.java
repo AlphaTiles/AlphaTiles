@@ -899,6 +899,11 @@ public class Start extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initialize the positionalVariantHashmap and add any variant strings
+     * from gametiles columns Word-InitialVariant, Word-MedialVariant, and Word-FinalVariant
+     * as keys for the Tile objects they vary from
+     */
     public void buildPositionalVariantHashMap() {
         positionalVariantHashMap = new TileHashMap();
         for (int i = 0; i < tileList.size(); i++) {
