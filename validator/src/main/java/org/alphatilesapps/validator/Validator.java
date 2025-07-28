@@ -1006,8 +1006,8 @@ public class Validator {
         try {
             Tab gametiles = langPackGoogleSheet.getTabFromName("gametiles");
             Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
-            if (gametiles.size() > 1 && gametiles.get(0).size() > 11) {
 
+            if (gametiles.size() > 1 && gametiles.get(0).size() > 11) {
                 // build wordlist for search (column 1 = word in LOP)
                 ArrayList<String> wordLOP = new ArrayList<>();
                 for (int i = 1; i < wordlist.size(); i++) {
@@ -1020,7 +1020,10 @@ public class Validator {
                     ArrayList<String> row = gametiles.get(i);
                     String tile = row.get(0).trim();
                     if (tile.isEmpty()) continue;
-                    if (row.size() > 11 && !row.get(11).trim().isEmpty()) continue; // skip if there is already an iconic word
+                    if (row.size() > 11) {
+                        String val = row.get(11).trim();
+                        if (!val.isEmpty() && !val.equals("-") && !val.equals("0")) continue;
+                    } // skip if there is already an iconic word
                     String tileLower = tile.toLowerCase();
                     String iconicWord = "";
                     // find first word whose first tile matches this tile
@@ -1034,6 +1037,10 @@ public class Validator {
                                 break;
                             }
                         }
+                    }
+                    if (!iconicWord.isEmpty()) {
+                        while (row.size() <= 11) row.add("");
+                        row.set(11, iconicWord);
                     }
                     // if not found, find first word containing tile anywhere
                     if (iconicWord.isEmpty()) {
