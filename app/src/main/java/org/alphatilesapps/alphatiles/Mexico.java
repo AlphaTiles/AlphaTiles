@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +20,7 @@ import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Mexico extends GameActivity {
 
-    ArrayList<String[]> memoryCollection = new ArrayList(); // KP
+    ArrayList<String[]> memoryCollection = new ArrayList<>();
     int justClickedCard;
     int priorClickedCard;
     int activeSelections = 0;
@@ -257,7 +258,7 @@ public class Mexico extends GameActivity {
             setOptionsRowUnclickable();
             setAllGameButtonsUnclickable();
 
-            handler = new Handler();
+            handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(quickViewDelay, Long.valueOf(800));
         }
 
@@ -334,7 +335,7 @@ public class Mexico extends GameActivity {
             if (!delaySetting.equals("")) {
                 delay = Long.valueOf(delaySetting);
             }
-            handler = new Handler();
+            handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(flipCardsBackOver, delay);
 
         }

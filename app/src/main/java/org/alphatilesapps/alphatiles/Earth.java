@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -41,6 +42,15 @@ public class Earth extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Disable back navigation
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Intentionally empty — do nothing
+            }
+        });
+
         context = this;
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -367,8 +377,4 @@ public class Earth extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
 }
