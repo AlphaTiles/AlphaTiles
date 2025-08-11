@@ -9,7 +9,7 @@ android {
         applicationId "org.alphatilesapps.alphatiles"
         minSdk = 21
         targetSdk = 36
-        versionCode = 183
+        versionCode = 184
         versionName = "2.8.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
