@@ -161,7 +161,11 @@ public class Resources extends AppCompatActivity {
                 String httpText = resourcesList[r][1];
                 String displayText = resourcesList[r][0];
                 String linkText = "<a href=\"" + httpText + "\">" + displayText + "</a>";
-                promotedText.setText(Html.fromHtml(linkText));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {  // API 24+
+                    promotedText.setText(Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY));
+                } else {
+                    promotedText.setText(Html.fromHtml(linkText));
+                }
                 promotedText.setMovementMethod(LinkMovementMethod.getInstance());
 
             } else {
@@ -217,7 +221,11 @@ public class Resources extends AppCompatActivity {
             String httpText = resourcesList[resourceIndex][1];
             String displayText = resourcesList[resourceIndex][0];
             String linkText = "<a href=\"" + httpText + "\">" + displayText + "</a>";
-            promotedText.setText(Html.fromHtml(linkText));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {  // API 24+
+                promotedText.setText(Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                promotedText.setText(Html.fromHtml(linkText));
+            }
             promotedText.setMovementMethod(LinkMovementMethod.getInstance());
 
             promotedResource.setVisibility(View.VISIBLE);

@@ -7,11 +7,15 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,7 +48,7 @@ public class LoadingScreen extends AppCompatActivity {
     //JP June 2022: moved loading of all SoundPool audio into this activity
     //note: audio instructions use MediaPlayer, not SoundPool
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
     Context context;
     ProgressBar progressBar;
 
@@ -59,6 +63,8 @@ public class LoadingScreen extends AppCompatActivity {
         ActivityLayouts.setStatusAndNavColors(this);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        mHandler = new Handler(Looper.getMainLooper());
 
         progressBar = findViewById(R.id.progressBar);
         String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
@@ -138,9 +144,15 @@ public class LoadingScreen extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        progressBar.getProgressDrawable().setColorFilter(
-                                Color.rgb(reds[mod_color[0]], greens[mod_color[0]], blues[mod_color[0]]),
-                                android.graphics.PorterDuff.Mode.SRC_IN);
+                        int color = Color.rgb(reds[mod_color[0]], greens[mod_color[0]], blues[mod_color[0]]);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // API 29+
+                            progressBar.getProgressDrawable().setColorFilter(
+                                    new BlendModeColorFilter(color, BlendMode.SRC_IN));
+                        } else {
+                            progressBar.getProgressDrawable().setColorFilter(
+                                    color,
+                                    android.graphics.PorterDuff.Mode.SRC_IN);
+                        }
 
                     }
                 });
@@ -180,7 +192,7 @@ public class LoadingScreen extends AppCompatActivity {
     public void loadWordAudio() {
         // load speech sounds
         Resources res = context.getResources();
-        wordAudioIDs = new HashMap();
+        wordAudioIDs = new HashMap<>();
 
         int i = 0;
         for (Start.Word word : wordList) {
@@ -198,7 +210,7 @@ public class LoadingScreen extends AppCompatActivity {
 
     public void loadSyllableAudio() {
         Resources res = context.getResources();
-        syllableAudioIDs = new HashMap();
+        syllableAudioIDs = new HashMap<>();
 
         int i = 0;
         for (Start.Syllable syllable : syllableList) {
@@ -216,8 +228,8 @@ public class LoadingScreen extends AppCompatActivity {
 
     public void loadTileAudio() {
         Resources res = context.getResources();
-        tileAudioIDs = new HashMap(0);
-        tileDurations = new HashMap();
+        tileAudioIDs = new HashMap<>(0);
+        tileDurations = new HashMap<>();
 
         int i = 0;
         for (Start.Tile tile : tileList) {

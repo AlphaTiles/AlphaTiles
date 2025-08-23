@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -81,6 +82,15 @@ public class ChoosePlayer extends AppCompatActivity {
 
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
+
+        // Disable back navigation
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Intentionally empty — do nothing
+            }
+        });
+
         setContentView(R.layout.choose_player);
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.choosePlayerCL);
@@ -119,8 +129,8 @@ public class ChoosePlayer extends AppCompatActivity {
         choosePlayerCL = findViewById(R.id.choosePlayerCL);
 
         // Populate arrays from what is actually in the layout
-        avatarIdList = new ArrayList();
-        avatarJpgList = new ArrayList();
+        avatarIdList = new ArrayList<>();
+        avatarJpgList = new ArrayList<>();
 
         for (int j = 0; j < choosePlayerCL.getChildCount(); j++) {
             View child = choosePlayerCL.getChildAt(j);
@@ -317,11 +327,6 @@ public class ChoosePlayer extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // no action
     }
 
 }

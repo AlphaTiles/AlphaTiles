@@ -6,17 +6,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowInsets;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -48,6 +52,15 @@ public class SetPlayerName extends AppCompatActivity {
         context = this;
 
         super.onCreate(savedInstanceState);
+
+        // Disable back navigation
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Intentionally empty — do nothing
+            }
+        });
+
         setContentView(R.layout.set_player_name);
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.setPlayerNameCL);
@@ -114,9 +127,18 @@ public class SetPlayerName extends AppCompatActivity {
 
     public void setTextSizes() {
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
+        int heightOfDisplay;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {  // API 30+
+            WindowMetrics windowMetrics = getWindowManager().getCurrentWindowMetrics();
+            Insets insets = windowMetrics.getWindowInsets()
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            heightOfDisplay = windowMetrics.getBounds().height() - insets.top - insets.bottom;
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            heightOfDisplay = displayMetrics.heightPixels;
+        }
         int pixelHeight = 0;
         double scaling = 0.45;
         int bottomToTopId;
@@ -366,9 +388,6 @@ public class SetPlayerName extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
+
 
 }
