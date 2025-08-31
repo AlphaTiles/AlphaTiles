@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".AppSettingsActivity"
+            android:label="Settings" />
+        <activity
             android:name=".Japan"
             android:exported="false" />
         <activity

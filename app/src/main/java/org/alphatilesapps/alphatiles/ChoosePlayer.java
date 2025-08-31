@@ -38,7 +38,6 @@ public class ChoosePlayer extends AppCompatActivity {
 
     public static ArrayList<Integer> avatarIdList;
     public static ArrayList<Drawable> avatarJpgList;
-
     public static final int[] AVATAR_IMAGE_IDS = {
             R.id.avatar01, R.id.avatar02, R.id.avatar03, R.id.avatar04, R.id.avatar05, R.id.avatar06,
             R.id.avatar07, R.id.avatar08, R.id.avatar09, R.id.avatar10, R.id.avatar11, R.id.avatar12
@@ -245,7 +244,7 @@ public class ChoosePlayer extends AppCompatActivity {
             playername12.setVisibility(View.GONE);
         }
     }
-    public void goToEarthFromAvatar(View view) {
+        public void goToEarthFromAvatar(View view) {
 
         playerNumber = Integer.parseInt((String) view.getTag());
         Intent intent = new Intent(context, Earth.class);
@@ -322,6 +321,53 @@ public class ChoosePlayer extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // no action
+    }
+    public void reset(int playerNum) {
+       // SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        // SharedPreferences.Editor editor = prefs.edit();
+
+        // **DO NOT modify player name here if you don't want to reset it**
+        // The following lines are commented out as they would reset the player's name:
+        // String localWordForName = langInfoList.find("NAME in local language");
+        // String defaultName;
+        // if (localWordForName.equals("custom")) {
+        //     defaultName = nameList.get(playerNum - 1);
+        // } else {
+        //     defaultName = localWordForName + " " + playerNum;
+        // }
+        // String playerString = Util.returnPlayerStringToAppend(playerNum);
+        // editor.putString("storedName" + playerString, defaultName);
+
+        // **Add logic here to reset other player-specific data, if applicable.**
+        // For example, if you have scores or progress stored in SharedPreferences:
+        // editor.remove("playerScores" + playerString); // Example: remove player scores
+        // editor.remove("playerProgress" + playerString); // Example: remove player progress
+        // editor.apply(); // Apply any other changes to SharedPreferences if you added them
+
+        // Navigate to a new Earth instance
+        Intent intent = new Intent(context, Earth.class);
+        intent.putExtra("playerNumber", playerNum); // Pass the player number if needed by Earth
+        intent.putExtra("settingsList", settingsList); // Pass settings if needed
+        startActivity(intent);
+        finish(); // Finish the current activity (ChoosePlayer)
+    }
+
+    public void reset(){
+        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        prefs.edit().clear().apply(); // Clear all data in the shared preferences
+
+        // Navigate to the ChoosePlayer activity.
+        // This will create a new instance of ChoosePlayer, causing it to reload
+        // player names and other data from scratch (which will now be defaults).
+        Intent intent = new Intent(context, ChoosePlayer.class);
+        startActivity(intent);
+        finish();
+    }
+    public void onSettingsIconClick(View view) {
+        Intent intent = new Intent(this, AppSettingsActivity.class);
+        startActivity(intent);
+        finish();
+        // You might not want to finish ChoosePlayer here, so the user can return to it.
     }
 
 }

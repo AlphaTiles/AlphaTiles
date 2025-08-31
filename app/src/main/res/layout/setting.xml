@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".AppSettingsActivity">
+
+    <TextView
+        android:id="@+id/textViewSettingsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="App Settings"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/buttonResetAllData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reset All Game Data"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/buttonResetPlayer1Data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reset Player 1 Data"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/textViewSomeOtherSettingLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Future Setting Label:"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"/>
+
+    <!-- You can add more settings elements here like Switches, EditTexts, etc. -->
+
+</LinearLayout>
