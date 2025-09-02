@@ -184,6 +184,9 @@ public class Validator {
                 if(checks.copySyllables) {
                     myValidator.copySyllablesDraft();
                 }
+                if (checks.copyIconicWords) {
+                    myValidator.copyIconicWordsDraft();
+                }
                 Set<Message.Tag> tagsToShow;
                 if (checks.preWorkshop) {
                     tagsToShow = Set.of(Message.Tag.PreWorkshop);
@@ -1369,6 +1372,22 @@ public class Validator {
             clipboard.setContents(new StringSelection(builder.toString()), null);
         } catch (ValidatorException e) {
             warn(Message.Tag.Etc,"Couldn't load the wordlist tab to generate syllable draft");
+        }
+    }
+    public void copyIconicWordsDraft() {
+        try {
+            Tab gametiles = langPackGoogleSheet.getTabFromName("gametiles");
+            StringBuilder builder = new StringBuilder();
+            for (int i = 1; i < gametiles.size(); i++) { // skip the header 
+                ArrayList<String> row = gametiles.get(i);
+                String tile = row.get(0);
+                String iconicWord = (row.size() > 11) ? row.get(11) : "";
+                builder.append(tile).append("\t").append(iconicWord).append("\n");
+            }
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(new StringSelection(builder.toString()), null);
+        } catch (ValidatorException e) {
+            warn(Message.Tag.Etc, "Couldn't load the gametiles tab to generate iconic word draft");
         }
     }
     /**
