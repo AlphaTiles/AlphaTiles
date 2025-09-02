@@ -416,11 +416,7 @@ public class Validator {
         if (usesSyllables) {
             this.validateSyllablesTab();
         }
-        // updates the fontFamily in styles/xml
         this.validateResourceSubfolders();
-
-        // updates the font in styles.xml
-        this.updateFontFamilyInStylesXml();
 
     }
     
@@ -1226,57 +1222,6 @@ public class Validator {
             }
         } catch (ValidatorException e) {
             warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the audio_instructions_optional folder or the games tab");
-        }
-    }
-    /**
-     * Updates the fontFamily item in the styles.xml file to match the font XML file found 
-     * in the current product flavor's font folder.
-     */
-    private void updateFontFamilyInStylesXml() {
-        String flavorName = langPackGoogleSheet.getName();
-
-        String fontFolderPath = "../app/src/" + flavorName + "/res/font/";
-        java.io.File fontFolder = new java.io.File(fontFolderPath);
-        String fontFileName = null;
-        String[] files = fontFolder.list();
-
-        if (files != null) {
-            for (String file : files) {
-                System.out.println("File name:" + file.toString());
-                if (file.endsWith(".xml")) {
-                    fontFileName = file.substring(0, file.length() - 4); // remove .xml
-                    break;
-                }
-            }
-        }
-        if (fontFileName == null) {
-            System.out.println("No font XML file found for flavor: " + flavorName);
-            return;
-        }
-
-        String stylesXmlPath = "../app/src/main/res/values/styles.xml";
-        List<String> updatedLines = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(stylesXmlPath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.contains("<item name=\"fontFamily\">")) {
-                    line = "        <item name=\"fontFamily\">@font/" + fontFileName + "</item>";
-                }
-                updatedLines.add(line);
-            }
-        }
-        catch (IOException e) {
-            fatalError(Message.Tag.Etc, "FAILED TO READ STYLES.XML");
-        }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(stylesXmlPath))) {
-            for (int i = 0; i < updatedLines.size(); i++) {
-                writer.write(updatedLines.get(i));
-                writer.newLine();
-            }
-        }
-        catch (IOException e) {
-            fatalError(Message.Tag.Etc, "FAILED TO WRITE IN STYLES.XML");
         }
     }
     /**
