@@ -81,17 +81,17 @@ public class Thailand extends GameActivity {
         // challengeLevelThai = 2 (distractors not random)
         // refType = "TILE_AUDIO" (1-indexed index in the TYPES array)
         // choiceType = "WORD_IMAGE" (1-indexed index in the TYPES array)
-        String clString = String.valueOf(challengeLevel);
-        challengeLevelThai = Integer.parseInt(clString.substring(0, 1));
-        refType = TYPES[Integer.parseInt(clString.substring(1, 2)) - 1];
-        choiceType = TYPES[Integer.parseInt(clString.substring(2, 3)) - 1];
+        String clString = String.valueOf(challengeLevel);// Turns the challenge level into a three-digit string
+        challengeLevelThai = Integer.parseInt(clString.substring(0, 1));// ChallengeLevelThai is represented by the first string
+        refType = TYPES[Integer.parseInt(clString.substring(1, 2)) - 1];// The second number represents the type of the reference
+        choiceType = TYPES[Integer.parseInt(clString.substring(2, 3)) - 1];// The third number represents the type of the choices
 
         int gameID = 0;
         if (choiceType.equals("WORD_TEXT")) {
-            setContentView(R.layout.thailand2);
+            setContentView(R.layout.thailand2);// sets a screen layout that is better suited for words
             gameID = R.id.thailand2CL;
         } else {
-            setContentView(R.layout.thailand);
+            setContentView(R.layout.thailand); // box layout
             gameID = R.id.thailandCL;
         }
 
@@ -190,7 +190,7 @@ public class Thailand extends GameActivity {
             } else if (refType.contains("WORD") && choiceType.contains("WORD")) {
                 boolean freshTile = false;
                 int freshChecks = 0;
-                while (!freshTile) {
+                while (!freshTile) {// Here or the chooseWord method is where I will need to implement
                     chooseWord();
                     parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
                     refTile = firstAudibleTile(refWord);
@@ -210,15 +210,15 @@ public class Thailand extends GameActivity {
 
             }
 
-        } else if (choiceType.contains("SYLLABLE") && refType.contains("SYLLABLE")) {
+        } else if (choiceType.contains("SYLLABLE") && refType.contains("SYLLABLE")) {// Task: add stages support for syllables in Start and syllables file.
             boolean freshSyllable = false;
             while (!freshSyllable) {
-                int randomNum2 = rand.nextInt(syllableList.size());
+                int randomNum2 = rand.nextInt(syllableList.size());// This line will need to be changed (We need to implement stages for syllables)
                 refSyllable = syllableList.get(randomNum2);
                 refString = syllableList.get(randomNum2).text;
                 if (!refString.equals(refStringLast)
                         && !refString.equals(refStringSecondToLast)
-                        && !refString.equals(refStringThirdToLast)) {
+                        && !refString.equals(refStringThirdToLast)) {// This needs better commenting but not relevant to my task.
                     freshSyllable = true;
                     refStringThirdToLast = refStringSecondToLast;
                     refStringSecondToLast = refStringLast;
@@ -226,7 +226,7 @@ public class Thailand extends GameActivity {
                 }
             }
 
-        } else if (choiceType.contains("WORD") && refType.contains("SYLLABLE")) {
+        } else if (choiceType.contains("WORD") && refType.contains("SYLLABLE")) {// Assuming that the word is being taken from the appropriate stage this should be fine.
             boolean freshSyllable = false;
             while (!freshSyllable) {
                 chooseWord();
@@ -246,11 +246,11 @@ public class Thailand extends GameActivity {
         } else {
             // Makes sure that the reference tile chosen is not a glottal stop for ex;
             // Ensure that chosen tile is a consonant or vowel
-            if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO")) {
+            if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO")) {// tiles and possibly audio must be taken from the appropriate stage.
                 boolean freshTile = false;
                 int freshChecks = 0;
                 while (!freshTile || !(CorV.contains(refTile))) {
-                    int randomTileIndex = rand.nextInt(tileListNoSAD.size());
+                    int randomTileIndex = rand.nextInt(tileListNoSAD.size());// Change from random tile to staged tile
                     freshChecks++;
                     refTile = tileListNoSAD.get(randomTileIndex);
                     refString = refTile.text;
@@ -271,12 +271,12 @@ public class Thailand extends GameActivity {
                 int freshChecks = 0;
 
                 while (!freshTile || refTileType.equals("X")) {
-                    int randomTileIndex = rand.nextInt(tileListNoSAD.size());
+                    int randomTileIndex = rand.nextInt(tileListNoSAD.size());// What is tileListNoSad? Do we need sublists of it?
                     freshChecks++;
                     refTile = tileListNoSAD.get(randomTileIndex);
                     refString = refTile.upper;
                     refTileType = refTile.typeOfThisTileInstance;
-                    while (challengeLevelThai == 1 && refTileType.matches("(T|AD|D|PC)")) {
+                    while (challengeLevelThai == 1 && refTileType.matches("(T|AD|D|PC)")) {// What does this mean?
                         // JP: Disallow tone marks, diacritics, and silent consonants from being reference in level 1
                         randomTileIndex = rand.nextInt(tileListNoSAD.size());
                         freshChecks++;
