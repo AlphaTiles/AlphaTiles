@@ -184,6 +184,9 @@ public class Validator {
                 if(checks.copySyllables) {
                     myValidator.copySyllablesDraft();
                 }
+                if (checks.copyIconicWords) {
+                    myValidator.copyIconicWordsDraft();
+                }
                 Set<Message.Tag> tagsToShow;
                 if (checks.preWorkshop) {
                     tagsToShow = Set.of(Message.Tag.PreWorkshop);
@@ -398,15 +401,14 @@ public class Validator {
     //</editor-fold>
 
     //<editor-fold desc="validation methods">
-
     /**
      * Executes all validation, delegating to validateGoogleSheet, validateSyllables (
      * if it appears syllables are attempted) and validateResourceSubfolders.
      * Populates fatalErrors, warnings, project notes and recommendations.
      */
     public void validate() {
-
-        this.validateGoogleSheet();
+        
+       this.validateGoogleSheet();
         try {
             stagesInformation = StagesChecks.check(wordList, tileList, stageCorrespondenceRatio, firstTileStageCorrespondence);
         } catch (Exception ignored) {
@@ -417,7 +419,6 @@ public class Validator {
         if (usesSyllables) {
             this.validateSyllablesTab();
         }
-
         this.validateResourceSubfolders();
 
     }
@@ -597,8 +598,10 @@ public class Validator {
                 } catch (ValidatorException e) {
                     fatalError(Message.Tag.Etc, "In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\". Please add a valid script type.");
                 }
+
                 try {
                     Tab settings = langPackGoogleSheet.getTabFromName("settings");
+                    // The below line may cause the NullPointerException catch block to activate.
                     placeholderCharacter = settings.getRowFromFirstCell("Stand-in base for combining tiles").get(1); // sets global variable for complex parses
                     boolean placeholderCharacterFoundInGametiles = false;
                     for (Tile tile : tileList) {
@@ -616,8 +619,15 @@ public class Validator {
                             warn(Message.Tag.Etc, "Since the script type is Thai or Lao, you have the option to specify the \"Stand-in base for combining tiles\" in settings. By default, it will be \"◌\".");
                         }
                     }
+                } catch (NullPointerException e) {
+                    // This catch block is intended to only be triggered when the line assigning
+                    // placeholderCharacter throws an error because stand-in base is undefined in
+                    // a language. It prevents the nesting block from being triggered and bypassing
+                    // the next few sections of code.
                 }
+
                 ArrayList<Tile> tilesInWord;
+
                 try {
                     tilesInWord = tileList.parseWordIntoTilesPreliminary(word); // Complex tiles are broken into pieces for the China game
                     int numTiles = tilesInWord.size();
@@ -889,6 +899,9 @@ public class Validator {
             if (!gamesList.contains("Malaysia")) {
                 recommend(Message.Tag.Etc, "it is recommended that you include the Malaysia game");
             }
+            if (!gamesList.contains("Iraq")) {
+                recommend(Message.Tag.Etc, "it is recommended that you include the Iraq game, either challenge level 1 (random words) or 2 (iconic words)");
+            }
 
             if ((fourTileWords < 3 || threeTileWords < 1) && gamesList.contains("China")) {
                 fatalError(Message.Tag.Etc, "the China game requires at least 3 four tile words and 1 three tile word, you only " +
@@ -1002,6 +1015,67 @@ public class Validator {
         } catch(Exception e) {
             fatalError(Message.Tag.Etc, FAILED_CHECK_WARNING + "the gametiles or syllables tab");
         }
+        //iconic word auto population
+        try {
+            Tab gametiles = langPackGoogleSheet.getTabFromName("gametiles");
+            Tab wordlist = langPackGoogleSheet.getTabFromName("wordlist");
+
+            if (gametiles.size() > 1 && gametiles.get(0).size() > 11) {
+                // build wordlist for search (column 1 = word in LOP)
+                ArrayList<String> wordLOP = new ArrayList<>();
+                for (int i = 1; i < wordlist.size(); i++) {
+                    ArrayList<String> wrow = wordlist.get(i);
+                    if (wrow.size() > 1) {
+                        wordLOP.add(wrow.get(1));
+                    }
+                }
+                for (int i = 1; i < gametiles.size(); i++) {
+                    ArrayList<String> row = gametiles.get(i);
+                    String tile = row.get(0).trim();
+                    if (tile.isEmpty()) continue;
+                    if (row.size() > 11) {
+                        String val = row.get(11).trim();
+                        if (!val.isEmpty() && !val.equals("-") && !val.equals("0")) continue;
+                    } // skip if there is already an iconic word
+                    String tileLower = tile.toLowerCase();
+                    String iconicWord = "";
+                    // find first word whose first tile matches this tile
+                    for (Word w : wordList) {
+                        if (w.wordInLOP == null) continue;
+                        ArrayList<Tile> tilesInWord = tileList.parseWordIntoTiles(w);
+                        if (tilesInWord != null && !tilesInWord.isEmpty()) {
+                            String firstTileText = tilesInWord.get(0).text;
+                            if (firstTileText != null && firstTileText.trim().equalsIgnoreCase(tile)) {
+                                iconicWord = w.wordInLOP;
+                                break;
+                            }
+                        }
+                    }
+                    if (!iconicWord.isEmpty()) {
+                        while (row.size() <= 11) row.add("");
+                        row.set(11, iconicWord);
+                    }
+                    // if not found, find first word containing tile anywhere
+                    if (iconicWord.isEmpty()) {
+                        for (Word w : wordList) {
+                            if (w.wordInLOP != null && w.wordInLOP.toLowerCase().contains(tileLower)) {
+                                iconicWord = w.wordInLOP;
+                                break;
+                            }
+                        }
+                    }
+                    // set col 11 (L) to iconicWord if found
+                    if (!iconicWord.isEmpty()) {
+                        while (row.size() <= 11) row.add("");
+                        row.set(11, iconicWord);
+                    }
+                }
+
+            }
+        } catch (ValidatorException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private static Map<String, Integer> getKeyUsage() {
@@ -1217,7 +1291,57 @@ public class Validator {
             warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the audio_instructions_optional folder or the games tab");
         }
     }
+    /**
+     * Updates the fontFamily item in the styles.xml file to match the font XML file found 
+     * in the current product flavor's font folder.
+     */
+    private void updateFontFamilyInStylesXml() {
+        String flavorName = langPackGoogleSheet.getName();
 
+        String fontFolderPath = "../app/src/" + flavorName + "/res/font/";
+        java.io.File fontFolder = new java.io.File(fontFolderPath);
+        String fontFileName = null;
+        String[] files = fontFolder.list();
+
+        if (files != null) {
+            for (String file : files) {
+                System.out.println("Font in styles.xml set to:" + file.toString());
+                if (file.endsWith(".xml")) {
+                    fontFileName = file.substring(0, file.length() - 4); // remove .xml
+                    break;
+                }
+            }
+        }
+        if (fontFileName == null) {
+            System.out.println("No font XML file found for flavor: " + flavorName);
+            return;
+        }
+
+        String stylesXmlPath = "../app/src/main/res/values/styles.xml";
+        List<String> updatedLines = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(stylesXmlPath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("<item name=\"fontFamily\">")) {
+                    line = "        <item name=\"fontFamily\">@font/" + fontFileName + "</item>";
+                }
+                updatedLines.add(line);
+            }
+        }
+        catch (IOException e) {
+            fatalError(Message.Tag.Etc, "FAILED TO READ STYLES.XML");
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(stylesXmlPath))) {
+            for (int i = 0; i < updatedLines.size(); i++) {
+                writer.write(updatedLines.get(i));
+                writer.newLine();
+            }
+        }
+        catch (IOException e) {
+            fatalError(Message.Tag.Etc, "FAILED TO WRITE IN STYLES.XML");
+        }
+    }
     /**
      * Executes checks on the syllable tab in langPackGoogleSheet.
      * Checks are wrapped in try catch blocks so that if one check fails, the rest of the checks can still be run.
@@ -1310,6 +1434,22 @@ public class Validator {
             warn(Message.Tag.Etc,"Couldn't load the wordlist tab to generate syllable draft");
         }
     }
+    public void copyIconicWordsDraft() {
+        try {
+            Tab gametiles = langPackGoogleSheet.getTabFromName("gametiles");
+            StringBuilder builder = new StringBuilder();
+            for (int i = 1; i < gametiles.size(); i++) { // skip the header 
+                ArrayList<String> row = gametiles.get(i);
+                String tile = row.get(0);
+                String iconicWord = (row.size() > 11) ? row.get(11) : "";
+                builder.append(tile).append("\t").append(iconicWord).append("\n");
+            }
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(new StringSelection(builder.toString()), null);
+        } catch (ValidatorException e) {
+            warn(Message.Tag.Etc, "Couldn't load the gametiles tab to generate iconic word draft");
+        }
+    }
     /**
      * Writes an android language pack to be used in the AlphaTiles app, including adjustments to build.gradle.
      * Bases language pack template on local device in PublicLanguageAssets repo that should be sister to AlphaTiles.
@@ -1350,7 +1490,26 @@ public class Validator {
         if (Files.exists(pathToTempServices)) {
             Files.move(pathToTempServices, pathToLangPack.resolve("google-services.json"));
         }
-
+        
+        GoogleDriveItem googleServicesItem = null;
+        for (GoogleDriveItem item : langPackDriveFolder.getFolderContents()) {
+            if (item.getName().startsWith("google-services") && item.getName().endsWith(".json")) {
+                googleServicesItem = item;
+                break;
+            }
+        }
+        if (googleServicesItem != null) {
+            Path localGoogleServicesPath = pathToLangPack.resolve(googleServicesItem.getName());
+            try (OutputStream out = new FileOutputStream(localGoogleServicesPath.toFile())) {
+                driveService.files().get(googleServicesItem.getId()).executeMediaAndDownloadTo(out);
+                System.out.println("Downloaded google-services.json to " + localGoogleServicesPath);
+            } catch (IOException e) {
+                fatalError(Message.Tag.Etc, "FAILED TO DOWNLOAD google-services.json: " + e.getMessage());
+            }
+        } else {
+            warn(Message.Tag.Etc, "google-services.json not found in Drive folder or json subfolder.");
+        }
+        
         writeNewBuildGradle(pathToApp);
         writeRawTxtFiles(pathToLangPack);
         writeImageAndAudioFiles(pathToLangPack);
@@ -1501,6 +1660,8 @@ public class Validator {
                     Files.createDirectories(outputFolderPath);
                 }
 
+
+
                 for (GoogleDriveItem driveResource : folderContents) {
                     Path pathForResource = outputFolderPath.resolve(driveResource.getName());
                     java.io.File downloadedResource = pathForResource.toFile();
@@ -1546,10 +1707,13 @@ public class Validator {
                     }
                 }
                 System.out.println("finished downloading " + subFolderName + " from google drive into language pack.");
+
             } catch (ValidatorException e) {
                 System.out.println("FAILED TO DOWNLOAD " + subfolderSpecs.getKey() + " from google drive into language pack.");
             }
         }
+        // updates the font in styles.xml
+        this.updateFontFamilyInStylesXml();
     }
     //</editor-fold>
 
@@ -2010,6 +2174,9 @@ public class Validator {
                 if (row.get(col).matches("([0-9]+\\.)?\\s*" + Pattern.quote(cell))) {
                     return row;
                 }
+            }
+            if (scriptType.equals("Roman") && cell.contains("Stand-in base for combining tiles")){
+                return null;// suppresses the fatal errors if Roman language pack doesn't have that row
             }
             fatalError(Message.Tag.Etc, "cannot find a row in " + this.getName() + " that contains \"" + cell + "\" in column " + col);
             throw new ValidatorException("cannot find a row in " + this.getName() + " that contains \"" + cell + "\" in column " + col);
@@ -2498,12 +2665,14 @@ public class Validator {
         public boolean preWorkshop = false;
         public boolean copySyllables = false;
         public boolean stagesInformation = false;
+        public boolean copyIconicWords = false;
         public Checks(JPanel dialog) {
             addCheck(dialog, "Pre-workshop checks only", (ActionEvent e) -> preWorkshop = !preWorkshop, false);
             addCheck(dialog, "Show recommendations", (ActionEvent e) -> showRecommendations = !showRecommendations);
             addCheck(dialog, "Show excess file warnings", (ActionEvent e) -> showExcess = !showExcess);
             addCheck(dialog, "Show stages information", (ActionEvent e) -> stagesInformation = !stagesInformation, false);
             addCheck(dialog, "Copy syllables draft to clipboard", (ActionEvent e) -> copySyllables = !copySyllables, false);
+            addCheck(dialog, "Copy iconic word draft to clipboard", (ActionEvent e) -> copyIconicWords = !copyIconicWords, false);
         }
         private void addCheck(JPanel dialog, String message, ActionListener listener) {
             addCheck(dialog, message, listener, true);
@@ -3059,26 +3228,25 @@ public class Validator {
                     return null;
                 }
             }
-            for (Tile tile : wordPreliminaryTileArray) { // Set instance-specific fields
-                Tile nextTile = new Tile(tile);
-                if (MULTITYPE_TILES.contains(nextTile.text)) {
-                    nextTile.typeOfThisTileInstance = getInstanceTypeForMixedTilePreliminary(tileIndex, wordPreliminaryTileArray, wordListWord);
-                    if (nextTile.typeOfThisTileInstance.equals(nextTile.tileTypeB)) {
-                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearanceB;
-                        nextTile.audioForThisTileType = nextTile.audioNameB;
-                    } else if (nextTile.typeOfThisTileInstance.equals(nextTile.tileTypeC)) {
-                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearanceC;
-                        nextTile.audioForThisTileType = nextTile.audioNameC;
+            for (Tile tile : wordPreliminaryTileArray) {
+                if (MULTITYPE_TILES.contains(tile.text)) {
+                    tile.typeOfThisTileInstance = getInstanceTypeForMixedTilePreliminary(tileIndex, wordPreliminaryTileArray, wordListWord);
+                    if (tile.typeOfThisTileInstance.equals(tile.tileTypeB)) {
+                        tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearanceB;
+                        tile.audioForThisTileType = tile.audioNameB;
+                    } else if (tile.typeOfThisTileInstance.equals(tile.tileTypeC)) {
+                        tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearanceC;
+                        tile.audioForThisTileType = tile.audioNameC;
                     } else {
-                        nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
-                        nextTile.audioForThisTileType = nextTile.audioName;
+                        tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearance;
+                        tile.audioForThisTileType = tile.audioName;
                     }
-                    wordPreliminaryTileArrayFinal.add(nextTile);
+                    wordPreliminaryTileArrayFinal.add(tile);
                 } else {
-                    nextTile.typeOfThisTileInstance = nextTile.tileType;
-                    nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
-                    nextTile.audioForThisTileType = nextTile.audioName;
-                    wordPreliminaryTileArrayFinal.add(nextTile);
+                    tile.typeOfThisTileInstance = tile.tileType;
+                    tile.stageOfFirstAppearanceForThisTileType = tile.stageOfFirstAppearance;
+                    tile.audioForThisTileType = tile.audioName;
+                    wordPreliminaryTileArrayFinal.add(tile);
                 }
                 tileIndex++;
             }

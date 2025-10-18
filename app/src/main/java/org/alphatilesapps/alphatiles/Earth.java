@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -41,6 +42,15 @@ public class Earth extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Disable back navigation
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Intentionally empty — do nothing
+            }
+        });
+
         context = this;
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -130,10 +140,25 @@ public class Earth extends AppCompatActivity {
             }
         }
         if (noShareIcon) { // if aa_share does not have a second line, don't display a share icon
-        //if (true) {
+            //if (true) {
             ImageView shareIcon = findViewById(R.id.share);
             shareIcon.setVisibility(View.GONE);
             shareIcon.setOnClickListener(null);
+        }
+        boolean noResources = true;
+        if (context.getResources().getIdentifier("aa_resources", "raw", context.getPackageName()) != 0) { // Checks if resource file exists
+            Scanner resourceScanner = new Scanner(getResources().openRawResource(R.raw.aa_resources));
+            if (resourceScanner.hasNext()) { // See if there is anything in resource file
+                resourceScanner.nextLine(); // Skips the header line
+                if (resourceScanner.hasNext() && !resourceScanner.next().isEmpty()) { // If there is a line after the header that is not an empty string ""
+                    noResources = false;
+                }
+            }
+        }
+        if (noResources) {
+            ImageView resourcesIcon = findViewById(R.id.resourcePromo);
+            resourcesIcon.setVisibility(View.GONE);
+            resourcesIcon.setOnClickListener(null);
         }
     }
 
@@ -367,8 +392,4 @@ public class Earth extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
 }

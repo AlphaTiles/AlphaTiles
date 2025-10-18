@@ -2,24 +2,25 @@ package org.alphatilesapps.alphatiles;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import static org.alphatilesapps.alphatiles.Start.enhancedAudioLoadingLog;
 import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.wordList;
@@ -47,10 +48,9 @@ public class LoadingScreen extends AppCompatActivity {
     //JP June 2022: moved loading of all SoundPool audio into this activity
     //note: audio instructions use MediaPlayer, not SoundPool
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
     Context context;
     ProgressBar progressBar;
-    int maxWordWidthInPixels = 39;
 
     private static final Logger LOGGER = Logger.getLogger( LoadingScreen.class.getName() );
 
@@ -64,6 +64,8 @@ public class LoadingScreen extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        mHandler = new Handler(Looper.getMainLooper());
+
         progressBar = findViewById(R.id.progressBar);
         String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
         if (scriptDirection.equals("RTL")) {
@@ -74,12 +76,15 @@ public class LoadingScreen extends AppCompatActivity {
         }
         context = this;
 
-        String verName = BuildConfig.VERSION_NAME;
-        TextView versionNumberView = (TextView) findViewById(R.id.versionNumber);
-        versionNumberView.setText(getString(R.string.ver_info, verName));
+        TextView gameNameView = findViewById(R.id.gameName);
+        String localAppName = langInfoList.find("Game Name");
+        gameNameView.setText(localAppName);
 
+        TextView langPackNameView = findViewById(R.id.langPackName);
+        langPackNameView.setText(BuildConfig.FLAVOR);
 
-        int num_of_words = wordList.size();
+        TextView versionNoView = findViewById(R.id.versionNo);
+        versionNoView.setText(BuildConfig.VERSION_NAME);
 
         Intent intent = new Intent(this, ChoosePlayer.class);
 
@@ -117,13 +122,6 @@ public class LoadingScreen extends AppCompatActivity {
             }).start();
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loadPixelWidthAdjustments();
-            }
-        }).start();
-
         //JP: alpha tiles colors separated into r,g,b
         //ex: the first color 6200EE corresponds to 98, 0, 1 in the 0 index of each array
         //for the progress bar
@@ -146,9 +144,15 @@ public class LoadingScreen extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        progressBar.getProgressDrawable().setColorFilter(
-                                Color.rgb(reds[mod_color[0]], greens[mod_color[0]], blues[mod_color[0]]),
-                                android.graphics.PorterDuff.Mode.SRC_IN);
+                        int color = Color.rgb(reds[mod_color[0]], greens[mod_color[0]], blues[mod_color[0]]);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // API 29+
+                            progressBar.getProgressDrawable().setColorFilter(
+                                    new BlendModeColorFilter(color, BlendMode.SRC_IN));
+                        } else {
+                            progressBar.getProgressDrawable().setColorFilter(
+                                    color,
+                                    android.graphics.PorterDuff.Mode.SRC_IN);
+                        }
 
                     }
                 });
@@ -188,9 +192,14 @@ public class LoadingScreen extends AppCompatActivity {
     public void loadWordAudio() {
         // load speech sounds
         Resources res = context.getResources();
-        wordAudioIDs = new HashMap();
+        wordAudioIDs = new HashMap<>();
 
+        int i = 0;
         for (Start.Word word : wordList) {
+            if (enhancedAudioLoadingLog) {
+                i++;
+                LOGGER.info("LoadProgress: next task: load word audio " + i + " of " + wordList.size() + ": " + word.wordInLWC + " (" + word.wordInLOP + ")");
+            }
             int resId = res.getIdentifier(word.wordInLWC, "raw", context.getPackageName());
             int duration = getAssetDuration(resId) + 100;
             wordAudioIDs.put(word.wordInLWC, gameSounds.load(context, resId, 1));
@@ -201,9 +210,14 @@ public class LoadingScreen extends AppCompatActivity {
 
     public void loadSyllableAudio() {
         Resources res = context.getResources();
-        syllableAudioIDs = new HashMap();
+        syllableAudioIDs = new HashMap<>();
 
+        int i = 0;
         for (Start.Syllable syllable : syllableList) {
+            if (enhancedAudioLoadingLog) {
+                i++;
+                LOGGER.info("LoadProgress: next task: load syllable audio " + i + " of " + syllableList.size() + ": " + syllable.text + " (" + syllable.audioName + ")");
+            }
             int resId = res.getIdentifier(syllable.audioName, "raw", context.getPackageName());
             int duration = getAssetDuration(resId) + 100;
             syllableAudioIDs.put(syllable.audioName, gameSounds.load(context, resId, 2));
@@ -214,10 +228,15 @@ public class LoadingScreen extends AppCompatActivity {
 
     public void loadTileAudio() {
         Resources res = context.getResources();
-        tileAudioIDs = new HashMap(0);
-        tileDurations = new HashMap();
+        tileAudioIDs = new HashMap<>(0);
+        tileDurations = new HashMap<>();
 
+        int i = 0;
         for (Start.Tile tile : tileList) {
+            if (enhancedAudioLoadingLog) {
+                i++;
+                LOGGER.info("LoadProgress: next task: load tile audio " + i + " of " + tileList.size() + ": " + tile.text + " (" + tile.audioName + ")");
+            }
             if(!tile.audioForThisTileType.equals("zz_no_audio_needed")) {
                 int resId = res.getIdentifier(tile.audioForThisTileType, "raw", context.getPackageName());
                 int duration = getAssetDuration(resId) + 100;
@@ -233,8 +252,19 @@ public class LoadingScreen extends AppCompatActivity {
 
     public void loadGameAudio() {
         // load music sounds
+        if (enhancedAudioLoadingLog) {
+            LOGGER.info("LoadProgress: next task: load game audio 1 of 3: zz_correct.mp3");
+        }
         correctSoundID = gameSounds.load(context, R.raw.zz_correct, 3);
+
+        if (enhancedAudioLoadingLog) {
+            LOGGER.info("LoadProgress: next task: load game audio 2 of 3: zz_incorrect.mp3");
+        }
         incorrectSoundID = gameSounds.load(context, R.raw.zz_incorrect, 3);
+
+        if (enhancedAudioLoadingLog) {
+            LOGGER.info("LoadProgress: next task: load game audio 3 of 3: zz_correct_final.mp3");
+        }
         correctFinalSoundID = gameSounds.load(context, R.raw.zz_correct_final, 1);
 
         correctSoundDuration = getAssetDuration(R.raw.zz_correct) + 200;
@@ -251,44 +281,13 @@ public class LoadingScreen extends AppCompatActivity {
         return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
 
-    public void loadPixelWidthAdjustments() {
-
-        for (Start.Word word : wordList) {
-            word.adjustment = String.valueOf(calculatedPixelWidthAdjustment(word.wordInLOP));
-        }
-    }
-
-    private double calculatedPixelWidthAdjustment(String word) {
-        TextView wordView = new TextView(this);
-        wordView.setText(word);
-        wordView.setTextSize(11);
-        wordView.measure(0, 0);
-        int wordWidthInPixels = wordView.getMeasuredWidth();
-
-        if (wordWidthInPixels <= maxWordWidthInPixels) {
-            return 1;
-        } else {
-            return Math.round((maxWordWidthInPixels * 100.0) / (wordWidthInPixels * 100));
-        }
-
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void forceRTLIfSupported() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        }
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void forceLTRIfSupported() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-        }
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
     }
-
 
 }
 

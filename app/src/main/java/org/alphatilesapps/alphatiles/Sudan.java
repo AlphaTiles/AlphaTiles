@@ -270,6 +270,8 @@ public class Sudan extends GameActivity {
     public void showOrHideScrollingArrows() {
         ImageView nextPageArrow = findViewById(R.id.nextSet);
         ImageView prevPageArrow = findViewById(R.id.previousSet);
+        nextPageArrow.setColorFilter(Color.parseColor("#FF00FF"));
+        prevPageArrow.setColorFilter(Color.parseColor("#FF00FF"));
         if (currentPageNumber == numPages) {
             nextPageArrow.setVisibility(View.INVISIBLE);
         } else {

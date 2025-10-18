@@ -1,10 +1,8 @@
 package org.alphatilesapps.alphatiles;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -13,6 +11,8 @@ import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.core.text.util.LinkifyCompat;
+import android.os.Build;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -59,7 +59,7 @@ public class About extends AppCompatActivity {
 
         TextView photoAudioCredits2 = findViewById(R.id.photoAudioCredits2);
         String mediaTwo = Start.langInfoList.find("Audio and image credits (lang 2)");
-        if (mediaTwo.equals("none") || mediaTwo.equals(null)|| mediaTwo.equals("")) {
+        if (mediaTwo != null && !mediaTwo.equalsIgnoreCase("none") && !mediaTwo.isEmpty()) {
             photoAudioCredits2.setText("");
         } else {
             photoAudioCredits2.setText(mediaTwo);
@@ -73,12 +73,12 @@ public class About extends AppCompatActivity {
         }
 
         TextView email = findViewById(R.id.email);
-        email.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
         String contactEmail = Start.langInfoList.find("Email");
-    if (contactEmail.equals("none") || contactEmail.equals(null)|| contactEmail.equals("")) {
+        if (contactEmail == null || contactEmail.equals("none") || contactEmail.isEmpty()) {
             email.setText("");
         } else {
             email.setText(contactEmail);
+            LinkifyCompat.addLinks(email, Linkify.EMAIL_ADDRESSES);
             email.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
@@ -86,7 +86,12 @@ public class About extends AppCompatActivity {
 
         String httpText = Start.langInfoList.find("Privacy Policy");
         String linkText = "<a href=\"" + httpText + "\">" + "Privacy Policy" + "</a>";
-        CharSequence styledText = Html.fromHtml(linkText);
+        CharSequence styledText;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            styledText = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            styledText = Html.fromHtml(linkText); // for API 21 to 23
+        }
         privacyPolicy.setText(styledText);
         privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -99,7 +104,7 @@ public class About extends AppCompatActivity {
 
         String verName = BuildConfig.VERSION_NAME;
         TextView verInfo = findViewById(R.id.appVersionInEnglish);
-        verInfo.setText(getString(R.string.ver_info, verName));
+        verInfo.setText(String.format("%s: %s (%s)", "Alpha Tiles", verName, BuildConfig.FLAVOR));
 
         if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
@@ -112,7 +117,7 @@ public class About extends AppCompatActivity {
 
             if (hideSILlogo) {
 
-                ImageView SILlogoImage = (ImageView) findViewById(R.id.logoSILImage);
+                ImageView SILlogoImage = findViewById(R.id.logoSILImage);
                 SILlogoImage.setVisibility(View.GONE);
 
                 ConstraintLayout constraintLayout = findViewById(R.id.aboutCL);
@@ -128,7 +133,7 @@ public class About extends AppCompatActivity {
         int resID = context.getResources().getIdentifier("zzz_about", "raw", context.getPackageName());
         if (resID == 0) {
             // hide audio instructions icon
-            ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+            ImageView instructionsButton = findViewById(R.id.instructions);
             instructionsButton.setVisibility(View.GONE);
 
             ConstraintLayout constraintLayout = findViewById(R.id.aboutCL);
@@ -185,18 +190,12 @@ public class About extends AppCompatActivity {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void forceRTLIfSupported() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        }
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void forceLTRIfSupported() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-        }
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
     }
 
 }
