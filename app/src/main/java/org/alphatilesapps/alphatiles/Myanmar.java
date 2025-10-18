@@ -43,6 +43,7 @@ public class Myanmar extends GameActivity {
     int wordsCompleted = 0;
     int completionGoal = 0;
     private Stack<TextView> selectedTileIndices = new Stack<>();
+    int selectionMethod = 2;
 
     Handler handler;
     private static final Logger LOGGER = Logger.getLogger(Myanmar.class.getName());
@@ -109,6 +110,13 @@ public class Myanmar extends GameActivity {
 
         if (getAudioInstructionsResID() == 0) {
             hideInstructionAudioImage();
+        }
+
+        try {
+            String selectionValue = Start.settingsList.find("Selection Method for Word Search");
+            selectionMethod = Integer.parseInt(selectionValue);
+        } catch (Exception e) {
+            selectionMethod = 2;
         }
 
         setTextSizes();
@@ -844,8 +852,11 @@ public class Myanmar extends GameActivity {
     }
 
     public void onBtnClick(View view) {
-        respondToTileSelection2(Integer.parseInt((String) view.getTag()));
-        //respondToTileSelection(Integer.parseInt((String) view.getTag()));
+        if (selectionMethod==2) {
+            respondToTileSelection2(Integer.parseInt((String) view.getTag()));
+        } else {
+            respondToTileSelection(Integer.parseInt((String) view.getTag()));
+        }
     }
 
     @Override
