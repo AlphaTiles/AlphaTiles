@@ -398,15 +398,14 @@ public class Validator {
     //</editor-fold>
 
     //<editor-fold desc="validation methods">
-
     /**
      * Executes all validation, delegating to validateGoogleSheet, validateSyllables (
      * if it appears syllables are attempted) and validateResourceSubfolders.
      * Populates fatalErrors, warnings, project notes and recommendations.
      */
     public void validate() {
-
-        this.validateGoogleSheet();
+        
+       this.validateGoogleSheet();
         try {
             stagesInformation = StagesChecks.check(wordList, tileList, stageCorrespondenceRatio, firstTileStageCorrespondence);
         } catch (Exception ignored) {
@@ -417,7 +416,6 @@ public class Validator {
         if (usesSyllables) {
             this.validateSyllablesTab();
         }
-
         this.validateResourceSubfolders();
 
     }
@@ -1226,7 +1224,57 @@ public class Validator {
             warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the audio_instructions_optional folder or the games tab");
         }
     }
+    /**
+     * Updates the fontFamily item in the styles.xml file to match the font XML file found 
+     * in the current product flavor's font folder.
+     */
+    private void updateFontFamilyInStylesXml() {
+        String flavorName = langPackGoogleSheet.getName();
 
+        String fontFolderPath = "../app/src/" + flavorName + "/res/font/";
+        java.io.File fontFolder = new java.io.File(fontFolderPath);
+        String fontFileName = null;
+        String[] files = fontFolder.list();
+
+        if (files != null) {
+            for (String file : files) {
+                System.out.println("Font in styles.xml set to:" + file.toString());
+                if (file.endsWith(".xml")) {
+                    fontFileName = file.substring(0, file.length() - 4); // remove .xml
+                    break;
+                }
+            }
+        }
+        if (fontFileName == null) {
+            System.out.println("No font XML file found for flavor: " + flavorName);
+            return;
+        }
+
+        String stylesXmlPath = "../app/src/main/res/values/styles.xml";
+        List<String> updatedLines = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(stylesXmlPath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("<item name=\"fontFamily\">")) {
+                    line = "        <item name=\"fontFamily\">@font/" + fontFileName + "</item>";
+                }
+                updatedLines.add(line);
+            }
+        }
+        catch (IOException e) {
+            fatalError(Message.Tag.Etc, "FAILED TO READ STYLES.XML");
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(stylesXmlPath))) {
+            for (int i = 0; i < updatedLines.size(); i++) {
+                writer.write(updatedLines.get(i));
+                writer.newLine();
+            }
+        }
+        catch (IOException e) {
+            fatalError(Message.Tag.Etc, "FAILED TO WRITE IN STYLES.XML");
+        }
+    }
     /**
      * Executes checks on the syllable tab in langPackGoogleSheet.
      * Checks are wrapped in try catch blocks so that if one check fails, the rest of the checks can still be run.
@@ -1555,10 +1603,13 @@ public class Validator {
                     }
                 }
                 System.out.println("finished downloading " + subFolderName + " from google drive into language pack.");
+
             } catch (ValidatorException e) {
                 System.out.println("FAILED TO DOWNLOAD " + subfolderSpecs.getKey() + " from google drive into language pack.");
             }
         }
+        // updates the font in styles.xml
+        this.updateFontFamilyInStylesXml();
     }
     //</editor-fold>
 
