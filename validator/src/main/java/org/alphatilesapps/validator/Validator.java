@@ -1407,7 +1407,26 @@ public class Validator {
         if (Files.exists(pathToTempServices)) {
             Files.move(pathToTempServices, pathToLangPack.resolve("google-services.json"));
         }
-
+        
+        GoogleDriveItem googleServicesItem = null;
+        for (GoogleDriveItem item : langPackDriveFolder.getFolderContents()) {
+            if (item.getName().startsWith("google-services") && item.getName().endsWith(".json")) {
+                googleServicesItem = item;
+                break;
+            }
+        }
+        if (googleServicesItem != null) {
+            Path localGoogleServicesPath = pathToLangPack.resolve(googleServicesItem.getName());
+            try (OutputStream out = new FileOutputStream(localGoogleServicesPath.toFile())) {
+                driveService.files().get(googleServicesItem.getId()).executeMediaAndDownloadTo(out);
+                System.out.println("Downloaded google-services.json to " + localGoogleServicesPath);
+            } catch (IOException e) {
+                fatalError(Message.Tag.Etc, "FAILED TO DOWNLOAD google-services.json: " + e.getMessage());
+            }
+        } else {
+            warn(Message.Tag.Etc, "google-services.json not found in Drive folder or json subfolder.");
+        }
+        
         writeNewBuildGradle(pathToApp);
         writeRawTxtFiles(pathToLangPack);
         writeImageAndAudioFiles(pathToLangPack);
