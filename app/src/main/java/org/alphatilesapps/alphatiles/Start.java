@@ -1270,7 +1270,7 @@ public class Start extends AppCompatActivity {
         public String colorTitle;
 
         public ArrayList<Syllable> parseWordIntoSyllables(Word refWord) {
-            ArrayList<Syllable> parsedWordArrayTemp = new ArrayList();
+            ArrayList<Syllable> parsedWordArrayTemp = new ArrayList<>();
             String noHashWord = refWord.wordInLOP.replaceAll("[#]", "");
             StringTokenizer st = new StringTokenizer(noHashWord, ".");
             while (st.hasMoreTokens()) {
@@ -1955,7 +1955,7 @@ public class Start extends AppCompatActivity {
 
         public ArrayList<Tile> returnFourTileChoices(Tile correctTile, int challengeLevel, String refTileType) {
 
-            ArrayList<Tile> fourTileChoices = new ArrayList();
+            ArrayList<Tile> fourTileChoices = new ArrayList<>();
             ArrayList<String> alreadyStoredAnswerChoices = new ArrayList<>();
 
             Tile aTile = correctTile;
