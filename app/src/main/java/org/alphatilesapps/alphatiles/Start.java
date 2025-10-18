@@ -295,8 +295,8 @@ public class Start extends AppCompatActivity {
                 tileList.audioForTileBTitle = thisLineArray[8];
                 tileList.tileTypeCTitle = thisLineArray[9];
                 tileList.audioForTileCTitle = thisLineArray[10];
-                tileList.tileDuration1Title = "";
-                tileList.tileDuration2Title = "";
+                tileList.iconicWordTitle = thisLineArray[11];
+                tileList.tileColorTitle = thisLineArray[12];
                 tileList.tileDuration3Title = "";
                 tileList.stageOfFirstAppearanceTitle = thisLineArray[14];
                 tileList.stageOfFirstAppearanceTitleType2 = thisLineArray[15];
@@ -304,6 +304,7 @@ public class Start extends AppCompatActivity {
 
                 header = false;
             } else {
+
                 // Sort information for staged introduction, including among potential second or third types of a tile
                 int stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3;
                 if(!thisLineArray[14].matches("[0-9]+")) { // Add all first types of tiles to "stage 1" if stages aren't being used
@@ -335,7 +336,7 @@ public class Start extends AppCompatActivity {
                 distractors.add(thisLineArray[1]);
                 distractors.add(thisLineArray[2]);
                 distractors.add(thisLineArray[3]);
-                Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[4], stageOfFirstAppearance, thisLineArray[5]);
+                Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6],thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10],thisLineArray[11], 0, 0,stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3,thisLineArray[4], stageOfFirstAppearance, thisLineArray[5]);
                 if (!tile.hasNull()) {
                     tileList.add(tile);
                     if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -343,7 +344,7 @@ public class Start extends AppCompatActivity {
                     }
                 }
                 if(!tile.tileTypeB.equals("none")){
-                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[7], stageOfFirstAppearanceType2, thisLineArray[8]);
+                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6],thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10],thisLineArray[11], 0, 0,stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3,thisLineArray[7], stageOfFirstAppearanceType2, thisLineArray[8]);
                     if (!tile.hasNull()) {
                         tileList.add(tile);
                         if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -352,7 +353,7 @@ public class Start extends AppCompatActivity {
                     }
                 }
                 if(!tile.tileTypeC.equals("none")){
-                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[9], stageOfFirstAppearanceType3, thisLineArray[10]);
+                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6],thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10],thisLineArray[11], 0, 0,stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3,thisLineArray[9], stageOfFirstAppearanceType3, thisLineArray[10]);
                     if (!tile.hasNull()) {
                         tileList.add(tile);
                         if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -858,8 +859,9 @@ public class Start extends AppCompatActivity {
         public String audioNameB;
         public String tileTypeC;
         public String audioNameC;
-        public int tileDuration1;
-        public int tileDuration2;
+
+        public String iconicWord;
+        public int tileColor;
         public int tileDuration3;
         public int stageOfFirstAppearance;
         public int stageOfFirstAppearanceB;
@@ -868,7 +870,8 @@ public class Start extends AppCompatActivity {
         public int stageOfFirstAppearanceForThisTileType;
         public String audioForThisTileType;
 
-        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType) {
+        // for testing purposes, created another constructor just for iconic words so i don't have to edit all the games
+        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, String iconicWord, int tileColor, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType) {
             super(text);
             this.distractors = distractors;
             this.tileType = tileType;
@@ -878,8 +881,8 @@ public class Start extends AppCompatActivity {
             this.audioNameB = audioNameB;
             this.tileTypeC = tileTypeC;
             this.audioNameC = audioNameC;
-            this.tileDuration1 = tileDuration1;
-            this.tileDuration2 = tileDuration2;
+            this.iconicWord = iconicWord;
+            this.tileColor = tileColor;
             this.tileDuration3 = tileDuration3;
             this.stageOfFirstAppearance = stageOfFirstAppearance;
             this.stageOfFirstAppearanceB = stageOfFirstAppearanceB;
@@ -887,6 +890,7 @@ public class Start extends AppCompatActivity {
             this.typeOfThisTileInstance = typeOfThisTileInstance;
             this.stageOfFirstAppearanceForThisTileType = stageOfFirstAppearanceForThisTileType;
             this.audioForThisTileType = audioForThisTileType;
+
         }
 
         public Tile (Tile anotherTile) {
@@ -899,8 +903,8 @@ public class Start extends AppCompatActivity {
             this.audioNameB = anotherTile.audioNameB;
             this.tileTypeC = anotherTile.tileTypeC;
             this.audioNameC = anotherTile.audioNameC;
-            this.tileDuration1 = anotherTile.tileDuration1;
-            this.tileDuration2 = anotherTile.tileDuration2;
+            this.iconicWord = anotherTile.iconicWord;
+            this.tileColor = anotherTile.tileColor;
             this.tileDuration3 = anotherTile.tileDuration3;
             this.stageOfFirstAppearance = anotherTile.stageOfFirstAppearance;
             this.stageOfFirstAppearanceB = anotherTile.stageOfFirstAppearanceB;
@@ -1316,7 +1320,7 @@ public class Start extends AppCompatActivity {
         public String colorTitle;
 
         public ArrayList<Syllable> parseWordIntoSyllables(Word refWord) {
-            ArrayList<Syllable> parsedWordArrayTemp = new ArrayList();
+            ArrayList<Syllable> parsedWordArrayTemp = new ArrayList<>();
             String noHashWord = refWord.wordInLOP.replaceAll("[#]", "");
             StringTokenizer st = new StringTokenizer(noHashWord, ".");
             while (st.hasMoreTokens()) {
@@ -1463,8 +1467,8 @@ public class Start extends AppCompatActivity {
         public String audioForTileBTitle;
         public String tileTypeCTitle;
         public String audioForTileCTitle;
-        public String tileDuration1Title;
-        public String tileDuration2Title;
+        public String iconicWordTitle;
+        public String tileColorTitle;
         public String tileDuration3Title;
 
         public String stageOfFirstAppearanceTitle;
@@ -2001,7 +2005,7 @@ public class Start extends AppCompatActivity {
 
         public ArrayList<Tile> returnFourTileChoices(Tile correctTile, int challengeLevel, String refTileType) {
 
-            ArrayList<Tile> fourTileChoices = new ArrayList();
+            ArrayList<Tile> fourTileChoices = new ArrayList<>();
             ArrayList<String> alreadyStoredAnswerChoices = new ArrayList<>();
 
             Tile aTile = correctTile;

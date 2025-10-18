@@ -2,12 +2,17 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowMetrics;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +21,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Stack;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -35,6 +42,8 @@ public class Myanmar extends GameActivity {
     int higherClick = 0;
     int wordsCompleted = 0;
     int completionGoal = 0;
+    private Stack<TextView> selectedTileIndices = new Stack<>();
+    int selectionMethod = 2;
 
     Handler handler;
     private static final Logger LOGGER = Logger.getLogger(Myanmar.class.getName());
@@ -103,6 +112,13 @@ public class Myanmar extends GameActivity {
             hideInstructionAudioImage();
         }
 
+        try {
+            String selectionValue = Start.settingsList.find("Selection Method for Word Search");
+            selectionMethod = Integer.parseInt(selectionValue);
+        } catch (Exception e) {
+            selectionMethod = 2;
+        }
+
         setTextSizes();
         updatePointsAndTrackers(0);
         playAgain();
@@ -110,9 +126,18 @@ public class Myanmar extends GameActivity {
 
     public void setTextSizes() {
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
+        int heightOfDisplay;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {  // API 30+
+            WindowMetrics windowMetrics = getWindowManager().getCurrentWindowMetrics();
+            Insets insets = windowMetrics.getWindowInsets()
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            heightOfDisplay = windowMetrics.getBounds().height() - insets.top - insets.bottom;
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            heightOfDisplay = displayMetrics.heightPixels;
+        }
         int pixelHeight = 0;
         double scaling = 0.45;
         int bottomToTopId;
@@ -205,6 +230,7 @@ public class Myanmar extends GameActivity {
             if (++sanityCounter > 21) {
                 // we've looped too many times - give up
                 LOGGER.warning("chooseWords: can't proceed - not enough words");
+
                 // return to the home screen
                 goBackToEarth(null);
                 return;
@@ -612,7 +638,7 @@ public class Myanmar extends GameActivity {
                 updatePointsAndTrackers(wordsCompleted);
             }
             playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
-            handler = new Handler();
+            handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(clearImageFromImageBank(indexOfFoundWord), Long.valueOf(refWord.duration + correctSoundDuration));
 
         } else { // Word not found
@@ -628,6 +654,191 @@ public class Myanmar extends GameActivity {
 
         }
     }
+    private int getTileIndex(TextView tile) {
+        int id = tile.getId();
+        for (int i = 0; i < GAME_BUTTONS.length; i++) {
+            if (GAME_BUTTONS[i] == id) {
+                return i;
+            }
+        }
+        return -1; // Not found — you may want to handle this case
+    }
+
+    private int getDirection(int fromTile, int toTile) {
+        // Assuming tiles are arranged in a grid (you'll need to adjust based on your grid size)
+        int gridWidth = 7; // Adjust this to match your actual grid width
+
+        int fromRow = fromTile / gridWidth;
+        int fromCol = fromTile % gridWidth;
+        int toRow = toTile / gridWidth;
+        int toCol = toTile % gridWidth;
+
+        int rowDiff = toRow - fromRow;
+        int colDiff = toCol - fromCol;
+
+        if (rowDiff == 0) {
+            return 1; // Horizontal
+        } else if (colDiff == 0) {
+            return 2; // Vertical
+        } else if (rowDiff == colDiff) {
+            return 3; // Diagonal NW/SE
+        } else if (rowDiff == -colDiff) {
+            return 4; // Diagonal NE/SW
+        }
+
+        return 0; // Should not happen for adjacent tiles
+    }
+
+    private boolean isAdjacent(int index1, int index2) {
+        int row1 = index1 / 7; // Assuming a grid width of 7
+        int col1 = index1 % 7;
+        int row2 = index2 / 7;
+        int col2 = index2 % 7;
+
+        int rowDiff = Math.abs(row1 - row2);
+        int colDiff = Math.abs(col1 - col2);
+
+        // For tiles to be adjacent (including diagonals), both the row difference
+        // and column difference must be at most 1, and they cannot be the same tile.
+        // This means (rowDiff <= 1) AND (colDiff <= 1) must be true,
+        // AND not (rowDiff == 0 AND colDiff == 0).
+        // The condition (index1 != index2) is simpler for the second part.
+        return (rowDiff <= 1 && colDiff <= 1) && (index1 != index2);
+    }
+
+    int direction = 0; // 0=unset, 1=horizontal, 2=vertical, 3=diagonal-NW/SE, 4=diagonal-NE/SW
+
+    public void respondToTileSelection2(int clickedTile){
+
+        setAllGameButtonsUnclickable();
+        setOptionsRowUnclickable();
+
+        TextView clickedTileIndex = findViewById(GAME_BUTTONS[clickedTile - 1]);
+        int tileColor = ((ColorDrawable) clickedTileIndex.getBackground()).getColor();
+        int textColor = clickedTileIndex.getCurrentTextColor();
+
+        if(tileColor == Color.YELLOW && selectedTileIndices.peek() != clickedTileIndex){
+            return;
+        }
+
+        //if stack isn't empty, the tile selected is the last one added, and for sanity sake the tiles color is yellow
+        if (!selectedTileIndices.isEmpty() && selectedTileIndices.peek() == clickedTileIndex && tileColor == Color.YELLOW) {
+            // Deselect last tile
+            selectedTileIndices.pop();
+            clickedTileIndex.setBackgroundColor(Color.WHITE);
+            clickedTileIndex.setTextColor(Color.BLACK);
+
+            // Reset direction if we go back to less than 2 tiles
+            if (selectedTileIndices.size() < 2) {
+                direction = 0;
+            }
+            return;
+        }
+
+        boolean canSelect = false;
+
+        if (selectedTileIndices.isEmpty()) {
+            // First tile - can select anywhere
+            canSelect = true;
+        } else if (selectedTileIndices.size() == 1) {
+            // Second tile - must be adjacent
+            canSelect = isAdjacent(getTileIndex(selectedTileIndices.peek()), clickedTile-1);
+
+            if (canSelect) {
+                // Set the direction based on first two tiles
+                direction = getDirection(getTileIndex(selectedTileIndices.peek()), clickedTile-1);
+            }
+        } else {
+            // Third tile and beyond - must be adjacent AND in the same direction
+            int lastTileIndex = getTileIndex(selectedTileIndices.peek());
+            canSelect = isAdjacent(lastTileIndex, clickedTile-1) &&
+                    getDirection(lastTileIndex, clickedTile-1) == direction;
+        }
+
+        if (canSelect) {
+            clickCount++;
+            selectedTileIndices.push(clickedTileIndex);
+            if(selectedTileIndices.size() == 8){ //should never be allowed to be more than 8 tiles selected if you reach 8 tiles and still no word, reset and play incorrect
+                clearStack();
+                playIncorrectSound();
+                direction = 0; // Reset direction
+                return;
+            }
+            clickedTileIndex.setBackgroundColor(Color.YELLOW);
+            clickedTileIndex.setTextColor(Color.BLACK); // or other visible color
+            checkIfCompleted();
+        } else {
+            playIncorrectSound();
+        }
+
+        setAllGameButtonsClickable();
+        setOptionsRowClickable();
+    }
+
+    private void checkIfCompleted() {
+        TextView activeWord = findViewById(R.id.activeWordTextView);
+        int indexOfFoundWord = -1;
+        boolean wordFound = false;
+
+        // Build the word from the selected tiles
+            StringBuilder builtWord = new StringBuilder();
+            for (TextView tile : selectedTileIndices) {
+                builtWord.append(tile.getText().toString());
+            }
+            String currentWord = builtWord.toString();
+
+            // Check if the built word is in the sevenWords array
+            // Assuming sevenWords is an array of String or an object with a toString() method representing the word
+            for (int i = 0; i < sevenWords.length; i++) {
+                // You might need to adjust this comparison based on the actual type and structure of sevenWords[i]
+                // For example, if sevenWords[i] is an object, you might need sevenWords[i].getWord() or similar.
+                // Also, consider case sensitivity: .equalsIgnoreCase() might be more appropriate.
+                String targetWordString = wordInLOPWithStandardizedSequenceOfCharacters(sevenWords[i]);
+                if (targetWordString.equals(currentWord)) {
+                    indexOfFoundWord = i;
+                    wordFound = true;
+                    break; // Exit loop once word is found
+                }
+            }
+
+            if (wordFound) {
+                LOGGER.warning("word was found");
+                String displayWord = "";
+                wordsCompleted++;
+                activeWord.setText(displayWord);
+
+                String tileColorStr = colorList.get(wordsCompleted % 5);
+                int tileColor = Color.parseColor(tileColorStr);
+                // Color the tiles in the found word
+                for (TextView tile : selectedTileIndices) {
+                    tile.setBackgroundColor(tileColor); // theme color
+                    tile.setTextColor(Color.parseColor("#FFFFFF")); // white
+                    tile.setClickable(false);
+                }
+                // Play word and "correct" sounds and then clear the image from word bank
+                refWord = sevenWords[indexOfFoundWord];
+                if (wordsCompleted == completionGoal) {
+                    setAdvanceArrowToBlue();
+                    updatePointsAndTrackers(wordsCompleted);
+                }
+                playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
+                handler = new Handler();
+                handler.postDelayed(clearImageFromImageBank(indexOfFoundWord), Long.valueOf(refWord.duration + correctSoundDuration));
+                selectedTileIndices.clear();
+            } else {
+                LOGGER.warning("word not found, word tried " + currentWord);
+
+            }
+        }
+
+
+    private void clearStack(){
+        for (TextView tile : selectedTileIndices) {
+            tile.setBackgroundColor(Color.parseColor("#FFFFFF")); // Default to white
+            tile.setTextColor(Color.parseColor("#000000")); // Default to black
+        }
+        selectedTileIndices.clear(); // Clear the stack as the word was incorrect
+    }
 
     private Runnable clearImageFromImageBank(int w) {
         Runnable clearImg = new Runnable() {
@@ -641,7 +852,11 @@ public class Myanmar extends GameActivity {
     }
 
     public void onBtnClick(View view) {
-        respondToTileSelection(Integer.parseInt((String) view.getTag()));
+        if (selectionMethod==2) {
+            respondToTileSelection2(Integer.parseInt((String) view.getTag()));
+        } else {
+            respondToTileSelection(Integer.parseInt((String) view.getTag()));
+        }
     }
 
     @Override
