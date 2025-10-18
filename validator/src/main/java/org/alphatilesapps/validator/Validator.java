@@ -892,6 +892,9 @@ public class Validator {
             if (!gamesList.contains("Malaysia")) {
                 recommend(Message.Tag.Etc, "it is recommended that you include the Malaysia game");
             }
+            if (!gamesList.contains("Iraq")) {
+                recommend(Message.Tag.Etc, "it is recommended that you include the Iraq game, either challenge level 1 (random words) or 2 (iconic words)");
+            }
 
             if ((fourTileWords < 3 || threeTileWords < 1) && gamesList.contains("China")) {
                 fatalError(Message.Tag.Etc, "the China game requires at least 3 four tile words and 1 three tile word, you only " +
