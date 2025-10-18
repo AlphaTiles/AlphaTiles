@@ -416,11 +416,7 @@ public class Validator {
         if (usesSyllables) {
             this.validateSyllablesTab();
         }
-        // updates the fontFamily in styles/xml
         this.validateResourceSubfolders();
-
-        // updates the font in styles.xml
-        this.updateFontFamilyInStylesXml();
 
     }
     
@@ -1242,7 +1238,7 @@ public class Validator {
 
         if (files != null) {
             for (String file : files) {
-                System.out.println("File name:" + file.toString());
+                System.out.println("Font in styles.xml set to:" + file.toString());
                 if (file.endsWith(".xml")) {
                     fontFileName = file.substring(0, file.length() - 4); // remove .xml
                     break;
@@ -1607,10 +1603,13 @@ public class Validator {
                     }
                 }
                 System.out.println("finished downloading " + subFolderName + " from google drive into language pack.");
+
             } catch (ValidatorException e) {
                 System.out.println("FAILED TO DOWNLOAD " + subfolderSpecs.getKey() + " from google drive into language pack.");
             }
         }
+        // updates the font in styles.xml
+        this.updateFontFamilyInStylesXml();
     }
     //</editor-fold>
 
