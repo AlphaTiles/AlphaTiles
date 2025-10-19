@@ -42,7 +42,7 @@ public class Resources extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        ImageView backwardImage;
         super.onCreate(savedInstanceState);
         context = this;
 
@@ -55,15 +55,20 @@ public class Resources extends AppCompatActivity {
         loadResources();
 
         if (scriptDirection.equals("RTL")) {
-            ImageView backwardImage = (ImageView) findViewById(R.id.backward);
+            backwardImage = (ImageView) findViewById(R.id.backward);
             ImageView forwardImage = (ImageView) findViewById(R.id.forward);
+
 
             backwardImage.setRotationY(180);
             forwardImage.setRotationY(180);
             forceRTLIfSupported();
+
+
         } else {
             forceLTRIfSupported();
         }
+        backwardImage = (ImageView) findViewById(R.id.backward);
+        backwardImage.setVisibility(View.INVISIBLE);
 
         int resID = context.getResources().getIdentifier("zzz_resources", "raw", context.getPackageName());
         if (resID == 0) {
@@ -77,6 +82,8 @@ public class Resources extends AppCompatActivity {
             constraintSet.centerHorizontally(R.id.gamesHomeImage, R.id.earthCL);
             constraintSet.applyTo(constraintLayout);
         }
+
+
 
     }
 
@@ -119,6 +126,7 @@ public class Resources extends AppCompatActivity {
 
     public void loadResources() {
 
+
         resourcesInUse = Resources.resourcesArraySize;
         partial = resourcesInUse % (RESOURCES.length);
         totalScreens = resourcesInUse / (RESOURCES.length);
@@ -131,6 +139,12 @@ public class Resources extends AppCompatActivity {
 
         ImageView goBackward = findViewById(R.id.backward);
         ImageView goForward = findViewById(R.id.forward);
+
+        if(resourcesScreenNo == 1){ //first page only display forward arrow
+            goBackward.setVisibility(View.INVISIBLE);
+
+        }
+
 
         if (resourcesInUse > RESOURCES.length) {
 
@@ -196,6 +210,19 @@ public class Resources extends AppCompatActivity {
 
     private void updateResources() { // This routine will only be called when there are seven or more resources (the layout has space for six)
 
+        ImageView goBackward = findViewById(R.id.backward);
+        ImageView goForward = findViewById(R.id.forward);
+
+        if(resourcesScreenNo == 1){ //first page only display forward arrow
+            goBackward.setVisibility(View.INVISIBLE);
+            goForward.setVisibility(View.VISIBLE);
+        } else if(resourcesScreenNo == totalScreens) { //last page only display backward arrow
+            goBackward.setVisibility(View.VISIBLE);
+            goForward.setVisibility(View.INVISIBLE);
+        } else { //display both if neither first or last page
+            goBackward.setVisibility(View.VISIBLE);
+            goForward.setVisibility(View.VISIBLE);
+        }
         int resourcesLimit;
         if (totalScreens == resourcesScreenNo) {
             resourcesLimit = partial;
@@ -290,6 +317,9 @@ public class Resources extends AppCompatActivity {
             child.setClickable(false);
         }
     }
+
+
+
 
     protected void setAllElemsClickable() {
         // Get reference to the parent layout container

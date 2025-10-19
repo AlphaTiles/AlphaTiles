@@ -2,10 +2,9 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -94,6 +93,14 @@ public class Start extends AppCompatActivity {
     public static ArrayList<String> MULTITYPE_TILES = new ArrayList<>();
 
     private static final Logger LOGGER = Logger.getLogger( Start.class.getName() );
+
+    // This List stores the color options for a text box. 0=not started, 1=correct,
+    // 2=on the right track, 3=on the right track but with wrong tile (tile games only),
+    // 4=incorrect. By default, these are set to Grey, Green, Yellow, Orange, Red, but this can be
+    // adjusted in settings.
+    public static List<String> boxColors = new ArrayList<>();
+
+    // This Hashmap maps color Strings to color objects.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,8 +295,8 @@ public class Start extends AppCompatActivity {
                 tileList.audioForTileBTitle = thisLineArray[8];
                 tileList.tileTypeCTitle = thisLineArray[9];
                 tileList.audioForTileCTitle = thisLineArray[10];
-                tileList.tileDuration1Title = "";
-                tileList.tileDuration2Title = "";
+                tileList.iconicWordTitle = thisLineArray[11];
+                tileList.tileColorTitle = thisLineArray[12];
                 tileList.tileDuration3Title = "";
                 tileList.stageOfFirstAppearanceTitle = thisLineArray[14];
                 tileList.stageOfFirstAppearanceTitleType2 = thisLineArray[15];
@@ -297,6 +304,7 @@ public class Start extends AppCompatActivity {
 
                 header = false;
             } else {
+
                 // Sort information for staged introduction, including among potential second or third types of a tile
                 int stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3;
                 if(!thisLineArray[14].matches("[0-9]+")) { // Add all first types of tiles to "stage 1" if stages aren't being used
@@ -328,7 +336,7 @@ public class Start extends AppCompatActivity {
                 distractors.add(thisLineArray[1]);
                 distractors.add(thisLineArray[2]);
                 distractors.add(thisLineArray[3]);
-                Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[4], stageOfFirstAppearance, thisLineArray[5]);
+                Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6],thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10],thisLineArray[11], 0, 0,stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3,thisLineArray[4], stageOfFirstAppearance, thisLineArray[5]);
                 if (!tile.hasNull()) {
                     tileList.add(tile);
                     if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -336,7 +344,7 @@ public class Start extends AppCompatActivity {
                     }
                 }
                 if(!tile.tileTypeB.equals("none")){
-                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[7], stageOfFirstAppearanceType2, thisLineArray[8]);
+                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6],thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10],thisLineArray[11], 0, 0,stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3,thisLineArray[7], stageOfFirstAppearanceType2, thisLineArray[8]);
                     if (!tile.hasNull()) {
                         tileList.add(tile);
                         if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -345,7 +353,7 @@ public class Start extends AppCompatActivity {
                     }
                 }
                 if(!tile.tileTypeC.equals("none")){
-                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[9], stageOfFirstAppearanceType3, thisLineArray[10]);
+                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6],thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10],thisLineArray[11], 0, 0,stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3,thisLineArray[9], stageOfFirstAppearanceType3, thisLineArray[10]);
                     if (!tile.hasNull()) {
                         tileList.add(tile);
                         if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -785,6 +793,43 @@ public class Start extends AppCompatActivity {
         }
     }
 
+    /**
+     * A method that populates the first five elements of boxColors.
+     */
+    public void fillTextboxColors(){
+        ArrayList<String> boxes = new ArrayList<>();
+        boxes.set(0, "Color for empty text box");
+        boxes.set(1, "Color for partially filled text box");
+        boxes.set(2, "Color for \"on the right track\"");
+        boxes.set(3, "Color for correct letters but incorrect tiles (Columbia CL4 only)");
+        boxes.set(4, "Color for incorrect text box");
+
+        for (int i = 0; i < boxColors.size(); i++){
+            boxColors.set(i, settingsList.find(boxes.get(i)));
+        }
+
+        ArrayList<String> defaults = new ArrayList<>();
+        defaults.set(0, "Grey");
+        defaults.set(0, "Green");
+        defaults.set(0, "Yellow");
+        defaults.set(0, "Orange");
+        defaults.set(0, "Red");
+
+        for (int i = 0; i < boxColors.size(); i++) {
+            try {
+                // Use reflection to get the Color constant by name
+                Color color = (Color) Color.class.getField(boxColors.get(i).toUpperCase()).get(null);
+            } catch (Exception e) {
+                boxColors.set(i, defaults.get(i));
+            }
+        }
+
+
+        //0=not started, 1=correct,
+        // 2=on the right track, 3=on the right track but with wrong tile (tile games only),
+        // 4=incorrect. By default, these are set to Grey, Green, Yellow, Orange, Red,
+    }
+
     public static class Word {
         public String wordInLWC;
         public String wordInLOP;
@@ -814,8 +859,9 @@ public class Start extends AppCompatActivity {
         public String audioNameB;
         public String tileTypeC;
         public String audioNameC;
-        public int tileDuration1;
-        public int tileDuration2;
+
+        public String iconicWord;
+        public int tileColor;
         public int tileDuration3;
         public int stageOfFirstAppearance;
         public int stageOfFirstAppearanceB;
@@ -824,7 +870,8 @@ public class Start extends AppCompatActivity {
         public int stageOfFirstAppearanceForThisTileType;
         public String audioForThisTileType;
 
-        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType) {
+        // for testing purposes, created another constructor just for iconic words so i don't have to edit all the games
+        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, String iconicWord, int tileColor, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType) {
             super(text);
             this.distractors = distractors;
             this.tileType = tileType;
@@ -834,8 +881,8 @@ public class Start extends AppCompatActivity {
             this.audioNameB = audioNameB;
             this.tileTypeC = tileTypeC;
             this.audioNameC = audioNameC;
-            this.tileDuration1 = tileDuration1;
-            this.tileDuration2 = tileDuration2;
+            this.iconicWord = iconicWord;
+            this.tileColor = tileColor;
             this.tileDuration3 = tileDuration3;
             this.stageOfFirstAppearance = stageOfFirstAppearance;
             this.stageOfFirstAppearanceB = stageOfFirstAppearanceB;
@@ -843,6 +890,7 @@ public class Start extends AppCompatActivity {
             this.typeOfThisTileInstance = typeOfThisTileInstance;
             this.stageOfFirstAppearanceForThisTileType = stageOfFirstAppearanceForThisTileType;
             this.audioForThisTileType = audioForThisTileType;
+
         }
 
         public Tile (Tile anotherTile) {
@@ -855,8 +903,8 @@ public class Start extends AppCompatActivity {
             this.audioNameB = anotherTile.audioNameB;
             this.tileTypeC = anotherTile.tileTypeC;
             this.audioNameC = anotherTile.audioNameC;
-            this.tileDuration1 = anotherTile.tileDuration1;
-            this.tileDuration2 = anotherTile.tileDuration2;
+            this.iconicWord = anotherTile.iconicWord;
+            this.tileColor = anotherTile.tileColor;
             this.tileDuration3 = anotherTile.tileDuration3;
             this.stageOfFirstAppearance = anotherTile.stageOfFirstAppearance;
             this.stageOfFirstAppearanceB = anotherTile.stageOfFirstAppearanceB;
@@ -1419,8 +1467,8 @@ public class Start extends AppCompatActivity {
         public String audioForTileBTitle;
         public String tileTypeCTitle;
         public String audioForTileCTitle;
-        public String tileDuration1Title;
-        public String tileDuration2Title;
+        public String iconicWordTitle;
+        public String tileColorTitle;
         public String tileDuration3Title;
 
         public String stageOfFirstAppearanceTitle;
