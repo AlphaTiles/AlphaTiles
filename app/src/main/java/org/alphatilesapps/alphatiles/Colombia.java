@@ -487,7 +487,8 @@ public class Colombia extends GameActivity {
                 if (currentAttempt.equals(correctString.substring(0, currentAttempt.length()))
                 || clickedKeys.equals(firstNCorrectTiles)) { // Word is incomplete but spelled correctly so far
                     // orange=true if there is no key option that would allow the player to continue correctly
-                    if (challengeLevel == 1 || challengeLevel == 2 || syllableGame.equals("S")) {
+                    if (challengeLevel == 1 || challengeLevel == 2 || challengeLevel == 4 ||syllableGame.equals("S")) {
+                        // AGH: unclear why CL=3 is excluded, as teams often put complex keys (tiles more or less) in their keyboard
                         boolean orange = false;
                         for (int i = 0; i < clickedKeys.size(); i++) {
                             if (syllableGame.equals("S")) {
