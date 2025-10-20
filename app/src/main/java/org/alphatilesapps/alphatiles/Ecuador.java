@@ -450,7 +450,7 @@ public class Ecuador extends GameActivity {
 
             if (sendAnalytics) {
                 // report time and number of incorrect guesses
-                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + gameMode;
                 Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
                         .putValue("Number Incorrect", incorrectOnLevel)
                         .putValue("Correct Answer", chosenWordText)

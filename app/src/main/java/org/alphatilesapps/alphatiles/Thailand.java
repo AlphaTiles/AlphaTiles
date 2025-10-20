@@ -261,11 +261,11 @@ public class Thailand extends GameActivity {
                     refTile = tileListNoSAD.get(randomTileIndex);
                     refTileType = refTile.typeOfThisTileInstance;
                     boolean choicesContainContextualizersOrPlaceholders = false;
-                    if (refTile.text.contains(contextualizingCharacter) || refTile.text.contains(placeholderCharacter)) {
+                    if (refTile.text.contains(contextualizer) || refTile.text.contains(placeholderCharacter)) {
                         choicesContainContextualizersOrPlaceholders = true;
                     } else {
                         for (String t : refTile.distractors) {
-                            if (t.contains(contextualizingCharacter) || t.contains(placeholderCharacter)) {
+                            if (t.contains(contextualizer) || t.contains(placeholderCharacter)) {
                                 choicesContainContextualizersOrPlaceholders = true;
                                 break;
                             }
@@ -360,15 +360,6 @@ public class Thailand extends GameActivity {
 
         switch (choiceType) {
             case "TILE_LOWER":
-                for (int t = 0; t < GAME_BUTTONS.length; t++) {
-                    TextView choiceButton = findViewById(GAME_BUTTONS[t]);
-                    String choiceColorStr = "#A9A9A9"; // dark gray
-                    int choiceColorNo = Color.parseColor(choiceColorStr);
-                    choiceButton.setBackgroundColor(choiceColorNo);
-                    choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                    choiceButton.setText(fourTileChoices.get(t).text);
-                }
-                break;
             case "CONTEXTUAL":
                 switch(contextualTilePosition) { // Arabic script challengeLevel option; position specified by the 4th character of the challengeLevel number
                     case "INITIAL":
@@ -616,7 +607,7 @@ public class Thailand extends GameActivity {
 
             if (sendAnalytics) {
                 // report time and number of incorrect guesses
-                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + gameMode;
                 Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
                         .putValue("Number Incorrect", incorrectOnLevel)
                         .putValue("Correct Answer", refTile)
@@ -645,7 +636,6 @@ public class Thailand extends GameActivity {
                 }
             }
 
-            //JP: Added switch statement to determine which method to call: tile or word
             switch (refType) {
                 case "SYLLABLE_TEXT":
                 case "SYLLABLE_AUDIO":
@@ -656,8 +646,6 @@ public class Thailand extends GameActivity {
                     }
                     break;
                 case "TILE_AUDIO":
-                    playCorrectSoundThenActiveTileClip(false);
-                    break;
                 case "TILE_LOWER":
                 case "TILE_UPPER":
                 case "CONTEXTUAL":

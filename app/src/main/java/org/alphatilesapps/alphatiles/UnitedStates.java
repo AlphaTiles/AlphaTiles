@@ -142,7 +142,7 @@ public class UnitedStates extends GameActivity {
         }
 
         // Set up additional structures
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
             parsedLengthOfRefWord = parsedRefWordSyllableArray.size();
             parsedRefWordSyllableArrayStrings = new ArrayList<String>();
@@ -150,9 +150,12 @@ public class UnitedStates extends GameActivity {
                 parsedRefWordSyllableArrayStrings.add(s.text);
             }
         } else {
-            Tile emptyTile = new Tile("__", new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "");
+            Tile emptyTile = new Tile(blankForMissingWordPiece, new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "");
             tileSelections = new Tile[parsedLengthOfRefWord];
             for (int t = 0; t<parsedLengthOfRefWord; t++) {
+                if (contextualizeWordFrames){ // For some Arabic Script apps, to make edges of pieces in the word draft appear contextually
+                    emptyTile.text = contextualizedWordPieceString(blankForMissingWordPiece, t, parsedRefWordTileArrayStrings);
+                }
                 tileSelections[t] = new Tile(emptyTile);
             }
             tileOptions.clear();
@@ -201,7 +204,7 @@ public class UnitedStates extends GameActivity {
                 int randomlyCorrectStringGoesBelow = rand.nextInt(2); // Choose whether correct tile goes above ( =0 ) or below ( =1 )
                 int randomDistractor = rand.nextInt(Start.ALT_COUNT); // KP // Choose which distractor will be the alternative
                 if (randomlyCorrectStringGoesBelow == 0) { // Correct string goes above
-                    if (syllableGame.equals("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
+                    if (gameMode.contains("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
                         gameButtonA.setText(parsedRefWordSyllableArray.get(parseIndex).text);
                         gameButtonB.setText(parsedRefWordSyllableArray.get(parseIndex).distractors.get(randomDistractor));
                     } else {
@@ -211,7 +214,7 @@ public class UnitedStates extends GameActivity {
                         tileOptions.add(tileHashMap.find(parsedRefWordTileArray.get(parseIndex).distractors.get(randomDistractor)));
                     }
                 } else { // Correct string goes below
-                    if (syllableGame.equals("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
+                    if (gameMode.contains("S") && !SAD_STRINGS.contains(parsedRefWordSyllableArray.get(parseIndex).text)) {
                         gameButtonB.setText(parsedRefWordSyllableArray.get(parseIndex).text);
                         gameButtonA.setText(parsedRefWordSyllableArray.get(parseIndex).distractors.get(randomDistractor));
                     } else {
@@ -237,23 +240,24 @@ public class UnitedStates extends GameActivity {
         TextView constructedWord = findViewById(R.id.activeWordTextView);
         String initialDisplay = "";
         for (int i = 0; i < numberOfPairs; i++)
-            initialDisplay += "__";
+            initialDisplay += blankForMissingWordPiece;
         constructedWord.setText(initialDisplay);
+        constructedWord.setTextColor(Color.BLACK);
 
 
-        if (useContextualFormsBWFP) { // Option for Arabic scripts
-            if(syllableGame.equals("S")) {
-                contextualizeSyllableForms();
-            } else {
-                contextualizeTileForms();
-            }
+       // Game modes included in some Arabic-based-script apps to make word piece strings appear in contextual form
+        if(gameMode.equals("CS")) {
+            contextualizeSyllableForms();
+        } else if (gameMode.equals("CT")){
+            contextualizeTileForms();
         }
+
 
         setAllGameButtonsClickable();
     }
 
     /**
-     * For Arabic script apps with useContextualFormsBWFP = true (BWFP = Build Word From Pairs)
+     * For Arabic script apps with a game in CT mode (Contextualized Tile answer choices)
      */
     private void contextualizeTileForms() {
 
@@ -270,7 +274,7 @@ public class UnitedStates extends GameActivity {
     }
 
     /**
-     * For Arabic script apps with useContextualFormsBWFP = true (BWFP = Build Word From Pairs)
+     * For Arabic script apps with games in CS mode (Contextualized Syllable answer choices)
      */
     private void contextualizeSyllableForms() {
 
@@ -300,7 +304,7 @@ public class UnitedStates extends GameActivity {
         }
 
         String displayedWord;
-        if (syllableGame.equals("S")){
+        if (gameMode.contains("S")){
             StringBuilder stringBuilder = new StringBuilder();
 
             for (int i = 0; i < numberOfPairs; i++) {
@@ -308,7 +312,11 @@ public class UnitedStates extends GameActivity {
                     stringBuilder.append(selections[2 * i]);
                     stringBuilder.append(selections[2 * i + 1]);
                 } else {
-                    stringBuilder.append(contextualizedWordPieceString("__", i, parsedRefWordSyllableArrayStrings));
+                    if (contextualizeWordFrames) {
+                        stringBuilder.append(contextualizedWordPieceString(blankForMissingWordPiece, i, parsedRefWordSyllableArrayStrings));
+                    } else {
+                        stringBuilder.append(blankForMissingWordPiece);
+                    }
                 }
             }
 
@@ -357,7 +365,7 @@ public class UnitedStates extends GameActivity {
         Button otherGameButton = findViewById(GAME_BUTTONS[otherOptionIndex]);
         selections[selectionIndex] = gameButton.getText().toString();
         selections[otherOptionIndex] = "";
-        if(syllableGame.equals("T")) {
+        if(gameMode.contains("T")) {
             tileSelections[selectionIndex/2] = tileOptions.get(selectionIndex);
         }
 

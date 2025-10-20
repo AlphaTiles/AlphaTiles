@@ -17,7 +17,6 @@ import java.util.Set;
 import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.CorV;
-import static org.alphatilesapps.alphatiles.Start.useContextualFormsITI;
 
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
@@ -93,7 +92,7 @@ public class Georgia extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         int gameID = 0;
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             setContentView(R.layout.georgia_syll);
             gameID = R.id.georgiaCL_syll;
         } else {
@@ -131,7 +130,7 @@ public class Georgia extends GameActivity {
                 visibleGameButtons = 6;
         }
 
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             syllableListCopy = (Start.SyllableList) Start.syllableList.clone();
         }
 
@@ -163,14 +162,14 @@ public class Georgia extends GameActivity {
 
         repeatLocked = true;
         setAdvanceArrowToGray();
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             Collections.shuffle(syllableListCopy); //JP
         }
 
         setWord();
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             setUpSyllables();
         } else {
             setUpTiles();
@@ -193,7 +192,7 @@ public class Georgia extends GameActivity {
 
     private void setWord() {
         chooseWord();
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             parsedRefWordSyllableArray = Start.syllableList.parseWordIntoSyllables(refWord); // JP
             initialSyllable = parsedRefWordSyllableArray.get(0);
         } else {
@@ -275,7 +274,7 @@ public class Georgia extends GameActivity {
 
         // Make the gameButtons contain contextual forms for some Arabic script apps
         Set<String> contextualizedChallengingChoices = new HashSet<String>();
-        if(useContextualFormsITI){
+        if(gameMode.equals("CS")){
             for (String answerChoiceString : challengingAnswerChoices) {
                 contextualizedChallengingChoices.add(contextualizedForm_Initial(answerChoiceString));
             }
@@ -302,7 +301,7 @@ public class Georgia extends GameActivity {
                         randomNum = rand.nextInt(syllableListCopy.size());
                         syllableOptionText = syllableListCopy.get(randomNum).text;
                     }
-                    if (useContextualFormsITI) { // For some Arabic script apps
+                    if (gameMode.equals("CS")) { // Contextualized syllable texts, for some Arabic script apps
                         gameTile.setText(contextualizedForm_Initial(syllableOptionText));
                     } else {
                         gameTile.setText(syllableOptionText);
@@ -400,7 +399,7 @@ public class Georgia extends GameActivity {
 
         // Make the gameButtons contain contextual forms for some Arabic script apps
         Set<String> contextualizedChallengingChoices = new HashSet<String>();
-        if(useContextualFormsITI) { // For some Arabic script apps
+        if(gameMode.contains("C")) { // For some Arabic script apps; answer choices in contextual form
             for (String answerChoiceString : challengingAnswerChoices) {
                 contextualizedChallengingChoices.add(contextualizedForm_Initial(answerChoiceString));
             }
@@ -430,7 +429,7 @@ public class Georgia extends GameActivity {
                         randomNum = rand.nextInt(CorV.size());
                         tileOptionText = CorV.get(randomNum).text;
                     }
-                    if (useContextualFormsITI) { // For some Arabic script apps
+                    if (gameMode.contains("C")) { // For some Arabic script apps; answer choices in contextual form
                         gameTile.setText(contextualizedForm_Initial(tileOptionText));
                     } else {
                         gameTile.setText(tileOptionText);
@@ -472,7 +471,7 @@ public class Georgia extends GameActivity {
             rand = new Random();
             randomNum = rand.nextInt(visibleGameButtons - 1);
             TextView gameTile = findViewById(GAME_BUTTONS[randomNum]);
-            if(useContextualFormsITI) {
+            if(gameMode.equals("CT")) { // Contextualized tile string options. Included in some Arabic-based-script apps.
                 gameTile.setText(contextualizedForm_Initial(initialTile.text));
             } else {
                 gameTile.setText(initialTile.text);
@@ -491,7 +490,7 @@ public class Georgia extends GameActivity {
         setOptionsRowUnclickable();
 
         String correctString = "";
-        if (syllableGame.equals("S")) {
+        if (gameMode.contains("S")) {
             correctString = initialSyllable.text;
         } else {
             correctString = initialTile.text;
@@ -508,7 +507,7 @@ public class Georgia extends GameActivity {
 
             if (sendAnalytics) {
                 // report time and number of incorrect guesses
-                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
+                String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + gameMode;
                 Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
                         .putValue("Number Incorrect", incorrectOnLevel)
                         .putValue("Correct Answer", correctString)
