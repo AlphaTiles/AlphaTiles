@@ -44,11 +44,12 @@ public class Start extends AppCompatActivity {
     public static SettingsList settingsList; // KP // from aa_settings.txt
     public static AvatarNameList nameList; // KP / from aa_names.txt
 
-    // LM / allows us to find() a Tile object using its name
-    public static TileHashMap tileHashMap;
-    public static TileHashMap tileHashMapWithoutPlaceHoldersOrContextualizers;
+    // These TileHashMaps help us to find() a Tile object via a String associated with it
+    public static TileHashMap tileHashMap; // key: tile.text
+    public static TileHashMap tileHashMapWithoutPlaceHoldersOrContextualizers; // key: tile.text stripped of all placeholders and contextualizing characters
     public static TileHashMap tileHashMapNoSAD;
     public static TileHashMap tileHashMapNoSADWithoutPlaceholdersOrContextualizers;
+    public static TileHashMap positionalVariantHashMap;
     public static WordHashMap lwcWordHashMap;
     public static WordHashMap lopWordHashMap;
 
@@ -423,7 +424,7 @@ public class Start extends AppCompatActivity {
                 distractors.add(thisLineArray[1]);
                 distractors.add(thisLineArray[2]);
                 distractors.add(thisLineArray[3]);
-                Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[4], stageOfFirstAppearance, thisLineArray[5], positionRestrictions);
+                Tile tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[4], stageOfFirstAppearance, thisLineArray[5], positionRestrictions, thisLineArray[18], thisLineArray[19], thisLineArray[20]);
                 if (!tile.hasNull()) {
                     tileList.add(tile);
                     if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -431,7 +432,7 @@ public class Start extends AppCompatActivity {
                     }
                 }
                 if(!tile.tileTypeB.equals("none")){
-                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[7], stageOfFirstAppearanceType2, thisLineArray[8], positionRestrictions);
+                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[7], stageOfFirstAppearanceType2, thisLineArray[8], positionRestrictions, thisLineArray[18], thisLineArray[19], thisLineArray[20]);
                     if (!tile.hasNull()) {
                         tileList.add(tile);
                         if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -440,7 +441,7 @@ public class Start extends AppCompatActivity {
                     }
                 }
                 if(!tile.tileTypeC.equals("none")){
-                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[9], stageOfFirstAppearanceType3, thisLineArray[10], positionRestrictions);
+                    tile = new Tile(thisLineArray[0], distractors, thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], thisLineArray[8], thisLineArray[9], thisLineArray[10], 0, 0, 0, stageOfFirstAppearance, stageOfFirstAppearanceType2, stageOfFirstAppearanceType3, thisLineArray[9], stageOfFirstAppearanceType3, thisLineArray[10], positionRestrictions, thisLineArray[18], thisLineArray[19], thisLineArray[20]);
                     if (!tile.hasNull()) {
                         tileList.add(tile);
                         if (!tile.typeOfThisTileInstance.equals("SAD") && !(tile.audioForThisTileType.equals("zz_no_audio_needed") && !tile.typeOfThisTileInstance.equals("PC"))) {
@@ -460,6 +461,7 @@ public class Start extends AppCompatActivity {
         }
         buildTileHashMap();
         buildTileHashMapWithoutPlaceholdersOrContextualizers();
+        buildPositionalVariantHashMap();
     }
 
 
@@ -892,6 +894,27 @@ public class Start extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initialize the positionalVariantHashmap and add any variant strings
+     * from gametiles columns Word-InitialVariant, Word-MedialVariant, and Word-FinalVariant
+     * as keys for the Tile objects they vary from
+     */
+    public void buildPositionalVariantHashMap() {
+        positionalVariantHashMap = new TileHashMap();
+        for (int i = 0; i < tileList.size(); i++) {
+            if (!tileList.get(i).wordInitialVariant.equals("none")){
+                positionalVariantHashMap.put(tileList.get(i).wordInitialVariant, tileList.get(i));
+            }
+            if (!tileList.get(i).wordMedialVariant.equals("none")){
+                positionalVariantHashMap.put(tileList.get(i).wordMedialVariant, tileList.get(i));
+            }
+            if (!tileList.get(i).wordFinalVariant.equals("none")){
+                positionalVariantHashMap.put(tileList.get(i).wordFinalVariant, tileList.get(i));
+            }
+        }
+    }
+
+
     public void buildWordHashMap() {
         lwcWordHashMap = new WordHashMap();
         for (int i = 0; i < wordList.size(); i++) {
@@ -942,10 +965,12 @@ public class Start extends AppCompatActivity {
         public String typeOfThisTileInstance;
         public int stageOfFirstAppearanceForThisTileType;
         public String audioForThisTileType;
-
         public String positionRestrictions;
+        public String wordInitialVariant;
+        public String wordMedialVariant;
+        public String wordFinalVariant;
 
-        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType, String positionRestrictions) {
+        public Tile(String text, ArrayList<String> distractors, String tileType, String audioName, String upper, String tileTypeB, String audioNameB, String tileTypeC, String audioNameC, int tileDuration1, int tileDuration2, int tileDuration3, int stageOfFirstAppearance, int stageOfFirstAppearanceB, int stageOfFirstAppearanceC, String typeOfThisTileInstance, int stageOfFirstAppearanceForThisTileType, String audioForThisTileType, String positionRestrictions, String wordInitialVariant, String wordMedialVariant, String wordFinalVariant) {
             super(text);
             this.distractors = distractors;
             this.tileType = tileType;
@@ -965,6 +990,9 @@ public class Start extends AppCompatActivity {
             this.stageOfFirstAppearanceForThisTileType = stageOfFirstAppearanceForThisTileType;
             this.audioForThisTileType = audioForThisTileType;
             this.positionRestrictions = positionRestrictions;
+            this.wordInitialVariant = wordInitialVariant;
+            this.wordMedialVariant = wordMedialVariant;
+            this.wordFinalVariant = wordFinalVariant;
         }
 
         public Tile (Tile anotherTile) {
@@ -987,6 +1015,9 @@ public class Start extends AppCompatActivity {
             this.stageOfFirstAppearanceForThisTileType = anotherTile.stageOfFirstAppearanceForThisTileType;
             this.audioForThisTileType = anotherTile.audioForThisTileType;
             this.positionRestrictions = anotherTile.positionRestrictions;
+            this.wordInitialVariant = anotherTile.wordInitialVariant;
+            this.wordMedialVariant = anotherTile.wordMedialVariant;
+            this.wordFinalVariant = anotherTile.wordFinalVariant;
         }
 
         public boolean hasNull() {
@@ -1923,8 +1954,55 @@ public class Start extends AppCompatActivity {
                             break;
                     }
                     referenceWordStringPreliminaryTileArray.add(nextTile);
-                }
+                } else {
+                    // See if the blocks of length one, two, three or four Unicode characters matches a variant of a tile
+                    // Note: This assumes that each variant only corresponds to one Tile object
+                    // Choose the longest block that matches a variant of a game tile and add that as the next segment in the parsed word array
+                    charBlockLength = 0;
+                    if (positionalVariantHashMap.containsKey(next1Chars)) {
+                        // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
+                        charBlockLength = 1;
+                    }
+                    if (positionalVariantHashMap.containsKey(next2Chars)) {
+                        // The value 2 can overwrite 1 but it can't overwrite 3 or 4
+                        charBlockLength = 2;
+                    }
+                    if (positionalVariantHashMap.containsKey(next3Chars)) {
+                        // The value 3 can overwrite 1 or 2 but it can't overwrite 4
+                        charBlockLength = 3;
+                    }
+                    if (positionalVariantHashMap.containsKey(next4Chars)) {
+                        // The value 4 can overwrite 1 or 2 or 3
+                        charBlockLength = 4;
+                    }
 
+                    // Add the selected game tile (the longest selected from the previous loop) to the parsed word array
+                    if (charBlockLength>0) {
+                        Tile nextTile;
+                        switch (charBlockLength) {
+                            case 2:
+                                nextTile = new Tile (positionalVariantHashMap.get(next2Chars));
+                                nextTile.text = next2Chars; // The variant text becomes the main text for this word's tile array
+                                i++;
+                                break;
+                            case 3:
+                                nextTile = new Tile (positionalVariantHashMap.get(next3Chars));
+                                nextTile.text = next3Chars;  // The variant text becomes the main text for this word's tile array
+                                i += 2;
+                                break;
+                            case 4:
+                                nextTile = new Tile (positionalVariantHashMap.get(next4Chars));
+                                nextTile.text = next4Chars;  // The variant text becomes the main text for this word's tile array
+                                i += 3;
+                                break;
+                            default: // charBlockLength==1
+                                nextTile = new Tile (positionalVariantHashMap.get(next1Chars));
+                                nextTile.text = next1Chars;  // The variant text becomes the main text for this word's tile array
+                                break;
+                        }
+                        referenceWordStringPreliminaryTileArray.add(nextTile);
+                    }
+                }
             }
             for (Tile tile : referenceWordStringPreliminaryTileArray) { // Set instance-specific fields
                 Tile nextTile = new Tile(tile);
@@ -1940,13 +2018,48 @@ public class Start extends AppCompatActivity {
                         nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
                         nextTile.audioForThisTileType = nextTile.audioName;
                     }
-                    referenceWordStringPreliminaryTileArrayFinal.add(nextTile);
                 } else {
                     nextTile.typeOfThisTileInstance = nextTile.tileType;
                     nextTile.stageOfFirstAppearanceForThisTileType = nextTile.stageOfFirstAppearance;
                     nextTile.audioForThisTileType = nextTile.audioName;
-                    referenceWordStringPreliminaryTileArrayFinal.add(nextTile);
                 }
+                if (positionalVariantHashMap.containsKey(nextTile.text)) { // variants, if parsed, replaced base texts, above
+                    switch(nextTile.typeOfThisTileInstance) {
+                        case "V":
+                        case "LV":
+                        case "AV":
+                        case "BV":
+                        case "FV":
+                            VOWELS.add(nextTile);
+                            CorV.add(nextTile);
+                            break;
+                        case "C":
+                        case "PC":
+                            CONSONANTS.add(nextTile);
+                            CorV.add(nextTile);
+                            break;
+                        case "AD":
+                            ADs.add(nextTile);
+                            break;
+                        case "D":
+                            Ds.add(nextTile);
+                            break;
+                        case "T":
+                            TONES.add(nextTile);
+                        case "SAD":
+                            SAD.add(nextTile);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (!tileHashMap.containsKey(nextTile.text)) {
+                    tileHashMap.put(nextTile.text, nextTile);
+                }
+                if (!nextTile.tileType.equals("SAD") && !tileHashMapNoSAD.containsKey(nextTile.text)) {
+                    tileHashMapNoSAD.put(nextTile.text, nextTile);
+                }
+                referenceWordStringPreliminaryTileArrayFinal.add(nextTile);
                 tileIndex++;
             }
 
@@ -2019,6 +2132,91 @@ public class Start extends AppCompatActivity {
                                 break;
                         }
                         stringToParsePreliminaryTileArray.add(nextTile);
+                    } else {
+                        // See if the blocks of length one, two, three or four Unicode characters matches a variant of a tile
+                        // Note: This assumes that each variant only corresponds to one Tile object
+                        // Choose the longest block that matches a variant of a game tile and add that as the next segment in the parsed word array
+                        charBlockLength = 0;
+                        if (positionalVariantHashMap.containsKey(next1Chars)) {
+                            // If charBlockLength is already assigned 2 or 3 or 4, it should not overwrite with 1
+                            charBlockLength = 1;
+                        }
+                        if (positionalVariantHashMap.containsKey(next2Chars)) {
+                            // The value 2 can overwrite 1 but it can't overwrite 3 or 4
+                            charBlockLength = 2;
+                        }
+                        if (positionalVariantHashMap.containsKey(next3Chars)) {
+                            // The value 3 can overwrite 1 or 2 but it can't overwrite 4
+                            charBlockLength = 3;
+                        }
+                        if (positionalVariantHashMap.containsKey(next4Chars)) {
+                            // The value 4 can overwrite 1 or 2 or 3
+                            charBlockLength = 4;
+                        }
+
+                        // Add the variant (the longest selected from the previous loop) to the parsed word array
+                        if (charBlockLength>0) {
+                            Tile nextTile;
+                            switch (charBlockLength) {
+                                case 2:
+                                    nextTile = new Tile (positionalVariantHashMap.get(next2Chars));
+                                    nextTile.text = next2Chars; // The variant text becomes the main text for this word's tile array
+                                    i++;
+                                    break;
+                                case 3:
+                                    nextTile = new Tile (positionalVariantHashMap.get(next3Chars));
+                                    nextTile.text = next3Chars;  // The variant text becomes the main text for this word's tile array
+                                    i += 2;
+                                    break;
+                                case 4:
+                                    nextTile = new Tile (positionalVariantHashMap.get(next4Chars));
+                                    nextTile.text = next4Chars;  // The variant text becomes the main text for this word's tile array
+                                    i += 3;
+                                    break;
+                                default: // charBlockLength==1
+                                    nextTile = new Tile (positionalVariantHashMap.get(next1Chars));
+                                    nextTile.text = next1Chars;  // The variant text becomes the main text for this word's tile array
+                                    break;
+                            }
+
+                            if (positionalVariantHashMap.containsKey(nextTile.text)) { // variants, if parsed, replaced base texts, above
+                                switch (nextTile.typeOfThisTileInstance) {
+                                    case "V":
+                                    case "LV":
+                                    case "AV":
+                                    case "BV":
+                                    case "FV":
+                                        VOWELS.add(nextTile);
+                                        CorV.add(nextTile);
+                                        break;
+                                    case "C":
+                                    case "PC":
+                                        CONSONANTS.add(nextTile);
+                                        CorV.add(nextTile);
+                                        break;
+                                    case "AD":
+                                        ADs.add(nextTile);
+                                        break;
+                                    case "D":
+                                        Ds.add(nextTile);
+                                        break;
+                                    case "T":
+                                        TONES.add(nextTile);
+                                    case "SAD":
+                                        SAD.add(nextTile);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            if (!tileHashMap.containsKey(nextTile.text)) {
+                                tileHashMap.put(nextTile.text, nextTile);
+                            }
+                            if (!nextTile.tileType.equals("SAD") && !tileHashMapNoSAD.containsKey(nextTile.text)) {
+                                tileHashMapNoSAD.put(nextTile.text, nextTile);
+                            }
+                            stringToParsePreliminaryTileArray.add(nextTile);
+                        }
                     }
                 }
 
@@ -2323,6 +2521,7 @@ public class Start extends AppCompatActivity {
         public String title;
 
     }
+
 
     /**
      * tracks two fields together: an index within a word to place the WordPiece into, and the WordPiece's text

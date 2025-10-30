@@ -363,7 +363,7 @@ public class Brazil extends GameActivity {
             }
             word = wordBuilder.toString();
         } else { // Tile game
-            Start.Tile blankTile = new Start.Tile("__", new ArrayList<>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, correctTile.typeOfThisTileInstance, 1, "", "No restrictions (default)");
+            Start.Tile blankTile = new Start.Tile("__", new ArrayList<>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, correctTile.typeOfThisTileInstance, 1, "", "No restrictions (default)", "none", "none", "none");
             parsedRefWordTileArray.set(indexToRemove, blankTile);
             if (scriptType.equals("Khmer") && correctTile.typeOfThisTileInstance.equals("C")){
                 if(indexToRemove < parsedRefWordTileArray.size()-1 && parsedRefWordTileArray.get(indexToRemove + 1).typeOfThisTileInstance.matches("(V|AV|BV|D)")) {
