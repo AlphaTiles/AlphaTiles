@@ -306,7 +306,7 @@ public class Iraq extends GameActivity {
                     if (iconicWordObj != null) {
                         String wordText = Start.wordList.stripInstructionCharacters(iconicWordObj.wordInLOP);
                         tileView.setText(wordText);
-                        tileView.setBackgroundColor(Color.LTGRAY);
+                        tileView.setBackgroundColor(Color.WHITE);
 
                         // Show the image
                         ImageView wordImage = new ImageView(context);
@@ -340,7 +340,8 @@ public class Iraq extends GameActivity {
                     } else {
                         // fallback: just show the tile text
                         tileView.setText(originalText);
-                        tileView.setBackgroundColor(Color.LTGRAY);
+                        tileView.setBackgroundColor(Color.WHITE);
+                        tileView.setTextColor(originalColor);
                     }
                 } else {
                     Start.Word[] groupOfWordsForActiveTile = null;
@@ -386,7 +387,7 @@ public class Iraq extends GameActivity {
 
                         // Show the word in the tile
                         tileView.setText(wordText);
-                        tileView.setBackgroundColor(Color.LTGRAY);
+                        tileView.setBackgroundColor(Color.WHITE);
 
                         // Show the image
                         ImageView wordImage = new ImageView(context);
@@ -422,7 +423,8 @@ public class Iraq extends GameActivity {
                     } else {
                         // fallback: just show the tile text
                         tileView.setText(originalText);
-                        tileView.setBackgroundColor(Color.LTGRAY);
+                        tileView.setBackgroundColor(Color.WHITE);
+                        tileView.setTextColor(originalColor);
                     }
                 } 
             }catch (Exception e) { }
@@ -432,6 +434,7 @@ public class Iraq extends GameActivity {
                     try {
                         tileView.setText(originalText);
                         tileView.setBackgroundColor(originalColor);
+                        tileView.setTextColor(Color.WHITE);
                         setAllGameButtonsClickable();
                         setOptionsRowClickable();
                         setPageArrowsClickable(true);
