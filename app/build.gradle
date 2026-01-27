@@ -1,16 +1,18 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+}
 
 android {
     compileSdk = 36
 
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
-        applicationId "org.alphatilesapps.alphatiles"
+        applicationId = "org.alphatilesapps.alphatiles"
         minSdk = 21
         targetSdk = 36
-        versionCode = 186
-        versionName = "2.9.1"
+        versionCode = 187
+        versionName = "2.9.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -28,13 +30,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             // Optional code that customizes the .apk output name
-            applicationVariants.all{
-                variant ->
-                    variant.outputs.each{
-                        output->
-                            def apkOutputName = "alphaTiles.Blue.${variant.productFlavors[0].name}.V${variant.versionName}.apk"
-                            output.outputFileName = apkOutputName
+            androidComponents {
+                onVariants(selector().withBuildType("release")) { variant ->
+                    variant.outputs.forEach { output ->
+                        def flavorName = variant.productFlavors[0].second
+                        output.outputFileName.set(
+                                "alphaTiles.Blue.${flavorName}.V${output.versionName.get()}.apk"
+                        )
                     }
+                }
             }
         }
     }
