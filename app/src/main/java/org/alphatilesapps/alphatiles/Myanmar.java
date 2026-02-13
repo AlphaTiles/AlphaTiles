@@ -244,6 +244,7 @@ public class Myanmar extends GameActivity {
             tile.setText("");
             tile.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             tile.setTextColor(Color.parseColor("#000000")); // black
+            tile.setClickable(true);
         }
 
         for (int x = 0; x < 7; x++) {
