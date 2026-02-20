@@ -1225,13 +1225,15 @@ public abstract class GameActivity extends AppCompatActivity {
 
 
     /**
-     * This method is used for Arabic script apps in games which have been set to use contextual forms of word pieces.
+     * This method is used for Arabic script apps in games which have been set to use contextual
+     * forms of word pieces.
      * @param isolateWordPieceString a String to contextualize
      * @param indexInWord the position of that Tile or Syllable within its word or pseudo-word
      * @param stringPieces the ArrayList of tile or syllable strings within the word or pseudo-word
      * @return the WordPiece's text in proper contextual form
      */
-    public static String contextualizedWordPieceString(String isolateWordPieceString, int indexInWord, ArrayList<String> stringPieces) {
+    public static String contextualizedWordPieceString(String isolateWordPieceString, int indexInWord,
+                                                       ArrayList<String> stringPieces) {
 
         if (indexInWord==0) { // WORD-INITIAL
             // Handle subsequent non-joiners
@@ -1514,6 +1516,10 @@ public abstract class GameActivity extends AppCompatActivity {
     public Start.Syllable fittingSyllableAlternative(WordPieceStringPositionSet alreadyAddedPlacements, ArrayList<Start.Syllable> syllablesInRefWord, int indexInParsedRefWordSyllableArray) {
 
         ArrayList<Start.Syllable> syllableListCopy = (Start.SyllableList) Start.syllableList.clone();
+
+        // The Brazil and Georgia games require random syllables, so shuffle the list first.
+        Collections.shuffle(syllableListCopy);
+
         for (Start.Syllable s : syllableListCopy) {
             if (!(alreadyAddedPlacements.contains(new WordPieceStringPosition(indexInParsedRefWordSyllableArray, s.text)))
                     && s.canBePlacedInPosition(syllablesInRefWord, indexInParsedRefWordSyllableArray)) {
@@ -1535,6 +1541,10 @@ public abstract class GameActivity extends AppCompatActivity {
     public Start.Syllable fittingSyllableAlternative(Start.Syllable refSyllable, ArrayList<Start.Syllable> alreadyAddedChoices, String contextualPosition) {
 
         ArrayList<Start.Syllable> syllableListCopy = (Start.SyllableList) Start.syllableList.clone();
+
+        // The Brazil and Georgia games require random syllables, so shuffle the list first.
+        Collections.shuffle(syllableListCopy);
+
         for (Start.Syllable s : syllableListCopy) {
             if (!alreadyAddedChoices.contains(s) && s.canBePlacedInPosition(contextualPosition)) {
                 return s;

@@ -94,7 +94,7 @@ public class Georgia extends GameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        int gameID = 0;
+        int gameID;
         if (syllableGame.equals("S")) {
             setContentView(R.layout.georgia_syll);
             gameID = R.id.georgiaCL_syll;
@@ -181,8 +181,8 @@ public class Georgia extends GameActivity {
         setAllGameButtonsClickable();
         setOptionsRowClickable();
 
-        for (int i = 0; i < GAME_BUTTONS.length; i++) {
-            TextView nextWord = (TextView) findViewById(GAME_BUTTONS[i]);
+        for (int gameButton : GAME_BUTTONS) {
+            TextView nextWord = (TextView) findViewById(gameButton);
             nextWord.setClickable(true);
         }
 
@@ -514,7 +514,7 @@ public class Georgia extends GameActivity {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
-        String correctString = "";
+        String correctString;
         if (syllableGame.equals("S")) {
             correctString = initialSyllable.text;
         } else {
@@ -538,7 +538,7 @@ public class Georgia extends GameActivity {
                         .putValue("Correct Answer", correctString)
                         .putValue("Grade", studentGrade);
                 for (int i = 0; i < visibleGameButtons - 1; i++) {
-                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                    if (!incorrectAnswersSelected.get(i).isEmpty()) {
                         info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
                     }
                 }
@@ -562,7 +562,7 @@ public class Georgia extends GameActivity {
             for (int i = 0; i < visibleGameButtons - 1; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(selectedTileString)) break;  // this incorrect answer already selected
-                if (item.equals("")) {
+                if (item.isEmpty()) {
                     incorrectAnswersSelected.set(i, selectedTileString);
                     break;
                 }
