@@ -1092,7 +1092,6 @@ public class Validator {
 
             // For each row, check and ensure these three things are not simultaneously true.
             for (ArrayList<String> row : games) {
-                System.out.println(row.get(gm) + "\t" + row.get(cl) + "\t" + row.get(st));
                 if (row.get(1).equals("Colombia") && row.get(6).equals("S") && row.get(2).equals("4")){
                     fatalError(Message.Tag.Etc, "The games tab should not include a Columbia CL4 Syllable game.");
                 }
