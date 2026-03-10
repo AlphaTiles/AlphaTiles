@@ -391,8 +391,6 @@ public class Brazil extends GameActivity {
     }
 
     private void setUpSyllables() {
-        LOGGER.info("setUpSyllables: visible=" + visibleGameButtons + " level=" + challengeLevel);
-
         if (challengeLevel == 1) { // Find and add random alternatives
 
             WordPieceStringPositionSet alreadyAddedPlacements = new WordPieceStringPositionSet();
@@ -400,15 +398,11 @@ public class Brazil extends GameActivity {
             for (int b = 0; b < visibleGameButtons; b++) {
                 TextView gameButton = findViewById(GAME_BUTTONS[b]);
 
-                LOGGER.info("setUpSyllables: get fitting syllable: " + alreadyAddedPlacements.size() + "/"
-                + parsedRefWordSyllableArray.size() + "/" + indexToRemove);
                 Syllable option = fittingSyllableAlternative(alreadyAddedPlacements, parsedRefWordSyllableArray, indexToRemove);
                 if (Objects.isNull(option)) { // Fewer than 4 viable answer choices available. 'Restart' with new word.
                     playAgain();
                     return;
                 } else { // Display viable options.
-                    LOGGER.info("setUpSyllables: option=" + option.text);
-
                     gameButton.setText(option.text);
                     gameButton.setBackgroundColor(Color.parseColor(colorList.get(b % 5)));
                     gameButton.setTextColor(Color.parseColor("#FFFFFF")); // white
@@ -525,7 +519,7 @@ public class Brazil extends GameActivity {
 
         WordPieceStringPositionSet alreadyAddedPlacements = new WordPieceStringPositionSet();
         Start.Tile option;
-        LOGGER.info("setUpTiles: visible=" + visibleGameButtons + " level=" + challengeLevel);
+
         for (int b = 0; b < visibleGameButtons; b++) {
             TextView gameButton = findViewById(GAME_BUTTONS[b]);
             switch (challengeLevel) {
@@ -552,23 +546,21 @@ public class Brazil extends GameActivity {
             if (Objects.isNull(option)) {
                 if (b < 4) {
                     option = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, indexToRemove, cumulativeStageBasedTileList);
-                    LOGGER.info("setUpTiles (null b<4): option=" + option.text + " b=" + b);
                     if (Objects.isNull(option)) {
                         playAgain();
                         return;
                     }
-                    // Display viable answer choice
-                    LOGGER.info("setUpTiles: Entering fix!!");
+                    // Else we got back a viable answer choice  - display it
+                    // LOGGER.info("setUpTiles: Entering fix!!");
                     gameButton.setText(option.text);
                     gameButton.setBackgroundColor(Color.parseColor(colorList.get(b % 5)));
                     gameButton.setTextColor(Color.parseColor("#FFFFFF")); // white
                     gameButton.setVisibility(View.VISIBLE);
                     gameButton.setClickable(true);
                     alreadyAddedPlacements.add(new WordPieceStringPosition(indexToRemove, option.text));
-                    LOGGER.info("setUpTiles: Exiting fix!!");
+                    // LOGGER.info("setUpTiles: Exiting fix!!");
 
                 } else { // Viable answer choice beyond 4 not found
-                    LOGGER.info("setUpTiles (null b>=4): option=" + option.text + " b=" + b);
                     gameButton.setText(String.valueOf(b + 1));
                     gameButton.setBackgroundResource(R.drawable.textview_border);
                     gameButton.setTextColor(Color.parseColor("#000000")); // black
@@ -576,7 +568,6 @@ public class Brazil extends GameActivity {
                     gameButton.setVisibility(View.INVISIBLE);
                 }
             } else { // Display viable answer choice
-                LOGGER.info("setUpTiles (not null): option=" + option.text + " b=" + b);
                 gameButton.setText(option.text);
                 gameButton.setBackgroundColor(Color.parseColor(colorList.get(b % 5)));
                 gameButton.setTextColor(Color.parseColor("#FFFFFF")); // white
@@ -586,11 +577,9 @@ public class Brazil extends GameActivity {
             }
         }
 
-        // LOGGER.info("setUpTiles: loop " + visibleGameButtons + " to " + GAME_BUTTONS.length);
         for (int b=visibleGameButtons; b<GAME_BUTTONS.length; b++) { // Hide empty buttons
             TextView gameButton = findViewById(GAME_BUTTONS[b]);
             if(!Objects.isNull(gameButton)) {
-                // LOGGER.info("setUpTiles (not null): gameButton=" + gameButton + "b=" + b);
                 gameButton.setText(String.valueOf(b + 1));
                 gameButton.setBackgroundResource(R.drawable.textview_border);
                 gameButton.setTextColor(Color.parseColor("#000000")); // black
@@ -605,7 +594,6 @@ public class Brazil extends GameActivity {
             int randomNum = rand.nextInt(visibleGameButtons - 1); // KP
             TextView gameButton = findViewById(GAME_BUTTONS[randomNum]);
             gameButton.setText(correctTile.text);
-            LOGGER.info("put correct tile into block:" + correctTile.text);
         }
 
 

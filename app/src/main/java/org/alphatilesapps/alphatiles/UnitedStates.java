@@ -334,13 +334,12 @@ public class UnitedStates extends GameActivity {
         } else {
             lastSelectedIndex = (tileIndex - 1) / 2;
         }
-        LOGGER.info("buildWord: tileIndex=" + tileIndex + "/lastIndex=" + lastSelectedIndex);
+
         String displayedWord;
         if (syllableGame.equals("S")){
             StringBuilder stringBuilder = new StringBuilder();
-            LOGGER.info("buildWord: numberOfPairs=" + numberOfPairs);
+
             for (int i = 0; i < numberOfPairs; i++) {
-                LOGGER.info("buildWord: i=" + i + "/pairHasSelection=" + pairHasSelection[i]);
                 if (pairHasSelection[i]) {
                     stringBuilder.append(selections[2 * i]);
                     stringBuilder.append(selections[2 * i + 1]);
@@ -351,16 +350,13 @@ public class UnitedStates extends GameActivity {
                     String s = contextualizedWordPieceString(underbars, i, parsedRefWordSyllableArrayStrings);
                     if (s.startsWith("XYZXYZ")) {
                         stringBuilder.append(underbars);
-                        LOGGER.info("buildWord: append=" + underbars);
                     } else {
                         stringBuilder.append(s);
-                        LOGGER.info("buildWord: append=" + s);
                     }
                 }
             }
 
             displayedWord = stringBuilder.toString();
-            LOGGER.info("buildWord: displayedWord=" + displayedWord);
             constructedWord.setText(displayedWord);
 
         } else {
