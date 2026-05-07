@@ -87,6 +87,8 @@ public class Validator {
      */
     private static final int NUM_TIMES_TILES_WANTED_IN_WORDS = 5;
 
+    public static String lastParseError = "";
+
     /**
      * List of Tile objects from gametiles
      */
@@ -646,8 +648,7 @@ public class Validator {
                 }
                 // go to the next word if this one cannot be parsed
                 catch (NullPointerException e) {
-                    fatalError(Message.Tag.Etc, "Cannot parse word \"" + word.wordInLOP + "\" in wordlist into tiles from gametiles.");
-                }
+                    fatalError(Message.Tag.Etc, "Cannot parse word \"" + word.wordInLOP + "\" in wordlist into tiles from gametiles. " + lastParseError);                                }
 
             }
             if (longWords > 0) {
@@ -3248,9 +3249,10 @@ public class Validator {
                     Tile nextTile = tileHashMap.find(tileString);
                     wordPreliminaryTileArray.add(nextTile);
                 } else if (!".#".contains(next1Chars)) {
+                    lastParseError = "the character \"" + next1Chars + "\" (U+" + String.format("%04X", (int) next1Chars.charAt(0)) + ") at position " + i + " could not be matched to any tile in gametiles.";
                     return null;
                 }
-            }
+                            }
             for (Tile tile : wordPreliminaryTileArray) {
                 if (MULTITYPE_TILES.contains(tile.text)) {
                     tile.typeOfThisTileInstance = getInstanceTypeForMixedTilePreliminary(tileIndex, wordPreliminaryTileArray, wordListWord);
