@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
@@ -19,6 +20,15 @@ public class Celebration extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        // Disable back navigation
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Intentionally empty — do nothing
+            }
+        });
+
         context = this;
         setContentView(R.layout.celebration);
 
@@ -36,11 +46,5 @@ public class Celebration extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
-
 
 }

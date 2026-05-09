@@ -2,12 +2,17 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowMetrics;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -110,9 +115,18 @@ public class Myanmar extends GameActivity {
 
     public void setTextSizes() {
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int heightOfDisplay = displayMetrics.heightPixels;
+        int heightOfDisplay;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {  // API 30+
+            WindowMetrics windowMetrics = getWindowManager().getCurrentWindowMetrics();
+            Insets insets = windowMetrics.getWindowInsets()
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            heightOfDisplay = windowMetrics.getBounds().height() - insets.top - insets.bottom;
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            heightOfDisplay = displayMetrics.heightPixels;
+        }
         int pixelHeight = 0;
         double scaling = 0.45;
         int bottomToTopId;
@@ -612,7 +626,7 @@ public class Myanmar extends GameActivity {
                 updatePointsAndTrackers(wordsCompleted);
             }
             playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
-            handler = new Handler();
+            handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(clearImageFromImageBank(indexOfFoundWord), Long.valueOf(refWord.duration + correctSoundDuration));
 
         } else { // Word not found

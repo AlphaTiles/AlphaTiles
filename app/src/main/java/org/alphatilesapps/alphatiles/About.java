@@ -11,6 +11,8 @@ import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.core.text.util.LinkifyCompat;
+import android.os.Build;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -57,7 +59,7 @@ public class About extends AppCompatActivity {
 
         TextView photoAudioCredits2 = findViewById(R.id.photoAudioCredits2);
         String mediaTwo = Start.langInfoList.find("Audio and image credits (lang 2)");
-        if (mediaTwo.equals("none") || mediaTwo.equals(null)|| mediaTwo.equals("")) {
+        if (mediaTwo != null && !mediaTwo.equalsIgnoreCase("none") && !mediaTwo.isEmpty()) {
             photoAudioCredits2.setText("");
         } else {
             photoAudioCredits2.setText(mediaTwo);
@@ -71,12 +73,12 @@ public class About extends AppCompatActivity {
         }
 
         TextView email = findViewById(R.id.email);
-        email.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
         String contactEmail = Start.langInfoList.find("Email");
-    if (contactEmail.equals("none") || contactEmail.equals(null)|| contactEmail.equals("")) {
+        if (contactEmail == null || contactEmail.equals("none") || contactEmail.isEmpty()) {
             email.setText("");
         } else {
             email.setText(contactEmail);
+            LinkifyCompat.addLinks(email, Linkify.EMAIL_ADDRESSES);
             email.setMovementMethod(LinkMovementMethod.getInstance());
         }
 
@@ -84,7 +86,12 @@ public class About extends AppCompatActivity {
 
         String httpText = Start.langInfoList.find("Privacy Policy");
         String linkText = "<a href=\"" + httpText + "\">" + "Privacy Policy" + "</a>";
-        CharSequence styledText = Html.fromHtml(linkText);
+        CharSequence styledText;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            styledText = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            styledText = Html.fromHtml(linkText); // for API 21 to 23
+        }
         privacyPolicy.setText(styledText);
         privacyPolicy.setMovementMethod(LinkMovementMethod.getInstance());
 

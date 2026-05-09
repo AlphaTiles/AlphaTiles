@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import android.graphics.Typeface;
 import android.widget.Button;
@@ -36,6 +37,8 @@ public class UnitedStates extends GameActivity {
 
     ArrayList<Tile> tileOptions = new ArrayList<>();
     Tile[] tileSelections;
+
+    private static final Logger LOGGER = Logger.getLogger(UnitedStates.class.getName());
 
     protected static final int[] GAME_BUTTONS = {
             R.id.button01a, R.id.button01b, R.id.button02a, R.id.button02b, R.id.button03a, R.id.button03b, R.id.button04a, R.id.button04b, R.id.button05a, R.id.button05b,
@@ -74,7 +77,7 @@ public class UnitedStates extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
 
-        int gameID = 0;
+        int gameID;
         switch (challengeLevel) {
             case 2:
                 setContentView(R.layout.united_states_cl2);
@@ -268,10 +271,10 @@ public class UnitedStates extends GameActivity {
         }
 
         TextView constructedWord = findViewById(R.id.activeWordTextView);
-        String initialDisplay = "";
+        StringBuilder initialDisplay = new StringBuilder();
         for (int i = 0; i < numberOfPairs; i++)
-            initialDisplay += "__";
-        constructedWord.setText(initialDisplay);
+            initialDisplay.append("__");
+        constructedWord.setText(initialDisplay.toString());
 
 
         if (useContextualFormsBWFP) { // Option for Arabic scripts
@@ -341,7 +344,15 @@ public class UnitedStates extends GameActivity {
                     stringBuilder.append(selections[2 * i]);
                     stringBuilder.append(selections[2 * i + 1]);
                 } else {
-                    stringBuilder.append(contextualizedWordPieceString("__", i, parsedRefWordSyllableArrayStrings));
+                    // Be sure not to use the default dummy contextualizingCharacter value XYZXYZ,
+                    // as that is meaningless in non-Arabic languages.
+                    String underbars = "__";
+                    String s = contextualizedWordPieceString(underbars, i, parsedRefWordSyllableArrayStrings);
+                    if (s.startsWith("XYZXYZ")) {
+                        stringBuilder.append(underbars);
+                    } else {
+                        stringBuilder.append(s);
+                    }
                 }
             }
 

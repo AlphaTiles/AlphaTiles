@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -50,6 +51,7 @@ public class Brazil extends GameActivity {
     ArrayList<String> parsedRefWordSyllableArrayStrings;
 
     Start.SyllableList syllableListCopy;
+    private static final Logger LOGGER = Logger.getLogger(Brazil.class.getName());
 
     protected static final int[] GAME_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -94,7 +96,7 @@ public class Brazil extends GameActivity {
             setContentView(R.layout.brazil_cl1);
         }
 
-        int gameID = 0;
+        int gameID;
         if (challengeLevel == 3 || challengeLevel == 6) {
             gameID = R.id.brazil_cl3_CL;
         } else {
@@ -297,7 +299,7 @@ public class Brazil extends GameActivity {
     private void removeTile() {
 
         Random rand = new Random();
-        int index = 0;
+        int index;
         indexToRemove = 0;
 
         boolean repeat = true;
@@ -418,7 +420,7 @@ public class Brazil extends GameActivity {
                 gameButton.setText(correctSyllable.text);
             }
         } else { // Challenge level 2
-            // Alternatives are challenging: first  distractors, then syllables with the same initial or final characters, then random.
+            // Alternatives are challenging: first distractors, then syllables with the same initial or final characters, then random.
 
             // First, add correct answer and distractors
             Set<String> challengingAnswerChoices = new HashSet<String>(); // Duplicates will be prevented since this is a Set
@@ -548,6 +550,16 @@ public class Brazil extends GameActivity {
                         playAgain();
                         return;
                     }
+                    // Else we got back a viable answer choice  - display it
+                    // LOGGER.info("setUpTiles: Entering fix!!");
+                    gameButton.setText(option.text);
+                    gameButton.setBackgroundColor(Color.parseColor(colorList.get(b % 5)));
+                    gameButton.setTextColor(Color.parseColor("#FFFFFF")); // white
+                    gameButton.setVisibility(View.VISIBLE);
+                    gameButton.setClickable(true);
+                    alreadyAddedPlacements.add(new WordPieceStringPosition(indexToRemove, option.text));
+                    // LOGGER.info("setUpTiles: Exiting fix!!");
+
                 } else { // Viable answer choice beyond 4 not found
                     gameButton.setText(String.valueOf(b + 1));
                     gameButton.setBackgroundResource(R.drawable.textview_border);
@@ -576,7 +588,8 @@ public class Brazil extends GameActivity {
             }
         }
 
-        if (!(alreadyAddedPlacements.contains(new WordPieceStringPosition(indexToRemove, correctTile.text)))) { // If the correct syllable wasn't randomly added as an answer choice, then here it overwrites one of the others
+        if (!(alreadyAddedPlacements.contains(new WordPieceStringPosition(indexToRemove, correctTile.text)))) {
+            // If the correct syllable wasn't randomly added as an answer choice, then here it overwrites one of the others
             Random rand = new Random();
             int randomNum = rand.nextInt(visibleGameButtons - 1); // KP
             TextView gameButton = findViewById(GAME_BUTTONS[randomNum]);
@@ -604,7 +617,7 @@ public class Brazil extends GameActivity {
 
     /**
      * For Arabic script apps
-     * Show the right form (medial, initial, final) of the missing sylllable choices
+     * Show the right form (medial, initial, final) of the missing syllable choices
      */
     private void produceContextualSyllableAnswerChoices() {
         for(int t = 0; t< visibleGameButtons; t++) { // For all answer choices
@@ -641,7 +654,7 @@ public class Brazil extends GameActivity {
                         .putValue("Correct Answer", correctString)
                         .putValue("Grade", studentGrade);
                 for (int i = 0; i < visibleGameButtons - 1; i++) {
-                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                    if (!incorrectAnswersSelected.get(i).isEmpty()) {
                         info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
                     }
                 }
@@ -668,7 +681,7 @@ public class Brazil extends GameActivity {
             for (int i = 0; i < visibleGameButtons-1; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(gameButtonString)) break;  // this incorrect answer already selected
-                if (item.equals("")) {
+                if (item.isEmpty()) {
                     incorrectAnswersSelected.set(i, gameButtonString);
                     break;
                 }
