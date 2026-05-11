@@ -284,13 +284,25 @@ public class Thailand extends GameActivity {
                         case "CONTEXTUAL":
                             switch (contextualTilePosition) {
                                 case "INITIAL":
-                                    refString = contextualizedForm_Initial(refTile.text);
+                                    if (!refTile.wordInitialVariant.equals("none")) {
+                                        refString = refTile.wordInitialVariant;
+                                    } else {
+                                        refString = contextualizedForm_Initial(refTile.text);
+                                    }
                                     break;
                                 case "FINAL":
-                                    refString = contextualizedForm_Final(refTile.text);
+                                    if (!refTile.wordFinalVariant.equals("none")) {
+                                        refString = refTile.wordFinalVariant;
+                                    } else {
+                                        refString = contextualizedForm_Final(refTile.text);
+                                    }
                                     break;
                                 default: // MEDIAL
-                                    refString = contextualizedForm_Medial(refTile.text);
+                                    if (!refTile.wordMedialVariant.equals("none")) {
+                                        refString = refTile.wordMedialVariant;
+                                    } else {
+                                        refString = contextualizedForm_Medial(refTile.text);
+                                    }
                                     break;
                             }
                             break;
@@ -401,7 +413,11 @@ public class Thailand extends GameActivity {
                             int choiceColorNo = Color.parseColor(choiceColorStr);
                             choiceButton.setBackgroundColor(choiceColorNo);
                             choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                            choiceButton.setText(contextualizedForm_Initial(fourTileChoices.get(t).text));
+                            if (!fourTileChoices.get(t).wordInitialVariant.equals("none")) {
+                                choiceButton.setText(fourTileChoices.get(t).wordInitialVariant);
+                            } else {
+                                choiceButton.setText(contextualizedForm_Initial(fourTileChoices.get(t).text));
+                            }
                         }
                         break;
                     case "FINAL":
@@ -411,7 +427,11 @@ public class Thailand extends GameActivity {
                             int choiceColorNo = Color.parseColor(choiceColorStr);
                             choiceButton.setBackgroundColor(choiceColorNo);
                             choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                            choiceButton.setText(contextualizedForm_Final(fourTileChoices.get(t).text));
+                            if (!fourTileChoices.get(t).wordFinalVariant.equals("none")) {
+                                choiceButton.setText(fourTileChoices.get(t).wordFinalVariant);
+                            } else {
+                                choiceButton.setText(contextualizedForm_Final(fourTileChoices.get(t).text));
+                            }
                         }
                         break;
                     default: // MEDIAL
@@ -421,7 +441,11 @@ public class Thailand extends GameActivity {
                             int choiceColorNo = Color.parseColor(choiceColorStr);
                             choiceButton.setBackgroundColor(choiceColorNo);
                             choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                            choiceButton.setText(contextualizedForm_Medial(fourTileChoices.get(t).text));
+                            if (!fourTileChoices.get(t).wordMedialVariant.equals("none")) {
+                                choiceButton.setText(fourTileChoices.get(t).wordMedialVariant);
+                            } else {
+                                choiceButton.setText(contextualizedForm_Medial(fourTileChoices.get(t).text));
+                            }
                         }
                         break;
                 }
