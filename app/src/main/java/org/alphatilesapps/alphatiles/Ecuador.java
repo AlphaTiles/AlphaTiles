@@ -58,7 +58,7 @@ public class Ecuador extends GameActivity {
     @Override
     protected void hideInstructionAudioImage() {
 
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
         
     }
@@ -85,8 +85,8 @@ public class Ecuador extends GameActivity {
         ActivityLayouts.applyEdgeToEdge(this, R.id.ecuadorCL);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView repeatImage = findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
