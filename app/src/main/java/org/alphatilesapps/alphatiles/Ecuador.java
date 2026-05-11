@@ -34,7 +34,7 @@ import com.segment.analytics.Properties;
 // 2. FILTER DUPLICATE ANSWER CHOICES
 
 public class Ecuador extends GameActivity {
-// testing for crawl
+// testing for crawl #2
     int[][] boxCoordinates;   // Will be 8 boxes, defined by 4 parameters each: x1, y1, x2, y2
     int justClickedWord = 0;
     ArrayList<Word> wordPool = new ArrayList<>();
