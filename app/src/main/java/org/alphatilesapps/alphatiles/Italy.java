@@ -108,6 +108,18 @@ public class Italy extends GameActivity {
             Collections.shuffle(sortableTilesArray);
         }
 
+        if (challengeLevel==1) {
+            for (int t = 0; t < 16; t++) {
+                ImageView wordImage = findViewById(WORD_IMAGES[t]);
+                wordImage.setVisibility(View.VISIBLE);
+            }
+        } else if (challengeLevel==2) {
+            for (int t = 0; t < 16; t++) {
+                ImageView wordImage = findViewById(WORD_IMAGES[t]);
+                wordImage.setVisibility(View.INVISIBLE);
+            }
+        }
+
         // override default deck size setting, if configured
         final String deckSizeSetting = Start.settingsList.find(ITALY_DECK_SIZE);
         if (! deckSizeSetting.isEmpty()) {
@@ -139,6 +151,7 @@ public class Italy extends GameActivity {
         nextWordArrow.setClickable(false);
 
         ImageView referenceItem = findViewById(R.id.referenceItem);
+
         referenceItem.setClickable(false);
 
         for (int t = 0; t < visibleGameButtons; t++) {
