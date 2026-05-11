@@ -80,7 +80,7 @@ public class Myanmar extends GameActivity {
     @Override
     protected void hideInstructionAudioImage() {
 
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
         
     }
@@ -99,8 +99,8 @@ public class Myanmar extends GameActivity {
         ActivityLayouts.setStatusAndNavColors(this);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView repeatImage = findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
@@ -162,7 +162,7 @@ public class Myanmar extends GameActivity {
 
         }
 
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
+        TextView wordToBuild = findViewById(R.id.activeWordTextView);
         ConstraintLayout.LayoutParams lp2 = (ConstraintLayout.LayoutParams) wordToBuild.getLayoutParams();
         int bottomToTopId2 = lp2.bottomToTop;
         int topToTopId2 = lp2.topToTop;
@@ -194,7 +194,7 @@ public class Myanmar extends GameActivity {
         higherClick = 0;
         completionGoal = 7;
 
-        TextView wordToBuild = (TextView) findViewById(R.id.activeWordTextView);
+        TextView wordToBuild = findViewById(R.id.activeWordTextView);
         wordToBuild.setText("");
         chooseWords();
         resetBoard();
@@ -716,7 +716,7 @@ public class Myanmar extends GameActivity {
 
         TextView clickedTileIndex = findViewById(GAME_BUTTONS[clickedTile - 1]);
         int tileColor = ((ColorDrawable) clickedTileIndex.getBackground()).getColor();
-        int textColor = clickedTileIndex.getCurrentTextColor();
+        //int textColor = clickedTileIndex.getCurrentTextColor();
 
         if(tileColor == Color.YELLOW && selectedTileIndices.peek() != clickedTileIndex){
             return;
