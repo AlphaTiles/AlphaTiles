@@ -94,8 +94,8 @@ public class UnitedStates extends GameActivity {
         ActivityLayouts.setStatusAndNavColors(this);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView repeatImage = findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
@@ -221,14 +221,12 @@ public class UnitedStates extends GameActivity {
             parseIndex++;
 
         }
-        //TextView constructedWord = findViewById(R.id.activeWordTextView); // KP
-        //constructedWord.setText(""); // KP
 
         TextView constructedWord = findViewById(R.id.activeWordTextView);
-        String initialDisplay = "";
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < numberOfPairs; i++)
-            initialDisplay += "__";
-        constructedWord.setText(initialDisplay);
+            sb.append("__");
+        constructedWord.setText(sb.toString());
 
         setAllGameButtonsClickable();
     }
