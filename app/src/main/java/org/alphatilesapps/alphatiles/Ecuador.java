@@ -34,7 +34,7 @@ import com.segment.analytics.Properties;
 // 2. FILTER DUPLICATE ANSWER CHOICES
 
 public class Ecuador extends GameActivity {
-
+// testing for crawl #2
     int[][] boxCoordinates;   // Will be 8 boxes, defined by 4 parameters each: x1, y1, x2, y2
     int justClickedWord = 0;
     ArrayList<Word> wordPool = new ArrayList<>();
@@ -58,7 +58,7 @@ public class Ecuador extends GameActivity {
     @Override
     protected void hideInstructionAudioImage() {
 
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
         
     }
@@ -85,8 +85,8 @@ public class Ecuador extends GameActivity {
         ActivityLayouts.applyEdgeToEdge(this, R.id.ecuadorCL);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView repeatImage = findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
