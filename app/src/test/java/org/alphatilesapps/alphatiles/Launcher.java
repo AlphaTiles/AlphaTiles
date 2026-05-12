@@ -15,6 +15,7 @@ public class Launcher {
         intent.putExtra("gameNumber", 1);
         return Robolectric.buildActivity(cls, intent);
     }
+
     public static <A extends GameActivity> ActivityController<A> launch(Class<A> cls, int challengeLevel) {
         return launch(cls, challengeLevel, 1, "T");
     }

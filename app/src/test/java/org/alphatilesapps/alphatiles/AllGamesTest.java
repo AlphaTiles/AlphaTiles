@@ -1,16 +1,11 @@
 package org.alphatilesapps.alphatiles;
 
-import android.content.Intent;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
-
-import java.util.ArrayList;
-import java.util.logging.Logger;
 
 @RunWith(AndroidJUnit4.class)
 public class AllGamesTest {
