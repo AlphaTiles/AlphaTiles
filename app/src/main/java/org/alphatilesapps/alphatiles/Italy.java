@@ -137,6 +137,7 @@ public class Italy extends GameActivity {
         if(!Start.changeArrowColor) {
             playNextWordImage.setImageResource(R.drawable.zz_forward_green);
         }
+
         updatePointsAndTrackers(0);
         playAgain();
     }
@@ -246,6 +247,18 @@ public class Italy extends GameActivity {
         // Shuffle the gameCards again; they will be "called" in order from here on out
         Collections.shuffle(gameCards);
 
+        if (challengeLevel==1) {
+            for (int t = 0; t < 16; t++) {
+                ImageView wordImage = findViewById(WORD_IMAGES[t]);
+                wordImage.setVisibility(View.VISIBLE);
+            }
+        } else if (challengeLevel==2) {
+            for (int t = 0; t < 16; t++) {
+                ImageView wordImage = findViewById(WORD_IMAGES[t]);
+                wordImage.setVisibility(View.INVISIBLE);
+            }
+        }
+
         // Display the first word
         nextWordFromGameSet();
 
@@ -292,6 +305,7 @@ public class Italy extends GameActivity {
 
         ImageView imageJustSelected = findViewById(WORD_IMAGES[indexOfTileJustSelected - 1]);
         imageJustSelected.setImageResource(R.drawable.zz_bean);
+        imageJustSelected.setVisibility(View.VISIBLE);
 
         TextView thisCardText = findViewById(GAME_BUTTONS[indexOfTileJustSelected - 1]);
         thisCardText.setTextColor(Color.BLACK);
@@ -323,6 +337,7 @@ public class Italy extends GameActivity {
                 for (int i = 0; i < sequence.length; i++) {
                     ImageView bean = findViewById(WORD_IMAGES[sequence[i] - 1]);
                     bean.setImageResource(R.drawable.zz_bean_loteria);
+                    bean.setVisibility(View.VISIBLE);
                 }
                 return true;
             }
