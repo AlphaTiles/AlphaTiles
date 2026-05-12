@@ -107,7 +107,7 @@ public class Peru extends GameActivity {
 //        int tileLength = parsedRefWordTileArray.size();
 
         int sanityCounter1 = 0;
-        int tileLength = 0;
+        int tileLength;
         System.out.println("testing testing 123");
 
 // This loop keeps "re-rolling" the word until it finds one with 2+ tiles
