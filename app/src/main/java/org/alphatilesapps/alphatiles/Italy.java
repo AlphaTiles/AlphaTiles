@@ -259,6 +259,8 @@ public class Italy extends GameActivity {
             }
         }
 
+        setAllGameButtonsClickable();
+
         // Display the first word
         nextWordFromGameSet();
 
@@ -339,6 +341,7 @@ public class Italy extends GameActivity {
                     bean.setImageResource(R.drawable.zz_bean_loteria);
                     bean.setVisibility(View.VISIBLE);
                 }
+
                 return true;
             }
         }
@@ -347,6 +350,7 @@ public class Italy extends GameActivity {
     }
 
     public void respondToLoteria() {
+        setAllGameButtonsUnclickable();
         setAdvanceArrowToBlue();
         playCorrectSoundThenActiveWordClip(true);
         updatePointsAndTrackers(4);
