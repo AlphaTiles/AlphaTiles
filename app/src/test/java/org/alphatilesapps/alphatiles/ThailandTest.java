@@ -27,7 +27,15 @@ public class ThailandTest {
         try(ActivityController<Thailand> controller = Robolectric.buildActivity(Thailand.class, intent)) {
             controller.setup();
             Thailand activity = controller.get();
-            activity.findViewById(R.id.choice01).performClick();
+            for(int i = 0; i < 12; i++) {
+                activity.findViewById(R.id.choice01).performClick();
+                activity.findViewById(R.id.choice02).performClick();
+                activity.findViewById(R.id.choice03).performClick();
+                activity.findViewById(R.id.choice04).performClick();
+                assert !activity.repeatLocked;
+                activity.findViewById(R.id.repeatImage).performClick();
+                assert activity.repeatLocked;
+            }
         }
     }
 
