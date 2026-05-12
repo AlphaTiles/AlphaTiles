@@ -13,8 +13,10 @@ public class DummyStart {
             Start.tileDurations.put(tile.audioForThisTileType, 0);
         }
         Start.syllableAudioIDs = new HashMap<>();
-        for(Start.Syllable syl : Start.syllableList) {
-            Start.syllableAudioIDs.put(syl.audioName, -1);
+        if(Start.syllableList != null) {
+            for(Start.Syllable syl : Start.syllableList) {
+                Start.syllableAudioIDs.put(syl.audioName, -1);
+            }
         }
         Start.wordAudioIDs = new HashMap<>();
         for(Start.Word word : Start.wordList) {
