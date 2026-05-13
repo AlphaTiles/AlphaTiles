@@ -18,10 +18,10 @@ public class ColombiaTest {
             controller.setup();
         }
         DummyStart.initAudios();
-        for (int challengeLevel = 3; challengeLevel <= 3; challengeLevel++) {
-            for (int i = 0; i < 10; i++) {
-                play(challengeLevel, "T", 12);
-            }
+        for (int challengeLevel = 1; challengeLevel <= 3; challengeLevel++) {
+            play(challengeLevel, "T", 12);
+            play(challengeLevel, "S", 12);
+
         }
     }
 
