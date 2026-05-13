@@ -65,6 +65,7 @@ public class ColombiaTest {
                     assert longest.isClickable();
                     longest.performClick();
                     target = target.substring(longest.getText().length());
+                    if(target.isEmpty()) break;
                     for (int screen = screens; screen > 1; screen--) {
                         kbBack.performClick();
                     }
