@@ -196,7 +196,7 @@ public class Brazil extends GameActivity {
     }
 
     public void playAgain() {
-        if (isAudioPlaying) {
+        if (mediaPlayerIsPlaying) {
             return;
         }
 
@@ -598,7 +598,7 @@ public class Brazil extends GameActivity {
 
     private void respondToTileSelection(int justClickedButton) {
 
-        if (isAudioPlaying) {
+        if (mediaPlayerIsPlaying) {
             return;
         }
 

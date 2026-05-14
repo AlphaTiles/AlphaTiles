@@ -16,7 +16,6 @@ import com.segment.analytics.Properties;
 
 import static android.graphics.Color.WHITE;
 import static org.alphatilesapps.alphatiles.Start.*;
-import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 
 public class Thailand extends GameActivity {
     ArrayList<Start.Word> fourWordChoices = new ArrayList<>();
@@ -754,15 +753,8 @@ public class Thailand extends GameActivity {
         }, correctSoundDuration);
     }
 
-    public void playCorrectSoundThenActiveTileClip(final boolean playFinalSound) {
-        if (tempSoundPoolSwitch) {
-            playCorrectSoundThenActiveTileClip1(playFinalSound); //SoundPool
-        } else {
-            playCorrectSoundThenActiveTileClip0(playFinalSound); //MediaPlayer
-        }
-    }
 
-    public void playCorrectSoundThenActiveTileClip1(final boolean playFinalSound) { //JP: Specifically for TILE audio. playCorrectSoundThenActiveWordClip is for WORDS
+    public void playCorrectSoundThenActiveTileClip(final boolean playFinalSound) { //JP: Specifically for TILE audio. playCorrectSoundThenActiveWordClip is for WORDS
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
@@ -787,19 +779,6 @@ public class Thailand extends GameActivity {
         }, correctSoundDuration);
     }
 
-    public void playCorrectSoundThenActiveTileClip0(final boolean playFinalSound) { // Media player
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.reset(); //JP: This fixes "mediaplayer went away with unhandled events" issue
-                mp2.release();
-                playActiveTileClip(playFinalSound);
-            }
-        });
-    }
 
     public void clickPicHearAudio(View view) {
         super.clickPicHearAudio(view);

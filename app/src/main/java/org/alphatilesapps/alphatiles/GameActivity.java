@@ -38,14 +38,12 @@ import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
-import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.placeholderCharacter;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.wordStagesLists;
-//??import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
@@ -94,7 +92,7 @@ public abstract class GameActivity extends AppCompatActivity {
     Queue<String> lastXWords = new LinkedList<>();  // avoid reusing words too quickly
 
 
-    boolean isAudioPlaying  = false;
+    boolean mediaPlayerIsPlaying = false;
     boolean repeatLocked = true;
     Handler soundSequencer;
 
@@ -226,7 +224,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
     public void goBackToChoosePlayer(View view) {
 
-        if (isAudioPlaying ) {
+        if (mediaPlayerIsPlaying) {
             return;
         }
         startActivity(new Intent(context, ChoosePlayer.class));
@@ -590,13 +588,6 @@ public abstract class GameActivity extends AppCompatActivity {
         playActiveWordClip(false);
     }
 
-//??    protected void playActiveWordClip(final boolean playFinalSound) {
-//        if (tempSoundPoolSwitch) {
-//            playActiveWordClip1(playFinalSound);    //SoundPool
-//        } else
-//            playActiveWordClip0(playFinalSound);    //MediaPlayer
-//    }
-
     protected void playActiveWordClip(final boolean playFinalSound) {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
@@ -631,28 +622,6 @@ public abstract class GameActivity extends AppCompatActivity {
         }, refWord.duration);
     }
 
-    //?? protected void playActiveWordClip0(final boolean playFinalSound) {
-//        setAllGameButtonsUnclickable();
-//        setOptionsRowUnclickable();
-//        int resID = getResources().getIdentifier(refWord.wordInLWC, "raw", getPackageName());
-//        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-//        isAudioPlaying  = true;
-//        //mp1.start();
-//        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp1) {
-//                mpCompletion(mp1, playFinalSound);
-//            }
-//        });
-//        mp1.start();
-//    }
-
-//    ??protected void playCorrectSoundThenActiveWordClip(final boolean playFinalSound) {
-//        if (tempSoundPoolSwitch)
-//            playCorrectSoundThenActiveWordClip1(playFinalSound);
-//        else
-//        playCorrectSoundThenActiveWordClip0(playFinalSound);
-  //  }
 
     protected void playCorrectSoundThenActiveWordClip(final boolean playFinalSound) {
         setAllGameButtonsUnclickable();
@@ -678,29 +647,6 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
 
-  //??  protected void playCorrectSoundThenActiveWordClip0(final boolean playFinalSound) {
-//        setAllGameButtonsUnclickable();
-//        setOptionsRowUnclickable();
-//        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-//        isAudioPlaying  = true;
-//        mp2.start();
-//        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp2) {
-//                mp2.reset(); //JP: fixed "mediaplayer went away with unhandled events" issue
-//                mp2.release();
-//                playActiveWordClip(playFinalSound);
-//            }
-//        });
-//    }
-
-//?? protected void playIncorrectSound() {
-//        if (tempSoundPoolSwitch)
-//            playIncorrectSound1();
-//        else
-//        playIncorrectSound0();
-//    }
-
     protected void playIncorrectSound() {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
@@ -709,30 +655,6 @@ public abstract class GameActivity extends AppCompatActivity {
         setOptionsRowClickable();
     }
 
-//??    protected void playIncorrectSound0() {
-//        setAllGameButtonsUnclickable();
-//        setOptionsRowUnclickable();
-//        mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
-//        isAudioPlaying  = true;
-//        mp3.start();
-//        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp3) {
-//                isAudioPlaying  = false;
-//                setAllGameButtonsClickable();
-//                setOptionsRowClickable();
-//                mp3.reset(); //JP
-//                mp3.release();
-//            }
-//        });
-//    }
-
-    //?? protected void playCorrectFinalSound() {
-//        if (tempSoundPoolSwitch)
-//            playCorrectFinalSound1();
-//        else
-//        playCorrectFinalSound0();
-//    }
 
     protected void playCorrectFinalSound() {
         setAllGameButtonsUnclickable();
@@ -750,42 +672,25 @@ public abstract class GameActivity extends AppCompatActivity {
         }
     }
 
-//??    protected void playCorrectFinalSound0() {
-//        setAllGameButtonsUnclickable();
-//        setOptionsRowUnclickable();
-//        isAudioPlaying  = true;
-//        mp3 = MediaPlayer.create(this, R.raw.zz_correct_final);
-//        mp3.start();
-//        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp3) {
-//                isAudioPlaying  = false;
-//                setAllGameButtonsClickable();
-//                setOptionsRowClickable();
-//                mp3.reset(); //JP
-//                mp3.release();
-//            }
-//        });
-//    }
 
     public void playAudioInstructions(View view) {
-        if (isAudioPlaying ){
+        if (mediaPlayerIsPlaying){
             mp3.stop();
             mp3.release();
-            isAudioPlaying  = false;
+            mediaPlayerIsPlaying = false;
             setAllGameButtonsClickable();
             setOptionsRowClickable();
             return;
         }
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
-        isAudioPlaying  = true;
+        mediaPlayerIsPlaying = true;
         mp3 = MediaPlayer.create(this, getAudioInstructionsResID());
         mp3.start();
         mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp3) {
-                isAudioPlaying  = false;
+                mediaPlayerIsPlaying = false;
                 setAllGameButtonsClickable();
                 setOptionsRowClickable();
                 mp3.release();
@@ -801,15 +706,12 @@ public abstract class GameActivity extends AppCompatActivity {
 
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
-        //??if(!tempSoundPoolSwitch) {
-            playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
-        //??} else {
-        //??playTileAudio(playFinalSound, tileAudioNumber(tile), tileDurations.get(tile.audioForThisTileType));
-        //??}
+        playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
+
     }
 
     protected boolean isReadyToPlayTileAudio() {
-        if(isAudioPlaying ) {
+        if(mediaPlayerIsPlaying) {
             return false;
         }
 
@@ -818,46 +720,26 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected boolean tileShouldPlayAudio(Start.Tile tile) {
         // make sure audio can be found
-        if (/**??tempSoundPoolSwitch && */tile.audioForThisTileType.equals("X")) {
+        if (tile.audioForThisTileType.equals("X")) {
                 return false;
         }
-
-        //??if(!tempSoundPoolSwitch) {
-//            try{
-//                getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
-//            } catch (NullPointerException e) {
-//                 return false;
-//            }
-//        }
-
         return true;
     }
 
     protected int tileAudioNumber(Start.Tile tile) {
         String audioName = tile.getAudioNameAccountingForMultitypeSymbols();
-        //??if (tempSoundPoolSwitch) {
             return tileAudioIDs.get(audioName);
-        //??} else {
-        //??return getResources().getIdentifier(audioName, "raw", getPackageName());
-        //?? }
     }
 
     protected void playTileAudio(boolean playFinalSound, int audioNumber, int audioDuration) {
-        //??if (tempSoundPoolSwitch) {
             playTileAudioSoundPool(playFinalSound, audioNumber,audioDuration);
-        //??} else {
-        //?? playTileAudioMediaPlayer(playFinalSound, audioNumber);
-        //??}
     }
-
-
-
 
 
     private void playTileAudioMediaPlayer(final boolean playFinalSound, int resID) {     //JP: for Media Player; tile audio
 
         final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        isAudioPlaying  = true;
+        mediaPlayerIsPlaying = true;
         mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp1) {
@@ -900,7 +782,7 @@ public abstract class GameActivity extends AppCompatActivity {
             repeatLocked = false;
             playCorrectFinalSound();
         } else {
-            isAudioPlaying  = false;
+            mediaPlayerIsPlaying = false;
             if (repeatLocked) {
                 setAllGameButtonsClickable();
             }
