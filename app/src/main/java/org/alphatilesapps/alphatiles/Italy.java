@@ -294,7 +294,9 @@ public class Italy extends GameActivity {
 
         TextView tileJustSelected = findViewById(GAME_BUTTONS[indexOfTileJustSelected - 1]);
 
-        if (tileJustSelected.getText().equals(wordList.stripInstructionCharacters(refWord.wordInLOP))) {
+        if (boardCardsFound[indexOfTileJustSelected - 1]) {
+            respondToIncorrectSelection();
+        } else if (tileJustSelected.getText().equals(wordList.stripInstructionCharacters(refWord.wordInLOP))) {
             respondToCorrectSelection(indexOfTileJustSelected);
         } else {
             respondToIncorrectSelection();
@@ -354,6 +356,11 @@ public class Italy extends GameActivity {
         setAdvanceArrowToBlue();
         playCorrectSoundThenActiveWordClip(true);
         updatePointsAndTrackers(4);
+
+        ImageView nextWordArrow = findViewById(R.id.playNextWord);
+        nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
+        nextWordArrow.setClickable(false);
+        nextWordArrow.setVisibility(View.INVISIBLE);
 
         // TODO: Draw a thin/transparent line across the loteria?
     }
