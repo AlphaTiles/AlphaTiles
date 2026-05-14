@@ -259,6 +259,11 @@ public class Italy extends GameActivity {
             }
         }
 
+        ImageView nextWordArrow = findViewById(R.id.playNextWord);
+        nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
+        nextWordArrow.setClickable(true);
+        nextWordArrow.setVisibility(View.VISIBLE);
+
         setAllGameButtonsClickable();
 
         // Display the first word
