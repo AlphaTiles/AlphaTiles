@@ -3,25 +3,15 @@ package org.alphatilesapps.alphatiles;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
 
-@RunWith(AndroidJUnit4.class)
-public class ColombiaTest {
+public class ColombiaTest extends GameTest {
     @Test
     public void colombiaTest() {
-        try (ActivityController<Start> controller = Robolectric.buildActivity(Start.class)) {
-            controller.setup();
-        }
-        DummyStart.initAudios();
         for (int challengeLevel = 1; challengeLevel <= 3; challengeLevel++) {
             play(challengeLevel, "T", 12);
             play(challengeLevel, "S", 12);
-
         }
     }
 
@@ -65,7 +55,7 @@ public class ColombiaTest {
                     assert longest.isClickable();
                     longest.performClick();
                     target = target.substring(longest.getText().length());
-                    if(target.isEmpty()) break;
+                    if (target.isEmpty()) break;
                     for (int screen = screens; screen > 1; screen--) {
                         kbBack.performClick();
                     }

@@ -2,11 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.view.View;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.android.controller.ActivityController;
 
 import java.util.ArrayList;
@@ -14,9 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-@RunWith(AndroidJUnit4.class)
-public class BruteForceTest {
-    public static void testGeorgia() {
+public class BruteForceTest extends GameTest {
+    @Test
+    public void testGeorgia() {
         for (int challengeLevel = 1; challengeLevel <= 12; challengeLevel++) {
             try (ActivityController<Georgia> controller = Launcher.launch(Georgia.class, challengeLevel)) {
                 controller.setup();
@@ -36,7 +32,8 @@ public class BruteForceTest {
         }
     }
 
-    public static void testThailand() {
+    @Test
+    public void testThailand() {
         List<Integer> refs = new ArrayList<>(Arrays.asList(1, 2, 4, 5, 6));
         List<Integer> choices = new ArrayList<>(Arrays.asList(1, 2, 4, 5));
 
@@ -64,16 +61,6 @@ public class BruteForceTest {
                 }
             }
         }
-    }
-
-    @Test
-    public void bruteForceTest() {
-        try (ActivityController<Start> controller = Robolectric.buildActivity(Start.class)) {
-            controller.setup();
-        }
-        DummyStart.initAudios();
-        testThailand();
-        testGeorgia();
     }
 
     public static void play(GameActivity activity, int[] buttons, int rounds) {
