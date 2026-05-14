@@ -456,7 +456,7 @@
         android:id="@+id/instructions"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:contentDescription="@string/playAgain"
+        android:contentDescription="@string/playAudioInstructions"
         android:onClick="playAudioInstructionsChoosePlayer"
         android:rotationY="0"
         app:layout_constraintTop_toTopOf="@+id/guidelineH13"

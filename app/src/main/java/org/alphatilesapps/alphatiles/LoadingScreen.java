@@ -2,22 +2,21 @@ package org.alphatilesapps.alphatiles;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -49,10 +48,9 @@ public class LoadingScreen extends AppCompatActivity {
     //JP June 2022: moved loading of all SoundPool audio into this activity
     //note: audio instructions use MediaPlayer, not SoundPool
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
     Context context;
     ProgressBar progressBar;
-    int maxWordWidthInPixels = 39;
 
     private static final Logger LOGGER = Logger.getLogger( LoadingScreen.class.getName() );
 
@@ -66,6 +64,8 @@ public class LoadingScreen extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        mHandler = new Handler(Looper.getMainLooper());
+
         progressBar = findViewById(R.id.progressBar);
         String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
         if (scriptDirection.equals("RTL")) {
@@ -76,12 +76,15 @@ public class LoadingScreen extends AppCompatActivity {
         }
         context = this;
 
-        String verName = BuildConfig.VERSION_NAME;
-        TextView versionNumberView = (TextView) findViewById(R.id.versionNumber);
-        versionNumberView.setText(getString(R.string.ver_info, verName));
+        TextView gameNameView = findViewById(R.id.gameName);
+        String localAppName = langInfoList.find("Game Name");
+        gameNameView.setText(localAppName);
 
+        TextView langPackNameView = findViewById(R.id.langPackName);
+        langPackNameView.setText(BuildConfig.FLAVOR);
 
-        int num_of_words = wordList.size();
+        TextView versionNoView = findViewById(R.id.versionNo);
+        versionNoView.setText(BuildConfig.VERSION_NAME);
 
         Intent intent = new Intent(this, ChoosePlayer.class);
 
@@ -119,13 +122,6 @@ public class LoadingScreen extends AppCompatActivity {
             }).start();
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loadPixelWidthAdjustments();
-            }
-        }).start();
-
         //JP: alpha tiles colors separated into r,g,b
         //ex: the first color 6200EE corresponds to 98, 0, 1 in the 0 index of each array
         //for the progress bar
@@ -148,9 +144,15 @@ public class LoadingScreen extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        progressBar.getProgressDrawable().setColorFilter(
-                                Color.rgb(reds[mod_color[0]], greens[mod_color[0]], blues[mod_color[0]]),
-                                android.graphics.PorterDuff.Mode.SRC_IN);
+                        int color = Color.rgb(reds[mod_color[0]], greens[mod_color[0]], blues[mod_color[0]]);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // API 29+
+                            progressBar.getProgressDrawable().setColorFilter(
+                                    new BlendModeColorFilter(color, BlendMode.SRC_IN));
+                        } else {
+                            progressBar.getProgressDrawable().setColorFilter(
+                                    color,
+                                    android.graphics.PorterDuff.Mode.SRC_IN);
+                        }
 
                     }
                 });
@@ -190,7 +192,7 @@ public class LoadingScreen extends AppCompatActivity {
     public void loadWordAudio() {
         // load speech sounds
         Resources res = context.getResources();
-        wordAudioIDs = new HashMap();
+        wordAudioIDs = new HashMap<>();
 
         int i = 0;
         for (Start.Word word : wordList) {
@@ -208,7 +210,7 @@ public class LoadingScreen extends AppCompatActivity {
 
     public void loadSyllableAudio() {
         Resources res = context.getResources();
-        syllableAudioIDs = new HashMap();
+        syllableAudioIDs = new HashMap<>();
 
         int i = 0;
         for (Start.Syllable syllable : syllableList) {
@@ -226,8 +228,8 @@ public class LoadingScreen extends AppCompatActivity {
 
     public void loadTileAudio() {
         Resources res = context.getResources();
-        tileAudioIDs = new HashMap(0);
-        tileDurations = new HashMap();
+        tileAudioIDs = new HashMap<>(0);
+        tileDurations = new HashMap<>();
 
         int i = 0;
         for (Start.Tile tile : tileList) {
@@ -279,44 +281,13 @@ public class LoadingScreen extends AppCompatActivity {
         return Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
 
-    public void loadPixelWidthAdjustments() {
-
-        for (Start.Word word : wordList) {
-            word.adjustment = String.valueOf(calculatedPixelWidthAdjustment(word.wordInLOP));
-        }
-    }
-
-    private double calculatedPixelWidthAdjustment(String word) {
-        TextView wordView = new TextView(this);
-        wordView.setText(word);
-        wordView.setTextSize(11);
-        wordView.measure(0, 0);
-        int wordWidthInPixels = wordView.getMeasuredWidth();
-
-        if (wordWidthInPixels <= maxWordWidthInPixels) {
-            return 1;
-        } else {
-            return Math.round((maxWordWidthInPixels * 100.0) / (wordWidthInPixels * 100));
-        }
-
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void forceRTLIfSupported() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        }
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void forceLTRIfSupported() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-        }
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
     }
-
 
 }
 

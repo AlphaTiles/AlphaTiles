@@ -409,30 +409,34 @@ public class Ecuador extends GameActivity {
 
     public static Point getAppUsableScreenSize(Context context) {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return size;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {  // API 30+
+            WindowMetrics metrics = windowManager.getCurrentWindowMetrics();
+            Insets insets = metrics.getWindowInsets().getInsetsIgnoringVisibility(
+                    WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
+            int width = metrics.getBounds().width() - insets.left - insets.right;
+            int height = metrics.getBounds().height() - insets.top - insets.bottom;
+            return new Point(width, height);
+        } else {
+            Display display = windowManager.getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            return size;
+        }
     }
 
     public static Point getRealScreenSize(Context context) {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
-        Point size = new Point();
-
-        if (Build.VERSION.SDK_INT >= 17) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {  // API 30+
+            WindowMetrics metrics = windowManager.getCurrentWindowMetrics();
+            int width = metrics.getBounds().width();
+            int height = metrics.getBounds().height();
+            return new Point(width, height);
+        } else {
+            Display display = windowManager.getDefaultDisplay();
+            Point size = new Point();
             display.getRealSize(size);
-        } else if (Build.VERSION.SDK_INT >= 14) {
-            try {
-                size.x = (Integer) Display.class.getMethod("getRawWidth").invoke(display);
-                size.y = (Integer) Display.class.getMethod("getRawHeight").invoke(display);
-            } catch (IllegalAccessException e) {
-            } catch (InvocationTargetException e) {
-            } catch (NoSuchMethodException e) {
-            }
+            return size;
         }
-
-        return size;
     }
 
     private void respondToWordSelection() {

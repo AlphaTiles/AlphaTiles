@@ -138,7 +138,7 @@ public class UnitedStates extends GameActivity {
             parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
             parsedLengthOfRefWord = parsedRefWordSyllableArray.size();
         } else {
-            Tile emptyTile = new Tile("__", new ArrayList<String>(), "", "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, "", 0, "");
+            Tile emptyTile = new Tile("__", new ArrayList<String>(), "", "", "", "", "", "", "", "", 0, 0, 0, 0, 0, "", 0, "");
             tileSelections = new Tile[parsedLengthOfRefWord];
             for (int t = 0; t<parsedLengthOfRefWord; t++) {
                 tileSelections[t] = new Tile(emptyTile);

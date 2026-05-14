@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -41,6 +42,15 @@ public class Earth extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Disable back navigation
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // Intentionally empty — do nothing
+            }
+        });
+
         context = this;
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -130,10 +140,25 @@ public class Earth extends AppCompatActivity {
             }
         }
         if (noShareIcon) { // if aa_share does not have a second line, don't display a share icon
-        //if (true) {
+            //if (true) {
             ImageView shareIcon = findViewById(R.id.share);
             shareIcon.setVisibility(View.GONE);
             shareIcon.setOnClickListener(null);
+        }
+        boolean noResources = true;
+        if (context.getResources().getIdentifier("aa_resources", "raw", context.getPackageName()) != 0) { // Checks if resource file exists
+            Scanner resourceScanner = new Scanner(getResources().openRawResource(R.raw.aa_resources));
+            if (resourceScanner.hasNext()) { // See if there is anything in resource file
+                resourceScanner.nextLine(); // Skips the header line
+                if (resourceScanner.hasNext() && !resourceScanner.next().isEmpty()) { // If there is a line after the header that is not an empty string ""
+                    noResources = false;
+                }
+            }
+        }
+        if (noResources) {
+            ImageView resourcesIcon = findViewById(R.id.resourcePromo);
+            resourcesIcon.setVisibility(View.GONE);
+            resourcesIcon.setOnClickListener(null);
         }
     }
 
@@ -170,8 +195,7 @@ public class Earth extends AppCompatActivity {
                         // So we are forcing this game's door to initialize with a start
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")) {
-                            trackerCount = 12;
+                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {                            trackerCount = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
                         } else if (trackerCount < 12) {
                             ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
@@ -182,8 +206,7 @@ public class Earth extends AppCompatActivity {
 
                         boolean changeColor = true;
                         String doorStyle = "";
-                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")) {
-                            doorStyle = "_inprocess";
+                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {                            doorStyle = "_inprocess";
                         } else if (trackerCount > 0 && trackerCount < 12) {
                             doorStyle = "_inprocess";
                         } else if (trackerCount >= 12) {
@@ -367,8 +390,4 @@ public class Earth extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        // no action
-    }
 }

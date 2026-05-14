@@ -70,7 +70,7 @@ public class Italy extends GameActivity {
     @Override
     protected void hideInstructionAudioImage() {
 
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
         
     }
@@ -85,12 +85,12 @@ public class Italy extends GameActivity {
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
-        ImageView playNextWordImage = (ImageView) findViewById(R.id.playNextWord);
+        ImageView playNextWordImage = findViewById(R.id.playNextWord);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
-            ImageView referenceItemImage = (ImageView) findViewById(R.id.referenceItem);
+            ImageView instructionsImage =  findViewById(R.id.instructions);
+            ImageView repeatImage =  findViewById(R.id.repeatImage);
+            ImageView referenceItemImage =  findViewById(R.id.referenceItem);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
@@ -219,12 +219,12 @@ public class Italy extends GameActivity {
 //      WordList boardCards = new WordList();
         for (int tileNumber = 0; tileNumber < CARDS_ON_BOARD; tileNumber++) {
 //          boardCards.add(gameCards.get(tileNumber));
-            TextView thisCardText = (TextView) findViewById(GAME_BUTTONS[tileNumber]);
+            TextView thisCardText =  findViewById(GAME_BUTTONS[tileNumber]);
             thisCardText.setText(wordList.stripInstructionCharacters(gameCards.get(tileNumber).wordInLOP));
             String tileColorStr = colorList.get(tileNumber % 5);
             int tileColor = Color.parseColor(tileColorStr);
             thisCardText.setTextColor(tileColor); // resets as in previous round some text fields set to black
-            ImageView thisCardImage = (ImageView) findViewById(WORD_IMAGES[tileNumber]);
+            ImageView thisCardImage =  findViewById(WORD_IMAGES[tileNumber]);
             int resID = getResources().getIdentifier(gameCards.get(tileNumber).wordInLWC +"2", "drawable", getPackageName());
             thisCardImage.setImageResource(0);
             thisCardImage.setImageResource(resID);
@@ -280,7 +280,7 @@ public class Italy extends GameActivity {
         ImageView imageJustSelected = findViewById(WORD_IMAGES[indexOfTileJustSelected - 1]);
         imageJustSelected.setImageResource(R.drawable.zz_bean);
 
-        TextView thisCardText = (TextView) findViewById(GAME_BUTTONS[indexOfTileJustSelected - 1]);
+        TextView thisCardText = findViewById(GAME_BUTTONS[indexOfTileJustSelected - 1]);
         thisCardText.setTextColor(Color.BLACK);
 
         if (loteria()) {

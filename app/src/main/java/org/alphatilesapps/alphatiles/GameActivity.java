@@ -126,8 +126,8 @@ public abstract class GameActivity extends AppCompatActivity {
         for(Start.Word thisWord : wordList){
             ArrayList<Start.Tile> thisParsedTileArray = tileList.parseWordIntoTiles(thisWord.wordInLOP, thisWord);
             ArrayList<Start.Tile> thisPreliminaryParsedTileArray = tileList.parseWordIntoTilesPreliminary(thisWord.wordInLOP, thisWord);
-            ArrayList<String> thisParsedTileArrayStrings = new ArrayList();
-            ArrayList<String> thisPreliminaryParsedTileArrayStrings = new ArrayList();
+            ArrayList<String> thisParsedTileArrayStrings = new ArrayList<>();
+            ArrayList<String> thisPreliminaryParsedTileArrayStrings = new ArrayList<>();
             for(Start.Tile tile : thisParsedTileArray) {
                 thisParsedTileArrayStrings.add(tile.text);
             }

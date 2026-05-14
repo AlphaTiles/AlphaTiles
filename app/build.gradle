@@ -1,37 +1,44 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+}
 
 android {
-    compileSdk 35
+    compileSdk = 36
 
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
-        applicationId "org.alphatilesapps.alphatiles"
-        minSdkVersion 21
-        targetSdkVersion 35
-        versionCode 178
-        versionName "2.6.1"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        applicationId = "org.alphatilesapps.alphatiles"
+        minSdk = 23
+        targetSdk = 36
+        versionCode = 312
+        versionName = "3.0.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    android {
-        buildFeatures {
-            buildConfig = true
-        }
+    buildFeatures {
+        resValues = true
+        buildConfig = true
     }
+
+//    tasks.withType(JavaCompile) {
+//        options.compilerArgs << "-Xlint:deprecation"
+//    }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             // Optional code that customizes the .apk output name
-            applicationVariants.all{
-                variant ->
-                    variant.outputs.each{
-                        output->
-                            def apkOutputName = "alphaTiles.Blue.${variant.productFlavors[0].name}.V${variant.versionName}.apk"
-                            output.outputFileName = apkOutputName
+            androidComponents {
+                onVariants(selector().withBuildType("release")) { variant ->
+                    variant.outputs.forEach { output ->
+                        def flavorName = variant.productFlavors[0].second
+                        output.outputFileName.set(
+                                "alphaTiles.Blue.${flavorName}.V${output.versionName.get()}.apk"
+                        )
                     }
+                }
             }
         }
     }
@@ -47,20 +54,24 @@ android {
             resValue "string", "app_name", 'Mu̱ꞌtsíin meꞌphaa (tpxTEO)'
         }
     }
-    namespace 'org.alphatilesapps.alphatiles'
+    namespace = 'org.alphatilesapps.alphatiles'
 }
+
+//tasks.withType(JavaCompile).configureEach {
+//    options.compilerArgs += ['-Xlint:unchecked']
+//}
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
-    implementation 'com.google.zxing:core:3.2.1'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation platform('com.google.firebase:firebase-bom:33.13.0')
+    implementation 'com.google.zxing:core:3.5.4'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation platform('com.google.firebase:firebase-bom:34.12.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.segment.analytics.android:analytics:4.11.3'
-    testImplementation 'androidx.test.ext:junit:1.2.1'
-    testImplementation 'androidx.test.ext:junit:1.2.1'
-    testImplementation 'org.robolectric:robolectric:4.10.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    implementation 'androidx.core:core:1.18.0'
+    testImplementation 'androidx.test.ext:junit:1.3.0'
+    testImplementation 'org.robolectric:robolectric:4.16.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
 }

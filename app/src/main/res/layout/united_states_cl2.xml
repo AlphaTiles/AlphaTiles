@@ -641,7 +641,7 @@
         app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer"
         app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        android:contentDescription="@string/playAgain"
+        android:contentDescription="@string/playAudioInstructions"
         android:rotationY="0"
         app:srcCompat="@drawable/zz_instructions" />
 
