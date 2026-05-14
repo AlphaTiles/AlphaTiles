@@ -602,18 +602,28 @@ public class Australia extends GameActivity {
 
     protected  int[] getWordImages() { return null; }
 
-    protected int getAudioInstructionsResID() { return 0; }
+    @Override
+    protected int getAudioInstructionsResID() {
+        Resources res = context.getResources();
+        int audioInstructionsResID;
+        try {
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
+        } catch (NullPointerException e) {
+            audioInstructionsResID = -1;
+        }
+        return audioInstructionsResID;
+    }
 
     protected void centerGamesHomeImage() {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
-        ConstraintLayout constraintLayout = findViewById(R.id.constraintlayout);
+        ConstraintLayout constraintLayout = findViewById(R.id.australiaCL);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
         constraintSet.connect(R.id.gamesHomeImage, ConstraintSet.END, R.id.repeatImage, ConstraintSet.START, 0);
         constraintSet.connect(R.id.repeatImage, ConstraintSet.START, R.id.gamesHomeImage, ConstraintSet.END, 0);
-        constraintSet.centerHorizontally(R.id.gamesHomeImage, R.id.constraintlayout);
+        constraintSet.centerHorizontally(R.id.gamesHomeImage, R.id.australiaCL);
         constraintSet.applyTo(constraintLayout);
     }
 
@@ -771,6 +781,18 @@ public class Australia extends GameActivity {
 
         setContentView(R.layout.australia);
 
+        ActivityLayouts.applyEdgeToEdge(this, R.id.australiaCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
+        if (scriptDirection.equals("RTL")) {
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView repeatImage = findViewById(R.id.repeatImage);
+
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+
+            fixConstraintsRTL(R.id.australiaCL);
+        }
 
         // The board is set programmatically, based on the boardWidth, boardHeight, and width of the
         // screen. All that you need to do to change the number of squares on the board is change
@@ -856,7 +878,7 @@ public class Australia extends GameActivity {
         poppy.closePopup();
 
         if (getAudioInstructionsResID() == 0) {
-            centerGamesHomeImage();
+            hideInstructionAudioImage();
         }
 
 
@@ -875,6 +897,9 @@ public class Australia extends GameActivity {
     }
 
     void playAgain() {
+        if (mediaPlayerIsPlaying) {
+            return;
+        }
         repeatLocked = true;
         setAdvanceArrowToGray();
         boardFiller.fillBoard();
