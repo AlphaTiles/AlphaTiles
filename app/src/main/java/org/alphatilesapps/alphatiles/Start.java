@@ -2003,7 +2003,7 @@ public class Start extends AppCompatActivity {
             return tileHashMap.find(correctTile.distractors.get(randomNum));
         }
 
-        public ArrayList<Tile> returnFourTileChoices(Tile correctTile, int challengeLevel, String refTileType) {
+        public ArrayList<Tile> returnFourTileChoices(Tile correctTile, int challengeLevel, String refTileType, TileList stageFilteredTileList) {
 
             ArrayList<Tile> fourTileChoices = new ArrayList<>();
             ArrayList<String> alreadyStoredAnswerChoices = new ArrayList<>();
@@ -2022,8 +2022,8 @@ public class Start extends AppCompatActivity {
                             || Character.toLowerCase(correctTile.text.charAt(0)) == Character.toLowerCase(aTile.text.charAt(0))
                             || (!aTile.typeOfThisTileInstance.matches("(C|PC)") && !aTile.typeOfThisTileInstance.equals("V")
                             && (refTileType.matches(("(C|PC)")) || refTileType.equals("V")))) {
-                        int randomTileIndex = rand.nextInt(tileListNoSAD.size());
-                        aTile = Start.tileListNoSAD.get(randomTileIndex);
+                        int randomTileIndex = rand.nextInt(stageFilteredTileList.size());
+                        aTile = stageFilteredTileList.get(randomTileIndex);
                         firstIteration = false;
                     }
                     alreadyStoredAnswerChoices.add(aTile.text);

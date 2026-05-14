@@ -250,16 +250,16 @@ public class Thailand extends GameActivity {
                 boolean freshTile = false;
                 int freshChecks = 0;
                 while (!freshTile || !(CorV.contains(refTile))) {
-                    int randomTileIndex = rand.nextInt(tileListNoSAD.size());
+                    int randomTileIndex = rand.nextInt(cumulativeStageBasedTileList.size());
                     freshChecks++;
-                    refTile = tileListNoSAD.get(randomTileIndex);
+                    refTile = cumulativeStageBasedTileList.get(randomTileIndex);
                     refString = refTile.text;
                     refTileType = refTile.typeOfThisTileInstance;
-                    while (challengeLevelThai == 1 && refTileType.matches("(T|AD|C|PC)")) {
+                    while (challengeLevelThai == 1 && refTileType.matches("(T|AD|D|PC)")) {
                         // JP: Disallow tone marks, diacritics, and silent consonants from being reference in level 1
                         freshChecks++;
-                        randomTileIndex = rand.nextInt(tileListNoSAD.size());
-                        refTile = tileListNoSAD.get(randomTileIndex);
+                        randomTileIndex = rand.nextInt(cumulativeStageBasedTileList.size());
+                        refTile = cumulativeStageBasedTileList.get(randomTileIndex);
                         refString = refTile.text;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
@@ -271,16 +271,16 @@ public class Thailand extends GameActivity {
                 int freshChecks = 0;
 
                 while (!freshTile || refTileType.equals("X")) {
-                    int randomTileIndex = rand.nextInt(tileListNoSAD.size());
+                    int randomTileIndex = rand.nextInt(cumulativeStageBasedTileList.size());
                     freshChecks++;
-                    refTile = tileListNoSAD.get(randomTileIndex);
+                    refTile = cumulativeStageBasedTileList.get(randomTileIndex);
                     refString = refTile.upper;
                     refTileType = refTile.typeOfThisTileInstance;
                     while (challengeLevelThai == 1 && refTileType.matches("(T|AD|D|PC)")) {
                         // JP: Disallow tone marks, diacritics, and silent consonants from being reference in level 1
-                        randomTileIndex = rand.nextInt(tileListNoSAD.size());
+                        randomTileIndex = rand.nextInt(cumulativeStageBasedTileList.size());
                         freshChecks++;
-                        refTile = tileListNoSAD.get(randomTileIndex);
+                        refTile = cumulativeStageBasedTileList.get(randomTileIndex);
                         refString = refTile.upper;
                         refTileType = refTile.typeOfThisTileInstance;
                     }
@@ -320,7 +320,7 @@ public class Thailand extends GameActivity {
         }
 
         if (choiceType.equals("TILE_LOWER") || choiceType.equals("TILE_UPPER")) {
-            fourTileChoices = tileListNoSAD.returnFourTileChoices(refTile, challengeLevelThai, refTileType);
+            fourTileChoices = tileListNoSAD.returnFourTileChoices(refTile, challengeLevelThai, refTileType, cumulativeStageBasedTileList);
             // challengeLevelThai 1 = pull random tiles for wrong choices
             // challengeLevelThai 2 = pull distractor tiles for wrong choices
         } else if ((choiceType.equals("WORD_TEXT") || choiceType.equals("WORD_IMAGE")) && (!refType.contains("SYLLABLE"))) {
