@@ -42,6 +42,7 @@
         <activity android:name=".Peru" />
         <activity android:name=".Resources" />
         <activity android:name=".Romania" />
+        <activity android:name=".Senegal" />
         <activity android:name=".Sudan" />
         <activity android:name=".Thailand" />
         <activity android:name=".UnitedStates" />
