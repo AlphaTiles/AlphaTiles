@@ -38,6 +38,7 @@ import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.placeholderCharacter;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
