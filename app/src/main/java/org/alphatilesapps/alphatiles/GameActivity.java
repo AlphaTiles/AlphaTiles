@@ -45,7 +45,6 @@ import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.wordStagesLists;
-import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
@@ -591,13 +590,6 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void playActiveWordClip(final boolean playFinalSound) {
-        if (tempSoundPoolSwitch) {
-            playActiveWordClip1(playFinalSound);    //SoundPool
-        } else
-            playActiveWordClip0(playFinalSound);    //MediaPlayer
-    }
-
-    protected void playActiveWordClip1(final boolean playFinalSound) {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
@@ -631,30 +623,8 @@ public abstract class GameActivity extends AppCompatActivity {
         }, refWord.duration);
     }
 
-    protected void playActiveWordClip0(final boolean playFinalSound) {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(refWord.wordInLWC, "raw", getPackageName());
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        //mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mpCompletion(mp1, playFinalSound);
-            }
-        });
-        mp1.start();
-    }
 
     protected void playCorrectSoundThenActiveWordClip(final boolean playFinalSound) {
-        if (tempSoundPoolSwitch)
-            playCorrectSoundThenActiveWordClip1(playFinalSound);
-        else
-            playCorrectSoundThenActiveWordClip0(playFinalSound);
-    }
-
-    protected void playCorrectSoundThenActiveWordClip1(final boolean playFinalSound) {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
@@ -678,30 +648,7 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
 
-    protected void playCorrectSoundThenActiveWordClip0(final boolean playFinalSound) {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.reset(); //JP: fixed "mediaplayer went away with unhandled events" issue
-                mp2.release();
-                playActiveWordClip(playFinalSound);
-            }
-        });
-    }
-
     protected void playIncorrectSound() {
-        if (tempSoundPoolSwitch)
-            playIncorrectSound1();
-        else
-            playIncorrectSound0();
-    }
-
-    protected void playIncorrectSound1() {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
@@ -709,32 +656,8 @@ public abstract class GameActivity extends AppCompatActivity {
         setOptionsRowClickable();
     }
 
-    protected void playIncorrectSound0() {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
-        mediaPlayerIsPlaying = true;
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllGameButtonsClickable();
-                setOptionsRowClickable();
-                mp3.reset(); //JP
-                mp3.release();
-            }
-        });
-    }
 
     protected void playCorrectFinalSound() {
-        if (tempSoundPoolSwitch)
-            playCorrectFinalSound1();
-        else
-            playCorrectFinalSound0();
-    }
-
-    protected void playCorrectFinalSound1() {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
@@ -750,23 +673,6 @@ public abstract class GameActivity extends AppCompatActivity {
         }
     }
 
-    protected void playCorrectFinalSound0() {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        mediaPlayerIsPlaying = true;
-        mp3 = MediaPlayer.create(this, R.raw.zz_correct_final);
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllGameButtonsClickable();
-                setOptionsRowClickable();
-                mp3.reset(); //JP
-                mp3.release();
-            }
-        });
-    }
 
     public void playAudioInstructions(View view) {
         if (mediaPlayerIsPlaying){
@@ -801,11 +707,8 @@ public abstract class GameActivity extends AppCompatActivity {
 
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
-        if(!tempSoundPoolSwitch) {
-            playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
-        } else {
-            playTileAudio(playFinalSound, tileAudioNumber(tile), tileDurations.get(tile.audioForThisTileType));
-        }
+        playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
+
     }
 
     protected boolean isReadyToPlayTileAudio() {
@@ -818,40 +721,20 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected boolean tileShouldPlayAudio(Start.Tile tile) {
         // make sure audio can be found
-        if (tempSoundPoolSwitch && tile.audioForThisTileType.equals("X")) {
+        if (tile.audioForThisTileType.equals("X")) {
                 return false;
         }
-
-        if(!tempSoundPoolSwitch) {
-            try{
-                getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
-            } catch (NullPointerException e) {
-                 return false;
-            }
-        }
-
         return true;
     }
 
     protected int tileAudioNumber(Start.Tile tile) {
         String audioName = tile.getAudioNameAccountingForMultitypeSymbols();
-        if (tempSoundPoolSwitch) {
             return tileAudioIDs.get(audioName);
-        } else {
-            return getResources().getIdentifier(audioName, "raw", getPackageName());
-        }
     }
 
     protected void playTileAudio(boolean playFinalSound, int audioNumber, int audioDuration) {
-        if (tempSoundPoolSwitch) {
             playTileAudioSoundPool(playFinalSound, audioNumber,audioDuration);
-        } else {
-            playTileAudioMediaPlayer(playFinalSound, audioNumber);
-        }
     }
-
-
-
 
 
     private void playTileAudioMediaPlayer(final boolean playFinalSound, int resID) {     //JP: for Media Player; tile audio
