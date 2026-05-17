@@ -31,6 +31,7 @@
         <activity android:name=".About" />
         <activity android:name=".Share" />
         <activity android:name=".Brazil" />
+        <activity android:name=".Cameroon" />
         <activity android:name=".China" />
         <activity android:name=".Colombia" />
         <activity android:name=".Celebration" />
