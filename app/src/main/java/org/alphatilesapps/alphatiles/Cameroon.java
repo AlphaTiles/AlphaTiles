@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -27,7 +27,7 @@ import com.segment.analytics.Properties;
  *   wordText   (immediately below wordImage)
  *   ── lower grid: 4 rows × 7 columns ──
  *   col 0      : selector buttons (yellow circle → green circle on correct)
- *   cols 1–6   : tile-audio buttons (one per tile position; extras INVISIBLE)
+ *   cols 1–6   : tile-audio ImageView buttons (one per tile position; extras INVISIBLE)
  *   [bottom nav: home | instructions | advance arrow]
  *
  * Challenge levels (3-digit encoding):
@@ -102,7 +102,7 @@ public class Cameroon extends GameActivity {
     private int correctRowIndex;
     /**
      * rowTiles[row] holds the ArrayList<Tile> for that row.
-     * Row correctRowIndex = parsedRefWordTileArray (the real word).
+     * Row correctRowIndex = copy of parsedRefWordTileArray (the real word).
      * Other rows = nonce words derived from it.
      */
     private final List<ArrayList<Start.Tile>> rowTiles = new ArrayList<>();
@@ -262,6 +262,7 @@ public class Cameroon extends GameActivity {
     /**
      * Builds {@code rowTiles}: correct row at {@code correctRowIndex},
      * three nonce rows generated according to the challenge-level sub-modes.
+     * Every entry in rowTiles is a deep copy so no Start list is ever mutated.
      */
     private void buildRows(int tileLength) {
         rowTiles.clear();
@@ -272,65 +273,83 @@ public class Cameroon extends GameActivity {
         Random rand = new Random();
         correctRowIndex = rand.nextInt(NUM_ROWS);
 
-        // Place the correct word
-        rowTiles.set(correctRowIndex, new ArrayList<>(parsedRefWordTileArray));
+        // Deep-copy the correct word so we never mutate parsedRefWordTileArray
+        ArrayList<Start.Tile> correctRow = new ArrayList<>();
+        for (Start.Tile t : parsedRefWordTileArray) {
+            correctRow.add(new Start.Tile(t));
+        }
+        rowTiles.set(correctRowIndex, correctRow);
 
         // Build three nonce words
-        int nonceRow = 0;
         for (int row = 0; row < NUM_ROWS; row++) {
             if (row == correctRowIndex) continue;
-
             ArrayList<Start.Tile> nonce = buildNonceWord(tileLength, rand);
             rowTiles.set(row, nonce);
-            nonceRow++;
         }
     }
 
     /**
-     * Builds one nonce word from parsedRefWordTileArray according to:
-     * <ul>
-     *   <li>clSubstMode 1 → replace ONE randomly chosen tile</li>
-     *   <li>clSubstMode 2 → replace ALL tiles</li>
-     *   <li>clTileMode  1 → replacement from random tiles of same type</li>
-     *   <li>clTileMode  2 → replacement from distractor tiles</li>
-     * </ul>
+     * Builds one nonce word from parsedRefWordTileArray.
+     *
+     * Substitution scope (clSubstMode):
+     *   1 → replace ONE randomly chosen tile position
+     *   2 → replace ALL tile positions
+     *
+     * Replacement source (clTileMode):
+     *   1 → random tile of the same broad type, guaranteed different from original
+     *   2 → distractor tile
+     *
+     * The outer loop retries until the assembled nonce string differs from the
+     * correct word, preventing duplicate wrong-answer rows.
      */
     private ArrayList<Start.Tile> buildNonceWord(int tileLength, Random rand) {
         boolean isDuplicate = true;
         ArrayList<Start.Tile> nonce = null;
 
         while (isDuplicate) {
-            nonce = new ArrayList<>(parsedRefWordTileArray);
+            // Start from a fresh deep copy of the correct tiles each attempt
+            nonce = new ArrayList<>();
+            for (Start.Tile t : parsedRefWordTileArray) {
+                nonce.add(new Start.Tile(t));
+            }
 
             if (clSubstMode == 1) {
                 // Replace ONE random position
                 int idx = rand.nextInt(tileLength);
+                // Read original's instance type BEFORE replacement
+                String savedType = nonce.get(idx).typeOfThisTileInstance;
                 Start.Tile replacement = getReplacementTile(nonce.get(idx), rand);
                 if (replacement != null) {
-                    replacement.typeOfThisTileInstance = nonce.get(idx).typeOfThisTileInstance;
+                    replacement.typeOfThisTileInstance = savedType;
                     nonce.set(idx, replacement);
                 }
             } else {
-                // Replace ALL positions
+                // Replace ALL positions; read each savedType before we start swapping
+                String[] savedTypes = new String[tileLength];
+                for (int i = 0; i < tileLength; i++) {
+                    savedTypes[i] = nonce.get(i).typeOfThisTileInstance;
+                }
                 for (int i = 0; i < tileLength; i++) {
                     Start.Tile replacement = getReplacementTile(nonce.get(i), rand);
                     if (replacement != null) {
-                        replacement.typeOfThisTileInstance = nonce.get(i).typeOfThisTileInstance;
+                        replacement.typeOfThisTileInstance = savedTypes[i];
                         nonce.set(i, replacement);
                     }
                 }
             }
 
-            // Check it is different from the correct word
+            // Check assembled nonce differs from the correct word
             String nonceStr = combineTilesToMakeWord(nonce, refWord, -1);
             String correctStr = wordInLOPWithStandardizedSequenceOfCharacters(refWord);
             isDuplicate = nonceStr.equals(correctStr);
 
-            // Also guard against dangerous Arabic ligature
-            for (int j = 0; j < nonceStr.length() - 2; j++) {
-                if (nonceStr.startsWith("للہ", j)) {
-                    isDuplicate = true;
-                    break;
+            // Guard against dangerous Arabic ligature
+            if (!isDuplicate) {
+                for (int j = 0; j < nonceStr.length() - 2; j++) {
+                    if (nonceStr.startsWith("للہ", j)) {
+                        isDuplicate = true;
+                        break;
+                    }
                 }
             }
         }
@@ -338,31 +357,54 @@ public class Cameroon extends GameActivity {
     }
 
     /**
-     * Returns a single replacement tile for {@code original}.
-     * Mode 1 (random): picks a random tile of the same broad type.
-     * Mode 2 (distractor): picks from the tile's distractor list.
+     * Returns a fresh {@code new Start.Tile(…)} copy of a replacement tile for
+     * {@code original}.  This method NEVER returns a direct reference to any
+     * object held in the Start lists (VOWELS, CONSONANTS, TONES, ADs).
+     *
+     * Mode 1 (random): picks a random tile from the same broad-type pool, looping
+     *   until it finds one whose {@code text} differs from {@code original.text},
+     *   so that a substitution is always a genuine change.  If the pool has only
+     *   one tile, the outer {@code isDuplicate} loop in {@code buildNonceWord}
+     *   will re-roll the entire nonce word.
+     *
+     * Mode 2 (distractor): delegates to {@code tileList.returnRandomDistractorTile},
+     *   which already returns a copy.
      */
     private Start.Tile getReplacementTile(Start.Tile original, Random rand) {
         if (clTileMode == 1) {
-            // Random tile of same broad type
-            String type = original.typeOfThisTileInstance;
+            // Identify the pool matching original's broad type
+            TileList pool = null;
             if (VOWELS.contains(original)) {
-                int idx = rand.nextInt(VOWELS.size());
-                return new Start.Tile(VOWELS.get(idx));
+                pool = VOWELS;
             } else if (CONSONANTS.contains(original)) {
-                int idx = rand.nextInt(CONSONANTS.size());
-                return new Start.Tile(CONSONANTS.get(idx));
+                pool = CONSONANTS;
             } else if (TONES.contains(original)) {
-                int idx = rand.nextInt(TONES.size());
-                return new Start.Tile(TONES.get(idx));
+                pool = TONES;
             } else if (ADs.contains(original)) {
-                int idx = rand.nextInt(ADs.size());
-                return new Start.Tile(ADs.get(idx));
+                pool = ADs;
             }
-            // fallback: return self unchanged (shouldn't happen for normal tile types)
-            return new Start.Tile(original);
+
+            if (pool == null || pool.size() <= 1) {
+                // No genuine alternative in pool; return a copy of original.
+                // The isDuplicate check in buildNonceWord will force a retry.
+                return new Start.Tile(original);
+            }
+
+            // Loop until we find a tile with different text (prevents same-tile
+            // substitutions that produce a wrong answer identical to the correct one)
+            Start.Tile candidate;
+            int attempts = 0;
+            int maxAttempts = pool.size() * 4;
+            do {
+                int idx = rand.nextInt(pool.size());
+                candidate = pool.get(idx);
+                attempts++;
+            } while (candidate.text.equals(original.text) && attempts < maxAttempts);
+
+            // Return a copy — never the Start-list object itself
+            return new Start.Tile(candidate);
         } else {
-            // Distractor tile
+            // returnRandomDistractorTile creates and returns a copy via tileHashMap.find()
             return tileList.returnRandomDistractorTile(original);
         }
     }
@@ -370,25 +412,25 @@ public class Cameroon extends GameActivity {
     // ── UI grid population ─────────────────────────────────────────────────────
 
     /**
-     * Sets text on tile-audio buttons for every row and manages visibility so
-     * that only the first {@code tileLength} columns are shown.
+     * Applies a tinted {@code zz_click_for_tile_audio_simple} drawable to each
+     * tile-audio ImageView.  Only the first {@code tileLength} columns are shown;
+     * the rest are INVISIBLE.  Each row gets a single color from colorList using
+     * Brazil's {@code colorList.get(t % 5)} pattern.
      */
     private void populateGrid(int tileLength) {
         for (int row = 0; row < NUM_ROWS; row++) {
-            ArrayList<Start.Tile> tiles = rowTiles.get(row);
+            // Single row color — Brazil pattern
+            String tileColorStr = colorList.get(row % 5);
+            int tileColor = Color.parseColor(tileColorStr);
+
             for (int col = 0; col < MAX_TILES; col++) {
                 TextView btn = findViewById(TILE_BTN_IDS[row][col]);
                 if (col < tileLength) {
-                    // Display this tile
-                    Start.Tile tile = tiles.get(col);
-                    btn.setText(tile.text);
-                    // Color by tile type
-                    String typeColor = getTileTypeColor(tile.typeOfThisTileInstance);
-                    btn.setBackgroundColor(Color.parseColor(typeColor));
-                    btn.setTextColor(Color.parseColor("#FFFFFF"));
+                    btn.setBackgroundResource(R.drawable.zz_click_for_tile_audio_simple);
+                    btn.getBackground().setTint(tileColor);
                     btn.setVisibility(View.VISIBLE);
                     btn.setClickable(true);
-                    // Store row and col in the tag for click handling: "row,col"
+                    // Tag for audio dispatch: "row,col"
                     btn.setTag(row + "," + col);
                 } else {
                     btn.setVisibility(View.INVISIBLE);
@@ -416,11 +458,11 @@ public class Cameroon extends GameActivity {
         selector.setBackground(circle);
     }
 
-    // ── click handlers ────────────────────────────────────────────────────────
+    // ── click handlers ─────────────────────────────────────────────────────────
 
     /**
      * Called when a selector button (col 0) is tapped.
-     * Tag on each selector is set to its row index as a String.
+     * Tag on each selector is its row index as a String.
      */
     public void onSelectorClick(View view) {
         int row = Integer.parseInt((String) view.getTag());
@@ -428,7 +470,7 @@ public class Cameroon extends GameActivity {
     }
 
     /**
-     * Called when a tile-audio button (cols 1–6) is tapped.
+     * Called when a tile-audio ImageView (cols 1–6) is tapped.
      * Tag format: "row,col" where col is 0-based tile index.
      */
     public void onTileAudioClick(View view) {
@@ -437,7 +479,6 @@ public class Cameroon extends GameActivity {
         int row = Integer.parseInt(parts[0]);
         int col = Integer.parseInt(parts[1]);
 
-        // Get the tile for this row/col and play its audio (Sudan-style lookup)
         ArrayList<Start.Tile> tiles = rowTiles.get(row);
         if (col < tiles.size()) {
             Start.Tile tile = tiles.get(col);
@@ -514,8 +555,8 @@ public class Cameroon extends GameActivity {
     // ── tile audio playback (Sudan-style) ─────────────────────────────────────
 
     /**
-     * Plays the audio for a single tile using the SoundPool / MediaPlayer
-     * infrastructure from GameActivity, mirroring Sudan's onBtnClick pattern.
+     * Plays the audio for a single tile using the SoundPool infrastructure from
+     * GameActivity, mirroring Sudan's onBtnClick pattern.
      */
     private void playTileAudioForTile(Start.Tile tile) {
         if (mediaPlayerIsPlaying) return;
@@ -541,17 +582,5 @@ public class Cameroon extends GameActivity {
                 setOptionsRowClickable();
             }
         }, duration);
-    }
-
-    // ── helpers ───────────────────────────────────────────────────────────────
-
-    /** Maps a tile-type string to an app theme color string. */
-    private String getTileTypeColor(String type) {
-        switch (type) {
-            case "C":  return colorList.get(1);
-            case "V":  return colorList.get(2);
-            case "T":  return colorList.get(3);
-            default:   return colorList.get(4);
-        }
     }
 }

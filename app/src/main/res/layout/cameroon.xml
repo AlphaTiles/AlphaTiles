@@ -1,43 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    cameroon.xml  –  Segmenting Game layout
-    =========================================
-    Vertical zones (approximate % of screen height):
-      guidelineHneg1  0.01  ┐
-      guidelineH0     0.06  ┘  status / tracker bar
-      guidelineH1     0.08     top of wordImage
-      guidelineH2     0.36     bottom of wordImage / top of wordText
-      guidelineH3     0.44     bottom of wordText
-      guidelineH4     0.46     top of grid row 0
-      guidelineH5     0.58     boundary row 0/1
-      guidelineH6     0.59     top of grid row 1
-      guidelineH7     0.71     boundary row 1/2
-      guidelineH8     0.72     top of grid row 2
-      guidelineH9     0.84     boundary row 2/3
-      guidelineH10    0.85     top of grid row 3
-      guidelineH11    0.91     bottom of grid row 3
-      guidelineHSys1  0.93     top of bottom nav
-      guidelineHSys2  0.99     bottom of bottom nav
+    cameroon.xml  –  Segmenting Game layout  (revised)
+    =====================================================
+    CHANGE LOG vs original:
+      XML #1  wordImage shrunk 30%:  H2 moved from 0.36 → 0.276
+      XML #2  wordText grown  50%:   H3 moved from 0.44 → 0.396
+      XML #3  Selector buttons 50% smaller inside same column space:
+                added guidelineV1b (0.046) and guidelineV2b (0.119)
+                selectors now use V1b→V2b instead of V1→V2
+      XML #4  Tile columns 0–5 made equal width:
+                V3–V14 recalculated; each col = 0.129 wide with 0.01 gaps
+      XML #5  Grid rows 0–3 made equal height:
+                H4 = 0.406; each row = 0.119 tall; H5–H10 recalculated
+
+    Vertical zones (% of screen height):
+      guidelineHneg1  0.01    top of status bar
+      guidelineH0     0.06    bottom of status bar
+      guidelineH1     0.08    top of wordImage
+      guidelineH2     0.276   bottom of wordImage / top of wordText   [XML #1]
+      guidelineH3     0.396   bottom of wordText                      [XML #2]
+      guidelineH4     0.406   top of grid row 0                       [XML #5]
+      guidelineH5     0.525   boundary row 0 / row 1                  [XML #5]
+      guidelineH6     0.535   top of grid row 1                       [XML #5]
+      guidelineH7     0.654   boundary row 1 / row 2                  [XML #5]
+      guidelineH8     0.664   top of grid row 2                       [XML #5]
+      guidelineH9     0.783   boundary row 2 / row 3                  [XML #5]
+      guidelineH10    0.793   top of grid row 3                       [XML #5]
+      guidelineH11    0.91    bottom of grid row 3
+      guidelineHSys1  0.93    top of bottom nav
+      guidelineHSys2  0.99    bottom of bottom nav
 
     Horizontal zones (% of screen width):
-      guidelineV1   0.01   left margin
-      guidelineV2   0.155  right edge of selector col
-      guidelineV3   0.165  left edge of tile col 0
-      guidelineV4   0.305  right edge of tile col 0
-      guidelineV5   0.315  left edge of tile col 1
-      guidelineV6   0.455  right edge of tile col 1
-      guidelineV7   0.465  left edge of tile col 2
-      guidelineV8   0.605  right edge of tile col 2
-      guidelineV9   0.615  left edge of tile col 3
-      guidelineV10  0.755  right edge of tile col 3
-      guidelineV11  0.765  left edge of tile col 4
-      guidelineV12  0.905  right edge of tile col 4
-      guidelineV13  0.915  left edge of tile col 5
-      guidelineV14  0.99   right margin / right edge of tile col 5
+      guidelineV1    0.01    left margin
+      guidelineV1b   0.046   left edge of selector button  (inner)   [XML #3]
+      guidelineV2b   0.119   right edge of selector button (inner)   [XML #3]
+      guidelineV2    0.155   right edge of selector column (outer, unchanged)
+      guidelineV3    0.165   left edge of tile col 0                 [XML #4]
+      guidelineV4    0.294   right edge of tile col 0                [XML #4]
+      guidelineV5    0.304   left edge of tile col 1                 [XML #4]
+      guidelineV6    0.433   right edge of tile col 1                [XML #4]
+      guidelineV7    0.443   left edge of tile col 2                 [XML #4]
+      guidelineV8    0.572   right edge of tile col 2                [XML #4]
+      guidelineV9    0.582   left edge of tile col 3                 [XML #4]
+      guidelineV10   0.711   right edge of tile col 3                [XML #4]
+      guidelineV11   0.721   left edge of tile col 4                 [XML #4]
+      guidelineV12   0.850   right edge of tile col 4                [XML #4]
+      guidelineV13   0.860   left edge of tile col 5                 [XML #4]
+      guidelineV14   0.99    right margin / right edge tile col 5    [XML #4]
 
     Grid ID scheme:
-      selector{R}          – row R selector (R = 0..3)
-      tileBtn_{R}_{C}      – row R, tile-position C (C = 0..5)
+      selector{R}          – row R selector TextView (R = 0..3)
+      tileBtn_{R}_{C}      – row R, tile-position C ImageView (C = 0..5)
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -245,7 +258,7 @@
         android:maxLines="1"/>
 
     <!-- ══════════════════════════════════════════════════════════════════════ -->
-    <!--  WORD IMAGE  (upper third, visibility toggled by challenge level)     -->
+    <!--  WORD IMAGE  [XML #1: 30% smaller — H2 now 0.276]                    -->
     <!-- ══════════════════════════════════════════════════════════════════════ -->
 
     <ImageView
@@ -262,7 +275,7 @@
         app:srcCompat="@drawable/zz_sil"/>
 
     <!-- ══════════════════════════════════════════════════════════════════════ -->
-    <!--  WORD TEXT  (immediately below wordImage, also plays word audio)      -->
+    <!--  WORD TEXT  [XML #2: 50% larger — H3 now 0.396]                      -->
     <!-- ══════════════════════════════════════════════════════════════════════ -->
 
     <TextView
@@ -285,11 +298,13 @@
         android:maxLines="1"/>
 
     <!-- ══════════════════════════════════════════════════════════════════════ -->
-    <!--  ANSWER GRID                                                          -->
-    <!--  Row 0                                                                -->
+    <!--  ANSWER GRID  –  Row 0                                               -->
+    <!--  [XML #3] selector uses inner V1b→V2b (50% of column width)          -->
+    <!--  [XML #4] tile cols use equal-width V3/V4 … V13/V14                  -->
+    <!--  [XML #5] rows use equal-height H4/H5 … H10/H11                      -->
     <!-- ══════════════════════════════════════════════════════════════════════ -->
 
-    <!-- selector0: yellow circle button, col 0, row 0 -->
+    <!-- selector0 -->
     <TextView
         android:id="@+id/selector0"
         android:layout_width="0dp"
@@ -298,8 +313,8 @@
         android:onClick="onSelectorClick"
         android:tag="0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2b"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1b"
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
         app:layout_constraintDimensionRatio="1"/>
 
@@ -308,135 +323,88 @@
         android:id="@+id/tileBtn_0_0"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="0,0"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4"/>
 
     <!-- tileBtn_0_1 -->
     <TextView
         android:id="@+id/tileBtn_0_1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2196F3"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="0,1"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4"/>
 
     <!-- tileBtn_0_2 -->
     <TextView
         android:id="@+id/tileBtn_0_2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F44336"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="0,2"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV8"
         app:layout_constraintStart_toStartOf="@+id/guidelineV7"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4"/>
 
     <!-- tileBtn_0_3 -->
     <TextView
         android:id="@+id/tileBtn_0_3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#4CAF50"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="0,3"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV10"
         app:layout_constraintStart_toStartOf="@+id/guidelineV9"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4"/>
 
     <!-- tileBtn_0_4 -->
     <TextView
         android:id="@+id/tileBtn_0_4"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#E91E63"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="0,4"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV12"
         app:layout_constraintStart_toStartOf="@+id/guidelineV11"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4"/>
 
     <!-- tileBtn_0_5 -->
     <TextView
         android:id="@+id/tileBtn_0_5"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="0,5"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV14"
         app:layout_constraintStart_toStartOf="@+id/guidelineV13"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4"/>
 
-    <!-- ──  Row 1  ─────────────────────────────────────────────────────────── -->
+    <!-- ── Row 1 ──────────────────────────────────────────────────────────── -->
 
+    <!-- selector1 -->
     <TextView
         android:id="@+id/selector1"
         android:layout_width="0dp"
@@ -445,8 +413,8 @@
         android:onClick="onSelectorClick"
         android:tag="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2b"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1b"
         app:layout_constraintTop_toTopOf="@+id/guidelineH6"
         app:layout_constraintDimensionRatio="1"/>
 
@@ -454,130 +422,83 @@
         android:id="@+id/tileBtn_1_0"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2196F3"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="1,0"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6"/>
 
     <TextView
         android:id="@+id/tileBtn_1_1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F44336"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="1,1"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6"/>
 
     <TextView
         android:id="@+id/tileBtn_1_2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#4CAF50"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="1,2"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV8"
         app:layout_constraintStart_toStartOf="@+id/guidelineV7"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6"/>
 
     <TextView
         android:id="@+id/tileBtn_1_3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#E91E63"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="1,3"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV10"
         app:layout_constraintStart_toStartOf="@+id/guidelineV9"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6"/>
 
     <TextView
         android:id="@+id/tileBtn_1_4"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="1,4"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV12"
         app:layout_constraintStart_toStartOf="@+id/guidelineV11"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6"/>
 
     <TextView
         android:id="@+id/tileBtn_1_5"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2196F3"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="1,5"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV14"
         app:layout_constraintStart_toStartOf="@+id/guidelineV13"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6"/>
 
-    <!-- ──  Row 2  ─────────────────────────────────────────────────────────── -->
+    <!-- ── Row 2 ──────────────────────────────────────────────────────────── -->
 
+    <!-- selector2 -->
     <TextView
         android:id="@+id/selector2"
         android:layout_width="0dp"
@@ -586,8 +507,8 @@
         android:onClick="onSelectorClick"
         android:tag="2"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2b"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1b"
         app:layout_constraintTop_toTopOf="@+id/guidelineH8"
         app:layout_constraintDimensionRatio="1"/>
 
@@ -595,130 +516,83 @@
         android:id="@+id/tileBtn_2_0"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F44336"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="2,0"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8"/>
 
     <TextView
         android:id="@+id/tileBtn_2_1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#4CAF50"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="2,1"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8"/>
 
     <TextView
         android:id="@+id/tileBtn_2_2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#E91E63"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="2,2"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV8"
         app:layout_constraintStart_toStartOf="@+id/guidelineV7"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8"/>
 
     <TextView
         android:id="@+id/tileBtn_2_3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="2,3"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV10"
         app:layout_constraintStart_toStartOf="@+id/guidelineV9"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8"/>
 
     <TextView
         android:id="@+id/tileBtn_2_4"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2196F3"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="2,4"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV12"
         app:layout_constraintStart_toStartOf="@+id/guidelineV11"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8"/>
 
     <TextView
         android:id="@+id/tileBtn_2_5"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F44336"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="2,5"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV14"
         app:layout_constraintStart_toStartOf="@+id/guidelineV13"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH8"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8"/>
 
-    <!-- ──  Row 3  ─────────────────────────────────────────────────────────── -->
+    <!-- ── Row 3 ──────────────────────────────────────────────────────────── -->
 
+    <!-- selector3 -->
     <TextView
         android:id="@+id/selector3"
         android:layout_width="0dp"
@@ -727,8 +601,8 @@
         android:onClick="onSelectorClick"
         android:tag="3"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV2b"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV1b"
         app:layout_constraintTop_toTopOf="@+id/guidelineH10"
         app:layout_constraintDimensionRatio="1"/>
 
@@ -736,127 +610,79 @@
         android:id="@+id/tileBtn_3_0"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#4CAF50"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="3,0"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
         app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH10"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10"/>
 
     <TextView
         android:id="@+id/tileBtn_3_1"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#E91E63"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="3,1"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH10"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10"/>
 
     <TextView
         android:id="@+id/tileBtn_3_2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="3,2"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV8"
         app:layout_constraintStart_toStartOf="@+id/guidelineV7"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH10"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10"/>
 
     <TextView
         android:id="@+id/tileBtn_3_3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#2196F3"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="3,3"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV10"
         app:layout_constraintStart_toStartOf="@+id/guidelineV9"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH10"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10"/>
 
     <TextView
         android:id="@+id/tileBtn_3_4"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F44336"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="3,4"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV12"
         app:layout_constraintStart_toStartOf="@+id/guidelineV11"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH10"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10"/>
 
     <TextView
         android:id="@+id/tileBtn_3_5"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#4CAF50"
-        android:gravity="center_horizontal|center_vertical"
         android:onClick="onTileAudioClick"
         android:tag="3,5"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:text=""
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV14"
         app:layout_constraintStart_toStartOf="@+id/guidelineV13"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH10"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="2dp"
-        android:maxLines="1"/>
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10"/>
 
     <!-- ══════════════════════════════════════════════════════════════════════ -->
     <!--  BOTTOM NAVIGATION  (home | instructions | advance/repeat)            -->
@@ -935,69 +761,79 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.08"/>
 
+    <!-- XML #1: wordImage bottom (30% smaller) -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.36"/>
+        app:layout_constraintGuide_percent="0.276"/>
 
+    <!-- XML #2: wordText bottom (50% larger) -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.44"/>
+        app:layout_constraintGuide_percent="0.396"/>
 
+    <!-- XML #5: top of grid row 0 -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.46"/>
+        app:layout_constraintGuide_percent="0.406"/>
 
+    <!-- XML #5: bottom of row 0 / gap before row 1 -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.58"/>
+        app:layout_constraintGuide_percent="0.525"/>
 
+    <!-- XML #5: top of row 1 -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.59"/>
+        app:layout_constraintGuide_percent="0.535"/>
 
+    <!-- XML #5: bottom of row 1 / gap before row 2 -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.71"/>
+        app:layout_constraintGuide_percent="0.654"/>
 
+    <!-- XML #5: top of row 2 -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.72"/>
+        app:layout_constraintGuide_percent="0.664"/>
 
+    <!-- XML #5: bottom of row 2 / gap before row 3 -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.84"/>
+        app:layout_constraintGuide_percent="0.783"/>
 
+    <!-- XML #5: top of row 3 -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.85"/>
+        app:layout_constraintGuide_percent="0.793"/>
 
+    <!-- bottom of row 3 (unchanged) -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH11"
         android:layout_width="wrap_content"
@@ -1021,7 +857,6 @@
 
     <!-- ══════════════════════════════════════════════════════════════════════ -->
     <!--  VERTICAL GUIDELINES                                                  -->
-    <!--  Col layout: [selector | gap | t0 | gap | t1 | gap | t2 | gap | t3 | gap | t4 | gap | t5] -->
     <!-- ══════════════════════════════════════════════════════════════════════ -->
 
     <!-- Left margin -->
@@ -1032,7 +867,23 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.01"/>
 
-    <!-- Right edge of selector col -->
+    <!-- XML #3: inner left edge of selector (centered 50% within V1→V2) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV1b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.046"/>
+
+    <!-- XML #3: inner right edge of selector -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV2b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.119"/>
+
+    <!-- Right edge of selector column (outer, unchanged) -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV2"
         android:layout_width="wrap_content"
@@ -1040,7 +891,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.155"/>
 
-    <!-- Left edge of tile col 0 -->
+    <!-- XML #4: tile col 0 left edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV3"
         android:layout_width="wrap_content"
@@ -1048,87 +899,87 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.165"/>
 
-    <!-- Right edge of tile col 0 -->
+    <!-- XML #4: tile col 0 right edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.305"/>
+        app:layout_constraintGuide_percent="0.294"/>
 
-    <!-- Left edge of tile col 1 -->
+    <!-- XML #4: tile col 1 left edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.315"/>
+        app:layout_constraintGuide_percent="0.304"/>
 
-    <!-- Right edge of tile col 1 -->
+    <!-- XML #4: tile col 1 right edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.455"/>
+        app:layout_constraintGuide_percent="0.433"/>
 
-    <!-- Left edge of tile col 2 -->
+    <!-- XML #4: tile col 2 left edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.465"/>
+        app:layout_constraintGuide_percent="0.443"/>
 
-    <!-- Right edge of tile col 2 -->
+    <!-- XML #4: tile col 2 right edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.605"/>
+        app:layout_constraintGuide_percent="0.572"/>
 
-    <!-- Left edge of tile col 3 -->
+    <!-- XML #4: tile col 3 left edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.615"/>
+        app:layout_constraintGuide_percent="0.582"/>
 
-    <!-- Right edge of tile col 3 -->
+    <!-- XML #4: tile col 3 right edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.755"/>
+        app:layout_constraintGuide_percent="0.711"/>
 
-    <!-- Left edge of tile col 4 -->
+    <!-- XML #4: tile col 4 left edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.765"/>
+        app:layout_constraintGuide_percent="0.721"/>
 
-    <!-- Right edge of tile col 4 -->
+    <!-- XML #4: tile col 4 right edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.905"/>
+        app:layout_constraintGuide_percent="0.850"/>
 
-    <!-- Left edge of tile col 5 -->
+    <!-- XML #4: tile col 5 left edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.915"/>
+        app:layout_constraintGuide_percent="0.860"/>
 
-    <!-- Right margin / right edge of tile col 5 -->
+    <!-- Right margin / tile col 5 right edge -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV14"
         android:layout_width="wrap_content"
