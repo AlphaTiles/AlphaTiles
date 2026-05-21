@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
@@ -37,6 +38,8 @@ public class Thailand extends GameActivity {
     String choiceType;
     int refColor;
     int challengeLevelThai;
+
+    private static final Logger LOGGER = Logger.getLogger( Thailand.class.getName() );
 
     protected static final int[] GAME_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
@@ -143,6 +146,7 @@ public class Thailand extends GameActivity {
 
         // If either or both elements are word-based, then three IF statements, but if both elements are tile-based, then WHILE LOOP
 
+        // BLOCK_01
         if (refType.contains("WORD") || (choiceType.contains("WORD") && !refType.contains("SYLLABLE"))) {
             if (refType.equals("TILE_LOWER") || refType.equals("TILE_AUDIO") || choiceType.equals("TILE_LOWER")) {
                 boolean freshTile = false;
@@ -165,6 +169,7 @@ public class Thailand extends GameActivity {
                     freshTile = verifyFreshTile(refString, freshChecks);
                 }
 
+            // BLOCK_02
             } else if (refType.equals("TILE_UPPER") || choiceType.equals("TILE_UPPER")) {
                 boolean freshTile = false;
                 int freshChecks = 0;
@@ -187,6 +192,7 @@ public class Thailand extends GameActivity {
                     freshTile = verifyFreshTile(refString, freshChecks);
                 }
 
+            // BLOCK_03
             } else if (refType.contains("WORD") && choiceType.contains("WORD")) {
                 boolean freshTile = false;
                 int freshChecks = 0;
@@ -210,6 +216,7 @@ public class Thailand extends GameActivity {
 
             }
 
+        // BLOCK_04
         } else if (choiceType.contains("SYLLABLE") && refType.contains("SYLLABLE")) {
             boolean freshSyllable = false;
             while (!freshSyllable) {
@@ -226,10 +233,12 @@ public class Thailand extends GameActivity {
                 }
             }
 
+        // BLOCK_05
         } else if (choiceType.contains("WORD") && refType.contains("SYLLABLE")) {
             boolean freshSyllable = false;
             while (!freshSyllable) {
                 chooseWord();
+                LOGGER.info("ThailandX: refWord.wordInLOP" + refWord.wordInLOP);
                 parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
                 refSyllable = parsedRefWordSyllableArray.get(0);
                 refString = parsedRefWordSyllableArray.get(0).text;
@@ -243,6 +252,7 @@ public class Thailand extends GameActivity {
                 }
             }
 
+        // BLOCK_06
         } else {
             // Makes sure that the reference tile chosen is not a glottal stop for ex;
             // Ensure that chosen tile is a consonant or vowel
@@ -266,6 +276,7 @@ public class Thailand extends GameActivity {
                     freshTile = verifyFreshTile(refString, freshChecks);
                 }
             }
+            // BLOCK_07
             if (refType.equals("TILE_UPPER")) {
                 boolean freshTile = false;
                 int freshChecks = 0;
