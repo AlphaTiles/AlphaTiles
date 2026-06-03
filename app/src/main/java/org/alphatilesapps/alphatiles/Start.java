@@ -66,7 +66,7 @@ public class Start extends AppCompatActivity {
     public static Boolean hasSyllableAudio;
     public static Boolean enhancedAudioLoadingLog;
     public static Boolean hasSyllableGames = false;
-    public static int after12checkedTrackers;
+    public static int uponMastery;
     public static Boolean differentiatesTileTypes;
     public static Boolean hasSAD = false;
     public static double stageCorrespondenceRatio;
@@ -128,11 +128,11 @@ public class Start extends AppCompatActivity {
         changeArrowColor = getBooleanFromSettings("Change arrow colors", true);
         enhancedAudioLoadingLog = getBooleanFromSettings("Enhanced Audio Loading Log", false);
 
-        String after12checkedTrackersSetting = settingsList.find("After 12 checked trackers");
-        if (!after12checkedTrackersSetting.equals("")) {
-            after12checkedTrackers = Integer.valueOf(after12checkedTrackersSetting);
+        String uponMasterySetting = settingsList.find("After 12 checked trackers");
+        if (!uponMasterySetting.equals("")) {
+            uponMastery = Integer.valueOf(uponMasterySetting);
         } else {
-            after12checkedTrackers = 3;
+            uponMastery = 3;
         }
 
         String customNumOfAvatars = settingsList.find("Number of avatars"); // Default is 12
@@ -678,9 +678,12 @@ public class Start extends AppCompatActivity {
                 gameList.gameInstrDurationTitle = thisLineArray[5];
                 gameList.gameModeTitle = thisLineArray[6];
                 gameList.gameStageTitle = thisLineArray[7];
+                gameList.gameLookBackTitle = thisLineArray[8];
+                gameList.gameAccuracyTitle = thisLineArray[9];
+                gameList.gameAttemptsTitle = thisLineArray[10];
                 header = false;
             } else {
-                Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7]);
+                Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], Integer.parseInt(thisLineArray[8]), Integer.parseInt(thisLineArray[9]), Integer.parseInt(thisLineArray[10]));
                 if (!game.hasNull()) {
                     gameList.add(game);
                 }
@@ -958,8 +961,11 @@ public class Start extends AppCompatActivity {
         public String instructionDuration;
         public String mode; //JP : Syllable or Tile mode (S or T)
         public String stage; // LM The game will include tiles/words from all the stages up to and including the stage indicated in the row of aa_games.txt
+        public int lookBack;
+        public int accuracy;
+        public int attempts;
 
-        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration, String gameMode, String stage) {
+        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration, String gameMode, String stage, int lookBack, int accuracy, int attempts) {
             this.number = gameNumber;
             this.country = gameCountry;
             this.level = gameLevel;
@@ -968,10 +974,13 @@ public class Start extends AppCompatActivity {
             this.instructionDuration = gameInstrDuration;
             this.mode = gameMode;
             this.stage = stage;
+            this.lookBack = lookBack;
+            this.accuracy = accuracy;
+            this.attempts = attempts;
         }
 
         public boolean hasNull() {
-            return number == null || country == null || level == null || color == null || instructionAudioName == null || instructionDuration == null || mode == null;
+            return number == null || country == null || level == null || color == null || instructionAudioName == null || instructionDuration == null || mode == null || stage == null;
         }
     }
 
@@ -2182,7 +2191,9 @@ public class Start extends AppCompatActivity {
         public String gameInstrDurationTitle;
         public String gameModeTitle;
         public String gameStageTitle;
-
+        public String gameLookBackTitle;
+        public String gameAccuracyTitle;
+        public String gameAttemptsTitle;
     }
 
     public class LangInfoList extends HashMap<String, String> {

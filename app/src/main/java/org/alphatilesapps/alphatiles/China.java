@@ -90,7 +90,7 @@ public class China extends GameActivity {
         }
 
         visibleGameButtons = 16;
-        updatePointsAndTrackers(0);
+        updateView();
         playAgain();
     }
 
@@ -259,7 +259,7 @@ public class China extends GameActivity {
             repeatLocked = false;
             setAdvanceArrowToBlue();
 
-            updatePointsAndTrackers(4);
+            recordAttempt(true,4);
 
             playCorrectFinalSound();
             setAllGameButtonsUnclickable();

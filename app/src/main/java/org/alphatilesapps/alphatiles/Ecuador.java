@@ -99,7 +99,7 @@ public class Ecuador extends GameActivity {
         }
 
         visibleGameButtons = GAME_BUTTONS.length;
-        updatePointsAndTrackers(0);
+        updateView();
         incorrectAnswersSelected = new ArrayList<>(visibleGameButtons-1);
         for (int i = 0; i < visibleGameButtons-1; i++) {
             incorrectAnswersSelected.add("");
@@ -466,7 +466,7 @@ public class Ecuador extends GameActivity {
             repeatLocked = false;
             setAdvanceArrowToBlue();
 
-            updatePointsAndTrackers(2);
+            recordAttempt(true,2);
 
             for (int w = 0; w < GAME_BUTTONS.length; w++) {
                 TextView nextWord = findViewById(GAME_BUTTONS[w]);

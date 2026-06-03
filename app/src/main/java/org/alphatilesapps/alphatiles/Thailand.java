@@ -114,7 +114,7 @@ public class Thailand extends GameActivity {
         }
 
         visibleGameButtons = GAME_BUTTONS.length;
-        updatePointsAndTrackers(0);
+        updateView();
         incorrectAnswersSelected = new ArrayList<>(3);
         for (int i = 0; i < 3; i++) {
             incorrectAnswersSelected.add("");
@@ -591,7 +591,7 @@ public class Thailand extends GameActivity {
 
             repeatLocked = false;
             setAdvanceArrowToBlue();
-            updatePointsAndTrackers(1);
+            recordAttempt(true, 1);
 
             for (int b = 0; b < GAME_BUTTONS.length; b++) {
                 TextView nextButton = findViewById(GAME_BUTTONS[b]);
@@ -696,14 +696,13 @@ public class Thailand extends GameActivity {
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 if (playFinalSound) {
-                    updatePointsAndTrackers(0);
                     repeatLocked = false;
                     playCorrectFinalSound();
                 } else {
                     if (repeatLocked) {
                         setAllGameButtonsClickable();
                     }
-                    if (after12checkedTrackers == 1){
+                    if (uponMastery == 1){
                         setOptionsRowClickable();
                         // JP: In setting 1, the player can always keep advancing to the next tile/word/image
                     }
@@ -728,7 +727,7 @@ public class Thailand extends GameActivity {
                 if (repeatLocked) {
                     setAllGameButtonsClickable();
                 }
-                if (after12checkedTrackers == 1){
+                if (uponMastery == 1){
                     setOptionsRowClickable();
                     //JP: In setting 1, the player can always keep advancing to the next tile/word/image
                 }
@@ -752,7 +751,7 @@ public class Thailand extends GameActivity {
                 if (repeatLocked) {
                     setAllGameButtonsClickable();
                 }
-                if (after12checkedTrackers == 1){
+                if (uponMastery == 1){
                     setOptionsRowClickable();
                     // JP: In setting 1, the player can always keep advancing to the next tile/word/image
                 }
@@ -783,7 +782,7 @@ public class Thailand extends GameActivity {
                 playActiveTileClip(playFinalSound);
                 if (repeatLocked) {
                     setAllGameButtonsClickable();
-                if (after12checkedTrackers == 1){
+                if (uponMastery == 1){
                 }
                     setOptionsRowClickable();
                 }

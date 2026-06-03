@@ -125,7 +125,7 @@ public class Italy extends GameActivity {
         if(!Start.changeArrowColor) {
             playNextWordImage.setImageResource(R.drawable.zz_forward_green);
         }
-        updatePointsAndTrackers(0);
+        updateView();
         playAgain();
     }
     @Override
@@ -321,7 +321,7 @@ public class Italy extends GameActivity {
     public void respondToLoteria() {
         setAdvanceArrowToBlue();
         playCorrectSoundThenActiveWordClip(true);
-        updatePointsAndTrackers(4);
+        recordAttempt(true,4);
 
         // TODO: Draw a thin/transparent line across the loteria?
     }

@@ -295,6 +295,9 @@ public class Earth extends AppCompatActivity {
         int challengeLevel = Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).level);
         int gameNumber = (pageNumber * doorsPerPage) + doorIndex + 1;
         String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).mode;
+        int masteryLookBackWindow = gameList.get((pageNumber * doorsPerPage) + doorIndex).lookBack;
+        int masteryRequiredAccuracy = gameList.get((pageNumber * doorsPerPage) + doorIndex).accuracy;
+        int masteryMinAttempts = gameList.get((pageNumber * doorsPerPage) + doorIndex).attempts;
         int stage;
         if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
             stage = 1;
@@ -314,6 +317,9 @@ public class Earth extends AppCompatActivity {
         intent.putExtra("pageNumber", pageNumber);
         intent.putExtra("country", country);
         intent.putExtra("syllableGame", syllableGame);
+        intent.putExtra("masteryLookBackWindow", masteryLookBackWindow);
+        intent.putExtra("masteryRequiredAccuracy", masteryRequiredAccuracy);
+        intent.putExtra("masteryMinAttempts", masteryMinAttempts);
         intent.putExtra("stage", stage);
         intent.putExtra("studentGrade", grade);
         startActivity(intent);

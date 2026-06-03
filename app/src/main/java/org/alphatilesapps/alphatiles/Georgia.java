@@ -142,7 +142,7 @@ public class Georgia extends GameActivity {
         for (int i = 0; i < visibleGameButtons-1; i++) {
             incorrectAnswersSelected.add("");
         }
-        updatePointsAndTrackers(0);
+        updateView();
         playAgain();
     }
 
@@ -463,7 +463,7 @@ public class Georgia extends GameActivity {
 
             fullWordTextView.setText(Start.wordList.stripInstructionCharacters(refWord.wordInLOP));
             fullWordTextView.setVisibility(View.VISIBLE);
-            updatePointsAndTrackers(1);
+            recordAttempt(true,1);
 
             if (sendAnalytics) {
                 // report time and number of incorrect guesses

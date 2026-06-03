@@ -110,7 +110,7 @@ public class Mexico extends GameActivity {
             hideInstructionAudioImage();
         }
 
-        updatePointsAndTrackers(0);
+        updateView();
         playAgain();
     }
 
@@ -322,7 +322,7 @@ public class Mexico extends GameActivity {
             );
 
             if (pairsCompleted == (visibleGameButtons / 2)) {
-                updatePointsAndTrackers((visibleGameButtons / 2));
+                recordAttempt(true,visibleGameButtons / 2);
                 setAdvanceArrowToBlue();
             }
 

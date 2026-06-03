@@ -82,12 +82,12 @@ public class Peru extends GameActivity {
 
         }
         visibleGameButtons = GAME_BUTTONS.length;
-        updatePointsAndTrackers(0);
         incorrectAnswersSelected = new ArrayList<>(3);
         for (int i = 0; i < 3; i++) {
             incorrectAnswersSelected.add("");
         }
         playAgain();
+        updateView();
     }
 
 
@@ -266,10 +266,10 @@ public class Peru extends GameActivity {
                 Analytics.with(context).track(gameUniqueID, info);
             }
 
+            recordAttempt(true, 2);
+
             repeatLocked = false;
             setAdvanceArrowToBlue();
-
-            updatePointsAndTrackers(2);
 
             for (int w = 0; w < GAME_BUTTONS.length; w++) {
                 TextView nextWord = findViewById(GAME_BUTTONS[w]);

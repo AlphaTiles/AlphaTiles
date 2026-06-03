@@ -181,7 +181,7 @@ public class Brazil extends GameActivity {
             hideInstructionAudioImage();
         }
 
-        updatePointsAndTrackers(0);
+        updateView();
         incorrectAnswersSelected = new ArrayList<>(visibleGameButtons-1);
         for (int i = 0; i < visibleGameButtons-1; i++) {
             incorrectAnswersSelected.add("");
@@ -613,7 +613,7 @@ public class Brazil extends GameActivity {
             // Good job! You chose the right gameButton
             repeatLocked = false;
             setAdvanceArrowToBlue();
-            updatePointsAndTrackers(1);
+            recordAttempt(true,1);
 
             // report time and number of incorrect guesses
             if (sendAnalytics) {

@@ -110,7 +110,7 @@ public class Japan extends GameActivity {
             hideInstructionAudioImage();
         }
 
-        updatePointsAndTrackers(0);
+        updateView();
         play();
     }
 
@@ -464,7 +464,7 @@ public class Japan extends GameActivity {
             repeatLocked = false;
             setAdvanceArrowToBlue();
             playCorrectSoundThenActiveWordClip(false);
-            updatePointsAndTrackers(1);
+            recordAttempt(true,1);
             for (int v = 0; v < ALL_GAME_VIEW_IDS.length; v++) {
                 TextView view = findViewById(ALL_GAME_VIEW_IDS[v]);
                 if (v % 2 == 0) {

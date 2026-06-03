@@ -107,7 +107,7 @@ public class UnitedStates extends GameActivity {
             hideInstructionAudioImage();
         }
 
-        updatePointsAndTrackers(0);
+        updateView();
         playAgain();
     }
 
@@ -286,7 +286,7 @@ public class UnitedStates extends GameActivity {
             constructedWord.setTextColor(Color.parseColor("#006400")); // dark green
             constructedWord.setTypeface(constructedWord.getTypeface(), Typeface.BOLD);
 
-            updatePointsAndTrackers(2);
+            recordAttempt(true,2);
 
             for (int i = 0; i < visibleGameButtons; i++) {
                 TextView gameTile = findViewById(GAME_BUTTONS[i]);

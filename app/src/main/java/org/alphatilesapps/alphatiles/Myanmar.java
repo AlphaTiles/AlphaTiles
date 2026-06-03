@@ -120,7 +120,7 @@ public class Myanmar extends GameActivity {
         }
 
         setTextSizes();
-        updatePointsAndTrackers(0);
+        updateView();
         playAgain();
     }
 
@@ -636,7 +636,7 @@ public class Myanmar extends GameActivity {
             refWord = sevenWords[indexOfFoundWord];
             if (wordsCompleted == completionGoal) {
                 setAdvanceArrowToBlue();
-                updatePointsAndTrackers(wordsCompleted);
+                recordAttempt(true, wordsCompleted);
             }
             playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
             handler = new Handler(Looper.getMainLooper());
@@ -820,7 +820,7 @@ public class Myanmar extends GameActivity {
                 refWord = sevenWords[indexOfFoundWord];
                 if (wordsCompleted == completionGoal) {
                     setAdvanceArrowToBlue();
-                    updatePointsAndTrackers(wordsCompleted);
+                    recordAttempt(true, wordsCompleted);
                 }
                 playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
                 handler = new Handler();
