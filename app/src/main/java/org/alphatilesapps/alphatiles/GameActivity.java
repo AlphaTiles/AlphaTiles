@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -88,6 +89,8 @@ public abstract class GameActivity extends AppCompatActivity {
     ArrayDeque<Integer> recentAttempts = new ArrayDeque<>();
     int recentAccuracy = 0;
     int totalAttempts = 0;
+    String savedAttempts;
+
     int recentCorrectCount = 0;
     boolean masteryAchieved = false;
 
@@ -198,15 +201,20 @@ public abstract class GameActivity extends AppCompatActivity {
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         className = getClass().getName();
         uniqueGameLevelPlayerModeStageID = className + challengeLevel + playerString + syllableGame + stage;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
-        hasChecked12Trackers = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
         points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
-        // this is where you retrieve recentAttempts
-        // @ToDo - is the below correct? There is nothing to retrieve
-        calculateRecentAccuracy();
         totalAttempts = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_totalAttempts", 0);
-        recentCorrectCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_recentCorrectCount", 0);
+        savedAttempts = prefs.getString(uniqueGameLevelPlayerModeStageID + "_savedAttempts","");
         masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
+
+        deserializeRecentAttempts();
+
+        recentCorrectCount = 0;
+
+        for (int value : recentAttempts) {
+            recentCorrectCount += value;
+        }
+
+        calculateRecentAccuracy();
 
         cumulativeStageBasedTileList.addAll(Start.SAD);
         for (int s = 0; s < stage; s++) {
@@ -238,26 +246,6 @@ public abstract class GameActivity extends AppCompatActivity {
         super.onCreate(state);
         // @ToDo - do we move updateView out of all individual games to here? where was updatePointsAndTrackers previously?
 
-        //@ToDo see below
-        if (1 > 2) {
-            if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq")) {
-            } else {
-                TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
-                int displayedChallengeLevel;
-                if (gameList.get(gameNumber - 1).country.equals("Thailand")) {
-                    displayedChallengeLevel = challengeLevel / 100;
-                } else {
-                    displayedChallengeLevel = challengeLevel;
-                }
-                if (gameList.get(gameNumber - 1).country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
-                    displayedChallengeLevel = displayedChallengeLevel - 3;
-                }
-                if (gameList.get(gameNumber - 1).country.equals("Georgia") && challengeLevel > 6) {
-                    displayedChallengeLevel = displayedChallengeLevel - 6;
-                }
-                challengeLevelBox.setText(String.valueOf(displayedChallengeLevel));
-            }
-        }
     }
 
     @Override
@@ -296,6 +284,8 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected void recordAttempt(boolean correct, int pointsIncrease) {
 
+//        android.util.Log.d("ProgressBars", "recordAttempt called, correct=" + correct);
+
         totalAttempts++;
         int result = correct ? 1 : 0;
         recentAttempts.addLast(result);
@@ -311,31 +301,25 @@ public abstract class GameActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
             editor.apply();
-            editor.putBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers",
-                    hasChecked12Trackers);
             editor.apply();
-            editor.putInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", trackerCount);
             editor.apply();
             getIntent().putExtra("globalPoints", globalPoints);
-
-            updateView();
-            ifMasteryThenWhat();
         } else {
             //@ToDo add the mastery lines for incorrect answers
         }
         if (recentAttempts.size() > masteryLookBackWindow) {
-            int removed = recentAttempts.removeFirst();
-            if (correct) {
-                recentCorrectCount -= removed;
-            }
+            int removed = recentAttempts.removeFirst(); //
+            recentCorrectCount -= removed; // subtracts zero if removing incorrect answer, subtracts 1 if removing correct answer
         }
+        updateView();
+        ifMasteryThenWhat(); // only relevant for correct answers, but want recent update and updateView() before evaluating mastery
         // @ToDo - some of these might better be moved up in the sequence
-        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = prefs.edit();
 
         editor.putInt(uniqueGameLevelPlayerModeStageID + "_totalAttempts",totalAttempts);
         editor.putInt(uniqueGameLevelPlayerModeStageID + "_recentCorrectCount",recentCorrectCount);
         editor.putBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved",masteryAchieved);
-        editor.putString(uniqueGameLevelPlayerModeStageID + "_recentAttempts",serializeRecentAttempts());
+        editor.putString(uniqueGameLevelPlayerModeStageID + "_savedAttempts",serializeRecentAttempts());
         editor.apply();
     }
 
@@ -345,21 +329,46 @@ public abstract class GameActivity extends AppCompatActivity {
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(points));
 
-        TextView gameNumberBox = findViewById(R.id.gameNumberView);
-        gameNumberBox.setText(String.valueOf(gameNumber));
-        gameColor = Color.parseColor(colorList.get(Integer.parseInt(gameList.get(gameNumber - 1).color)));
-        gameNumberBox.setBackgroundColor(gameColor);
-        pointsEarned.setBackgroundColor(gameColor);
-
         // Update progress bars
         // @ToDo item - updating progress bars is the updateView task for the new mastery items
         calculateRecentAccuracy();
         updateProgressBars();
 
+    }
+    protected void setUpInitialView() {
+        // @ToDo - once working correctly, this needs to be added to all games
 
+        TextView gameNumberBox = findViewById(R.id.gameNumberView);
+        gameNumberBox.setText(String.valueOf(gameNumber));
+        gameColor = Color.parseColor(colorList.get(Integer.parseInt(gameList.get(gameNumber - 1).color)));
+        gameNumberBox.setBackgroundColor(gameColor);
+        TextView pointsEarned = findViewById(R.id.pointsTextView);
+        pointsEarned.setBackgroundColor(gameColor);
+        TextView stageNumber = findViewById(R.id.stageLevelView);
+        stageNumber.setText(String.valueOf(stage));
+        // @ToDo - stage number should be dash or something when stages size is 1; noting it as "1" or "7" isn't useful
 
+        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq")) {
+        } else {
+            TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
+            int displayedChallengeLevel;
+            if (gameList.get(gameNumber - 1).country.equals("Thailand")) {
+                displayedChallengeLevel = challengeLevel / 100;
+            } else {
+                displayedChallengeLevel = challengeLevel;
+            }
+            if (gameList.get(gameNumber - 1).country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
+                displayedChallengeLevel = displayedChallengeLevel - 3;
+            }
+            if (gameList.get(gameNumber - 1).country.equals("Georgia") && challengeLevel > 6) {
+                displayedChallengeLevel = displayedChallengeLevel - 6;
+            }
+            android.util.Log.d("ProgressBars", "displayedChallengeLevel=" + displayedChallengeLevel);
+            challengeLevelBox.setText(String.valueOf(displayedChallengeLevel));
+        }
     }
      protected void calculateRecentAccuracy() {
+//         android.util.Log.d("ProgressBars", "recentAttempts.size() = " + recentAttempts.size());
          if (recentAttempts.size() == 0) {
                  recentAccuracy = 0;
                  return;
@@ -369,21 +378,49 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected void updateProgressBars() {
 
+        if (attemptsBar == null || accuracyBar == null) {
+            android.util.Log.d("ProgressBars", "BARS ARE NULL");
+            return;
+        }
+
+        android.util.Log.d("ProgressBars", "totalAttempts=" + totalAttempts + "[min=" + masteryMinAttempts + "] / accuracy=" + recentAccuracy
+                + " [req=" + masteryRequiredAccuracy + "] / recentCorrect=" + recentCorrectCount);
+
+        int baseColor = (gameColor != 0) ? gameColor : Color.BLACK;
+
         attemptsBar = findViewById(R.id.attemptsBar);
         accuracyBar = findViewById(R.id.accuracyBar);
 
-        int baseAttemptsColor = gameColor;
-        int baseAccuracyColor = gameColor;
+//        int baseColor = gameColor;
+//        int baseColor = gameColor;
+
+//        attemptsBar.setBackgroundColor(gameColor);
+//        accuracyBar.setBackgroundColor(gameColor);
 
         // Attempts: grows horizontally 0 → masteryMinAttempts, fades in simultaneously
         int attemptsProgress = Math.min(totalAttempts, masteryMinAttempts);
         int attemptsPercent = (attemptsProgress * 100) / masteryMinAttempts;
+        // @Todo, Chat GPT:
+//        Problem 5: Possible integer division edge case
+//
+//                This is probably okay, but safer:
+//
+//        int attemptsPercent = masteryMinAttempts == 0
+//                ? 0
+//                : (attemptsProgress * 100) / masteryMinAttempts;
+//
+//        Same for accuracy alpha.
         int attemptsAlpha = (attemptsPercent * 255) / 100;
 
+//        android.util.Log.d("ProgressBars", "attemptsPercent=" + attemptsPercent
+//                + " attemptsAlpha=" + attemptsAlpha);
+
         attemptsBar.setProgress(attemptsPercent);
+        attemptsBar.getProgressDrawable().mutate();
         attemptsBar.setProgressTintList(ColorStateList.valueOf(
-                ColorUtils.setAlphaComponent(baseAttemptsColor, attemptsAlpha)
+                ColorUtils.setAlphaComponent(baseColor, attemptsAlpha)
         ));
+        attemptsBar.setProgressTintMode(PorterDuff.Mode.SRC_IN);
 
         // Accuracy: grows horizontally 0 → 100%, fades in until masteryRequiredAccuracy
         int accuracyAlpha;
@@ -395,24 +432,38 @@ public abstract class GameActivity extends AppCompatActivity {
 
         accuracyBar.setProgress(recentAccuracy);
         accuracyBar.setProgressTintList(ColorStateList.valueOf(
-                ColorUtils.setAlphaComponent(baseAccuracyColor, accuracyAlpha)
+                ColorUtils.setAlphaComponent(baseColor, accuracyAlpha)
         ));
     }
     protected void ifMasteryThenWhat() {
 
+//        android.util.Log.d("ProgressBars", "totalAttempts=" + totalAttempts);
+//        android.util.Log.d("ProgressBars", "masteryMinAttempts=" + masteryMinAttempts);
+//        android.util.Log.d("ProgressBars", "recentAccuracy=" + recentAccuracy);
+//        android.util.Log.d("ProgressBars", "masteryRequiredAccuracy=" + masteryRequiredAccuracy);
+
+
         if (totalAttempts >= masteryMinAttempts && recentAccuracy >= masteryRequiredAccuracy) {
+
+            android.util.Log.d("ProgressBars", "YES, mastery!");
+            masteryAchieved = true;
 
             setOptionsRowUnclickable();
             setAllGameButtonsUnclickable();
 
             // LM >>> AH
-            // After player reaches mastery...
-            // uponMastery option 1: nothing happens; player keeps playing indefinitely
+            // uponMastery option 1:
+            // Nothing happens; player keeps playing indefinitely
 
-            // uponMastery option 2: app returns player to Earth (player can re-enter game and will be returned to Earth again reaching mastery again)
+            // uponMastery option 2:
+            // App returns player to Earth (player can re-enter game and will be returned to Earth again reaching mastery again)
             // @ToDo - for option 2 and 3, do we reset masteryAchieved to false? Or maybe better masteryAchieved is an int that increments?
             // @ToDo - no, because true/false tells you at which point in the 0 to 12 (or some goal) series you're at, true = 12/24/36, while 1 is for 12 to 23
             // @ToDo - so you probably need both boolean masteryAchieved and the correctAnswers counter
+            // @ToDo - you also need to think through which of these values get reset to zero
+            // @ToDo - for example, recentCorrect either resets to zero and they restart the climb to the masteryMin (but are analytics lost?)
+            // @ToDo - or recentCorrect continues to climb (maybe you set levels (which matches what Jacob is doing)
+            // @ToDo = Need to move all of these notes out of here into stages Google Doc
             if (masteryAchieved && uponMastery == 2){
                 soundSequencer.postDelayed(new Runnable() {
                     public void run() {
@@ -480,10 +531,8 @@ public abstract class GameActivity extends AppCompatActivity {
                             } catch (ClassNotFoundException e) {
                                 e.printStackTrace();
                             }
-                            String nextUniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + syllableGame + stage;
-                            hasChecked12Trackers = prefs.getBoolean(nextUniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
 
-                            if (!hasChecked12Trackers) {
+                            if (!masteryAchieved) {
                                 foundNextUncompletedGame = true;
                                 intent.putExtra("challengeLevel", challengeLevel);
                                 intent.putExtra("stage", stage);
@@ -528,14 +577,13 @@ public abstract class GameActivity extends AppCompatActivity {
     protected void deserializeRecentAttempts() {
 
     recentAttempts.clear();
-    String saved = getPreferences(MODE_PRIVATE).getString(uniqueGameLevelPlayerModeStageID + "_recentAttempts","");
 
-    for (char c : saved.toCharArray()) {
+        for (char c : savedAttempts.toCharArray()) {
 
         recentAttempts.addLast(
-            c == '1' ? 1 : 0);
-        }
+                c == '1' ? 1 : 0);
     }
+}
 
     protected void chooseWord() {
         boolean freshWord = false;
