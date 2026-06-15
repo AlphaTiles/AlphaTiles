@@ -57,9 +57,6 @@ public class Peru extends GameActivity {
         context = this;
         setContentView(R.layout.peru);
 
-        attemptsBar = findViewById(R.id.attemptsBar);
-        accuracyBar = findViewById(R.id.accuracyBar);
-
         ActivityLayouts.applyEdgeToEdge(this, R.id.peruCL);
         ActivityLayouts.setStatusAndNavColors(this);
 

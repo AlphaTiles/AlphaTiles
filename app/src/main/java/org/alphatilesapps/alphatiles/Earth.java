@@ -191,15 +191,19 @@ public class Earth extends AppCompatActivity {
 
                         trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
 
+                        prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+                        int points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
+                        boolean masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
+
                         // This is currently the only game that has no right/wrong responses with an incrementing trackerCount variable
                         // So we are forcing this game's door to initialize with a start
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
                         if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {                            trackerCount = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
-                        } else if (trackerCount < 12) {
+                        } else if (!masteryAchieved) {
                             ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
-                        } else { // >= 12
+                        } else {
                             String textColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).color;
                             ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(textColor))));
                         }
@@ -207,9 +211,9 @@ public class Earth extends AppCompatActivity {
                         boolean changeColor = true;
                         String doorStyle = "";
                         if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {                            doorStyle = "_inprocess";
-                        } else if (trackerCount > 0 && trackerCount < 12) {
+                        } else if (points > 0 && !masteryAchieved) {
                             doorStyle = "_inprocess";
-                        } else if (trackerCount >= 12) {
+                        } else if (masteryAchieved) {
                             doorStyle = "_mastery";
                             changeColor = false;
                         } else { // 0
