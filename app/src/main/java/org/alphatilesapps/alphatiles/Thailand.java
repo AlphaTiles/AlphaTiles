@@ -120,6 +120,8 @@ public class Thailand extends GameActivity {
             incorrectAnswersSelected.add("");
         }
         playAgain();
+        setUpInitialView();
+        updateView();
 
     }
 
@@ -589,21 +591,8 @@ public class Thailand extends GameActivity {
                 Analytics.with(context).track(gameUniqueID, info);
             }
 
-            repeatLocked = false;
-            setAdvanceArrowToBlue();
             recordAttempt(true, 1);
-
-            for (int b = 0; b < GAME_BUTTONS.length; b++) {
-                TextView nextButton = findViewById(GAME_BUTTONS[b]);
-                nextButton.setClickable(false);
-                if (b == answerChoiceIndex && !choiceType.equals("WORD_IMAGE")) {
-                    nextButton.setBackgroundColor(refColor);
-                    nextButton.setTextColor(Color.parseColor("#FFFFFF")); // white
-                }
-                if (b != answerChoiceIndex && choiceType.equals("WORD_IMAGE")) {
-                    nextButton.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
-                }
-            }
+            endRound(answerChoiceIndex);
 
             //JP: Added switch statement to determine which method to call: tile or word
             switch (refType) {
@@ -627,8 +616,34 @@ public class Thailand extends GameActivity {
             }
 
         } else {
+            recordAttempt(false, 0);
             incorrectOnLevel += 1;
-            playIncorrectSound();
+            if(secondChances) {
+                playIncorrectSound();
+            } else {
+                endRound(answerChoiceIndex);
+                // @ToDo...update so that you can pass correct or incorrect to these methods:
+                // @ToDo...then would probably make sense to merge these two switch statements into one inside of endRound()
+                switch (refType) {
+                    case "SYLLABLE_TEXT":
+                    case "SYLLABLE_AUDIO":
+                        if (hasSyllableAudio) {
+                            playCorrectSoundThenActiveSyllableClip(false);
+                        } else {
+                            playCorrectSound();
+                        }
+                        break;
+                    case "TILE_LOWER":
+                    case "TILE_UPPER":
+                    case "TILE_AUDIO":
+                        playCorrectSoundThenActiveTileClip(false);
+                        break;
+                    case "WORD_TEXT":
+                    case "WORD_IMAGE":
+                    case "WORD_AUDIO":
+                        playCorrectSoundThenActiveWordClip(false);
+                }
+            }
 
             for (int i = 0; i < 3; i++) {
                 String item = incorrectAnswersSelected.get(i);
@@ -640,6 +655,26 @@ public class Thailand extends GameActivity {
             }
         }
     }
+
+    private void endRound(int answerChoiceIndex) {
+
+        repeatLocked = false;
+        setAdvanceArrowToBlue();
+
+        for (int b = 0; b < GAME_BUTTONS.length; b++) {
+            TextView nextButton = findViewById(GAME_BUTTONS[b]);
+            nextButton.setClickable(false);
+            if (b == answerChoiceIndex && !choiceType.equals("WORD_IMAGE")) {
+                nextButton.setBackgroundColor(refColor);
+                nextButton.setTextColor(Color.parseColor("#FFFFFF")); // white
+            }
+            if (b != answerChoiceIndex && choiceType.equals("WORD_IMAGE")) {
+                nextButton.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
+            }
+        }
+
+    }
+
 
     public Tile firstAudibleTile(Word word) {
         ArrayList<Tile> wordParsedIntoTiles = tileList.parseWordIntoTiles(word.wordInLOP, word);

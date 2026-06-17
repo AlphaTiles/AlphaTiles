@@ -67,6 +67,7 @@ public class Start extends AppCompatActivity {
     public static Boolean hasTileAudio;
     public static Boolean hasSyllableAudio;
     public static Boolean enhancedAudioLoadingLog;
+    public static Boolean secondChances;
     public static Boolean hasSyllableGames = false;
     public static int uponMastery;
     public static Boolean differentiatesTileTypes;
@@ -129,6 +130,7 @@ public class Start extends AppCompatActivity {
         sendAnalytics = getBooleanFromSettings("Send analytics", false);
         changeArrowColor = getBooleanFromSettings("Change arrow colors", true);
         enhancedAudioLoadingLog = getBooleanFromSettings("Enhanced Audio Loading Log", false);
+        secondChances = getBooleanFromSettings("Can the player make additional attempts after an initial incorrect response", true);
 
         String uponMasterySetting = settingsList.find("After 12 checked trackers");
         if (!uponMasterySetting.equals("")) {

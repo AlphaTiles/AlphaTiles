@@ -269,19 +269,7 @@ public class Peru extends GameActivity {
 
             recordAttempt(true, 2);
 
-            repeatLocked = false;
-            setAdvanceArrowToBlue();
-
-            for (int w = 0; w < GAME_BUTTONS.length; w++) {
-                TextView nextWord = findViewById(GAME_BUTTONS[w]);
-                nextWord.setClickable(false);
-                if (w != t) {
-                    String wordColorStr = "#A9A9A9"; // dark gray
-                    int wordColorNo = Color.parseColor(wordColorStr);
-                    nextWord.setBackgroundColor(wordColorNo);
-                    nextWord.setTextColor(Color.parseColor("#000000")); // black
-                }
-            }
+            endRound(t);
 
             playCorrectSoundThenActiveWordClip(false);
 
@@ -295,9 +283,33 @@ public class Peru extends GameActivity {
                     break;
                 }
             }
-            playIncorrectSound();
-            recordAttempt(false,0);
+            recordAttempt(false, 0);
+            if(secondChances) {
+                playIncorrectSound();
+            } else {
+                endRound(t);
+                // @ToDo...update so that you can pass correct or incorrect to this method:
+                playCorrectSoundThenActiveWordClip(false);
+            }
         }
+    }
+
+    private void endRound(int justClickedWord) {
+
+        repeatLocked = false;
+        setAdvanceArrowToBlue();
+
+        for (int w = 0; w < GAME_BUTTONS.length; w++) {
+            TextView nextWord = findViewById(GAME_BUTTONS[w]);
+            nextWord.setClickable(false);
+            if (w != justClickedWord) {
+                String wordColorStr = "#A9A9A9"; // dark gray
+                int wordColorNo = Color.parseColor(wordColorStr);
+                nextWord.setBackgroundColor(wordColorNo);
+                nextWord.setTextColor(Color.parseColor("#000000")); // black
+            }
+        }
+
     }
 
     public void onWordClick(View view) {
