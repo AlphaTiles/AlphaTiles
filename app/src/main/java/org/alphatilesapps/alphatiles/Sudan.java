@@ -63,7 +63,7 @@ public class Sudan extends GameActivity {
 
     @Override
     protected void hideInstructionAudioImage() {
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
     }
@@ -91,10 +91,10 @@ public class Sudan extends GameActivity {
         ActivityLayouts.setStatusAndNavColors(this);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView nextSet = (ImageView) findViewById(R.id.nextSet);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView nextSet = findViewById(R.id.nextSet);
 
-            ImageView previousSet = (ImageView) findViewById(R.id.previousSet);
+            ImageView previousSet = findViewById(R.id.previousSet);
             previousSet.setRotationY(180);
 
             instructionsImage.setRotationY(180);
