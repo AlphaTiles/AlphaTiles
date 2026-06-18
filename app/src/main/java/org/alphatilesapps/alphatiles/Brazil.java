@@ -187,6 +187,8 @@ public class Brazil extends GameActivity {
             incorrectAnswersSelected.add("");
         }
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View View) {
@@ -611,9 +613,9 @@ public class Brazil extends GameActivity {
 
         if (gameButtonString.equals(correctString)) {
             // Good job! You chose the right gameButton
-            repeatLocked = false;
-            setAdvanceArrowToBlue();
+
             recordAttempt(true,1);
+            endRound(tileNo);
 
             // report time and number of incorrect guesses
             if (sendAnalytics) {
@@ -630,20 +632,6 @@ public class Brazil extends GameActivity {
                 Analytics.with(context).track(gameUniqueID, info);
             }
 
-            TextView constructedWord = findViewById(R.id.activeWordTextView);
-            String word = wordInLOPWithStandardizedSequenceOfCharacters(refWord);
-            constructedWord.setText(word);
-
-            for (int t = 0; t < visibleGameButtons; t++) {
-                TextView gameTile = findViewById(GAME_BUTTONS[t]);
-                gameTile.setClickable(false);
-                if (t != (tileNo)) {
-                    String wordColorStr = "#A9A9A9"; // dark gray
-                    int wordColorNo = Color.parseColor(wordColorStr);
-                    gameTile.setBackgroundColor(wordColorNo);
-                    gameTile.setTextColor(Color.parseColor("#000000")); // black
-                }
-            }
             playCorrectSoundThenActiveWordClip(false);
         } else {
             incorrectOnLevel += 1;
@@ -655,8 +643,37 @@ public class Brazil extends GameActivity {
                     break;
                 }
             }
-            playIncorrectSound();
+            recordAttempt(false, 0);
+            if(secondChances) {
+                playIncorrectSound();
+            } else {
+                endRound(tileNo);
+                // @ToDo...update so that you can pass correct or incorrect to this method:
+                playCorrectSoundThenActiveWordClip(false);
+            }
         }
+    }
+
+    private void endRound(int tileNo) {
+
+        repeatLocked = false;
+        setAdvanceArrowToBlue();
+
+        TextView constructedWord = findViewById(R.id.activeWordTextView);
+        String word = wordInLOPWithStandardizedSequenceOfCharacters(refWord);
+        constructedWord.setText(word);
+
+        for (int t = 0; t < visibleGameButtons; t++) {
+            TextView gameTile = findViewById(GAME_BUTTONS[t]);
+            gameTile.setClickable(false);
+            if (t != (tileNo)) {
+                String wordColorStr = "#A9A9A9"; // dark gray
+                int wordColorNo = Color.parseColor(wordColorStr);
+                gameTile.setBackgroundColor(wordColorNo);
+                gameTile.setTextColor(Color.parseColor("#000000")); // black
+            }
+        }
+
     }
 
     public void clickPicHearAudio(View view) {

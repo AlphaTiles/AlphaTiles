@@ -90,8 +90,9 @@ public class China extends GameActivity {
         }
 
         visibleGameButtons = 16;
-        updateView();
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View View) {

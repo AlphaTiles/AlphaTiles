@@ -82,6 +82,7 @@ public class Chile extends GameActivity {
         ActivityLayouts.applyEdgeToEdge(this, R.id.chileCL);
         ActivityLayouts.setStatusAndNavColors(this);
 
+        setUpInitialView();
         updateView();
         setAdvanceArrowToGray();
         if (scriptDirection.equals("RTL")) {
@@ -271,6 +272,7 @@ public class Chile extends GameActivity {
             guessBox.smoothScrollToPosition(tiles.size());
             guessAdapter.notifyDataSetChanged();
             Start.gameSounds.play(Start.incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+            recordAttempt(false,0);
         }
         else {
             currentRow++;
