@@ -177,25 +177,25 @@ public class Cameroon extends GameActivity {
             List<Start.Tile> row = new ArrayList<>(word);
             rows.add(row);
         }
-        // Pick one column to be all different so that the other columns can choose anything
-        int col;
-        Start.Tile tile;
-        List<Start.Tile> tiles;
-        do {
-            col = rand.nextInt(word.size());
-            tile = word.get(col);
-            tiles = replacementTiles(tile, useDistractors);
-        } while (tiles == null || tiles.size() < 4);
-        // Draw 4 so that if we accidentally draw the original tile we can throw it out and still have 3
-        List<Start.Tile> choice = choose(tiles, 4);
-        for (int row = 0; row < 3; row++) {
-            Start.Tile replacement;
-            do {
-                replacement = choice.remove(0);
-            } while (replacement.text.equals(tile.text));
-            rows.get(row).set(col, replacement);
-        }
         if (substituteAll) {
+            // Pick one column to be all different so that the other columns can choose anything
+            int col;
+            Start.Tile tile;
+            List<Start.Tile> tiles;
+            do {
+                col = rand.nextInt(word.size());
+                tile = word.get(col);
+                tiles = replacementTiles(tile, useDistractors);
+            } while (tiles == null || tiles.size() < 4);
+            // Draw 4 so that if we accidentally draw the original tile we can throw it out and still have 3
+            List<Start.Tile> choice = choose(tiles, 4);
+            for (int row = 0; row < 3; row++) {
+                Start.Tile replacement;
+                do {
+                    replacement = choice.remove(0);
+                } while (replacement.text.equals(tile.text));
+                rows.get(row).set(col, replacement);
+            }
             for (int c = 0; c < word.size(); c++) {
                 if (c == col) continue;
                 List<Start.Tile> replacements = replacementTiles(word.get(c), useDistractors);
@@ -206,6 +206,23 @@ public class Cameroon extends GameActivity {
                     Start.Tile replacement = replacements.get(rand.nextInt(replacements.size()));
                     rows.get(row).set(c, replacement);
                 }
+            }
+        } else {
+            List<List<String>> taken = new ArrayList<>();
+            for(int col = 0; col < word.size(); col++) {
+                taken.add(new ArrayList<>());
+            }
+            for(int row = 0; row < 3; row++) {
+                int col = rand.nextInt(word.size());
+                List<Start.Tile> replacements = replacementTiles(word.get(col), useDistractors);
+                Start.Tile tile;
+                while(true) {
+                    tile = replacements.get(rand.nextInt(replacements.size()));
+                    if(taken.get(col).contains(tile.text) || tile.text.equals(word.get(col).text)) continue;
+                    taken.get(col).add(tile.text);
+                    break;
+                }
+                rows.get(row).set(col, tile);
             }
         }
         return rows;
