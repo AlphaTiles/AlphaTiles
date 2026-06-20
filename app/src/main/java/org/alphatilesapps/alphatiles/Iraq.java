@@ -74,13 +74,21 @@ public class Iraq extends GameActivity {
         }
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.iraq_cl1);
         int gameID = R.id.iraqcl;
-        scanSetting = Integer.parseInt(Start.settingsList.find("Game 001 Scan Setting"));
+
+        // Safe Scan Setting
+        String settingValue = Start.settingsList.find("Game 001 Scan Setting");
+        if (settingValue != null && !settingValue.isEmpty()) {
+            scanSetting = Integer.parseInt(settingValue);
+        } else {
+            scanSetting = 1;
+        }
 
         splitTileListAcrossPages();
         showCorrectNumTiles(currentPageNumber);
@@ -88,14 +96,20 @@ public class Iraq extends GameActivity {
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
 
+        // SAFE RTL BLOCK
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = findViewById(R.id.instructions);
             ImageView nextSet = findViewById(R.id.nextSet);
             ImageView previousSet = findViewById(R.id.previousSet);
-            previousSet.setRotationY(180);
-            instructionsImage.setRotationY(180);
-            nextSet.setRotationY(180);
-            fixConstraintsRTL(gameID);
+
+            if (previousSet != null) previousSet.setRotationY(180);
+            if (instructionsImage != null) instructionsImage.setRotationY(180);
+            if (nextSet != null) nextSet.setRotationY(180);
+
+            // Only fix constraints if the layout exists
+            if (findViewById(gameID) != null) {
+                fixConstraintsRTL(gameID);
+            }
         }
 
         if (getAudioInstructionsResID() == 0) {
@@ -165,12 +179,17 @@ public class Iraq extends GameActivity {
             displayTiles.add(tile);
         }
 
-        // for the current page, show the correct slice of displayTiles
+
+
         int buttonIdx = 0;
         for (int i = startIdx; i < Math.min(startIdx + tilesPerPage, displayTiles.size()); i++, buttonIdx++) {
             Tile tile = displayTiles.get(i);
             TextView tileView = findViewById(GAME_BUTTONS[buttonIdx]);
+
+            // SAFETY CHECK: If the button isn't in the XML, skip it instead of crashing!
+            if (tileView == null) continue;
             tileView.setText(tile.text);
+
             String type = tile.typeOfThisTileInstance;
             String typeColor;
             switch (type) {

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -87,6 +88,9 @@ public class Chile extends GameActivity {
         if (scriptDirection.equals("RTL")) {
             findViewById(R.id.backspace).setScaleX(-1);
             findViewById(R.id.repeatImage).setScaleX(-1);
+            //rotate icon
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            instructionsImage.setRotationY(180);
         }
         data.guesses = baseGuessCount - challengeLevel + 1;
         int guessBoxID = R.id.guessBox;

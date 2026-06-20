@@ -66,6 +66,9 @@ public class Earth extends AppCompatActivity {
             ImageView goForwardImage = (ImageView) findViewById(R.id.goForward);
             ImageView goBackImage = (ImageView) findViewById(R.id.goBack);
             ImageView activePlayerImage = (ImageView) findViewById(R.id.activePlayerImage);
+            //rotate instruction icon
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            instructionsImage.setRotationY(180);
 
             goForwardImage.setRotationY(180);
             goBackImage.setRotationY(180);

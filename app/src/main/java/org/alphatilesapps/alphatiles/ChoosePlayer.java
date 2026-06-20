@@ -124,6 +124,9 @@ public class ChoosePlayer extends AppCompatActivity {
             avatar10Image.setRotationY(180);
             avatar11Image.setRotationY(180);
             avatar12Image.setRotationY(180);
+            //rotate the icon
+            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
+            instructionsImage.setRotationY(180);
 
         }
         choosePlayerCL = findViewById(R.id.choosePlayerCL);
