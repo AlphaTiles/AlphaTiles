@@ -802,18 +802,22 @@ public abstract class GameActivity extends AppCompatActivity {
         mp1.start();
     }
 
-    protected void playCorrectSoundThenActiveWordClip(final boolean playFinalSound) {
+    protected void playGameSoundThenActiveWordClip(boolean correctAnswer, final boolean playFinalSound) {
         if (tempSoundPoolSwitch)
-            playCorrectSoundThenActiveWordClip1(playFinalSound);
+            playGameSoundThenActiveWordClip1(correctAnswer, playFinalSound);
         else
-            playCorrectSoundThenActiveWordClip0(playFinalSound);
+            playGameSoundThenActiveWordClip0(correctAnswer, playFinalSound);
     }
 
-    protected void playCorrectSoundThenActiveWordClip1(final boolean playFinalSound) {
+    protected void playGameSoundThenActiveWordClip1(boolean correctAnswer, final boolean playFinalSound) {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
-        gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        if (correctAnswer) {
+            gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        } else {
+            gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        }
 
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
@@ -833,7 +837,7 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
 
-    protected void playCorrectSoundThenActiveWordClip0(final boolean playFinalSound) {
+    protected void playGameSoundThenActiveWordClip0(boolean correctAnswer, final boolean playFinalSound) {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);

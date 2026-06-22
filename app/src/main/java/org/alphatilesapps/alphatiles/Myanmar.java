@@ -120,8 +120,9 @@ public class Myanmar extends GameActivity {
         }
 
         setTextSizes();
-        updateView();
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void setTextSizes() {
@@ -635,10 +636,11 @@ public class Myanmar extends GameActivity {
             // Play word and "correct" sounds and then clear the image from word bank
             refWord = sevenWords[indexOfFoundWord];
             if (wordsCompleted == completionGoal) {
+                repeatLocked = false;
                 setAdvanceArrowToBlue();
                 recordAttempt(true, wordsCompleted);
             }
-            playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
+            playGameSoundThenActiveWordClip(true,wordsCompleted == completionGoal);
             handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(clearImageFromImageBank(indexOfFoundWord), Long.valueOf(refWord.duration + correctSoundDuration));
 
@@ -819,10 +821,11 @@ public class Myanmar extends GameActivity {
                 // Play word and "correct" sounds and then clear the image from word bank
                 refWord = sevenWords[indexOfFoundWord];
                 if (wordsCompleted == completionGoal) {
+                    repeatLocked = false;
                     setAdvanceArrowToBlue();
                     recordAttempt(true, wordsCompleted);
                 }
-                playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
+                playGameSoundThenActiveWordClip(true,wordsCompleted == completionGoal);
                 handler = new Handler();
                 handler.postDelayed(clearImageFromImageBank(indexOfFoundWord), Long.valueOf(refWord.duration + correctSoundDuration));
                 selectedTileIndices.clear();

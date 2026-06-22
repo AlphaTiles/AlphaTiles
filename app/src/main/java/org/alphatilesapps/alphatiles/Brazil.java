@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -206,7 +207,7 @@ public class Brazil extends GameActivity {
         setAdvanceArrowToGray();
 
         setWord();
-        removeTile();
+        removeTileOrSyllable();
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         if (syllableGame.equals("S")) {
@@ -287,7 +288,7 @@ public class Brazil extends GameActivity {
         }
     }
 
-    private void removeTile() {
+    private void removeTileOrSyllable() {
 
         Random rand = new Random();
         int index = 0;
@@ -598,7 +599,7 @@ public class Brazil extends GameActivity {
         }
     }
 
-    private void respondToTileSelection(int justClickedButton) {
+    private void respondToTileOrSyllableSelection(int justClickedButton) {
 
         if (mediaPlayerIsPlaying) {
             return;
@@ -632,7 +633,7 @@ public class Brazil extends GameActivity {
                 Analytics.with(context).track(gameUniqueID, info);
             }
 
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
         } else {
             incorrectOnLevel += 1;
             for (int i = 0; i < visibleGameButtons-1; i++) {
@@ -647,9 +648,14 @@ public class Brazil extends GameActivity {
             if(secondChances) {
                 playIncorrectSound();
             } else {
-                endRound(tileNo);
-                // @ToDo...update so that you can pass correct or incorrect to this method:
-                playCorrectSoundThenActiveWordClip(false);
+                for (int i = 0; i < visibleGameButtons; i++) {
+                    TextView gameTile = findViewById(GAME_BUTTONS[i]);
+                    String tileSyllableButtonString = gameTile.getText().toString();
+                    if (tileSyllableButtonString.equals(correctString))  {
+                        endRound(i);
+                    }
+                }
+                playGameSoundThenActiveWordClip(false,false);
             }
         }
     }
@@ -686,7 +692,7 @@ public class Brazil extends GameActivity {
     }
 
     public void onBtnClick(View view) {
-        respondToTileSelection(Integer.parseInt((String) view.getTag())); // KP
+        respondToTileOrSyllableSelection(Integer.parseInt((String) view.getTag())); // KP
     }
 
     public void playAudioInstructions(View view) {

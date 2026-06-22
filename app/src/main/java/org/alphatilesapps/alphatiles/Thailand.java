@@ -16,6 +16,7 @@ import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
 
 import static android.graphics.Color.WHITE;
+import static android.graphics.Color.blue;
 import static org.alphatilesapps.alphatiles.Start.*;
 import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 
@@ -36,8 +37,10 @@ public class Thailand extends GameActivity {
     String refStringSecondToLast = "";
     String refStringThirdToLast = "";
     String choiceType;
+    String chosenItemText;
     int refColor;
     int challengeLevelThai;
+    int correctButtonIndex;
 
     private static final Logger LOGGER = Logger.getLogger( Thailand.class.getName() );
 
@@ -431,6 +434,7 @@ public class Thailand extends GameActivity {
             incorrectAnswersSelected.set(i, "");
         }
         incorrectOnLevel = 0;
+        determineCorrectButtonIndex();
         levelBegunTime = System.currentTimeMillis();
     }
 
@@ -447,133 +451,137 @@ public class Thailand extends GameActivity {
         return false;
     }
 
+    private void determineCorrectButtonIndex() {
+
+        for (int b = 0; b < GAME_BUTTONS.length; b++) {
+
+            String refItemText = null;
+            TextView refItem = findViewById(R.id.referenceItem);
+
+            switch (refType) {
+                case "TILE_LOWER":
+                case "TILE_UPPER":
+                case "TILE_AUDIO":
+                case "SYLLABLE_AUDIO":
+                    refItemText = refString;
+                    break;
+                case "WORD_TEXT":
+                case "SYLLABLE_TEXT":
+                    refItemText = refItem.getText().toString();
+                    break;
+                case "WORD_IMAGE":
+                case "WORD_AUDIO":
+                    refItemText = wordList.stripInstructionCharacters(refWord.wordInLOP);
+                    break;
+                default:
+                    break;
+            }
+
+            TextView chosenItem = findViewById(GAME_BUTTONS[b]);
+            if (refType.contains("SYLLABLE") && choiceType.contains("WORD")) {
+                chosenItemText = fourWordChoices.get(b).wordInLOP; // don't strip periods
+            } else if (!choiceType.equals("WORD_IMAGE")) {
+                chosenItemText = chosenItem.getText().toString(); // all cases except WORD_IMAGE
+            } else {
+                chosenItemText = wordList.stripInstructionCharacters(fourWordChoices.get(b).wordInLOP); // when WORD_IMAGE
+            }
+
+            switch (choiceType) {
+                case "TILE_LOWER":
+                    switch (refType) {
+                        case "TILE_LOWER":
+                        case "TILE_AUDIO":
+                        case "TILE_UPPER":
+                            if (refItemText != null && chosenItemText.equals(refTile.text)) {
+                                correctButtonIndex = b;
+                            }
+                            break;
+                        case "WORD_TEXT":
+                        case "WORD_IMAGE":
+                        case "WORD_AUDIO":
+                            Tile firstAudibleTileInRefWord = firstAudibleTile(refWord);
+                            if (firstAudibleTileInRefWord.text.equals(chosenItemText)) {
+                                correctButtonIndex = b;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case "TILE_UPPER":
+                    switch (refType) {
+                        case "TILE_LOWER":
+                        case "TILE_AUDIO":
+                        case "TILE_UPPER":
+                            if (chosenItemText.equals(refTile.upper)) {
+                                correctButtonIndex = b;
+                            }
+                            break;
+                        case "WORD_TEXT":
+                        case "WORD_IMAGE":
+                        case "WORD_AUDIO":
+                            Tile firstAudibleTileInRefWord = firstAudibleTile(refWord);
+                            if (chosenItemText.equals(firstAudibleTileInRefWord.upper)) {
+                                correctButtonIndex = b;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case "WORD_TEXT":
+                case "WORD_IMAGE":
+                    ArrayList<Start.Syllable> parsedChosenWordSyllableArray;
+                    Tile firstAudibleTileInWordChoice;
+                    switch (refType) {
+                        case "TILE_LOWER":
+                        case "TILE_AUDIO":
+                            firstAudibleTileInWordChoice = firstAudibleTile(fourWordChoices.get(b));
+                            if (firstAudibleTileInWordChoice.text.equals(refItemText) && firstAudibleTileInWordChoice.typeOfThisTileInstance.equals(refTileType)) {
+                                correctButtonIndex = b;
+                            }
+                            break;
+                        case "SYLLABLE_TEXT":
+                        case "SYLLABLE_AUDIO":
+                            parsedChosenWordSyllableArray = syllableList.parseWordIntoSyllables(lopWordHashMap.find(chosenItemText));
+                            // this needs to be word from wordlist w/the periods still in it
+                            if (parsedChosenWordSyllableArray.get(0).text.equals(refItemText)) {
+                                correctButtonIndex = b;
+                            }
+                            break;
+                        case "TILE_UPPER":
+                            firstAudibleTileInWordChoice = firstAudibleTile(fourWordChoices.get(b));
+                            if (refItemText != null && refItemText.equals(firstAudibleTileInWordChoice.upper)) {
+                                correctButtonIndex = b;
+                            }
+                            break;
+                        case "WORD_TEXT":
+                        case "WORD_IMAGE":
+                        case "WORD_AUDIO":
+                            if (refItemText != null && refItemText.equals(chosenItemText)) {
+                                correctButtonIndex = b;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case "SYLLABLE_TEXT":
+                    if (refItemText != null && refItemText.equals(chosenItemText)) {
+                        correctButtonIndex = b;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     private void respondToSelection(int justClickedItem) {
-        String refItemText = null;
-        TextView refItem = findViewById(R.id.referenceItem);
-
-        switch (refType) {
-            case "TILE_LOWER":
-            case "TILE_UPPER":
-            case "TILE_AUDIO":
-            case "SYLLABLE_AUDIO":
-                refItemText = refString;
-                break;
-            case "WORD_TEXT":
-            case "SYLLABLE_TEXT":
-                refItemText = refItem.getText().toString();
-                break;
-            case "WORD_IMAGE":
-            case "WORD_AUDIO":
-                refItemText = wordList.stripInstructionCharacters(refWord.wordInLOP);
-                break;
-            default:
-                break;
-        }
 
         int answerChoiceIndex = justClickedItem - 1; //  justClickedItem uses 1 to 4, answerChoiceIndex uses the array ID (between [0] and [3]
-        TextView chosenItem = findViewById(GAME_BUTTONS[answerChoiceIndex]);
-        String chosenItemText;
-        if (refType.contains("SYLLABLE") && choiceType.contains("WORD")) {
-            chosenItemText = fourWordChoices.get(answerChoiceIndex).wordInLOP; // don't strip periods
-        } else if (!choiceType.equals("WORD_IMAGE")) {
-            chosenItemText = chosenItem.getText().toString(); // all cases except WORD_IMAGE
-        } else {
-            chosenItemText = wordList.stripInstructionCharacters(fourWordChoices.get(answerChoiceIndex).wordInLOP); // when WORD_IMAGE
-        }
 
-        boolean goodMatch = false;
-
-        switch (choiceType) {
-            case "TILE_LOWER":
-                switch (refType) {
-                    case "TILE_LOWER":
-                    case "TILE_AUDIO":
-                    case "TILE_UPPER":
-                        if (refItemText != null && chosenItemText.equals(refTile.text)) {
-                            goodMatch = true;
-                        }
-                        break;
-                    case "WORD_TEXT":
-                    case "WORD_IMAGE":
-                    case "WORD_AUDIO":
-                        Tile firstAudibleTileInRefWord = firstAudibleTile(refWord);
-                        if (firstAudibleTileInRefWord.text.equals(chosenItemText)) {
-                            goodMatch = true;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case "TILE_UPPER":
-                switch (refType) {
-                    case "TILE_LOWER":
-                    case "TILE_AUDIO":
-                    case "TILE_UPPER":
-                        if (chosenItemText.equals(refTile.upper)) {
-                            goodMatch = true;
-                        }
-                        break;
-                    case "WORD_TEXT":
-                    case "WORD_IMAGE":
-                    case "WORD_AUDIO":
-                        Tile firstAudibleTileInRefWord = firstAudibleTile(refWord);
-                        if (chosenItemText.equals(firstAudibleTileInRefWord.upper)) {
-                            goodMatch = true;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case "WORD_TEXT":
-            case "WORD_IMAGE":
-                ArrayList<Start.Syllable> parsedChosenWordSyllableArray;
-                Tile firstAudibleTileInWordChoice;
-                switch (refType) {
-                    case "TILE_LOWER":
-                    case "TILE_AUDIO":
-                        firstAudibleTileInWordChoice = firstAudibleTile(fourWordChoices.get(answerChoiceIndex));
-                        if (firstAudibleTileInWordChoice.text.equals(refItemText) && firstAudibleTileInWordChoice.typeOfThisTileInstance.equals(refTileType)) {
-                            goodMatch = true;
-                        }
-                        break;
-                    case "SYLLABLE_TEXT":
-                    case "SYLLABLE_AUDIO":
-                        parsedChosenWordSyllableArray = syllableList.parseWordIntoSyllables(lopWordHashMap.find(chosenItemText));
-                        // this needs to be word from wordlist w/the periods still in it
-                        if (parsedChosenWordSyllableArray.get(0).text.equals(refItemText)) {
-                            goodMatch = true;
-                        }
-                        break;
-                    case "TILE_UPPER":
-                        firstAudibleTileInWordChoice = firstAudibleTile(fourWordChoices.get(answerChoiceIndex));
-                        if (refItemText != null && refItemText.equals(firstAudibleTileInWordChoice.upper)) {
-                            goodMatch = true;
-                        }
-                        break;
-                    case "WORD_TEXT":
-                    case "WORD_IMAGE":
-                    case "WORD_AUDIO":
-                        if (refItemText != null && refItemText.equals(chosenItemText)) {
-                            goodMatch = true;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case "SYLLABLE_TEXT":
-                if (refItemText != null && refItemText.equals(chosenItemText)) {
-                    goodMatch = true;
-                }
-                break;
-            default:
-                break;
-        }
-
-        if (goodMatch) {
+        if (answerChoiceIndex==correctButtonIndex) {
             // Good job!
 
             if (sendAnalytics) {
@@ -599,20 +607,20 @@ public class Thailand extends GameActivity {
                 case "SYLLABLE_TEXT":
                 case "SYLLABLE_AUDIO":
                     if (hasSyllableAudio) {
-                        playCorrectSoundThenActiveSyllableClip(false);
+//                        playCorrectSoundThenActiveSyllableClip(false);
                     } else {
-                        playCorrectSound();
+//                        playCorrectSound();
                     }
                     break;
                 case "TILE_LOWER":
                 case "TILE_UPPER":
                 case "TILE_AUDIO":
-                    playCorrectSoundThenActiveTileClip(false);
+//                    playCorrectSoundThenActiveTileClip(false);
                     break;
                 case "WORD_TEXT":
                 case "WORD_IMAGE":
                 case "WORD_AUDIO":
-                    playCorrectSoundThenActiveWordClip(false);
+                    playGameSoundThenActiveWordClip(true,false);
             }
 
         } else {
@@ -621,7 +629,8 @@ public class Thailand extends GameActivity {
             if(secondChances) {
                 playIncorrectSound();
             } else {
-                endRound(answerChoiceIndex);
+                endRound(correctButtonIndex);
+                }
                 // @ToDo...update so that you can pass correct or incorrect to these methods:
                 // @ToDo...then would probably make sense to merge these two switch statements into one inside of endRound()
                 switch (refType) {
@@ -641,7 +650,7 @@ public class Thailand extends GameActivity {
                     case "WORD_TEXT":
                     case "WORD_IMAGE":
                     case "WORD_AUDIO":
-                        playCorrectSoundThenActiveWordClip(false);
+                        playGameSoundThenActiveWordClip(false,false);
                 }
             }
 
@@ -654,7 +663,7 @@ public class Thailand extends GameActivity {
                 }
             }
         }
-    }
+
 
     private void endRound(int answerChoiceIndex) {
 
@@ -665,10 +674,12 @@ public class Thailand extends GameActivity {
             TextView nextButton = findViewById(GAME_BUTTONS[b]);
             nextButton.setClickable(false);
             if (b == answerChoiceIndex && !choiceType.equals("WORD_IMAGE")) {
+                LOGGER.info("ThailandX: set right TEXT choice to theme color with white font");
                 nextButton.setBackgroundColor(refColor);
                 nextButton.setTextColor(Color.parseColor("#FFFFFF")); // white
             }
             if (b != answerChoiceIndex && choiceType.equals("WORD_IMAGE")) {
+                LOGGER.info("ThailandX: set wrong IMAGE choice to invisible via whitening??");
                 nextButton.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             }
         }

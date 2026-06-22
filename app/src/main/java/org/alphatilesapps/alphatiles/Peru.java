@@ -31,6 +31,8 @@ public class Peru extends GameActivity {
         return null;
     }
 
+    int indexOfCorrectAnswerAmongChoices;
+
     @Override
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
@@ -123,7 +125,7 @@ public class Peru extends GameActivity {
         image.setClickable(true);
 
         Random rand = new Random();
-        int indexOfCorrectAnswerAmongChoices = rand.nextInt(4);
+        indexOfCorrectAnswerAmongChoices = rand.nextInt(4);
         List<String> shuffledDistractorTiles = parsedRefWordTileArray.get(0).distractors;
         Collections.shuffle(shuffledDistractorTiles);
 
@@ -271,7 +273,7 @@ public class Peru extends GameActivity {
 
             endRound(t);
 
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
 
         } else {
             incorrectOnLevel += 1;
@@ -287,9 +289,8 @@ public class Peru extends GameActivity {
             if(secondChances) {
                 playIncorrectSound();
             } else {
-                endRound(t);
-                // @ToDo...update so that you can pass correct or incorrect to this method:
-                playCorrectSoundThenActiveWordClip(false);
+                endRound(indexOfCorrectAnswerAmongChoices);
+                playGameSoundThenActiveWordClip(false,false);
             }
         }
     }

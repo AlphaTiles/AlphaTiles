@@ -125,8 +125,10 @@ public class Italy extends GameActivity {
         if(!Start.changeArrowColor) {
             playNextWordImage.setImageResource(R.drawable.zz_forward_green);
         }
-        updateView();
         playAgain();
+        setUpInitialView();
+        updateView();
+
     }
     @Override
     public void setAllGameButtonsUnclickable() {
@@ -249,7 +251,7 @@ public class Italy extends GameActivity {
 
             // The player went through all the cards without getting a loteria. Set up a new board
             playIncorrectSound();
-            playIncorrectSound();
+            recordAttempt(false,0);
             playAgain();
         } else { // "Call out" the next word
 
@@ -287,7 +289,7 @@ public class Italy extends GameActivity {
             respondToLoteria();
         } else {
             // Play sounds, then advance to the next word
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
             nextWordFromGameSet();
         }
 
@@ -319,8 +321,9 @@ public class Italy extends GameActivity {
     }
 
     public void respondToLoteria() {
+        repeatLocked = false;
         setAdvanceArrowToBlue();
-        playCorrectSoundThenActiveWordClip(true);
+        playGameSoundThenActiveWordClip(true,true);
         recordAttempt(true,4);
 
         // TODO: Draw a thin/transparent line across the loteria?

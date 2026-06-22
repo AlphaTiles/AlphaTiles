@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import static org.alphatilesapps.alphatiles.Start.secondChances;
 import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.CorV;
@@ -52,6 +53,8 @@ public class Georgia extends GameActivity {
     Set<String> challengingAnswerChoices = new HashSet<>();
     Start.Tile initialTile;
     Start.Syllable initialSyllable;
+
+    String correctString;
 
     protected static final int[] GAME_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -142,8 +145,9 @@ public class Georgia extends GameActivity {
         for (int i = 0; i < visibleGameButtons-1; i++) {
             incorrectAnswersSelected.add("");
         }
-        updateView();
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View View) {
@@ -445,7 +449,6 @@ public class Georgia extends GameActivity {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
-        String correctString;
         if (syllableGame.equals("S")) {
             correctString = initialSyllable.text;
         } else {
@@ -457,13 +460,10 @@ public class Georgia extends GameActivity {
         String selectedTileString = tile.getText().toString();
 
         if (correctString.equals(selectedTileString)) {
-            repeatLocked = false;
-            setAdvanceArrowToBlue();
             TextView fullWordTextView = findViewById(R.id.fullWordTextView);
 
             fullWordTextView.setText(Start.wordList.stripInstructionCharacters(refWord.wordInLOP));
             fullWordTextView.setVisibility(View.VISIBLE);
-            recordAttempt(true,1);
 
             if (sendAnalytics) {
                 // report time and number of incorrect guesses
@@ -480,20 +480,13 @@ public class Georgia extends GameActivity {
                 Analytics.with(context).track(gameUniqueID, info);
             }
 
-            for (int t = 0; t < GAME_BUTTONS.length; t++) {
-                TextView gameTile = findViewById(GAME_BUTTONS[t]);
-                gameTile.setClickable(false);
-                if (t != (tileNo)) {
-                    String wordColorStr = "#A9A9A9"; // dark gray
-                    int wordColorNo = Color.parseColor(wordColorStr);
-                    gameTile.setBackgroundColor(wordColorNo);
-                    gameTile.setTextColor(Color.parseColor("#000000")); // black
-                }
-            }
-            playCorrectSoundThenActiveWordClip(false);
+            recordAttempt(true,1);
+
+            endRound(tileNo);
+
+            playGameSoundThenActiveWordClip(true,false);
         } else {
             incorrectOnLevel += 1;
-            playIncorrectSound();
             for (int i = 0; i < visibleGameButtons - 1; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(selectedTileString)) break;  // this incorrect answer already selected
@@ -501,6 +494,36 @@ public class Georgia extends GameActivity {
                     incorrectAnswersSelected.set(i, selectedTileString);
                     break;
                 }
+            }
+            recordAttempt(false, 0);
+            if(secondChances) {
+                playIncorrectSound();
+            } else {
+                for (int i = 0; i < visibleGameButtons; i++) {
+                    TextView gameTile = findViewById(GAME_BUTTONS[i]);
+                    String tileSyllableButtonString = gameTile.getText().toString();
+                    if (tileSyllableButtonString.equals(correctString))  {
+                        endRound(i);
+                    }
+                }
+                playGameSoundThenActiveWordClip(false,false);
+            }
+        }
+    }
+
+    private void endRound(int tileNo) {
+
+        repeatLocked = false;
+        setAdvanceArrowToBlue();
+
+        for (int t = 0; t < GAME_BUTTONS.length; t++) {
+            TextView gameTile = findViewById(GAME_BUTTONS[t]);
+            gameTile.setClickable(false);
+            if (t != (tileNo)) {
+                String wordColorStr = "#A9A9A9"; // dark gray
+                int wordColorNo = Color.parseColor(wordColorStr);
+                gameTile.setBackgroundColor(wordColorNo);
+                gameTile.setTextColor(Color.parseColor("#000000")); // black
             }
         }
 

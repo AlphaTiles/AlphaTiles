@@ -110,8 +110,9 @@ public class Mexico extends GameActivity {
             hideInstructionAudioImage();
         }
 
-        updateView();
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View View) {
@@ -125,7 +126,8 @@ public class Mexico extends GameActivity {
         startActivity(intent);
         finish();
         playAgain();
-
+        setUpInitialView();
+        updateView();
     }
 
     public void playAgain() {
@@ -323,10 +325,11 @@ public class Mexico extends GameActivity {
 
             if (pairsCompleted == (visibleGameButtons / 2)) {
                 recordAttempt(true,visibleGameButtons / 2);
+                repeatLocked = false;
                 setAdvanceArrowToBlue();
             }
 
-            playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleGameButtons / 2));
+            playGameSoundThenActiveWordClip(true,pairsCompleted == (visibleGameButtons / 2));
 
         } else {
             // The two cards do NOT match

@@ -293,7 +293,7 @@ public class UnitedStates extends GameActivity {
                 gameTile.setClickable(false);
             }
 
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
         } else {
             constructedWord.setTextColor(Color.BLACK);
             constructedWord.setTypeface(constructedWord.getTypeface(), Typeface.NORMAL);
