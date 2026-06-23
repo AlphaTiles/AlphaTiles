@@ -107,8 +107,9 @@ public class UnitedStates extends GameActivity {
             hideInstructionAudioImage();
         }
 
-        updateView();
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View view) {
