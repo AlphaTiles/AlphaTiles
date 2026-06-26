@@ -607,15 +607,15 @@ public class Thailand extends GameActivity {
                 case "SYLLABLE_TEXT":
                 case "SYLLABLE_AUDIO":
                     if (hasSyllableAudio) {
-//                        playCorrectSoundThenActiveSyllableClip(false);
+                        playGameSoundThenActiveSyllableClip(true,false);
                     } else {
-//                        playCorrectSound();
+                        playCorrectSound();
                     }
                     break;
                 case "TILE_LOWER":
                 case "TILE_UPPER":
                 case "TILE_AUDIO":
-//                    playCorrectSoundThenActiveTileClip(false);
+                    playGameSoundThenActiveTileClip(true, false);
                     break;
                 case "WORD_TEXT":
                 case "WORD_IMAGE":
@@ -637,7 +637,7 @@ public class Thailand extends GameActivity {
                     case "SYLLABLE_TEXT":
                     case "SYLLABLE_AUDIO":
                         if (hasSyllableAudio) {
-                            playCorrectSoundThenActiveSyllableClip(false);
+                            playGameSoundThenActiveSyllableClip(false,false);
                         } else {
                             playCorrectSound();
                         }
@@ -645,7 +645,7 @@ public class Thailand extends GameActivity {
                     case "TILE_LOWER":
                     case "TILE_UPPER":
                     case "TILE_AUDIO":
-                        playCorrectSoundThenActiveTileClip(false);
+                        playGameSoundThenActiveTileClip(false, false);
                         break;
                     case "WORD_TEXT":
                     case "WORD_IMAGE":
@@ -752,7 +752,7 @@ public class Thailand extends GameActivity {
                         setOptionsRowClickable();
                         // JP: In setting 1, the player can always keep advancing to the next tile/word/image
                     }
-                    else if (trackerCount >0 && trackerCount % 12 != 0) {
+                    else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
                         setOptionsRowClickable();
                         // Otherwise, updatePointsAndTrackers will set it clickable only after
                         // the player returns to earth (2) or sees the celebration screen (3)
@@ -777,7 +777,7 @@ public class Thailand extends GameActivity {
                     setOptionsRowClickable();
                     //JP: In setting 1, the player can always keep advancing to the next tile/word/image
                 }
-                else if (trackerCount >0 && trackerCount % 12 != 0) {
+                else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
                     setOptionsRowClickable();
                     // Otherwise, updatePointsAndTrackers will set it clickable only after
                     // the player returns to earth (2) or sees the celebration screen (3)
@@ -786,11 +786,16 @@ public class Thailand extends GameActivity {
         }, 925);
     }
 
-    private void playCorrectSoundThenActiveSyllableClip(final boolean playFinalSound) {
+    private void playGameSoundThenActiveSyllableClip(boolean correctAnswer, final boolean playFinalSound) {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
-        gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+        if (correctAnswer) {
+            gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        } else {
+            gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        }
+
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 playActiveSyllableClip(playFinalSound);
@@ -801,7 +806,7 @@ public class Thailand extends GameActivity {
                     setOptionsRowClickable();
                     // JP: In setting 1, the player can always keep advancing to the next tile/word/image
                 }
-                else if (trackerCount >0 && trackerCount % 12 != 0) {
+                else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
                     setOptionsRowClickable();
                     // Otherwise, updatePointsAndTrackers will set it clickable only after
                     // the player returns to earth (2) or sees the celebration screen (3)
@@ -810,19 +815,17 @@ public class Thailand extends GameActivity {
         }, correctSoundDuration);
     }
 
-    public void playCorrectSoundThenActiveTileClip(final boolean playFinalSound) {
-        if (tempSoundPoolSwitch) {
-            playCorrectSoundThenActiveTileClip1(playFinalSound); //SoundPool
-        } else {
-            playCorrectSoundThenActiveTileClip0(playFinalSound); //MediaPlayer
-        }
-    }
+    public void playGameSoundThenActiveTileClip(boolean correctAnswer, final boolean playFinalSound) {
 
-    public void playCorrectSoundThenActiveTileClip1(final boolean playFinalSound) { //JP: Specifically for TILE audio. playCorrectSoundThenActiveWordClip is for WORDS
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
-        gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
+        if (correctAnswer) {
+            gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        } else {
+            gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        }
+
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 playActiveTileClip(playFinalSound);
@@ -833,7 +836,7 @@ public class Thailand extends GameActivity {
                     setOptionsRowClickable();
                 }
                     //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
-                else if (trackerCount >0 && trackerCount % 12 != 0) {
+                else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
                     setOptionsRowClickable();
                     //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
                     // and we don't want the user to be able to advance before returning to earth (2) or
@@ -841,20 +844,6 @@ public class Thailand extends GameActivity {
                 }
             }
         }, correctSoundDuration);
-    }
-
-    public void playCorrectSoundThenActiveTileClip0(final boolean playFinalSound) { // Media player
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.reset(); //JP: This fixes "mediaplayer went away with unhandled events" issue
-                mp2.release();
-                playActiveTileClip(playFinalSound);
-            }
-        });
     }
 
     public void clickPicHearAudio(View view) {

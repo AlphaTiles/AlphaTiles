@@ -91,8 +91,6 @@ public abstract class GameActivity extends AppCompatActivity {
     int recentCorrectCount = 0;
     boolean masteryAchieved = false;
 
-    int trackerCount = 0;
-
     char studentGrade;
     long levelBegunTime;
     int incorrectOnLevel = 0;
@@ -276,274 +274,274 @@ public abstract class GameActivity extends AppCompatActivity {
 
     }
 
-    protected void recordAttempt(boolean correct, int pointsIncrease) {
+        protected void recordAttempt(boolean correct, int pointsIncrease) {
 
-        totalAttempts++;
-        int result = correct ? 1 : 0;
-        recentAttempts.addLast(result);
+            totalAttempts++;
+            int result = correct ? 1 : 0;
+            recentAttempts.addLast(result);
 
-        if (correct) {
-            globalPoints += pointsIncrease; // points across all games for this player
-            points += pointsIncrease; // points in this game-level combo for this player
-            recentCorrectCount += result;
+            if (correct) {
+                globalPoints += pointsIncrease; // points across all games for this player
+                points += pointsIncrease; // points in this game-level combo for this player
+                recentCorrectCount += result;
 
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
+                editor.apply();
+                getIntent().putExtra("globalPoints", globalPoints);
+            }
+            if (recentAttempts.size() > masteryLookBackWindow) {
+                int removed = recentAttempts.removeFirst(); //
+                recentCorrectCount -= removed; // subtracts zero if removing incorrect answer, subtracts 1 if removing correct answer
+            }
+            updateView();
+            ifMasteryThenWhat(); // only relevant for correct answers, but want recent update and updateView() before evaluating mastery
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
+            editor.putInt(uniqueGameLevelPlayerModeStageID + "_totalAttempts",totalAttempts);
+            editor.putInt(uniqueGameLevelPlayerModeStageID + "_recentCorrectCount",recentCorrectCount);
+            editor.putBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved",masteryAchieved);
+            editor.putString(uniqueGameLevelPlayerModeStageID + "_savedAttempts",serializeRecentAttempts());
             editor.apply();
-            getIntent().putExtra("globalPoints", globalPoints);
-        }
-        if (recentAttempts.size() > masteryLookBackWindow) {
-            int removed = recentAttempts.removeFirst(); //
-            recentCorrectCount -= removed; // subtracts zero if removing incorrect answer, subtracts 1 if removing correct answer
-        }
-        updateView();
-        ifMasteryThenWhat(); // only relevant for correct answers, but want recent update and updateView() before evaluating mastery
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(uniqueGameLevelPlayerModeStageID + "_totalAttempts",totalAttempts);
-        editor.putInt(uniqueGameLevelPlayerModeStageID + "_recentCorrectCount",recentCorrectCount);
-        editor.putBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved",masteryAchieved);
-        editor.putString(uniqueGameLevelPlayerModeStageID + "_savedAttempts",serializeRecentAttempts());
-        editor.apply();
-    }
-
-    protected void updateView() {
-
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
-
-        calculateRecentAccuracy();
-        updateProgressBars();
-
-    }
-    protected void setUpInitialView() {
-        // @ToDo - once working correctly, this needs to be added to all games
-
-        TextView gameNumberBox = findViewById(R.id.gameNumberView);
-        gameNumberBox.setText(String.valueOf(gameNumber));
-        gameColor = Color.parseColor(colorList.get(Integer.parseInt(gameList.get(gameNumber - 1).color)));
-        gameNumberBox.setBackgroundColor(gameColor);
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setBackgroundColor(gameColor);
-        TextView stageNumber = findViewById(R.id.stageLevelView);
-        if (stagesInUse > 1) {
-            stageNumber.setText(String.valueOf(stage)); // use stage number when more than one stage is in use
-        } else {
-            stageNumber.setText(String.valueOf("★")); // when stages isn't being used (when all words = stage 1), set to star
         }
 
-        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq")) {
-        } else {
-            TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
-            int displayedChallengeLevel;
-            if (gameList.get(gameNumber - 1).country.equals("Thailand")) {
-                displayedChallengeLevel = challengeLevel / 100;
+        protected void updateView() {
+
+            TextView pointsEarned = findViewById(R.id.pointsTextView);
+            pointsEarned.setText(String.valueOf(points));
+
+            calculateRecentAccuracy();
+            updateProgressBars();
+
+        }
+        protected void setUpInitialView() {
+            // @ToDo - once working correctly, this needs to be added to all games
+
+            TextView gameNumberBox = findViewById(R.id.gameNumberView);
+            gameNumberBox.setText(String.valueOf(gameNumber));
+            gameColor = Color.parseColor(colorList.get(Integer.parseInt(gameList.get(gameNumber - 1).color)));
+            gameNumberBox.setBackgroundColor(gameColor);
+            TextView pointsEarned = findViewById(R.id.pointsTextView);
+            pointsEarned.setBackgroundColor(gameColor);
+            TextView stageNumber = findViewById(R.id.stageLevelView);
+            if (stagesInUse > 1) {
+                stageNumber.setText(String.valueOf(stage)); // use stage number when more than one stage is in use
             } else {
-                displayedChallengeLevel = challengeLevel;
+                stageNumber.setText(String.valueOf("★")); // when stages isn't being used (when all words = stage 1), set to star
             }
-            if (gameList.get(gameNumber - 1).country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
-                displayedChallengeLevel = displayedChallengeLevel - 3;
+
+            if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq")) {
+            } else {
+                TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
+                int displayedChallengeLevel;
+                if (gameList.get(gameNumber - 1).country.equals("Thailand")) {
+                    displayedChallengeLevel = challengeLevel / 100;
+                } else {
+                    displayedChallengeLevel = challengeLevel;
+                }
+                if (gameList.get(gameNumber - 1).country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
+                    displayedChallengeLevel = displayedChallengeLevel - 3;
+                }
+                if (gameList.get(gameNumber - 1).country.equals("Georgia") && challengeLevel > 6) {
+                    displayedChallengeLevel = displayedChallengeLevel - 6;
+                }
+                android.util.Log.d("ProgressBars", "displayedChallengeLevel=" + displayedChallengeLevel);
+                challengeLevelBox.setText(String.valueOf(displayedChallengeLevel));
             }
-            if (gameList.get(gameNumber - 1).country.equals("Georgia") && challengeLevel > 6) {
-                displayedChallengeLevel = displayedChallengeLevel - 6;
-            }
-            android.util.Log.d("ProgressBars", "displayedChallengeLevel=" + displayedChallengeLevel);
-            challengeLevelBox.setText(String.valueOf(displayedChallengeLevel));
         }
-    }
-     protected void calculateRecentAccuracy() {
-         if (recentAttempts.size() == 0) {
-                 recentAccuracy = 0;
-                 return;
-         }
-         recentAccuracy = (recentCorrectCount * 100) / recentAttempts.size();
-    }
-
-    protected void updateProgressBars() {
-
-        attemptsBar = findViewById(R.id.attemptsBar);
-        accuracyBar = findViewById(R.id.accuracyBar);
-
-        if (attemptsBar == null || accuracyBar == null) {
-            android.util.Log.d("ProgressBars", "BARS ARE NULL");
-            return;
-        }
-
-        android.util.Log.d("ProgressBars", "totalAttempts=" + totalAttempts + "[min=" + masteryMinAttempts + "] / accuracy=" + recentAccuracy
-                + " [req=" + masteryRequiredAccuracy + "] / recentCorrect=" + recentCorrectCount);
-
-        int baseColor = (gameColor != 0) ? gameColor : Color.BLACK;
-
-        attemptsBar = findViewById(R.id.attemptsBar);
-        accuracyBar = findViewById(R.id.accuracyBar);
-
-        // Accuracy: yellow when under threshold reached, then game color
-        int attemptsProgress = Math.min(totalAttempts, masteryMinAttempts);
-        int attemptsPercent = (attemptsProgress * 100) / masteryMinAttempts;
-
-        int attemptsColor;
-        if (totalAttempts >= masteryMinAttempts) {
-            attemptsColor = baseColor;
-        } else {
-            attemptsColor = Color.YELLOW;
+         protected void calculateRecentAccuracy() {
+             if (recentAttempts.size() == 0) {
+                     recentAccuracy = 0;
+                     return;
+             }
+             recentAccuracy = (recentCorrectCount * 100) / recentAttempts.size();
         }
 
-        attemptsBar.setProgress(attemptsPercent);
-        attemptsBar.setProgressTintList(ColorStateList.valueOf(attemptsColor));
+        protected void updateProgressBars() {
 
-        // Accuracy: yellow when under required accuracy, green when at/over required accuracy
-        int accuracyColor;
-        if (recentAccuracy >= masteryRequiredAccuracy) {
-            accuracyColor = baseColor;
-        } else {
-            accuracyColor = Color.YELLOW;
-        }
-        accuracyBar.setProgress(recentAccuracy);
-        accuracyBar.setProgressTintList(ColorStateList.valueOf(accuracyColor));
+            attemptsBar = findViewById(R.id.attemptsBar);
+            accuracyBar = findViewById(R.id.accuracyBar);
 
-    }
-    protected void ifMasteryThenWhat() {
-
-        android.util.Log.d("Mastery", "A: entering ifMasteryThenWhat()");
-
-        if (totalAttempts >= masteryMinAttempts && recentAccuracy >= masteryRequiredAccuracy && !masteryAchieved) {
-
-            android.util.Log.d("Mastery", "B: inside main if{} statement");
-
-            masteryAchieved = true;
-
-            setOptionsRowUnclickable();
-            setAllGameButtonsUnclickable();
-
-            // LM >>> AH
-            // uponMastery option 1:
-            // Nothing happens; player keeps playing indefinitely
-
-            // uponMastery option 2:
-            // App returns player to Earth (player can re-enter game and will be returned to Earth again reaching mastery again)
-            if (masteryAchieved && uponMastery == 2){
-
-                android.util.Log.d("Mastery", "C2: inside uponMastery == 2");
-
-                soundSequencer.postDelayed(new Runnable() {
-                    public void run() {
-                        Intent intent = getIntent();
-                        intent.setClass(context, Earth.class); // so we retain the Extras
-                        startActivity(intent);
-                        finish();
-                    }
-                }, correctSoundDuration);
-
+            if (attemptsBar == null || accuracyBar == null) {
+                android.util.Log.d("ProgressBars", "BARS ARE NULL");
+                return;
             }
-            // uponMastery option 3: app displays celebration screen and moves on to the next game where mastery has not been shown yet
-            if (masteryAchieved && uponMastery == 3) {
 
-                android.util.Log.d("Mastery", "C3: inside uponMastery == 3");
+            android.util.Log.d("ProgressBars", "totalAttempts=" + totalAttempts + "[min=" + masteryMinAttempts + "] / accuracy=" + recentAccuracy
+                    + " [req=" + masteryRequiredAccuracy + "] / recentCorrect=" + recentCorrectCount);
+
+            int baseColor = (gameColor != 0) ? gameColor : Color.BLACK;
+
+            attemptsBar = findViewById(R.id.attemptsBar);
+            accuracyBar = findViewById(R.id.accuracyBar);
+
+            // Accuracy: yellow when under threshold reached, then game color
+            int attemptsProgress = Math.min(totalAttempts, masteryMinAttempts);
+            int attemptsPercent = (attemptsProgress * 100) / masteryMinAttempts;
+
+            int attemptsColor;
+            if (totalAttempts >= masteryMinAttempts) {
+                attemptsColor = baseColor;
+            } else {
+                attemptsColor = Color.YELLOW;
+            }
+
+            attemptsBar.setProgress(attemptsPercent);
+            attemptsBar.setProgressTintList(ColorStateList.valueOf(attemptsColor));
+
+            // Accuracy: yellow when under required accuracy, green when at/over required accuracy
+            int accuracyColor;
+            if (recentAccuracy >= masteryRequiredAccuracy) {
+                accuracyColor = baseColor;
+            } else {
+                accuracyColor = Color.YELLOW;
+            }
+            accuracyBar.setProgress(recentAccuracy);
+            accuracyBar.setProgressTintList(ColorStateList.valueOf(accuracyColor));
+
+        }
+        protected void ifMasteryThenWhat() {
+
+            android.util.Log.d("Mastery", "A: entering ifMasteryThenWhat()");
+
+            if (totalAttempts >= masteryMinAttempts && recentAccuracy >= masteryRequiredAccuracy && !masteryAchieved) {
+
+                android.util.Log.d("Mastery", "B: inside main if{} statement");
+
+                masteryAchieved = true;
 
                 setOptionsRowUnclickable();
                 setAllGameButtonsUnclickable();
-                soundSequencer.postDelayed(new Runnable() {
-                    public void run() {
-                        // Show celebration screen
-                        Intent intent = getIntent();
-                        intent.setClass(context, Celebration.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                }, correctSoundDuration + 1800);
 
-                android.util.Log.d("Mastery", "D3: finished postDelayed");
+                // LM >>> AH
+                // uponMastery option 1:
+                // Nothing happens; player keeps playing indefinitely
 
-                // Then switch to next uncompleted game after 4 seconds
-                Timer nextScreenTimer = new Timer();
-                nextScreenTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        // Select and go to the next unfinished game to play
-                        // If the game with gameNumber (gameNumber+1) has not been mastered, go to it. If mastered, check the next gameNumber
-                        Intent intent = getIntent(); //gets intent that launched the current activity
-                        String project = "org.alphatilesapps.alphatiles.";
-                        boolean foundNextUncompletedGame = false;
-                        int repeat = 0;
+                // uponMastery option 2:
+                // App returns player to Earth (player can re-enter game and will be returned to Earth again reaching mastery again)
+                if (masteryAchieved && uponMastery == 2){
 
-                        android.util.Log.d("Mastery", "E3: about to enter while loop");
+                    android.util.Log.d("Mastery", "C2: inside uponMastery == 2");
 
-                        while (!foundNextUncompletedGame && repeat < gameList.size()) {
-                            // Get the info about the next game
-
-                            android.util.Log.d("Mastery", "F3: inside while loop");
-
-                            gameNumber = gameNumber + 1;
-                            if (gameNumber - 1 < gameList.size()) {
-                                challengeLevel = Integer.parseInt(gameList.get(gameNumber - 1).level);
-                                if (gameList.get(gameNumber-1).stage.equals("-")) {
-                                    stage = 1;
-                                } else {
-                                    stage = Integer.parseInt(gameList.get(gameNumber - 1).stage);
-                                }
-                                syllableGame = gameList.get(gameNumber - 1).mode;
-                                country = gameList.get(gameNumber - 1).country;
-                            } else {
-                                gameNumber = 1;
-                                challengeLevel = Integer.parseInt(gameList.get(0).level);
-                                if (gameList.get(0).stage.equals("-")) {
-                                    stage = 1;
-                                } else {
-                                    stage = Integer.parseInt(gameList.get(0).stage);
-                                }
-                                syllableGame = gameList.get(0).mode;
-                                country = gameList.get(0).country;
-                            }
-                            String activityClass = project + country;
-
-                            android.util.Log.d("Mastery", "F3.1.2: activityClass = " + activityClass);
-
-                            try {
-                                intent.setClass(context, Class.forName(activityClass));
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
-
-                            prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-                            uniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + syllableGame + stage;
-                            masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
-
-                            android.util.Log.d("Mastery", "G3: about to enter final if (!masteryAchieved) ");
-
-                            if (!masteryAchieved) {
-                                foundNextUncompletedGame = true;
-                                intent.putExtra("challengeLevel", challengeLevel);
-                                intent.putExtra("stage", stage);
-                                intent.putExtra("syllableGame", syllableGame);
-                                intent.putExtra("globalPoints", globalPoints);
-                                intent.putExtra("gameNumber", gameNumber);
-                                intent.putExtra("country", country);
-                                intent.putExtra("masteryLookBackWindow", masteryLookBackWindow);
-                                intent.putExtra("masteryRequiredAccuracy", masteryRequiredAccuracy);
-                                intent.putExtra("masteryMinAttempts", masteryMinAttempts);
-                                // @ToDo Move grade from Earth to GameActivity?
-                                // intent.putExtra("studentGrade", grade);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                //keep looping
-                            }
-                            repeat++;
-                        }
-
-                        android.util.Log.d("Mastery", "H3: past the game by game checks");
-
-                        // If it's looped through all of the games and they're all complete, return to Earth
-                        if (!foundNextUncompletedGame) {
-
-                            android.util.Log.d("Mastery", "I3: !foundNextUncompletedGame");
-
+                    soundSequencer.postDelayed(new Runnable() {
+                        public void run() {
+                            Intent intent = getIntent();
                             intent.setClass(context, Earth.class); // so we retain the Extras
                             startActivity(intent);
                             finish();
                         }
-                    }
-                }, 4500);
-            }
+                    }, correctSoundDuration);
+
+                }
+                // uponMastery option 3: app displays celebration screen and moves on to the next game where mastery has not been shown yet
+                if (masteryAchieved && uponMastery == 3) {
+
+                    android.util.Log.d("Mastery", "C3: inside uponMastery == 3");
+
+                    setOptionsRowUnclickable();
+                    setAllGameButtonsUnclickable();
+                    soundSequencer.postDelayed(new Runnable() {
+                        public void run() {
+                            // Show celebration screen
+                            Intent intent = getIntent();
+                            intent.setClass(context, Celebration.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, correctSoundDuration + 1800);
+
+                    android.util.Log.d("Mastery", "D3: finished postDelayed");
+
+                    // Then switch to next uncompleted game after 4 seconds
+                    Timer nextScreenTimer = new Timer();
+                    nextScreenTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            // Select and go to the next unfinished game to play
+                            // If the game with gameNumber (gameNumber+1) has not been mastered, go to it. If mastered, check the next gameNumber
+                            Intent intent = getIntent(); //gets intent that launched the current activity
+                            String project = "org.alphatilesapps.alphatiles.";
+                            boolean foundNextUncompletedGame = false;
+                            int repeat = 0;
+
+                            android.util.Log.d("Mastery", "E3: about to enter while loop");
+
+                            while (!foundNextUncompletedGame && repeat < gameList.size()) {
+                                // Get the info about the next game
+
+                                android.util.Log.d("Mastery", "F3: inside while loop");
+
+                                gameNumber = gameNumber + 1;
+                                if (gameNumber - 1 < gameList.size()) {
+                                    challengeLevel = Integer.parseInt(gameList.get(gameNumber - 1).level);
+                                    if (gameList.get(gameNumber-1).stage.equals("-")) {
+                                        stage = 1;
+                                    } else {
+                                        stage = Integer.parseInt(gameList.get(gameNumber - 1).stage);
+                                    }
+                                    syllableGame = gameList.get(gameNumber - 1).mode;
+                                    country = gameList.get(gameNumber - 1).country;
+                                } else {
+                                    gameNumber = 1;
+                                    challengeLevel = Integer.parseInt(gameList.get(0).level);
+                                    if (gameList.get(0).stage.equals("-")) {
+                                        stage = 1;
+                                    } else {
+                                        stage = Integer.parseInt(gameList.get(0).stage);
+                                    }
+                                    syllableGame = gameList.get(0).mode;
+                                    country = gameList.get(0).country;
+                                }
+                                String activityClass = project + country;
+
+                                android.util.Log.d("Mastery", "F3.1.2: activityClass = " + activityClass);
+
+                                try {
+                                    intent.setClass(context, Class.forName(activityClass));
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+
+                                prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+                                uniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + syllableGame + stage;
+                                masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
+
+                                android.util.Log.d("Mastery", "G3: about to enter final if (!masteryAchieved) ");
+
+                                if (!masteryAchieved) {
+                                    foundNextUncompletedGame = true;
+                                    intent.putExtra("challengeLevel", challengeLevel);
+                                    intent.putExtra("stage", stage);
+                                    intent.putExtra("syllableGame", syllableGame);
+                                    intent.putExtra("globalPoints", globalPoints);
+                                    intent.putExtra("gameNumber", gameNumber);
+                                    intent.putExtra("country", country);
+                                    intent.putExtra("masteryLookBackWindow", masteryLookBackWindow);
+                                    intent.putExtra("masteryRequiredAccuracy", masteryRequiredAccuracy);
+                                    intent.putExtra("masteryMinAttempts", masteryMinAttempts);
+                                    // @ToDo Move grade from Earth to GameActivity?
+                                    // intent.putExtra("studentGrade", grade);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    //keep looping
+                                }
+                                repeat++;
+                            }
+
+                            android.util.Log.d("Mastery", "H3: past the game by game checks");
+
+                            // If it's looped through all of the games and they're all complete, return to Earth
+                            if (!foundNextUncompletedGame) {
+
+                                android.util.Log.d("Mastery", "I3: !foundNextUncompletedGame");
+
+                                intent.setClass(context, Earth.class); // so we retain the Extras
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                    }, 4500);
+                }
 
         }
 
@@ -772,13 +770,12 @@ public abstract class GameActivity extends AppCompatActivity {
                     if (uponMastery == 1){
                         setOptionsRowClickable();
                         // JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                    }
-                    else if (trackerCount >0 && trackerCount % 12 != 0) {
+                    } else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
                         setOptionsRowClickable();
-                        // Otherwise, recordAttempts will set it clickable only after
+                        // Otherwise, recordAttempt will set it clickable only after
                         // the player returns to earth (2) or sees the celebration screen (3)
                     }
-                    else if (trackerCount == 0){
+                    else if (recentCorrectCount == 0){
                         setOptionsRowClickable();
                     }
                 }
@@ -826,9 +823,9 @@ public abstract class GameActivity extends AppCompatActivity {
                     setOptionsRowClickable();
                     //JP: In setting 1, the player can always keep advancing to the next tile/word/image
                 }
-                else if (trackerCount >0 && trackerCount % 12 != 0) {
+                else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
                     setOptionsRowClickable();
-                    // Otherwise, recordAttempts will set it clickable only after
+                    // Otherwise, recordAttempt will set it clickable only after
                     // the player returns to earth (2) or sees the celebration screen (3)
                 }
                 playActiveWordClip(playFinalSound);
@@ -902,9 +899,9 @@ public abstract class GameActivity extends AppCompatActivity {
             setOptionsRowClickable();
             // JP: In setting 1, the player can always keep advancing to the next tile/word/image
         }
-        else if (trackerCount >0 && trackerCount % 12 != 0) {
+        else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
             setOptionsRowClickable();
-            // Otherwise, recordAttempts will set it clickable only after
+            // Otherwise, recordAttempt will set it clickable only after
             // the player returns to earth (2) or sees the celebration screen (3)
         }
     }
@@ -1042,7 +1039,7 @@ public abstract class GameActivity extends AppCompatActivity {
                         setOptionsRowClickable();
                         // JP: In setting 1, the player can always keep advancing to the next tile/word/image
                     }
-                    else if (trackerCount >0 && trackerCount % 12 != 0) {
+                    else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
                         setOptionsRowClickable();
                         // Otherwise, recordAttempts will set it clickable only after
                         // the player returns to earth (2) or sees the celebration screen (3)
