@@ -42,14 +42,12 @@ import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
 import static org.alphatilesapps.alphatiles.Start.stagesInUse;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
-import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.placeholderCharacter;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.wordStagesLists;
-import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
@@ -744,13 +742,7 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void playActiveWordClip(final boolean playFinalSound) {
-        if (tempSoundPoolSwitch) {
-            playActiveWordClip1(playFinalSound);    //SoundPool
-        } else
-            playActiveWordClip0(playFinalSound);    //MediaPlayer
-    }
 
-    protected void playActiveWordClip1(final boolean playFinalSound) {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
@@ -783,30 +775,8 @@ public abstract class GameActivity extends AppCompatActivity {
         }, refWord.duration);
     }
 
-    protected void playActiveWordClip0(final boolean playFinalSound) {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(refWord.wordInLWC, "raw", getPackageName());
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        //mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mpCompletion(mp1, playFinalSound);
-            }
-        });
-        mp1.start();
-    }
-
     protected void playGameSoundThenActiveWordClip(boolean correctAnswer, final boolean playFinalSound) {
-        if (tempSoundPoolSwitch)
-            playGameSoundThenActiveWordClip1(correctAnswer, playFinalSound);
-        else
-            playGameSoundThenActiveWordClip0(correctAnswer, playFinalSound);
-    }
 
-    protected void playGameSoundThenActiveWordClip1(boolean correctAnswer, final boolean playFinalSound) {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
@@ -828,36 +798,16 @@ public abstract class GameActivity extends AppCompatActivity {
                     // Otherwise, recordAttempt will set it clickable only after
                     // the player returns to earth (2) or sees the celebration screen (3)
                 }
+                else if (recentCorrectCount == 0){
+                    setOptionsRowClickable();
+                }
                 playActiveWordClip(playFinalSound);
             }
         }, correctSoundDuration);
     }
 
-
-    protected void playGameSoundThenActiveWordClip0(boolean correctAnswer, final boolean playFinalSound) {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.reset(); //JP: fixed "mediaplayer went away with unhandled events" issue
-                mp2.release();
-                playActiveWordClip(playFinalSound);
-            }
-        });
-    }
-
     protected void playIncorrectSound() {
-        if (tempSoundPoolSwitch)
-            playIncorrectSound1();
-        else
-            playIncorrectSound0();
-    }
 
-    protected void playIncorrectSound1() {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
@@ -865,32 +815,8 @@ public abstract class GameActivity extends AppCompatActivity {
         setOptionsRowClickable();
     }
 
-    protected void playIncorrectSound0() {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
-        mediaPlayerIsPlaying = true;
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllGameButtonsClickable();
-                setOptionsRowClickable();
-                mp3.reset(); //JP
-                mp3.release();
-            }
-        });
-    }
-
     protected void playCorrectFinalSound() {
-        if (tempSoundPoolSwitch)
-            playCorrectFinalSound1();
-        else
-            playCorrectFinalSound0();
-    }
 
-    protected void playCorrectFinalSound1() {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
@@ -904,24 +830,9 @@ public abstract class GameActivity extends AppCompatActivity {
             // Otherwise, recordAttempt will set it clickable only after
             // the player returns to earth (2) or sees the celebration screen (3)
         }
-    }
-
-    protected void playCorrectFinalSound0() {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        mediaPlayerIsPlaying = true;
-        mp3 = MediaPlayer.create(this, R.raw.zz_correct_final);
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllGameButtonsClickable();
-                setOptionsRowClickable();
-                mp3.reset(); //JP
-                mp3.release();
-            }
-        });
+        else if (recentCorrectCount == 0){
+            setOptionsRowClickable();
+        }
     }
 
     public void playAudioInstructions(View view) {
@@ -957,11 +868,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
-        if(!tempSoundPoolSwitch) {
-            playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
-        } else {
-            playTileAudio(playFinalSound, tileAudioNumber(tile), tileDurations.get(tile.audioForThisTileType));
-        }
+        playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
     }
 
     protected boolean isReadyToPlayTileAudio() {
@@ -974,16 +881,8 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected boolean tileShouldPlayAudio(Start.Tile tile) {
         // make sure audio can be found
-        if (tempSoundPoolSwitch && tile.audioForThisTileType.equals("X")) {
+        if (tile.audioForThisTileType.equals("X")) {
                 return false;
-        }
-
-        if(!tempSoundPoolSwitch) {
-            try{
-                getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
-            } catch (NullPointerException e) {
-                 return false;
-            }
         }
 
         return true;
@@ -991,36 +890,11 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected int tileAudioNumber(Start.Tile tile) {
         String audioName = tile.getAudioNameAccountingForMultitypeSymbols();
-        if (tempSoundPoolSwitch) {
-            return tileAudioIDs.get(audioName);
-        } else {
-            return getResources().getIdentifier(audioName, "raw", getPackageName());
-        }
+        return tileAudioIDs.get(audioName);
     }
 
     protected void playTileAudio(boolean playFinalSound, int audioNumber, int audioDuration) {
-        if (tempSoundPoolSwitch) {
-            playTileAudioSoundPool(playFinalSound, audioNumber,audioDuration);
-        } else {
-            playTileAudioMediaPlayer(playFinalSound, audioNumber);
-        }
-    }
-
-
-
-
-
-    private void playTileAudioMediaPlayer(final boolean playFinalSound, int resID) {     //JP: for Media Player; tile audio
-
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mpCompletion(mp1, playFinalSound);
-            }
-        });
-        mp1.start();
+        playTileAudioSoundPool(playFinalSound, audioNumber,audioDuration);
     }
 
     private void playTileAudioSoundPool(final boolean playFinalSound, int audioID, int audioDuration) {     //JP: for SoundPool, for tile audio
@@ -1044,25 +918,12 @@ public abstract class GameActivity extends AppCompatActivity {
                         // Otherwise, recordAttempts will set it clickable only after
                         // the player returns to earth (2) or sees the celebration screen (3)
                     }
+                    else if (recentCorrectCount == 0){
+                        setOptionsRowClickable();
+                    }
                 }
             }
         }, audioDuration);
-    }
-
-    protected void mpCompletion(MediaPlayer mp, boolean isFinal) {
-        if (isFinal) {
-            repeatLocked = false;
-            playCorrectFinalSound();
-        } else {
-            mediaPlayerIsPlaying = false;
-            if (repeatLocked) {
-                setAllGameButtonsClickable();
-            }
-            setOptionsRowClickable();
-            mp.reset(); //JP
-            mp.release();
-        }
-
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

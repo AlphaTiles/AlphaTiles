@@ -16,9 +16,7 @@ import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
 
 import static android.graphics.Color.WHITE;
-import static android.graphics.Color.blue;
 import static org.alphatilesapps.alphatiles.Start.*;
-import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 
 public class Thailand extends GameActivity {
     ArrayList<Start.Word> fourWordChoices = new ArrayList<>();
@@ -638,8 +636,6 @@ public class Thailand extends GameActivity {
                     case "SYLLABLE_AUDIO":
                         if (hasSyllableAudio) {
                             playGameSoundThenActiveSyllableClip(false,false);
-                        } else {
-                            playCorrectSound();
                         }
                         break;
                     case "TILE_LOWER":
@@ -757,6 +753,9 @@ public class Thailand extends GameActivity {
                         // Otherwise, updatePointsAndTrackers will set it clickable only after
                         // the player returns to earth (2) or sees the celebration screen (3)
                     }
+                    else if (recentCorrectCount == 0){
+                        setOptionsRowClickable();
+                    }
                 }
             }
         }, refSyllable.duration);
@@ -781,6 +780,9 @@ public class Thailand extends GameActivity {
                     setOptionsRowClickable();
                     // Otherwise, updatePointsAndTrackers will set it clickable only after
                     // the player returns to earth (2) or sees the celebration screen (3)
+                }
+                else if (recentCorrectCount == 0){
+                    setOptionsRowClickable();
                 }
             }
         }, 925);
@@ -810,6 +812,9 @@ public class Thailand extends GameActivity {
                     setOptionsRowClickable();
                     // Otherwise, updatePointsAndTrackers will set it clickable only after
                     // the player returns to earth (2) or sees the celebration screen (3)
+                }
+                else if (recentCorrectCount == 0){
+                    setOptionsRowClickable();
                 }
             }
         }, correctSoundDuration);
@@ -841,6 +846,9 @@ public class Thailand extends GameActivity {
                     //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
                     // and we don't want the user to be able to advance before returning to earth (2) or
                     // before seeing the celebration screen (3)
+                }
+                else if (recentCorrectCount == 0){
+                    setOptionsRowClickable();
                 }
             }
         }, correctSoundDuration);
