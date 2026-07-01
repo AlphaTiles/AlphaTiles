@@ -38,6 +38,18 @@ public class Earth extends AppCompatActivity {
     int doorsPerPage = 33;
     ConstraintLayout earthCL;
 
+    private static final int TRACKER_COUNT_PER_IMAGE = 12;
+    private static final int MAX_TRACKER_MARK_IMAGES = 22;
+
+    private static final int[] MARK_VIEW_IDS = {
+            R.id.textMark001, R.id.textMark002, R.id.textMark003, R.id.textMark004, R.id.textMark005,
+            R.id.textMark006, R.id.textMark007, R.id.textMark008, R.id.textMark009, R.id.textMark010,
+            R.id.textMark011, R.id.textMark012, R.id.textMark013, R.id.textMark014, R.id.textMark015,
+            R.id.textMark016, R.id.textMark017, R.id.textMark018, R.id.textMark019, R.id.textMark020,
+            R.id.textMark021, R.id.textMark022, R.id.textMark023, R.id.textMark024, R.id.textMark025,
+            R.id.textMark026, R.id.textMark027, R.id.textMark028, R.id.textMark029, R.id.textMark030,
+            R.id.textMark031, R.id.textMark032, R.id.textMark033
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +75,9 @@ public class Earth extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView goForwardImage = (ImageView) findViewById(R.id.goForward);
-            ImageView goBackImage = (ImageView) findViewById(R.id.goBack);
-            ImageView activePlayerImage = (ImageView) findViewById(R.id.activePlayerImage);
+            ImageView goForwardImage = findViewById(R.id.goForward);
+            ImageView goBackImage = findViewById(R.id.goBack);
+            ImageView activePlayerImage = findViewById(R.id.activePlayerImage);
 
             goForwardImage.setRotationY(180);
             goBackImage.setRotationY(180);
@@ -102,8 +114,6 @@ public class Earth extends AppCompatActivity {
         name.setText(playerName);
 
         pageNumber = getIntent().getIntExtra("pageNumber", 0);
-
-        updateDoors();
 
         if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
@@ -160,6 +170,17 @@ public class Earth extends AppCompatActivity {
             resourcesIcon.setVisibility(View.GONE);
             resourcesIcon.setOnClickListener(null);
         }
+
+        // Run after layout and other onCreate constraint changes so marks are not left at XML defaults
+        earthCL.post(this::updateDoors);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (earthCL != null) {
+            updateDoors();
+        }
     }
 
     public void updateDoors() {
@@ -171,6 +192,10 @@ public class Earth extends AppCompatActivity {
             View child = earthCL.getChildAt(j);
             if (child instanceof TextView && child.getTag() != null) {
                 try {
+                    String viewEntryName = getResources().getResourceEntryName(child.getId());
+                    if (viewEntryName.startsWith("textMark")) {
+                        continue;
+                    }
                     int doorIndex = Integer.parseInt((String) earthCL.getChildAt(j).getTag()) - 1;
                     String doorText = String.valueOf((pageNumber * doorsPerPage) + doorIndex + 1);
                     ((TextView) child).setText(doorText);
@@ -239,6 +264,8 @@ public class Earth extends AppCompatActivity {
             }
         }
 
+        updateAllMarks(prefs);
+
         ImageView backArrow = findViewById(R.id.goBack);
         if (pageNumber == 0) {
             backArrow.setVisibility(View.INVISIBLE);
@@ -253,6 +280,61 @@ public class Earth extends AppCompatActivity {
             forwardArrow.setVisibility(View.INVISIBLE);
         }
 
+    }
+
+    private int getTrackerCountForGame(int gameIndex, SharedPreferences prefs) {
+        String project = "org.alphatilesapps.alphatiles.";
+        String country = Start.gameList.get(gameIndex).country;
+        String challengeLevel = Start.gameList.get(gameIndex).level;
+        String syllableGame = gameList.get(gameIndex).mode;
+        String stage;
+        if (gameList.get(gameIndex).stage.equals("-")) {
+            stage = "1";
+        } else {
+            stage = gameList.get(gameIndex).stage;
+        }
+        String uniqueGameLevelPlayerModeStageID = project + country + challengeLevel
+                + playerString + syllableGame + stage;
+        return prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
+    }
+
+    private void updateAllMarks(SharedPreferences prefs) {
+        for (int markSlot = 0; markSlot < MARK_VIEW_IDS.length; markSlot++) {
+            TextView mark = findViewById(MARK_VIEW_IDS[markSlot]);
+            if (mark == null || mark.getTag() == null) {
+                continue;
+            }
+            int doorIndex = Integer.parseInt(mark.getTag().toString()) - 1;
+            int gameIndex = (pageNumber * doorsPerPage) + doorIndex;
+            if (gameIndex >= Start.gameList.size()) {
+                mark.setVisibility(View.INVISIBLE);
+                continue;
+            }
+            int trackerCount = getTrackerCountForGame(gameIndex, prefs);
+            updateMarkForTrackerCount(mark, trackerCount);
+        }
+    }
+
+    /**
+     * trackerCount tiers (each spans 12 counts):
+     * 0–11: hidden
+     * 12–23: tracker_01, 24–35: tracker_02, 36–47: tracker_03, 48–59: tracker_04, 60+: tracker_05
+     * Position comes from earth.xml (one mark view per door); only the image changes here.
+     */
+    private void updateMarkForTrackerCount(TextView mark, int trackerCount) {
+        int trackerTier = trackerCount / TRACKER_COUNT_PER_IMAGE;
+        if (trackerTier < 1) {
+            mark.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        int imageIndex = Math.min(MAX_TRACKER_MARK_IMAGES, trackerTier);
+        int trackerDrawableId = getResources().getIdentifier(
+                "tracker_" + String.format("%02d", imageIndex), "drawable", getPackageName());
+        if (trackerDrawableId != 0) {
+            mark.setBackgroundResource(trackerDrawableId);
+        }
+        mark.setVisibility(View.VISIBLE);
     }
 
     public void goToAboutPage(View view) {
