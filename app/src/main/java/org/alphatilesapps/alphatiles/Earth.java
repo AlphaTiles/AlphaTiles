@@ -39,7 +39,7 @@ public class Earth extends AppCompatActivity {
     ConstraintLayout earthCL;
 
     private static final int TRACKER_COUNT_PER_IMAGE = 12;
-    private static final int MAX_TRACKER_MARK_IMAGES = 5;
+    private static final int MAX_TRACKER_MARK_IMAGES = 22;
 
     private static final int[] MARK_VIEW_IDS = {
             R.id.textMark001, R.id.textMark002, R.id.textMark003, R.id.textMark004, R.id.textMark005,
