@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import android.graphics.Typeface;
@@ -16,7 +17,7 @@ import android.widget.Button;
 import static org.alphatilesapps.alphatiles.Start.*;
 
 /*LEVELS:
-
+    DANIEL KAO
  */
 
 public class UnitedStates extends GameActivity {
@@ -59,7 +60,7 @@ public class UnitedStates extends GameActivity {
 
     @Override
     protected void hideInstructionAudioImage() {
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
         
     }
@@ -69,7 +70,7 @@ public class UnitedStates extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
 
-        int gameID = 0;
+        int gameID;
         switch (challengeLevel) {
             case 2:
                 setContentView(R.layout.united_states_cl2);
@@ -94,8 +95,8 @@ public class UnitedStates extends GameActivity {
         ActivityLayouts.setStatusAndNavColors(this);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView repeatImage = findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
@@ -138,7 +139,7 @@ public class UnitedStates extends GameActivity {
             parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
             parsedLengthOfRefWord = parsedRefWordSyllableArray.size();
         } else {
-            Tile emptyTile = new Tile("__", new ArrayList<String>(), "", "", "", "", "", "", "", "", 0, 0, 0, 0, 0, "", 0, "");
+            Tile emptyTile = new Tile("__", new ArrayList<>(), "", "", "", "", "", "", "", "", 0, 0, 0, 0, 0, "", 0, "");
             tileSelections = new Tile[parsedLengthOfRefWord];
             for (int t = 0; t<parsedLengthOfRefWord; t++) {
                 tileSelections[t] = new Tile(emptyTile);
@@ -149,11 +150,13 @@ public class UnitedStates extends GameActivity {
         // added by Camden. Delete if this does not work!
         numberOfPairs = parsedLengthOfRefWord;
 
-        ImageView image = (ImageView) findViewById(R.id.wordImage);
+        int wordImgId = R.id.wordImage;
+
+        ImageView image = findViewById(wordImgId);
         int resID = getResources().getIdentifier(refWord.wordInLWC, "drawable", getPackageName());
         image.setImageResource(resID);
 
-        ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
+        ImageView wordImage = findViewById(wordImgId);
         wordImage.setClickable(true);
 
         switch (challengeLevel) {
@@ -171,8 +174,8 @@ public class UnitedStates extends GameActivity {
 
         for (int buttonPair = 0; buttonPair < visibleGameButtons; buttonPair += 2) {
 
-            Button gameButtonA = (Button) findViewById(GAME_BUTTONS[buttonPair]);
-            Button gameButtonB = (Button) findViewById(GAME_BUTTONS[buttonPair + 1]);
+            Button gameButtonA = findViewById(GAME_BUTTONS[buttonPair]);
+            Button gameButtonB = findViewById(GAME_BUTTONS[buttonPair + 1]);
 
             String tileColorStr = colorList.get((buttonPair % 5) / 2);
             int tileColor = Color.parseColor(tileColorStr);
@@ -221,14 +224,12 @@ public class UnitedStates extends GameActivity {
             parseIndex++;
 
         }
-        //TextView constructedWord = findViewById(R.id.activeWordTextView); // KP
-        //constructedWord.setText(""); // KP
 
         TextView constructedWord = findViewById(R.id.activeWordTextView);
-        String initialDisplay = "";
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < numberOfPairs; i++)
-            initialDisplay += "__";
-        constructedWord.setText(initialDisplay);
+            sb.append("__");
+        constructedWord.setText(sb.toString());
 
         setAllGameButtonsClickable();
     }
@@ -249,8 +250,6 @@ public class UnitedStates extends GameActivity {
         String displayedWord;
         if (syllableGame.equals("S")){
            StringBuilder stringBuilder = new StringBuilder();
-
-           int index = 0;
            for (int i = 0; i < numberOfPairs; i++) {
                if (pairHasSelection[i]) {
                    stringBuilder.append(selections[2 * i]);
@@ -260,20 +259,11 @@ public class UnitedStates extends GameActivity {
                }
            }
 
-           /*
-           for (String s : selections) {
-               stringBuilder.append(s);
-           }
-           */
 
             displayedWord = stringBuilder.toString();
             constructedWord.setText(displayedWord);
         } else {
-            Tile[] tilesSelectedArray = new Tile[numberOfPairs];
-            ArrayList<Tile> tilesSelected = new ArrayList<>();
-            for (Tile tile : tileSelections) {
-                tilesSelected.add(tile);
-            }
+            ArrayList<Tile> tilesSelected = new ArrayList<>(Arrays.asList(tileSelections));
             displayedWord = combineTilesToMakeWord(tilesSelected, refWord, lastSelectedIndex);
             constructedWord.setText(displayedWord);
         }

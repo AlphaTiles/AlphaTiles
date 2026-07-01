@@ -881,8 +881,9 @@ public class Validator {
             ArrayList<String> gamesList = langPackGoogleSheet.getTabFromName("games").getCol(1);
             if (!gamesList.contains("Italy")) {
                 recommend(Message.Tag.Etc, "It is recommended that you include the Italy game");
-            } else if (wordlist.size() < 55) {
-                fatalError(Message.Tag.Etc, "the Italy game requires at least 54 words, you only provide " + wordlist.size());
+            } else if (wordList.size() < 54) {
+                // wordList size must be greater than or equal to 54, or Loteria won't work
+                fatalError(Message.Tag.Etc, "the Italy / Loteria game requires at least 54 words, but the wordlist only provides " + wordList.size());
             }
 
             if (gamesList.size() < 7) {
@@ -3310,21 +3311,22 @@ public class Validator {
         Path pathToValidator = rootPath.resolve("validator");
         Path pathToTempFolder = pathToValidator.resolve("temp");
         BufferedReader wordlistFileReader = new BufferedReader(new FileReader(pathToTempFolder.resolve("wordlist.txt").toFile(), StandardCharsets.UTF_8));
-        boolean header = true;
-        wordList = new ArrayList<Word>();
+        wordList = new ArrayList<>();
+        /*
+         * Potential fix change for the while loop, since having a conditional
+         * inside it introduces more complexity. Assumes that every wordlist
+         * starts with a header line.
+         */
+        wordlistFileReader.readLine(); // Skip the header line before the while loop starts
         String thisLine = wordlistFileReader.readLine();
         while (thisLine != null) {
             String[] thisLineArray = thisLine.split("\t");
-            if (header) {
-                header = false;
-            } else {
                 try {
                     Word word = new Word(thisLineArray[0], thisLineArray[1], thisLineArray[3], "", thisLineArray[5]);
                     wordList.add(word);
                 } catch (IndexOutOfBoundsException e) {
                     // this row in wordlist.txt is empty at some columns and cannot be assessed
                 }
-            }
             thisLine = wordlistFileReader.readLine();
         }
         wordlistFileReader.close();
