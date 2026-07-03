@@ -28,7 +28,6 @@ import java.util.Scanner;
 
 public class Earth extends AppCompatActivity {
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
     int playerNumber = -1;
     String playerString;
@@ -62,6 +61,7 @@ public class Earth extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
         if (scriptDirection.equals("RTL")) {
             ImageView goForwardImage = (ImageView) findViewById(R.id.goForward);
             ImageView goBackImage = (ImageView) findViewById(R.id.goBack);

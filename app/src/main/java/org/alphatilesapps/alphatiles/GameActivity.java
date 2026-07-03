@@ -62,7 +62,7 @@ public abstract class GameActivity extends AppCompatActivity {
     MediaPlayer mp3;
     String className;
     String country;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String scriptDirection;
     int gameNumber = 0;
     int playerNumber = -1;
     String playerString;
@@ -151,6 +151,8 @@ public abstract class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle state) {
         context = this;
+
+        scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
         soundSequencer = new Handler(Looper.getMainLooper());
         OnBackPressedCallback back = new OnBackPressedCallback(true) {

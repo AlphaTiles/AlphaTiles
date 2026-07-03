@@ -22,7 +22,7 @@ import java.util.Scanner;
 public class Resources extends AppCompatActivity {
 
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String scriptDirection;
 
     static int resourcesArraySize;      // the number of resources (plus the header row) in aa_resources.txt, as determined below
     static String[][] resourcesList;     // will capture the name, link and image name [3 items]
@@ -45,6 +45,8 @@ public class Resources extends AppCompatActivity {
         ImageView backwardImage;
         super.onCreate(savedInstanceState);
         context = this;
+
+        scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
         setContentView(R.layout.resources);
 
