@@ -152,6 +152,16 @@ public abstract class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle state) {
         context = this;
 
+        if (Start.langInfoList == null) {
+            // Process was killed and restarted directly into this screen.
+            // Relaunch from the beginning so static state gets repopulated.
+            Intent intent = new Intent(this, Start.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
         soundSequencer = new Handler(Looper.getMainLooper());
