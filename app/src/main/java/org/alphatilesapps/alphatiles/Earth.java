@@ -172,20 +172,21 @@ public class Earth extends AppCompatActivity {
             if (child instanceof TextView && child.getTag() != null) {
                 try {
                     int doorIndex = Integer.parseInt((String) earthCL.getChildAt(j).getTag()) - 1;
-                    String doorText = String.valueOf((pageNumber * doorsPerPage) + doorIndex + 1);
+                    int gameIndex = (pageNumber * doorsPerPage) + doorIndex;
+                    String doorText = String.valueOf(gameIndex + 1);
                     ((TextView) child).setText(doorText);
-                    if (((pageNumber * doorsPerPage) + doorIndex) >= Start.gameList.size()) {
+                    if (gameIndex >= Start.gameList.size()) {
                         ((TextView) child).setVisibility(View.INVISIBLE);
                     } else {
                         String project = "org.alphatilesapps.alphatiles.";
-                        String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).country;
-                        String challengeLevel = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).level;
-                        String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).mode;
+                        String country = Start.gameList.get(gameIndex).country;
+                        String challengeLevel = Start.gameList.get(gameIndex).level;
+                        String syllableGame = gameList.get(gameIndex).mode;
                         String stage;
-                        if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
+                        if (gameList.get(gameIndex).stage.equals("-")) {
                             stage = "1";
                         } else {
-                            stage = gameList.get((pageNumber * doorsPerPage) + doorIndex).stage;
+                            stage = gameList.get(gameIndex).stage;
                         }
                         String uniqueGameLevelPlayerModeStageID = project + country + challengeLevel + playerString + syllableGame + stage;
 
@@ -195,12 +196,15 @@ public class Earth extends AppCompatActivity {
                         // So we are forcing this game's door to initialize with a start
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {                            trackerCount = 12;
+                        String doorTextColor = Start.gameList.get(gameIndex).doorTextColor;
+                        if (!doorTextColor.isEmpty()) {
+                            ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(doorTextColor))));
+                        } else if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {                            trackerCount = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
                         } else if (trackerCount < 12) {
                             ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
                         } else { // >= 12
-                            String textColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).color;
+                            String textColor = Start.gameList.get(gameIndex).color;
                             ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(textColor))));
                         }
 
@@ -225,8 +229,7 @@ public class Earth extends AppCompatActivity {
                         Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
                         if (changeColor) {
                             DrawableCompat.setTint(wrappedDrawable, Color.parseColor(colorList.get(
-                                    Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage)
-                                            + doorIndex).color))));
+                                    Integer.parseInt(Start.gameList.get(gameIndex).color))));
                         }
                         ((TextView) child).setBackground(wrappedDrawable);
                         ((TextView) child).setVisibility(View.VISIBLE);

@@ -668,7 +668,7 @@ public class Start extends AppCompatActivity {
         gameList = new GameList();
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
-            String[] thisLineArray = thisLine.split("\t");
+            String[] thisLineArray = thisLine.split("\t", -1);
             if (header) {
                 gameList.gameNumberTitle = thisLineArray[0];
                 gameList.gameCountryTitle = thisLineArray[1];
@@ -678,9 +678,11 @@ public class Start extends AppCompatActivity {
                 gameList.gameInstrDurationTitle = thisLineArray[5];
                 gameList.gameModeTitle = thisLineArray[6];
                 gameList.gameStageTitle = thisLineArray[7];
+                gameList.gameDoorTextColorTitle = thisLineArray.length > 8 ? thisLineArray[8] : "";
                 header = false;
             } else {
-                Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7]);
+                String gameDoorTextColor = thisLineArray.length > 8 ? thisLineArray[8] : "";
+                Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], gameDoorTextColor);
                 if (!game.hasNull()) {
                     gameList.add(game);
                 }
@@ -958,8 +960,9 @@ public class Start extends AppCompatActivity {
         public String instructionDuration;
         public String mode; //JP : Syllable or Tile mode (S or T)
         public String stage; // LM The game will include tiles/words from all the stages up to and including the stage indicated in the row of aa_games.txt
+        public String doorTextColor;
 
-        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration, String gameMode, String stage) {
+        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration, String gameMode, String stage, String doorTextColor) {
             this.number = gameNumber;
             this.country = gameCountry;
             this.level = gameLevel;
@@ -968,6 +971,7 @@ public class Start extends AppCompatActivity {
             this.instructionDuration = gameInstrDuration;
             this.mode = gameMode;
             this.stage = stage;
+            this.doorTextColor = doorTextColor;
         }
 
         public boolean hasNull() {
@@ -2182,6 +2186,7 @@ public class Start extends AppCompatActivity {
         public String gameInstrDurationTitle;
         public String gameModeTitle;
         public String gameStageTitle;
+        public String gameDoorTextColorTitle;
 
     }
 

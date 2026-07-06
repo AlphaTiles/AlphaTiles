@@ -320,7 +320,7 @@ public class Validator {
             Map.entry("gametiles", "A1:Q"),
             Map.entry("wordlist", "A1:F"),
             Map.entry("keyboard", "A1:B"),
-            Map.entry("games", "A1:H"),
+            Map.entry("games", "A1:I"),
             Map.entry("syllables", "A1:G"),
             Map.entry("resources", "A1:C"),
             Map.entry("settings", "A1:B"),
@@ -527,6 +527,25 @@ public class Validator {
                 if (!available.contains(key.color)) {
                     fatalError(Message.Tag.Etc, "Keyboard uses color id " + key.color + ", which is not defined in the colors tab");
                 }
+            }
+            try {
+                for (ArrayList<String> row : langPackGoogleSheet.getTabFromName("games")) {
+                    if (row.get(0).equals("Door")) {
+                        continue;
+                    }
+                    String doorBackgroundColor = row.get(3);
+                    if (!available.contains(doorBackgroundColor)) {
+                        fatalError(Message.Tag.Etc, "Game door " + row.get(0) + " uses background color id " +
+                                doorBackgroundColor + ", which is not defined in the colors tab");
+                    }
+                    String doorTextColor = row.get(8);
+                    if (!doorTextColor.isEmpty() && !available.contains(doorTextColor)) {
+                        fatalError(Message.Tag.Etc, "Game door " + row.get(0) + " uses text color id " +
+                                doorTextColor + ", which is not defined in the colors tab");
+                    }
+                }
+            } catch (ValidatorException e) {
+                warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "the games tab");
             }
 
             // Compare the keys in keyboard to the words in wordlist
@@ -1185,7 +1204,7 @@ public class Validator {
         recommendations.addAll(filePresence.recommendations);
         boolean hasInstructionAudio = filePresence.okay("audio_instruction") && !filePresence.empty("audio_instruction");
         //tile and syllable audio have the extra step of checking against settings to see if the checks should be run
-        boolean syllableAudioAttempted = !filePresence.empty("syllable_audio");
+        boolean syllableAudioAttempted = decideIfAudioAttempted("syllables", 4, "audio_syllables_optional");
         boolean syllableAudioSetting = false;
         try {
             if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has syllable audio").get(1).equals("TRUE")) {
@@ -1205,7 +1224,10 @@ public class Validator {
             }
         }
 
-        boolean tileAudioAttempted = !filePresence.empty("tile_audio");
+        boolean tileAudioAttempted =
+                decideIfAudioAttempted("gametiles", 5, "audio_tiles_optional") ||
+                decideIfAudioAttempted("gametiles", 8, "audio_tiles_optional") ||
+                decideIfAudioAttempted("gametiles", 10, "audio_tiles_optional");
         boolean tileAudioSetting = false;
         try {
             if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has tile audio").get(1).equals("TRUE")) {
@@ -2086,7 +2108,9 @@ public class Validator {
                 } else if (this.get(i).size() < rowLen) {
                     for (int j = this.get(i).size(); j < rowLen; j++) {
 
-                        if (defaultValInTemplateTxt(this.name, j) != null) {
+                        if (isOptionalCell(this.name, j)) {
+                            this.get(i).add("");
+                        } else if (defaultValInTemplateTxt(this.name, j) != null) {
                             this.get(i).add(defaultValInTemplateTxt(this.name, j));
                             warn(Message.Tag.Etc, "The tab \"" + this.getName() + "\" is missing cells/columns which could be replaced " +
                                     "by default values found in the latest language pack template. " +
@@ -2104,7 +2128,9 @@ public class Validator {
                             fatalError(Message.Tag.Etc, "The cell at row " + (i + 1) + " column " + (j + 1) + " in " + this.name +
                                     " contains multiple lines. Please delete the 'enter' character ");
                         } else if (this.get(i).get(j).isEmpty()) {
-                            if (defaultValInTemplateTxt(this.name, j) != null) {
+                            if (isOptionalCell(this.name, j)) {
+                                continue;
+                            } else if (defaultValInTemplateTxt(this.name, j) != null) {
                                 this.get(i).set(j, defaultValInTemplateTxt(this.name, j));
                                 warn(Message.Tag.Etc, "The tab \"" + this.getName() + "\" is missing cells/columns which could be replaced " +
                                         "by default values found in the latest language pack template. " +
@@ -2331,6 +2357,26 @@ public class Validator {
      * @return True if the syllables tab contains more than six words parsed into syllables (they contain periods)
      * AND the syllables tab is not empty. False otherwise.
      */
+
+    private boolean decideIfAudioAttempted(String tabName, int colNum, String subFolderName) {
+        boolean tabContainsAudioNames = false;
+        boolean subFolderNotEmpty = false;
+
+        try {
+            ArrayList<String> audioNames = langPackGoogleSheet.getTabFromName(tabName).getCol(colNum);
+            audioNames.removeAll(Set.of("", "naWhileMPOnly", "X", "zz_no_audio_needed"));
+            tabContainsAudioNames = !audioNames.isEmpty();
+        } catch (ValidatorException e) {
+            warn(Message.Tag.Etc, FAILED_CHECK_WARNING + "tab '" + tabName + "'");
+        }
+
+        try {
+            subFolderNotEmpty = langPackDriveFolder.getFolderFromName(subFolderName).size() > 0;
+        } catch (ValidatorException ignored) {
+        }
+
+        return tabContainsAudioNames && subFolderNotEmpty;
+    }
     private boolean decideIfSyllablesAttempted() {
 
         boolean numerousWordsSpliced = false;
@@ -2653,6 +2699,10 @@ public class Validator {
             return null;
         }
         return null;
+    }
+
+    private static boolean isOptionalCell(String rawFileName, int col) {
+        return rawFileName.equals("games") && col == 8;
     }
 
     /**
