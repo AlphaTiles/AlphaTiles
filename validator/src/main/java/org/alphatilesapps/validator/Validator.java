@@ -900,8 +900,14 @@ public class Validator {
             if (!gamesList.contains("Malaysia")) {
                 recommend(Message.Tag.Etc, "it is recommended that you include the Malaysia game");
             }
-            if (!gamesList.contains("Iraq")) {
-                recommend(Message.Tag.Etc, "it is recommended that you include the Iraq game, either challenge level 1 (random words) or 2 (iconic words)");
+
+            try {
+                if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has tile audio").get(1).equals("TRUE")) {
+                    if (!gamesList.contains("Iraq")) {
+                        recommend(Message.Tag.Etc, "it is recommended that you include the Iraq game, either challenge level 1 (random words) or 2 (iconic words)");
+                    }
+                }
+            } catch (Exception ignored) {
             }
 
             if ((fourTileWords < 3 || threeTileWords < 1) && gamesList.contains("China")) {
