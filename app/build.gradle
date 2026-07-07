@@ -27,8 +27,11 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled = false
+            minifyEnabled = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE' // If using native C/C++ code
+            }
             // Optional code that customizes the .apk output name
             androidComponents {
                 onVariants(selector().withBuildType("release")) { variant ->
@@ -48,6 +51,11 @@ android {
         //Alpha Tiles internal team developers can find active product flavor definitions here:
         // https://docs.google.com/document/d/1a3satcmHFa5r6l7THrKLgxSWVCs-Mp2yOGyzk4oETsk/edit
 
+        engEnglish4 {
+            dimension "language"
+            applicationIdSuffix ".blue.engEnglish4"
+            resValue "string", "app_name", 'Alpha Tiles: Ready to Read'
+        }
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
