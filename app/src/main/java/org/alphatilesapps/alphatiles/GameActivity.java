@@ -179,7 +179,6 @@ public abstract class GameActivity extends AppCompatActivity {
         gameNumber = getIntent().getIntExtra("gameNumber", 0);
         country = getIntent().getStringExtra("country");
         playerString = Util.returnPlayerStringToAppend(playerNumber);
-        globalPoints = getIntent().getIntExtra("globalPoints", 0);
         studentGrade = getIntent().getCharExtra("studentGrade", '0');
 
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
@@ -188,6 +187,7 @@ public abstract class GameActivity extends AppCompatActivity {
         trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
         hasChecked12Trackers = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
         points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
+        globalPoints = prefs.getInt(playerString + "_globalPoints", 0);
 
         cumulativeStageBasedTileList.addAll(Start.SAD);
         for(int s=0; s<stage; s++){
@@ -312,7 +312,8 @@ public abstract class GameActivity extends AppCompatActivity {
             editor.apply();
             editor.putInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", trackerCount);
             editor.apply();
-            getIntent().putExtra("globalPoints", globalPoints);
+            editor.putInt(playerString + "_globalPoints", globalPoints);
+            editor.apply();
 
             // Update tracker icons
             for (int t = 0; t < TRACKERS.length; t++) {
@@ -400,10 +401,12 @@ public abstract class GameActivity extends AppCompatActivity {
 
                             if (!hasChecked12Trackers) {
                                 foundNextUncompletedGame = true;
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putInt(playerString + "_globalPoints", globalPoints);
+                                editor.apply();
                                 intent.putExtra("challengeLevel", challengeLevel);
                                 intent.putExtra("stage", stage);
                                 intent.putExtra("syllableGame", syllableGame);
-                                intent.putExtra("globalPoints", globalPoints);
                                 intent.putExtra("gameNumber", gameNumber);
                                 intent.putExtra("country", country);
                                 startActivity(intent);

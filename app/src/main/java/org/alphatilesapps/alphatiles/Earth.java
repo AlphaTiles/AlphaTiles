@@ -32,6 +32,7 @@ public class Earth extends AppCompatActivity {
     int playerNumber = -1;
     String playerString;
     char grade;
+    SharedPreferences prefs;
     int pageNumber; // Games 001 to 033 are displayed on page 1, games 034 to 066 are displayed on page 2, etc.
     int globalPoints;
     int doorsPerPage = 33;
@@ -82,8 +83,8 @@ public class Earth extends AppCompatActivity {
             activePlayerImage.setRotationY(180);
         }
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        globalPoints = getIntent().getIntExtra("globalPoints", 0);
+        prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        globalPoints = prefs.getInt(playerString + "_globalPoints", 0);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(globalPoints));
@@ -174,7 +175,7 @@ public class Earth extends AppCompatActivity {
 
     public void updateDoors() {
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         int trackerCount;
 
         for (int j = 0; j < earthCL.getChildCount(); j++) {
@@ -318,8 +319,11 @@ public class Earth extends AppCompatActivity {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(playerString + "_globalPoints", globalPoints);
+        editor.apply();
+
         intent.putExtra("challengeLevel", challengeLevel);
-        intent.putExtra("globalPoints", globalPoints);
         intent.putExtra("gameNumber", gameNumber);
         intent.putExtra("pageNumber", pageNumber);
         intent.putExtra("country", country);
