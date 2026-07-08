@@ -135,6 +135,11 @@ public class Colombia extends GameActivity {
         ImageView wordImage = (ImageView) findViewById(R.id.wordImage);
         wordImage.setClickable(true);
 
+        if (totalScreens > 1) {
+            keyboardScreenNo = 1;
+            updateKeyboard();
+        }
+
     }
 
     private void setWord() {

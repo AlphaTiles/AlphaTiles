@@ -105,9 +105,23 @@ public class Peru extends GameActivity {
     public void playAgain() {
         repeatLocked = true;
         setAdvanceArrowToGray();
-        chooseWord();
-        parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
-        int tileLength = parsedRefWordTileArray.size();
+
+        int sanityCounter1 = 0;
+        int tileLength;
+
+// This loop keeps "re-rolling" the word until it finds one with 2+ tiles
+        do {
+            chooseWord();
+            parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
+            tileLength = parsedRefWordTileArray.size();
+            sanityCounter1++;
+        } while (tileLength < 2 && sanityCounter1 < 100);
+
+// Safety net: If we check 100 words and none are valid, exit to menu instead of freezing
+        if (sanityCounter1 >= 100) {
+            goBackToEarth(null);
+            return;
+        }
 
         // Set thematic colors for four word choice TextViews, also make clickable
         for (int i = 0; i < GAME_BUTTONS.length; i++) {

@@ -28,11 +28,11 @@ import java.util.Scanner;
 
 public class Earth extends AppCompatActivity {
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
     int playerNumber = -1;
     String playerString;
     char grade;
+    SharedPreferences prefs;
     int pageNumber; // Games 001 to 033 are displayed on page 1, games 034 to 066 are displayed on page 2, etc.
     int globalPoints;
     int doorsPerPage = 33;
@@ -42,6 +42,16 @@ public class Earth extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Start.langInfoList == null) {
+            // Process was killed and restarted directly into this screen.
+            // Relaunch from the beginning so static state gets repopulated.
+            Intent intent = new Intent(this, Start.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         // Disable back navigation
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -62,6 +72,7 @@ public class Earth extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
         if (scriptDirection.equals("RTL")) {
             ImageView goForwardImage = (ImageView) findViewById(R.id.goForward);
             ImageView goBackImage = (ImageView) findViewById(R.id.goBack);
@@ -72,8 +83,8 @@ public class Earth extends AppCompatActivity {
             activePlayerImage.setRotationY(180);
         }
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        globalPoints = getIntent().getIntExtra("globalPoints", 0);
+        prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        globalPoints = prefs.getInt(playerString + "_globalPoints", 0);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(globalPoints));
@@ -164,7 +175,7 @@ public class Earth extends AppCompatActivity {
 
     public void updateDoors() {
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         int trackerCount;
 
         for (int j = 0; j < earthCL.getChildCount(); j++) {
@@ -315,8 +326,11 @@ public class Earth extends AppCompatActivity {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(playerString + "_globalPoints", globalPoints);
+        editor.apply();
+
         intent.putExtra("challengeLevel", challengeLevel);
-        intent.putExtra("globalPoints", globalPoints);
         intent.putExtra("gameNumber", gameNumber);
         intent.putExtra("pageNumber", pageNumber);
         intent.putExtra("country", country);
