@@ -298,7 +298,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
                 editor.apply();
-                globalPoints = prefs.getInt(playerString + "_globalPoints", 0);
+                editor.putInt(playerString + "_globalPoints", globalPoints);
                 editor.apply();
             }
             if (recentAttempts.size() > masteryLookBackWindow) {
