@@ -63,7 +63,7 @@ public abstract class GameActivity extends AppCompatActivity {
     MediaPlayer mp3;
     String className;
     String country;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String scriptDirection;
     int gameNumber = 0;
     int playerNumber = -1;
     String playerString;
@@ -161,6 +161,18 @@ public abstract class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle state) {
         context = this;
 
+        if (Start.langInfoList == null) {
+            // Process was killed and restarted directly into this screen.
+            // Relaunch from the beginning so static state gets repopulated.
+            Intent intent = new Intent(this, Start.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+
         soundSequencer = new Handler(Looper.getMainLooper());
         OnBackPressedCallback back = new OnBackPressedCallback(true) {
             @Override
@@ -183,7 +195,6 @@ public abstract class GameActivity extends AppCompatActivity {
         // Values that persist for a player across all games (including their global points)
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         playerString = Util.returnPlayerStringToAppend(playerNumber);
-        globalPoints = getIntent().getIntExtra("globalPoints", 0);
         studentGrade = getIntent().getCharExtra("studentGrade", '0');
 
         // Values that track the player's performance (including their game specific points)
@@ -191,6 +202,7 @@ public abstract class GameActivity extends AppCompatActivity {
         className = getClass().getName();
         uniqueGameLevelPlayerModeStageID = className + challengeLevel + playerString + syllableGame + stage;
         points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
+        globalPoints = prefs.getInt(playerString + "_globalPoints", 0);
         totalAttempts = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_totalAttempts", 0);
         savedAttempts = prefs.getString(uniqueGameLevelPlayerModeStageID + "_savedAttempts","");
         masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
@@ -286,7 +298,8 @@ public abstract class GameActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
                 editor.apply();
-                getIntent().putExtra("globalPoints", globalPoints);
+                globalPoints = prefs.getInt(playerString + "_globalPoints", 0);
+                editor.apply();
             }
             if (recentAttempts.size() > masteryLookBackWindow) {
                 int removed = recentAttempts.removeFirst(); //
@@ -507,10 +520,12 @@ public abstract class GameActivity extends AppCompatActivity {
 
                                 if (!masteryAchieved) {
                                     foundNextUncompletedGame = true;
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.putInt(playerString + "_globalPoints", globalPoints);
+                                    editor.apply();
                                     intent.putExtra("challengeLevel", challengeLevel);
                                     intent.putExtra("stage", stage);
                                     intent.putExtra("syllableGame", syllableGame);
-                                    intent.putExtra("globalPoints", globalPoints);
                                     intent.putExtra("gameNumber", gameNumber);
                                     intent.putExtra("country", country);
                                     intent.putExtra("masteryLookBackWindow", masteryLookBackWindow);
