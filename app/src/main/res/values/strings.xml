@@ -287,4 +287,37 @@
 
     <string name="expiration_dialog_message">This app has expired.</string>
     <string name="expiration_dialog_title">Expired</string>
+    <string name="mark001">Mark 001</string>
+    <string name="mark002">Mark 002</string>
+    <string name="mark003">Mark 003</string>
+    <string name="mark004">Mark 004</string>
+    <string name="mark005">Mark 005</string>
+    <string name="mark006">Mark 006</string>
+    <string name="mark007">Mark 007</string>
+    <string name="mark008">Mark 008</string>
+    <string name="mark009">Mark 009</string>
+    <string name="mark010">Mark 010</string>
+    <string name="mark011">Mark 011</string>
+    <string name="mark012">Mark 012</string>
+    <string name="mark014">Mark 014</string>
+    <string name="mark015">Mark 015</string>
+    <string name="mark013">Mark 013</string>
+    <string name="mark016">Mark 016</string>
+    <string name="mark017">Mark 017</string>
+    <string name="mark018">Mark 018</string>
+    <string name="mark019">Mark 019</string>
+    <string name="mark020">Mark 020</string>
+    <string name="mark021">Mark 021</string>
+    <string name="mark022">Mark 022</string>
+    <string name="mark023">Mark 023</string>
+    <string name="mark024">Mark 024</string>
+    <string name="mark025">Mark 025</string>
+    <string name="mark026">Mark 026</string>
+    <string name="mark027">Mark 027</string>
+    <string name="mark028">Mark 028</string>
+    <string name="mark029">Mark 029</string>
+    <string name="mark030">Mark 030</string>
+    <string name="mark031">Mark 031</string>
+    <string name="mark033">Mark 033</string>
+    <string name="mark032">Mark 032</string>
 </resources>
