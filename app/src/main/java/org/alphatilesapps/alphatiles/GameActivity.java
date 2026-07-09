@@ -87,6 +87,7 @@ public abstract class GameActivity extends AppCompatActivity {
     String savedAttempts;
 
     int recentCorrectCount = 0;
+    int totalCorrect;
     boolean masteryAchieved = false;
 
     char studentGrade;
@@ -192,12 +193,12 @@ public abstract class GameActivity extends AppCompatActivity {
         masteryRequiredAccuracy = getIntent().getIntExtra("masteryRequiredAccuracy", 90);
         masteryMinAttempts = getIntent().getIntExtra("masteryMinAttempts", 20);
 
-        // Values that persist for a player across all games (including their global points)
+        // Values that persist for a player across all games
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         playerString = Util.returnPlayerStringToAppend(playerNumber);
         studentGrade = getIntent().getCharExtra("studentGrade", '0');
 
-        // Values that track the player's performance (including their game specific points)
+        // Values that track the player's performance
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         className = getClass().getName();
         uniqueGameLevelPlayerModeStageID = className + challengeLevel + playerString + syllableGame + stage;
@@ -205,6 +206,8 @@ public abstract class GameActivity extends AppCompatActivity {
         globalPoints = prefs.getInt(playerString + "_globalPoints", 0);
         totalAttempts = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_totalAttempts", 0);
         savedAttempts = prefs.getString(uniqueGameLevelPlayerModeStageID + "_savedAttempts","");
+        totalCorrect = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_totalCorrect", 0);
+        LOGGER.info("GameActivityX1: totalCorrect = " + totalCorrect);
         masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
 
         android.util.Log.d("Mastery", "01: className = " + className);
@@ -293,12 +296,13 @@ public abstract class GameActivity extends AppCompatActivity {
             if (correct) {
                 globalPoints += pointsIncrease; // points across all games for this player
                 points += pointsIncrease; // points in this game-level combo for this player
+                totalCorrect ++; // total right answers across all games for this player
                 recentCorrectCount += result;
 
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
-                editor.apply();
                 editor.putInt(playerString + "_globalPoints", globalPoints);
+                editor.putInt(uniqueGameLevelPlayerModeStageID + "_totalCorrect", totalCorrect);
                 editor.apply();
             }
             if (recentAttempts.size() > masteryLookBackWindow) {

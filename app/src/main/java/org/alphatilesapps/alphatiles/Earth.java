@@ -24,6 +24,7 @@ import android.widget.TextView;
 import static org.alphatilesapps.alphatiles.Start.*;
 
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 
 public class Earth extends AppCompatActivity {
@@ -35,10 +36,10 @@ public class Earth extends AppCompatActivity {
     SharedPreferences prefs;
     int pageNumber; // Games 001 to 033 are displayed on page 1, games 034 to 066 are displayed on page 2, etc.
     int globalPoints;
+//    int totalCorrect;
     int doorsPerPage = 33;
     ConstraintLayout earthCL;
 
-    private static final int TRACKER_COUNT_PER_IMAGE = 12;
     private static final int MAX_TRACKER_MARK_IMAGES = 22;
 
     private static final int[] MARK_VIEW_IDS = {
@@ -50,6 +51,8 @@ public class Earth extends AppCompatActivity {
             R.id.textMark026, R.id.textMark027, R.id.textMark028, R.id.textMark029, R.id.textMark030,
             R.id.textMark031, R.id.textMark032, R.id.textMark033
     };
+
+    private static final Logger LOGGER = Logger.getLogger( Earth.class.getName() );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +200,6 @@ public class Earth extends AppCompatActivity {
     public void updateDoors() {
 
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        int trackerCount;
 
         for (int j = 0; j < earthCL.getChildCount(); j++) {
             View child = earthCL.getChildAt(j);
@@ -213,29 +215,21 @@ public class Earth extends AppCompatActivity {
                     if (((pageNumber * doorsPerPage) + doorIndex) >= Start.gameList.size()) {
                         ((TextView) child).setVisibility(View.INVISIBLE);
                     } else {
-                        String project = "org.alphatilesapps.alphatiles.";
+                        String uniqueGameLevelPlayerModeStageID = getUniqueID((pageNumber * doorsPerPage) + doorIndex);
                         String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).country;
-                        String challengeLevel = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).level;
-                        String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).mode;
-                        String stage;
-                        if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
-                            stage = "1";
-                        } else {
-                            stage = gameList.get((pageNumber * doorsPerPage) + doorIndex).stage;
-                        }
-                        String uniqueGameLevelPlayerModeStageID = project + country + challengeLevel + playerString + syllableGame + stage;
 
-                        trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
+//                      totalCorrect = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_totalCorrect", 0);
 
                         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
                         int points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
                         boolean masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
 
-                        // This is currently the only game that has no right/wrong responses with an incrementing trackerCount variable
+                        // This is currently the only game that has no right/wrong responses with an incrementing totalCorrect variable
                         // So we are forcing this game's door to initialize with a start
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {                            trackerCount = 12;
+                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {
+//                            totalCorrect = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
                         } else if (!masteryAchieved) {
                             ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
@@ -297,7 +291,7 @@ public class Earth extends AppCompatActivity {
 
     }
 
-    private int getTrackerCountForGame(int gameIndex, SharedPreferences prefs) {
+    private String getUniqueID(int gameIndex) {
         String project = "org.alphatilesapps.alphatiles.";
         String country = Start.gameList.get(gameIndex).country;
         String challengeLevel = Start.gameList.get(gameIndex).level;
@@ -308,9 +302,8 @@ public class Earth extends AppCompatActivity {
         } else {
             stage = gameList.get(gameIndex).stage;
         }
-        String uniqueGameLevelPlayerModeStageID = project + country + challengeLevel
-                + playerString + syllableGame + stage;
-        return prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
+
+        return project + country + challengeLevel + playerString + syllableGame + stage;
     }
 
     private void updateAllMarks(SharedPreferences prefs) {
@@ -325,31 +318,49 @@ public class Earth extends AppCompatActivity {
                 mark.setVisibility(View.INVISIBLE);
                 continue;
             }
-            int trackerCount = getTrackerCountForGame(gameIndex, prefs);
-            updateMarkForTrackerCount(mark, trackerCount);
+            LOGGER.info("EarthX1: getUniqueID(gameIndex) = " + getUniqueID(gameIndex));
+            int correct = prefs.getInt(getUniqueID(gameIndex) + "_totalCorrect", 0);
+            LOGGER.info("EarthX2: updateAllMarks: correct = " + correct);
+            int masteryLookBackWindow = gameList.get((pageNumber * doorsPerPage) + doorIndex).lookBack;
+            updateMarkForTotalCorrect(mark, gameIndex, correct, masteryLookBackWindow);
         }
     }
 
     /**
-     * trackerCount tiers (each spans 12 counts):
-     * 0–11: hidden
-     * 12–23: tracker_01, 24–35: tracker_02, 36–47: tracker_03, 48–59: tracker_04, 60+: tracker_05
+     * tracker tiers (each tier is the size of masteryLookBackWindow):
+     * Gem: none: 0 to one less than masteryLookBackWindow
+     * Gem: # 1 : masteryLookBackWindow to ((2*masteryLookBackWindow)–1), but only if masteryAchieve = true
+     * Gem: # 2 : (2*masteryLookBackWindow) to ((3*masteryLookBackWindow)–1), but only if masteryAchieve = true
+     * etc.
      * Position comes from earth.xml (one mark view per door); only the image changes here.
      */
-    private void updateMarkForTrackerCount(TextView mark, int trackerCount) {
-        int trackerTier = trackerCount / TRACKER_COUNT_PER_IMAGE;
+    private void updateMarkForTotalCorrect(TextView mark, int gameIndex, int correct, int masteryLookBackWindow) {
+
+        LOGGER.info("EarthX3: gameIndex = " + gameIndex);
+        LOGGER.info("EarthX4: correct = " + correct);
+        LOGGER.info("EarthX5: masteryLookBackWindow = " + masteryLookBackWindow);
+
+        int trackerTier = correct / masteryLookBackWindow;
+        LOGGER.info("EarthX6: trackerTier = " + trackerTier);
         if (trackerTier < 1) {
             mark.setVisibility(View.INVISIBLE);
+            LOGGER.info("EarthX7: View.INVISIBLE");
             return;
         }
 
-        int imageIndex = Math.min(MAX_TRACKER_MARK_IMAGES, trackerTier);
-        int trackerDrawableId = getResources().getIdentifier(
-                "tracker_" + String.format("%02d", imageIndex), "drawable", getPackageName());
-        if (trackerDrawableId != 0) {
-            mark.setBackgroundResource(trackerDrawableId);
+        boolean masteryAchieved = prefs.getBoolean(getUniqueID(gameIndex) + "_masteryAchieved", false);
+
+        if (masteryAchieved) {
+            int imageIndex = Math.min(MAX_TRACKER_MARK_IMAGES, trackerTier);
+            int trackerDrawableId = getResources().getIdentifier(
+                    "tracker_" + String.format("%02d", imageIndex), "drawable", getPackageName());
+            if (trackerDrawableId != 0) {
+                mark.setBackgroundResource(trackerDrawableId);
+            }
+            mark.setVisibility(View.VISIBLE);
+            LOGGER.info("EarthX8: View.VISIBLE");
+
         }
-        mark.setVisibility(View.VISIBLE);
     }
 
     public void goToAboutPage(View view) {
