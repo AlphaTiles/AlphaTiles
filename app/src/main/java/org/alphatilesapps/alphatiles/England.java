@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.alphatilesapps.alphatiles.Start.wordList;
+import static org.alphatilesapps.alphatiles.Start.*;
+
+import androidx.core.content.ContextCompat;
 
 public class England extends GameActivity {
     final int BOARD_SIZE = 16;
@@ -23,6 +25,8 @@ public class England extends GameActivity {
     int currentTargetIndex = 0;
     Start.Word firstWord;
     TextView currentActiveWordView = null; // Tracks the currently highlighted word
+    int currentRoundIndex = 0; // round of current session; resets when activity is recreated
+    String currentRoundColor; // hex color for current round, set once per round
 
     protected static final int[] GAME_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04,
@@ -44,14 +48,13 @@ public class England extends GameActivity {
     @Override
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
-        int resID;
+        int audioInstructionsResID;
         try {
-            resID = res.getIdentifier(Start.gameList.get(gameNumber - 1)
-                    .instructionAudioName, "raw", context.getPackageName());
-        } catch (NullPointerException | IndexOutOfBoundsException e) {
-            resID = 0;
+            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
+        } catch (NullPointerException e) {
+            audioInstructionsResID = -1;
         }
-        return resID;
+        return audioInstructionsResID;
     }
 
     @Override
@@ -65,15 +68,20 @@ public class England extends GameActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.england);
         context = this;
-        int gameID = R.id.englandCL;
+        setContentView(R.layout.england);
 
-        ActivityLayouts.applyEdgeToEdge(this, gameID);
+        ActivityLayouts.applyEdgeToEdge(this, R.id.englandCL);
         ActivityLayouts.setStatusAndNavColors(this);
 
         if (scriptDirection.equals("RTL")) {
-            fixConstraintsRTL(gameID);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView repeatImage = findViewById(R.id.repeatImage);
+
+            instructionsImage.setRotationY(180);
+            repeatImage.setRotationY(180);
+
+            fixConstraintsRTL(R.id.englandCL);
         }
 
         visibleGameButtons = BOARD_SIZE;
@@ -88,10 +96,10 @@ public class England extends GameActivity {
         }
 
         updatePointsAndTrackers(0);
-        initializeChainGame();
+        playAgain();
     }
 
-    private void initializeChainGame() {
+    private void playAgain() {
         repeatLocked = true;
         setAdvanceArrowToGray();
         currentTargetIndex = 0;
@@ -113,6 +121,9 @@ public class England extends GameActivity {
             goBackToEarth(null);
             return;
         }
+
+        currentRoundColor = colorList.get(currentRoundIndex % colorList.size());
+        currentRoundIndex++;
 
         Collections.shuffle(wordPool);
         for (int i = 0; i < BOARD_SIZE && i < wordPool.size(); i++) {
@@ -138,7 +149,7 @@ public class England extends GameActivity {
                 tile.setText("");
                 tile.setBackgroundResource(R.drawable.tile_white_background);
                 if (tile.getBackground() != null) {
-                    tile.getBackground().clearColorFilter();
+                    tile.getBackground().mutate().clearColorFilter();
                 }
 
                 int resID = getResources().getIdentifier(gameWords.get(i).wordInLWC, "drawable", getPackageName());
@@ -159,7 +170,7 @@ public class England extends GameActivity {
             currentActiveWordView.setBackgroundResource(R.drawable.tile_white_background);
             if (currentActiveWordView.getBackground() != null) {
                 // .mutate() is crucial here so we don't accidentally turn ALL tiles green!
-                currentActiveWordView.getBackground().mutate().setColorFilter(Color.parseColor("#4CAF50"), PorterDuff.Mode.SRC_ATOP);
+                currentActiveWordView.getBackground().mutate().setColorFilter(Color.parseColor(currentRoundColor), PorterDuff.Mode.SRC_ATOP);
             }
         }
 
@@ -169,7 +180,7 @@ public class England extends GameActivity {
         // 3. Apply the elegant black border to the NEW active view
         if (currentActiveWordView != null) {
             android.graphics.drawable.GradientDrawable border = new android.graphics.drawable.GradientDrawable();
-            border.setColor(Color.parseColor("#4CAF50")); // Keep the green background
+            border.setColor(Color.parseColor(currentRoundColor)); // Round-specific background color
             border.setStroke(8, Color.BLACK); // 8-pixel elegant black border
 
             // Convert 2dp to pixels to perfectly match tile_white_background.xml
@@ -185,7 +196,7 @@ public class England extends GameActivity {
             @Override
             public void run() {
                 try {
-                    Drawable drawable = getResources().getDrawable(resID);
+                    Drawable drawable = ContextCompat.getDrawable(context, resID);
                     if (drawable != null) {
                         int availableWidth = (int) (textView.getWidth() * 0.8);
                         int availableHeight = (int) (textView.getHeight() * 0.8);
@@ -206,13 +217,14 @@ public class England extends GameActivity {
         });
     }
 
-    public void onSelection(View view) {
+    public void onBtnClick(View view) {
         if (mediaPlayerIsPlaying || view.getTag() == null) return;
-        int index = Integer.parseInt(view.getTag().toString()) - 1;
-        handleCardClick(index);
+        int cardNo = Integer.parseInt(view.getTag().toString());
+        respondToCardSelection(cardNo);
     }
 
-    private void handleCardClick(int index) {
+    private void respondToCardSelection(int justClickedCard) {
+        int index = justClickedCard - 1;
         if (index >= gameWords.size() || flippedCards[index]) return;
 
         if (gameWords.get(index).wordInLOP.equals(refWord.wordInLOP)) {
@@ -253,9 +265,6 @@ public class England extends GameActivity {
                         public void run() {
                             // Step 2: Swap the visuals while the card is invisible
                             tile.setCompoundDrawables(null, null, null, null);
-                            if (tile.getBackground() != null) {
-                                tile.getBackground().mutate().setColorFilter(Color.parseColor("#4CAF50"), PorterDuff.Mode.SRC_ATOP);
-                            }
                             tile.setTextColor(Color.WHITE);
 
                             // Handle the game logic
@@ -270,7 +279,7 @@ public class England extends GameActivity {
                                 highlightActiveWord(null); // Clear the border when the game is won
                                 tile.setBackgroundResource(R.drawable.tile_white_background);
                                 if (tile.getBackground() != null) {
-                                    tile.getBackground().mutate().setColorFilter(Color.parseColor("#4CAF50"), PorterDuff.Mode.SRC_ATOP);
+                                    tile.getBackground().mutate().setColorFilter(Color.parseColor(currentRoundColor), PorterDuff.Mode.SRC_ATOP);
                                 }
 
                                 updatePointsAndTrackers(4); // This locks the UI
@@ -299,7 +308,11 @@ public class England extends GameActivity {
     }
 
     public void repeatGame(View view) {
-        if (!repeatLocked) initializeChainGame();
+
+        if (!repeatLocked) {
+            playAgain();
+        }
+
     }
 
     @Override
@@ -315,4 +328,11 @@ public class England extends GameActivity {
         ImageView repeatImage = findViewById(R.id.repeatImage);
         if (repeatImage != null) repeatImage.setClickable(true);
     }
+
+    public void playAudioInstructions(View view) {
+        if (getAudioInstructionsResID() > 0) {
+            super.playAudioInstructions(view);
+        }
+    }
+
 }
