@@ -363,7 +363,6 @@ public class Romania extends GameActivity {
         directionIsForward = true;
         Start.Tile oldTile = activeTile;
         activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
-        // LOGGER.info("goToNextTile: " + oldTile.text +"/" + activeTile.text);
         if (scanSetting == 1) {
             while (Start.wordList.numberOfWordsForActiveTile(activeTile, 1) == 0) {
                 oldTile = activeTile;
@@ -375,7 +374,6 @@ public class Romania extends GameActivity {
                 oldTile = activeTile;
                 activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
             }
-            // LOGGER.info("goToNextTile: " + oldTile.text +"/" + activeTile.text);
         } else {
             while ((activeTile.text.length() == 1 && Character.isWhitespace(activeTile.text.charAt(0))) ||
                     Start.wordList.numberOfWordsForActiveTile(activeTile, 3) == 0) {
@@ -387,7 +385,6 @@ public class Romania extends GameActivity {
         // loop until we find a new one (same text - the type will be different).
         if (!differentiatesTileTypes && MULTITYPE_TILES.contains(activeTile.text)) {
             while (activeTile.text.equals(oldTile.text)) {
-                LOGGER.info("goToNextTile: skip to one more after " + activeTile.text);
                 oldTile = activeTile;
                 activeTile = cumulativeStageBasedTileList.returnNextTile(oldTile);
             }
@@ -398,7 +395,6 @@ public class Romania extends GameActivity {
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile.text);
         editor.putString("typeOfLastActiveTileGame001_player" + playerString, activeTile.typeOfThisTileInstance);
         editor.apply();
-        // LOGGER.info("goToNextTile: " + oldTile.text +"/" + activeTile.text);
         setUpBasedOnGameTile(activeTile);
     }
 
@@ -426,7 +422,6 @@ public class Romania extends GameActivity {
         // loop until we find a new one (same text - the type will be different).
         if (!differentiatesTileTypes && MULTITYPE_TILES.contains(activeTile.text)) {
             while (activeTile.text.equals(oldTile.text)) {
-                LOGGER.info("goToPreviousTile: skip to one more before " + activeTile.text);
                 oldTile = activeTile;
                 activeTile = cumulativeStageBasedTileList.returnPreviousTile(oldTile);
             }

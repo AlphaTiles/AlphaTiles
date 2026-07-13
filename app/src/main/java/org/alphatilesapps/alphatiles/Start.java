@@ -132,7 +132,10 @@ public class Start extends AppCompatActivity {
         enhancedAudioLoadingLog = getBooleanFromSettings("Enhanced Audio Loading Log", false);
         secondChances = getBooleanFromSettings("Can the player make additional attempts after an initial incorrect response", true);
 
-        String uponMasterySetting = settingsList.find("After 12 checked trackers");
+        String uponMasterySetting = settingsList.find("After demonstrating game mastery"); // new setup and new search term
+        if (uponMasterySetting.equals("")) {
+            uponMasterySetting = settingsList.find("After 12 checked trackers"); // prior setup and prior search term
+        }
         if (!uponMasterySetting.equals("")) {
             uponMastery = Integer.valueOf(uponMasterySetting);
         } else {

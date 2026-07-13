@@ -89,6 +89,7 @@ public abstract class GameActivity extends AppCompatActivity {
     int recentCorrectCount = 0;
     int totalCorrect;
     boolean masteryAchieved = false;
+    boolean celebratingNow = false;
 
     char studentGrade;
     long levelBegunTime;
@@ -183,6 +184,8 @@ public abstract class GameActivity extends AppCompatActivity {
         };
         this.getOnBackPressedDispatcher().addCallback(back);
 
+        celebratingNow = false;
+
         // Values that define the game's (specific door's) structure; these values vary by game (door) but never change within a game (door)
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         stage = getIntent().getIntExtra("stage", 7);
@@ -207,10 +210,7 @@ public abstract class GameActivity extends AppCompatActivity {
         totalAttempts = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_totalAttempts", 0);
         savedAttempts = prefs.getString(uniqueGameLevelPlayerModeStageID + "_savedAttempts","");
         totalCorrect = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_totalCorrect", 0);
-        LOGGER.info("GameActivityX1: totalCorrect = " + totalCorrect);
         masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
-
-        android.util.Log.d("Mastery", "01: className = " + className);
 
         deserializeRecentAttempts();
 
@@ -359,7 +359,6 @@ public abstract class GameActivity extends AppCompatActivity {
                 if (gameList.get(gameNumber - 1).country.equals("Georgia") && challengeLevel > 6) {
                     displayedChallengeLevel = displayedChallengeLevel - 6;
                 }
-                android.util.Log.d("ProgressBars", "displayedChallengeLevel=" + displayedChallengeLevel);
                 challengeLevelBox.setText(String.valueOf(displayedChallengeLevel));
             }
         }
@@ -377,12 +376,8 @@ public abstract class GameActivity extends AppCompatActivity {
             accuracyBar = findViewById(R.id.accuracyBar);
 
             if (attemptsBar == null || accuracyBar == null) {
-                android.util.Log.d("ProgressBars", "BARS ARE NULL");
                 return;
             }
-
-            android.util.Log.d("ProgressBars", "totalAttempts=" + totalAttempts + "[min=" + masteryMinAttempts + "] / accuracy=" + recentAccuracy
-                    + " [req=" + masteryRequiredAccuracy + "] / recentCorrect=" + recentCorrectCount);
 
             int baseColor = (gameColor != 0) ? gameColor : Color.BLACK;
 
@@ -416,13 +411,10 @@ public abstract class GameActivity extends AppCompatActivity {
         }
         protected void ifMasteryThenWhat() {
 
-            android.util.Log.d("Mastery", "A: entering ifMasteryThenWhat()");
-
             if (totalAttempts >= masteryMinAttempts && recentAccuracy >= masteryRequiredAccuracy && !masteryAchieved) {
 
-                android.util.Log.d("Mastery", "B: inside main if{} statement");
-
                 masteryAchieved = true;
+                celebratingNow = true;
 
                 setOptionsRowUnclickable();
                 setAllGameButtonsUnclickable();
@@ -434,8 +426,6 @@ public abstract class GameActivity extends AppCompatActivity {
                 // uponMastery option 2:
                 // App returns player to Earth (player can re-enter game and will be returned to Earth again reaching mastery again)
                 if (masteryAchieved && uponMastery == 2){
-
-                    android.util.Log.d("Mastery", "C2: inside uponMastery == 2");
 
                     soundSequencer.postDelayed(new Runnable() {
                         public void run() {
@@ -450,8 +440,6 @@ public abstract class GameActivity extends AppCompatActivity {
                 // uponMastery option 3: app displays celebration screen and moves on to the next game where mastery has not been shown yet
                 if (masteryAchieved && uponMastery == 3) {
 
-                    android.util.Log.d("Mastery", "C3: inside uponMastery == 3");
-
                     setOptionsRowUnclickable();
                     setAllGameButtonsUnclickable();
                     soundSequencer.postDelayed(new Runnable() {
@@ -463,8 +451,6 @@ public abstract class GameActivity extends AppCompatActivity {
                             finish();
                         }
                     }, correctSoundDuration + 1800);
-
-                    android.util.Log.d("Mastery", "D3: finished postDelayed");
 
                     // Then switch to next uncompleted game after 4 seconds
                     Timer nextScreenTimer = new Timer();
@@ -478,12 +464,8 @@ public abstract class GameActivity extends AppCompatActivity {
                             boolean foundNextUncompletedGame = false;
                             int repeat = 0;
 
-                            android.util.Log.d("Mastery", "E3: about to enter while loop");
-
                             while (!foundNextUncompletedGame && repeat < gameList.size()) {
                                 // Get the info about the next game
-
-                                android.util.Log.d("Mastery", "F3: inside while loop");
 
                                 gameNumber = gameNumber + 1;
                                 if (gameNumber - 1 < gameList.size()) {
@@ -508,8 +490,6 @@ public abstract class GameActivity extends AppCompatActivity {
                                 }
                                 String activityClass = project + country;
 
-                                android.util.Log.d("Mastery", "F3.1.2: activityClass = " + activityClass);
-
                                 try {
                                     intent.setClass(context, Class.forName(activityClass));
                                 } catch (ClassNotFoundException e) {
@@ -519,8 +499,6 @@ public abstract class GameActivity extends AppCompatActivity {
                                 prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
                                 uniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + syllableGame + stage;
                                 masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
-
-                                android.util.Log.d("Mastery", "G3: about to enter final if (!masteryAchieved) ");
 
                                 if (!masteryAchieved) {
                                     foundNextUncompletedGame = true;
@@ -545,12 +523,8 @@ public abstract class GameActivity extends AppCompatActivity {
                                 repeat++;
                             }
 
-                            android.util.Log.d("Mastery", "H3: past the game by game checks");
-
                             // If it's looped through all of the games and they're all complete, return to Earth
                             if (!foundNextUncompletedGame) {
-
-                                android.util.Log.d("Mastery", "I3: !foundNextUncompletedGame");
 
                                 intent.setClass(context, Earth.class); // so we retain the Extras
                                 startActivity(intent);
@@ -778,15 +752,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     if (repeatLocked) {
                         setAllGameButtonsClickable();
                     }
-                    if (uponMastery == 1){
-                        setOptionsRowClickable();
-                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                    } else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
-                        setOptionsRowClickable();
-                        // Otherwise, recordAttempt will set it clickable only after
-                        // the player returns to earth (2) or sees the celebration screen (3)
-                    }
-                    else if (recentCorrectCount == 0){
+                    if (uponMastery == 1 || !celebratingNow){
                         setOptionsRowClickable();
                     }
                 }
@@ -808,16 +774,7 @@ public abstract class GameActivity extends AppCompatActivity {
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 setAllGameButtonsClickable();
-                if (uponMastery == 1){
-                    setOptionsRowClickable();
-                    //JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                }
-                else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
-                    setOptionsRowClickable();
-                    // Otherwise, recordAttempt will set it clickable only after
-                    // the player returns to earth (2) or sees the celebration screen (3)
-                }
-                else if (recentCorrectCount == 0){
+                if (uponMastery == 1 || !celebratingNow){
                     setOptionsRowClickable();
                 }
                 playActiveWordClip(playFinalSound);
@@ -840,16 +797,7 @@ public abstract class GameActivity extends AppCompatActivity {
         setOptionsRowUnclickable();
         gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
         setAllGameButtonsClickable();
-        if (uponMastery == 1){
-            setOptionsRowClickable();
-            // JP: In setting 1, the player can always keep advancing to the next tile/word/image
-        }
-        else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
-            setOptionsRowClickable();
-            // Otherwise, recordAttempt will set it clickable only after
-            // the player returns to earth (2) or sees the celebration screen (3)
-        }
-        else if (recentCorrectCount == 0){
+        if (uponMastery == 1 || !celebratingNow){
             setOptionsRowClickable();
         }
     }
@@ -928,16 +876,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     if (repeatLocked) {
                         setAllGameButtonsClickable();
                     }
-                    if (uponMastery == 1){
-                        setOptionsRowClickable();
-                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                    }
-                    else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
-                        setOptionsRowClickable();
-                        // Otherwise, recordAttempts will set it clickable only after
-                        // the player returns to earth (2) or sees the celebration screen (3)
-                    }
-                    else if (recentCorrectCount == 0){
+                    if (uponMastery == 1 || !celebratingNow){
                         setOptionsRowClickable();
                     }
                 }

@@ -46,7 +46,6 @@ public class Malaysia extends GameActivity {
     @Override
     protected int[] getWordImages() { return WORD_IMAGES; }
 
-    //private static final Logger LOGGER = Logger.getLogger(Malaysia.class.getName() );
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,13 +125,6 @@ public class Malaysia extends GameActivity {
                 key.setVisibility(View.INVISIBLE);
                 key.setClickable(false);
             }
-        }
-        //add in two loops here to make the images load in.
-        //LOGGER.info("JIRANIMO 1");
-        for(int i = 0; i < wordsPerPage; i++) {
-            //findViewById(WORD_IMAGES[i]).setBackgroundResource(getResources().getIdentifier(wordPagesLists.get(page).get(i).wordInLWC, "drawable", getPackageName())); //thailand 365
-            //LOGGER.info("JIRANIMO 4");
-            //image.setImageDrawable(null);
         }
     }
 

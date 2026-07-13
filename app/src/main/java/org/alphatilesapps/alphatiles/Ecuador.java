@@ -19,11 +19,9 @@ import android.view.WindowManager;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -77,8 +75,6 @@ public class Ecuador extends GameActivity {
         }
         return audioInstructionsResID;
     }
-
-    private static final Logger LOGGER = Logger.getLogger( Ecuador.class.getName() );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -380,7 +376,6 @@ public class Ecuador extends GameActivity {
             TextView wordTile = findViewById(GAME_BUTTONS[w]);
             Word word = wordPool.get(w + 1);
             wordTile.setText(wordList.stripInstructionCharacters(word.wordInLOP));
-            LOGGER.info("EcuadorX: w = " + w + ":: word.wordInLOP = " + word.wordInLOP);
         }
         TextView rightWordTile = findViewById(R.id.activeWordTextView);
         rightWordTile.setText(wordList.stripInstructionCharacters(refWord.wordInLOP));

@@ -24,8 +24,6 @@ import android.widget.TextView;
 import static org.alphatilesapps.alphatiles.Start.*;
 
 import java.util.Scanner;
-import java.util.logging.Logger;
-
 
 public class Earth extends AppCompatActivity {
     Context context;
@@ -51,8 +49,6 @@ public class Earth extends AppCompatActivity {
             R.id.textMark026, R.id.textMark027, R.id.textMark028, R.id.textMark029, R.id.textMark030,
             R.id.textMark031, R.id.textMark032, R.id.textMark033
     };
-
-    private static final Logger LOGGER = Logger.getLogger( Earth.class.getName() );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -318,9 +314,7 @@ public class Earth extends AppCompatActivity {
                 mark.setVisibility(View.INVISIBLE);
                 continue;
             }
-            LOGGER.info("EarthX1: getUniqueID(gameIndex) = " + getUniqueID(gameIndex));
             int correct = prefs.getInt(getUniqueID(gameIndex) + "_totalCorrect", 0);
-            LOGGER.info("EarthX2: updateAllMarks: correct = " + correct);
             int masteryLookBackWindow = gameList.get((pageNumber * doorsPerPage) + doorIndex).lookBack;
             updateMarkForTotalCorrect(mark, gameIndex, correct, masteryLookBackWindow);
         }
@@ -336,15 +330,9 @@ public class Earth extends AppCompatActivity {
      */
     private void updateMarkForTotalCorrect(TextView mark, int gameIndex, int correct, int masteryLookBackWindow) {
 
-        LOGGER.info("EarthX3: gameIndex = " + gameIndex);
-        LOGGER.info("EarthX4: correct = " + correct);
-        LOGGER.info("EarthX5: masteryLookBackWindow = " + masteryLookBackWindow);
-
         int trackerTier = correct / masteryLookBackWindow;
-        LOGGER.info("EarthX6: trackerTier = " + trackerTier);
         if (trackerTier < 1) {
             mark.setVisibility(View.INVISIBLE);
-            LOGGER.info("EarthX7: View.INVISIBLE");
             return;
         }
 
@@ -358,7 +346,6 @@ public class Earth extends AppCompatActivity {
                 mark.setBackgroundResource(trackerDrawableId);
             }
             mark.setVisibility(View.VISIBLE);
-            LOGGER.info("EarthX8: View.VISIBLE");
 
         }
     }

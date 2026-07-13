@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
@@ -39,8 +38,6 @@ public class Thailand extends GameActivity {
     int refColor;
     int challengeLevelThai;
     int correctButtonIndex;
-
-    private static final Logger LOGGER = Logger.getLogger( Thailand.class.getName() );
 
     protected static final int[] GAME_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04
@@ -241,7 +238,6 @@ public class Thailand extends GameActivity {
             boolean freshSyllable = false;
             while (!freshSyllable) {
                 chooseWord();
-                LOGGER.info("ThailandX: refWord.wordInLOP" + refWord.wordInLOP);
                 parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
                 refSyllable = parsedRefWordSyllableArray.get(0);
                 refString = parsedRefWordSyllableArray.get(0).text;
@@ -670,12 +666,10 @@ public class Thailand extends GameActivity {
             TextView nextButton = findViewById(GAME_BUTTONS[b]);
             nextButton.setClickable(false);
             if (b == answerChoiceIndex && !choiceType.equals("WORD_IMAGE")) {
-                LOGGER.info("ThailandX: set right TEXT choice to theme color with white font");
                 nextButton.setBackgroundColor(refColor);
                 nextButton.setTextColor(Color.parseColor("#FFFFFF")); // white
             }
             if (b != answerChoiceIndex && choiceType.equals("WORD_IMAGE")) {
-                LOGGER.info("ThailandX: set wrong IMAGE choice to invisible via whitening??");
                 nextButton.setBackgroundColor(Color.parseColor("#FFFFFF")); // white
             }
         }
@@ -744,16 +738,7 @@ public class Thailand extends GameActivity {
                     if (repeatLocked) {
                         setAllGameButtonsClickable();
                     }
-                    if (uponMastery == 1){
-                        setOptionsRowClickable();
-                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                    }
-                    else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
-                        setOptionsRowClickable();
-                        // Otherwise, updatePointsAndTrackers will set it clickable only after
-                        // the player returns to earth (2) or sees the celebration screen (3)
-                    }
-                    else if (recentCorrectCount == 0){
+                    if (uponMastery == 1 || !celebratingNow){
                         setOptionsRowClickable();
                     }
                 }
@@ -772,16 +757,7 @@ public class Thailand extends GameActivity {
                 if (repeatLocked) {
                     setAllGameButtonsClickable();
                 }
-                if (uponMastery == 1){
-                    setOptionsRowClickable();
-                    //JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                }
-                else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
-                    setOptionsRowClickable();
-                    // Otherwise, updatePointsAndTrackers will set it clickable only after
-                    // the player returns to earth (2) or sees the celebration screen (3)
-                }
-                else if (recentCorrectCount == 0){
+                if (uponMastery == 1 || !celebratingNow){
                     setOptionsRowClickable();
                 }
             }
@@ -804,16 +780,7 @@ public class Thailand extends GameActivity {
                 if (repeatLocked) {
                     setAllGameButtonsClickable();
                 }
-                if (uponMastery == 1){
-                    setOptionsRowClickable();
-                    // JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                }
-                else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
-                    setOptionsRowClickable();
-                    // Otherwise, updatePointsAndTrackers will set it clickable only after
-                    // the player returns to earth (2) or sees the celebration screen (3)
-                }
-                else if (recentCorrectCount == 0){
+                if (uponMastery == 1 || !celebratingNow){
                     setOptionsRowClickable();
                 }
             }
@@ -836,18 +803,8 @@ public class Thailand extends GameActivity {
                 playActiveTileClip(playFinalSound);
                 if (repeatLocked) {
                     setAllGameButtonsClickable();
-                if (uponMastery == 1){
                 }
-                    setOptionsRowClickable();
-                }
-                    //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
-                else if (recentCorrectCount >0 && recentCorrectCount % masteryLookBackWindow != 0) {
-                    setOptionsRowClickable();
-                    //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise
-                    // and we don't want the user to be able to advance before returning to earth (2) or
-                    // before seeing the celebration screen (3)
-                }
-                else if (recentCorrectCount == 0){
+                if (uponMastery == 1 || !celebratingNow){
                     setOptionsRowClickable();
                 }
             }

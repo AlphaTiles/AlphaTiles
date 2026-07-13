@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class Iraq extends GameActivity { 
 
@@ -41,8 +40,6 @@ public class Iraq extends GameActivity {
     Handler handler = new Handler();
     boolean isAnimating = false;
     int scanSetting = 1;
-
-    private static final Logger LOGGER = Logger.getLogger(Iraq.class.getName());
 
     @Override
     protected int[] getGameButtons() {
