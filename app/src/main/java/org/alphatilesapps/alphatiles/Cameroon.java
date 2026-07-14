@@ -39,9 +39,10 @@ public class Cameroon extends GameActivity {
     protected void onCreate(Bundle state) {
         super.onCreate(state);
         context = this;
-        useImage = challengeLevel / 100 == 2;
-        substituteAll = (challengeLevel / 10) % 10 == 2;
-        useDistractors = challengeLevel % 10 == 2;
+        // challengeLevel has three slots, each with a 1 or 2, i.e. 111 = use image + substitute one random slot + substitute with
+        useImage = challengeLevel / 100 != 2; // slot 1: TRUE = image visible, FALSE = image hidden
+        substituteAll = (challengeLevel / 10) % 10 == 2; // slot 2: TRUE = substitute all, FALSE = substitute one
+        useDistractors = challengeLevel % 10 == 2; // slot 3: TRUE = substitute with distractors, FALSE = substitute with random
         setContentView(R.layout.cameroon);
         ActivityLayouts.applyEdgeToEdge(this, R.id.cameroonCL);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -265,6 +266,11 @@ public class Cameroon extends GameActivity {
                 layout.addView(tileButton(word.get(col)));
             }
         }
+
+        playActiveWordClip(false);
+        setAllGameButtonsClickable();
+        setOptionsRowClickable();
+
     }
 
     private ImageView tileButton(Start.Tile tile) {
@@ -298,6 +304,10 @@ public class Cameroon extends GameActivity {
         if (!repeatLocked && !mediaPlayerIsPlaying) {
             playAgain();
         }
+    }
+
+    public void clickPicHearAudio(View view) {
+        super.clickPicHearAudio(view);
     }
 
     @Override
