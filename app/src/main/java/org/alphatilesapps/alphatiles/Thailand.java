@@ -130,6 +130,7 @@ public class Thailand extends GameActivity {
 
         repeatLocked = true;
         setAdvanceArrowToGray();
+        clearListenIconsOnGameButtons();
 
         TextView refItem = findViewById(R.id.referenceItem);
         refItem.setText("");
@@ -435,6 +436,11 @@ public class Thailand extends GameActivity {
 
 
     private void respondToSelection(int justClickedItem) {
+        if (!repeatLocked) {
+            playChoiceAudio(justClickedItem);
+            return;
+        }
+
         String refItemText = null;
         TextView refItem = findViewById(R.id.referenceItem);
 
@@ -593,6 +599,8 @@ public class Thailand extends GameActivity {
                 }
             }
 
+            showChoiceListenIcons();
+
             //JP: Added switch statement to determine which method to call: tile or word
             switch (refType) {
                 case "SYLLABLE_TEXT":
@@ -627,6 +635,70 @@ public class Thailand extends GameActivity {
                 }
             }
         }
+    }
+
+    private int getChoiceListenIconResId() {
+        switch (choiceType) {
+            case "SYLLABLE_TEXT":
+                return R.drawable.zz_click_for_syllable_audio;
+            case "WORD_TEXT":
+            case "WORD_IMAGE":
+                return R.drawable.zz_click_for_word_audio;
+            default:
+                return R.drawable.zz_click_for_tile_audio;
+        }
+    }
+
+    private void showChoiceListenIcons() {
+        int iconRes = getChoiceListenIconResId();
+        for (int b = 0; b < GAME_BUTTONS.length; b++) {
+            showListenIconOnGameButton(findViewById(GAME_BUTTONS[b]), iconRes);
+        }
+    }
+
+    private void playChoiceAudio(int justClickedItem) {
+        int choiceIndex = justClickedItem - 1;
+        int audioId = 0;
+        int duration = 0;
+
+        switch (choiceType) {
+            case "TILE_LOWER":
+            case "TILE_UPPER":
+                Start.Tile tile = fourTileChoices.get(choiceIndex);
+                if (tile != null && tileShouldPlayAudio(tile) && tileAudioIDs.containsKey(tile.audioForThisTileType)) {
+                    audioId = tileAudioIDs.get(tile.audioForThisTileType);
+                    duration = tileDurations.containsKey(tile.audioForThisTileType)
+                            ? tileDurations.get(tile.audioForThisTileType)
+                            : 0;
+                }
+                break;
+            case "WORD_TEXT":
+            case "WORD_IMAGE":
+                Start.Word word = fourWordChoices.get(choiceIndex);
+                if (word != null && wordAudioIDs.containsKey(word.wordInLWC)) {
+                    audioId = wordAudioIDs.get(word.wordInLWC);
+                    duration = word.duration;
+                }
+                break;
+            case "SYLLABLE_TEXT":
+                Start.Syllable syllable = fourSyllableChoices.get(choiceIndex);
+                if (syllable != null && hasSyllableAudio && syllableAudioIDs.containsKey(syllable.audioName)) {
+                    audioId = syllableAudioIDs.get(syllable.audioName);
+                    duration = syllable.duration;
+                }
+                break;
+            default:
+                break;
+        }
+
+        if (audioId > 0) {
+            playSoundPoolClipForChoiceListen(audioId, duration);
+        }
+    }
+
+    @Override
+    protected boolean shouldReenableGameButtonsAfterAudio() {
+        return true;
     }
 
     public Tile firstAudibleTile(Word word) {
@@ -688,7 +760,7 @@ public class Thailand extends GameActivity {
                     repeatLocked = false;
                     playCorrectFinalSound();
                 } else {
-                    if (repeatLocked) {
+                    if (shouldReenableGameButtonsAfterAudio()) {
                         setAllGameButtonsClickable();
                     }
                     if (after12checkedTrackers == 1){
@@ -713,7 +785,7 @@ public class Thailand extends GameActivity {
         gameSounds.play(correctSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
-                if (repeatLocked) {
+                if (shouldReenableGameButtonsAfterAudio()) {
                     setAllGameButtonsClickable();
                 }
                 if (after12checkedTrackers == 1){
@@ -737,7 +809,7 @@ public class Thailand extends GameActivity {
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 playActiveSyllableClip(playFinalSound);
-                if (repeatLocked) {
+                if (shouldReenableGameButtonsAfterAudio()) {
                     setAllGameButtonsClickable();
                 }
                 if (after12checkedTrackers == 1){
@@ -762,13 +834,13 @@ public class Thailand extends GameActivity {
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 playActiveTileClip(playFinalSound);
-                if (repeatLocked) {
+                if (shouldReenableGameButtonsAfterAudio()) {
                     setAllGameButtonsClickable();
+                }
                 if (after12checkedTrackers == 1){
-                }
                     setOptionsRowClickable();
-                }
                     //JP: in setting 1 we always want to keep advancing to the next tile/word/image regardless
+                }
                 else if (trackerCount >0 && trackerCount % 12 != 0) {
                     setOptionsRowClickable();
                     //JP: because updatePointsAndTrackers will take care of setting it clickable otherwise

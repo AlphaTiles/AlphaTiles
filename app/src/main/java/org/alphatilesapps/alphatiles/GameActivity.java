@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -532,6 +535,67 @@ public abstract class GameActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * After feedback audio, most games only re-enable choices while the player is still answering
+     * ({@code repeatLocked}). Games that support listen-after-correct override this to always return true.
+     */
+    protected boolean shouldReenableGameButtonsAfterAudio() {
+        return repeatLocked;
+    }
+
+    protected void showListenIconOnGameButton(TextView button, int audioIconResId) {
+        Drawable icon = getResources().getDrawable(audioIconResId, getTheme());
+        if (icon == null || button == null) {
+            return;
+        }
+        float density = getResources().getDisplayMetrics().density;
+        int size = button.getHeight() > 0
+                ? Math.max((int) (button.getHeight() * 0.32f), (int) (18 * density))
+                : (int) (24 * density);
+        int pad = (int) (4 * density);
+        LayerDrawable layer = new LayerDrawable(new Drawable[]{icon.mutate()});
+        layer.setLayerGravity(0, Gravity.BOTTOM | Gravity.END);
+        layer.setLayerWidth(0, size);
+        layer.setLayerHeight(0, size);
+        layer.setLayerInset(0, 0, 0, pad, pad);
+        button.setForeground(layer);
+    }
+
+    protected void clearListenIconsOnGameButtons() {
+        int[] buttons = getGameButtons();
+        if (buttons == null) {
+            return;
+        }
+        for (int t = 0; t < visibleGameButtons && t < buttons.length; t++) {
+            TextView gameTile = findViewById(buttons[t]);
+            if (gameTile != null) {
+                gameTile.setForeground(null);
+            }
+        }
+    }
+
+    protected void playSoundPoolClipForChoiceListen(int audioId, int durationMs) {
+        setAllGameButtonsUnclickable();
+        setOptionsRowUnclickable();
+        if (audioId > 0) {
+            gameSounds.play(audioId, 1.0f, 1.0f, 2, 0, 1.0f);
+        }
+        soundSequencer.postDelayed(new Runnable() {
+            public void run() {
+                if (shouldReenableGameButtonsAfterAudio()) {
+                    setAllGameButtonsClickable();
+                }
+                if (after12checkedTrackers == 1) {
+                    setOptionsRowClickable();
+                } else if (trackerCount > 0 && trackerCount % 12 != 0) {
+                    setOptionsRowClickable();
+                } else if (trackerCount == 0 || !repeatLocked) {
+                    setOptionsRowClickable();
+                }
+            }
+        }, Math.max(durationMs, 0));
+    }
+
     protected void setOptionsRowUnclickable() {
         ImageView wordImage = findViewById(R.id.wordImage);
         if (wordImage != null)
@@ -603,7 +667,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     repeatLocked = false;
                     playCorrectFinalSound();
                 } else {
-                    if (repeatLocked) {
+                    if (shouldReenableGameButtonsAfterAudio()) {
                         setAllGameButtonsClickable();
                     }
                     if (after12checkedTrackers == 1){
@@ -760,7 +824,7 @@ public abstract class GameActivity extends AppCompatActivity {
                     repeatLocked = false;
                     playCorrectFinalSound();
                 } else {
-                    if (repeatLocked) {
+                    if (shouldReenableGameButtonsAfterAudio()) {
                         setAllGameButtonsClickable();
                     }
                     if (after12checkedTrackers == 1){
@@ -784,7 +848,7 @@ public abstract class GameActivity extends AppCompatActivity {
             playCorrectFinalSound();
         } else {
             mediaPlayerIsPlaying = false;
-            if (repeatLocked) {
+            if (shouldReenableGameButtonsAfterAudio()) {
                 setAllGameButtonsClickable();
             }
             setOptionsRowClickable();

@@ -202,6 +202,7 @@ public class Brazil extends GameActivity {
 
         repeatLocked = true;
         setAdvanceArrowToGray();
+        clearListenIconsOnGameButtons();
 
         setWord();
         removeTile();
@@ -602,6 +603,11 @@ public class Brazil extends GameActivity {
             return;
         }
 
+        if (!repeatLocked) {
+            playChoiceAudio(justClickedButton);
+            return;
+        }
+
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
@@ -644,6 +650,7 @@ public class Brazil extends GameActivity {
                     gameTile.setTextColor(Color.parseColor("#000000")); // black
                 }
             }
+            showChoiceListenIcons();
             playCorrectSoundThenActiveWordClip(false);
         } else {
             incorrectOnLevel += 1;
@@ -657,6 +664,44 @@ public class Brazil extends GameActivity {
             }
             playIncorrectSound();
         }
+    }
+
+    private void showChoiceListenIcons() {
+        int iconRes = syllableGame.equals("S")
+                ? R.drawable.zz_click_for_syllable_audio
+                : R.drawable.zz_click_for_tile_audio;
+        for (int t = 0; t < visibleGameButtons; t++) {
+            showListenIconOnGameButton(findViewById(GAME_BUTTONS[t]), iconRes);
+        }
+    }
+
+    private void playChoiceAudio(int justClickedButton) {
+        int tileNo = justClickedButton - 1;
+        TextView gameButton = findViewById(GAME_BUTTONS[tileNo]);
+        String selected = gameButton.getText().toString();
+
+        if (syllableGame.equals("S")) {
+            Start.Syllable syllable = syllableHashMap.find(selected);
+            if (syllable == null || !syllableAudioIDs.containsKey(syllable.audioName)) {
+                return;
+            }
+            playSoundPoolClipForChoiceListen(syllableAudioIDs.get(syllable.audioName), syllable.duration);
+        } else {
+            Start.Tile chosenTile = tileHashMap.find(selected);
+            if (chosenTile == null || !tileShouldPlayAudio(chosenTile)
+                    || !tileAudioIDs.containsKey(chosenTile.audioForThisTileType)) {
+                return;
+            }
+            int duration = tileDurations.containsKey(chosenTile.audioForThisTileType)
+                    ? tileDurations.get(chosenTile.audioForThisTileType)
+                    : 0;
+            playSoundPoolClipForChoiceListen(tileAudioIDs.get(chosenTile.audioForThisTileType), duration);
+        }
+    }
+
+    @Override
+    protected boolean shouldReenableGameButtonsAfterAudio() {
+        return true;
     }
 
     public void clickPicHearAudio(View view) {

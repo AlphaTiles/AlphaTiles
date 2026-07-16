@@ -17,6 +17,11 @@ import java.util.Set;
 import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.CorV;
+import static org.alphatilesapps.alphatiles.Start.syllableAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.syllableHashMap;
+import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
+import static org.alphatilesapps.alphatiles.Start.tileDurations;
+import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
@@ -162,6 +167,7 @@ public class Georgia extends GameActivity {
 
         repeatLocked = true;
         setAdvanceArrowToGray();
+        clearListenIconsOnGameButtons();
         if (syllableGame.equals("S")) {
             Collections.shuffle(syllableListCopy); //JP
         }
@@ -442,6 +448,11 @@ public class Georgia extends GameActivity {
             return;
         }
 
+        if (!repeatLocked) {
+            playChoiceAudio(justClickedTile);
+            return;
+        }
+
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
@@ -490,6 +501,7 @@ public class Georgia extends GameActivity {
                     gameTile.setTextColor(Color.parseColor("#000000")); // black
                 }
             }
+            showChoiceListenIcons();
             playCorrectSoundThenActiveWordClip(false);
         } else {
             incorrectOnLevel += 1;
@@ -504,6 +516,44 @@ public class Georgia extends GameActivity {
             }
         }
 
+    }
+
+    private void showChoiceListenIcons() {
+        int iconRes = syllableGame.equals("S")
+                ? R.drawable.zz_click_for_syllable_audio
+                : R.drawable.zz_click_for_tile_audio;
+        for (int t = 0; t < visibleGameButtons; t++) {
+            showListenIconOnGameButton(findViewById(GAME_BUTTONS[t]), iconRes);
+        }
+    }
+
+    private void playChoiceAudio(int justClickedTile) {
+        int tileNo = justClickedTile - 1;
+        TextView tileView = findViewById(GAME_BUTTONS[tileNo]);
+        String selected = tileView.getText().toString();
+
+        if (syllableGame.equals("S")) {
+            Start.Syllable syllable = syllableHashMap.find(selected);
+            if (syllable == null || !syllableAudioIDs.containsKey(syllable.audioName)) {
+                return;
+            }
+            playSoundPoolClipForChoiceListen(syllableAudioIDs.get(syllable.audioName), syllable.duration);
+        } else {
+            Start.Tile chosenTile = tileHashMap.find(selected);
+            if (chosenTile == null || !tileShouldPlayAudio(chosenTile)
+                    || !tileAudioIDs.containsKey(chosenTile.audioForThisTileType)) {
+                return;
+            }
+            int duration = tileDurations.containsKey(chosenTile.audioForThisTileType)
+                    ? tileDurations.get(chosenTile.audioForThisTileType)
+                    : 0;
+            playSoundPoolClipForChoiceListen(tileAudioIDs.get(chosenTile.audioForThisTileType), duration);
+        }
+    }
+
+    @Override
+    protected boolean shouldReenableGameButtonsAfterAudio() {
+        return true;
     }
 
     public void onBtnClick(View view) {
