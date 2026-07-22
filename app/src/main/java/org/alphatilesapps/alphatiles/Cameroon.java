@@ -143,7 +143,9 @@ public class Cameroon extends GameActivity {
         TextView text = findViewById(R.id.wordText);
         text.setText(wordList.stripInstructionCharacters(refWord.wordInLOP));
         correct = new Random().nextInt(4);
-        words = mutateWord(parsedRefWordTileArray);
+        do {
+            words = mutateWord(parsedRefWordTileArray);
+        } while (hasFailedMutation(words, parsedRefWordTileArray));
         words.add(correct, parsedRefWordTileArray);
         correctString = Start.wordList.stripInstructionCharacters(refWord.wordInLOP);
         for (int row = 0; row < 4; row++) {
@@ -228,6 +230,21 @@ public class Cameroon extends GameActivity {
             }
         }
         return rows;
+    }
+
+    private boolean hasFailedMutation(List<List<Start.Tile>> mutatedWords, List<Start.Tile> originalWord) {
+        for (List<Start.Tile> word : mutatedWords) {
+            if (word.size() != originalWord.size()) continue;
+            boolean identical = true;
+            for (int i = 0; i < word.size(); i++) {
+                if (!word.get(i).text.equals(originalWord.get(i).text)) {
+                    identical = false;
+                    break;
+                }
+            }
+            if (identical) return true;
+        }
+        return false;
     }
 
     private List<Start.Tile> replacementTiles(Start.Tile tile, boolean useDistractors) {
@@ -337,7 +354,7 @@ public class Cameroon extends GameActivity {
             }
             playCorrectSoundThenActiveWordClip(false);
             for (int s : selectors) {
-                findViewById(s).setClickable(false); // after the round ends, a player can still listen to tile audio and review why they were right or wrong
+                findViewById(s).setClickable(true); // after the round ends, a player can still listen to tile audio and review why they were right or wrong
             }
         } else {
             // TODO: this won't work for Thai, but the method for combining Thai characters only works when only one tile is changed
