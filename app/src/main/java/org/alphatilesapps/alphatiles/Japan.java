@@ -124,14 +124,22 @@ public class Japan extends GameActivity {
         }
 
         parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
-        parsedRefWordTileArray.removeAll(SAD);
         parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord);
+        ArrayList<Syllable> toRemoveSyl = new ArrayList<>();
         for (Syllable syllable : parsedRefWordSyllableArray) {
-            if (SAD_STRINGS.equals(syllable.text)) {
-                parsedRefWordSyllableArray.remove(syllable);
+            if (SAD_STRINGS.contains(syllable.text)) {
+                toRemoveSyl.add(syllable);
             }
         }
 
+        ArrayList<Tile> toRemoveTile = new ArrayList<>();
+        for (Tile tile : parsedRefWordTileArray) {
+            if (SAD_STRINGS.contains(tile.text)) {
+                toRemoveTile.add(tile);
+            }
+        }
+        parsedRefWordSyllableArray.removeAll(toRemoveSyl);
+        parsedRefWordTileArray.removeAll(toRemoveTile);
         currentViews.clear();
         originalViews.clear();
         int linkButtonNumber = 1;
@@ -446,7 +454,8 @@ public class Japan extends GameActivity {
     private String removeSADFromWordInLOP(String wordInLOP) {
         String stringToReturn = wordInLOP;
         for (String ch : SAD_STRINGS) {
-            stringToReturn = stringToReturn.replaceAll("." + ch, ""); // assumes SAD tiles don't occur word-initially
+            stringToReturn = stringToReturn.replace("#", "");
+            stringToReturn = stringToReturn.replace("." + ch, ""); // assumes SAD tiles don't occur word-initially
         }
         return stringToReturn;
     }

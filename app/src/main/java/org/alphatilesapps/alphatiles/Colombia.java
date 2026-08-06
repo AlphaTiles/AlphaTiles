@@ -207,15 +207,7 @@ public class Colombia extends GameActivity {
                     int numberOfCorrectKeys = parsedRefWordSyllableArray.size();
                     for (int n=0; n<numberOfCorrectKeys; n++) {
                         Start.Syllable syllableInTheList = syllableKeysList.get(n);
-                        if(SAD_STRINGS.contains(syllableInTheList.text)){
-                            Start.Syllable distractorSADSyllable = syllableInTheList;
-                            distractorSADSyllable.text = tileList.returnRandomDistractorTile(tileHashMap.find(syllableInTheList.text)).text;
-                            if (distractorSADSyllable.distractors.contains(distractorSADSyllable.text)) {
-                                distractorSADSyllable.distractors.remove(distractorSADSyllable.text);
-                                distractorSADSyllable.distractors.add(syllableInTheList.text);
-                            }
-                            syllableKeysList.add(distractorSADSyllable);
-                        } else {
+                        if(!SAD_STRINGS.contains(syllableInTheList.text)){
                             syllableKeysList.add(syllableList.returnRandomDistractorSyllable(syllableInTheList));
                         }
                     }
@@ -255,15 +247,7 @@ public class Colombia extends GameActivity {
                     syllableKeysList = new ArrayList<>(parsedRefWordSyllableArray);
                     for (int n=0; n<(18-parsedRefWordSyllableArray.size()); n++) {
                         Start.Syllable syllableInTheList = syllableKeysList.get(n);
-                        if(SAD_STRINGS.contains(syllableInTheList.text)){
-                            Start.Syllable distractorSADSyllable = syllableInTheList;
-                            distractorSADSyllable.text = tileList.returnRandomDistractorTile(tileHashMap.find(syllableInTheList.text)).text;
-                            if(distractorSADSyllable.distractors.contains(distractorSADSyllable.text)){
-                                distractorSADSyllable.distractors.remove(distractorSADSyllable.text);
-                                distractorSADSyllable.distractors.add(syllableInTheList.text);
-                            }
-                            syllableKeysList.add(distractorSADSyllable);
-                        } else {
+                        if(!SAD_STRINGS.contains(syllableInTheList.text)){
                             syllableKeysList.add(syllableList.returnRandomDistractorSyllable(syllableInTheList));
                         }
                     }

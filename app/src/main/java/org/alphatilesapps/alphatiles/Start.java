@@ -35,6 +35,7 @@ public class Start extends AppCompatActivity {
     public static ArrayList<WordList> wordStagesLists; // LM // For staged introduction of tiles/words
 
     public static SyllableList syllableList; // JP // from aa_syllables.txt
+    public static SyllableList syllableListNoSAD;
     public static KeyList keyList; // KP // from aa_keyboard.txt
 
     public static GameList gameList; // from aa_games.text
@@ -411,6 +412,7 @@ public class Start extends AppCompatActivity {
 
         boolean header = true;
         syllableList = new SyllableList();
+        syllableListNoSAD = new SyllableList();
 
         while (scanner.hasNext()) {
             String thisLine = scanner.nextLine();
@@ -430,6 +432,9 @@ public class Start extends AppCompatActivity {
                 Syllable syllable = new Syllable(thisLineArray[0], distractors, thisLineArray[4], Integer.parseInt(thisLineArray[5]), thisLineArray[6]);
                 if (!syllable.hasNull()) {
                     syllableList.add(syllable);
+                    if(!SAD_STRINGS.contains(syllable.text)) {
+                        syllableListNoSAD.add(syllable);
+                    }
                 }
             }
         }
@@ -1409,8 +1414,8 @@ public class Start extends AppCompatActivity {
             syllablesAddedStrings.add(refSyllable.text);
             if (challengeLevel == 1) { // Random wrong syllables
                 while (fourSyllableChoices.size() < 4) {
-                    int randomNum = rand.nextInt(syllableList.size());
-                    aSyllableChoice = syllableList.get(randomNum);
+                    int randomNum = rand.nextInt(this.size());
+                    aSyllableChoice = this.get(randomNum);
                     if (!aSyllableChoice.text.equals(refSyllableString) && !refSyllable.distractors.contains(aSyllableChoice.text)) {
                         syllablesAddedStrings.add(aSyllableChoice.text);
                         fourSyllableChoices.add(aSyllableChoice);
@@ -1430,8 +1435,8 @@ public class Start extends AppCompatActivity {
                     fourSyllableChoices.add(syllableHashMap.find(refSyllable.distractors.get(2)));
                 }
                 while (fourSyllableChoices.size() < 4) {
-                    int randomNum = rand.nextInt(syllableList.size());
-                    aSyllableChoice = syllableList.get(randomNum);
+                    int randomNum = rand.nextInt(this.size());
+                    aSyllableChoice = this.get(randomNum);
                     if (!aSyllableChoice.text.equals(refSyllableString) && !syllablesAddedStrings.contains(aSyllableChoice.text)) {
                         syllablesAddedStrings.add(aSyllableChoice.text);
                         fourSyllableChoices.add(aSyllableChoice);

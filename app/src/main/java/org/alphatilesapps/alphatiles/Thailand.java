@@ -213,9 +213,9 @@ public class Thailand extends GameActivity {
         } else if (choiceType.contains("SYLLABLE") && refType.contains("SYLLABLE")) {
             boolean freshSyllable = false;
             while (!freshSyllable) {
-                int randomNum2 = rand.nextInt(syllableList.size());
-                refSyllable = syllableList.get(randomNum2);
-                refString = syllableList.get(randomNum2).text;
+                int randomNum2 = rand.nextInt(syllableListNoSAD.size());
+                refSyllable = syllableListNoSAD.get(randomNum2);
+                refString = refSyllable.text;
                 if (!refString.equals(refStringLast)
                         && !refString.equals(refStringSecondToLast)
                         && !refString.equals(refStringThirdToLast)) {
@@ -331,7 +331,7 @@ public class Thailand extends GameActivity {
         } else if (refType.contains("SYLLABLE") && (choiceType.contains("WORD"))) {
             fourWordChoices = syllableList.returnFourWordChoices(refString, challengeLevelThai);
         } else if (refType.contains("SYLLABLE") && (choiceType.contains("SYLLABLE"))) {
-            fourSyllableChoices = syllableList.returnFourSyllableChoices(refString, challengeLevelThai);
+            fourSyllableChoices = syllableListNoSAD.returnFourSyllableChoices(refString, challengeLevelThai);
         }
 
         switch (choiceType) {
