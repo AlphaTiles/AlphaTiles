@@ -98,6 +98,12 @@ public class Indonesia extends GameActivity {
         buildWordPages();
         displayPage(0);
         showOrHideScrollArrows();
+
+        ImageView fwd = (ImageView) findViewById(R.id.forwardArrowImage);
+        ImageView bwd = (ImageView) findViewById(R.id.backwardArrowImage);
+
+        bwd.setImageResource(R.drawable.zz_backward);
+        fwd.setImageResource(R.drawable.zz_forward);
     }
 
     // ── Paging ────────────────────────────────────────────────────────────────
@@ -277,3 +283,4 @@ public class Indonesia extends GameActivity {
         if (getAudioInstructionsResID() > 0) super.playAudioInstructions(view);
     }
 }
+
