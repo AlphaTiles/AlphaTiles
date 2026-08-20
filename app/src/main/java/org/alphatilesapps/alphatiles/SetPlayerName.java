@@ -30,7 +30,7 @@ import static org.alphatilesapps.alphatiles.Start.colorList;
 public class SetPlayerName extends AppCompatActivity {
 
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String scriptDirection;
 
     int keysInUse;
     int keyboardScreenNo; // for languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
@@ -52,6 +52,18 @@ public class SetPlayerName extends AppCompatActivity {
         context = this;
 
         super.onCreate(savedInstanceState);
+
+        if (Start.langInfoList == null) {
+            // Process was killed and restarted directly into this screen.
+            // Relaunch from the beginning so static state gets repopulated.
+            Intent intent = new Intent(this, Start.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
         // Disable back navigation
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {

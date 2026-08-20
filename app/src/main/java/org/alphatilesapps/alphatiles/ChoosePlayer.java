@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -34,8 +33,8 @@ import static org.alphatilesapps.alphatiles.Start.*;
 
 public class ChoosePlayer extends AppCompatActivity {
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
-    String singleColorHex = Start.settingsList.find("Single hex color on avatar screen");
+    String scriptDirection;
+    String singleColorHex;
 
     public static ArrayList<Integer> avatarIdList;
     public static ArrayList<Drawable> avatarJpgList;
@@ -82,6 +81,19 @@ public class ChoosePlayer extends AppCompatActivity {
 
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
+
+        if (Start.langInfoList == null) {
+            // Process was killed and restarted directly into this screen.
+            // Relaunch from the beginning so static state gets repopulated.
+            Intent intent = new Intent(this, Start.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+        singleColorHex = Start.settingsList.find("Single hex color on avatar screen");
 
         // Disable back navigation
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {

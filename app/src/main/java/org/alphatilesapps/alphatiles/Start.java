@@ -34,6 +34,8 @@ public class Start extends AppCompatActivity {
     public static WordList wordList;     // KP  // from aa_wordlist.txt
     public static ArrayList<WordList> wordStagesLists; // LM // For staged introduction of tiles/words
 
+    public static int stagesInUse;
+
     public static SyllableList syllableList; // JP // from aa_syllables.txt
     public static KeyList keyList; // KP // from aa_keyboard.txt
 
@@ -65,8 +67,9 @@ public class Start extends AppCompatActivity {
     public static Boolean hasTileAudio;
     public static Boolean hasSyllableAudio;
     public static Boolean enhancedAudioLoadingLog;
+    public static Boolean secondChances;
     public static Boolean hasSyllableGames = false;
-    public static int after12checkedTrackers;
+    public static int uponMastery;
     public static Boolean differentiatesTileTypes;
     public static Boolean hasSAD = false;
     public static double stageCorrespondenceRatio;
@@ -127,12 +130,16 @@ public class Start extends AppCompatActivity {
         sendAnalytics = getBooleanFromSettings("Send analytics", false);
         changeArrowColor = getBooleanFromSettings("Change arrow colors", true);
         enhancedAudioLoadingLog = getBooleanFromSettings("Enhanced Audio Loading Log", false);
+        secondChances = getBooleanFromSettings("Can the player make additional attempts after an initial incorrect response", true);
 
-        String after12checkedTrackersSetting = settingsList.find("After 12 checked trackers");
-        if (!after12checkedTrackersSetting.equals("")) {
-            after12checkedTrackers = Integer.valueOf(after12checkedTrackersSetting);
+        String uponMasterySetting = settingsList.find("After demonstrating game mastery"); // new setup and new search term
+        if (uponMasterySetting.equals("")) {
+            uponMasterySetting = settingsList.find("After 12 checked trackers"); // prior setup and prior search term
+        }
+        if (!uponMasterySetting.equals("")) {
+            uponMastery = Integer.valueOf(uponMasterySetting);
         } else {
-            after12checkedTrackers = 3;
+            uponMastery = 3;
         }
 
         String customNumOfAvatars = settingsList.find("Number of avatars"); // Default is 12
@@ -515,7 +522,6 @@ public class Start extends AppCompatActivity {
                 lastStage = tile.stageOfFirstAppearanceC;
             }
         }
-        // LOGGER.info("buildWordStageLists: add all words to last tile stage " + lastStage);
         for(Word word : wordList){
             stagesOfFirstAppearance.put(word, lastStage);
         }
@@ -523,7 +529,6 @@ public class Start extends AppCompatActivity {
         // Keep trying to find an earlier stage that it corresponds with until knowing the earliest stage
         // that it corresponds with.  Loop downward from Stage 6 (i==5) to Stage 1 (i==0).
         for(int i=5;i>-1; i--){
-            // LOGGER.info("buildWordStageLists: NEW STAGE " + (i+1));
             ArrayList<Tile> cumulativeCorrespondingTiles = new ArrayList<Tile>();
             for(int s=0; s<=i; s++){
                 cumulativeCorrespondingTiles.addAll(tileStagesLists.get(s));
@@ -536,7 +541,7 @@ public class Start extends AppCompatActivity {
                     for(int a=0; a<cumulativeCorrespondingTiles.size(); a++) {
                         Tile aTileInTheStage = cumulativeCorrespondingTiles.get(a);
                         if(aTileInThisWord==null || aTileInThisWord.hasNull()){
-                            LOGGER.info("problematic word: " + word.wordInLOP + "; index of problematic tile is " + a);
+                            LOGGER.info("LoadProgress: problematic word: " + word.wordInLOP + "; index of problematic tile is " + a);
                         }
                         if(aTileInThisWord.text.equals(aTileInTheStage.text)){
                             if(differentiatesTileTypes){
@@ -552,24 +557,12 @@ public class Start extends AppCompatActivity {
                     }
                 }
                 double quotient = (double)correspondingTiles / tilesInThisWord.size();
-                // if (tilesInThisWord.size() != correspondingTiles) {
-                //    LOGGER.info("buildWordStageLists: word=" + word.wordInLOP
-                //            + " corrTiles=" + correspondingTiles
-                //            + " tilesInWord=" + tilesInThisWord.size()
-                //            + " quotient=" + quotient + " Ratio=" + stageCorrespondenceRatio);
-                // } else {
-                //    LOGGER.info("buildWordStageLists: corrTiles==tilesInWord==" + correspondingTiles);
-                // }
                 if(quotient >= stageCorrespondenceRatio){
                     if ((i==0 || i==1) && (tilesInThisWord.size()>stage1and2MaxWordLength)){
                         // Bump words that are too long for stage 1 or 2 to the next stage
                         stagesOfFirstAppearance.put(word, i+2);
-                        // LOGGER.info("buildWordStageLists: bump '" + word.wordInLOP
-                        //        + "' to stage " + (i+2));
                     } else {
                         stagesOfFirstAppearance.put(word, i+1);
-                        // LOGGER.info("buildWordStageLists: add '" + word.wordInLOP
-                        //        + "' to stage " + (i+1));
                     }
                 }
             }
@@ -602,9 +595,6 @@ public class Start extends AppCompatActivity {
                 // Bump words back to a higher stage if their first tile disqualifies them
                 // from being in the stage assigned by the Stage Correspondence Ratio.
                 if (stageFirstTileBelongsTo > stagesOfFirstAppearance.get(word)){
-                    // LOGGER.info("buildWordStageLists: 1st-ltr bump '" + word.wordInLOP
-                    //        + "' stage " + stagesOfFirstAppearance.get(word)
-                    //        + " back to " + stageFirstTileBelongsTo);
                     stagesOfFirstAppearance.put(word, stageFirstTileBelongsTo);
                 }
             }
@@ -615,8 +605,6 @@ public class Start extends AppCompatActivity {
             if(word.stageOfFirstAppearance.matches("[0-9]+")){
                 int stage = Integer.parseInt(word.stageOfFirstAppearance);
                 if (stage >=1 && stage <= 7) {
-                    // LOGGER.info("buildWordStageLists: put '" + word.wordInLOP
-                    //        + "' into stage " + stage);
                     stagesOfFirstAppearance.put(word, stage);
                 }
             }
@@ -625,14 +613,15 @@ public class Start extends AppCompatActivity {
         // Then use the stage info found to make the sub-wordlists
         for(Word word : wordList){
             int stageOfFirstAppearance = stagesOfFirstAppearance.get(word);
-            // LOGGER.info("buildWordStageLists: word=" + word.wordInLOP
-            //        + "; stageOf1stApp=" + stageOfFirstAppearance);
             wordStagesLists.get(stageOfFirstAppearance-1).add(word);
         }
 
-        // print out final totals
+        // set stagesInUse value and log word counts per stage
         for (int z = 0; z < 7; z++) {
-            LOGGER.info("buildWordStageLists: stage " + (z+1) + " has "
+            if (wordStagesLists.get(z).size() > 0) {
+                stagesInUse++;
+            }
+            LOGGER.info("LoadProgress: buildWordStageLists: stage " + (z+1) + " has "
                     + wordStagesLists.get(z).size() + " entries");
         }
     }
@@ -678,9 +667,12 @@ public class Start extends AppCompatActivity {
                 gameList.gameInstrDurationTitle = thisLineArray[5];
                 gameList.gameModeTitle = thisLineArray[6];
                 gameList.gameStageTitle = thisLineArray[7];
+                gameList.gameLookBackTitle = thisLineArray[8];
+                gameList.gameAccuracyTitle = thisLineArray[9];
+                gameList.gameAttemptsTitle = thisLineArray[10];
                 header = false;
             } else {
-                Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7]);
+                Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], Integer.parseInt(thisLineArray[8]), Integer.parseInt(thisLineArray[9]), Integer.parseInt(thisLineArray[10]));
                 if (!game.hasNull()) {
                     gameList.add(game);
                 }
@@ -958,8 +950,11 @@ public class Start extends AppCompatActivity {
         public String instructionDuration;
         public String mode; //JP : Syllable or Tile mode (S or T)
         public String stage; // LM The game will include tiles/words from all the stages up to and including the stage indicated in the row of aa_games.txt
+        public int lookBack;
+        public int accuracy;
+        public int attempts;
 
-        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration, String gameMode, String stage) {
+        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration, String gameMode, String stage, int lookBack, int accuracy, int attempts) {
             this.number = gameNumber;
             this.country = gameCountry;
             this.level = gameLevel;
@@ -968,10 +963,13 @@ public class Start extends AppCompatActivity {
             this.instructionDuration = gameInstrDuration;
             this.mode = gameMode;
             this.stage = stage;
+            this.lookBack = lookBack;
+            this.accuracy = accuracy;
+            this.attempts = attempts;
         }
 
         public boolean hasNull() {
-            return number == null || country == null || level == null || color == null || instructionAudioName == null || instructionDuration == null || mode == null;
+            return number == null || country == null || level == null || color == null || instructionAudioName == null || instructionDuration == null || mode == null || stage == null;
         }
     }
 
@@ -1034,7 +1032,6 @@ public class Start extends AppCompatActivity {
                     Tile tileInFocus = parsedWordArrayFinal.get(k);
                     String tileInFocusType = tileInFocus.typeOfThisTileInstance;
                     if (tileInFocus.text.equals(activeTile.text)) {
-                        // LOGGER.info("numOfWords: " + get(i).wordInLOP + " included");
                         if(differentiatesTileTypes){
                             if (tileInFocusType.equals(activeTileType)) {
                                 wordCount++;
@@ -1047,7 +1044,6 @@ public class Start extends AppCompatActivity {
                     }
                 }
             }
-            // LOGGER.info("numOfWords: " + wordCount);
             return wordCount;
         }
 
@@ -2003,7 +1999,7 @@ public class Start extends AppCompatActivity {
             return tileHashMap.find(correctTile.distractors.get(randomNum));
         }
 
-        public ArrayList<Tile> returnFourTileChoices(Tile correctTile, int challengeLevel, String refTileType) {
+        public ArrayList<Tile> returnFourTileChoices(Tile correctTile, int challengeLevel, String refTileType, TileList stageFilteredTileList) {
 
             ArrayList<Tile> fourTileChoices = new ArrayList<>();
             ArrayList<String> alreadyStoredAnswerChoices = new ArrayList<>();
@@ -2022,8 +2018,8 @@ public class Start extends AppCompatActivity {
                             || Character.toLowerCase(correctTile.text.charAt(0)) == Character.toLowerCase(aTile.text.charAt(0))
                             || (!aTile.typeOfThisTileInstance.matches("(C|PC)") && !aTile.typeOfThisTileInstance.equals("V")
                             && (refTileType.matches(("(C|PC)")) || refTileType.equals("V")))) {
-                        int randomTileIndex = rand.nextInt(tileListNoSAD.size());
-                        aTile = Start.tileListNoSAD.get(randomTileIndex);
+                        int randomTileIndex = rand.nextInt(stageFilteredTileList.size());
+                        aTile = stageFilteredTileList.get(randomTileIndex);
                         firstIteration = false;
                     }
                     alreadyStoredAnswerChoices.add(aTile.text);
@@ -2182,7 +2178,9 @@ public class Start extends AppCompatActivity {
         public String gameInstrDurationTitle;
         public String gameModeTitle;
         public String gameStageTitle;
-
+        public String gameLookBackTitle;
+        public String gameAccuracyTitle;
+        public String gameAttemptsTitle;
     }
 
     public class LangInfoList extends HashMap<String, String> {

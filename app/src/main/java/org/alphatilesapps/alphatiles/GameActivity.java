@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -21,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,23 +40,21 @@ import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.differentiatesTileTypes;
 import static org.alphatilesapps.alphatiles.Start.gameList;
 import static org.alphatilesapps.alphatiles.Start.stageCorrespondenceRatio;
+import static org.alphatilesapps.alphatiles.Start.stagesInUse;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
-import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.placeholderCharacter;
 import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.tileStagesLists;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.wordStagesLists;
-import static org.alphatilesapps.alphatiles.Testing.tempSoundPoolSwitch;
 import static org.alphatilesapps.alphatiles.Start.correctFinalSoundID;
 import static org.alphatilesapps.alphatiles.Start.correctSoundDuration;
 import static org.alphatilesapps.alphatiles.Start.correctSoundID;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.incorrectSoundID;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
-import static org.alphatilesapps.alphatiles.Start.after12checkedTrackers;
-
+import static org.alphatilesapps.alphatiles.Start.uponMastery;
 
 public abstract class GameActivity extends AppCompatActivity {
 
@@ -62,7 +63,7 @@ public abstract class GameActivity extends AppCompatActivity {
     MediaPlayer mp3;
     String className;
     String country;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String scriptDirection;
     int gameNumber = 0;
     int playerNumber = -1;
     String playerString;
@@ -70,12 +71,25 @@ public abstract class GameActivity extends AppCompatActivity {
     int stage = 7;
     String syllableGame;
 
+    int gameColor;
+
     SharedPreferences prefs;
     String uniqueGameLevelPlayerModeStageID;
-    boolean hasChecked12Trackers;
     int points;
     int globalPoints;
-    int trackerCount = 0;
+    int masteryLookBackWindow;
+    int masteryRequiredAccuracy;
+    int masteryMinAttempts;
+
+    ArrayDeque<Integer> recentAttempts = new ArrayDeque<>();
+    int recentAccuracy = 0;
+    int totalAttempts = 0;
+    String savedAttempts;
+
+    int recentCorrectCount = 0;
+    int totalCorrect;
+    boolean masteryAchieved = false;
+    boolean celebratingNow = false;
 
     char studentGrade;
     long levelBegunTime;
@@ -98,11 +112,8 @@ public abstract class GameActivity extends AppCompatActivity {
     boolean repeatLocked = true;
     Handler soundSequencer;
 
-    protected static final int[] TRACKERS = {
-            R.id.tracker01, R.id.tracker02, R.id.tracker03, R.id.tracker04, R.id.tracker05, R.id.tracker06, R.id.tracker07, R.id.tracker08, R.id.tracker09, R.id.tracker10,
-            R.id.tracker11, R.id.tracker12
-
-    };
+    protected ProgressBar attemptsBar;
+    protected ProgressBar accuracyBar;
 
     protected abstract int[] getGameButtons();
 
@@ -152,6 +163,18 @@ public abstract class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle state) {
         context = this;
 
+        if (Start.langInfoList == null) {
+            // Process was killed and restarted directly into this screen.
+            // Relaunch from the beginning so static state gets repopulated.
+            Intent intent = new Intent(this, Start.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+
         soundSequencer = new Handler(Looper.getMainLooper());
         OnBackPressedCallback back = new OnBackPressedCallback(true) {
             @Override
@@ -160,27 +183,49 @@ public abstract class GameActivity extends AppCompatActivity {
             }
         };
         this.getOnBackPressedDispatcher().addCallback(back);
-        playerNumber = getIntent().getIntExtra("playerNumber", -1);
+
+        celebratingNow = false;
+
+        // Values that define the game's (specific door's) structure; these values vary by game (door) but never change within a game (door)
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         stage = getIntent().getIntExtra("stage", 7);
         syllableGame = getIntent().getStringExtra("syllableGame");
         gameNumber = getIntent().getIntExtra("gameNumber", 0);
         country = getIntent().getStringExtra("country");
+        masteryLookBackWindow = getIntent().getIntExtra("masteryLookBackWindow", 20);
+        masteryRequiredAccuracy = getIntent().getIntExtra("masteryRequiredAccuracy", 90);
+        masteryMinAttempts = getIntent().getIntExtra("masteryMinAttempts", 20);
+
+        // Values that persist for a player across all games
+        playerNumber = getIntent().getIntExtra("playerNumber", -1);
         playerString = Util.returnPlayerStringToAppend(playerNumber);
-        globalPoints = getIntent().getIntExtra("globalPoints", 0);
         studentGrade = getIntent().getCharExtra("studentGrade", '0');
 
+        // Values that track the player's performance
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
         className = getClass().getName();
         uniqueGameLevelPlayerModeStageID = className + challengeLevel + playerString + syllableGame + stage;
-        trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
-        hasChecked12Trackers = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
         points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
+        globalPoints = prefs.getInt(playerString + "_globalPoints", 0);
+        totalAttempts = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_totalAttempts", 0);
+        savedAttempts = prefs.getString(uniqueGameLevelPlayerModeStageID + "_savedAttempts","");
+        totalCorrect = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_totalCorrect", 0);
+        masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
+
+        deserializeRecentAttempts();
+
+        recentCorrectCount = 0;
+
+        for (int value : recentAttempts) {
+            recentCorrectCount += value;
+        }
+
+        calculateRecentAccuracy();
 
         cumulativeStageBasedTileList.addAll(Start.SAD);
-        for(int s=0; s<stage; s++){
-            for(Start.Tile tile : tileStagesLists.get(s)){
-                if(!SILENT_PRELIMINARY_TILES.contains(tile)){
+        for (int s = 0; s < stage; s++) {
+            for (Start.Tile tile : tileStagesLists.get(s)) {
+                if (!SILENT_PRELIMINARY_TILES.contains(tile)) {
                     cumulativeStageBasedTileList.add(tile);
                 }
             }
@@ -188,9 +233,9 @@ public abstract class GameActivity extends AppCompatActivity {
         }
 
         previousStagesTileList.addAll(Start.SAD);
-        for(int s=0; s<(stage-1); s++){
-            for(Start.Tile tile : tileStagesLists.get(s)){
-                if(!SILENT_PRELIMINARY_TILES.contains(tile)){
+        for (int s = 0; s < (stage - 1); s++) {
+            for (Start.Tile tile : tileStagesLists.get(s)) {
+                if (!SILENT_PRELIMINARY_TILES.contains(tile)) {
                     previousStagesTileList.add(tile);
                 }
             }
@@ -242,177 +287,278 @@ public abstract class GameActivity extends AppCompatActivity {
 
     }
 
-    protected void updatePointsAndTrackers(int pointsIncrease) {
-        setOptionsRowUnclickable();
-        setAllGameButtonsUnclickable();
-        // Update global points and game points gem
-        globalPoints+=pointsIncrease;
-        points+=pointsIncrease;
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(points));
+        protected void recordAttempt(boolean correct, int pointsIncrease) {
 
-        TextView gameNumberBox = findViewById(R.id.gameNumberView);
-        gameNumberBox.setText(String.valueOf(gameNumber));
-        int gameColor = Color.parseColor(colorList.get(Integer.parseInt(gameList.get(gameNumber-1).color)));
-        gameNumberBox.setBackgroundColor(gameColor);
-        pointsEarned.setBackgroundColor(gameColor);
-        TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
+            totalAttempts++;
+            int result = correct ? 1 : 0;
+            recentAttempts.addLast(result);
 
-        int displayedChallengeLevel;
-        if (gameList.get(gameNumber-1).country.equals("Thailand")) {
-            displayedChallengeLevel = challengeLevel / 100;
-        }
-        else {
-            displayedChallengeLevel = challengeLevel;
-        }
-        if (gameList.get(gameNumber-1).country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
-            displayedChallengeLevel = displayedChallengeLevel - 3;
-        }
-        if (gameList.get(gameNumber-1).country.equals("Georgia") && challengeLevel > 6) {
-            displayedChallengeLevel = displayedChallengeLevel - 6;
-        }
-        challengeLevelBox.setText(String.valueOf(displayedChallengeLevel));
+            if (correct) {
+                globalPoints += pointsIncrease; // points across all games for this player
+                points += pointsIncrease; // points in this game-level combo for this player
+                totalCorrect ++; // total right answers across all games for this player
+                recentCorrectCount += result;
 
-        // Update tracker icons
-        for (int t = 0; t < TRACKERS.length; t++) {
-            ImageView tracker = findViewById(TRACKERS[t]);
-            if (t < trackerCount) {
-                int resID = getResources().getIdentifier("zz_complete", "drawable", getPackageName());
-                tracker.setImageResource(resID);
-            } else {
-                int resID2 = getResources().getIdentifier("zz_incomplete", "drawable", getPackageName());
-                tracker.setImageResource(resID2);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
+                editor.putInt(playerString + "_globalPoints", globalPoints);
+                editor.putInt(uniqueGameLevelPlayerModeStageID + "_totalCorrect", totalCorrect);
+                editor.apply();
             }
-        }
-
-        if (pointsIncrease > 0){ // Check whether 12 trackers were checked and how to proceed based on settings
-            trackerCount++;
-
-            if (trackerCount >= 12) {
-                hasChecked12Trackers = true;
+            if (recentAttempts.size() > masteryLookBackWindow) {
+                int removed = recentAttempts.removeFirst(); //
+                recentCorrectCount -= removed; // subtracts zero if removing incorrect answer, subtracts 1 if removing correct answer
             }
-
+            updateView();
+            ifMasteryThenWhat(); // only relevant for correct answers, but want recent update and updateView() before evaluating mastery
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt(uniqueGameLevelPlayerModeStageID + "_points", points);
+            editor.putInt(uniqueGameLevelPlayerModeStageID + "_totalAttempts",totalAttempts);
+            editor.putInt(uniqueGameLevelPlayerModeStageID + "_recentCorrectCount",recentCorrectCount);
+            editor.putBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved",masteryAchieved);
+            editor.putString(uniqueGameLevelPlayerModeStageID + "_savedAttempts",serializeRecentAttempts());
             editor.apply();
-            editor.putBoolean(uniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers",
-                    hasChecked12Trackers);
-            editor.apply();
-            editor.putInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", trackerCount);
-            editor.apply();
-            getIntent().putExtra("globalPoints", globalPoints);
+        }
 
-            // Update tracker icons
-            for (int t = 0; t < TRACKERS.length; t++) {
-                ImageView tracker = findViewById(TRACKERS[t]);
-                if (t < trackerCount) {
-                    int resID = getResources().getIdentifier("zz_complete", "drawable", getPackageName());
-                    tracker.setImageResource(resID);
+        protected void updateView() {
+
+            TextView pointsEarned = findViewById(R.id.pointsTextView);
+            pointsEarned.setText(String.valueOf(points));
+
+            calculateRecentAccuracy();
+            updateProgressBars();
+
+        }
+        protected void setUpInitialView() {
+            // @ToDo - once working correctly, this needs to be added to all games
+
+            TextView gameNumberBox = findViewById(R.id.gameNumberView);
+            gameNumberBox.setText(String.valueOf(gameNumber));
+            gameColor = Color.parseColor(colorList.get(Integer.parseInt(gameList.get(gameNumber - 1).color)));
+            gameNumberBox.setBackgroundColor(gameColor);
+            TextView pointsEarned = findViewById(R.id.pointsTextView);
+            pointsEarned.setBackgroundColor(gameColor);
+            TextView stageNumber = findViewById(R.id.stageLevelView);
+            if (stagesInUse > 1) {
+                stageNumber.setText(String.valueOf(stage)); // use stage number when more than one stage is in use
+            } else {
+                stageNumber.setText(String.valueOf("★")); // when stages isn't being used (when all words = stage 1), set to star
+            }
+
+            if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq")) {
+            } else {
+                TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
+                int displayedChallengeLevel;
+                if (gameList.get(gameNumber - 1).country.equals("Thailand")) {
+                    displayedChallengeLevel = challengeLevel / 100;
                 } else {
-                    int resID2 = getResources().getIdentifier("zz_incomplete", "drawable", getPackageName());
-                    tracker.setImageResource(resID2);
+                    displayedChallengeLevel = challengeLevel;
                 }
+                if (gameList.get(gameNumber - 1).country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
+                    displayedChallengeLevel = displayedChallengeLevel - 3;
+                }
+                if (gameList.get(gameNumber - 1).country.equals("Georgia") && challengeLevel > 6) {
+                    displayedChallengeLevel = displayedChallengeLevel - 6;
+                }
+                challengeLevelBox.setText(String.valueOf(displayedChallengeLevel));
             }
-            // LM
-            // after12CheckedTrackers option 1: nothing happens; players keep playing even after checking all 12 trackers
-            // after12CheckedTrackers option 2: app returns players to Earth after checking all 12 trackers. They can get back in. Will return to Earth again after another 12 correct answers.
-            if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 2){
-                soundSequencer.postDelayed(new Runnable() {
-                    public void run() {
-                        Intent intent = getIntent();
-                        intent.setClass(context, Earth.class); // so we retain the Extras
-                        startActivity(intent);
-                        finish();
-                    }
-                }, correctSoundDuration);
+        }
+         protected void calculateRecentAccuracy() {
+             if (recentAttempts.size() == 0) {
+                     recentAccuracy = 0;
+                     return;
+             }
+             recentAccuracy = (recentCorrectCount * 100) / recentAttempts.size();
+        }
 
+        protected void updateProgressBars() {
+
+            attemptsBar = findViewById(R.id.attemptsBar);
+            accuracyBar = findViewById(R.id.accuracyBar);
+
+            if (attemptsBar == null || accuracyBar == null) {
+                return;
             }
-            // after12CheckedTrackers option 3: app displays celebration screen and moves on to the next unchecked game after checking all 12 trackers.
-            if (trackerCount > 0 && trackerCount % 12 == 0 && after12checkedTrackers == 3) {
+
+            int baseColor = (gameColor != 0) ? gameColor : Color.BLACK;
+
+            attemptsBar = findViewById(R.id.attemptsBar);
+            accuracyBar = findViewById(R.id.accuracyBar);
+
+            // Accuracy: yellow when under threshold reached, then game color
+            int attemptsProgress = Math.min(totalAttempts, masteryMinAttempts);
+            int attemptsPercent = (attemptsProgress * 100) / masteryMinAttempts;
+
+            int attemptsColor;
+            if (totalAttempts >= masteryMinAttempts) {
+                attemptsColor = baseColor;
+            } else {
+                attemptsColor = Color.YELLOW;
+            }
+
+            attemptsBar.setProgress(attemptsPercent);
+            attemptsBar.setProgressTintList(ColorStateList.valueOf(attemptsColor));
+
+            // Accuracy: yellow when under required accuracy, green when at/over required accuracy
+            int accuracyColor;
+            if (recentAccuracy >= masteryRequiredAccuracy) {
+                accuracyColor = baseColor;
+            } else {
+                accuracyColor = Color.YELLOW;
+            }
+            accuracyBar.setProgress(recentAccuracy);
+            accuracyBar.setProgressTintList(ColorStateList.valueOf(accuracyColor));
+
+        }
+        protected void ifMasteryThenWhat() {
+
+            if (totalAttempts >= masteryMinAttempts && recentAccuracy >= masteryRequiredAccuracy && !masteryAchieved) {
+
+                masteryAchieved = true;
+                celebratingNow = true;
+
                 setOptionsRowUnclickable();
                 setAllGameButtonsUnclickable();
-                soundSequencer.postDelayed(new Runnable() {
-                    public void run() {
-                        // Show celebration screen
-                        Intent intent = getIntent();
-                        intent.setClass(context, Celebration.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                }, correctSoundDuration + 1800);
 
-                // Then switch to next uncompleted game after 4 seconds
-                Timer nextScreenTimer = new Timer();
-                nextScreenTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        // Select and go to the next unfinished game to play
-                        // If the game with gameNumber (gameNumber+1) has not checked all 12 trackers, go to it. If not, keep looking for one like this.
-                        Intent intent = getIntent(); //gets intent that launched the current activity
-                        String project = "org.alphatilesapps.alphatiles.";
-                        boolean foundNextUncompletedGame = false;
-                        int repeat = 0;
+                // LM >>> AH
+                // uponMastery option 1:
+                // Nothing happens; player keeps playing indefinitely
 
-                        while (foundNextUncompletedGame == false && repeat < gameList.size()) {
-                            // Get the info about the next game
-                            gameNumber = gameNumber + 1;
-                            if (gameNumber - 1 < gameList.size()) {
-                                challengeLevel = Integer.parseInt(gameList.get(gameNumber - 1).level);
-                                if (gameList.get(gameNumber-1).stage.equals("-")) {
-                                    stage = 1;
-                                } else {
-                                    stage = Integer.parseInt(gameList.get(gameNumber - 1).stage);
-                                }
-                                syllableGame = gameList.get(gameNumber - 1).mode;
-                                country = gameList.get(gameNumber - 1).country;
-                            } else {
-                                gameNumber = 1;
-                                challengeLevel = Integer.parseInt(gameList.get(0).level);
-                                if (gameList.get(0).stage.equals("-")) {
-                                    stage = 1;
-                                } else {
-                                    stage = Integer.parseInt(gameList.get(0).stage);
-                                }
-                                syllableGame = gameList.get(0).mode;
-                                country = gameList.get(0).country;
-                            }
-                            String activityClass = project + country;
+                // uponMastery option 2:
+                // App returns player to Earth (player can re-enter game and will be returned to Earth again reaching mastery again)
+                if (masteryAchieved && uponMastery == 2){
 
-                            try {
-                                intent.setClass(context, Class.forName(activityClass));
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                            String nextUniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + syllableGame + stage;
-                            hasChecked12Trackers = prefs.getBoolean(nextUniqueGameLevelPlayerModeStageID + "_hasChecked12Trackers", false);
-
-                            if (!hasChecked12Trackers) {
-                                foundNextUncompletedGame = true;
-                                intent.putExtra("challengeLevel", challengeLevel);
-                                intent.putExtra("stage", stage);
-                                intent.putExtra("syllableGame", syllableGame);
-                                intent.putExtra("globalPoints", globalPoints);
-                                intent.putExtra("gameNumber", gameNumber);
-                                intent.putExtra("country", country);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                //keep looping
-                            }
-                            repeat++;
-                        }
-
-                        // If it's looped through all of the games and they're all complete, return to Earth
-                        if (!foundNextUncompletedGame) {
+                    soundSequencer.postDelayed(new Runnable() {
+                        public void run() {
+                            Intent intent = getIntent();
                             intent.setClass(context, Earth.class); // so we retain the Extras
                             startActivity(intent);
                             finish();
                         }
-                    }
-                }, 4500);
-            }
+                    }, correctSoundDuration);
+
+                }
+                // uponMastery option 3: app displays celebration screen and moves on to the next game where mastery has not been shown yet
+                if (masteryAchieved && uponMastery == 3) {
+
+                    setOptionsRowUnclickable();
+                    setAllGameButtonsUnclickable();
+                    soundSequencer.postDelayed(new Runnable() {
+                        public void run() {
+                            // Show celebration screen
+                            Intent intent = getIntent();
+                            intent.setClass(context, Celebration.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, correctSoundDuration + 1800);
+
+                    // Then switch to next uncompleted game after 4 seconds
+                    Timer nextScreenTimer = new Timer();
+                    nextScreenTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            // Select and go to the next unfinished game to play
+                            // If the game with gameNumber (gameNumber+1) has not been mastered, go to it. If mastered, check the next gameNumber
+                            Intent intent = getIntent(); //gets intent that launched the current activity
+                            String project = "org.alphatilesapps.alphatiles.";
+                            boolean foundNextUncompletedGame = false;
+                            int repeat = 0;
+
+                            while (!foundNextUncompletedGame && repeat < gameList.size()) {
+                                // Get the info about the next game
+
+                                gameNumber = gameNumber + 1;
+                                if (gameNumber - 1 < gameList.size()) {
+                                    challengeLevel = Integer.parseInt(gameList.get(gameNumber - 1).level);
+                                    if (gameList.get(gameNumber-1).stage.equals("-")) {
+                                        stage = 1;
+                                    } else {
+                                        stage = Integer.parseInt(gameList.get(gameNumber - 1).stage);
+                                    }
+                                    syllableGame = gameList.get(gameNumber - 1).mode;
+                                    country = gameList.get(gameNumber - 1).country;
+                                } else {
+                                    gameNumber = 1;
+                                    challengeLevel = Integer.parseInt(gameList.get(0).level);
+                                    if (gameList.get(0).stage.equals("-")) {
+                                        stage = 1;
+                                    } else {
+                                        stage = Integer.parseInt(gameList.get(0).stage);
+                                    }
+                                    syllableGame = gameList.get(0).mode;
+                                    country = gameList.get(0).country;
+                                }
+                                String activityClass = project + country;
+
+                                try {
+                                    intent.setClass(context, Class.forName(activityClass));
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+
+                                prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+                                uniqueGameLevelPlayerModeStageID = activityClass + challengeLevel + playerString + syllableGame + stage;
+                                masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
+
+                                if (!masteryAchieved) {
+                                    foundNextUncompletedGame = true;
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.putInt(playerString + "_globalPoints", globalPoints);
+                                    editor.apply();
+                                    intent.putExtra("challengeLevel", challengeLevel);
+                                    intent.putExtra("stage", stage);
+                                    intent.putExtra("syllableGame", syllableGame);
+                                    intent.putExtra("gameNumber", gameNumber);
+                                    intent.putExtra("country", country);
+                                    intent.putExtra("masteryLookBackWindow", masteryLookBackWindow);
+                                    intent.putExtra("masteryRequiredAccuracy", masteryRequiredAccuracy);
+                                    intent.putExtra("masteryMinAttempts", masteryMinAttempts);
+                                    // @ToDo Move grade from Earth to GameActivity?
+                                    // intent.putExtra("studentGrade", grade);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    //keep looping
+                                }
+                                repeat++;
+                            }
+
+                            // If it's looped through all of the games and they're all complete, return to Earth
+                            if (!foundNextUncompletedGame) {
+
+                                intent.setClass(context, Earth.class); // so we retain the Extras
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                    }, 4500);
+                }
+
         }
+
     }
+
+     protected String serializeRecentAttempts() {
+
+        StringBuilder sb = new StringBuilder();
+        for (int value : recentAttempts) {
+            sb.append(value);
+        }
+
+    return sb.toString();
+
+    }
+
+    protected void deserializeRecentAttempts() {
+
+    recentAttempts.clear();
+
+        for (char c : savedAttempts.toCharArray()) {
+
+        recentAttempts.addLast(
+                c == '1' ? 1 : 0);
+    }
+}
 
     protected void chooseWord() {
         boolean freshWord = false;
@@ -500,8 +646,6 @@ public abstract class GameActivity extends AppCompatActivity {
                     refWord = previousStagesWordList.get(randomNumberForChoosingAnOlderWord);
                 }
             }
-
-            // LOGGER.info("chooseWord: candidate=" + refWord.wordInLOP);
 
             // If this word isn't one of the X previously tested words, we're good
             // Assume a pool of 12 "last words", but if Stage 1 is smaller than 12,
@@ -591,13 +735,7 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void playActiveWordClip(final boolean playFinalSound) {
-        if (tempSoundPoolSwitch) {
-            playActiveWordClip1(playFinalSound);    //SoundPool
-        } else
-            playActiveWordClip0(playFinalSound);    //MediaPlayer
-    }
 
-    protected void playActiveWordClip1(final boolean playFinalSound) {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
@@ -607,23 +745,14 @@ public abstract class GameActivity extends AppCompatActivity {
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 if (playFinalSound) {
-                    updatePointsAndTrackers(0);
+                    // Removing recordAttempt (updatePointsAndTrackers), as already run during onCreate, playAgain and recordAttempt
                     repeatLocked = false;
                     playCorrectFinalSound();
                 } else {
                     if (repeatLocked) {
                         setAllGameButtonsClickable();
                     }
-                    if (after12checkedTrackers == 1){
-                        setOptionsRowClickable();
-                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                    }
-                    else if (trackerCount >0 && trackerCount % 12 != 0) {
-                        setOptionsRowClickable();
-                        // Otherwise, updatePointsAndTrackers will set it clickable only after
-                        // the player returns to earth (2) or sees the celebration screen (3)
-                    }
-                    else if (trackerCount == 0){
+                    if (uponMastery == 1 || !celebratingNow){
                         setOptionsRowClickable();
                     }
                 }
@@ -631,77 +760,30 @@ public abstract class GameActivity extends AppCompatActivity {
         }, refWord.duration);
     }
 
-    protected void playActiveWordClip0(final boolean playFinalSound) {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        int resID = getResources().getIdentifier(refWord.wordInLWC, "raw", getPackageName());
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        //mp1.start();
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mpCompletion(mp1, playFinalSound);
-            }
-        });
-        mp1.start();
-    }
+    protected void playGameSoundThenActiveWordClip(boolean correctAnswer, final boolean playFinalSound) {
 
-    protected void playCorrectSoundThenActiveWordClip(final boolean playFinalSound) {
-        if (tempSoundPoolSwitch)
-            playCorrectSoundThenActiveWordClip1(playFinalSound);
-        else
-            playCorrectSoundThenActiveWordClip0(playFinalSound);
-    }
-
-    protected void playCorrectSoundThenActiveWordClip1(final boolean playFinalSound) {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
 
-        gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        if (correctAnswer) {
+            gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        } else {
+            gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+        }
 
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 setAllGameButtonsClickable();
-                if (after12checkedTrackers == 1){
+                if (uponMastery == 1 || !celebratingNow){
                     setOptionsRowClickable();
-                    //JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                }
-                else if (trackerCount >0 && trackerCount % 12 != 0) {
-                    setOptionsRowClickable();
-                    // Otherwise, updatePointsAndTrackers will set it clickable only after
-                    // the player returns to earth (2) or sees the celebration screen (3)
                 }
                 playActiveWordClip(playFinalSound);
             }
         }, correctSoundDuration);
     }
 
-
-    protected void playCorrectSoundThenActiveWordClip0(final boolean playFinalSound) {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        MediaPlayer mp2 = MediaPlayer.create(this, R.raw.zz_correct);
-        mediaPlayerIsPlaying = true;
-        mp2.start();
-        mp2.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp2) {
-                mp2.reset(); //JP: fixed "mediaplayer went away with unhandled events" issue
-                mp2.release();
-                playActiveWordClip(playFinalSound);
-            }
-        });
-    }
-
     protected void playIncorrectSound() {
-        if (tempSoundPoolSwitch)
-            playIncorrectSound1();
-        else
-            playIncorrectSound0();
-    }
 
-    protected void playIncorrectSound1() {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         gameSounds.play(incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
@@ -709,63 +791,15 @@ public abstract class GameActivity extends AppCompatActivity {
         setOptionsRowClickable();
     }
 
-    protected void playIncorrectSound0() {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        mp3 = MediaPlayer.create(this, R.raw.zz_incorrect);
-        mediaPlayerIsPlaying = true;
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllGameButtonsClickable();
-                setOptionsRowClickable();
-                mp3.reset(); //JP
-                mp3.release();
-            }
-        });
-    }
-
     protected void playCorrectFinalSound() {
-        if (tempSoundPoolSwitch)
-            playCorrectFinalSound1();
-        else
-            playCorrectFinalSound0();
-    }
 
-    protected void playCorrectFinalSound1() {
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         gameSounds.play(correctFinalSoundID, 1.0f, 1.0f, 1, 0, 1.0f);
         setAllGameButtonsClickable();
-        if (after12checkedTrackers == 1){
+        if (uponMastery == 1 || !celebratingNow){
             setOptionsRowClickable();
-            // JP: In setting 1, the player can always keep advancing to the next tile/word/image
         }
-        else if (trackerCount >0 && trackerCount % 12 != 0) {
-            setOptionsRowClickable();
-            // Otherwise, updatePointsAndTrackers will set it clickable only after
-            // the player returns to earth (2) or sees the celebration screen (3)
-        }
-    }
-
-    protected void playCorrectFinalSound0() {
-        setAllGameButtonsUnclickable();
-        setOptionsRowUnclickable();
-        mediaPlayerIsPlaying = true;
-        mp3 = MediaPlayer.create(this, R.raw.zz_correct_final);
-        mp3.start();
-        mp3.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp3) {
-                mediaPlayerIsPlaying = false;
-                setAllGameButtonsClickable();
-                setOptionsRowClickable();
-                mp3.reset(); //JP
-                mp3.release();
-            }
-        });
     }
 
     public void playAudioInstructions(View view) {
@@ -801,11 +835,7 @@ public abstract class GameActivity extends AppCompatActivity {
 
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
-        if(!tempSoundPoolSwitch) {
-            playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
-        } else {
-            playTileAudio(playFinalSound, tileAudioNumber(tile), tileDurations.get(tile.audioForThisTileType));
-        }
+        playTileAudio(playFinalSound, tileAudioNumber(tile), -1);
     }
 
     protected boolean isReadyToPlayTileAudio() {
@@ -818,16 +848,8 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected boolean tileShouldPlayAudio(Start.Tile tile) {
         // make sure audio can be found
-        if (tempSoundPoolSwitch && tile.audioForThisTileType.equals("X")) {
+        if (tile.audioForThisTileType.equals("X")) {
                 return false;
-        }
-
-        if(!tempSoundPoolSwitch) {
-            try{
-                getResources().getIdentifier(tile.audioForThisTileType, "raw", getPackageName());
-            } catch (NullPointerException e) {
-                 return false;
-            }
         }
 
         return true;
@@ -835,36 +857,11 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected int tileAudioNumber(Start.Tile tile) {
         String audioName = tile.getAudioNameAccountingForMultitypeSymbols();
-        if (tempSoundPoolSwitch) {
-            return tileAudioIDs.get(audioName);
-        } else {
-            return getResources().getIdentifier(audioName, "raw", getPackageName());
-        }
+        return tileAudioIDs.get(audioName);
     }
 
     protected void playTileAudio(boolean playFinalSound, int audioNumber, int audioDuration) {
-        if (tempSoundPoolSwitch) {
-            playTileAudioSoundPool(playFinalSound, audioNumber,audioDuration);
-        } else {
-            playTileAudioMediaPlayer(playFinalSound, audioNumber);
-        }
-    }
-
-
-
-
-
-    private void playTileAudioMediaPlayer(final boolean playFinalSound, int resID) {     //JP: for Media Player; tile audio
-
-        final MediaPlayer mp1 = MediaPlayer.create(this, resID);
-        mediaPlayerIsPlaying = true;
-        mp1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp1) {
-                mpCompletion(mp1, playFinalSound);
-            }
-        });
-        mp1.start();
+        playTileAudioSoundPool(playFinalSound, audioNumber,audioDuration);
     }
 
     private void playTileAudioSoundPool(final boolean playFinalSound, int audioID, int audioDuration) {     //JP: for SoundPool, for tile audio
@@ -873,42 +870,18 @@ public abstract class GameActivity extends AppCompatActivity {
         soundSequencer.postDelayed(new Runnable() {
             public void run() {
                 if (playFinalSound) {
-                    updatePointsAndTrackers(0);
                     repeatLocked = false;
                     playCorrectFinalSound();
                 } else {
                     if (repeatLocked) {
                         setAllGameButtonsClickable();
                     }
-                    if (after12checkedTrackers == 1){
+                    if (uponMastery == 1 || !celebratingNow){
                         setOptionsRowClickable();
-                        // JP: In setting 1, the player can always keep advancing to the next tile/word/image
-                    }
-                    else if (trackerCount >0 && trackerCount % 12 != 0) {
-                        setOptionsRowClickable();
-                        // Otherwise, updatePointsAndTrackers will set it clickable only after
-                        // the player returns to earth (2) or sees the celebration screen (3)
                     }
                 }
             }
         }, audioDuration);
-    }
-
-    protected void mpCompletion(MediaPlayer mp, boolean isFinal) {
-        if (isFinal) {
-            updatePointsAndTrackers(0);
-            repeatLocked = false;
-            playCorrectFinalSound();
-        } else {
-            mediaPlayerIsPlaying = false;
-            if (repeatLocked) {
-                setAllGameButtonsClickable();
-            }
-            setOptionsRowClickable();
-            mp.reset(); //JP
-            mp.release();
-        }
-
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

@@ -22,7 +22,7 @@ import java.util.Scanner;
 public class Resources extends AppCompatActivity {
 
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String scriptDirection;
 
     static int resourcesArraySize;      // the number of resources (plus the header row) in aa_resources.txt, as determined below
     static String[][] resourcesList;     // will capture the name, link and image name [3 items]
@@ -45,6 +45,18 @@ public class Resources extends AppCompatActivity {
         ImageView backwardImage;
         super.onCreate(savedInstanceState);
         context = this;
+
+        if (Start.langInfoList == null) {
+            // Process was killed and restarted directly into this screen.
+            // Relaunch from the beginning so static state gets repopulated.
+            Intent intent = new Intent(this, Start.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
         setContentView(R.layout.resources);
 

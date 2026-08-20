@@ -25,23 +25,44 @@ import static org.alphatilesapps.alphatiles.Start.*;
 
 import java.util.Scanner;
 
-
 public class Earth extends AppCompatActivity {
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
 
     int playerNumber = -1;
     String playerString;
     char grade;
+    SharedPreferences prefs;
     int pageNumber; // Games 001 to 033 are displayed on page 1, games 034 to 066 are displayed on page 2, etc.
     int globalPoints;
+//    int totalCorrect;
     int doorsPerPage = 33;
     ConstraintLayout earthCL;
 
+    private static final int MAX_TRACKER_MARK_IMAGES = 22;
+
+    private static final int[] MARK_VIEW_IDS = {
+            R.id.textMark001, R.id.textMark002, R.id.textMark003, R.id.textMark004, R.id.textMark005,
+            R.id.textMark006, R.id.textMark007, R.id.textMark008, R.id.textMark009, R.id.textMark010,
+            R.id.textMark011, R.id.textMark012, R.id.textMark013, R.id.textMark014, R.id.textMark015,
+            R.id.textMark016, R.id.textMark017, R.id.textMark018, R.id.textMark019, R.id.textMark020,
+            R.id.textMark021, R.id.textMark022, R.id.textMark023, R.id.textMark024, R.id.textMark025,
+            R.id.textMark026, R.id.textMark027, R.id.textMark028, R.id.textMark029, R.id.textMark030,
+            R.id.textMark031, R.id.textMark032, R.id.textMark033
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Start.langInfoList == null) {
+            // Process was killed and restarted directly into this screen.
+            // Relaunch from the beginning so static state gets repopulated.
+            Intent intent = new Intent(this, Start.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         // Disable back navigation
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -62,18 +83,19 @@ public class Earth extends AppCompatActivity {
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
         if (scriptDirection.equals("RTL")) {
-            ImageView goForwardImage = (ImageView) findViewById(R.id.goForward);
-            ImageView goBackImage = (ImageView) findViewById(R.id.goBack);
-            ImageView activePlayerImage = (ImageView) findViewById(R.id.activePlayerImage);
+            ImageView goForwardImage = findViewById(R.id.goForward);
+            ImageView goBackImage = findViewById(R.id.goBack);
+            ImageView activePlayerImage = findViewById(R.id.activePlayerImage);
 
             goForwardImage.setRotationY(180);
             goBackImage.setRotationY(180);
             activePlayerImage.setRotationY(180);
         }
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        globalPoints = getIntent().getIntExtra("globalPoints", 0);
+        prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+        globalPoints = prefs.getInt(playerString + "_globalPoints", 0);
 
         TextView pointsEarned = findViewById(R.id.pointsTextView);
         pointsEarned.setText(String.valueOf(globalPoints));
@@ -102,8 +124,6 @@ public class Earth extends AppCompatActivity {
         name.setText(playerName);
 
         pageNumber = getIntent().getIntExtra("pageNumber", 0);
-
-        updateDoors();
 
         if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
@@ -160,46 +180,56 @@ public class Earth extends AppCompatActivity {
             resourcesIcon.setVisibility(View.GONE);
             resourcesIcon.setOnClickListener(null);
         }
+
+        // Run after layout and other onCreate constraint changes so marks are not left at XML defaults
+        earthCL.post(this::updateDoors);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (earthCL != null) {
+            updateDoors();
+        }
     }
 
     public void updateDoors() {
 
-        SharedPreferences prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        int trackerCount;
+        prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
 
         for (int j = 0; j < earthCL.getChildCount(); j++) {
             View child = earthCL.getChildAt(j);
             if (child instanceof TextView && child.getTag() != null) {
                 try {
+                    String viewEntryName = getResources().getResourceEntryName(child.getId());
+                    if (viewEntryName.startsWith("textMark")) {
+                        continue;
+                    }
                     int doorIndex = Integer.parseInt((String) earthCL.getChildAt(j).getTag()) - 1;
                     String doorText = String.valueOf((pageNumber * doorsPerPage) + doorIndex + 1);
                     ((TextView) child).setText(doorText);
                     if (((pageNumber * doorsPerPage) + doorIndex) >= Start.gameList.size()) {
                         ((TextView) child).setVisibility(View.INVISIBLE);
                     } else {
-                        String project = "org.alphatilesapps.alphatiles.";
+                        String uniqueGameLevelPlayerModeStageID = getUniqueID((pageNumber * doorsPerPage) + doorIndex);
                         String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).country;
-                        String challengeLevel = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).level;
-                        String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).mode;
-                        String stage;
-                        if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
-                            stage = "1";
-                        } else {
-                            stage = gameList.get((pageNumber * doorsPerPage) + doorIndex).stage;
-                        }
-                        String uniqueGameLevelPlayerModeStageID = project + country + challengeLevel + playerString + syllableGame + stage;
 
-                        trackerCount = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_trackerCount", 0);
+//                      totalCorrect = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_totalCorrect", 0);
 
-                        // This is currently the only game that has no right/wrong responses with an incrementing trackerCount variable
+                        prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
+                        int points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
+                        boolean masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
+
+                        // This is currently the only game that has no right/wrong responses with an incrementing totalCorrect variable
                         // So we are forcing this game's door to initialize with a start
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {                            trackerCount = 12;
+                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {
+//                            totalCorrect = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
-                        } else if (trackerCount < 12) {
+                        } else if (!masteryAchieved) {
                             ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
-                        } else { // >= 12
+                        } else {
                             String textColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).color;
                             ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(textColor))));
                         }
@@ -207,9 +237,9 @@ public class Earth extends AppCompatActivity {
                         boolean changeColor = true;
                         String doorStyle = "";
                         if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {                            doorStyle = "_inprocess";
-                        } else if (trackerCount > 0 && trackerCount < 12) {
+                        } else if (points > 0 && !masteryAchieved) {
                             doorStyle = "_inprocess";
-                        } else if (trackerCount >= 12) {
+                        } else if (masteryAchieved) {
                             doorStyle = "_mastery";
                             changeColor = false;
                         } else { // 0
@@ -239,6 +269,8 @@ public class Earth extends AppCompatActivity {
             }
         }
 
+        updateAllMarks(prefs);
+
         ImageView backArrow = findViewById(R.id.goBack);
         if (pageNumber == 0) {
             backArrow.setVisibility(View.INVISIBLE);
@@ -253,6 +285,69 @@ public class Earth extends AppCompatActivity {
             forwardArrow.setVisibility(View.INVISIBLE);
         }
 
+    }
+
+    private String getUniqueID(int gameIndex) {
+        String project = "org.alphatilesapps.alphatiles.";
+        String country = Start.gameList.get(gameIndex).country;
+        String challengeLevel = Start.gameList.get(gameIndex).level;
+        String syllableGame = gameList.get(gameIndex).mode;
+        String stage;
+        if (gameList.get(gameIndex).stage.equals("-")) {
+            stage = "1";
+        } else {
+            stage = gameList.get(gameIndex).stage;
+        }
+
+        return project + country + challengeLevel + playerString + syllableGame + stage;
+    }
+
+    private void updateAllMarks(SharedPreferences prefs) {
+        for (int markSlot = 0; markSlot < MARK_VIEW_IDS.length; markSlot++) {
+            TextView mark = findViewById(MARK_VIEW_IDS[markSlot]);
+            if (mark == null || mark.getTag() == null) {
+                continue;
+            }
+            int doorIndex = Integer.parseInt(mark.getTag().toString()) - 1;
+            int gameIndex = (pageNumber * doorsPerPage) + doorIndex;
+            if (gameIndex >= Start.gameList.size()) {
+                mark.setVisibility(View.INVISIBLE);
+                continue;
+            }
+            int correct = prefs.getInt(getUniqueID(gameIndex) + "_totalCorrect", 0);
+            int masteryLookBackWindow = gameList.get((pageNumber * doorsPerPage) + doorIndex).lookBack;
+            updateMarkForTotalCorrect(mark, gameIndex, correct, masteryLookBackWindow);
+        }
+    }
+
+    /**
+     * tracker tiers (each tier is the size of masteryLookBackWindow):
+     * Gem: none: 0 to one less than masteryLookBackWindow
+     * Gem: # 1 : masteryLookBackWindow to ((2*masteryLookBackWindow)–1), but only if masteryAchieve = true
+     * Gem: # 2 : (2*masteryLookBackWindow) to ((3*masteryLookBackWindow)–1), but only if masteryAchieve = true
+     * etc.
+     * Position comes from earth.xml (one mark view per door); only the image changes here.
+     */
+    private void updateMarkForTotalCorrect(TextView mark, int gameIndex, int correct, int masteryLookBackWindow) {
+
+        int trackerTier = correct / masteryLookBackWindow;
+        if (trackerTier < 1) {
+            mark.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        boolean masteryAchieved = prefs.getBoolean(getUniqueID(gameIndex) + "_masteryAchieved", false);
+
+        if (masteryAchieved) {
+            int imageIndex = Math.min(MAX_TRACKER_MARK_IMAGES, trackerTier);
+            int trackerDrawableId = getResources().getIdentifier(
+                    "tracker_" + String.format("%02d", imageIndex), "drawable", getPackageName());
+            if (trackerDrawableId != 0) {
+                mark.setBackgroundResource(trackerDrawableId);
+            }
+            mark.setVisibility(View.VISIBLE);
+
+        }
     }
 
     public void goToAboutPage(View view) {
@@ -295,6 +390,9 @@ public class Earth extends AppCompatActivity {
         int challengeLevel = Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).level);
         int gameNumber = (pageNumber * doorsPerPage) + doorIndex + 1;
         String syllableGame = gameList.get((pageNumber * doorsPerPage) + doorIndex).mode;
+        int masteryLookBackWindow = gameList.get((pageNumber * doorsPerPage) + doorIndex).lookBack;
+        int masteryRequiredAccuracy = gameList.get((pageNumber * doorsPerPage) + doorIndex).accuracy;
+        int masteryMinAttempts = gameList.get((pageNumber * doorsPerPage) + doorIndex).attempts;
         int stage;
         if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
             stage = 1;
@@ -308,12 +406,18 @@ public class Earth extends AppCompatActivity {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(playerString + "_globalPoints", globalPoints);
+        editor.apply();
+
         intent.putExtra("challengeLevel", challengeLevel);
-        intent.putExtra("globalPoints", globalPoints);
         intent.putExtra("gameNumber", gameNumber);
         intent.putExtra("pageNumber", pageNumber);
         intent.putExtra("country", country);
         intent.putExtra("syllableGame", syllableGame);
+        intent.putExtra("masteryLookBackWindow", masteryLookBackWindow);
+        intent.putExtra("masteryRequiredAccuracy", masteryRequiredAccuracy);
+        intent.putExtra("masteryMinAttempts", masteryMinAttempts);
         intent.putExtra("stage", stage);
         intent.putExtra("studentGrade", grade);
         startActivity(intent);
