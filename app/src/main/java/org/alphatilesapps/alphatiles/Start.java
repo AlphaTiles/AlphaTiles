@@ -670,9 +670,10 @@ public class Start extends AppCompatActivity {
                 gameList.gameLookBackTitle = thisLineArray[8];
                 gameList.gameAccuracyTitle = thisLineArray[9];
                 gameList.gameAttemptsTitle = thisLineArray[10];
+                gameList.gameDoorTextColorTitle  = thisLineArray[11];
                 header = false;
             } else {
-                Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], Integer.parseInt(thisLineArray[8]), Integer.parseInt(thisLineArray[9]), Integer.parseInt(thisLineArray[10]));
+                Game game = new Game(thisLineArray[0], thisLineArray[1], thisLineArray[2], thisLineArray[3], thisLineArray[4], thisLineArray[5], thisLineArray[6], thisLineArray[7], Integer.parseInt(thisLineArray[8]), Integer.parseInt(thisLineArray[9]), Integer.parseInt(thisLineArray[10]),thisLineArray[11]);
                 if (!game.hasNull()) {
                     gameList.add(game);
                 }
@@ -953,8 +954,9 @@ public class Start extends AppCompatActivity {
         public int lookBack;
         public int accuracy;
         public int attempts;
+        public String doorTextColor;
 
-        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration, String gameMode, String stage, int lookBack, int accuracy, int attempts) {
+        public Game(String gameNumber, String gameCountry, String gameLevel, String gameColor, String gameInstrLabel, String gameInstrDuration, String gameMode, String stage, int lookBack, int accuracy, int attempts, String doorTextColor) {
             this.number = gameNumber;
             this.country = gameCountry;
             this.level = gameLevel;
@@ -966,6 +968,7 @@ public class Start extends AppCompatActivity {
             this.lookBack = lookBack;
             this.accuracy = accuracy;
             this.attempts = attempts;
+            this.doorTextColor  = doorTextColor;
         }
 
         public boolean hasNull() {
@@ -2181,6 +2184,8 @@ public class Start extends AppCompatActivity {
         public String gameLookBackTitle;
         public String gameAccuracyTitle;
         public String gameAttemptsTitle;
+        public String gameDoorTextColorTitle;
+
     }
 
     public class LangInfoList extends HashMap<String, String> {

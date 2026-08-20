@@ -319,7 +319,7 @@ public class Validator {
             Map.entry("gametiles", "A1:Q"),
             Map.entry("wordlist", "A1:F"),
             Map.entry("keyboard", "A1:B"),
-            Map.entry("games", "A1:K"),
+            Map.entry("games", "A1:L"),
             Map.entry("syllables", "A1:G"),
             Map.entry("resources", "A1:C"),
             Map.entry("settings", "A1:B"),

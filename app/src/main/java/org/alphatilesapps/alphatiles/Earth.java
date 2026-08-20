@@ -224,7 +224,11 @@ public class Earth extends AppCompatActivity {
                         // So we are forcing this game's door to initialize with a start
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {
+                        String doorTextColor = Start.gameList.get(pageNumber * doorsPerPage).doorTextColor;
+
+                        if (!doorTextColor.isEmpty()) {
+                            ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(doorTextColor))));
+                        } else if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {
 //                            totalCorrect = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
                         } else if (!masteryAchieved) {
