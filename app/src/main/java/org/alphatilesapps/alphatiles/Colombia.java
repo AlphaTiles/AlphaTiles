@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -65,6 +66,8 @@ public class Colombia extends GameActivity {
         instructionsButton.setVisibility(View.GONE);
 
     }
+
+    private static final Logger LOGGER = Logger.getLogger( Colombia.class.getName() );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -283,11 +286,17 @@ public class Colombia extends GameActivity {
                         tileKeysList.add(tileHashMap.find(key.text));
                     }
                     keysInUse = keyList.size(); // KP
-                    partial = keysInUse % (GAME_BUTTONS.length - 2);
-                    totalScreens = keysInUse / (GAME_BUTTONS.length - 2);
-
-                    if (partial != 0) {
-                        totalScreens++;
+                    if (keysInUse <= tilesPerPage) {
+                        totalScreens = keysInUse / (GAME_BUTTONS.length);
+                        partial = keysInUse % (GAME_BUTTONS.length);
+                    } else {
+                        totalScreens = keysInUse / (GAME_BUTTONS.length - 2);
+                        partial = keysInUse % (GAME_BUTTONS.length - 2);
+                    }
+                    if (partial == 0) {
+                        partial = GAME_BUTTONS.length - 2; // if partial is zero, then the prior screen's partial is 100% full
+                    } else {
+                        totalScreens++; // at least one partial tile requires an additional screen
                     }
 
                     if (keysInUse > GAME_BUTTONS.length) {
@@ -335,12 +344,19 @@ public class Colombia extends GameActivity {
                     i++;
                 }
                 keysInUse = tileKeysList.size(); // KP
-                partial = keysInUse % (GAME_BUTTONS.length - 2);
                 totalScreens = keysInUse / (GAME_BUTTONS.length - 2);
+                if (totalScreens == 1) {
+                    partial = keysInUse % (GAME_BUTTONS.length);
+                } else {
+                    partial = keysInUse % (GAME_BUTTONS.length - 2);
+                }
 
                 if (partial != 0) {
                     totalScreens++;
                 }
+                LOGGER.info("ColombiaX: keysInUse = " + keysInUse);
+                LOGGER.info("ColombiaX: totalScreens = " + totalScreens);
+                LOGGER.info("ColombiaX: partial = " + partial);
 
                 if (keysInUse > GAME_BUTTONS.length) {
                     visibleGameButtons = GAME_BUTTONS.length;
@@ -576,7 +592,7 @@ public class Colombia extends GameActivity {
                 updateKeyboard();
             }
         } else {
-            if (keysInUse <= tilesPerPage || justClickedKey <= (tilesPerPage - 2)) {
+            if (totalScreens == 1 || (totalScreens >= 2 && justClickedKey <= (tilesPerPage - 2))) {
                 int keyIndex = (33 * (keyboardScreenNo - 1)) + justClickedKey - 1;
                 respondToKeySelection(keyIndex);
             } else {
@@ -601,53 +617,64 @@ public class Colombia extends GameActivity {
 
     private void updateKeyboard() { // This routine is only called when there are more keys than will fit on the basic 35-key layout
 
+        LOGGER.info("ColombiaX: just entered updateKeyboard()");
+
         int keysLimit;
 
         TextView key34;
         TextView key35;
+        key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
+        key35 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 1]);
 
         // This if block accounts for the partial screen at the end, and also adjusts the arrow color.
         if (totalScreens == keyboardScreenNo) {// on last page
-            // grey out forward arrow
-            key35 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 1]);
-            key35.setBackgroundResource(R.drawable.zz_forward_inactive);
-            // green in backward arrow
-            key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
-            key34.setBackgroundResource(R.drawable.zz_backward_green);
 
+            LOGGER.info("ColombiaX: just entered if (totalScreens == keyboardScreenNo)");
+
+            if (totalScreens > 1) { // if on the last page of a multipage
+                key35.setBackgroundResource(R.drawable.zz_forward_inactive);
+                key34.setBackgroundResource(R.drawable.zz_backward_green);
+            }
 
             keysLimit = partial;
+            LOGGER.info("ColombiaX: keysLimit = " + keysLimit);
+
             for (int k = keysLimit; k < (tilesPerPage - 2); k++) {
+                LOGGER.info("ColombiaX: k = " + k);
                 TextView key = findViewById(GAME_BUTTONS[k]);
                 key.setVisibility(View.INVISIBLE);
             }
-        } else if (keyboardScreenNo == 1){// on first page
-            // grey out backward arrow
-            key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
-            key34.setBackgroundResource(R.drawable.zz_backward_inactive);
-            // green in forward arrow
-            key35 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 1]);
-            key35.setBackgroundResource(R.drawable.zz_forward_green);
-            keysLimit = tilesPerPage - 2;
-        } else {// in a middle page
-            // green in both
-            key35 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 1]);
-            key35.setBackgroundResource(R.drawable.zz_forward_green);
-            key34 = findViewById(GAME_BUTTONS[GAME_BUTTONS.length - 2]);
-            key34.setBackgroundResource(R.drawable.zz_backward_green);
 
+        } else if (keyboardScreenNo == 1){// on first page
+
+            if (totalScreens > 1) { // if on the first page of a multipage
+                key34.setBackgroundResource(R.drawable.zz_backward_inactive);
+                key35.setBackgroundResource(R.drawable.zz_forward_green);
+            }
             keysLimit = tilesPerPage - 2;
+
+        } else {// in a middle page
+
+            key35.setBackgroundResource(R.drawable.zz_forward_green);
+            key34.setBackgroundResource(R.drawable.zz_backward_green);
+            keysLimit = tilesPerPage - 2;
+
         }
+
         if (scriptDirection.equals("RTL")) {
             key34.setRotationY(180);
             key35.setRotationY(180);
         }
+
         // This if block resets text and color. It can be refactored,
         // but is more easily worked on this way
         if (challengeLevel == 3) {
+            LOGGER.info("ColombiaX: just entered if(challengeLevel == 3)");
             for (int k = 0; k < keysLimit; k++) {
                 TextView key = findViewById(GAME_BUTTONS[k]);
+                LOGGER.info("ColombiaX: keyboardScreenNo = " + keyboardScreenNo);
                 int keyIndex = (33 * (keyboardScreenNo - 1)) + k;
+                LOGGER.info("ColombiaX: keyIndex = " + keyIndex);
                 key.setText(keyList.get(keyIndex).text); // KRP
                 String tileColorStr = colorList.get(Integer.parseInt(keyList.get(keyIndex).color));
                 int tileColor = Color.parseColor(tileColorStr);
