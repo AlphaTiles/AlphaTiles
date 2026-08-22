@@ -368,6 +368,11 @@ public class Italy extends GameActivity {
         nextWordArrow.setClickable(false);
         nextWordArrow.setVisibility(View.INVISIBLE);
 
+        ImageView nextWordArrow = findViewById(R.id.playNextWord);
+        nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
+        nextWordArrow.setClickable(false);
+        nextWordArrow.setVisibility(View.INVISIBLE);
+
         // TODO: Draw a thin/transparent line across the loteria?
     }
 }
