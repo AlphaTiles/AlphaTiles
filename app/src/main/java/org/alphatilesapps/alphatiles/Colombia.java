@@ -104,8 +104,9 @@ public class Colombia extends GameActivity {
         }
 
         keyboardScreenNo = 1;
-        updatePointsAndTrackers(0);
         playAgain();
+        setUpInitialView();
+        updateView();
     }
     public void repeatGame(View View) {
 
@@ -478,8 +479,8 @@ public class Colombia extends GameActivity {
             }
             ImageView deleteArrow = (ImageView) findViewById(R.id.deleteImage);
             deleteArrow.setClickable(false);
-            updatePointsAndTrackers(4);
-            playCorrectSoundThenActiveWordClip(false);
+            recordAttempt(true,4);
+            playGameSoundThenActiveWordClip(true,false);
             repeatLocked = false;
             setAdvanceArrowToBlue();
 

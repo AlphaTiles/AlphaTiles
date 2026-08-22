@@ -137,9 +137,10 @@ public class Italy extends GameActivity {
         if(!Start.changeArrowColor) {
             playNextWordImage.setImageResource(R.drawable.zz_forward_green);
         }
-
-        updatePointsAndTrackers(0);
         playAgain();
+        setUpInitialView();
+        updateView();
+
     }
     @Override
     public void setAllGameButtonsUnclickable() {
@@ -282,7 +283,7 @@ public class Italy extends GameActivity {
 
             // The player went through all the cards without getting a loteria. Set up a new board
             playIncorrectSound();
-            playIncorrectSound();
+            recordAttempt(false,0);
             playAgain();
         } else { // "Call out" the next word
 
@@ -323,7 +324,7 @@ public class Italy extends GameActivity {
             respondToLoteria();
         } else {
             // Play sounds, then advance to the next word
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
             nextWordFromGameSet();
         }
 
@@ -357,10 +358,15 @@ public class Italy extends GameActivity {
     }
 
     public void respondToLoteria() {
-        setAllGameButtonsUnclickable();
+        repeatLocked = false;
         setAdvanceArrowToBlue();
-        playCorrectSoundThenActiveWordClip(true);
-        updatePointsAndTrackers(4);
+        playGameSoundThenActiveWordClip(true,true);
+        recordAttempt(true,4);
+
+        ImageView nextWordArrow = findViewById(R.id.playNextWord);
+        nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
+        nextWordArrow.setClickable(false);
+        nextWordArrow.setVisibility(View.INVISIBLE);
 
         ImageView nextWordArrow = findViewById(R.id.playNextWord);
         nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
