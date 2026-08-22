@@ -67,8 +67,6 @@ public class Colombia extends GameActivity {
 
     }
 
-    private static final Logger LOGGER = Logger.getLogger( Colombia.class.getName() );
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -354,9 +352,6 @@ public class Colombia extends GameActivity {
                 if (partial != 0) {
                     totalScreens++;
                 }
-                LOGGER.info("ColombiaX: keysInUse = " + keysInUse);
-                LOGGER.info("ColombiaX: totalScreens = " + totalScreens);
-                LOGGER.info("ColombiaX: partial = " + partial);
 
                 if (keysInUse > GAME_BUTTONS.length) {
                     visibleGameButtons = GAME_BUTTONS.length;
@@ -617,8 +612,6 @@ public class Colombia extends GameActivity {
 
     private void updateKeyboard() { // This routine is only called when there are more keys than will fit on the basic 35-key layout
 
-        LOGGER.info("ColombiaX: just entered updateKeyboard()");
-
         int keysLimit;
 
         TextView key34;
@@ -629,18 +622,14 @@ public class Colombia extends GameActivity {
         // This if block accounts for the partial screen at the end, and also adjusts the arrow color.
         if (totalScreens == keyboardScreenNo) {// on last page
 
-            LOGGER.info("ColombiaX: just entered if (totalScreens == keyboardScreenNo)");
-
             if (totalScreens > 1) { // if on the last page of a multipage
                 key35.setBackgroundResource(R.drawable.zz_forward_inactive);
                 key34.setBackgroundResource(R.drawable.zz_backward_green);
             }
 
             keysLimit = partial;
-            LOGGER.info("ColombiaX: keysLimit = " + keysLimit);
 
             for (int k = keysLimit; k < (tilesPerPage - 2); k++) {
-                LOGGER.info("ColombiaX: k = " + k);
                 TextView key = findViewById(GAME_BUTTONS[k]);
                 key.setVisibility(View.INVISIBLE);
             }
@@ -669,12 +658,9 @@ public class Colombia extends GameActivity {
         // This if block resets text and color. It can be refactored,
         // but is more easily worked on this way
         if (challengeLevel == 3) {
-            LOGGER.info("ColombiaX: just entered if(challengeLevel == 3)");
             for (int k = 0; k < keysLimit; k++) {
                 TextView key = findViewById(GAME_BUTTONS[k]);
-                LOGGER.info("ColombiaX: keyboardScreenNo = " + keyboardScreenNo);
                 int keyIndex = (33 * (keyboardScreenNo - 1)) + k;
-                LOGGER.info("ColombiaX: keyIndex = " + keyIndex);
                 key.setText(keyList.get(keyIndex).text); // KRP
                 String tileColorStr = colorList.get(Integer.parseInt(keyList.get(keyIndex).color));
                 int tileColor = Color.parseColor(tileColorStr);
