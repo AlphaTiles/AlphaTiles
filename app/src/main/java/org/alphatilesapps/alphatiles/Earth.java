@@ -220,23 +220,11 @@ public class Earth extends AppCompatActivity {
                         int points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
                         boolean masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
 
-                        // This is currently the only game that has no right/wrong responses with an incrementing totalCorrect variable
-                        // So we are forcing this game's door to initialize with a start
+                        // There are now several games with no right/wrong responses and with no incrementing totalCorrect variable
+                        // We are forcing these games' doors to initialize with a starting circle (in progress) shape
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
                         String doorTextColor = Start.gameList.get(pageNumber * doorsPerPage).doorTextColor;
-
-                        if (!doorTextColor.isEmpty()) {
-                            ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(doorTextColor))));
-                        } else if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {
-//                            totalCorrect = 12;
-                            ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
-                        } else if (!masteryAchieved) {
-                            ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
-                        } else {
-                            String textColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).color;
-                            ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(textColor))));
-                        }
 
                         boolean changeColor = true;
                         String doorStyle = "";
@@ -265,8 +253,20 @@ public class Earth extends AppCompatActivity {
                         ((TextView) child).setBackground(wrappedDrawable);
                         ((TextView) child).setVisibility(View.VISIBLE);
 
+                        if (!doorTextColor.isEmpty()) {
+                            ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(doorTextColor))));
+                        } else if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {
+//                            totalCorrect = 12;
+                            ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
+                        } else if (!masteryAchieved) {
+                            ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
+                        } else {
+                            String textColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).color;
+                            ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(textColor))));
+                        }
+
                     }
-                } catch (Throwable ex)    // Never reached if tags are well formed!
+                } catch (Throwable ex)    // Never reached if tags are well-formed!
                 {
                     ex.printStackTrace();
                 }

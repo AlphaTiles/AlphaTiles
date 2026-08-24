@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId = "org.alphatilesapps.alphatiles"
         minSdk = 23
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 320
         versionName = "3.0.8"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -76,7 +76,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:34.18.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.segment.analytics.android:analytics:4.11.3'
-    implementation 'androidx.core:core:1.18.0'
+    implementation 'androidx.core:core:1.19.0'
     testImplementation 'androidx.test.ext:junit:1.3.0'
     testImplementation 'org.robolectric:robolectric:4.16.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
