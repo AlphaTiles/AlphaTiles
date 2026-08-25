@@ -103,6 +103,7 @@ public class Colombia extends GameActivity {
             hideInstructionAudioImage();
         }
 
+        totalScreens = 1;
         keyboardScreenNo = 1;
         playAgain();
         setUpInitialView();

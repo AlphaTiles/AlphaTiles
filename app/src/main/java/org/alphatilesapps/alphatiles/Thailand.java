@@ -198,6 +198,7 @@ public class Thailand extends GameActivity {
                 int freshChecks = 0;
                 while (!freshTile) {
                     chooseWord();
+                    freshChecks++;
                     parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
                     refTile = firstAudibleTile(refWord);
                     refString = refTile.text;
