@@ -31,6 +31,7 @@
         <activity android:name=".About" />
         <activity android:name=".Share" />
         <activity android:name=".Brazil" />
+        <activity android:name=".Cameroon" />
         <activity android:name=".China" />
         <activity android:name=".Colombia" />
         <activity android:name=".Celebration" />
@@ -48,6 +49,9 @@
         <activity android:name=".Chile"/>
         <activity android:name=".Malaysia"/>
         <activity android:name=".Iraq"/>
+        <activity
+            android:name=".India"
+            android:exported="false" />
     </application>
 
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
