@@ -247,7 +247,6 @@ public abstract class GameActivity extends AppCompatActivity {
         } else {
             forceLTRIfSupported();
         }
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // testParsingAndCombining(); // Helpful runtime check for complex tile parsing
         super.onCreate(state);
 

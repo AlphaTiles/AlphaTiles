@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +14,9 @@ import java.util.List;
 import java.util.Random;
 
 import static org.alphatilesapps.alphatiles.Start.*;
+
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.Guideline;
 
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
@@ -50,6 +54,22 @@ public class Peru extends GameActivity {
 
         ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            Guideline gH1 = findViewById(R.id.guidelineH1);
+            Guideline gH2 = findViewById(R.id.guidelineH2);
+            gH1.setGuidelinePercent(0.20f);
+            gH2.setGuidelinePercent(0.30f);
+
+        }
 
     }
 
