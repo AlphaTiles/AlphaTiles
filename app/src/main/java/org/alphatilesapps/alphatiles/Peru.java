@@ -4,7 +4,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +16,6 @@ import java.util.Random;
 import static org.alphatilesapps.alphatiles.Start.*;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.Guideline;
 
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
@@ -35,6 +33,44 @@ public class Peru extends GameActivity {
     protected int[] getWordImages() {
         return null;
     }
+
+    // Gridlines will update during orientation change
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.horGuidelineRefTop, R.dimen.peru_horGuidelineRefTop},
+            {R.id.horGuidelineRefBottom, R.dimen.peru_horGuidelineRefBottom},
+            {R.id.horGuidelineWord1Top, R.dimen.peru_horGuidelineWord1Top},
+            {R.id.horGuidelineWord1Bottom, R.dimen.peru_horGuidelineWord1Bottom},
+            {R.id.horGuidelineWord2Top, R.dimen.peru_horGuidelineWord2Top},
+            {R.id.horGuidelineWord2Bottom, R.dimen.peru_horGuidelineWord2Bottom},
+            {R.id.horGuidelineWord3Top, R.dimen.peru_horGuidelineWord3Top},
+            {R.id.horGuidelineWord3Bottom, R.dimen.peru_horGuidelineWord3Bottom},
+            {R.id.horGuidelineWord4Top, R.dimen.peru_horGuidelineWord4Top},
+            {R.id.horGuidelineWord4Bottom, R.dimen.peru_horGuidelineWord4Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.verGuidelineRefLeft, R.dimen.peru_verGuidelineRefLeft},
+            {R.id.verGuidelineWordsLeft, R.dimen.peru_verGuidelineWordsLeft},
+            {R.id.verGuidelineRefRight, R.dimen.peru_verGuidelineRefRight},
+            {R.id.verGuidelineWordsRight, R.dimen.peru_verGuidelineWordsRight}
+    };
 
     int indexOfCorrectAnswerAmongChoices;
 
@@ -110,53 +146,10 @@ public class Peru extends GameActivity {
 
     private void updateGuidelines() {
 
-        // Map Guideline View IDs to their corresponding dimen Resource IDs
-        int[][] guidelineMappings = {
-                // Horizontal Guidelines
-                {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
-                {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
-                {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
-                {R.id.horGuidelineRefTop, R.dimen.horGuidelineRefTop},
-                {R.id.horGuidelineRefBottom, R.dimen.horGuidelineRefBottom},
-                {R.id.horGuidelineWord1Top, R.dimen.horGuidelineWord1Top},
-                {R.id.horGuidelineWord1Bottom, R.dimen.horGuidelineWord1Bottom},
-                {R.id.horGuidelineWord2Top, R.dimen.horGuidelineWord2Top},
-                {R.id.horGuidelineWord2Bottom, R.dimen.horGuidelineWord2Bottom},
-                {R.id.horGuidelineWord3Top, R.dimen.horGuidelineWord3Top},
-                {R.id.horGuidelineWord3Bottom, R.dimen.horGuidelineWord3Bottom},
-                {R.id.horGuidelineWord4Top, R.dimen.horGuidelineWord4Top},
-                {R.id.horGuidelineWord4Bottom, R.dimen.horGuidelineWord4Bottom},
-                {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
-                {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
-
-                // Vertical Guidelines
-                {R.id.verGuidelineStatusLeft, R.dimen.verGuidelineStatusLeft},
-                {R.id.verGuidelineRefLeft, R.dimen.verGuidelineRefLeft},
-                {R.id.verGuidelineWordsLeft, R.dimen.verGuidelineWordsLeft},
-                {R.id.verGuidelineGameCLBorder, R.dimen.verGuidelineGameCLBorder},
-                {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
-                {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
-                {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
-                {R.id.verGuidelineStatusRight, R.dimen.verGuidelineStatusRight},
-                {R.id.verGuidelineRefRight, R.dimen.verGuidelineRefRight},
-                {R.id.verGuidelineWordsRight, R.dimen.verGuidelineWordsRight}
-        };
-
-        TypedValue typedValue = new TypedValue();
-
-        for (int[] mapping : guidelineMappings) {
-            int viewId = mapping[0];
-            int dimenId = mapping[1];
-
-            Guideline guideline = findViewById(viewId);
-            if (guideline != null) {
-                getResources().getValue(dimenId, typedValue, true);
-                guideline.setGuidelinePercent(typedValue.getFloat());
-            }
-        }
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
 
     }
-
 
     public void repeatGame(View view) {
 

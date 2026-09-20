@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import java.util.List;
 import java.util.Set;
 
 import static org.alphatilesapps.alphatiles.Start.*;
+
+import androidx.annotation.NonNull;
 
 // RR
 //Game idea: Find the vowel missing from the word
@@ -58,6 +61,99 @@ public class Brazil extends GameActivity {
         return null;
     }
 
+    // Gridlines will update during orientation change
+    private static final int[][] GUIDELINE_MAPPINGS_CL1 = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            // CL1 (and CL2)
+            {R.id.horGuidelineRefTop, R.dimen.brazil_cl1_horGuidelineRefTop},
+            {R.id.horGuidelineRefBottom, R.dimen.brazil_cl1_horGuidelineRefBottom},
+            {R.id.horGuidelineWordTextTop, R.dimen.brazil_cl1_horGuidelineWordTextTop},
+            {R.id.horGuidelineWordTextBottom, R.dimen.brazil_cl1_horGuidelineWordTextBottom},
+            {R.id.horGuidelineRow1TilesTop, R.dimen.brazil_cl1_horGuidelineRow1TilesTop},
+            {R.id.horGuidelineRow1TilesBottom, R.dimen.brazil_cl1_horGuidelineRow1TilesBottom},
+            {R.id.horGuidelineRow2TilesTop, R.dimen.brazil_cl1_horGuidelineRow2TilesTop},
+            {R.id.horGuidelineRow2TilesBottom, R.dimen.brazil_cl1_horGuidelineRow2TilesBottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            // CL1 (and CL2)
+            {R.id.verGuidelineRefLeft, R.dimen.brazil_cl1_verGuidelineRefLeft},
+            {R.id.verGuidelineWordTextLeft, R.dimen.brazil_cl1_verGuidelineWordTextLeft},
+            {R.id.verGuidelineRefRight, R.dimen.brazil_cl1_verGuidelineRefRight},
+            {R.id.verGuidelineWordTextRight, R.dimen.brazil_cl1_verGuidelineWordTextRight},
+            {R.id.verGuidelineTilesLeft, R.dimen.brazil_cl1_verGuidelineTilesLeft},
+            {R.id.verGuidelineCol1TilesRight, R.dimen.brazil_cl1_verGuidelineCol1TilesRight},
+            {R.id.verGuidelineCol2TilesLeft, R.dimen.brazil_cl1_verGuidelineCol2TilesLeft},
+            {R.id.verGuidelineTilesRight, R.dimen.brazil_cl1_verGuidelineTilesRight},
+
+    };
+
+    private static final int[][] GUIDELINE_MAPPINGS_CL3 = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            // CL3
+            {R.id.horGuidelineRefTop, R.dimen.brazil_cl3_horGuidelineRefTop},
+            {R.id.horGuidelineRefBottom, R.dimen.brazil_cl3_horGuidelineRefBottom},
+            {R.id.horGuidelineWordTextTop, R.dimen.brazil_cl3_horGuidelineWordTextTop},
+            {R.id.horGuidelineWordTextBottom, R.dimen.brazil_cl3_horGuidelineWordTextBottom},
+            {R.id.horGuidelineRow1TilesTop, R.dimen.brazil_cl3_horGuidelineRow1TilesTop},
+            {R.id.horGuidelineRow1TilesBottom, R.dimen.brazil_cl3_horGuidelineRow1TilesBottom},
+            {R.id.horGuidelineRow2TilesTop, R.dimen.brazil_cl3_horGuidelineRow2TilesTop},
+            {R.id.horGuidelineRow2TilesBottom, R.dimen.brazil_cl3_horGuidelineRow2TilesBottom},
+            {R.id.horGuidelineRow3TilesTop, R.dimen.brazil_cl3_horGuidelineRow3TilesTop},
+            {R.id.horGuidelineRow3TilesBottom, R.dimen.brazil_cl3_horGuidelineRow3TilesBottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            // CL3
+            {R.id.verGuidelineRefLeft, R.dimen.brazil_cl3_verGuidelineRefLeft},
+            {R.id.verGuidelineWordTextLeft, R.dimen.brazil_cl3_verGuidelineWordTextLeft},
+            {R.id.verGuidelineRefRight, R.dimen.brazil_cl3_verGuidelineRefRight},
+            {R.id.verGuidelineWordTextRight, R.dimen.brazil_cl3_verGuidelineWordTextRight},
+            {R.id.verGuidelineTilesLeft, R.dimen.brazil_cl3_verGuidelineTilesLeft},
+            {R.id.verGuidelineCol1TilesRight, R.dimen.brazil_cl3_verGuidelineCol1TilesRight},
+            {R.id.verGuidelineCol2TilesLeft, R.dimen.brazil_cl3_verGuidelineCol2TilesLeft},
+            {R.id.verGuidelineCol2TilesRight, R.dimen.brazil_cl3_verGuidelineCol2TilesRight},
+            {R.id.verGuidelineCol3TilesLeft, R.dimen.brazil_cl3_verGuidelineCol3TilesLeft},
+            {R.id.verGuidelineCol3TilesRight, R.dimen.brazil_cl3_verGuidelineCol3TilesRight},
+            {R.id.verGuidelineCol4TilesLeft, R.dimen.brazil_cl3_verGuidelineCol4TilesLeft},
+            {R.id.verGuidelineCol4TilesRight, R.dimen.brazil_cl3_verGuidelineCol4TilesRight},
+            {R.id.verGuidelineCol5TilesLeft, R.dimen.brazil_cl3_verGuidelineCol5TilesLeft},
+            {R.id.verGuidelineCol5TilesRight, R.dimen.brazil_cl3_verGuidelineCol5TilesRight},
+            {R.id.verGuidelineCol6TilesLeft, R.dimen.brazil_cl3_verGuidelineCol6TilesLeft},
+    };
+
     @Override
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
@@ -79,6 +175,14 @@ public class Brazil extends GameActivity {
     }
 
     @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        updateGuidelines();
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
@@ -94,6 +198,8 @@ public class Brazil extends GameActivity {
         } else {
             gameID = R.id.brazil_cl1_CL;
         }
+
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -189,6 +295,16 @@ public class Brazil extends GameActivity {
         playAgain();
         setUpInitialView();
         updateView();
+    }
+
+    private void updateGuidelines() {
+
+        View rootView = findViewById(android.R.id.content);
+        if (challengeLevel < 3) {
+            GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS_CL1);
+        } else {
+            GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS_CL3);
+        }
     }
 
     public void repeatGame(View View) {

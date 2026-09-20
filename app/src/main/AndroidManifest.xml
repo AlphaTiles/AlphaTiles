@@ -30,7 +30,8 @@
         <activity android:name=".Earth" />
         <activity android:name=".About" />
         <activity android:name=".Share" />
-        <activity android:name=".Brazil" />
+        <activity android:name=".Brazil"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
         <activity android:name=".China" />
         <activity android:name=".Colombia" />
         <activity android:name=".Celebration" />

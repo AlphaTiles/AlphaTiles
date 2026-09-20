@@ -20,8 +20,8 @@
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
-        app:layout_constraintEnd_toStartOf="@+id/verGuidelineGameCLBorder"
-        app:layout_constraintStart_toStartOf="@id/verGuidelineStatusLeft"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineGameNoCLBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineGameNoLeft"
         app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
@@ -43,7 +43,7 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
         app:layout_constraintEnd_toStartOf="@+id/verGuidelineCLStageBorder"
-        app:layout_constraintStart_toStartOf="@id/verGuidelineGameCLBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineGameNoCLBorder"
         app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
@@ -120,7 +120,7 @@
         android:progress="0"
         android:max="100"
         app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
-        app:layout_constraintEnd_toEndOf="@id/verGuidelineStatusRight"
+        app:layout_constraintEnd_toEndOf="@id/verGuidelinePointsRight"
         app:layout_constraintStart_toStartOf="@id/verGuidelineBarsPointsBorder"
         app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
@@ -155,7 +155,7 @@
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/horGuidelineWord1Bottom"
-        app:layout_constraintEnd_toStartOf="@+id/verGuidelineStatusRight"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineWordsRight"
         app:layout_constraintStart_toStartOf="@+id/verGuidelineWordsLeft"
         app:layout_constraintTop_toTopOf="@+id/horGuidelineWord1Top"
         app:autoSizeTextType="uniform"
@@ -177,7 +177,7 @@
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/horGuidelineWord2Bottom"
-        app:layout_constraintEnd_toStartOf="@+id/verGuidelineStatusRight"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineWordsRight"
         app:layout_constraintStart_toStartOf="@+id/verGuidelineWordsLeft"
         app:layout_constraintTop_toTopOf="@+id/horGuidelineWord2Top"
         app:autoSizeTextType="uniform"
@@ -199,7 +199,7 @@
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/horGuidelineWord3Bottom"
-        app:layout_constraintEnd_toStartOf="@+id/verGuidelineStatusRight"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineWordsRight"
         app:layout_constraintStart_toStartOf="@+id/verGuidelineWordsLeft"
         app:layout_constraintTop_toTopOf="@+id/horGuidelineWord3Top"
         app:autoSizeTextType="uniform"
@@ -221,7 +221,7 @@
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/horGuidelineWord4Bottom"
-        app:layout_constraintEnd_toStartOf="@+id/verGuidelineStatusRight"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineWordsRight"
         app:layout_constraintStart_toStartOf="@+id/verGuidelineWordsLeft"
         app:layout_constraintTop_toTopOf="@+id/horGuidelineWord4Top"
         app:autoSizeTextType="uniform"
@@ -238,7 +238,7 @@
         android:onClick="goBackToEarth"
         app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer"
-        app:layout_constraintStart_toStartOf="@id/verGuidelineStatusLeft"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineOptionsLeft"
         app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
         android:contentDescription="@string/playerAvatar"
         app:srcCompat="@drawable/zz_games_home" />
@@ -272,7 +272,7 @@
         android:layout_height="0dp"
         android:onClick="repeatGame"
         app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
-        app:layout_constraintEnd_toEndOf="@id/verGuidelineStatusRight"
+        app:layout_constraintEnd_toEndOf="@id/verGuidelineOptionsRight"
         app:layout_constraintStart_toEndOf="@+id/bottomMiddleSpacer"
         app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
         android:contentDescription="@string/playAgain"
@@ -385,7 +385,7 @@
         app:layout_constraintGuide_percent="0.99" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/verGuidelineStatusLeft"
+        android:id="@+id/verGuidelineGameNoLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -406,7 +406,14 @@
         app:layout_constraintGuide_percent="0.01" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/verGuidelineGameCLBorder"
+        android:id="@+id/verGuidelineOptionsLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.01" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineGameNoCLBorder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -434,7 +441,7 @@
         app:layout_constraintGuide_percent="0.88" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/verGuidelineStatusRight"
+        android:id="@+id/verGuidelinePointsRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -449,6 +456,13 @@
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/verGuidelineWordsRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.99" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineOptionsRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
