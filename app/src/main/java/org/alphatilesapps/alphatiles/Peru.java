@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,15 +62,7 @@ public class Peru extends GameActivity {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-            Guideline gH1 = findViewById(R.id.guidelineH1);
-            Guideline gH2 = findViewById(R.id.guidelineH2);
-            gH1.setGuidelinePercent(0.20f);
-            gH2.setGuidelinePercent(0.30f);
-
-        }
+        updateGuidelines();
 
     }
 
@@ -78,6 +71,8 @@ public class Peru extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.peru);
+
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.peruCL);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -111,6 +106,55 @@ public class Peru extends GameActivity {
         playAgain();
         setUpInitialView();
         updateView();
+    }
+
+    private void updateGuidelines() {
+
+        // Map Guideline View IDs to their corresponding dimen Resource IDs
+        int[][] guidelineMappings = {
+                // Horizontal Guidelines
+                {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+                {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+                {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+                {R.id.horGuidelineRefTop, R.dimen.horGuidelineRefTop},
+                {R.id.horGuidelineRefBottom, R.dimen.horGuidelineRefBottom},
+                {R.id.horGuidelineWord1Top, R.dimen.horGuidelineWord1Top},
+                {R.id.horGuidelineWord1Bottom, R.dimen.horGuidelineWord1Bottom},
+                {R.id.horGuidelineWord2Top, R.dimen.horGuidelineWord2Top},
+                {R.id.horGuidelineWord2Bottom, R.dimen.horGuidelineWord2Bottom},
+                {R.id.horGuidelineWord3Top, R.dimen.horGuidelineWord3Top},
+                {R.id.horGuidelineWord3Bottom, R.dimen.horGuidelineWord3Bottom},
+                {R.id.horGuidelineWord4Top, R.dimen.horGuidelineWord4Top},
+                {R.id.horGuidelineWord4Bottom, R.dimen.horGuidelineWord4Bottom},
+                {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+                {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+                // Vertical Guidelines
+                {R.id.verGuidelineStatusLeft, R.dimen.verGuidelineStatusLeft},
+                {R.id.verGuidelineRefLeft, R.dimen.verGuidelineRefLeft},
+                {R.id.verGuidelineWordsLeft, R.dimen.verGuidelineWordsLeft},
+                {R.id.verGuidelineGameCLBorder, R.dimen.verGuidelineGameCLBorder},
+                {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+                {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+                {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+                {R.id.verGuidelineStatusRight, R.dimen.verGuidelineStatusRight},
+                {R.id.verGuidelineRefRight, R.dimen.verGuidelineRefRight},
+                {R.id.verGuidelineWordsRight, R.dimen.verGuidelineWordsRight}
+        };
+
+        TypedValue typedValue = new TypedValue();
+
+        for (int[] mapping : guidelineMappings) {
+            int viewId = mapping[0];
+            int dimenId = mapping[1];
+
+            Guideline guideline = findViewById(viewId);
+            if (guideline != null) {
+                getResources().getValue(dimenId, typedValue, true);
+                guideline.setGuidelinePercent(typedValue.getFloat());
+            }
+        }
+
     }
 
 
