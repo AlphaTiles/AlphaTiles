@@ -85,4 +85,37 @@
     <item name="peru_verGuidelineRefRight" type="dimen" format="float">0.99</item>
     <item name="peru_verGuidelineWordsRight" type="dimen" format="float">0.99</item>
 
+    <!-- Thailand Horizontal Guidelines (Portrait) -->
+    <item name="thailand_horGuidelineRefTop" type="dimen" format="float">0.10</item>
+    <item name="thailand_horGuidelineRefBottom" type="dimen" format="float">0.42</item>
+    <item name="thailand_horGuidelineRow1TilesTop" type="dimen" format="float">0.44</item>
+    <item name="thailand_horGuidelineRow1TilesBottom" type="dimen" format="float">0.66</item>
+    <item name="thailand_horGuidelineRow2TilesTop" type="dimen" format="float">0.68</item>
+    <item name="thailand_horGuidelineRow2TilesBottom" type="dimen" format="float">0.90</item>
+
+    <!-- Thailand Vertical Guidelines (Portrait) -->
+    <item name="thailand_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="thailand_verGuidelineRefRight" type="dimen" format="float">0.99</item>
+    <item name="thailand_verGuidelineTilesLeft" type="dimen" format="float">0.01</item>
+    <item name="thailand_verGuidelineCol1TilesRight" type="dimen" format="float">0.49</item>
+    <item name="thailand_verGuidelineCol2TilesLeft" type="dimen" format="float">0.51</item>
+    <item name="thailand_verGuidelineTilesRight" type="dimen" format="float">0.99</item>
+
+    <!-- Thailand2 Horizontal Guidelines (Portrait) -->
+    <item name="thailand2_horGuidelineRefTop" type="dimen" format="float">0.08</item>
+    <item name="thailand2_horGuidelineRefBottom" type="dimen" format="float">0.46</item>
+    <item name="thailand2_horGuidelineRow1TilesTop" type="dimen" format="float">0.48</item>
+    <item name="thailand2_horGuidelineRow1TilesBottom" type="dimen" format="float">0.58</item>
+    <item name="thailand2_horGuidelineRow2TilesTop" type="dimen" format="float">0.59</item>
+    <item name="thailand2_horGuidelineRow2TilesBottom" type="dimen" format="float">0.69</item>
+    <item name="thailand2_horGuidelineRow3TilesTop" type="dimen" format="float">0.70</item>
+    <item name="thailand2_horGuidelineRow3TilesBottom" type="dimen" format="float">0.80</item>
+    <item name="thailand2_horGuidelineRow4TilesTop" type="dimen" format="float">0.81</item>
+    <item name="thailand2_horGuidelineRow4TilesBottom" type="dimen" format="float">0.91</item>
+
+    <!-- Thailand2 Vertical Guidelines (Portrait) -->
+    <item name="thailand2_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="thailand2_verGuidelineRefRight" type="dimen" format="float">0.99</item>
+    <item name="thailand2_verGuidelineTilesLeft" type="dimen" format="float">0.01</item>
+    <item name="thailand2_verGuidelineTilesRight" type="dimen" format="float">0.99</item>
 </resources>

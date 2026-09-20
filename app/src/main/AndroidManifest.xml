@@ -45,7 +45,8 @@
         <activity android:name=".Resources" />
         <activity android:name=".Romania" />
         <activity android:name=".Sudan" />
-        <activity android:name=".Thailand" />
+        <activity android:name=".Thailand"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
         <activity android:name=".UnitedStates" />
         <activity android:name=".Chile"/>
         <activity android:name=".Malaysia"/>
