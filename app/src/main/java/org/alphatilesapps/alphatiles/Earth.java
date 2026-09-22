@@ -224,7 +224,7 @@ public class Earth extends AppCompatActivity {
                         // We are forcing these games' doors to initialize with a starting circle (in progress) shape
                         // This code is in two places
                         // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                        String doorTextColor = Start.gameList.get(pageNumber * doorsPerPage).doorTextColor;
+                        String doorTextColor = Start.gameList.get((pageNumber * doorsPerPage)+doorIndex).doorTextColor;
 
                         boolean changeColor = true;
                         String doorStyle = "";
