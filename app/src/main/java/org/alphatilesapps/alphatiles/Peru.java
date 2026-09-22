@@ -31,6 +31,8 @@ public class Peru extends GameActivity {
         return null;
     }
 
+    int indexOfCorrectAnswerAmongChoices;
+
     @Override
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
@@ -82,12 +84,13 @@ public class Peru extends GameActivity {
 
         }
         visibleGameButtons = GAME_BUTTONS.length;
-        updatePointsAndTrackers(0);
         incorrectAnswersSelected = new ArrayList<>(3);
         for (int i = 0; i < 3; i++) {
             incorrectAnswersSelected.add("");
         }
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
 
@@ -136,7 +139,7 @@ public class Peru extends GameActivity {
         image.setClickable(true);
 
         Random rand = new Random();
-        int indexOfCorrectAnswerAmongChoices = rand.nextInt(4);
+        indexOfCorrectAnswerAmongChoices = rand.nextInt(4);
         List<String> shuffledDistractorTiles = parsedRefWordTileArray.get(0).distractors;
         Collections.shuffle(shuffledDistractorTiles);
 
@@ -280,23 +283,11 @@ public class Peru extends GameActivity {
                 Analytics.with(context).track(gameUniqueID, info);
             }
 
-            repeatLocked = false;
-            setAdvanceArrowToBlue();
+            recordAttempt(true, 2);
 
-            updatePointsAndTrackers(2);
+            endRound(t);
 
-            for (int w = 0; w < GAME_BUTTONS.length; w++) {
-                TextView nextWord = findViewById(GAME_BUTTONS[w]);
-                nextWord.setClickable(false);
-                if (w != t) {
-                    String wordColorStr = "#A9A9A9"; // dark gray
-                    int wordColorNo = Color.parseColor(wordColorStr);
-                    nextWord.setBackgroundColor(wordColorNo);
-                    nextWord.setTextColor(Color.parseColor("#000000")); // black
-                }
-            }
-
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
 
         } else {
             incorrectOnLevel += 1;
@@ -308,8 +299,32 @@ public class Peru extends GameActivity {
                     break;
                 }
             }
-            playIncorrectSound();
+            recordAttempt(false, 0);
+            if(secondChances) {
+                playIncorrectSound();
+            } else {
+                endRound(indexOfCorrectAnswerAmongChoices);
+                playGameSoundThenActiveWordClip(false,false);
+            }
         }
+    }
+
+    private void endRound(int justClickedWord) {
+
+        repeatLocked = false;
+        setAdvanceArrowToBlue();
+
+        for (int w = 0; w < GAME_BUTTONS.length; w++) {
+            TextView nextWord = findViewById(GAME_BUTTONS[w]);
+            nextWord.setClickable(false);
+            if (w != justClickedWord) {
+                String wordColorStr = "#A9A9A9"; // dark gray
+                int wordColorNo = Color.parseColor(wordColorStr);
+                nextWord.setBackgroundColor(wordColorNo);
+                nextWord.setTextColor(Color.parseColor("#000000")); // black
+            }
+        }
+
     }
 
     public void onWordClick(View view) {

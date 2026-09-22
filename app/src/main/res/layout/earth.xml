@@ -91,6 +91,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH2" />
 
     <TextView
+        android:id="@+id/textMark001"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark001"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="1"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH1"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH2" />
+
+    <TextView
         android:id="@+id/textDoor002"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -111,6 +134,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH2" />
+
+    <TextView
+        android:id="@+id/textMark002"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark002"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="2"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH1"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH2" />
 
     <TextView
@@ -137,6 +183,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH2" />
 
     <TextView
+        android:id="@+id/textMark003"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark003"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="3"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH1"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH2" />
+
+    <TextView
         android:id="@+id/textDoor004"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -157,6 +226,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
         app:layout_constraintStart_toStartOf="@+id/guidelineV8"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH2" />
+
+    <TextView
+        android:id="@+id/textMark004"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark004"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="4"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH1"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV5"
         app:layout_constraintTop_toTopOf="@+id/guidelineH2" />
 
     <TextView
@@ -183,6 +275,30 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH4" />
 
     <TextView
+        android:id="@+id/textMark005"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark005"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="5"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH2"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4" />
+
+
+    <TextView
         android:id="@+id/textDoor006"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -203,6 +319,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
         app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4" />
+
+    <TextView
+        android:id="@+id/textMark006"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark006"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="6"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH2"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH4" />
 
     <TextView
@@ -229,6 +368,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH4" />
 
     <TextView
+        android:id="@+id/textMark007"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark007"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="7"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH2"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV3"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4" />
+
+    <TextView
         android:id="@+id/textDoor008"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -249,6 +411,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4" />
+
+    <TextView
+        android:id="@+id/textMark008"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark008"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="8"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH2"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV4"
         app:layout_constraintTop_toTopOf="@+id/guidelineH4" />
 
     <TextView
@@ -275,6 +460,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH4" />
 
     <TextView
+        android:id="@+id/textMark009"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark009"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="9"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH2"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV5"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4" />
+
+    <TextView
         android:id="@+id/textDoor010"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -295,6 +503,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV1"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6" />
+
+    <TextView
+        android:id="@+id/textMark010"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark010"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="10"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH3"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH6" />
 
     <TextView
@@ -321,6 +552,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH6" />
 
     <TextView
+        android:id="@+id/textMark011"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark011"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="11"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH3"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6" />
+
+    <TextView
         android:id="@+id/textDoor012"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -341,6 +595,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6" />
+
+    <TextView
+        android:id="@+id/textMark012"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark012"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="12"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH3"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH6" />
 
     <TextView
@@ -367,6 +644,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH6" />
 
     <TextView
+        android:id="@+id/textMark013"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark013"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="13"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH3"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6" />
+
+    <TextView
         android:id="@+id/textDoor014"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -387,6 +687,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
         app:layout_constraintStart_toStartOf="@+id/guidelineV8"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH6" />
+
+    <TextView
+        android:id="@+id/textMark014"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark014"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="14"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH3"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV5"
         app:layout_constraintTop_toTopOf="@+id/guidelineH6" />
 
     <TextView
@@ -413,6 +736,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH8" />
 
     <TextView
+        android:id="@+id/textMark015"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark015"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="15"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH4"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8" />
+
+    <TextView
         android:id="@+id/textDoor016"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -433,6 +779,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
         app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8" />
+
+    <TextView
+        android:id="@+id/textMark016"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark016"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="16"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH4"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH8" />
 
     <TextView
@@ -459,6 +828,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH8" />
 
     <TextView
+        android:id="@+id/textMark017"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark017"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="17"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH4"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV3"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8" />
+
+    <TextView
         android:id="@+id/textDoor018"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -479,6 +871,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8" />
+
+    <TextView
+        android:id="@+id/textMark018"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark018"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="18"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH4"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV4"
         app:layout_constraintTop_toTopOf="@+id/guidelineH8" />
 
     <TextView
@@ -505,6 +920,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH8" />
 
     <TextView
+        android:id="@+id/textMark019"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark019"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="19"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH4"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV5"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH8" />
+
+    <TextView
         android:id="@+id/textDoor020"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -525,6 +963,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV1"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10" />
+
+    <TextView
+        android:id="@+id/textMark020"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark020"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="20"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH5"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH10" />
 
     <TextView
@@ -551,6 +1012,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH10" />
 
     <TextView
+        android:id="@+id/textMark021"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark021"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="21"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH5"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10" />
+
+    <TextView
         android:id="@+id/textDoor022"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -571,6 +1055,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10" />
+
+    <TextView
+        android:id="@+id/textMark022"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark022"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="22"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH5"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH10" />
 
     <TextView
@@ -597,6 +1104,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH10" />
 
     <TextView
+        android:id="@+id/textMark023"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark023"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="23"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH5"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10" />
+
+    <TextView
         android:id="@+id/textDoor024"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -617,6 +1147,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
         app:layout_constraintStart_toStartOf="@+id/guidelineV8"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH10" />
+
+    <TextView
+        android:id="@+id/textMark024"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark024"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="24"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH5"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV5"
         app:layout_constraintTop_toTopOf="@+id/guidelineH10" />
 
     <TextView
@@ -643,6 +1196,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH12" />
 
     <TextView
+        android:id="@+id/textMark025"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark025"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="25"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH6"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH12" />
+
+    <TextView
         android:id="@+id/textDoor026"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -663,6 +1239,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
         app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH12" />
+
+    <TextView
+        android:id="@+id/textMark026"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark026"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="26"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH6"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV2"
         app:layout_constraintTop_toTopOf="@+id/guidelineH12" />
 
     <TextView
@@ -689,6 +1288,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH12" />
 
     <TextView
+        android:id="@+id/textMark027"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark027"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="27"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH6"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV3"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH12" />
+
+    <TextView
         android:id="@+id/textDoor028"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -709,6 +1331,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH12" />
+
+    <TextView
+        android:id="@+id/textMark028"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark028"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="28"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH6"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV4"
         app:layout_constraintTop_toTopOf="@+id/guidelineH12" />
 
     <TextView
@@ -735,6 +1380,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH12" />
 
     <TextView
+        android:id="@+id/textMark029"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark029"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="29"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH6"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV5"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH12" />
+
+    <TextView
         android:id="@+id/textDoor030"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -755,6 +1423,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV1"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH14" />
+
+    <TextView
+        android:id="@+id/textMark030"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark030"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="30"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH7"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH14" />
 
     <TextView
@@ -781,6 +1472,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH14" />
 
     <TextView
+        android:id="@+id/textMark031"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark031"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="31"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH7"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH14" />
+
+    <TextView
         android:id="@+id/textDoor032"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -804,6 +1518,29 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH14" />
 
     <TextView
+        android:id="@+id/textMark032"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark032"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="32"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH7"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV3"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH14" />
+
+    <TextView
         android:id="@+id/textDoor033"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -824,6 +1561,29 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH14" />
+
+    <TextView
+        android:id="@+id/textMark033"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/tracker_01"
+        android:visibility="invisible"
+        android:contentDescription="@string/mark033"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="goToDoor"
+        android:padding="4dp"
+        android:tag="33"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="40sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineSH7"
+        app:layout_constraintDimensionRatio="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineSV4"
         app:layout_constraintTop_toTopOf="@+id/guidelineH14" />
 
 
@@ -1152,5 +1912,89 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.99" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSH1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.16" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSH2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.27" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSH3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.38" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSH4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.49" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSH5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.60" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSH6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.71" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSH7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.82" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSV1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.13" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSV2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3325" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSV3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.535" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSV4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7375" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineSV5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.94" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

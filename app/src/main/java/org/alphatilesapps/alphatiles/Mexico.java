@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.logging.Logger;
 
 import static android.graphics.Color.BLACK;
 
@@ -28,7 +27,6 @@ public class Mexico extends GameActivity {
     int cardHitA = 0;
     int cardHitB = 0;
     Handler handler; // KP
-    private static final Logger LOGGER = Logger.getLogger(Mexico.class.getName());
 
     protected static final int[] GAME_BUTTONS = {
             R.id.card01, R.id.card02, R.id.card03, R.id.card04, R.id.card05, R.id.card06, R.id.card07, R.id.card08, R.id.card09, R.id.card10,
@@ -110,8 +108,9 @@ public class Mexico extends GameActivity {
             hideInstructionAudioImage();
         }
 
-        updatePointsAndTrackers(0);
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View View) {
@@ -125,7 +124,8 @@ public class Mexico extends GameActivity {
         startActivity(intent);
         finish();
         playAgain();
-
+        setUpInitialView();
+        updateView();
     }
 
     public void playAgain() {
@@ -208,7 +208,6 @@ public class Mexico extends GameActivity {
 
             if (++sanityCounter > cardsToSetUp*3) {
                 // we've looped too many times - give up
-                LOGGER.warning("chooseMemoryWords: can't proceed - not enough words");
                 // return to the home screen
                 goBackToEarth(null);
                 return;
@@ -322,11 +321,12 @@ public class Mexico extends GameActivity {
             );
 
             if (pairsCompleted == (visibleGameButtons / 2)) {
-                updatePointsAndTrackers((visibleGameButtons / 2));
+                recordAttempt(true,visibleGameButtons / 2);
+                repeatLocked = false;
                 setAdvanceArrowToBlue();
             }
 
-            playCorrectSoundThenActiveWordClip(pairsCompleted == (visibleGameButtons / 2));
+            playGameSoundThenActiveWordClip(true,pairsCompleted == (visibleGameButtons / 2));
 
         } else {
             // The two cards do NOT match

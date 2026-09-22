@@ -181,12 +181,14 @@ public class Brazil extends GameActivity {
             hideInstructionAudioImage();
         }
 
-        updatePointsAndTrackers(0);
+        updateView();
         incorrectAnswersSelected = new ArrayList<>(visibleGameButtons-1);
         for (int i = 0; i < visibleGameButtons-1; i++) {
             incorrectAnswersSelected.add("");
         }
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View View) {
@@ -204,7 +206,7 @@ public class Brazil extends GameActivity {
         setAdvanceArrowToGray();
 
         setWord();
-        removeTile();
+        removeTileOrSyllable();
         setAllGameButtonsUnclickable();
         setOptionsRowUnclickable();
         if (syllableGame.equals("S")) {
@@ -285,7 +287,7 @@ public class Brazil extends GameActivity {
         }
     }
 
-    private void removeTile() {
+    private void removeTileOrSyllable() {
 
         Random rand = new Random();
         int index = 0;
@@ -596,7 +598,7 @@ public class Brazil extends GameActivity {
         }
     }
 
-    private void respondToTileSelection(int justClickedButton) {
+    private void respondToTileOrSyllableSelection(int justClickedButton) {
 
         if (mediaPlayerIsPlaying) {
             return;
@@ -611,9 +613,9 @@ public class Brazil extends GameActivity {
 
         if (gameButtonString.equals(correctString)) {
             // Good job! You chose the right gameButton
-            repeatLocked = false;
-            setAdvanceArrowToBlue();
-            updatePointsAndTrackers(1);
+
+            recordAttempt(true,1);
+            endRound(tileNo);
 
             // report time and number of incorrect guesses
             if (sendAnalytics) {
@@ -630,21 +632,7 @@ public class Brazil extends GameActivity {
                 Analytics.with(context).track(gameUniqueID, info);
             }
 
-            TextView constructedWord = findViewById(R.id.activeWordTextView);
-            String word = wordInLOPWithStandardizedSequenceOfCharacters(refWord);
-            constructedWord.setText(word);
-
-            for (int t = 0; t < visibleGameButtons; t++) {
-                TextView gameTile = findViewById(GAME_BUTTONS[t]);
-                gameTile.setClickable(false);
-                if (t != (tileNo)) {
-                    String wordColorStr = "#A9A9A9"; // dark gray
-                    int wordColorNo = Color.parseColor(wordColorStr);
-                    gameTile.setBackgroundColor(wordColorNo);
-                    gameTile.setTextColor(Color.parseColor("#000000")); // black
-                }
-            }
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
         } else {
             incorrectOnLevel += 1;
             for (int i = 0; i < visibleGameButtons-1; i++) {
@@ -655,8 +643,42 @@ public class Brazil extends GameActivity {
                     break;
                 }
             }
-            playIncorrectSound();
+            recordAttempt(false, 0);
+            if(secondChances) {
+                playIncorrectSound();
+            } else {
+                for (int i = 0; i < visibleGameButtons; i++) {
+                    TextView gameTile = findViewById(GAME_BUTTONS[i]);
+                    String tileSyllableButtonString = gameTile.getText().toString();
+                    if (tileSyllableButtonString.equals(correctString))  {
+                        endRound(i);
+                    }
+                }
+                playGameSoundThenActiveWordClip(false,false);
+            }
         }
+    }
+
+    private void endRound(int tileNo) {
+
+        repeatLocked = false;
+        setAdvanceArrowToBlue();
+
+        TextView constructedWord = findViewById(R.id.activeWordTextView);
+        String word = wordInLOPWithStandardizedSequenceOfCharacters(refWord);
+        constructedWord.setText(word);
+
+        for (int t = 0; t < visibleGameButtons; t++) {
+            TextView gameTile = findViewById(GAME_BUTTONS[t]);
+            gameTile.setClickable(false);
+            if (t != (tileNo)) {
+                String wordColorStr = "#A9A9A9"; // dark gray
+                int wordColorNo = Color.parseColor(wordColorStr);
+                gameTile.setBackgroundColor(wordColorNo);
+                gameTile.setTextColor(Color.parseColor("#000000")); // black
+            }
+        }
+
     }
 
     public void clickPicHearAudio(View view) {
@@ -669,7 +691,7 @@ public class Brazil extends GameActivity {
     }
 
     public void onBtnClick(View view) {
-        respondToTileSelection(Integer.parseInt((String) view.getTag())); // KP
+        respondToTileOrSyllableSelection(Integer.parseInt((String) view.getTag())); // KP
     }
 
     public void playAudioInstructions(View view) {

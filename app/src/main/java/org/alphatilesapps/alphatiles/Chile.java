@@ -82,7 +82,8 @@ public class Chile extends GameActivity {
         ActivityLayouts.applyEdgeToEdge(this, R.id.chileCL);
         ActivityLayouts.setStatusAndNavColors(this);
 
-        updatePointsAndTrackers(0);
+        setUpInitialView();
+        updateView();
         setAdvanceArrowToGray();
         if (scriptDirection.equals("RTL")) {
             findViewById(R.id.backspace).setScaleX(-1);
@@ -261,7 +262,7 @@ public class Chile extends GameActivity {
         if(greenCount == secret.length && !finished) {
             finished = true;
             Start.gameSounds.play(Start.correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
-            updatePointsAndTrackers(1);
+            recordAttempt(true,3);
         }
         else if(currentRow == data.guesses - 1) {
             finished = true;
@@ -271,6 +272,7 @@ public class Chile extends GameActivity {
             guessBox.smoothScrollToPosition(tiles.size());
             guessAdapter.notifyDataSetChanged();
             Start.gameSounds.play(Start.incorrectSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
+            recordAttempt(false,0);
         }
         else {
             currentRow++;

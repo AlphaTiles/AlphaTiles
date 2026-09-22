@@ -19,7 +19,6 @@ import android.view.WindowManager;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -37,6 +36,7 @@ public class Ecuador extends GameActivity {
 // testing for crawl #2
     int[][] boxCoordinates;   // Will be 8 boxes, defined by 4 parameters each: x1, y1, x2, y2
     int justClickedWord = 0;
+    int rightWordIndex;
     ArrayList<Word> wordPool = new ArrayList<>();
     // # 1 memoryCollection[LWC word, e.g. Spanish]
     // # 2 [LOP word, e.g. Me'phaa]
@@ -99,13 +99,15 @@ public class Ecuador extends GameActivity {
         }
 
         visibleGameButtons = GAME_BUTTONS.length;
-        updatePointsAndTrackers(0);
+        updateView();
         incorrectAnswersSelected = new ArrayList<>(visibleGameButtons-1);
         for (int i = 0; i < visibleGameButtons-1; i++) {
             incorrectAnswersSelected.add("");
         }
         wordPool.addAll(cumulativeStageBasedWordList);
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View View) {
@@ -382,7 +384,7 @@ public class Ecuador extends GameActivity {
         image.setImageResource(resID);
 
         Random rand = new Random();
-        int rightWordIndex = rand.nextInt(GAME_BUTTONS.length);
+        rightWordIndex = rand.nextInt(GAME_BUTTONS.length);
         TextView correctMatchTile = findViewById(GAME_BUTTONS[rightWordIndex]);
         correctMatchTile.setText(wordList.stripInstructionCharacters(refWord.wordInLOP));
     }
@@ -463,23 +465,11 @@ public class Ecuador extends GameActivity {
                 Analytics.with(context).track(gameUniqueID, info);
             }
 
-            repeatLocked = false;
-            setAdvanceArrowToBlue();
+            recordAttempt(true,2);
 
-            updatePointsAndTrackers(2);
+            endRound(t);
 
-            for (int w = 0; w < GAME_BUTTONS.length; w++) {
-                TextView nextWord = findViewById(GAME_BUTTONS[w]);
-                nextWord.setClickable(false);
-                if (w != t) {
-                    String wordColorStr = "#A9A9A9"; // dark gray
-                    int wordColorNo = Color.parseColor(wordColorStr);
-                    nextWord.setBackgroundColor(wordColorNo);
-                    nextWord.setTextColor(Color.parseColor("#000000")); // black
-                }
-            }
-
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
 
         } else {
             incorrectOnLevel += 1;
@@ -491,11 +481,35 @@ public class Ecuador extends GameActivity {
                     break;
                 }
             }
-            playIncorrectSound();
+            recordAttempt(false, 0);
+            if(secondChances) {
+                playIncorrectSound();
+            } else {
+                endRound(rightWordIndex);
+                playGameSoundThenActiveWordClip(false,false);
+            }
         }
     }
 
-    public void onWordClick(View view) {
+    private void endRound(int t) {
+
+        repeatLocked = false;
+        setAdvanceArrowToBlue();
+
+        for (int w = 0; w < GAME_BUTTONS.length; w++) {
+            TextView nextWord = findViewById(GAME_BUTTONS[w]);
+            nextWord.setClickable(false);
+            if (w != t) {
+                String wordColorStr = "#A9A9A9"; // dark gray
+                int wordColorNo = Color.parseColor(wordColorStr);
+                nextWord.setBackgroundColor(wordColorNo);
+                nextWord.setTextColor(Color.parseColor("#000000")); // black
+            }
+        }
+
+    }
+
+        public void onWordClick(View view) {
         justClickedWord = Integer.parseInt((String) view.getTag());
         respondToWordSelection();
     }

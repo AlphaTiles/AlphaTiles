@@ -110,11 +110,12 @@ public class Japan extends GameActivity {
             hideInstructionAudioImage();
         }
 
-        updatePointsAndTrackers(0);
-        play();
+        playAgain();
+        setUpInitialView();
+        updateView();
     }
 
-    private void play() {
+    private void playAgain() {
         repeatLocked = true;
         setAdvanceArrowToGray();
         chooseWord();
@@ -246,7 +247,7 @@ public class Japan extends GameActivity {
 
     public void repeatGame(View view) {
         if (!repeatLocked) {
-            play();
+            playAgain();
         }
     }
 
@@ -463,8 +464,8 @@ public class Japan extends GameActivity {
         if (currentSegmentsAppended.toString().equals(wordInLOPNoSAD)) { // Whole word combo is correct!
             repeatLocked = false;
             setAdvanceArrowToBlue();
-            playCorrectSoundThenActiveWordClip(false);
-            updatePointsAndTrackers(1);
+            playGameSoundThenActiveWordClip(true,false);
+            recordAttempt(true,1);
             for (int v = 0; v < ALL_GAME_VIEW_IDS.length; v++) {
                 TextView view = findViewById(ALL_GAME_VIEW_IDS[v]);
                 if (v % 2 == 0) {

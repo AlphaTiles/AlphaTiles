@@ -21,8 +21,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.Stack;
 
 import static org.alphatilesapps.alphatiles.Start.*;
@@ -46,7 +44,6 @@ public class Myanmar extends GameActivity {
     int selectionMethod = 2;
 
     Handler handler;
-    private static final Logger LOGGER = Logger.getLogger(Myanmar.class.getName());
 
     protected static final int[] GAME_BUTTONS = {
             R.id.tile01, R.id.tile02, R.id.tile03, R.id.tile04, R.id.tile05, R.id.tile06, R.id.tile07, R.id.tile08, R.id.tile09, R.id.tile10,
@@ -120,8 +117,9 @@ public class Myanmar extends GameActivity {
         }
 
         setTextSizes();
-        updatePointsAndTrackers(0);
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void setTextSizes() {
@@ -229,7 +227,6 @@ public class Myanmar extends GameActivity {
 
             if (++sanityCounter > 21) {
                 // we've looped too many times - give up
-                LOGGER.warning("chooseWords: can't proceed - not enough words");
 
                 // return to the home screen
                 goBackToEarth(null);
@@ -635,10 +632,11 @@ public class Myanmar extends GameActivity {
             // Play word and "correct" sounds and then clear the image from word bank
             refWord = sevenWords[indexOfFoundWord];
             if (wordsCompleted == completionGoal) {
+                repeatLocked = false;
                 setAdvanceArrowToBlue();
-                updatePointsAndTrackers(wordsCompleted);
+                recordAttempt(true, wordsCompleted);
             }
-            playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
+            playGameSoundThenActiveWordClip(true,wordsCompleted == completionGoal);
             handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(clearImageFromImageBank(indexOfFoundWord), Long.valueOf(refWord.duration + correctSoundDuration));
 
@@ -803,7 +801,6 @@ public class Myanmar extends GameActivity {
             }
 
             if (wordFound) {
-                LOGGER.warning("word was found");
                 String displayWord = "";
                 wordsCompleted++;
                 activeWord.setText(displayWord);
@@ -819,16 +816,14 @@ public class Myanmar extends GameActivity {
                 // Play word and "correct" sounds and then clear the image from word bank
                 refWord = sevenWords[indexOfFoundWord];
                 if (wordsCompleted == completionGoal) {
+                    repeatLocked = false;
                     setAdvanceArrowToBlue();
-                    updatePointsAndTrackers(wordsCompleted);
+                    recordAttempt(true, wordsCompleted);
                 }
-                playCorrectSoundThenActiveWordClip(wordsCompleted == completionGoal);
+                playGameSoundThenActiveWordClip(true,wordsCompleted == completionGoal);
                 handler = new Handler();
                 handler.postDelayed(clearImageFromImageBank(indexOfFoundWord), Long.valueOf(refWord.duration + correctSoundDuration));
                 selectedTileIndices.clear();
-            } else {
-                LOGGER.warning("word not found, word tried " + currentWord);
-
             }
         }
 
