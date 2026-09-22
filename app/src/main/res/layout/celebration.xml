@@ -8,35 +8,35 @@
     tools:context=".Celebration">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
+        android:id="@+id/horGuidelineCelebrationTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.11" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline5"
+        android:id="@+id/verGuidelineCelebrationLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.4" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline6"
+        android:id="@+id/verGuidelineCelebrationRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.6" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHSys1"
+        android:id="@+id/horGuidelineCelebrationOptionsTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.89" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHSys2"
+        android:id="@+id/horGuidelineCelebrationOptionsBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -44,25 +44,22 @@
 
     <ImageView
         android:id="@+id/gamesHomeImage"
-        android:layout_width="102dp"
-        android:layout_height="102dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:onClick="goBackToEarth"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineCelebrationOptionsBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/celebrationImage"
+        app:layout_constraintTop_toBottomOf="@+id/horGuidelineCelebrationOptionsTop"
         app:srcCompat="@drawable/zz_games_home" />
 
     <ImageView
         android:id="@+id/celebrationImage"
-        android:layout_width="368dp"
-        android:layout_height="526dp"
-        android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toTopOf="@id/guidelineHSys1"
-        app:layout_constraintTop_toBottomOf="@id/guideline2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/horGuidelineCelebrationOptionsTop"
+        app:layout_constraintTop_toBottomOf="@id/horGuidelineCelebrationTop"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/zz_celebration" />
 

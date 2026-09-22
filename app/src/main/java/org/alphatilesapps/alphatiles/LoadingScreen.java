@@ -1,11 +1,12 @@
 package org.alphatilesapps.alphatiles;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
@@ -54,15 +55,39 @@ public class LoadingScreen extends AppCompatActivity {
 
     private static final Logger LOGGER = Logger.getLogger( LoadingScreen.class.getName() );
 
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            {R.id.horGuidelineLoadingSplashTop, R.dimen.loading_horGuidelineSplashTop},
+            {R.id.horGuidelineLoadingSplashBottom, R.dimen.loading_horGuidelineSplashBottom},
+            {R.id.horGuidelineLoadingProgressTop, R.dimen.loading_horGuidelineProgressTop},
+            {R.id.horGuidelineLoadingProgressBottom, R.dimen.loading_horGuidelineProgressBottom},
+            {R.id.horGuidelineLoadingGameNameTop, R.dimen.loading_horGuidelineGameNameTop},
+            {R.id.horGuidelineLoadingGameNameBottom, R.dimen.loading_horGuidelineGameNameBottom},
+            {R.id.horGuidelineLoadingLangPackTop, R.dimen.loading_horGuidelineLangPackTop},
+            {R.id.horGuidelineLoadingVersionBottom, R.dimen.loading_horGuidelineLoadingVersionBottom},
+            {R.id.verGuidelineTextFieldsLeft, R.dimen.loading_verGuidelineTextFieldsLeft},
+            {R.id.verGuidelineLoadingSplashLeft, R.dimen.loading_verGuidelineSplashLeft},
+            {R.id.verGuidelineLoadingProgressLeft, R.dimen.loading_verGuidelineProgressLeft},
+            {R.id.verGuidelineLoadingProgressRight, R.dimen.loading_verGuidelineProgressRight},
+            {R.id.verGuidelineLoadingSplashRight, R.dimen.loading_verGuidelineSplashRight},
+            {R.id.verGuidelineTextFieldsRight, R.dimen.loading_verGuidelineTextFieldsRight}
+    };
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);
+
+        updateGuidelines();
+
         ActivityLayouts.applyEdgeToEdge(this, R.id.activityloadingscreenCL);
         ActivityLayouts.setStatusAndNavColors(this);
-
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mHandler = new Handler(Looper.getMainLooper());
 
@@ -189,6 +214,11 @@ public class LoadingScreen extends AppCompatActivity {
         });
     }
 
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+    }
+
     public void loadWordAudio() {
         // load speech sounds
         Resources res = context.getResources();
@@ -290,5 +320,3 @@ public class LoadingScreen extends AppCompatActivity {
     }
 
 }
-
-

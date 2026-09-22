@@ -118,4 +118,82 @@
     <item name="thailand2_verGuidelineRefRight" type="dimen" format="float">0.99</item>
     <item name="thailand2_verGuidelineTilesLeft" type="dimen" format="float">0.01</item>
     <item name="thailand2_verGuidelineTilesRight" type="dimen" format="float">0.99</item>
+
+    <!-- About Horizontal Guidelines (Portrait) -->
+    <item name="about_horGuidelineLogoTop" type="dimen" format="float">0.01</item>
+    <item name="about_horGuidelineLogoBottom" type="dimen" format="float">0.16</item>
+    <item name="about_horGuidelineGameNameTop" type="dimen" format="float">0.17</item>
+    <item name="about_horGuidelineGameNameBottom" type="dimen" format="float">0.26</item>
+    <item name="about_horGuidelineLanguagesCountryTop" type="dimen" format="float">0.27</item>
+    <item name="about_horGuidelineLanguagesCountryBottom" type="dimen" format="float">0.34</item>
+    <item name="about_horGuidelineCreditsTop" type="dimen" format="float">0.35</item>
+    <item name="about_horGuidelineCreditsBottom" type="dimen" format="float">0.70</item>
+    <item name="about_horGuidelineCreditsBottomIfLang2" type="dimen" format="float">0.52</item>
+    <item name="about_horGuidelineCredits2Top" type="dimen" format="float">0.53</item>
+    <item name="about_horGuidelineEmailTop" type="dimen" format="float">0.71</item>
+    <item name="about_horGuidelineEmailBottom" type="dimen" format="float">0.77</item>
+    <item name="about_horGuidelinePrivacyTop" type="dimen" format="float">0.78</item>
+    <item name="about_horGuidelinePrivacyBottom" type="dimen" format="float">0.84</item>
+    <item name="about_horGuidelineVersionTop" type="dimen" format="float">0.85</item>
+    <item name="about_horGuidelineVersionBottom" type="dimen" format="float">0.91</item>
+
+    <!-- About Vertical Guidelines (Portrait) -->
+    <item name="about_verGuidelineMainLeft" type="dimen" format="float">0.01</item>
+    <item name="about_verGuidelineMainMiddleLeft" type="dimen" format="float">0.99</item>
+    <item name="about_verGuidelineMainMiddleRight" type="dimen" format="float">0.01</item>
+    <item name="about_verGuidelineMainRight" type="dimen" format="float">0.99</item>
+
+    <!-- Celebration Horizontal Guidelines (Portrait) -->
+    <item name="horGuidelineCelebrationTop" type="dimen" format="float">0.11</item>
+    <item name="horGuidelineCelebrationOptionsTop" type="dimen" format="float">0.89</item>
+    <item name="horGuidelineCelebrationOptionsBottom" type="dimen" format="float">0.98</item>
+
+    <!-- Celebration Vertical Guidelines (Portrait) -->
+    <item name="verGuidelineCelebrationLeft" type="dimen" format="float">0.4</item>
+    <item name="verGuidelineCelebrationRight" type="dimen" format="float">0.6</item>
+
+    <!-- LoadingScreen Horizontal Guidelines (Portrait) -->
+    <item name="loading_horGuidelineSplashTop" type="dimen" format="float">0.10</item>
+    <item name="loading_horGuidelineSplashBottom" type="dimen" format="float">0.53</item>
+    <item name="loading_horGuidelineProgressTop" type="dimen" format="float">0.55</item>
+    <item name="loading_horGuidelineProgressBottom" type="dimen" format="float">0.64</item>
+    <item name="loading_horGuidelineGameNameTop" type="dimen" format="float">0.66</item>
+    <item name="loading_horGuidelineGameNameBottom" type="dimen" format="float">0.74</item>
+    <item name="loading_horGuidelineLangPackTop" type="dimen" format="float">0.79</item>
+    <item name="loading_horGuidelineLoadingVersionBottom" type="dimen" format="float">0.83</item>
+
+    <!-- LoadingScreen Vertical Guidelines (Portrait) -->
+    <item name="loading_verGuidelineSplashLeft" type="dimen" format="float">0.03</item>
+    <item name="loading_verGuidelineProgressLeft" type="dimen" format="float">0.2</item>
+    <item name="loading_verGuidelineTextFieldsLeft" type="dimen" format="float">0.03</item>
+    <item name="loading_verGuidelineTextFieldsRight" type="dimen" format="float">0.97</item>
+    <item name="loading_verGuidelineProgressRight" type="dimen" format="float">0.8</item>
+    <item name="loading_verGuidelineSplashRight" type="dimen" format="float">0.97</item>
+
+    <!-- Resources Horizontal Guidelines (Portrait) -->
+    <item name="resources_horGuidelineHeaderIconTop" type="dimen" format="float">0.01</item>
+    <item name="resources_horGuidelineHeaderIconBottom" type="dimen" format="float">0.12</item>
+    <item name="resources_horGuidelineIconAndText1Top" type="dimen" format="float">0.14</item>
+    <item name="resources_horGuidelineIconAndText1Bottom" type="dimen" format="float">0.24</item>
+    <item name="resources_horGuidelineIconAndText2Top" type="dimen" format="float">0.26</item>
+    <item name="resources_horGuidelineIconAndText2Bottom" type="dimen" format="float">0.36</item>
+    <item name="resources_horGuidelineIconAndText3Top" type="dimen" format="float">0.38</item>
+    <item name="resources_horGuidelineIconAndText3Bottom" type="dimen" format="float">0.48</item>
+    <item name="resources_horGuidelineIconAndText4Top" type="dimen" format="float">0.50</item>
+    <item name="resources_horGuidelineIconAndText4Bottom" type="dimen" format="float">0.60</item>
+    <item name="resources_horGuidelineIconAndText5Top" type="dimen" format="float">0.62</item>
+    <item name="resources_horGuidelineIconAndText5Bottom" type="dimen" format="float">0.72</item>
+    <item name="resources_horGuidelineIconAndText6Top" type="dimen" format="float">0.74</item>
+    <item name="resources_horGuidelineIconAndText6Bottom" type="dimen" format="float">0.84</item>
+    <item name="resources_horGuidelineArrowsTop" type="dimen" format="float">0.84</item>
+    <item name="resources_horGuidelineArrowsBottom" type="dimen" format="float">0.91</item>
+
+    <!-- Resources Vertical Guidelines (Portrait) -->
+    <item name="resources_verGuidelineMainLeft" type="dimen" format="float">0.01</item>
+    <item name="resources_verGuidelineHeaderIconLeft" type="dimen" format="float">0.01</item>
+    <item name="resources_verGuidelineTextLeft" type="dimen" format="float">0.21</item>
+    <item name="resources_verGuidelineTextRight" type="dimen" format="float">0.79</item>
+    <item name="resources_verGuidelineHeaderIconRight" type="dimen" format="float">0.99</item>
+    <item name="resources_verGuidelineMainRight" type="dimen" format="float">0.99</item>
+
 </resources>

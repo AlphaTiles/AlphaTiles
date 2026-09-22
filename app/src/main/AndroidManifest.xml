@@ -24,17 +24,20 @@
         </activity>
         <activity
             android:name=".LoadingScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".ChoosePlayer" />
         <activity android:name=".SetPlayerName" />
         <activity android:name=".Earth" />
-        <activity android:name=".About" />
+        <activity android:name=".About"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Share" />
         <activity android:name=".Brazil"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
         <activity android:name=".China" />
         <activity android:name=".Colombia" />
-        <activity android:name=".Celebration" />
+        <activity android:name=".Celebration"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Ecuador" />
         <activity android:name=".Georgia" />
         <activity android:name=".Italy" />
@@ -42,7 +45,8 @@
         <activity android:name=".Myanmar" />
         <activity android:name=".Peru"
                   android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
-        <activity android:name=".Resources" />
+        <activity android:name=".Resources"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Romania" />
         <activity android:name=".Sudan" />
         <activity android:name=".Thailand"
