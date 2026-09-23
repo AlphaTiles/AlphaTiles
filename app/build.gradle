@@ -1,12 +1,14 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+}
 
 android {
     compileSdk = 36
 
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
-        applicationId "org.alphatilesapps.alphatiles"
+        applicationId = "org.alphatilesapps.alphatiles"
         minSdk = 21
         targetSdk = 36
         versionCode = 185
@@ -15,6 +17,7 @@ android {
     }
 
     buildFeatures {
+        resValues = true
         buildConfig = true
 
     }
@@ -25,32 +28,39 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled =
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                debugSymbolLevel = 'SYMBOL_TABLE' // If using native C/C++ code
+            }
             // Optional code that customizes the .apk output name
-            applicationVariants.all{
-                variant ->
-                    variant.outputs.each{
-                        output->
-                            def apkOutputName = "alphaTiles.Blue.${variant.productFlavors[0].name}.V${variant.versionName}.apk"
-                            output.outputFileName = apkOutputName
+            androidComponents {
+                onVariants(selector().withBuildType("release")) { variant ->
+                    variant.outputs.forEach { output ->
+                        def flavorName = variant.productFlavors[0].second
+                        output.outputFileName.set(
+                                "alphaTiles.Blue.${flavorName}.V${output.versionName.get()}.apk")
                     }
+                }
             }
         }
     }
 
     flavorDimensions += "language"
     productFlavors {
-        //Alpha Tiles internal team developers can find active product flavor definitions here:
-        // https://docs.google.com/document/d/1a3satcmHFa5r6l7THrKLgxSWVCs-Mp2yOGyzk4oETsk/edit
 
+        engEnglish4 {
+            dimension "language"
+            applicationIdSuffix ".blue.engEnglish4"
+            resValue "string", "app_name", 'Alpha Tiles: Ready to Read'
+        }
         tpxTeocuitlapa {
             dimension "language"
             applicationIdSuffix ".blue.tpxTeocuitlapa"
-            resValue "string", "app_name", 'Mu̱ꞌtsíin meꞌphaa (tpxTEO)'
+            resValue "string", "app_name", 'Mu̱ꞌtsíin meꞌphaa (tpxTeo)'
         }
     }
-    namespace 'org.alphatilesapps.alphatiles'
+    namespace = 'org.alphatilesapps.alphatiles'
 }
 
 //tasks.withType(JavaCompile).configureEach {
@@ -59,15 +69,15 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
-    implementation 'com.google.zxing:core:3.5.3'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation platform('com.google.firebase:firebase-bom:33.16.0')
+    implementation 'androidx.appcompat:appcompat:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.2'
+    implementation 'com.google.zxing:core:3.5.4'
+    implementation 'com.google.android.material:material:1.14.0'
+    implementation platform('com.google.firebase:firebase-bom:34.19.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.segment.analytics.android:analytics:4.11.3'
-    implementation 'androidx.core:core:1.17.0-rc01'
+    implementation 'androidx.core:core:1.18.0'
     testImplementation 'androidx.test.ext:junit:1.3.0'
-    testImplementation 'org.robolectric:robolectric:4.15.1'
+    testImplementation 'org.robolectric:robolectric:4.17'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
 }
