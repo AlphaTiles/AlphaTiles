@@ -196,4 +196,26 @@
     <item name="resources_verGuidelineHeaderIconRight" type="dimen" format="float">0.19</item>
     <item name="resources_verGuidelineMainRight" type="dimen" format="float">0.99</item>
 
+    <!-- China Horizontal Guidelines (Landscape) -->
+    <item name="china_horGuidelineRow1Top" type="dimen" format="float">0.14</item>
+    <item name="china_horGuidelineRow1Bottom" type="dimen" format="float">0.31</item>
+    <item name="china_horGuidelineRow2Top" type="dimen" format="float">0.32</item>
+    <item name="china_horGuidelineRow2Bottom" type="dimen" format="float">0.49</item>
+    <item name="china_horGuidelineRow3Top" type="dimen" format="float">0.50</item>
+    <item name="china_horGuidelineRow3Bottom" type="dimen" format="float">0.67</item>
+    <item name="china_horGuidelineRow4Top" type="dimen" format="float">0.68</item>
+    <item name="china_horGuidelineRow4Bottom" type="dimen" format="float">0.85</item>
+
+    <!-- China Vertical Guidelines (Landscape) -->
+    <item name="china_verGuidelineGridLeft" type="dimen" format="float">0.23</item>
+    <item name="china_verGuidelineCol1Right" type="dimen" format="float">0.33</item>
+    <item name="china_verGuidelineCol2Left" type="dimen" format="float">0.34</item>
+    <item name="china_verGuidelineCol2Right" type="dimen" format="float">0.44</item>
+    <item name="china_verGuidelineCol3Left" type="dimen" format="float">0.45</item>
+    <item name="china_verGuidelineCol3Right" type="dimen" format="float">0.55</item>
+    <item name="china_verGuidelineCol4Left" type="dimen" format="float">0.56</item>
+    <item name="china_verGuidelineCol4Right" type="dimen" format="float">0.66</item>
+    <item name="china_verGuidelineCol5Left" type="dimen" format="float">0.67</item>
+    <item name="china_verGuidelineGridRight" type="dimen" format="float">0.77</item>
+
 </resources>
