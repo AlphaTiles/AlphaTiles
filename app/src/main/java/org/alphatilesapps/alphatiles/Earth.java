@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
+import androidx.annotation.NonNull;
+
 import java.util.Scanner;
 
 public class Earth extends AppCompatActivity {
@@ -51,10 +53,16 @@ public class Earth extends AppCompatActivity {
     };
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("pageNumber", pageNumber);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (Start.langInfoList == null) {
+        if (langInfoList == null) {
             // Process was killed and restarted directly into this screen.
             // Relaunch from the beginning so static state gets repopulated.
             Intent intent = new Intent(this, Start.class);
@@ -72,6 +80,12 @@ public class Earth extends AppCompatActivity {
             }
         });
 
+        if (savedInstanceState != null) {
+            pageNumber = savedInstanceState.getInt("pageNumber", pageNumber);
+        } else {
+            pageNumber = getIntent().getIntExtra("pageNumber", 0);
+        }
+
         context = this;
         playerNumber = getIntent().getIntExtra("playerNumber", -1);
         playerString = Util.returnPlayerStringToAppend(playerNumber);
@@ -81,9 +95,7 @@ public class Earth extends AppCompatActivity {
         ActivityLayouts.applyEdgeToEdge(this, R.id.earthCL);
         ActivityLayouts.setStatusAndNavColors(this);
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+        String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
         if (scriptDirection.equals("RTL")) {
             ImageView goForwardImage = findViewById(R.id.goForward);
             ImageView goBackImage = findViewById(R.id.goBack);
@@ -108,7 +120,7 @@ public class Earth extends AppCompatActivity {
         String playerName;
         String localWordForName = langInfoList.find("NAME in local language");
         if (localWordForName.equals("custom")) {
-            defaultName = Start.nameList.get(playerNumber - 1);
+            defaultName = nameList.get(playerNumber - 1);
         } else {
             defaultName = localWordForName + " " + playerNumber;
         }
@@ -122,8 +134,6 @@ public class Earth extends AppCompatActivity {
 
         TextView name = findViewById(R.id.avatarName);
         name.setText(playerName);
-
-        pageNumber = getIntent().getIntExtra("pageNumber", 0);
 
         if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
