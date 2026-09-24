@@ -108,8 +108,6 @@ public class ChoosePlayer extends AppCompatActivity {
         ActivityLayouts.applyEdgeToEdge(this, R.id.choosePlayerCL);
         ActivityLayouts.setStatusAndNavColors(this);
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         if (scriptDirection.equals("RTL")) {
             ImageView avatar01Image = (ImageView) findViewById(R.id.avatar01);
             ImageView avatar02Image = (ImageView) findViewById(R.id.avatar02);
