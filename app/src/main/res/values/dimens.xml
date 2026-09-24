@@ -218,4 +218,36 @@
     <item name="china_verGuidelineCol5Left" type="dimen" format="float">0.73</item>
     <item name="china_verGuidelineGridRight" type="dimen" format="float">0.99</item>
 
+    <!-- Italy Horizontal Guidelines (Portrait) -->
+    <item name="italy_horGuidelineRefTop" type="dimen" format="float">0.08</item>
+    <item name="italy_horGuidelineRefBottom" type="dimen" format="float">0.17</item>
+    <item name="italy_horGuidelinePlayNextTop" type="dimen" format="float">0.08</item>
+    <item name="italy_horGuidelinePlayNextBottom" type="dimen" format="float">0.17</item>
+    <item name="italy_horGuidelineChoiceRow1Top" type="dimen" format="float">0.19</item>
+    <item name="italy_horGuidelineChoiceRow1Middle" type="dimen" format="float">0.29</item>
+    <item name="italy_horGuidelineChoiceRow1Bottom" type="dimen" format="float">0.36</item>
+    <item name="italy_horGuidelineChoiceRow2Top" type="dimen" format="float">0.37</item>
+    <item name="italy_horGuidelineChoiceRow2Middle" type="dimen" format="float">0.47</item>
+    <item name="italy_horGuidelineChoiceRow2Bottom" type="dimen" format="float">0.54</item>
+    <item name="italy_horGuidelineChoiceRow3Top" type="dimen" format="float">0.55</item>
+    <item name="italy_horGuidelineChoiceRow3Middle" type="dimen" format="float">0.65</item>
+    <item name="italy_horGuidelineChoiceRow3Bottom" type="dimen" format="float">0.72</item>
+    <item name="italy_horGuidelineChoiceRow4Top" type="dimen" format="float">0.73</item>
+    <item name="italy_horGuidelineChoiceRow4Middle" type="dimen" format="float">0.83</item>
+    <item name="italy_horGuidelineChoiceRow4Bottom" type="dimen" format="float">0.90</item>
+
+    <!-- Italy Vertical Guidelines (Portrait) -->
+    <item name="italy_verGuidelineRefLeft" type="dimen" format="float">0.15</item>
+    <item name="italy_verGuidelineRefRight" type="dimen" format="float">0.35</item>
+    <item name="italy_verGuidelinePlayNextLeft" type="dimen" format="float">0.65</item>
+    <item name="italy_verGuidelinePlayNextRight" type="dimen" format="float">0.85</item>
+    <item name="italy_verGuidelineChoiceCol1Left" type="dimen" format="float">0.01</item>
+    <item name="italy_verGuidelineChoiceCol1Right" type="dimen" format="float">0.24</item>
+    <item name="italy_verGuidelineChoiceCol2Left" type="dimen" format="float">0.26</item>
+    <item name="italy_verGuidelineChoiceCol2Right" type="dimen" format="float">0.49</item>
+    <item name="italy_verGuidelineChoiceCol3Left" type="dimen" format="float">0.51</item>
+    <item name="italy_verGuidelineChoiceCol3Right" type="dimen" format="float">0.74</item>
+    <item name="italy_verGuidelineChoiceCol4Left" type="dimen" format="float">0.76</item>
+    <item name="italy_verGuidelineChoiceCol4Right" type="dimen" format="float">0.99</item>
+
 </resources>

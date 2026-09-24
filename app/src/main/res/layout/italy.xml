@@ -8,6 +8,301 @@
     android:background="#FFFFFF"
     tools:context=".Italy">
 
+    <!-- Guidelines -->
+    <!-- Status Guidelines (Horizontal) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusMiddle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusMiddle" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusBottom" />
+
+    <!-- Italy Specific Horizontal Guidelines -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineRefTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineRefTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineRefBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineRefBottom" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelinePlayNextTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelinePlayNextTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelinePlayNextBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelinePlayNextBottom" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow1Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow1Top" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow1Middle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow1Middle" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow1Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow1Bottom" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow2Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow2Top" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow2Middle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow2Middle" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow2Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow2Bottom" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow3Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow3Top" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow3Middle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow3Middle" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow3Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow3Bottom" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow4Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow4Top" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow4Middle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow4Middle" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_horGuidelineChoiceRow4Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/italy_horGuidelineChoiceRow4Bottom" />
+
+    <!-- Options Guidelines (Horizontal) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineOptionsTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineOptionsBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsBottom" />
+
+    <!-- Status Guidelines (Vertical) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineGameNoLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineGameNoLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineGameNoCLBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineGameNoCLBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineCLStageBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineCLStageBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineStageBarsBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineStageBarsBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineBarsPointsBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineBarsPointsBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelinePointsRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelinePointsRight" />
+
+    <!-- Italy Specific Vertical Guidelines -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelineRefLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelineRefLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelineRefRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelineRefRight" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelinePlayNextLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelinePlayNextLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelinePlayNextRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelinePlayNextRight" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelineChoiceCol1Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelineChoiceCol1Left" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelineChoiceCol1Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelineChoiceCol1Right" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelineChoiceCol2Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelineChoiceCol2Left" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelineChoiceCol2Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelineChoiceCol2Right" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelineChoiceCol3Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelineChoiceCol3Left" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelineChoiceCol3Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelineChoiceCol3Right" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelineChoiceCol4Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelineChoiceCol4Left" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/italy_verGuidelineChoiceCol4Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/italy_verGuidelineChoiceCol4Right" />
+
+    <!-- Options Guidelines (Vertical) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineOptionsLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineOptionsRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsRight" />
+
+    <!-- Views -->
     <TextView
         android:id="@+id/gameNumberView"
         android:layout_width="0dp"
@@ -19,15 +314,15 @@
         android:textStyle="bold"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.1"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineGameNoCLBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineGameNoLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
     <TextView
@@ -41,15 +336,15 @@
         android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.2"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineCLStageBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineGameNoCLBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
     <TextView
@@ -63,15 +358,15 @@
         android:textStyle="bold"
         android:textColor="#FFD700"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.3"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineStageBarsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineCLStageBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
     <ProgressBar
@@ -85,10 +380,10 @@
         android:max="100"
         android:scaleY="5.25"
         android:indeterminate="false"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHneg1.1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1" />
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusMiddle"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineBarsPointsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineStageBarsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop" />
 
     <ProgressBar
         android:id="@+id/attemptsBar"
@@ -101,10 +396,10 @@
         android:max="100"
         android:scaleY="2.25"
         android:indeterminate="false"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1.1" />
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineBarsPointsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineStageBarsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusMiddle" />
 
     <TextView
         android:id="@+id/pointsTextView"
@@ -119,43 +414,41 @@
         android:text="@string/pointsScored"
         android:progress="0"
         android:max="100"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toEndOf="@id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toEndOf="@id/verGuidelinePointsRight"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineBarsPointsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
     <ImageView
         android:id="@+id/referenceItem"
-        android:layout_width="100dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="onRefClick"
         android:padding="2dp"
         android:tag="0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1"
-        app:layout_constraintEnd_toEndOf="@id/guidelineV5"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
-        app:layout_constraintVertical_bias="0.04"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineRefBottom"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineRefLeft"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineRefRight"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineRefTop"
         app:srcCompat="@drawable/zz_click_for_word_audio"/>
 
     <ImageView
         android:id="@+id/playNextWord"
-        android:layout_width="100dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="getAnotherWord"
         android:padding="2dp"
         android:tag="0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
-        app:layout_constraintStart_toEndOf="@+id/referenceItem"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
-        app:layout_constraintVertical_bias="0.04"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelinePlayNextBottom"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelinePlayNextLeft"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelinePlayNextRight"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelinePlayNextTop"
         app:srcCompat="@drawable/zz_forward_green"/>
 
     <ImageView
@@ -167,11 +460,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH3AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV2"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow1Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol1Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol1Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow1Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -183,11 +476,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH3AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow1Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol2Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol2Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow1Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -199,11 +492,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH3AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV4"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow1Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol3Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol3Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow1Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -215,11 +508,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH3AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow1Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol4Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol4Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow1Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -231,11 +524,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV2"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow2Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol1Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol1Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow2Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -247,11 +540,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow2Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol2Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol2Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow2Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -263,11 +556,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV4"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow2Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol3Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol3Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow2Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -279,11 +572,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow2Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol4Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol4Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow2Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -295,11 +588,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH5AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV2"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow3Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol1Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol1Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow3Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -311,11 +604,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH5AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow3Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol2Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol2Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow3Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -327,11 +620,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH5AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV4"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow3Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol3Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol3Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow3Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -343,11 +636,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH5AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow3Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol4Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol4Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow3Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -359,11 +652,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV2"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow4Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol1Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol1Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow4Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -375,11 +668,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow4Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol2Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol2Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow4Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -391,11 +684,11 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV4"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow4Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol3Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol3Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow4Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <ImageView
@@ -407,18 +700,18 @@
         android:onClick="onSelection"
         android:rotationY="0"
         android:translationZ="90dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6AndAHalf"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
-        android:padding = "8dp"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow4Middle"
+        app:layout_constraintEnd_toEndOf="@+id/italy_verGuidelineChoiceCol4Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol4Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow4Top"
+        android:padding="4dp"
         app:srcCompat="@drawable/zz_sil" />
 
     <TextView
         android:id="@+id/choice01"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:maxLines="1"
         android:onClick="onSelection"
         android:padding="1dp"
@@ -430,18 +723,16 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow1Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol1Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol1Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow1Middle" />
 
     <TextView
         android:id="@+id/choice02"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:maxLines="1"
         android:onClick="onSelection"
         android:padding="1dp"
@@ -453,37 +744,37 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow1Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol2Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol2Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow1Middle" />
 
     <TextView
         android:id="@+id/choice03"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:onClick="onSelection"
         android:tag="3"
         android:text="@string/choice03"
         android:textColor="#F44336"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow1Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol3Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol3Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow1Middle"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "1dp"
+        android:padding="1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice04"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:maxLines="1"
         android:onClick="onSelection"
         android:padding="1dp"
@@ -495,121 +786,121 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow1Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol4Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol4Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow1Middle" />
 
     <TextView
         android:id="@+id/choice05"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:onClick="onSelection"
         android:tag="5"
         android:text="@string/choice05"
         android:textColor="#E91E63"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow2Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol1Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol1Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow2Middle"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "1dp"
+        android:padding="1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice06"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:onClick="onSelection"
         android:tag="6"
         android:text="@string/choice06"
         android:textColor="#9C27B0"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow2Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol2Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol2Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow2Middle"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "1dp"
+        android:padding="1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice07"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:onClick="onSelection"
         android:tag="7"
         android:text="@string/choice07"
         android:textColor="#2196F3"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow2Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol3Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol3Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow2Middle"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "1dp"
+        android:padding="1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice08"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:onClick="onSelection"
         android:tag="8"
         android:text="@string/choice08"
         android:textColor="#F44336"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH4"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow2Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol4Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol4Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow2Middle"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "1dp"
+        android:padding="1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice09"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:onClick="onSelection"
         android:tag="9"
         android:text="@string/choice09"
         android:textColor="#4CAF50"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow3Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol1Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol1Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow3Middle"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "1dp"
+        android:padding="1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice10"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:maxLines="1"
         android:onClick="onSelection"
         android:padding="1dp"
@@ -621,37 +912,37 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow3Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol2Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol2Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow3Middle" />
 
     <TextView
         android:id="@+id/choice11"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:onClick="onSelection"
         android:tag="11"
         android:text="@string/choice11"
         android:textColor="#9C27B0"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow3Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol3Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol3Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow3Middle"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "1dp"
+        android:padding="1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice12"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:maxLines="1"
         android:onClick="onSelection"
         android:padding="1dp"
@@ -663,94 +954,93 @@
         app:autoSizeMinTextSize="5sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5" />
-
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow3Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol4Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol4Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow3Middle" />
 
     <TextView
         android:id="@+id/choice13"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:onClick="onSelection"
         android:tag="13"
         android:text="@string/choice13"
         android:textColor="#F44336"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow4Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol1Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol1Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow4Middle"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "1dp"
+        android:padding="1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice14"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:onClick="onSelection"
         android:tag="14"
         android:text="@string/choice14"
         android:textColor="#4CAF50"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow4Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol2Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol2Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow4Middle"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "1dp"
+        android:padding="1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice15"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:onClick="onSelection"
         android:tag="15"
         android:text="@string/choice15"
         android:textColor="#E91E63"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow4Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol3Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol3Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow4Middle"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "1dp"
+        android:padding="1dp"
         android:maxLines="1"/>
 
     <TextView
         android:id="@+id/choice16"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="bottom|center_horizontal"
+        android:gravity="center"
         android:onClick="onSelection"
         android:tag="16"
         android:text="@string/choice16"
         android:textColor="#9C27B0"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"
+        app:layout_constraintBottom_toTopOf="@+id/italy_horGuidelineChoiceRow4Bottom"
+        app:layout_constraintEnd_toStartOf="@+id/italy_verGuidelineChoiceCol4Right"
+        app:layout_constraintStart_toStartOf="@+id/italy_verGuidelineChoiceCol4Left"
+        app:layout_constraintTop_toTopOf="@+id/italy_horGuidelineChoiceRow4Middle"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "1dp"
+        android:padding="1dp"
         android:maxLines="1"/>
 
     <ImageView
@@ -758,10 +1048,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="goBackToEarth"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineOptionsLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
         android:contentDescription="@string/playerAvatar"
         app:srcCompat="@drawable/zz_games_home" />
 
@@ -770,20 +1060,20 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:tag="BMS"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintEnd_toStartOf="@+id/repeatImage"
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"/>
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"/>
 
     <ImageView
         android:id="@+id/instructions"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="playAudioInstructions"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer"
         app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
         android:contentDescription="@string/playAudioInstructions"
         android:rotationY="0"
         app:srcCompat="@drawable/zz_instructions" />
@@ -793,187 +1083,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="repeatGame"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toEndOf="@id/guidelineV5"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toEndOf="@id/verGuidelineOptionsRight"
         app:layout_constraintStart_toEndOf="@+id/bottomMiddleSpacer"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
         android:contentDescription="@string/playAgain"
         android:rotationY="0"
         app:srcCompat="@drawable/zz_forward_inactive" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHneg1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.01" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHneg1.1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.045" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.06" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.08" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.21" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.23" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH3AndAHalf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH4AndAHalf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.52" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.57" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH5AndAHalf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.69" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.74" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH6AndAHalf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.86" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.91" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHSys1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.93" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHSys2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.99" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.01" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.12" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.18" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.24" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.88" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.26" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.50" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.74" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.99" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
