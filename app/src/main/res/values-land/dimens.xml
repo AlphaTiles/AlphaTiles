@@ -262,4 +262,109 @@
     <item name="italy_verGuidelineChoiceCol4Left" type="dimen" format="float">0.875</item>
     <item name="italy_verGuidelineChoiceCol4Right" type="dimen" format="float">0.985</item>
 
+    <!-- Mexico Card Guidelines (Landscape 4x5 Grid) -->
+    <!-- Row 1: Cards 01-05 -->
+    <item name="mexico_horGuidelineCard01Top" type="dimen" format="float">0.14</item>
+    <item name="mexico_horGuidelineCard01Bottom" type="dimen" format="float">0.30</item>
+    <item name="mexico_verGuidelineCard01Left" type="dimen" format="float">0.01</item>
+    <item name="mexico_verGuidelineCard01Right" type="dimen" format="float">0.19</item>
+
+    <item name="mexico_horGuidelineCard02Top" type="dimen" format="float">0.14</item>
+    <item name="mexico_horGuidelineCard02Bottom" type="dimen" format="float">0.30</item>
+    <item name="mexico_verGuidelineCard02Left" type="dimen" format="float">0.21</item>
+    <item name="mexico_verGuidelineCard02Right" type="dimen" format="float">0.39</item>
+
+    <item name="mexico_horGuidelineCard03Top" type="dimen" format="float">0.14</item>
+    <item name="mexico_horGuidelineCard03Bottom" type="dimen" format="float">0.30</item>
+    <item name="mexico_verGuidelineCard03Left" type="dimen" format="float">0.41</item>
+    <item name="mexico_verGuidelineCard03Right" type="dimen" format="float">0.59</item>
+
+    <item name="mexico_horGuidelineCard04Top" type="dimen" format="float">0.14</item>
+    <item name="mexico_horGuidelineCard04Bottom" type="dimen" format="float">0.30</item>
+    <item name="mexico_verGuidelineCard04Left" type="dimen" format="float">0.61</item>
+    <item name="mexico_verGuidelineCard04Right" type="dimen" format="float">0.79</item>
+
+    <item name="mexico_horGuidelineCard05Top" type="dimen" format="float">0.14</item>
+    <item name="mexico_horGuidelineCard05Bottom" type="dimen" format="float">0.30</item>
+    <item name="mexico_verGuidelineCard05Left" type="dimen" format="float">0.81</item>
+    <item name="mexico_verGuidelineCard05Right" type="dimen" format="float">0.99</item>
+
+    <!-- Row 2: Cards 06-10 -->
+    <item name="mexico_horGuidelineCard06Top" type="dimen" format="float">0.32</item>
+    <item name="mexico_horGuidelineCard06Bottom" type="dimen" format="float">0.48</item>
+    <item name="mexico_verGuidelineCard06Left" type="dimen" format="float">0.01</item>
+    <item name="mexico_verGuidelineCard06Right" type="dimen" format="float">0.19</item>
+
+    <item name="mexico_horGuidelineCard07Top" type="dimen" format="float">0.32</item>
+    <item name="mexico_horGuidelineCard07Bottom" type="dimen" format="float">0.48</item>
+    <item name="mexico_verGuidelineCard07Left" type="dimen" format="float">0.21</item>
+    <item name="mexico_verGuidelineCard07Right" type="dimen" format="float">0.39</item>
+
+    <item name="mexico_horGuidelineCard08Top" type="dimen" format="float">0.32</item>
+    <item name="mexico_horGuidelineCard08Bottom" type="dimen" format="float">0.48</item>
+    <item name="mexico_verGuidelineCard08Left" type="dimen" format="float">0.41</item>
+    <item name="mexico_verGuidelineCard08Right" type="dimen" format="float">0.59</item>
+
+    <item name="mexico_horGuidelineCard09Top" type="dimen" format="float">0.32</item>
+    <item name="mexico_horGuidelineCard09Bottom" type="dimen" format="float">0.48</item>
+    <item name="mexico_verGuidelineCard09Left" type="dimen" format="float">0.61</item>
+    <item name="mexico_verGuidelineCard09Right" type="dimen" format="float">0.79</item>
+
+    <item name="mexico_horGuidelineCard10Top" type="dimen" format="float">0.32</item>
+    <item name="mexico_horGuidelineCard10Bottom" type="dimen" format="float">0.48</item>
+    <item name="mexico_verGuidelineCard10Left" type="dimen" format="float">0.81</item>
+    <item name="mexico_verGuidelineCard10Right" type="dimen" format="float">0.99</item>
+
+    <!-- Row 3: Cards 11-15 -->
+    <item name="mexico_horGuidelineCard11Top" type="dimen" format="float">0.50</item>
+    <item name="mexico_horGuidelineCard11Bottom" type="dimen" format="float">0.66</item>
+    <item name="mexico_verGuidelineCard11Left" type="dimen" format="float">0.01</item>
+    <item name="mexico_verGuidelineCard11Right" type="dimen" format="float">0.19</item>
+
+    <item name="mexico_horGuidelineCard12Top" type="dimen" format="float">0.50</item>
+    <item name="mexico_horGuidelineCard12Bottom" type="dimen" format="float">0.66</item>
+    <item name="mexico_verGuidelineCard12Left" type="dimen" format="float">0.21</item>
+    <item name="mexico_verGuidelineCard12Right" type="dimen" format="float">0.39</item>
+
+    <item name="mexico_horGuidelineCard13Top" type="dimen" format="float">0.50</item>
+    <item name="mexico_horGuidelineCard13Bottom" type="dimen" format="float">0.66</item>
+    <item name="mexico_verGuidelineCard13Left" type="dimen" format="float">0.41</item>
+    <item name="mexico_verGuidelineCard13Right" type="dimen" format="float">0.59</item>
+
+    <item name="mexico_horGuidelineCard14Top" type="dimen" format="float">0.50</item>
+    <item name="mexico_horGuidelineCard14Bottom" type="dimen" format="float">0.66</item>
+    <item name="mexico_verGuidelineCard14Left" type="dimen" format="float">0.61</item>
+    <item name="mexico_verGuidelineCard14Right" type="dimen" format="float">0.79</item>
+
+    <item name="mexico_horGuidelineCard15Top" type="dimen" format="float">0.50</item>
+    <item name="mexico_horGuidelineCard15Bottom" type="dimen" format="float">0.66</item>
+    <item name="mexico_verGuidelineCard15Left" type="dimen" format="float">0.81</item>
+    <item name="mexico_verGuidelineCard15Right" type="dimen" format="float">0.99</item>
+
+    <!-- Row 4: Cards 16-20 -->
+    <item name="mexico_horGuidelineCard16Top" type="dimen" format="float">0.68</item>
+    <item name="mexico_horGuidelineCard16Bottom" type="dimen" format="float">0.84</item>
+    <item name="mexico_verGuidelineCard16Left" type="dimen" format="float">0.01</item>
+    <item name="mexico_verGuidelineCard16Right" type="dimen" format="float">0.19</item>
+
+    <item name="mexico_horGuidelineCard17Top" type="dimen" format="float">0.68</item>
+    <item name="mexico_horGuidelineCard17Bottom" type="dimen" format="float">0.84</item>
+    <item name="mexico_verGuidelineCard17Left" type="dimen" format="float">0.21</item>
+    <item name="mexico_verGuidelineCard17Right" type="dimen" format="float">0.39</item>
+
+    <item name="mexico_horGuidelineCard18Top" type="dimen" format="float">0.68</item>
+    <item name="mexico_horGuidelineCard18Bottom" type="dimen" format="float">0.84</item>
+    <item name="mexico_verGuidelineCard18Left" type="dimen" format="float">0.41</item>
+    <item name="mexico_verGuidelineCard18Right" type="dimen" format="float">0.59</item>
+
+    <item name="mexico_horGuidelineCard19Top" type="dimen" format="float">0.68</item>
+    <item name="mexico_horGuidelineCard19Bottom" type="dimen" format="float">0.84</item>
+    <item name="mexico_verGuidelineCard19Left" type="dimen" format="float">0.61</item>
+    <item name="mexico_verGuidelineCard19Right" type="dimen" format="float">0.79</item>
+
+    <item name="mexico_horGuidelineCard20Top" type="dimen" format="float">0.68</item>
+    <item name="mexico_horGuidelineCard20Bottom" type="dimen" format="float">0.84</item>
+    <item name="mexico_verGuidelineCard20Left" type="dimen" format="float">0.81</item>
+    <item name="mexico_verGuidelineCard20Right" type="dimen" format="float">0.99</item>
+
 </resources>

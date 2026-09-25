@@ -1,6 +1,7 @@
 package org.alphatilesapps.alphatiles;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +34,117 @@ public class Mexico extends GameActivity {
     protected static final int[] GAME_BUTTONS = {
             R.id.card01, R.id.card02, R.id.card03, R.id.card04, R.id.card05, R.id.card06, R.id.card07, R.id.card08, R.id.card09, R.id.card10,
             R.id.card11, R.id.card12, R.id.card13, R.id.card14, R.id.card15, R.id.card16, R.id.card17, R.id.card18, R.id.card19, R.id.card20
+    };
+
+    // Gridlines will update during orientation change
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Card Guidelines (Cards 01-20 Top, Bottom, Left, Right)
+            {R.id.mexico_horGuidelineCard01Top, R.dimen.mexico_horGuidelineCard01Top},
+            {R.id.mexico_horGuidelineCard01Bottom, R.dimen.mexico_horGuidelineCard01Bottom},
+            {R.id.mexico_verGuidelineCard01Left, R.dimen.mexico_verGuidelineCard01Left},
+            {R.id.mexico_verGuidelineCard01Right, R.dimen.mexico_verGuidelineCard01Right},
+
+            {R.id.mexico_horGuidelineCard02Top, R.dimen.mexico_horGuidelineCard02Top},
+            {R.id.mexico_horGuidelineCard02Bottom, R.dimen.mexico_horGuidelineCard02Bottom},
+            {R.id.mexico_verGuidelineCard02Left, R.dimen.mexico_verGuidelineCard02Left},
+            {R.id.mexico_verGuidelineCard02Right, R.dimen.mexico_verGuidelineCard02Right},
+
+            {R.id.mexico_horGuidelineCard03Top, R.dimen.mexico_horGuidelineCard03Top},
+            {R.id.mexico_horGuidelineCard03Bottom, R.dimen.mexico_horGuidelineCard03Bottom},
+            {R.id.mexico_verGuidelineCard03Left, R.dimen.mexico_verGuidelineCard03Left},
+            {R.id.mexico_verGuidelineCard03Right, R.dimen.mexico_verGuidelineCard03Right},
+
+            {R.id.mexico_horGuidelineCard04Top, R.dimen.mexico_horGuidelineCard04Top},
+            {R.id.mexico_horGuidelineCard04Bottom, R.dimen.mexico_horGuidelineCard04Bottom},
+            {R.id.mexico_verGuidelineCard04Left, R.dimen.mexico_verGuidelineCard04Left},
+            {R.id.mexico_verGuidelineCard04Right, R.dimen.mexico_verGuidelineCard04Right},
+
+            {R.id.mexico_horGuidelineCard05Top, R.dimen.mexico_horGuidelineCard05Top},
+            {R.id.mexico_horGuidelineCard05Bottom, R.dimen.mexico_horGuidelineCard05Bottom},
+            {R.id.mexico_verGuidelineCard05Left, R.dimen.mexico_verGuidelineCard05Left},
+            {R.id.mexico_verGuidelineCard05Right, R.dimen.mexico_verGuidelineCard05Right},
+
+            {R.id.mexico_horGuidelineCard06Top, R.dimen.mexico_horGuidelineCard06Top},
+            {R.id.mexico_horGuidelineCard06Bottom, R.dimen.mexico_horGuidelineCard06Bottom},
+            {R.id.mexico_verGuidelineCard06Left, R.dimen.mexico_verGuidelineCard06Left},
+            {R.id.mexico_verGuidelineCard06Right, R.dimen.mexico_verGuidelineCard06Right},
+
+            {R.id.mexico_horGuidelineCard07Top, R.dimen.mexico_horGuidelineCard07Top},
+            {R.id.mexico_horGuidelineCard07Bottom, R.dimen.mexico_horGuidelineCard07Bottom},
+            {R.id.mexico_verGuidelineCard07Left, R.dimen.mexico_verGuidelineCard07Left},
+            {R.id.mexico_verGuidelineCard07Right, R.dimen.mexico_verGuidelineCard07Right},
+
+            {R.id.mexico_horGuidelineCard08Top, R.dimen.mexico_horGuidelineCard08Top},
+            {R.id.mexico_horGuidelineCard08Bottom, R.dimen.mexico_horGuidelineCard08Bottom},
+            {R.id.mexico_verGuidelineCard08Left, R.dimen.mexico_verGuidelineCard08Left},
+            {R.id.mexico_verGuidelineCard08Right, R.dimen.mexico_verGuidelineCard08Right},
+
+            {R.id.mexico_horGuidelineCard09Top, R.dimen.mexico_horGuidelineCard09Top},
+            {R.id.mexico_horGuidelineCard09Bottom, R.dimen.mexico_horGuidelineCard09Bottom},
+            {R.id.mexico_verGuidelineCard09Left, R.dimen.mexico_verGuidelineCard09Left},
+            {R.id.mexico_verGuidelineCard09Right, R.dimen.mexico_verGuidelineCard09Right},
+
+            {R.id.mexico_horGuidelineCard10Top, R.dimen.mexico_horGuidelineCard10Top},
+            {R.id.mexico_horGuidelineCard10Bottom, R.dimen.mexico_horGuidelineCard10Bottom},
+            {R.id.mexico_verGuidelineCard10Left, R.dimen.mexico_verGuidelineCard10Left},
+            {R.id.mexico_verGuidelineCard10Right, R.dimen.mexico_verGuidelineCard10Right},
+
+            {R.id.mexico_horGuidelineCard11Top, R.dimen.mexico_horGuidelineCard11Top},
+            {R.id.mexico_horGuidelineCard11Bottom, R.dimen.mexico_horGuidelineCard11Bottom},
+            {R.id.mexico_verGuidelineCard11Left, R.dimen.mexico_verGuidelineCard11Left},
+            {R.id.mexico_verGuidelineCard11Right, R.dimen.mexico_verGuidelineCard11Right},
+
+            {R.id.mexico_horGuidelineCard12Top, R.dimen.mexico_horGuidelineCard12Top},
+            {R.id.mexico_horGuidelineCard12Bottom, R.dimen.mexico_horGuidelineCard12Bottom},
+            {R.id.mexico_verGuidelineCard12Left, R.dimen.mexico_verGuidelineCard12Left},
+            {R.id.mexico_verGuidelineCard12Right, R.dimen.mexico_verGuidelineCard12Right},
+
+            {R.id.mexico_horGuidelineCard13Top, R.dimen.mexico_horGuidelineCard13Top},
+            {R.id.mexico_horGuidelineCard13Bottom, R.dimen.mexico_horGuidelineCard13Bottom},
+            {R.id.mexico_verGuidelineCard13Left, R.dimen.mexico_verGuidelineCard13Left},
+            {R.id.mexico_verGuidelineCard13Right, R.dimen.mexico_verGuidelineCard13Right},
+
+            {R.id.mexico_horGuidelineCard14Top, R.dimen.mexico_horGuidelineCard14Top},
+            {R.id.mexico_horGuidelineCard14Bottom, R.dimen.mexico_horGuidelineCard14Bottom},
+            {R.id.mexico_verGuidelineCard14Left, R.dimen.mexico_verGuidelineCard14Left},
+            {R.id.mexico_verGuidelineCard14Right, R.dimen.mexico_verGuidelineCard14Right},
+
+            {R.id.mexico_horGuidelineCard15Top, R.dimen.mexico_horGuidelineCard15Top},
+            {R.id.mexico_horGuidelineCard15Bottom, R.dimen.mexico_horGuidelineCard15Bottom},
+            {R.id.mexico_verGuidelineCard15Left, R.dimen.mexico_verGuidelineCard15Left},
+            {R.id.mexico_verGuidelineCard15Right, R.dimen.mexico_verGuidelineCard15Right},
+
+            {R.id.mexico_horGuidelineCard16Top, R.dimen.mexico_horGuidelineCard16Top},
+            {R.id.mexico_horGuidelineCard16Bottom, R.dimen.mexico_horGuidelineCard16Bottom},
+            {R.id.mexico_verGuidelineCard16Left, R.dimen.mexico_verGuidelineCard16Left},
+            {R.id.mexico_verGuidelineCard16Right, R.dimen.mexico_verGuidelineCard16Right},
+
+            {R.id.mexico_horGuidelineCard17Top, R.dimen.mexico_horGuidelineCard17Top},
+            {R.id.mexico_horGuidelineCard17Bottom, R.dimen.mexico_horGuidelineCard17Bottom},
+            {R.id.mexico_verGuidelineCard17Left, R.dimen.mexico_verGuidelineCard17Left},
+            {R.id.mexico_verGuidelineCard17Right, R.dimen.mexico_verGuidelineCard17Right},
+
+            {R.id.mexico_horGuidelineCard18Top, R.dimen.mexico_horGuidelineCard18Top},
+            {R.id.mexico_horGuidelineCard18Bottom, R.dimen.mexico_horGuidelineCard18Bottom},
+            {R.id.mexico_verGuidelineCard18Left, R.dimen.mexico_verGuidelineCard18Left},
+            {R.id.mexico_verGuidelineCard18Right, R.dimen.mexico_verGuidelineCard18Right},
+
+            {R.id.mexico_horGuidelineCard19Top, R.dimen.mexico_horGuidelineCard19Top},
+            {R.id.mexico_horGuidelineCard19Bottom, R.dimen.mexico_horGuidelineCard19Bottom},
+            {R.id.mexico_verGuidelineCard19Left, R.dimen.mexico_verGuidelineCard19Left},
+            {R.id.mexico_verGuidelineCard19Right, R.dimen.mexico_verGuidelineCard19Right},
+
+            {R.id.mexico_horGuidelineCard20Top, R.dimen.mexico_horGuidelineCard20Top},
+            {R.id.mexico_horGuidelineCard20Bottom, R.dimen.mexico_horGuidelineCard20Bottom},
+            {R.id.mexico_verGuidelineCard20Left, R.dimen.mexico_verGuidelineCard20Left},
+            {R.id.mexico_verGuidelineCard20Right, R.dimen.mexico_verGuidelineCard20Right}
     };
 
     protected int[] getGameButtons() {
@@ -61,11 +175,23 @@ public class Mexico extends GameActivity {
         
     }
 
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.mexico);
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.mexicoCL);
         ActivityLayouts.setStatusAndNavColors(this);
