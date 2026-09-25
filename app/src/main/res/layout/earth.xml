@@ -1712,10 +1712,22 @@
         android:onClick="goToAboutPage"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
+        app:layout_constraintEnd_toStartOf="@+id/exit"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/bottomShareSpacer"
         app:srcCompat="@drawable/zz_alphatileslogosmall" />
+
+    <ImageView
+        android:id="@+id/exit"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="exitApp"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/logoImage"
+        app:srcCompat="@drawable/zz_exit" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH0"

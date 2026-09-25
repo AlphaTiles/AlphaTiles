@@ -393,6 +393,10 @@ public class Earth extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void exitApp(View view) {
+        finishAffinity();
+    }
+
     public void goToDoor(View view) {
 
         finish();
