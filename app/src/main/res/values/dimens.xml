@@ -368,4 +368,132 @@
     <item name="mexico_verGuidelineCard20Left" type="dimen" format="float">0.76</item>
     <item name="mexico_verGuidelineCard20Right" type="dimen" format="float">0.99</item>
 
+    <!-- Georgia Guidelines (Portrait) -->
+    <item name="georgia_horGuidelineRefTop" type="dimen" format="float">0.08</item>
+    <item name="georgia_horGuidelineRefBottom" type="dimen" format="float">0.33</item>
+    <item name="georgia_horGuidelineTextTop" type="dimen" format="float">0.35</item>
+    <item name="georgia_horGuidelineTextBottom" type="dimen" format="float">0.49</item>
+    <item name="georgia_horGuidelineRow1Top" type="dimen" format="float">0.50</item>
+    <item name="georgia_horGuidelineRow1Bottom" type="dimen" format="float">0.61</item>
+    <item name="georgia_horGuidelineRow2Top" type="dimen" format="float">0.62</item>
+    <item name="georgia_horGuidelineRow2Bottom" type="dimen" format="float">0.73</item>
+    <item name="georgia_horGuidelineRow3Top" type="dimen" format="float">0.74</item>
+    <item name="georgia_horGuidelineRow3Bottom" type="dimen" format="float">0.85</item>
+    <item name="georgia_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="georgia_verGuidelineRefRight" type="dimen" format="float">0.99</item>
+    <item name="georgia_verGuidelineCol1Left" type="dimen" format="float">0.01</item>
+    <item name="georgia_verGuidelineCol1Right" type="dimen" format="float">0.16</item>
+    <item name="georgia_verGuidelineCol2Left" type="dimen" format="float">0.176</item>
+    <item name="georgia_verGuidelineCol2Right" type="dimen" format="float">0.326</item>
+    <item name="georgia_verGuidelineCol3Left" type="dimen" format="float">0.342</item>
+    <item name="georgia_verGuidelineCol3Right" type="dimen" format="float">0.492</item>
+    <item name="georgia_verGuidelineCol4Left" type="dimen" format="float">0.508</item>
+    <item name="georgia_verGuidelineCol4Right" type="dimen" format="float">0.658</item>
+    <item name="georgia_verGuidelineCol5Left" type="dimen" format="float">0.674</item>
+    <item name="georgia_verGuidelineCol5Right" type="dimen" format="float">0.824</item>
+    <item name="georgia_verGuidelineCol6Left" type="dimen" format="float">0.840</item>
+    <item name="georgia_verGuidelineCol6Right" type="dimen" format="float">0.99</item>
+
+    <!-- Georgia Syllable Guidelines (Portrait 4x5 Grid) -->
+    <item name="georgia_syll_horGuidelineRefTop" type="dimen" format="float">0.08</item>
+    <item name="georgia_syll_horGuidelineRefBottom" type="dimen" format="float">0.28</item>
+    <item name="georgia_syll_horGuidelineTextTop" type="dimen" format="float">0.30</item>
+    <item name="georgia_syll_horGuidelineTextBottom" type="dimen" format="float">0.37</item>
+    <item name="georgia_syll_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="georgia_syll_verGuidelineRefRight" type="dimen" format="float">0.99</item>
+
+    <!-- Row 1: Tiles 01-05 -->
+    <item name="georgia_syll_horGuidelineTile01Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_syll_horGuidelineTile01Bottom" type="dimen" format="float">0.505</item>
+    <item name="georgia_syll_verGuidelineTile01Left" type="dimen" format="float">0.01</item>
+    <item name="georgia_syll_verGuidelineTile01Right" type="dimen" format="float">0.19</item>
+
+    <item name="georgia_syll_horGuidelineTile02Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_syll_horGuidelineTile02Bottom" type="dimen" format="float">0.505</item>
+    <item name="georgia_syll_verGuidelineTile02Left" type="dimen" format="float">0.21</item>
+    <item name="georgia_syll_verGuidelineTile02Right" type="dimen" format="float">0.39</item>
+
+    <item name="georgia_syll_horGuidelineTile03Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_syll_horGuidelineTile03Bottom" type="dimen" format="float">0.505</item>
+    <item name="georgia_syll_verGuidelineTile03Left" type="dimen" format="float">0.41</item>
+    <item name="georgia_syll_verGuidelineTile03Right" type="dimen" format="float">0.59</item>
+
+    <item name="georgia_syll_horGuidelineTile04Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_syll_horGuidelineTile04Bottom" type="dimen" format="float">0.505</item>
+    <item name="georgia_syll_verGuidelineTile04Left" type="dimen" format="float">0.61</item>
+    <item name="georgia_syll_verGuidelineTile04Right" type="dimen" format="float">0.79</item>
+
+    <item name="georgia_syll_horGuidelineTile05Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_syll_horGuidelineTile05Bottom" type="dimen" format="float">0.505</item>
+    <item name="georgia_syll_verGuidelineTile05Left" type="dimen" format="float">0.81</item>
+    <item name="georgia_syll_verGuidelineTile05Right" type="dimen" format="float">0.99</item>
+
+    <!-- Row 2: Tiles 06-10 -->
+    <item name="georgia_syll_horGuidelineTile06Top" type="dimen" format="float">0.52</item>
+    <item name="georgia_syll_horGuidelineTile06Bottom" type="dimen" format="float">0.635</item>
+    <item name="georgia_syll_verGuidelineTile06Left" type="dimen" format="float">0.01</item>
+    <item name="georgia_syll_verGuidelineTile06Right" type="dimen" format="float">0.19</item>
+
+    <item name="georgia_syll_horGuidelineTile07Top" type="dimen" format="float">0.52</item>
+    <item name="georgia_syll_horGuidelineTile07Bottom" type="dimen" format="float">0.635</item>
+    <item name="georgia_syll_verGuidelineTile07Left" type="dimen" format="float">0.21</item>
+    <item name="georgia_syll_verGuidelineTile07Right" type="dimen" format="float">0.39</item>
+
+    <item name="georgia_syll_horGuidelineTile08Top" type="dimen" format="float">0.52</item>
+    <item name="georgia_syll_horGuidelineTile08Bottom" type="dimen" format="float">0.635</item>
+    <item name="georgia_syll_verGuidelineTile08Left" type="dimen" format="float">0.41</item>
+    <item name="georgia_syll_verGuidelineTile08Right" type="dimen" format="float">0.59</item>
+
+    <item name="georgia_syll_horGuidelineTile09Top" type="dimen" format="float">0.52</item>
+    <item name="georgia_syll_horGuidelineTile09Bottom" type="dimen" format="float">0.635</item>
+    <item name="georgia_syll_verGuidelineTile09Left" type="dimen" format="float">0.61</item>
+    <item name="georgia_syll_verGuidelineTile09Right" type="dimen" format="float">0.79</item>
+
+    <item name="georgia_syll_horGuidelineTile10Top" type="dimen" format="float">0.52</item>
+    <item name="georgia_syll_horGuidelineTile10Bottom" type="dimen" format="float">0.635</item>
+    <item name="georgia_syll_verGuidelineTile10Left" type="dimen" format="float">0.81</item>
+    <item name="georgia_syll_verGuidelineTile10Right" type="dimen" format="float">0.99</item>
+
+    <!-- Row 3: Tiles 11-15 -->
+    <item name="georgia_syll_horGuidelineTile11Top" type="dimen" format="float">0.65</item>
+    <item name="georgia_syll_horGuidelineTile11Bottom" type="dimen" format="float">0.765</item>
+    <item name="georgia_syll_verGuidelineTile11Left" type="dimen" format="float">0.01</item>
+    <item name="georgia_syll_verGuidelineTile11Right" type="dimen" format="float">0.19</item>
+
+    <item name="georgia_syll_horGuidelineTile12Top" type="dimen" format="float">0.65</item>
+    <item name="georgia_syll_horGuidelineTile12Bottom" type="dimen" format="float">0.765</item>
+    <item name="georgia_syll_verGuidelineTile12Left" type="dimen" format="float">0.21</item>
+    <item name="georgia_syll_verGuidelineTile12Right" type="dimen" format="float">0.39</item>
+
+    <item name="georgia_syll_horGuidelineTile13Top" type="dimen" format="float">0.65</item>
+    <item name="georgia_syll_horGuidelineTile13Bottom" type="dimen" format="float">0.765</item>
+    <item name="georgia_syll_verGuidelineTile13Left" type="dimen" format="float">0.41</item>
+    <item name="georgia_syll_verGuidelineTile13Right" type="dimen" format="float">0.59</item>
+
+    <item name="georgia_syll_horGuidelineTile14Top" type="dimen" format="float">0.65</item>
+    <item name="georgia_syll_horGuidelineTile14Bottom" type="dimen" format="float">0.765</item>
+    <item name="georgia_syll_verGuidelineTile14Left" type="dimen" format="float">0.61</item>
+    <item name="georgia_syll_verGuidelineTile14Right" type="dimen" format="float">0.79</item>
+
+    <item name="georgia_syll_horGuidelineTile15Top" type="dimen" format="float">0.65</item>
+    <item name="georgia_syll_horGuidelineTile15Bottom" type="dimen" format="float">0.765</item>
+    <item name="georgia_syll_verGuidelineTile15Left" type="dimen" format="float">0.81</item>
+    <item name="georgia_syll_verGuidelineTile15Right" type="dimen" format="float">0.99</item>
+
+    <!-- Row 4: Tiles 16-18 (Slots 19 and 20 empty) -->
+    <item name="georgia_syll_horGuidelineTile16Top" type="dimen" format="float">0.78</item>
+    <item name="georgia_syll_horGuidelineTile16Bottom" type="dimen" format="float">0.895</item>
+    <item name="georgia_syll_verGuidelineTile16Left" type="dimen" format="float">0.01</item>
+    <item name="georgia_syll_verGuidelineTile16Right" type="dimen" format="float">0.19</item>
+
+    <item name="georgia_syll_horGuidelineTile17Top" type="dimen" format="float">0.78</item>
+    <item name="georgia_syll_horGuidelineTile17Bottom" type="dimen" format="float">0.895</item>
+    <item name="georgia_syll_verGuidelineTile17Left" type="dimen" format="float">0.21</item>
+    <item name="georgia_syll_verGuidelineTile17Right" type="dimen" format="float">0.39</item>
+
+    <item name="georgia_syll_horGuidelineTile18Top" type="dimen" format="float">0.78</item>
+    <item name="georgia_syll_horGuidelineTile18Bottom" type="dimen" format="float">0.895</item>
+    <item name="georgia_syll_verGuidelineTile18Left" type="dimen" format="float">0.41</item>
+    <item name="georgia_syll_verGuidelineTile18Right" type="dimen" format="float">0.59</item>
+
 </resources>
