@@ -1,11 +1,14 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,10 +28,10 @@ public class Colombia extends GameActivity {
     int keyboardScreenNo; // For languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
     int totalScreens; // Total number of screens required to show all keys
     int partial; // Number of visible keys on final partial screen
-    static List<Start.Tile> tileKeysList = new ArrayList<>();
-    static List<Start.Syllable> syllableKeysList = new ArrayList<>();
+    static List<Tile> tileKeysList = new ArrayList<>();
+    static List<Syllable> syllableKeysList = new ArrayList<>();
     static List<WordPiece> clickedKeys = new ArrayList<>(); // Keys clicked, in order
-    static ArrayList<Start.Tile> tilesInBuiltWord = new ArrayList<>();
+    static ArrayList<Tile> tilesInBuiltWord = new ArrayList<>();
 
     final int tilesPerPage = 35;
     final int syllablesPerPage = 18;
@@ -38,6 +41,170 @@ public class Colombia extends GameActivity {
             R.id.key11, R.id.key12, R.id.key13, R.id.key14, R.id.key15, R.id.key16, R.id.key17, R.id.key18, R.id.key19, R.id.key20,
             R.id.key21, R.id.key22, R.id.key23, R.id.key24, R.id.key25, R.id.key26, R.id.key27, R.id.key28, R.id.key29, R.id.key30,
             R.id.key31, R.id.key32, R.id.key33, R.id.key34, R.id.key35
+    };
+
+    private static final int[][] MAPPINGS_COLOMBIA = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.colombia_horGuidelineRefTop, R.dimen.colombia_horGuidelineRefTop},
+            {R.id.colombia_horGuidelineRefBottom, R.dimen.colombia_horGuidelineRefBottom},
+            {R.id.colombia_horGuidelineTextTop, R.dimen.colombia_horGuidelineTextTop},
+            {R.id.colombia_horGuidelineTextBottom, R.dimen.colombia_horGuidelineTextBottom},
+            {R.id.colombia_horGuidelineRow1Top, R.dimen.colombia_horGuidelineRow1Top},
+            {R.id.colombia_horGuidelineRow1Bottom, R.dimen.colombia_horGuidelineRow1Bottom},
+            {R.id.colombia_horGuidelineRow2Top, R.dimen.colombia_horGuidelineRow2Top},
+            {R.id.colombia_horGuidelineRow2Bottom, R.dimen.colombia_horGuidelineRow2Bottom},
+            {R.id.colombia_horGuidelineRow3Top, R.dimen.colombia_horGuidelineRow3Top},
+            {R.id.colombia_horGuidelineRow3Bottom, R.dimen.colombia_horGuidelineRow3Bottom},
+            {R.id.colombia_horGuidelineRow4Top, R.dimen.colombia_horGuidelineRow4Top},
+            {R.id.colombia_horGuidelineRow4Bottom, R.dimen.colombia_horGuidelineRow4Bottom},
+            {R.id.colombia_horGuidelineRow5Top, R.dimen.colombia_horGuidelineRow5Top},
+            {R.id.colombia_horGuidelineRow5Bottom, R.dimen.colombia_horGuidelineRow5Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.colombia_verGuidelineRefLeft, R.dimen.colombia_verGuidelineRefLeft},
+            {R.id.colombia_verGuidelineRefRight, R.dimen.colombia_verGuidelineRefRight},
+            {R.id.colombia_verGuidelineTextLeft, R.dimen.colombia_verGuidelineTextLeft},
+            {R.id.colombia_verGuidelineTextRight, R.dimen.colombia_verGuidelineTextRight},
+            {R.id.colombia_verGuidelineDeleteLeft, R.dimen.colombia_verGuidelineDeleteLeft},
+            {R.id.colombia_verGuidelineDeleteRight, R.dimen.colombia_verGuidelineDeleteRight},
+            {R.id.colombia_verGuidelineCol1Left, R.dimen.colombia_verGuidelineCol1Left},
+            {R.id.colombia_verGuidelineCol1Right, R.dimen.colombia_verGuidelineCol1Right},
+            {R.id.colombia_verGuidelineCol2Left, R.dimen.colombia_verGuidelineCol2Left},
+            {R.id.colombia_verGuidelineCol2Right, R.dimen.colombia_verGuidelineCol2Right},
+            {R.id.colombia_verGuidelineCol3Left, R.dimen.colombia_verGuidelineCol3Left},
+            {R.id.colombia_verGuidelineCol3Right, R.dimen.colombia_verGuidelineCol3Right},
+            {R.id.colombia_verGuidelineCol4Left, R.dimen.colombia_verGuidelineCol4Left},
+            {R.id.colombia_verGuidelineCol4Right, R.dimen.colombia_verGuidelineCol4Right},
+            {R.id.colombia_verGuidelineCol5Left, R.dimen.colombia_verGuidelineCol5Left},
+            {R.id.colombia_verGuidelineCol5Right, R.dimen.colombia_verGuidelineCol5Right},
+            {R.id.colombia_verGuidelineCol6Left, R.dimen.colombia_verGuidelineCol6Left},
+            {R.id.colombia_verGuidelineCol6Right, R.dimen.colombia_verGuidelineCol6Right},
+            {R.id.colombia_verGuidelineCol7Left, R.dimen.colombia_verGuidelineCol7Left},
+            {R.id.colombia_verGuidelineCol7Right, R.dimen.colombia_verGuidelineCol7Right}
+    };
+
+    private static final int[][] MAPPINGS_COLOMBIA_SYLLABLES = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.colombia_syll_horGuidelineRefTop, R.dimen.colombia_syll_horGuidelineRefTop},
+            {R.id.colombia_syll_horGuidelineRefBottom, R.dimen.colombia_syll_horGuidelineRefBottom},
+            {R.id.colombia_syll_horGuidelineTextTop, R.dimen.colombia_syll_horGuidelineTextTop},
+            {R.id.colombia_syll_horGuidelineTextBottom, R.dimen.colombia_syll_horGuidelineTextBottom},
+
+            {R.id.colombia_syll_horGuidelineKey01Top, R.dimen.colombia_syll_horGuidelineKey01Top},
+            {R.id.colombia_syll_horGuidelineKey01Bottom, R.dimen.colombia_syll_horGuidelineKey01Bottom},
+            {R.id.colombia_syll_horGuidelineKey02Top, R.dimen.colombia_syll_horGuidelineKey02Top},
+            {R.id.colombia_syll_horGuidelineKey02Bottom, R.dimen.colombia_syll_horGuidelineKey02Bottom},
+            {R.id.colombia_syll_horGuidelineKey03Top, R.dimen.colombia_syll_horGuidelineKey03Top},
+            {R.id.colombia_syll_horGuidelineKey03Bottom, R.dimen.colombia_syll_horGuidelineKey03Bottom},
+            {R.id.colombia_syll_horGuidelineKey04Top, R.dimen.colombia_syll_horGuidelineKey04Top},
+            {R.id.colombia_syll_horGuidelineKey04Bottom, R.dimen.colombia_syll_horGuidelineKey04Bottom},
+            {R.id.colombia_syll_horGuidelineKey05Top, R.dimen.colombia_syll_horGuidelineKey05Top},
+            {R.id.colombia_syll_horGuidelineKey05Bottom, R.dimen.colombia_syll_horGuidelineKey05Bottom},
+            {R.id.colombia_syll_horGuidelineKey06Top, R.dimen.colombia_syll_horGuidelineKey06Top},
+            {R.id.colombia_syll_horGuidelineKey06Bottom, R.dimen.colombia_syll_horGuidelineKey06Bottom},
+            {R.id.colombia_syll_horGuidelineKey07Top, R.dimen.colombia_syll_horGuidelineKey07Top},
+            {R.id.colombia_syll_horGuidelineKey07Bottom, R.dimen.colombia_syll_horGuidelineKey07Bottom},
+            {R.id.colombia_syll_horGuidelineKey08Top, R.dimen.colombia_syll_horGuidelineKey08Top},
+            {R.id.colombia_syll_horGuidelineKey08Bottom, R.dimen.colombia_syll_horGuidelineKey08Bottom},
+            {R.id.colombia_syll_horGuidelineKey09Top, R.dimen.colombia_syll_horGuidelineKey09Top},
+            {R.id.colombia_syll_horGuidelineKey09Bottom, R.dimen.colombia_syll_horGuidelineKey09Bottom},
+            {R.id.colombia_syll_horGuidelineKey10Top, R.dimen.colombia_syll_horGuidelineKey10Top},
+            {R.id.colombia_syll_horGuidelineKey10Bottom, R.dimen.colombia_syll_horGuidelineKey10Bottom},
+            {R.id.colombia_syll_horGuidelineKey11Top, R.dimen.colombia_syll_horGuidelineKey11Top},
+            {R.id.colombia_syll_horGuidelineKey11Bottom, R.dimen.colombia_syll_horGuidelineKey11Bottom},
+            {R.id.colombia_syll_horGuidelineKey12Top, R.dimen.colombia_syll_horGuidelineKey12Top},
+            {R.id.colombia_syll_horGuidelineKey12Bottom, R.dimen.colombia_syll_horGuidelineKey12Bottom},
+            {R.id.colombia_syll_horGuidelineKey13Top, R.dimen.colombia_syll_horGuidelineKey13Top},
+            {R.id.colombia_syll_horGuidelineKey13Bottom, R.dimen.colombia_syll_horGuidelineKey13Bottom},
+            {R.id.colombia_syll_horGuidelineKey14Top, R.dimen.colombia_syll_horGuidelineKey14Top},
+            {R.id.colombia_syll_horGuidelineKey14Bottom, R.dimen.colombia_syll_horGuidelineKey14Bottom},
+            {R.id.colombia_syll_horGuidelineKey15Top, R.dimen.colombia_syll_horGuidelineKey15Top},
+            {R.id.colombia_syll_horGuidelineKey15Bottom, R.dimen.colombia_syll_horGuidelineKey15Bottom},
+            {R.id.colombia_syll_horGuidelineKey16Top, R.dimen.colombia_syll_horGuidelineKey16Top},
+            {R.id.colombia_syll_horGuidelineKey16Bottom, R.dimen.colombia_syll_horGuidelineKey16Bottom},
+            {R.id.colombia_syll_horGuidelineKey17Top, R.dimen.colombia_syll_horGuidelineKey17Top},
+            {R.id.colombia_syll_horGuidelineKey17Bottom, R.dimen.colombia_syll_horGuidelineKey17Bottom},
+            {R.id.colombia_syll_horGuidelineKey18Top, R.dimen.colombia_syll_horGuidelineKey18Top},
+            {R.id.colombia_syll_horGuidelineKey18Bottom, R.dimen.colombia_syll_horGuidelineKey18Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.colombia_syll_verGuidelineRefLeft, R.dimen.colombia_syll_verGuidelineRefLeft},
+            {R.id.colombia_syll_verGuidelineRefRight, R.dimen.colombia_syll_verGuidelineRefRight},
+            {R.id.colombia_syll_verGuidelineTextLeft, R.dimen.colombia_syll_verGuidelineTextLeft},
+            {R.id.colombia_syll_verGuidelineTextRight, R.dimen.colombia_syll_verGuidelineTextRight},
+            {R.id.colombia_syll_verGuidelineDeleteLeft, R.dimen.colombia_syll_verGuidelineDeleteLeft},
+            {R.id.colombia_syll_verGuidelineDeleteRight, R.dimen.colombia_syll_verGuidelineDeleteRight},
+
+            {R.id.colombia_syll_verGuidelineKey01Left, R.dimen.colombia_syll_verGuidelineKey01Left},
+            {R.id.colombia_syll_verGuidelineKey01Right, R.dimen.colombia_syll_verGuidelineKey01Right},
+            {R.id.colombia_syll_verGuidelineKey02Left, R.dimen.colombia_syll_verGuidelineKey02Left},
+            {R.id.colombia_syll_verGuidelineKey02Right, R.dimen.colombia_syll_verGuidelineKey02Right},
+            {R.id.colombia_syll_verGuidelineKey03Left, R.dimen.colombia_syll_verGuidelineKey03Left},
+            {R.id.colombia_syll_verGuidelineKey03Right, R.dimen.colombia_syll_verGuidelineKey03Right},
+            {R.id.colombia_syll_verGuidelineKey04Left, R.dimen.colombia_syll_verGuidelineKey04Left},
+            {R.id.colombia_syll_verGuidelineKey04Right, R.dimen.colombia_syll_verGuidelineKey04Right},
+            {R.id.colombia_syll_verGuidelineKey05Left, R.dimen.colombia_syll_verGuidelineKey05Left},
+            {R.id.colombia_syll_verGuidelineKey05Right, R.dimen.colombia_syll_verGuidelineKey05Right},
+            {R.id.colombia_syll_verGuidelineKey06Left, R.dimen.colombia_syll_verGuidelineKey06Left},
+            {R.id.colombia_syll_verGuidelineKey06Right, R.dimen.colombia_syll_verGuidelineKey06Right},
+            {R.id.colombia_syll_verGuidelineKey07Left, R.dimen.colombia_syll_verGuidelineKey07Left},
+            {R.id.colombia_syll_verGuidelineKey07Right, R.dimen.colombia_syll_verGuidelineKey07Right},
+            {R.id.colombia_syll_verGuidelineKey08Left, R.dimen.colombia_syll_verGuidelineKey08Left},
+            {R.id.colombia_syll_verGuidelineKey08Right, R.dimen.colombia_syll_verGuidelineKey08Right},
+            {R.id.colombia_syll_verGuidelineKey09Left, R.dimen.colombia_syll_verGuidelineKey09Left},
+            {R.id.colombia_syll_verGuidelineKey09Right, R.dimen.colombia_syll_verGuidelineKey09Right},
+            {R.id.colombia_syll_verGuidelineKey10Left, R.dimen.colombia_syll_verGuidelineKey10Left},
+            {R.id.colombia_syll_verGuidelineKey10Right, R.dimen.colombia_syll_verGuidelineKey10Right},
+            {R.id.colombia_syll_verGuidelineKey11Left, R.dimen.colombia_syll_verGuidelineKey11Left},
+            {R.id.colombia_syll_verGuidelineKey11Right, R.dimen.colombia_syll_verGuidelineKey11Right},
+            {R.id.colombia_syll_verGuidelineKey12Left, R.dimen.colombia_syll_verGuidelineKey12Left},
+            {R.id.colombia_syll_verGuidelineKey12Right, R.dimen.colombia_syll_verGuidelineKey12Right},
+            {R.id.colombia_syll_verGuidelineKey13Left, R.dimen.colombia_syll_verGuidelineKey13Left},
+            {R.id.colombia_syll_verGuidelineKey13Right, R.dimen.colombia_syll_verGuidelineKey13Right},
+            {R.id.colombia_syll_verGuidelineKey14Left, R.dimen.colombia_syll_verGuidelineKey14Left},
+            {R.id.colombia_syll_verGuidelineKey14Right, R.dimen.colombia_syll_verGuidelineKey14Right},
+            {R.id.colombia_syll_verGuidelineKey15Left, R.dimen.colombia_syll_verGuidelineKey15Left},
+            {R.id.colombia_syll_verGuidelineKey15Right, R.dimen.colombia_syll_verGuidelineKey15Right},
+            {R.id.colombia_syll_verGuidelineKey16Left, R.dimen.colombia_syll_verGuidelineKey16Left},
+            {R.id.colombia_syll_verGuidelineKey16Right, R.dimen.colombia_syll_verGuidelineKey16Right},
+            {R.id.colombia_syll_verGuidelineKey17Left, R.dimen.colombia_syll_verGuidelineKey17Left},
+            {R.id.colombia_syll_verGuidelineKey17Right, R.dimen.colombia_syll_verGuidelineKey17Right},
+            {R.id.colombia_syll_verGuidelineKey18Left, R.dimen.colombia_syll_verGuidelineKey18Left},
+            {R.id.colombia_syll_verGuidelineKey18Right, R.dimen.colombia_syll_verGuidelineKey18Right}
     };
 
     protected int[] getGameButtons() {
@@ -53,7 +220,7 @@ public class Colombia extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -65,6 +232,21 @@ public class Colombia extends GameActivity {
         ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
+    }
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        if (syllableGame.equals("S")) {
+            GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_COLOMBIA_SYLLABLES);
+        } else {
+            GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_COLOMBIA);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
     }
 
     @Override
@@ -83,6 +265,7 @@ public class Colombia extends GameActivity {
             setContentView(R.layout.colombia);
             gameID = R.id.colombiaCL;
         }
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -153,9 +336,9 @@ public class Colombia extends GameActivity {
         image.setImageResource(resID);
 
         if (syllableGame.equals("S")) {
-            parsedRefWordSyllableArray = Start.syllableList.parseWordIntoSyllables(refWord); // KP
+            parsedRefWordSyllableArray = syllableList.parseWordIntoSyllables(refWord); // KP
         } else {
-            parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
+            parsedRefWordTileArray = tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
         }
 
         loadKeyboard();
@@ -209,9 +392,9 @@ public class Colombia extends GameActivity {
                     syllableKeysList = new ArrayList<>(parsedRefWordSyllableArray);
                     int numberOfCorrectKeys = parsedRefWordSyllableArray.size();
                     for (int n=0; n<numberOfCorrectKeys; n++) {
-                        Start.Syllable syllableInTheList = syllableKeysList.get(n);
+                        Syllable syllableInTheList = syllableKeysList.get(n);
                         if(SAD_STRINGS.contains(syllableInTheList.text)){
-                            Start.Syllable distractorSADSyllable = syllableInTheList;
+                            Syllable distractorSADSyllable = syllableInTheList;
                             distractorSADSyllable.text = tileList.returnRandomDistractorTile(tileHashMap.find(syllableInTheList.text)).text;
                             if (distractorSADSyllable.distractors.contains(distractorSADSyllable.text)) {
                                 distractorSADSyllable.distractors.remove(distractorSADSyllable.text);
@@ -257,9 +440,9 @@ public class Colombia extends GameActivity {
                 if (syllableGame.equals("S")) { // 18 tiles; distractors for the wrong answers
                     syllableKeysList = new ArrayList<>(parsedRefWordSyllableArray);
                     for (int n=0; n<(18-parsedRefWordSyllableArray.size()); n++) {
-                        Start.Syllable syllableInTheList = syllableKeysList.get(n);
+                        Syllable syllableInTheList = syllableKeysList.get(n);
                         if(SAD_STRINGS.contains(syllableInTheList.text)){
-                            Start.Syllable distractorSADSyllable = syllableInTheList;
+                            Syllable distractorSADSyllable = syllableInTheList;
                             distractorSADSyllable.text = tileList.returnRandomDistractorTile(tileHashMap.find(syllableInTheList.text)).text;
                             if(distractorSADSyllable.distractors.contains(distractorSADSyllable.text)){
                                 distractorSADSyllable.distractors.remove(distractorSADSyllable.text);

@@ -496,4 +496,144 @@
     <item name="georgia_syll_verGuidelineTile18Left" type="dimen" format="float">0.41</item>
     <item name="georgia_syll_verGuidelineTile18Right" type="dimen" format="float">0.59</item>
 
+    <!-- Colombia Guidelines (Portrait 35-Key Layout) -->
+    <item name="colombia_horGuidelineRefTop" type="dimen" format="float">0.08</item>
+    <item name="colombia_horGuidelineRefBottom" type="dimen" format="float">0.33</item>
+    <item name="colombia_horGuidelineTextTop" type="dimen" format="float">0.35</item>
+    <item name="colombia_horGuidelineTextBottom" type="dimen" format="float">0.45</item>
+    <item name="colombia_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="colombia_verGuidelineRefRight" type="dimen" format="float">0.99</item>
+    <item name="colombia_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
+    <item name="colombia_verGuidelineTextRight" type="dimen" format="float">0.76</item>
+    <item name="colombia_verGuidelineDeleteLeft" type="dimen" format="float">0.77</item>
+    <item name="colombia_verGuidelineDeleteRight" type="dimen" format="float">0.99</item>
+
+    <item name="colombia_horGuidelineRow1Top" type="dimen" format="float">0.47</item>
+    <item name="colombia_horGuidelineRow1Bottom" type="dimen" format="float">0.55</item>
+    <item name="colombia_horGuidelineRow2Top" type="dimen" format="float">0.56</item>
+    <item name="colombia_horGuidelineRow2Bottom" type="dimen" format="float">0.64</item>
+    <item name="colombia_horGuidelineRow3Top" type="dimen" format="float">0.65</item>
+    <item name="colombia_horGuidelineRow3Bottom" type="dimen" format="float">0.73</item>
+    <item name="colombia_horGuidelineRow4Top" type="dimen" format="float">0.74</item>
+    <item name="colombia_horGuidelineRow4Bottom" type="dimen" format="float">0.82</item>
+    <item name="colombia_horGuidelineRow5Top" type="dimen" format="float">0.83</item>
+    <item name="colombia_horGuidelineRow5Bottom" type="dimen" format="float">0.91</item>
+
+    <item name="colombia_verGuidelineCol1Left" type="dimen" format="float">0.01</item>
+    <item name="colombia_verGuidelineCol1Right" type="dimen" format="float">0.143</item>
+    <item name="colombia_verGuidelineCol2Left" type="dimen" format="float">0.150</item>
+    <item name="colombia_verGuidelineCol2Right" type="dimen" format="float">0.283</item>
+    <item name="colombia_verGuidelineCol3Left" type="dimen" format="float">0.290</item>
+    <item name="colombia_verGuidelineCol3Right" type="dimen" format="float">0.423</item>
+    <item name="colombia_verGuidelineCol4Left" type="dimen" format="float">0.430</item>
+    <item name="colombia_verGuidelineCol4Right" type="dimen" format="float">0.563</item>
+    <item name="colombia_verGuidelineCol5Left" type="dimen" format="float">0.570</item>
+    <item name="colombia_verGuidelineCol5Right" type="dimen" format="float">0.703</item>
+    <item name="colombia_verGuidelineCol6Left" type="dimen" format="float">0.710</item>
+    <item name="colombia_verGuidelineCol6Right" type="dimen" format="float">0.843</item>
+    <item name="colombia_verGuidelineCol7Left" type="dimen" format="float">0.850</item>
+    <item name="colombia_verGuidelineCol7Right" type="dimen" format="float">0.99</item>
+
+    <!-- Colombia Syllables Guidelines (Portrait 6x3 Grid) -->
+    <item name="colombia_syll_horGuidelineRefTop" type="dimen" format="float">0.08</item>
+    <item name="colombia_syll_horGuidelineRefBottom" type="dimen" format="float">0.30</item>
+    <item name="colombia_syll_horGuidelineTextTop" type="dimen" format="float">0.32</item>
+    <item name="colombia_syll_horGuidelineTextBottom" type="dimen" format="float">0.42</item>
+    <item name="colombia_syll_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="colombia_syll_verGuidelineRefRight" type="dimen" format="float">0.99</item>
+    <item name="colombia_syll_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
+    <item name="colombia_syll_verGuidelineTextRight" type="dimen" format="float">0.76</item>
+    <item name="colombia_syll_verGuidelineDeleteLeft" type="dimen" format="float">0.77</item>
+    <item name="colombia_syll_verGuidelineDeleteRight" type="dimen" format="float">0.99</item>
+
+    <item name="colombia_syll_horGuidelineKey01Top" type="dimen" format="float">0.44</item>
+    <item name="colombia_syll_horGuidelineKey01Bottom" type="dimen" format="float">0.51</item>
+    <item name="colombia_syll_verGuidelineKey01Left" type="dimen" format="float">0.01</item>
+    <item name="colombia_syll_verGuidelineKey01Right" type="dimen" format="float">0.33</item>
+
+    <item name="colombia_syll_horGuidelineKey02Top" type="dimen" format="float">0.44</item>
+    <item name="colombia_syll_horGuidelineKey02Bottom" type="dimen" format="float">0.51</item>
+    <item name="colombia_syll_verGuidelineKey02Left" type="dimen" format="float">0.34</item>
+    <item name="colombia_syll_verGuidelineKey02Right" type="dimen" format="float">0.66</item>
+
+    <item name="colombia_syll_horGuidelineKey03Top" type="dimen" format="float">0.44</item>
+    <item name="colombia_syll_horGuidelineKey03Bottom" type="dimen" format="float">0.51</item>
+    <item name="colombia_syll_verGuidelineKey03Left" type="dimen" format="float">0.67</item>
+    <item name="colombia_syll_verGuidelineKey03Right" type="dimen" format="float">0.99</item>
+
+    <item name="colombia_syll_horGuidelineKey04Top" type="dimen" format="float">0.52</item>
+    <item name="colombia_syll_horGuidelineKey04Bottom" type="dimen" format="float">0.59</item>
+    <item name="colombia_syll_verGuidelineKey04Left" type="dimen" format="float">0.01</item>
+    <item name="colombia_syll_verGuidelineKey04Right" type="dimen" format="float">0.33</item>
+
+    <item name="colombia_syll_horGuidelineKey05Top" type="dimen" format="float">0.52</item>
+    <item name="colombia_syll_horGuidelineKey05Bottom" type="dimen" format="float">0.59</item>
+    <item name="colombia_syll_verGuidelineKey05Left" type="dimen" format="float">0.34</item>
+    <item name="colombia_syll_verGuidelineKey05Right" type="dimen" format="float">0.66</item>
+
+    <item name="colombia_syll_horGuidelineKey06Top" type="dimen" format="float">0.52</item>
+    <item name="colombia_syll_horGuidelineKey06Bottom" type="dimen" format="float">0.59</item>
+    <item name="colombia_syll_verGuidelineKey06Left" type="dimen" format="float">0.67</item>
+    <item name="colombia_syll_verGuidelineKey06Right" type="dimen" format="float">0.99</item>
+
+    <item name="colombia_syll_horGuidelineKey07Top" type="dimen" format="float">0.60</item>
+    <item name="colombia_syll_horGuidelineKey07Bottom" type="dimen" format="float">0.67</item>
+    <item name="colombia_syll_verGuidelineKey07Left" type="dimen" format="float">0.01</item>
+    <item name="colombia_syll_verGuidelineKey07Right" type="dimen" format="float">0.33</item>
+
+    <item name="colombia_syll_horGuidelineKey08Top" type="dimen" format="float">0.60</item>
+    <item name="colombia_syll_horGuidelineKey08Bottom" type="dimen" format="float">0.67</item>
+    <item name="colombia_syll_verGuidelineKey08Left" type="dimen" format="float">0.34</item>
+    <item name="colombia_syll_verGuidelineKey08Right" type="dimen" format="float">0.66</item>
+
+    <item name="colombia_syll_horGuidelineKey09Top" type="dimen" format="float">0.60</item>
+    <item name="colombia_syll_horGuidelineKey09Bottom" type="dimen" format="float">0.67</item>
+    <item name="colombia_syll_verGuidelineKey09Left" type="dimen" format="float">0.67</item>
+    <item name="colombia_syll_verGuidelineKey09Right" type="dimen" format="float">0.99</item>
+
+    <item name="colombia_syll_horGuidelineKey10Top" type="dimen" format="float">0.68</item>
+    <item name="colombia_syll_horGuidelineKey10Bottom" type="dimen" format="float">0.75</item>
+    <item name="colombia_syll_verGuidelineKey10Left" type="dimen" format="float">0.01</item>
+    <item name="colombia_syll_verGuidelineKey10Right" type="dimen" format="float">0.33</item>
+
+    <item name="colombia_syll_horGuidelineKey11Top" type="dimen" format="float">0.68</item>
+    <item name="colombia_syll_horGuidelineKey11Bottom" type="dimen" format="float">0.75</item>
+    <item name="colombia_syll_verGuidelineKey11Left" type="dimen" format="float">0.34</item>
+    <item name="colombia_syll_verGuidelineKey11Right" type="dimen" format="float">0.66</item>
+
+    <item name="colombia_syll_horGuidelineKey12Top" type="dimen" format="float">0.68</item>
+    <item name="colombia_syll_horGuidelineKey12Bottom" type="dimen" format="float">0.75</item>
+    <item name="colombia_syll_verGuidelineKey12Left" type="dimen" format="float">0.67</item>
+    <item name="colombia_syll_verGuidelineKey12Right" type="dimen" format="float">0.99</item>
+
+    <item name="colombia_syll_horGuidelineKey13Top" type="dimen" format="float">0.76</item>
+    <item name="colombia_syll_horGuidelineKey13Bottom" type="dimen" format="float">0.83</item>
+    <item name="colombia_syll_verGuidelineKey13Left" type="dimen" format="float">0.01</item>
+    <item name="colombia_syll_verGuidelineKey13Right" type="dimen" format="float">0.33</item>
+
+    <item name="colombia_syll_horGuidelineKey14Top" type="dimen" format="float">0.76</item>
+    <item name="colombia_syll_horGuidelineKey14Bottom" type="dimen" format="float">0.83</item>
+    <item name="colombia_syll_verGuidelineKey14Left" type="dimen" format="float">0.34</item>
+    <item name="colombia_syll_verGuidelineKey14Right" type="dimen" format="float">0.66</item>
+
+    <item name="colombia_syll_horGuidelineKey15Top" type="dimen" format="float">0.76</item>
+    <item name="colombia_syll_horGuidelineKey15Bottom" type="dimen" format="float">0.83</item>
+    <item name="colombia_syll_verGuidelineKey15Left" type="dimen" format="float">0.67</item>
+    <item name="colombia_syll_verGuidelineKey15Right" type="dimen" format="float">0.99</item>
+
+    <item name="colombia_syll_horGuidelineKey16Top" type="dimen" format="float">0.84</item>
+    <item name="colombia_syll_horGuidelineKey16Bottom" type="dimen" format="float">0.91</item>
+    <item name="colombia_syll_verGuidelineKey16Left" type="dimen" format="float">0.01</item>
+    <item name="colombia_syll_verGuidelineKey16Right" type="dimen" format="float">0.33</item>
+
+    <item name="colombia_syll_horGuidelineKey17Top" type="dimen" format="float">0.84</item>
+    <item name="colombia_syll_horGuidelineKey17Bottom" type="dimen" format="float">0.91</item>
+    <item name="colombia_syll_verGuidelineKey17Left" type="dimen" format="float">0.34</item>
+    <item name="colombia_syll_verGuidelineKey17Right" type="dimen" format="float">0.66</item>
+
+    <item name="colombia_syll_horGuidelineKey18Top" type="dimen" format="float">0.84</item>
+    <item name="colombia_syll_horGuidelineKey18Bottom" type="dimen" format="float">0.91</item>
+    <item name="colombia_syll_verGuidelineKey18Left" type="dimen" format="float">0.67</item>
+    <item name="colombia_syll_verGuidelineKey18Right" type="dimen" format="float">0.99</item>
+
 </resources>
