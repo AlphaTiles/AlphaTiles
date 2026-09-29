@@ -42,7 +42,8 @@
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Celebration"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
-        <activity android:name=".Ecuador" />
+        <activity android:name=".Ecuador"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Georgia"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Italy"

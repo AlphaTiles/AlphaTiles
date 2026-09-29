@@ -631,4 +631,14 @@
     <item name="colombia_syll_verGuidelineKey18Left" type="dimen" format="float">0.90</item>
     <item name="colombia_syll_verGuidelineKey18Right" type="dimen" format="float">0.99</item>
 
+    <!-- Ecuador Guidelines (Landscape) -->
+    <item name="ecuador_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="ecuador_horGuidelineRefBottom" type="dimen" format="float">0.52</item>
+    <item name="ecuador_horGuidelineTextTop" type="dimen" format="float">0.55</item>
+    <item name="ecuador_horGuidelineTextBottom" type="dimen" format="float">0.85</item>
+    <item name="ecuador_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="ecuador_verGuidelineRefRight" type="dimen" format="float">0.28</item>
+    <item name="ecuador_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
+    <item name="ecuador_verGuidelineTextRight" type="dimen" format="float">0.28</item>
+
 </resources>
