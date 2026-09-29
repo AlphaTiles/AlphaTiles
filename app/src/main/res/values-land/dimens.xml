@@ -641,4 +641,76 @@
     <item name="ecuador_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
     <item name="ecuador_verGuidelineTextRight" type="dimen" format="float">0.28</item>
 
+    <!-- Myanmar Guidelines (Landscape 7x7 Grid with 3x3 Word Image Table) -->
+    <item name="myanmar_horGuidelineTextTop" type="dimen" format="float">0.14</item>
+    <item name="myanmar_horGuidelineTextBottom" type="dimen" format="float">0.37</item>
+    <item name="myanmar_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
+    <item name="myanmar_verGuidelineTextRight" type="dimen" format="float">0.28</item>
+
+    <!-- Word Image Row 1 (Img 01, 02, 03) -->
+    <item name="myanmar_horGuidelineImg1Top" type="dimen" format="float">0.38</item>
+    <item name="myanmar_horGuidelineImg1Bottom" type="dimen" format="float">0.53</item>
+    <item name="myanmar_horGuidelineImg2Top" type="dimen" format="float">0.38</item>
+    <item name="myanmar_horGuidelineImg2Bottom" type="dimen" format="float">0.53</item>
+    <item name="myanmar_horGuidelineImg3Top" type="dimen" format="float">0.38</item>
+    <item name="myanmar_horGuidelineImg3Bottom" type="dimen" format="float">0.53</item>
+
+    <!-- Word Image Row 2 (Img 04, 05, 06) -->
+    <item name="myanmar_horGuidelineImg4Top" type="dimen" format="float">0.54</item>
+    <item name="myanmar_horGuidelineImg4Bottom" type="dimen" format="float">0.69</item>
+    <item name="myanmar_horGuidelineImg5Top" type="dimen" format="float">0.54</item>
+    <item name="myanmar_horGuidelineImg5Bottom" type="dimen" format="float">0.69</item>
+    <item name="myanmar_horGuidelineImg6Top" type="dimen" format="float">0.54</item>
+    <item name="myanmar_horGuidelineImg6Bottom" type="dimen" format="float">0.69</item>
+
+    <!-- Word Image Row 3 (Img 07) -->
+    <item name="myanmar_horGuidelineImg7Top" type="dimen" format="float">0.70</item>
+    <item name="myanmar_horGuidelineImg7Bottom" type="dimen" format="float">0.85</item>
+
+    <!-- Word Image Cols 1, 2, 3 -->
+    <item name="myanmar_verGuidelineImg1Left" type="dimen" format="float">0.01</item>
+    <item name="myanmar_verGuidelineImg1Right" type="dimen" format="float">0.09</item>
+    <item name="myanmar_verGuidelineImg2Left" type="dimen" format="float">0.10</item>
+    <item name="myanmar_verGuidelineImg2Right" type="dimen" format="float">0.18</item>
+    <item name="myanmar_verGuidelineImg3Left" type="dimen" format="float">0.19</item>
+    <item name="myanmar_verGuidelineImg3Right" type="dimen" format="float">0.28</item>
+    <item name="myanmar_verGuidelineImg4Left" type="dimen" format="float">0.01</item>
+    <item name="myanmar_verGuidelineImg4Right" type="dimen" format="float">0.09</item>
+    <item name="myanmar_verGuidelineImg5Left" type="dimen" format="float">0.10</item>
+    <item name="myanmar_verGuidelineImg5Right" type="dimen" format="float">0.18</item>
+    <item name="myanmar_verGuidelineImg6Left" type="dimen" format="float">0.19</item>
+    <item name="myanmar_verGuidelineImg6Right" type="dimen" format="float">0.28</item>
+    <item name="myanmar_verGuidelineImg7Left" type="dimen" format="float">0.01</item>
+    <item name="myanmar_verGuidelineImg7Right" type="dimen" format="float">0.09</item>
+
+    <item name="myanmar_horGuidelineRow1Top" type="dimen" format="float">0.140</item>
+    <item name="myanmar_horGuidelineRow1Bottom" type="dimen" format="float">0.238</item>
+    <item name="myanmar_horGuidelineRow2Top" type="dimen" format="float">0.242</item>
+    <item name="myanmar_horGuidelineRow2Bottom" type="dimen" format="float">0.340</item>
+    <item name="myanmar_horGuidelineRow3Top" type="dimen" format="float">0.344</item>
+    <item name="myanmar_horGuidelineRow3Bottom" type="dimen" format="float">0.442</item>
+    <item name="myanmar_horGuidelineRow4Top" type="dimen" format="float">0.446</item>
+    <item name="myanmar_horGuidelineRow4Bottom" type="dimen" format="float">0.544</item>
+    <item name="myanmar_horGuidelineRow5Top" type="dimen" format="float">0.548</item>
+    <item name="myanmar_horGuidelineRow5Bottom" type="dimen" format="float">0.646</item>
+    <item name="myanmar_horGuidelineRow6Top" type="dimen" format="float">0.650</item>
+    <item name="myanmar_horGuidelineRow6Bottom" type="dimen" format="float">0.748</item>
+    <item name="myanmar_horGuidelineRow7Top" type="dimen" format="float">0.752</item>
+    <item name="myanmar_horGuidelineRow7Bottom" type="dimen" format="float">0.850</item>
+
+    <item name="myanmar_verGuidelineCol1Left" type="dimen" format="float">0.30</item>
+    <item name="myanmar_verGuidelineCol1Right" type="dimen" format="float">0.39</item>
+    <item name="myanmar_verGuidelineCol2Left" type="dimen" format="float">0.40</item>
+    <item name="myanmar_verGuidelineCol2Right" type="dimen" format="float">0.49</item>
+    <item name="myanmar_verGuidelineCol3Left" type="dimen" format="float">0.50</item>
+    <item name="myanmar_verGuidelineCol3Right" type="dimen" format="float">0.59</item>
+    <item name="myanmar_verGuidelineCol4Left" type="dimen" format="float">0.60</item>
+    <item name="myanmar_verGuidelineCol4Right" type="dimen" format="float">0.69</item>
+    <item name="myanmar_verGuidelineCol5Left" type="dimen" format="float">0.70</item>
+    <item name="myanmar_verGuidelineCol5Right" type="dimen" format="float">0.79</item>
+    <item name="myanmar_verGuidelineCol6Left" type="dimen" format="float">0.80</item>
+    <item name="myanmar_verGuidelineCol6Right" type="dimen" format="float">0.89</item>
+    <item name="myanmar_verGuidelineCol7Left" type="dimen" format="float">0.90</item>
+    <item name="myanmar_verGuidelineCol7Right" type="dimen" format="float">0.99</item>
+
 </resources>
