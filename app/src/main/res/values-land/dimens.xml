@@ -713,4 +713,67 @@
     <item name="myanmar_verGuidelineCol7Left" type="dimen" format="float">0.90</item>
     <item name="myanmar_verGuidelineCol7Right" type="dimen" format="float">0.99</item>
 
+    <!-- United States Guidelines (Landscape) -->
+    <item name="us_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="us_horGuidelineRefBottom" type="dimen" format="float">0.52</item>
+    <item name="us_horGuidelineTextTop" type="dimen" format="float">0.55</item>
+    <item name="us_horGuidelineTextBottom" type="dimen" format="float">0.85</item>
+    <item name="us_horGuidelineRow1Top" type="dimen" format="float">0.14</item>
+    <item name="us_horGuidelineRow1Bottom" type="dimen" format="float">0.48</item>
+    <item name="us_horGuidelineRow2Top" type="dimen" format="float">0.51</item>
+    <item name="us_horGuidelineRow2Bottom" type="dimen" format="float">0.85</item>
+
+    <item name="us_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="us_verGuidelineRefRight" type="dimen" format="float">0.28</item>
+    <item name="us_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
+    <item name="us_verGuidelineTextRight" type="dimen" format="float">0.28</item>
+
+    <!-- CL1 Columns (5 cols) -->
+    <item name="us_cl1_verGuidelineCol1Left" type="dimen" format="float">0.30</item>
+    <item name="us_cl1_verGuidelineCol1Right" type="dimen" format="float">0.425</item>
+    <item name="us_cl1_verGuidelineCol2Left" type="dimen" format="float">0.44</item>
+    <item name="us_cl1_verGuidelineCol2Right" type="dimen" format="float">0.565</item>
+    <item name="us_cl1_verGuidelineCol3Left" type="dimen" format="float">0.58</item>
+    <item name="us_cl1_verGuidelineCol3Right" type="dimen" format="float">0.705</item>
+    <item name="us_cl1_verGuidelineCol4Left" type="dimen" format="float">0.72</item>
+    <item name="us_cl1_verGuidelineCol4Right" type="dimen" format="float">0.845</item>
+    <item name="us_cl1_verGuidelineCol5Left" type="dimen" format="float">0.86</item>
+    <item name="us_cl1_verGuidelineCol5Right" type="dimen" format="float">0.985</item>
+
+    <!-- CL2 Columns (7 cols) -->
+    <item name="us_cl2_verGuidelineCol1Left" type="dimen" format="float">0.30</item>
+    <item name="us_cl2_verGuidelineCol1Right" type="dimen" format="float">0.388</item>
+    <item name="us_cl2_verGuidelineCol2Left" type="dimen" format="float">0.398</item>
+    <item name="us_cl2_verGuidelineCol2Right" type="dimen" format="float">0.486</item>
+    <item name="us_cl2_verGuidelineCol3Left" type="dimen" format="float">0.496</item>
+    <item name="us_cl2_verGuidelineCol3Right" type="dimen" format="float">0.584</item>
+    <item name="us_cl2_verGuidelineCol4Left" type="dimen" format="float">0.594</item>
+    <item name="us_cl2_verGuidelineCol4Right" type="dimen" format="float">0.682</item>
+    <item name="us_cl2_verGuidelineCol5Left" type="dimen" format="float">0.692</item>
+    <item name="us_cl2_verGuidelineCol5Right" type="dimen" format="float">0.780</item>
+    <item name="us_cl2_verGuidelineCol6Left" type="dimen" format="float">0.790</item>
+    <item name="us_cl2_verGuidelineCol6Right" type="dimen" format="float">0.878</item>
+    <item name="us_cl2_verGuidelineCol7Left" type="dimen" format="float">0.888</item>
+    <item name="us_cl2_verGuidelineCol7Right" type="dimen" format="float">0.985</item>
+
+    <!-- CL3 Columns (9 cols) -->
+    <item name="us_cl3_verGuidelineCol1Left" type="dimen" format="float">0.300</item>
+    <item name="us_cl3_verGuidelineCol1Right" type="dimen" format="float">0.367</item>
+    <item name="us_cl3_verGuidelineCol2Left" type="dimen" format="float">0.375</item>
+    <item name="us_cl3_verGuidelineCol2Right" type="dimen" format="float">0.442</item>
+    <item name="us_cl3_verGuidelineCol3Left" type="dimen" format="float">0.450</item>
+    <item name="us_cl3_verGuidelineCol3Right" type="dimen" format="float">0.517</item>
+    <item name="us_cl3_verGuidelineCol4Left" type="dimen" format="float">0.525</item>
+    <item name="us_cl3_verGuidelineCol4Right" type="dimen" format="float">0.592</item>
+    <item name="us_cl3_verGuidelineCol5Left" type="dimen" format="float">0.600</item>
+    <item name="us_cl3_verGuidelineCol5Right" type="dimen" format="float">0.667</item>
+    <item name="us_cl3_verGuidelineCol6Left" type="dimen" format="float">0.675</item>
+    <item name="us_cl3_verGuidelineCol6Right" type="dimen" format="float">0.742</item>
+    <item name="us_cl3_verGuidelineCol7Left" type="dimen" format="float">0.750</item>
+    <item name="us_cl3_verGuidelineCol7Right" type="dimen" format="float">0.817</item>
+    <item name="us_cl3_verGuidelineCol8Left" type="dimen" format="float">0.825</item>
+    <item name="us_cl3_verGuidelineCol8Right" type="dimen" format="float">0.892</item>
+    <item name="us_cl3_verGuidelineCol9Left" type="dimen" format="float">0.900</item>
+    <item name="us_cl3_verGuidelineCol9Right" type="dimen" format="float">0.985</item>
+
 </resources>
