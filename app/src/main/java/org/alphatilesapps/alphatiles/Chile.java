@@ -1,6 +1,7 @@
 package org.alphatilesapps.alphatiles;
 
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,12 +75,55 @@ public class Chile extends GameActivity {
 
     }
 
+    private static final int[][] MAPPINGS_CHILE = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.chile_horGuidelineGuessTop, R.dimen.chile_horGuidelineGuessTop},
+            {R.id.chile_horGuidelineGuessBottom, R.dimen.chile_horGuidelineGuessBottom},
+            {R.id.chile_horGuidelineKeyTop, R.dimen.chile_horGuidelineKeyTop},
+            {R.id.chile_horGuidelineKeyBottom, R.dimen.chile_horGuidelineKeyBottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.chile_verGuidelineGuessLeft, R.dimen.chile_verGuidelineGuessLeft},
+            {R.id.chile_verGuidelineGuessRight, R.dimen.chile_verGuidelineGuessRight},
+            {R.id.chile_verGuidelineKeyLeft, R.dimen.chile_verGuidelineKeyLeft},
+            {R.id.chile_verGuidelineKeyRight, R.dimen.chile_verGuidelineKeyRight}
+    };
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_CHILE);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LOGGER.log(Level.INFO, "Chile start");
         context = this;
         setContentView(R.layout.chile);
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.chileCL);
         ActivityLayouts.setStatusAndNavColors(this);

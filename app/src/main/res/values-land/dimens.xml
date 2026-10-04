@@ -791,4 +791,15 @@
     <item name="japan_verGuidelineTileLeft" type="dimen" format="float">0.01</item>
     <item name="japan_verGuidelineTileRight" type="dimen" format="float">0.99</item>
 
+    <!-- Chile Guidelines (Landscape) -->
+    <item name="chile_horGuidelineGuessTop" type="dimen" format="float">0.14</item>
+    <item name="chile_horGuidelineGuessBottom" type="dimen" format="float">0.85</item>
+    <item name="chile_verGuidelineGuessLeft" type="dimen" format="float">0.01</item>
+    <item name="chile_verGuidelineGuessRight" type="dimen" format="float">0.48</item>
+
+    <item name="chile_horGuidelineKeyTop" type="dimen" format="float">0.14</item>
+    <item name="chile_horGuidelineKeyBottom" type="dimen" format="float">0.85</item>
+    <item name="chile_verGuidelineKeyLeft" type="dimen" format="float">0.51</item>
+    <item name="chile_verGuidelineKeyRight" type="dimen" format="float">0.99</item>
+
 </resources>

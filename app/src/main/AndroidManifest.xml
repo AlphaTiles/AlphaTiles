@@ -63,7 +63,8 @@
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
         <activity android:name=".UnitedStates"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
-        <activity android:name=".Chile"/>
+        <activity android:name=".Chile"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Malaysia"/>
         <activity android:name=".Iraq"/>
     </application>
