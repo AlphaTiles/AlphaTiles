@@ -775,4 +775,19 @@
     <item name="us_cl3_verGuidelineCol9Left" type="dimen" format="float">0.81</item>
     <item name="us_cl3_verGuidelineCol9Right" type="dimen" format="float">0.99</item>
 
+    <!-- Japan Guidelines (Portrait) -->
+    <item name="japan_horGuidelineRefTop" type="dimen" format="float">0.08</item>
+    <item name="japan_horGuidelineRefBottom" type="dimen" format="float">0.35</item>
+    <item name="japan_horGuidelineTextTop" type="dimen" format="float">0.37</item>
+    <item name="japan_horGuidelineTextBottom" type="dimen" format="float">0.47</item>
+    <item name="japan_horGuidelineTileTop" type="dimen" format="float">0.50</item>
+    <item name="japan_horGuidelineTileBottom" type="dimen" format="float">0.89</item>
+
+    <item name="japan_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="japan_verGuidelineRefRight" type="dimen" format="float">0.99</item>
+    <item name="japan_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
+    <item name="japan_verGuidelineTextRight" type="dimen" format="float">0.99</item>
+    <item name="japan_verGuidelineTileLeft" type="dimen" format="float">0.01</item>
+    <item name="japan_verGuidelineTileRight" type="dimen" format="float">0.99</item>
+
 </resources>

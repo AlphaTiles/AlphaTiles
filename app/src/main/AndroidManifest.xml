@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Japan"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
             android:exported="false" />
         <activity
             android:name=".Start"

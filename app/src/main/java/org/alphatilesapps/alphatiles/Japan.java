@@ -8,12 +8,15 @@ import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,6 +70,91 @@ public class Japan extends GameActivity {
         instructionsButton.setVisibility(View.GONE);
     }
 
+    private static final int[][] MAPPINGS_JAPAN_7 = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.japan_horGuidelineRefTop, R.dimen.japan_horGuidelineRefTop},
+            {R.id.japan_horGuidelineRefBottom, R.dimen.japan_horGuidelineRefBottom},
+            {R.id.japan_horGuidelineTextTop, R.dimen.japan_horGuidelineTextTop},
+            {R.id.japan_horGuidelineTextBottom, R.dimen.japan_horGuidelineTextBottom},
+            {R.id.japan_horGuidelineTileTop, R.dimen.japan_horGuidelineTileTop},
+            {R.id.japan_horGuidelineTileBottom, R.dimen.japan_horGuidelineTileBottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.japan_verGuidelineRefLeft, R.dimen.japan_verGuidelineRefLeft},
+            {R.id.japan_verGuidelineRefRight, R.dimen.japan_verGuidelineRefRight},
+            {R.id.japan_verGuidelineTextLeft, R.dimen.japan_verGuidelineTextLeft},
+            {R.id.japan_verGuidelineTextRight, R.dimen.japan_verGuidelineTextRight},
+            {R.id.japan_verGuidelineTileLeft, R.dimen.japan_verGuidelineTileLeft},
+            {R.id.japan_verGuidelineTileRight, R.dimen.japan_verGuidelineTileRight}
+    };
+
+    private static final int[][] MAPPINGS_JAPAN_12 = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.japan_horGuidelineRefTop, R.dimen.japan_horGuidelineRefTop},
+            {R.id.japan_horGuidelineRefBottom, R.dimen.japan_horGuidelineRefBottom},
+            {R.id.japan_horGuidelineTextTop, R.dimen.japan_horGuidelineTextTop},
+            {R.id.japan_horGuidelineTextBottom, R.dimen.japan_horGuidelineTextBottom},
+            {R.id.japan_horGuidelineTileTop, R.dimen.japan_horGuidelineTileTop},
+            {R.id.japan_horGuidelineTileBottom, R.dimen.japan_horGuidelineTileBottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.japan_verGuidelineRefLeft, R.dimen.japan_verGuidelineRefLeft},
+            {R.id.japan_verGuidelineRefRight, R.dimen.japan_verGuidelineRefRight},
+            {R.id.japan_verGuidelineTextLeft, R.dimen.japan_verGuidelineTextLeft},
+            {R.id.japan_verGuidelineTextRight, R.dimen.japan_verGuidelineTextRight},
+            {R.id.japan_verGuidelineTileLeft, R.dimen.japan_verGuidelineTileLeft},
+            {R.id.japan_verGuidelineTileRight, R.dimen.japan_verGuidelineTileRight}
+    };
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        if (challengeLevel == 1) {
+            GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_JAPAN_7);
+        } else {
+            GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_JAPAN_12);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,11 +178,10 @@ public class Japan extends GameActivity {
             MAX_TILES = 12;
             gameID = R.id.japancl_12;
         }
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
-
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);     // forces landscape mode only
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
