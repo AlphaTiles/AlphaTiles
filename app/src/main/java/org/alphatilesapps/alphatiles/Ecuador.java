@@ -1,25 +1,26 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Insets;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.view.WindowMetrics;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.os.Build;
-import android.content.Context;
-import android.graphics.Point;
-import android.view.Display;
-import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -34,9 +35,10 @@ import com.segment.analytics.Properties;
 // 2. FILTER DUPLICATE ANSWER CHOICES
 
 public class Ecuador extends GameActivity {
-
+    // testing for crawl #2
     int[][] boxCoordinates;   // Will be 8 boxes, defined by 4 parameters each: x1, y1, x2, y2
     int justClickedWord = 0;
+    int rightWordIndex;
     ArrayList<Word> wordPool = new ArrayList<>();
     // # 1 memoryCollection[LWC word, e.g. Spanish]
     // # 2 [LOP word, e.g. Me'phaa]
@@ -58,9 +60,9 @@ public class Ecuador extends GameActivity {
     @Override
     protected void hideInstructionAudioImage() {
 
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-        
+
     }
 
     @Override
@@ -76,17 +78,61 @@ public class Ecuador extends GameActivity {
         return audioInstructionsResID;
     }
 
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.ecuador_horGuidelineRefTop, R.dimen.ecuador_horGuidelineRefTop},
+            {R.id.ecuador_horGuidelineRefBottom, R.dimen.ecuador_horGuidelineRefBottom},
+            {R.id.ecuador_horGuidelineTextTop, R.dimen.ecuador_horGuidelineTextTop},
+            {R.id.ecuador_horGuidelineTextBottom, R.dimen.ecuador_horGuidelineTextBottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.ecuador_verGuidelineRefLeft, R.dimen.ecuador_verGuidelineRefLeft},
+            {R.id.ecuador_verGuidelineRefRight, R.dimen.ecuador_verGuidelineRefRight},
+            {R.id.ecuador_verGuidelineTextLeft, R.dimen.ecuador_verGuidelineTextLeft},
+            {R.id.ecuador_verGuidelineTextRight, R.dimen.ecuador_verGuidelineTextRight}
+    };
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+        findViewById(R.id.ecuadorCL).post(this::setBoxes);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.ecuador);
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.ecuadorCL);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView repeatImage = (ImageView) findViewById(R.id.repeatImage);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView repeatImage = findViewById(R.id.repeatImage);
 
             instructionsImage.setRotationY(180);
             repeatImage.setRotationY(180);
@@ -99,13 +145,15 @@ public class Ecuador extends GameActivity {
         }
 
         visibleGameButtons = GAME_BUTTONS.length;
-        updatePointsAndTrackers(0);
+        updateView();
         incorrectAnswersSelected = new ArrayList<>(visibleGameButtons-1);
         for (int i = 0; i < visibleGameButtons-1; i++) {
             incorrectAnswersSelected.add("");
         }
         wordPool.addAll(cumulativeStageBasedWordList);
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View View) {
@@ -134,7 +182,57 @@ public class Ecuador extends GameActivity {
 
     public void setBoxes() {
 
+        ConstraintLayout constraintLayout = findViewById(R.id.ecuadorCL);
+
+        // During the initial onCreate(), the views may not have been laid out yet.
+        // Wait until layout is complete so their actual positions can be used.
+        if (!constraintLayout.isLaidOut()) {
+            constraintLayout.post(this::setBoxes);
+            return;
+        }
+
         boxCoordinates = new int[8][4];
+
+        // These views are protected from overlap by the randomized word boxes.
+        // Portrait: active word and image.
+        // Landscape: attempts bar.
+        ArrayList<int[]> exclusionRects = new ArrayList<>();
+
+        boolean isLandscape = getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE;
+
+        if (isLandscape) {
+            View attemptsBar = findViewById(R.id.attemptsBar);
+            if (attemptsBar.getWidth() > 0 && attemptsBar.getHeight() > 0) {
+                exclusionRects.add(new int[]{
+                        attemptsBar.getLeft(),
+                        attemptsBar.getTop(),
+                        attemptsBar.getRight(),
+                        attemptsBar.getBottom()
+                });
+            }
+        } else {
+            View activeWordTextView = findViewById(R.id.activeWordTextView);
+            View wordImage = findViewById(R.id.wordImage);
+
+            if (activeWordTextView.getWidth() > 0 && activeWordTextView.getHeight() > 0) {
+                exclusionRects.add(new int[]{
+                        activeWordTextView.getLeft(),
+                        activeWordTextView.getTop(),
+                        activeWordTextView.getRight(),
+                        activeWordTextView.getBottom()
+                });
+            }
+
+            if (wordImage.getWidth() > 0 && wordImage.getHeight() > 0) {
+                exclusionRects.add(new int[]{
+                        wordImage.getLeft(),
+                        wordImage.getTop(),
+                        wordImage.getRight(),
+                        wordImage.getBottom()
+                });
+            }
+        }
 
         // JP: DisplayMetrics is deprecated after Android 11
         // must use WindowMetrics instead
@@ -156,38 +254,50 @@ public class Ecuador extends GameActivity {
             usableHeight = heightDisplay - getNavigationBarSize(this).y;
         }
 
-//        Point xyz = getNavigationBarSize(this);
         int usableWidth = widthDisplay;
 
-        int minX1 = 0;
-        int minY1 = (int) (usableHeight * 0.22);    // This is taken from the gridline H2 (20%) plus 2% margin
-        int maxX2 = usableWidth;
-        int maxY2 = (int) (usableHeight * 0.85);    // This is taken from the gridline H8 (89%) which already has the 2% margin with an extra 4% added in
-
-        int minStartX = minX1;
-        int maxStartX = (int) (usableWidth * 0.65);
-
-        int minWidth = (int) (usableWidth * 0.25);      // Height will be equal to (width / hwRatio)
-        int maxWidth = (int) (usableWidth * 0.5);
-
-        int bufferX = (int) (usableWidth * 0.05);
-        int bufferY = (int) (usableHeight * 0.05);
+        int minX1;
+        int maxX2;
+        int minY1;
+        int maxY2;
+        int minWidth;
+        int maxWidth;
+        int bufferX;
+        int bufferY;
 
         final int hwRatio = 4;
 
+        if (isLandscape) {
+            minX1 = (int) (usableWidth * 0.30);
+            maxX2 = (int) (usableWidth * 0.99);
+            minY1 = (int) (usableHeight * 0.15);
+            maxY2 = (int) (usableHeight * 0.85);
+
+            minWidth = (int) (usableWidth * 0.16);
+            maxWidth = (int) (usableWidth * 0.28);
+
+            bufferX = (int) (usableWidth * 0.02);
+            bufferY = (int) (usableHeight * 0.02);
+        } else {
+            minX1 = (int) (usableWidth * 0.02);
+            maxX2 = (int) (usableWidth * 0.98);
+            minY1 = (int) (usableHeight * 0.20);
+            maxY2 = (int) (usableHeight * 0.91);
+
+            minWidth = (int) (usableWidth * 0.28);
+            maxWidth = (int) (usableWidth * 0.45);
+
+            bufferX = (int) (usableWidth * 0.03);
+            bufferY = (int) (usableHeight * 0.02);
+        }
+
+        int minStartX = minX1;
+        int maxStartX = maxX2 - minWidth;
         int minStartY = minY1;
-        int maxStartY = (int) (usableHeight * 0.75);
-        //int maxStartY = (int) (usableHeight * 0.79) - (maxWidth / hwRatio);
+        int maxStartY = maxY2 - (minWidth / hwRatio);
 
-        // JP: maxStartY should really be (usableHeight * 0.79) - (maxWidth / hwRatio)
-        // to prevent it from going below bottom icons
-
-        boolean verticalOverlap;
-        boolean horizontalOverlap;
-        boolean overlap;
-        boolean outOfBounds;
-
-        int boxWidth;
+        if (maxStartX <= minStartX) maxStartX = minStartX + 1;
+        if (maxStartY <= minStartY) maxStartY = minStartY + 1;
 
         Random rand = new Random();
 
@@ -196,71 +306,49 @@ public class Ecuador extends GameActivity {
 
             int coordX1 = rand.nextInt((maxStartX - minStartX) + 1) + minStartX;
             int coordY1 = rand.nextInt((maxStartY - minStartY) + 1) + minStartY;
-            boxWidth = rand.nextInt((maxWidth - minWidth) + 1) + minWidth;
+            int boxWidth = rand.nextInt((maxWidth - minWidth) + 1) + minWidth;
             int coordX2 = coordX1 + boxWidth;
             int coordY2 = coordY1 + (boxWidth / hwRatio);
 
-            // Check to see if current box overlaps previous boxes or if current box goes out of bounds
-            boolean setValues = true;
-            if (currentBoxIndex == 0) {
-                verticalOverlap = true;
-                horizontalOverlap = true;
-                overlap = true;
-                if ((coordX2 + bufferX) < boxCoordinates[0][0] || (coordX1 - bufferX) > boxCoordinates[0][2]) {
-                    horizontalOverlap = false;
-                }
-                if ((coordY2 + bufferY) < boxCoordinates[0][1] || (coordY1 - bufferY) > boxCoordinates[0][3]) {
-                    verticalOverlap = false;
-                }
-                if (!horizontalOverlap || !verticalOverlap) {
-                    overlap = false;
-                }
+            boolean valid = true;
 
-                // Check if current box goes out of bounds
-                outOfBounds = false;
-                if (coordX2 > maxX2) {
-                    outOfBounds = true;
-                }
-                if (coordY2 > maxY2) {
-                    outOfBounds = true;
-                }
+            // Check out of bounds
+            if (coordX1 < minX1 || coordX2 > maxX2 || coordY1 < minY1 || coordY2 > maxY2) {
+                valid = false;
+            }
 
-                if (overlap || outOfBounds) {
-                    setValues = false;
+            // Check overlap with previously placed boxes
+            if (valid) {
+                for (int definedBoxIndex = 0; definedBoxIndex < currentBoxIndex; definedBoxIndex++) {
+                    int prevX1 = boxCoordinates[definedBoxIndex][0];
+                    int prevY1 = boxCoordinates[definedBoxIndex][1];
+                    int prevX2 = boxCoordinates[definedBoxIndex][2];
+                    int prevY2 = boxCoordinates[definedBoxIndex][3];
+
+                    boolean overlapX = (coordX1 - bufferX < prevX2) && (coordX2 + bufferX > prevX1);
+                    boolean overlapY = (coordY1 - bufferY < prevY2) && (coordY2 + bufferY > prevY1);
+
+                    if (overlapX && overlapY) {
+                        valid = false;
+                        break;
+                    }
                 }
             }
-            for (int definedBoxIndex = 0; definedBoxIndex < currentBoxIndex; definedBoxIndex++) {
-                // So, the very first pass (with currentBoxIndex = 0 and definedBoxIndex = 0), it will skip this loop
-                // But this is wrong, because even in the very first pass, you need to check that it is inside bounds
 
-                // Check for overlap of previous boxes
-                verticalOverlap = true;
-                horizontalOverlap = true;
-                overlap = true;
-                if ((coordX2 + bufferX) < boxCoordinates[definedBoxIndex][0] || (coordX1 - bufferX) > boxCoordinates[definedBoxIndex][2]) {
-                    horizontalOverlap = false;
-                }
-                if ((coordY2 + bufferY) < boxCoordinates[definedBoxIndex][1] || (coordY1 - bufferY) > boxCoordinates[definedBoxIndex][3]) {
-                    verticalOverlap = false;
-                }
-                if (!horizontalOverlap || !verticalOverlap) {
-                    overlap = false;
-                }
+            // Check overlap with protected UI elements.
+            if (valid) {
+                for (int[] exclusion : exclusionRects) {
+                    boolean overlapX = coordX1 < exclusion[2] && coordX2 > exclusion[0];
+                    boolean overlapY = coordY1 < exclusion[3] && coordY2 > exclusion[1];
 
-                // Check if current box goes out of bounds
-                outOfBounds = false;
-                if (coordX2 > maxX2) {
-                    outOfBounds = true;
-                }
-                if (coordY2 > maxY2) {
-                    outOfBounds = true;
-                }
-
-                if (overlap || outOfBounds) {
-                    setValues = false;
+                    if (overlapX && overlapY) {
+                        valid = false;
+                        break;
+                    }
                 }
             }
-            if (setValues) {
+
+            if (valid) {
                 boxCoordinates[currentBoxIndex][0] = coordX1;
                 boxCoordinates[currentBoxIndex][1] = coordY1;
                 boxCoordinates[currentBoxIndex][2] = coordX2;
@@ -268,12 +356,11 @@ public class Ecuador extends GameActivity {
                 extraLoops = 0;
             } else {
                 if (extraLoops < 10000) {
-                    currentBoxIndex = currentBoxIndex - 1;              // force repeat of setting parameters for current box
+                    currentBoxIndex--; // Try placing this box again
                     extraLoops++;
                 } else {
-                    // something has gone horribly wrong and I have no idea how to fix it
-                    // other than to start over until we find a config that works
-                    currentBoxIndex = 0;
+                    // Start over with first box if placement gets stuck
+                    currentBoxIndex = -1;
                     extraLoops = 0;
                 }
             }
@@ -382,7 +469,7 @@ public class Ecuador extends GameActivity {
         image.setImageResource(resID);
 
         Random rand = new Random();
-        int rightWordIndex = rand.nextInt(GAME_BUTTONS.length);
+        rightWordIndex = rand.nextInt(GAME_BUTTONS.length);
         TextView correctMatchTile = findViewById(GAME_BUTTONS[rightWordIndex]);
         correctMatchTile.setText(wordList.stripInstructionCharacters(refWord.wordInLOP));
     }
@@ -463,23 +550,11 @@ public class Ecuador extends GameActivity {
                 Analytics.with(context).track(gameUniqueID, info);
             }
 
-            repeatLocked = false;
-            setAdvanceArrowToBlue();
+            recordAttempt(true,2);
 
-            updatePointsAndTrackers(2);
+            endRound(t);
 
-            for (int w = 0; w < GAME_BUTTONS.length; w++) {
-                TextView nextWord = findViewById(GAME_BUTTONS[w]);
-                nextWord.setClickable(false);
-                if (w != t) {
-                    String wordColorStr = "#A9A9A9"; // dark gray
-                    int wordColorNo = Color.parseColor(wordColorStr);
-                    nextWord.setBackgroundColor(wordColorNo);
-                    nextWord.setTextColor(Color.parseColor("#000000")); // black
-                }
-            }
-
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
 
         } else {
             incorrectOnLevel += 1;
@@ -491,8 +566,32 @@ public class Ecuador extends GameActivity {
                     break;
                 }
             }
-            playIncorrectSound();
+            recordAttempt(false, 0);
+            if(secondChances) {
+                playIncorrectSound();
+            } else {
+                endRound(rightWordIndex);
+                playGameSoundThenActiveWordClip(false,false);
+            }
         }
+    }
+
+    private void endRound(int t) {
+
+        repeatLocked = false;
+        setAdvanceArrowToBlue();
+
+        for (int w = 0; w < GAME_BUTTONS.length; w++) {
+            TextView nextWord = findViewById(GAME_BUTTONS[w]);
+            nextWord.setClickable(false);
+            if (w != t) {
+                String wordColorStr = "#A9A9A9"; // dark gray
+                int wordColorNo = Color.parseColor(wordColorStr);
+                nextWord.setBackgroundColor(wordColorNo);
+                nextWord.setTextColor(Color.parseColor("#000000")); // black
+            }
+        }
+
     }
 
     public void onWordClick(View view) {

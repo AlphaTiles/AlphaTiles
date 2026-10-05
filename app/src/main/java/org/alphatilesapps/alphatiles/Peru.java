@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Random;
 
 import static org.alphatilesapps.alphatiles.Start.*;
+
+import androidx.annotation.NonNull;
 
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
@@ -30,6 +33,46 @@ public class Peru extends GameActivity {
     protected int[] getWordImages() {
         return null;
     }
+
+    // Gridlines will update during orientation change
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.horGuidelineRefTop, R.dimen.peru_horGuidelineRefTop},
+            {R.id.horGuidelineRefBottom, R.dimen.peru_horGuidelineRefBottom},
+            {R.id.horGuidelineWord1Top, R.dimen.peru_horGuidelineWord1Top},
+            {R.id.horGuidelineWord1Bottom, R.dimen.peru_horGuidelineWord1Bottom},
+            {R.id.horGuidelineWord2Top, R.dimen.peru_horGuidelineWord2Top},
+            {R.id.horGuidelineWord2Bottom, R.dimen.peru_horGuidelineWord2Bottom},
+            {R.id.horGuidelineWord3Top, R.dimen.peru_horGuidelineWord3Top},
+            {R.id.horGuidelineWord3Bottom, R.dimen.peru_horGuidelineWord3Bottom},
+            {R.id.horGuidelineWord4Top, R.dimen.peru_horGuidelineWord4Top},
+            {R.id.horGuidelineWord4Bottom, R.dimen.peru_horGuidelineWord4Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.verGuidelineRefLeft, R.dimen.peru_verGuidelineRefLeft},
+            {R.id.verGuidelineWordsLeft, R.dimen.peru_verGuidelineWordsLeft},
+            {R.id.verGuidelineRefRight, R.dimen.peru_verGuidelineRefRight},
+            {R.id.verGuidelineWordsRight, R.dimen.peru_verGuidelineWordsRight}
+    };
+
+    int indexOfCorrectAnswerAmongChoices;
 
     @Override
     protected int getAudioInstructionsResID() {
@@ -52,10 +95,20 @@ public class Peru extends GameActivity {
     }
 
     @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        updateGuidelines();
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.peru);
+
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.peruCL);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -82,14 +135,21 @@ public class Peru extends GameActivity {
 
         }
         visibleGameButtons = GAME_BUTTONS.length;
-        updatePointsAndTrackers(0);
         incorrectAnswersSelected = new ArrayList<>(3);
         for (int i = 0; i < 3; i++) {
             incorrectAnswersSelected.add("");
         }
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
+    private void updateGuidelines() {
+
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+
+    }
 
     public void repeatGame(View view) {
 
@@ -102,9 +162,23 @@ public class Peru extends GameActivity {
     public void playAgain() {
         repeatLocked = true;
         setAdvanceArrowToGray();
-        chooseWord();
-        parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord.wordInLOP, refWord); // KP
-        int tileLength = parsedRefWordTileArray.size();
+
+        int sanityCounter1 = 0;
+        int tileLength;
+
+// This loop keeps "re-rolling" the word until it finds one with 2+ tiles
+        do {
+            chooseWord();
+            parsedRefWordTileArray = Start.tileList.parseWordIntoTiles(refWord.wordInLOP, refWord);
+            tileLength = parsedRefWordTileArray.size();
+            sanityCounter1++;
+        } while (tileLength < 2 && sanityCounter1 < 100);
+
+// Safety net: If we check 100 words and none are valid, exit to menu instead of freezing
+        if (sanityCounter1 >= 100) {
+            goBackToEarth(null);
+            return;
+        }
 
         // Set thematic colors for four word choice TextViews, also make clickable
         for (int i = 0; i < GAME_BUTTONS.length; i++) {
@@ -122,7 +196,7 @@ public class Peru extends GameActivity {
         image.setClickable(true);
 
         Random rand = new Random();
-        int indexOfCorrectAnswerAmongChoices = rand.nextInt(4);
+        indexOfCorrectAnswerAmongChoices = rand.nextInt(4);
         List<String> shuffledDistractorTiles = parsedRefWordTileArray.get(0).distractors;
         Collections.shuffle(shuffledDistractorTiles);
 
@@ -266,23 +340,11 @@ public class Peru extends GameActivity {
                 Analytics.with(context).track(gameUniqueID, info);
             }
 
-            repeatLocked = false;
-            setAdvanceArrowToBlue();
+            recordAttempt(true, 2);
 
-            updatePointsAndTrackers(2);
+            endRound(t);
 
-            for (int w = 0; w < GAME_BUTTONS.length; w++) {
-                TextView nextWord = findViewById(GAME_BUTTONS[w]);
-                nextWord.setClickable(false);
-                if (w != t) {
-                    String wordColorStr = "#A9A9A9"; // dark gray
-                    int wordColorNo = Color.parseColor(wordColorStr);
-                    nextWord.setBackgroundColor(wordColorNo);
-                    nextWord.setTextColor(Color.parseColor("#000000")); // black
-                }
-            }
-
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
 
         } else {
             incorrectOnLevel += 1;
@@ -294,8 +356,32 @@ public class Peru extends GameActivity {
                     break;
                 }
             }
-            playIncorrectSound();
+            recordAttempt(false, 0);
+            if(secondChances) {
+                playIncorrectSound();
+            } else {
+                endRound(indexOfCorrectAnswerAmongChoices);
+                playGameSoundThenActiveWordClip(false,false);
+            }
         }
+    }
+
+    private void endRound(int justClickedWord) {
+
+        repeatLocked = false;
+        setAdvanceArrowToBlue();
+
+        for (int w = 0; w < GAME_BUTTONS.length; w++) {
+            TextView nextWord = findViewById(GAME_BUTTONS[w]);
+            nextWord.setClickable(false);
+            if (w != justClickedWord) {
+                String wordColorStr = "#A9A9A9"; // dark gray
+                int wordColorNo = Color.parseColor(wordColorStr);
+                nextWord.setBackgroundColor(wordColorNo);
+                nextWord.setTextColor(Color.parseColor("#000000")); // black
+            }
+        }
+
     }
 
     public void onWordClick(View view) {

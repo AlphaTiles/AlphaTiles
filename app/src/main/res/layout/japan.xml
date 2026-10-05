@@ -1,0 +1,813 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/japanCL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".Japan">
+
+    <!-- Guidelines -->
+    <!-- Status Guidelines (Horizontal) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusMiddle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusMiddle" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusBottom" />
+
+    <!-- Japan Specific Horizontal Guidelines -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_horGuidelineRefTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/japan_horGuidelineRefTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_horGuidelineRefBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/japan_horGuidelineRefBottom" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_horGuidelineTextTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/japan_horGuidelineTextTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_horGuidelineTextBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/japan_horGuidelineTextBottom" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_horGuidelineTileTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/japan_horGuidelineTileTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_horGuidelineTileBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/japan_horGuidelineTileBottom" />
+
+    <!-- Options Guidelines (Horizontal) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineOptionsTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineOptionsBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsBottom" />
+
+    <!-- Status Guidelines (Vertical) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineGameNoLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineGameNoLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineGameNoCLBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineGameNoCLBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineCLStageBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineCLStageBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineStageBarsBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineStageBarsBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineBarsPointsBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineBarsPointsBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelinePointsRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelinePointsRight" />
+
+    <!-- Japan Specific Vertical Guidelines -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_verGuidelineRefLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/japan_verGuidelineRefLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_verGuidelineRefRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/japan_verGuidelineRefRight" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_verGuidelineTextLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/japan_verGuidelineTextLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_verGuidelineTextRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/japan_verGuidelineTextRight" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_verGuidelineTileLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/japan_verGuidelineTileLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/japan_verGuidelineTileRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/japan_verGuidelineTileRight" />
+
+    <!-- Options Guidelines (Vertical) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineOptionsLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineOptionsRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsRight" />
+
+    <!-- Views -->
+    <TextView
+        android:id="@+id/gameNumberView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center"
+        android:tag="1"
+        android:text="0"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineGameNoCLBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineGameNoLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="0dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/challengeLevelView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#FFD700"
+        android:gravity="center"
+        android:tag="1"
+        android:text="0"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineCLStageBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineGameNoCLBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="0dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/stageLevelView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#000000"
+        android:gravity="center"
+        android:tag="1"
+        android:text="0"
+        android:textStyle="bold"
+        android:textColor="#FFD700"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineStageBarsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineCLStageBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="0dp"
+        android:maxLines="1"/>
+
+    <ProgressBar
+        android:id="@+id/accuracyBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:progressBackgroundTint="@android:color/transparent"
+        android:progress="0"
+        android:max="100"
+        android:scaleY="5.25"
+        android:indeterminate="false"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusMiddle"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineBarsPointsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineStageBarsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop" />
+
+    <ProgressBar
+        android:id="@+id/attemptsBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:progressBackgroundTint="@android:color/transparent"
+        android:progress="0"
+        android:max="100"
+        android:scaleY="2.25"
+        android:indeterminate="false"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineBarsPointsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineStageBarsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusMiddle" />
+
+    <TextView
+        android:id="@+id/pointsTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center"
+        android:tag="1"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:text="@string/pointsScored"
+        android:progress="0"
+        android:max="100"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toEndOf="@id/japan_verGuidelineTileRight"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineBarsPointsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="0dp"
+        android:maxLines="1"/>
+
+    <ImageView
+        android:id="@+id/wordImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/activeWordPicture"
+        android:onClick="onClickWord"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineRefBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/japan_verGuidelineRefRight"
+        app:layout_constraintStart_toStartOf="@+id/japan_verGuidelineRefLeft"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineRefTop"
+        app:srcCompat="@drawable/zz_sil" />
+
+    <TextView
+        android:id="@+id/word"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:onClick="onClickWord"
+        android:text="@string/activeWordText"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="15sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTextBottom"
+        app:layout_constraintEnd_toStartOf="@+id/japan_verGuidelineTextRight"
+        app:layout_constraintStart_toStartOf="@+id/japan_verGuidelineTextLeft"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTextTop"
+        android:maxLines="1"/>
+
+    <!-- 12 Tiles and 11 Link Buttons -->
+    <TextView
+        android:id="@+id/tile01"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clickable="false"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="0"
+        android:text="@string/gametile01"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintEnd_toStartOf="@+id/button1"
+        app:layout_constraintStart_toStartOf="@+id/japan_verGuidelineTileLeft"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop"
+        app:layout_constraintDimensionRatio="1"/>
+
+    <TextView
+        android:id="@+id/button1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/zz_chain_button"
+        android:onClick="onClickLinkButton"
+        android:rotation="90"
+        android:tag="1"
+        android:text="."
+        android:textColor="#8C9291"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/tile02"
+        app:layout_constraintStart_toEndOf="@+id/tile01"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/tile02"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="1"
+        android:text="@string/gametile02"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintStart_toEndOf="@+id/button1"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/button2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/zz_chain_button"
+        android:onClick="onClickLinkButton"
+        android:rotation="90"
+        android:tag="2"
+        android:text="."
+        android:textColor="#8C9291"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/tile03"
+        app:layout_constraintStart_toEndOf="@+id/tile02"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/tile03"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="2"
+        android:text="@string/gametile03"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintStart_toEndOf="@+id/button2"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/button3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/zz_chain_button"
+        android:onClick="onClickLinkButton"
+        android:rotation="90"
+        android:tag="2"
+        android:text="."
+        android:textColor="#8C9291"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/tile04"
+        app:layout_constraintStart_toEndOf="@+id/tile03"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/tile04"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="3"
+        android:text="@string/gametile04"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/button4"
+        app:layout_constraintStart_toEndOf="@+id/button3"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/button4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/zz_chain_button"
+        android:onClick="onClickLinkButton"
+        android:rotation="90"
+        android:tag="3"
+        android:text="."
+        android:textColor="#8C9291"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/tile05"
+        app:layout_constraintStart_toEndOf="@+id/tile04"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/tile05"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="4"
+        android:text="@string/gametile05"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/button5"
+        app:layout_constraintStart_toEndOf="@+id/button4"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/button5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/zz_chain_button"
+        android:onClick="onClickLinkButton"
+        android:rotation="90"
+        android:tag="4"
+        android:text="."
+        android:textColor="#8C9291"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/tile06"
+        app:layout_constraintStart_toEndOf="@+id/tile05"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/tile06"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="5"
+        android:text="@string/gametile06"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/button6"
+        app:layout_constraintStart_toEndOf="@+id/button5"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/button6"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/zz_chain_button"
+        android:onClick="onClickLinkButton"
+        android:rotation="90"
+        android:tag="5"
+        android:text="."
+        android:textColor="#8C9291"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/tile07"
+        app:layout_constraintStart_toEndOf="@+id/tile06"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/tile07"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="6"
+        android:text="@string/gametile07"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/button7"
+        app:layout_constraintStart_toEndOf="@+id/button6"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/button7"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/zz_chain_button"
+        android:onClick="onClickLinkButton"
+        android:rotation="90"
+        android:tag="6"
+        android:text="."
+        android:textColor="#8C9291"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/tile08"
+        app:layout_constraintStart_toEndOf="@+id/tile07"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/tile08"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="7"
+        android:text="@string/gametile08"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/button8"
+        app:layout_constraintStart_toEndOf="@+id/button7"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/button8"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/zz_chain_button"
+        android:onClick="onClickLinkButton"
+        android:rotation="90"
+        android:tag="7"
+        android:text="."
+        android:textColor="#8C9291"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/tile09"
+        app:layout_constraintStart_toEndOf="@+id/tile08"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/tile09"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="8"
+        android:text="@string/gametile09"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/button9"
+        app:layout_constraintStart_toEndOf="@+id/button8"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/button9"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/zz_chain_button"
+        android:onClick="onClickLinkButton"
+        android:rotation="90"
+        android:tag="8"
+        android:text="."
+        android:textColor="#8C9291"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/tile10"
+        app:layout_constraintStart_toEndOf="@+id/tile09"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/tile10"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="9"
+        android:text="@string/gametile10"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/button10"
+        app:layout_constraintStart_toEndOf="@+id/button9"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/button10"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/zz_chain_button"
+        android:onClick="onClickLinkButton"
+        android:rotation="90"
+        android:tag="9"
+        android:text="."
+        android:textColor="#8C9291"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/tile11"
+        app:layout_constraintStart_toEndOf="@+id/tile10"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/tile11"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="10"
+        android:text="@string/gametile11"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/button11"
+        app:layout_constraintStart_toEndOf="@+id/button10"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/button11"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/zz_chain_button"
+        android:onClick="onClickLinkButton"
+        android:rotation="90"
+        android:tag="10"
+        android:text="."
+        android:textColor="#8C9291"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/tile12"
+        app:layout_constraintStart_toEndOf="@+id/tile11"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <TextView
+        android:id="@+id/tile12"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:onClick="onClickTile"
+        android:padding="2dp"
+        android:tag="11"
+        android:text="@string/gametile12"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/japan_horGuidelineTileBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/japan_verGuidelineTileRight"
+        app:layout_constraintStart_toEndOf="@+id/button11"
+        app:layout_constraintTop_toTopOf="@+id/japan_horGuidelineTileTop" />
+
+    <!-- Options Bar -->
+    <ImageView
+        android:id="@+id/gamesHomeImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="goBackToEarth"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineOptionsLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        android:contentDescription="@string/playerAvatar"
+        app:srcCompat="@drawable/zz_games_home" />
+
+    <TextView
+        android:id="@+id/bottomMiddleSpacer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="BMS"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toStartOf="@+id/repeatImage"
+        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"/>
+
+    <ImageView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="playAudioInstructions"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        android:contentDescription="@string/playAudioInstructions"
+        android:rotationY="0"
+        app:srcCompat="@drawable/zz_instructions" />
+
+    <ImageView
+        android:id="@+id/repeatImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="repeatGame"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toEndOf="@id/verGuidelineOptionsRight"
+        app:layout_constraintStart_toEndOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        android:contentDescription="@string/playAgain"
+        android:rotationY="0"
+        app:srcCompat="@drawable/zz_forward_inactive" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
