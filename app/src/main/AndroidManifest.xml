@@ -60,6 +60,7 @@
         <activity android:name=".Resources"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Romania" />
+        <activity android:name=".Senegal" />
         <activity android:name=".Sudan" />
         <activity android:name=".Thailand"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
