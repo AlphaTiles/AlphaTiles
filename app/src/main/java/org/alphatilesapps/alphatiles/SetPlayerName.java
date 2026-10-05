@@ -30,7 +30,7 @@ import static org.alphatilesapps.alphatiles.Start.colorList;
 public class SetPlayerName extends AppCompatActivity {
 
     Context context;
-    String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+    String scriptDirection;
 
     int keysInUse;
     int keyboardScreenNo; // for languages with more than 35 keys, page 1 will have 33 buttons and a forward/backward button
@@ -53,6 +53,18 @@ public class SetPlayerName extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
+        if (Start.langInfoList == null) {
+            // Process was killed and restarted directly into this screen.
+            // Relaunch from the beginning so static state gets repopulated.
+            Intent intent = new Intent(this, Start.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
+
         // Disable back navigation
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -65,8 +77,6 @@ public class SetPlayerName extends AppCompatActivity {
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.setPlayerNameCL);
         ActivityLayouts.setStatusAndNavColors(this);
-
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (scriptDirection.equals("RTL")) {
             ImageView deleteImage = (ImageView) findViewById(R.id.deleteImage);
@@ -154,12 +164,20 @@ public class SetPlayerName extends AppCompatActivity {
                 ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) key.getLayoutParams();
                 bottomToTopId = lp1.bottomToTop;
                 topToTopId = lp1.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                if (bottomToTopId != -1 && topToTopId != -1) {
+                    View bottomView = findViewById(bottomToTopId);
+                    View topView = findViewById(topToTopId);
+                    if (bottomView != null && topView != null) {
+                        percentBottomToTop = ((ConstraintLayout.LayoutParams) bottomView.getLayoutParams()).guidePercent;
+                        percentTopToTop = ((ConstraintLayout.LayoutParams) topView.getLayoutParams()).guidePercent;
+                        percentHeight = percentBottomToTop - percentTopToTop;
+                        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                    }
+                }
             }
-            key.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+            if (pixelHeight > 0) {
+                key.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+            }
 
         }
 
@@ -167,11 +185,17 @@ public class SetPlayerName extends AppCompatActivity {
         ConstraintLayout.LayoutParams lp2 = (ConstraintLayout.LayoutParams) avatarName.getLayoutParams();
         int bottomToTopId2 = lp2.bottomToTop;
         int topToTopId2 = lp2.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId2).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId2).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-        avatarName.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+        if (bottomToTopId2 != -1 && topToTopId2 != -1) {
+            View bottomView2 = findViewById(bottomToTopId2);
+            View topView2 = findViewById(topToTopId2);
+            if (bottomView2 != null && topView2 != null) {
+                percentBottomToTop = ((ConstraintLayout.LayoutParams) bottomView2.getLayoutParams()).guidePercent;
+                percentTopToTop = ((ConstraintLayout.LayoutParams) topView2.getLayoutParams()).guidePercent;
+                percentHeight = percentBottomToTop - percentTopToTop;
+                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                avatarName.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+            }
+        }
 
     }
 

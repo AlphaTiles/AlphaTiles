@@ -6,12 +6,15 @@ import static org.alphatilesapps.alphatiles.Start.tileListNoSAD;
 
 import org.alphatilesapps.alphatiles.Start.WordList;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,6 +47,70 @@ public class Italy extends GameActivity {
 
     protected static final int[][] LOTERIA_SEQUENCES = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}, {1, 5, 9, 13}, {2, 6, 10, 14}, {3, 7, 11, 15}, {4, 8, 12, 16}, {1, 6, 11, 16}, {4, 7, 10, 13}};
 
+    // Gridlines will update during orientation change
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.italy_horGuidelineRefTop, R.dimen.italy_horGuidelineRefTop},
+            {R.id.italy_horGuidelineRefBottom, R.dimen.italy_horGuidelineRefBottom},
+            {R.id.italy_horGuidelinePlayNextTop, R.dimen.italy_horGuidelinePlayNextTop},
+            {R.id.italy_horGuidelinePlayNextBottom, R.dimen.italy_horGuidelinePlayNextBottom},
+            {R.id.italy_horGuidelineImageRow1Top, R.dimen.italy_horGuidelineImageRow1Top},
+            {R.id.italy_horGuidelineImageRow1Bottom, R.dimen.italy_horGuidelineImageRow1Bottom},
+            {R.id.italy_horGuidelineChoiceRow1Top, R.dimen.italy_horGuidelineChoiceRow1Top},
+            {R.id.italy_horGuidelineChoiceRow1Bottom, R.dimen.italy_horGuidelineChoiceRow1Bottom},
+            {R.id.italy_horGuidelineImageRow2Top, R.dimen.italy_horGuidelineImageRow2Top},
+            {R.id.italy_horGuidelineImageRow2Bottom, R.dimen.italy_horGuidelineImageRow2Bottom},
+            {R.id.italy_horGuidelineChoiceRow2Top, R.dimen.italy_horGuidelineChoiceRow2Top},
+            {R.id.italy_horGuidelineChoiceRow2Bottom, R.dimen.italy_horGuidelineChoiceRow2Bottom},
+            {R.id.italy_horGuidelineImageRow3Top, R.dimen.italy_horGuidelineImageRow3Top},
+            {R.id.italy_horGuidelineImageRow3Bottom, R.dimen.italy_horGuidelineImageRow3Bottom},
+            {R.id.italy_horGuidelineChoiceRow3Top, R.dimen.italy_horGuidelineChoiceRow3Top},
+            {R.id.italy_horGuidelineChoiceRow3Bottom, R.dimen.italy_horGuidelineChoiceRow3Bottom},
+            {R.id.italy_horGuidelineImageRow4Top, R.dimen.italy_horGuidelineImageRow4Top},
+            {R.id.italy_horGuidelineImageRow4Bottom, R.dimen.italy_horGuidelineImageRow4Bottom},
+            {R.id.italy_horGuidelineChoiceRow4Top, R.dimen.italy_horGuidelineChoiceRow4Top},
+            {R.id.italy_horGuidelineChoiceRow4Bottom, R.dimen.italy_horGuidelineChoiceRow4Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.italy_verGuidelineRefLeft, R.dimen.italy_verGuidelineRefLeft},
+            {R.id.italy_verGuidelineRefRight, R.dimen.italy_verGuidelineRefRight},
+            {R.id.italy_verGuidelinePlayNextLeft, R.dimen.italy_verGuidelinePlayNextLeft},
+            {R.id.italy_verGuidelinePlayNextRight, R.dimen.italy_verGuidelinePlayNextRight},
+            {R.id.italy_verGuidelineImageCol1Left, R.dimen.italy_verGuidelineImageCol1Left},
+            {R.id.italy_verGuidelineImageCol1Right, R.dimen.italy_verGuidelineImageCol1Right},
+            {R.id.italy_verGuidelineChoiceCol1Left, R.dimen.italy_verGuidelineChoiceCol1Left},
+            {R.id.italy_verGuidelineChoiceCol1Right, R.dimen.italy_verGuidelineChoiceCol1Right},
+            {R.id.italy_verGuidelineImageCol2Left, R.dimen.italy_verGuidelineImageCol2Left},
+            {R.id.italy_verGuidelineImageCol2Right, R.dimen.italy_verGuidelineImageCol2Right},
+            {R.id.italy_verGuidelineChoiceCol2Left, R.dimen.italy_verGuidelineChoiceCol2Left},
+            {R.id.italy_verGuidelineChoiceCol2Right, R.dimen.italy_verGuidelineChoiceCol2Right},
+            {R.id.italy_verGuidelineImageCol3Left, R.dimen.italy_verGuidelineImageCol3Left},
+            {R.id.italy_verGuidelineImageCol3Right, R.dimen.italy_verGuidelineImageCol3Right},
+            {R.id.italy_verGuidelineChoiceCol3Left, R.dimen.italy_verGuidelineChoiceCol3Left},
+            {R.id.italy_verGuidelineChoiceCol3Right, R.dimen.italy_verGuidelineChoiceCol3Right},
+            {R.id.italy_verGuidelineImageCol4Left, R.dimen.italy_verGuidelineImageCol4Left},
+            {R.id.italy_verGuidelineImageCol4Right, R.dimen.italy_verGuidelineImageCol4Right},
+            {R.id.italy_verGuidelineChoiceCol4Left, R.dimen.italy_verGuidelineChoiceCol4Left},
+            {R.id.italy_verGuidelineChoiceCol4Right, R.dimen.italy_verGuidelineChoiceCol4Right}
+    };
+
     @Override
     protected int[] getGameButtons() {
         return GAME_BUTTONS;
@@ -75,6 +142,17 @@ public class Italy extends GameActivity {
         
     }
 
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +160,7 @@ public class Italy extends GameActivity {
 
         setContentView(R.layout.italy);
         int gameID = R.id.italyCL;
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -137,9 +216,10 @@ public class Italy extends GameActivity {
         if(!Start.changeArrowColor) {
             playNextWordImage.setImageResource(R.drawable.zz_forward_green);
         }
-
-        updatePointsAndTrackers(0);
         playAgain();
+        setUpInitialView();
+        updateView();
+
     }
     @Override
     public void setAllGameButtonsUnclickable() {
@@ -282,7 +362,7 @@ public class Italy extends GameActivity {
 
             // The player went through all the cards without getting a loteria. Set up a new board
             playIncorrectSound();
-            playIncorrectSound();
+            recordAttempt(false,0);
             playAgain();
         } else { // "Call out" the next word
 
@@ -323,7 +403,7 @@ public class Italy extends GameActivity {
             respondToLoteria();
         } else {
             // Play sounds, then advance to the next word
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
             nextWordFromGameSet();
         }
 
@@ -357,10 +437,15 @@ public class Italy extends GameActivity {
     }
 
     public void respondToLoteria() {
-        setAllGameButtonsUnclickable();
+        repeatLocked = false;
         setAdvanceArrowToBlue();
-        playCorrectSoundThenActiveWordClip(true);
-        updatePointsAndTrackers(4);
+        playGameSoundThenActiveWordClip(true,true);
+        recordAttempt(true,4);
+
+        ImageView nextWordArrow = findViewById(R.id.playNextWord);
+        nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
+        nextWordArrow.setClickable(false);
+        nextWordArrow.setVisibility(View.INVISIBLE);
 
         ImageView nextWordArrow = findViewById(R.id.playNextWord);
         nextWordArrow.setImageResource(R.drawable.zz_forward_inactive);
