@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Japan"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"
             android:exported="false" />
         <activity
             android:name=".Start"
@@ -24,32 +25,51 @@
         </activity>
         <activity
             android:name=".LoadingScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".ChoosePlayer" />
         <activity android:name=".SetPlayerName" />
-        <activity android:name=".Earth" />
-        <activity android:name=".About" />
-        <activity android:name=".Share" />
-        <activity android:name=".Brazil" />
+        <activity android:name=".Earth"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".About"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Share"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Brazil"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
         <activity android:name=".Cameroon" />
-        <activity android:name=".China" />
-        <activity android:name=".Colombia" />
-        <activity android:name=".Celebration" />
-        <activity android:name=".Ecuador" />
-        <activity android:name=".Georgia" />
-        <activity android:name=".Italy" />
-        <activity android:name=".Mexico" />
-        <activity android:name=".Myanmar" />
-        <activity android:name=".Peru" />
-        <activity android:name=".Resources" />
+        <activity android:name=".China"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Colombia"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Celebration"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Ecuador"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Georgia"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Italy"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Mexico"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Myanmar"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Peru"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
+        <activity android:name=".Resources"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Romania" />
         <activity android:name=".Sudan" />
-        <activity android:name=".Thailand" />
-        <activity android:name=".UnitedStates" />
-        <activity android:name=".Chile"/>
+        <activity android:name=".Thailand"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
+        <activity android:name=".UnitedStates"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Chile"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Malaysia"/>
-        <activity android:name=".Iraq"/>
         <activity android:name=".Indonesia"/>
+        <activity android:name=".Iraq"/>
+        <activity android:name=".Ethiopia"/>
     </application>
 
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
