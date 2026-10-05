@@ -1,13 +1,11 @@
 package org.alphatilesapps.alphatiles;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import static org.alphatilesapps.alphatiles.Start.syllableList;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -29,7 +27,8 @@ public class Japan extends GameActivity {
     ArrayList<TextView> originalViews = new ArrayList<>();
     ArrayList<Integer> linkButtonIDs = new ArrayList<>();
     HashMap<Integer, Integer> numbersToLinkButtonIDs = new HashMap<>();
-    int MAX_TILES = 0;
+
+    int MAX_TILES = 10;
     ArrayList<Integer> finalCorrectLinkButtonIDs = new ArrayList<>();
     protected static final int[] TILE_VIEW_IDs = {
             R.id.tile01, R.id.button1, R.id.tile02, R.id.button2, R.id.tile03, R.id.button3,
@@ -70,42 +69,7 @@ public class Japan extends GameActivity {
         instructionsButton.setVisibility(View.GONE);
     }
 
-    private static final int[][] MAPPINGS_JAPAN_7 = {
-            // Common Horizontal Guidelines
-            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
-            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
-            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
-            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
-            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
-
-            // Specific Horizontal Guidelines
-            {R.id.japan_horGuidelineRefTop, R.dimen.japan_horGuidelineRefTop},
-            {R.id.japan_horGuidelineRefBottom, R.dimen.japan_horGuidelineRefBottom},
-            {R.id.japan_horGuidelineTextTop, R.dimen.japan_horGuidelineTextTop},
-            {R.id.japan_horGuidelineTextBottom, R.dimen.japan_horGuidelineTextBottom},
-            {R.id.japan_horGuidelineTileTop, R.dimen.japan_horGuidelineTileTop},
-            {R.id.japan_horGuidelineTileBottom, R.dimen.japan_horGuidelineTileBottom},
-
-            // Common Vertical Guidelines
-            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
-            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
-            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
-            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
-            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
-            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
-            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
-            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
-
-            // Specific Vertical Guidelines
-            {R.id.japan_verGuidelineRefLeft, R.dimen.japan_verGuidelineRefLeft},
-            {R.id.japan_verGuidelineRefRight, R.dimen.japan_verGuidelineRefRight},
-            {R.id.japan_verGuidelineTextLeft, R.dimen.japan_verGuidelineTextLeft},
-            {R.id.japan_verGuidelineTextRight, R.dimen.japan_verGuidelineTextRight},
-            {R.id.japan_verGuidelineTileLeft, R.dimen.japan_verGuidelineTileLeft},
-            {R.id.japan_verGuidelineTileRight, R.dimen.japan_verGuidelineTileRight}
-    };
-
-    private static final int[][] MAPPINGS_JAPAN_12 = {
+    private static final int[][] MAPPINGS_JAPAN = {
             // Common Horizontal Guidelines
             {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
             {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
@@ -142,46 +106,39 @@ public class Japan extends GameActivity {
 
     private void updateGuidelines() {
         View rootView = findViewById(android.R.id.content);
-        if (challengeLevel == 1) {
-            GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_JAPAN_7);
-        } else {
-            GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_JAPAN_12);
-        }
+        GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_JAPAN);
     }
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateGuidelines();
+        // The layout-change listener added in onCreate re-runs relayoutViews() once the new size is known
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Load in the tile view IDs first
-        int gameID = 0;
-        if (challengeLevel == 1) {
-            setContentView(R.layout.japan_7);
-            ALL_GAME_VIEW_IDS = new int[13];
-            for (int i = 0; i < 13; i++) {
-                ALL_GAME_VIEW_IDS[i] = TILE_VIEW_IDs[i];
-            }
-            MAX_TILES = 7;
-            gameID = R.id.japancl_7;
-        } else if (challengeLevel == 2) {
-            setContentView(R.layout.japan_12);
-            ALL_GAME_VIEW_IDS = new int[23];
-            for (int i = 0; i < 23; i++) {
-                ALL_GAME_VIEW_IDS[i] = TILE_VIEW_IDs[i];
-            }
-            MAX_TILES = 12;
-            gameID = R.id.japancl_12;
+        setContentView(R.layout.japan);
+        ALL_GAME_VIEW_IDS = new int[23];
+        for (int i = 0; i < 23; i++) {
+            ALL_GAME_VIEW_IDS[i] = TILE_VIEW_IDs[i];
         }
+        int gameID = R.id.japanCL;
+
         updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
+
+        // Re-run the tile row layout whenever the game layout changes size (first layout, rotation, etc.)
+        findViewById(getGameLayoutId()).addOnLayoutChangeListener(
+                (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                    if ((right - left) != (oldRight - oldLeft) || (bottom - top) != (oldBottom - oldTop)) {
+                        v.post(this::relayoutViews);
+                    }
+                });
 
         if (scriptDirection.equals("RTL")) {
             ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
@@ -205,6 +162,15 @@ public class Japan extends GameActivity {
     private void playAgain() {
         repeatLocked = true;
         setAdvanceArrowToGray();
+
+        // Detect orientation each round: landscape allows words up to 10 tiles, portrait up to 5
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            MAX_TILES = 10;
+        } else {
+            MAX_TILES = 5;
+        }
+
         chooseWord();
 
         while(tileList.parseWordIntoTiles(refWord.wordInLOP, refWord).size() > MAX_TILES) {
@@ -237,24 +203,6 @@ public class Japan extends GameActivity {
             }
         }
 
-        int gameID;
-        if (challengeLevel == 1) {
-            gameID = R.id.japancl_7;
-        } else {
-            gameID = R.id.japancl_12;
-        }
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        for (int v = 1; v < ALL_GAME_VIEW_IDS.length; v++) {
-            constraintSet.connect(ALL_GAME_VIEW_IDS[v - 1], ConstraintSet.END, ALL_GAME_VIEW_IDS[v],
-                    ConstraintSet.START, 0); //end of game button 1 to start of link button 1
-            constraintSet.connect(ALL_GAME_VIEW_IDS[v], ConstraintSet.START, ALL_GAME_VIEW_IDS[v - 1],
-                    ConstraintSet.END, 0); // start of link button 1 to end of game button 1
-            constraintSet.applyTo(constraintLayout);
-        }
-
-
         ArrayList<Integer> tilesPerCorrectSyllable = new ArrayList<>();
         for (Syllable syllable : parsedRefWordSyllableArray) {
             Start.Word syllableWord = new Start.Word(refWord.wordInLWC, syllable.text, 0, "-", "1", "1");
@@ -274,6 +222,7 @@ public class Japan extends GameActivity {
         displayTileChoices();
         setVisibleLinkButtonsClickable();
         setTilesUnclickable();
+        relayoutViews();
     }
 
     private void displayRefWord() {
@@ -320,11 +269,13 @@ public class Japan extends GameActivity {
 
     public void onClickLinkButton(View view) {
         joinTiles((TextView) view);
+        relayoutViews();
         evaluateCombination();
     }
 
     public void onClickTile(View view) {
         separateTiles((TextView) view);
+        relayoutViews();
         evaluateCombination();
     }
 
@@ -338,19 +289,15 @@ public class Japan extends GameActivity {
         }
     }
 
+    // Positioning is no longer done here: relayoutViews() (called after every tap) sets the size and
+    // position of every view in the row. These methods only restore/hide link buttons, update
+    // currentViews, and recolor tiles.
     private void separateTiles(TextView clickedTile) {
         // find the clicked tile in JoinedTracker
         // check if there is a button missing on either side
         // if there is, add it back in on that side
 
         int indexOfClickedTile = currentViews.indexOf(clickedTile);
-
-        int gameID;
-        if (challengeLevel == 1) {
-            gameID = R.id.japancl_7;
-        } else {
-            gameID = R.id.japancl_12;
-        }
 
         if (currentViews.size() == 1) {
             // TO DO: only one tile ?
@@ -362,20 +309,7 @@ public class Japan extends GameActivity {
                 restoredLinkButton.setVisibility(View.VISIBLE);
                 restoredLinkButton.setClickable(true);
 
-                // reapply constraints of the clicked tile and the restored link button
                 TextView nextTile = findViewById(ALL_GAME_VIEW_IDS[2]);
-
-                ConstraintLayout constraintLayout = findViewById(gameID);
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(constraintLayout);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[0], ConstraintSet.END, ALL_GAME_VIEW_IDS[1],
-                        ConstraintSet.START, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[1], ConstraintSet.START, ALL_GAME_VIEW_IDS[0],
-                        ConstraintSet.END, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[2], ConstraintSet.START, ALL_GAME_VIEW_IDS[1],
-                        ConstraintSet.END, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[1], ConstraintSet.END, ALL_GAME_VIEW_IDS[2], ConstraintSet.START, 0);
-                constraintSet.applyTo(constraintLayout);
 
                 Random rand = new Random();
                 int randomColorIndex = rand.nextInt(10);
@@ -395,20 +329,7 @@ public class Japan extends GameActivity {
                 restoredLinkButton.setVisibility(View.VISIBLE);
                 restoredLinkButton.setClickable(true);
 
-                // reapply constraints of clicked tile and its previous tile with the restored link button
                 TextView previousTile = findViewById(ALL_GAME_VIEW_IDS[restoredLinkButtonIndex - 1]);
-                ConstraintLayout constraintLayout = findViewById(gameID);
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(constraintLayout);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[restoredLinkButtonIndex - 1], ConstraintSet.END,
-                        ALL_GAME_VIEW_IDS[restoredLinkButtonIndex], ConstraintSet.START, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[restoredLinkButtonIndex], ConstraintSet.START,
-                        ALL_GAME_VIEW_IDS[restoredLinkButtonIndex - 1], ConstraintSet.END, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[restoredLinkButtonIndex + 1], ConstraintSet.START,
-                        ALL_GAME_VIEW_IDS[restoredLinkButtonIndex], ConstraintSet.END, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[restoredLinkButtonIndex], ConstraintSet.END,
-                        ALL_GAME_VIEW_IDS[restoredLinkButtonIndex + 1], ConstraintSet.START, 0);
-                constraintSet.applyTo(constraintLayout);
 
                 Random rand = new Random();
                 int randomColorIndex = rand.nextInt(10);
@@ -428,21 +349,7 @@ public class Japan extends GameActivity {
                 restoredButton.setVisibility(View.VISIBLE);
                 restoredButton.setClickable(true);
 
-                // reapply constraints of clicked tile, previous tile, and link button
                 TextView previousTile = originalViews.get(indexOfRestoredButton - 1);
-                ConstraintLayout constraintLayout = findViewById(gameID);
-                ConstraintSet constraintSet = new ConstraintSet();
-
-                constraintSet.clone(constraintLayout);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredButton - 1], ConstraintSet.END,
-                        ALL_GAME_VIEW_IDS[indexOfRestoredButton], ConstraintSet.START, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredButton], ConstraintSet.START,
-                        ALL_GAME_VIEW_IDS[indexOfRestoredButton - 1], ConstraintSet.END, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredButton + 1], ConstraintSet.START,
-                        ALL_GAME_VIEW_IDS[indexOfRestoredButton], ConstraintSet.END, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredButton], ConstraintSet.END,
-                        ALL_GAME_VIEW_IDS[indexOfRestoredButton + 1], ConstraintSet.START, 0);
-                constraintSet.applyTo(constraintLayout);
 
                 Random rand = new Random();
                 int randomColorIndex = rand.nextInt(10);
@@ -464,21 +371,7 @@ public class Japan extends GameActivity {
                     restoredButton.setVisibility(View.VISIBLE);
                     restoredButton.setClickable(true);
 
-                    // reapply constraints of clicked tile, next tile, and link button
                     TextView nextTile = originalViews.get(indexOfRestoredButton + 1);
-                    constraintLayout = findViewById(gameID);
-                    constraintSet = new ConstraintSet();
-                    constraintSet.clone(constraintLayout);
-
-                    constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredButton], ConstraintSet.END,
-                            ALL_GAME_VIEW_IDS[indexOfRestoredButton + 1], ConstraintSet.START, 0);
-                    constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredButton], ConstraintSet.START,
-                            ALL_GAME_VIEW_IDS[indexOfRestoredButton - 1], ConstraintSet.END, 0);
-                    constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredButton + 1], ConstraintSet.START,
-                            ALL_GAME_VIEW_IDS[indexOfRestoredButton], ConstraintSet.END, 0);
-                    constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredButton - 1], ConstraintSet.END,
-                            ALL_GAME_VIEW_IDS[indexOfRestoredButton], ConstraintSet.START, 0);
-                    constraintSet.applyTo(constraintLayout);
 
                     rand = new Random();
                     randomColorIndex = rand.nextInt(10);
@@ -501,21 +394,7 @@ public class Japan extends GameActivity {
                 restoredLinkButton.setVisibility(View.VISIBLE);
                 restoredLinkButton.setClickable(true);
 
-                // reset constraints of the clicked tile, restored link button, and next tile
                 TextView nextTile = originalViews.get(indexOfRestoredLinkButton + 1);
-                ConstraintLayout constraintLayout = findViewById(gameID);
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(constraintLayout);
-
-                constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredLinkButton], ConstraintSet.END,
-                        ALL_GAME_VIEW_IDS[indexOfRestoredLinkButton + 1], ConstraintSet.START, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredLinkButton], ConstraintSet.START,
-                        ALL_GAME_VIEW_IDS[indexOfRestoredLinkButton - 1], ConstraintSet.END, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredLinkButton + 1], ConstraintSet.START,
-                        ALL_GAME_VIEW_IDS[indexOfRestoredLinkButton], ConstraintSet.END, 0);
-                constraintSet.connect(ALL_GAME_VIEW_IDS[indexOfRestoredLinkButton - 1], ConstraintSet.END,
-                        ALL_GAME_VIEW_IDS[indexOfRestoredLinkButton], ConstraintSet.START, 0);
-                constraintSet.applyTo(constraintLayout);
 
                 Random rand = new Random();
                 int randomColorIndex = rand.nextInt(10);
@@ -556,7 +435,7 @@ public class Japan extends GameActivity {
             for (int v = 0; v < ALL_GAME_VIEW_IDS.length; v++) {
                 TextView view = findViewById(ALL_GAME_VIEW_IDS[v]);
                 if (v % 2 == 0) {
-                    view.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
+                    view.setBackgroundColor(Color.parseColor("#006600")); // dark green
                     view.setTextColor(Color.parseColor("#FFFFFF")); // white
                 }
                 view.setClickable(false);
@@ -593,13 +472,18 @@ public class Japan extends GameActivity {
                         }
                         if (intermediateTiles.size()!=parsedRefWordTileArray.size() && buttonPairComplete) { // prevent all tiles from turning green if combos are wrong
                             for (TextView tileView : intermediateTiles) {
-                                tileView.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
+                                tileView.setBackgroundColor(Color.parseColor("#006600")); // dark green
                                 tileView.setTextColor(Color.parseColor("#FFFFFF")); // white
                                 tileView.setClickable(false);
                             }
                             thisView.setClickable(false); // Set the link button at the end of the combination unclickable
                             firstLinkButton.setClickable(false); // Set the link button (or tile if index 0) at the beginning of the combination unclickable
                         }
+
+                        // This button is a syllable boundary, so the next syllable starts here whether or not
+                        // the previous one was complete. Reset so each syllable is judged on its own tiles.
+                        firstLinkButton = thisView;
+                        intermediateTiles.clear();
                     } else if (finalCorrectLinkButtonIDs.contains(thisView.getId())) {
                         buildingIntermediate = true;
                         firstLinkButton = thisView;
@@ -610,6 +494,22 @@ public class Japan extends GameActivity {
                     }
                 }
             }
+
+            // The last syllable has no link button after it, so the loop never evaluates it.
+            // The final entry of finalCorrectLinkButtonIDs marks the end of the word (it is not a real
+            // link button), so the last real syllable boundary is the second-to-last entry.
+            int lastBoundaryIndex = finalCorrectLinkButtonIDs.size() - 2;
+            if (buildingIntermediate && lastBoundaryIndex >= 0
+                && !intermediateTiles.isEmpty()
+                && intermediateTiles.size() != parsedRefWordTileArray.size()
+                && finalCorrectLinkButtonIDs.get(lastBoundaryIndex).equals(firstLinkButton.getId())) {
+                    for (TextView tileView : intermediateTiles) {
+                        tileView.setBackgroundColor(Color.parseColor("#4CAF50")); // theme green
+                        tileView.setTextColor(Color.parseColor("#FFFFFF")); // white
+                        tileView.setClickable(false);
+                    }
+                    firstLinkButton.setClickable(false); // Set the link button at the start of the last syllable unclickable
+                }
 
         }
     }
@@ -626,25 +526,107 @@ public class Japan extends GameActivity {
         TextView rightTile = originalViews.get(linkButtonIndex + 1);
         rightTile.setClickable(true);
 
-        int gameID;
-        if (challengeLevel == 1) {
-            gameID = R.id.japancl_7;
-        } else {
-            gameID = R.id.japancl_12;
-        }
-
-        ConstraintLayout constraintLayout = findViewById(gameID);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        // start of right tile to end of left tile
-        constraintSet.connect(ALL_GAME_VIEW_IDS[linkButtonIndex - 1], ConstraintSet.END,
-                ALL_GAME_VIEW_IDS[linkButtonIndex + 1], ConstraintSet.START, 0);
-        // end of left tile to start of right tile
-        constraintSet.connect(ALL_GAME_VIEW_IDS[linkButtonIndex + 1], ConstraintSet.START,
-                ALL_GAME_VIEW_IDS[linkButtonIndex - 1], ConstraintSet.END, 0);
-        constraintSet.applyTo(constraintLayout);
-
         currentViews.remove(linkButton);
 
+    }
+
+    private int getGameLayoutId() {
+        return R.id.japanCL;
+    }
+
+    private float getGuidePercent(int guidelineId) {
+        View guideline = findViewById(guidelineId);
+        return ((ConstraintLayout.LayoutParams) guideline.getLayoutParams()).guidePercent;
+    }
+
+    /**
+     * Sizes and positions the whole tile / link button row as one gap-free, centered strip.
+     *
+     * Every view in ALL_GAME_VIEW_IDS is given:
+     *   - a fixed square size (same width and height for tiles and link buttons)
+     *   - ALL of its old constraints removed (chains, neighbor links, guideline links, ratio, bias)
+     *   - exactly two constraints: start-to-parent-start and top-to-parent-top, with explicit
+     *     pixel margins
+     *
+     * So the position of view i is simply x = rowStart + i * size. Because every view is exactly
+     * `size` wide, view i's right edge is exactly view i+1's left edge: no gaps, no overlap. Nothing
+     * the XML or the old click handlers set can interfere, because every constraint is replaced here.
+     *
+     * Size is based on the word's full slot count (2n - 1), so short words get big tiles and long
+     * words get small tiles. When link buttons are joined, the row gets narrower and re-centers.
+     */
+    private void relayoutViews() {
+        ConstraintLayout layout = findViewById(getGameLayoutId());
+        if (layout == null || currentViews.isEmpty() || parsedRefWordTileArray == null) {
+            return;
+        }
+
+        // Percent guidelines are measured inside the layout's padding
+        int contentWidth = layout.getWidth() - layout.getPaddingLeft() - layout.getPaddingRight();
+        int contentHeight = layout.getHeight() - layout.getPaddingTop() - layout.getPaddingBottom();
+        if (contentWidth <= 0 || contentHeight <= 0) {
+            return; // not laid out yet; the layout-change listener calls this again after the first layout
+        }
+
+        float spanLeft = getGuidePercent(R.id.japan_verGuidelineTileLeft) * contentWidth;
+        float spanRight = getGuidePercent(R.id.japan_verGuidelineTileRight) * contentWidth;
+        float spanTop = getGuidePercent(R.id.japan_horGuidelineTileTop) * contentHeight;
+        float spanBottom = getGuidePercent(R.id.japan_horGuidelineTileBottom) * contentHeight;
+        float spanWidth = spanRight - spanLeft;
+        float spanHeight = spanBottom - spanTop;
+
+        int fullSlotCount = Math.max(1, parsedRefWordTileArray.size() * 2 - 1);
+        int size = (int) Math.floor(Math.min(spanWidth / fullSlotCount, spanHeight));
+        if (size <= 0) {
+            return;
+        }
+
+        int count = currentViews.size();
+        int rowStartX = Math.round(spanLeft + (spanWidth - (float) size * count) / 2f); // centered row
+        int rowTopY = Math.round(spanTop + (spanHeight - size) / 2f);                  // centered in the band
+
+        for (int id : ALL_GAME_VIEW_IDS) {
+            View view = findViewById(id);
+            ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+
+            // Remove every constraint the XML / earlier code put on this view
+            lp.leftToLeft = ConstraintLayout.LayoutParams.UNSET;
+            lp.leftToRight = ConstraintLayout.LayoutParams.UNSET;
+            lp.rightToLeft = ConstraintLayout.LayoutParams.UNSET;
+            lp.rightToRight = ConstraintLayout.LayoutParams.UNSET;
+            lp.startToStart = ConstraintLayout.LayoutParams.UNSET;
+            lp.startToEnd = ConstraintLayout.LayoutParams.UNSET;
+            lp.endToStart = ConstraintLayout.LayoutParams.UNSET;
+            lp.endToEnd = ConstraintLayout.LayoutParams.UNSET;
+            lp.topToTop = ConstraintLayout.LayoutParams.UNSET;
+            lp.topToBottom = ConstraintLayout.LayoutParams.UNSET;
+            lp.bottomToTop = ConstraintLayout.LayoutParams.UNSET;
+            lp.bottomToBottom = ConstraintLayout.LayoutParams.UNSET;
+            lp.baselineToBaseline = ConstraintLayout.LayoutParams.UNSET;
+            lp.dimensionRatio = null;
+            lp.horizontalBias = 0f;
+            lp.verticalBias = 0f;
+            lp.horizontalWeight = 0f;
+            lp.verticalWeight = 0f;
+
+            // Identical fixed square size for every tile and link button
+            lp.width = size;
+            lp.height = size;
+
+            // Slot index in the row (views that are not showing are parked at the row start, invisible)
+            int index = currentViews.indexOf(view);
+            int x = rowStartX + (index < 0 ? 0 : index) * size;
+
+            lp.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+            lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+            lp.leftMargin = 0;
+            lp.rightMargin = 0;
+            lp.setMarginStart(x);
+            lp.setMarginEnd(0);
+            lp.topMargin = rowTopY;
+            lp.bottomMargin = 0;
+
+            view.setLayoutParams(lp);
+        }
     }
 }
