@@ -35,7 +35,7 @@ import com.segment.analytics.Properties;
 // 2. FILTER DUPLICATE ANSWER CHOICES
 
 public class Ecuador extends GameActivity {
-// testing for crawl #2
+    // testing for crawl #2
     int[][] boxCoordinates;   // Will be 8 boxes, defined by 4 parameters each: x1, y1, x2, y2
     int justClickedWord = 0;
     int rightWordIndex;
@@ -62,7 +62,7 @@ public class Ecuador extends GameActivity {
 
         ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
-        
+
     }
 
     @Override
@@ -118,7 +118,7 @@ public class Ecuador extends GameActivity {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateGuidelines();
-        setBoxes();
+        findViewById(R.id.ecuadorCL).post(this::setBoxes);
     }
 
     @Override
@@ -182,7 +182,57 @@ public class Ecuador extends GameActivity {
 
     public void setBoxes() {
 
+        ConstraintLayout constraintLayout = findViewById(R.id.ecuadorCL);
+
+        // During the initial onCreate(), the views may not have been laid out yet.
+        // Wait until layout is complete so their actual positions can be used.
+        if (!constraintLayout.isLaidOut()) {
+            constraintLayout.post(this::setBoxes);
+            return;
+        }
+
         boxCoordinates = new int[8][4];
+
+        // These views are protected from overlap by the randomized word boxes.
+        // Portrait: active word and image.
+        // Landscape: attempts bar.
+        ArrayList<int[]> exclusionRects = new ArrayList<>();
+
+        boolean isLandscape = getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE;
+
+        if (isLandscape) {
+            View attemptsBar = findViewById(R.id.attemptsBar);
+            if (attemptsBar.getWidth() > 0 && attemptsBar.getHeight() > 0) {
+                exclusionRects.add(new int[]{
+                        attemptsBar.getLeft(),
+                        attemptsBar.getTop(),
+                        attemptsBar.getRight(),
+                        attemptsBar.getBottom()
+                });
+            }
+        } else {
+            View activeWordTextView = findViewById(R.id.activeWordTextView);
+            View wordImage = findViewById(R.id.wordImage);
+
+            if (activeWordTextView.getWidth() > 0 && activeWordTextView.getHeight() > 0) {
+                exclusionRects.add(new int[]{
+                        activeWordTextView.getLeft(),
+                        activeWordTextView.getTop(),
+                        activeWordTextView.getRight(),
+                        activeWordTextView.getBottom()
+                });
+            }
+
+            if (wordImage.getWidth() > 0 && wordImage.getHeight() > 0) {
+                exclusionRects.add(new int[]{
+                        wordImage.getLeft(),
+                        wordImage.getTop(),
+                        wordImage.getRight(),
+                        wordImage.getBottom()
+                });
+            }
+        }
 
         // JP: DisplayMetrics is deprecated after Android 11
         // must use WindowMetrics instead
@@ -205,8 +255,6 @@ public class Ecuador extends GameActivity {
         }
 
         int usableWidth = widthDisplay;
-
-        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         int minX1;
         int maxX2;
@@ -279,6 +327,19 @@ public class Ecuador extends GameActivity {
 
                     boolean overlapX = (coordX1 - bufferX < prevX2) && (coordX2 + bufferX > prevX1);
                     boolean overlapY = (coordY1 - bufferY < prevY2) && (coordY2 + bufferY > prevY1);
+
+                    if (overlapX && overlapY) {
+                        valid = false;
+                        break;
+                    }
+                }
+            }
+
+            // Check overlap with protected UI elements.
+            if (valid) {
+                for (int[] exclusion : exclusionRects) {
+                    boolean overlapX = coordX1 < exclusion[2] && coordX2 > exclusion[0];
+                    boolean overlapY = coordY1 < exclusion[3] && coordY2 > exclusion[1];
 
                     if (overlapX && overlapY) {
                         valid = false;
@@ -533,7 +594,7 @@ public class Ecuador extends GameActivity {
 
     }
 
-        public void onWordClick(View view) {
+    public void onWordClick(View view) {
         justClickedWord = Integer.parseInt((String) view.getTag());
         respondToWordSelection();
     }
