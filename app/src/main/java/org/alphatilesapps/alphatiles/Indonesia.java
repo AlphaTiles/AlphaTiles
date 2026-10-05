@@ -83,9 +83,6 @@ public class Indonesia extends GameActivity {
         // loops up to visibleGameButtons; 0 (the default) means it does nothing.
         visibleGameButtons = GAME_BUTTONS.length;
 
-        // Initialise the top bar (game number, challenge level, tracker dots)
-        updatePointsAndTrackers(0);
-
         if (scriptDirection.equals("RTL")) {
             fixConstraintsRTLIndonesia();
         }
@@ -104,6 +101,8 @@ public class Indonesia extends GameActivity {
 
         bwd.setImageResource(R.drawable.zz_backward);
         fwd.setImageResource(R.drawable.zz_forward);
+        setUpInitialView();
+        updateView();
     }
 
     // ── Paging ────────────────────────────────────────────────────────────────

@@ -97,13 +97,13 @@ public class Ethiopia extends GameActivity {
         }
 
         visibleGameButtons = GAME_BUTTONS.length;
-        updatePointsAndTrackers(0);
 
         incorrectAnswersSelected = new ArrayList<>(3);
         for (int i = 0; i < 3; i++) incorrectAnswersSelected.add("");
 
         playAgain();
-    }
+        setUpInitialView();
+        updateView();    }
 
     // ── Round management ──────────────────────────────────────────────────────
     public void repeatGame(View view) {
@@ -303,8 +303,8 @@ public class Ethiopia extends GameActivity {
         roundComplete = true;
         repeatLocked  = false;
         setAdvanceArrowToBlue();
-        updatePointsAndTrackers(2);               // +2 points, fill one tracker dot
-        playCorrectSoundThenActiveWordClip(false); // chime → pronounce the word
+        recordAttempt(true, 2);               // +2 points, fill one tracker dot
+        playGameSoundThenActiveWordClip(true,false); // chime → pronounce the word
     }
 
     private void onGameOver() {

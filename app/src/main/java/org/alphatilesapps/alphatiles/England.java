@@ -95,8 +95,9 @@ public class England extends GameActivity {
             hideInstructionAudioImage();
         }
 
-        updatePointsAndTrackers(0);
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     private void playAgain() {
@@ -232,6 +233,7 @@ public class England extends GameActivity {
             respondToCorrectSelection(index);
         } else {
             incorrectOnLevel++;
+            recordAttempt(false,0);
             playIncorrectSound();
 
             // The Wobble Animation
@@ -250,7 +252,7 @@ public class England extends GameActivity {
 
         // 1 & 2: Play Correct Sound followed by Word Audio
         boolean isFinalCheck = (currentTargetIndex >= gameWords.size() - 1);
-        playCorrectSoundThenActiveWordClip(isFinalCheck);
+        playGameSoundThenActiveWordClip(true, isFinalCheck);
 
         // 3: Delay the revealing of the word/flip until after audio
         long totalAudioDelay = Start.correctSoundDuration + refWord.duration;
@@ -282,15 +284,15 @@ public class England extends GameActivity {
                                     tile.getBackground().mutate().setColorFilter(Color.parseColor(currentRoundColor), PorterDuff.Mode.SRC_ATOP);
                                 }
 
-                                updatePointsAndTrackers(4); // This locks the UI
                                 repeatLocked = false;
                                 setAdvanceArrowToBlue();
+                                recordAttempt(true, 4); // This locks the UI
 
                                 // Manually unlock the UI so the blue arrow works
-                                if (Start.after12checkedTrackers == 1 || (trackerCount > 0 && trackerCount % 12 != 0)) {
-                                    setOptionsRowClickable();
-                                    setAllGameButtonsClickable();
-                                }
+//                                if (Start.after12checkedTrackers == 1 || (trackerCount > 0 && trackerCount % 12 != 0)) {
+//                                    setOptionsRowClickable();
+//                                    setAllGameButtonsClickable();
+//                                }
                             }
 
                             // Step 3: Snap to -90 degrees and animate back to 0 to complete the flip

@@ -86,7 +86,6 @@ public class India extends GameActivity {
         }
 
         visibleGameButtons = GAME_BUTTONS.length;
-        updatePointsAndTrackers(0);
 
         incorrectAnswersSelected = new ArrayList<>(3);
         for (int i = 0; i < 3; i++) {
@@ -94,6 +93,8 @@ public class India extends GameActivity {
         }
 
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View view) {
@@ -245,7 +246,7 @@ public class India extends GameActivity {
 
             repeatLocked = false;
             setAdvanceArrowToBlue();
-            updatePointsAndTrackers(1);
+            recordAttempt(true, 1);
 
             // Dim incorrect options
             for (int w = 0; w < GAME_BUTTONS.length; w++) {
@@ -261,11 +262,12 @@ public class India extends GameActivity {
                 }
             }
 
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true, false);
 
         } else {
             // Incorrect Answer!
             incorrectOnLevel++;
+            recordAttempt(false,0);
             for (int i = 0; i < 3; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(selectedWord)) break; // Already selected

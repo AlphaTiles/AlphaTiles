@@ -111,7 +111,8 @@ public class Senegal extends GameActivity {
         // Bound word count to available UI slots
         wordCount = Math.max(3, Math.min(6, wordCount));
 
-        updatePointsAndTrackers(0);
+        setUpInitialView();
+        updateView();
         initializeGame();
     }
 
@@ -415,15 +416,16 @@ public class Senegal extends GameActivity {
                     }
 
                     boolean isFinalWord = (currentIndex == currentTargetSequence.size());
-                    playCorrectSoundThenActiveWordClip(false);
+                    playGameSoundThenActiveWordClip(true,false);
 
                     if (isFinalWord) {
                         repeatLocked = false;
                         setAdvanceArrowToBlue();
-                        updatePointsAndTrackers(1);
+                        recordAttempt(true,1);
                     }
                 }
             } else {
+                recordAttempt(false,0);
                 incorrectOnLevel++;
                 playIncorrectSound();
                 View wrongTile = findViewById(GAME_BUTTONS[buttonIndex]);

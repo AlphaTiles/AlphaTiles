@@ -91,7 +91,6 @@ public class Cameroon extends GameActivity {
         } else {
             findViewById(R.id.wordImage).setClickable(true);
         }
-        updatePointsAndTrackers(0);
         for (int id : new int[]{R.id.rowlayout0, R.id.rowlayout1, R.id.rowlayout2, R.id.rowlayout3}) {
             rows.add(findViewById(id));
         }
@@ -108,7 +107,8 @@ public class Cameroon extends GameActivity {
             selector.setBackground(circle);
         }
         playAgain();
-
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View View) {
@@ -338,7 +338,7 @@ public class Cameroon extends GameActivity {
             circle.setColor(selectorColorCorrect);
             repeatLocked = false;
             setAdvanceArrowToBlue();
-            updatePointsAndTrackers(1);
+            recordAttempt(true, 1);
             if (sendAnalytics) {
                 String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
                 Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
@@ -352,7 +352,7 @@ public class Cameroon extends GameActivity {
                 }
                 Analytics.with(context).track(gameUniqueID, info);
             }
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
             for (int s : selectors) {
                 findViewById(s).setClickable(true); // after the round ends, a player can still listen to tile audio and review why they were right or wrong
             }
@@ -365,6 +365,7 @@ public class Cameroon extends GameActivity {
             }
             incorrectAnswersSelected.set(idx, incorrect.toString());
             playIncorrectSound();
+            recordAttempt(false,0);
         }
     }
 
