@@ -8,7 +8,6 @@ import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInsta
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -320,7 +319,7 @@ public class Validator {
             Map.entry("gametiles", "A1:Q"),
             Map.entry("wordlist", "A1:F"),
             Map.entry("keyboard", "A1:B"),
-            Map.entry("games", "A1:H"),
+            Map.entry("games", "A1:L"),
             Map.entry("syllables", "A1:G"),
             Map.entry("resources", "A1:C"),
             Map.entry("settings", "A1:B"),
@@ -2535,7 +2534,7 @@ public class Validator {
         // initially builds the drive and sheets service not knowing if the token is revoked/expired
         String APPLICATION_NAME = "Alpha Tiles Validator";
         JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-        NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        NetHttpTransport HTTP_TRANSPORT = new NetHttpTransport();
         sheetsService =
                 new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCrdntls(HTTP_TRANSPORT))
                         .setApplicationName(APPLICATION_NAME)

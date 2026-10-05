@@ -1,0 +1,805 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common Horizontal Guidelines (Landscape) -->
+    <item name="horGuidelineStatusTop" type="dimen" format="float">0.01</item>
+    <item name="horGuidelineStatusMiddle" type="dimen" format="float">0.094</item>
+    <item name="horGuidelineStatusBottom" type="dimen" format="float">0.12</item>
+    <item name="horGuidelineOptionsTop" type="dimen" format="float">0.87</item>
+    <item name="horGuidelineOptionsBottom" type="dimen" format="float">0.99</item>
+
+    <!-- Common Vertical Guidelines (Landscape) -->
+    <item name="verGuidelineGameNoLeft" type="dimen" format="float">0.01</item>
+    <item name="verGuidelineOptionsLeft" type="dimen" format="float">0.01</item>
+    <item name="verGuidelineGameNoCLBorder" type="dimen" format="float">0.12</item>
+    <item name="verGuidelineCLStageBorder" type="dimen" format="float">0.18</item>
+    <item name="verGuidelineStageBarsBorder" type="dimen" format="float">0.24</item>
+    <item name="verGuidelineBarsPointsBorder" type="dimen" format="float">0.88</item>
+    <item name="verGuidelinePointsRight" type="dimen" format="float">0.99</item>
+    <item name="verGuidelineOptionsRight" type="dimen" format="float">0.99</item>
+
+    <!-- About Horizontal Guidelines (Landscape) -->
+    <item name="about_horGuidelineLogoTop" type="dimen" format="float">0.01</item>
+    <item name="about_horGuidelineLogoBottom" type="dimen" format="float">0.21</item>
+    <item name="about_horGuidelineGameNameTop" type="dimen" format="float">0.22</item>
+    <item name="about_horGuidelineGameNameBottom" type="dimen" format="float">0.34</item>
+    <item name="about_horGuidelineLanguagesCountryTop" type="dimen" format="float">0.37</item>
+    <item name="about_horGuidelineLanguagesCountryBottom" type="dimen" format="float">0.45</item>
+    <item name="about_horGuidelineCreditsTop" type="dimen" format="float">0.22</item>
+    <item name="about_horGuidelineCreditsBottom" type="dimen" format="float">0.82</item>
+    <item name="about_horGuidelineCreditsBottomIfLang2" type="dimen" format="float">0.51</item>
+    <item name="about_horGuidelineCredits2Top" type="dimen" format="float">0.53</item>
+    <item name="about_horGuidelineEmailTop" type="dimen" format="float">0.48</item>
+    <item name="about_horGuidelineEmailBottom" type="dimen" format="float">0.56</item>
+    <item name="about_horGuidelinePrivacyTop" type="dimen" format="float">0.59</item>
+    <item name="about_horGuidelinePrivacyBottom" type="dimen" format="float">0.67</item>
+    <item name="about_horGuidelineVersionTop" type="dimen" format="float">0.70</item>
+    <item name="about_horGuidelineVersionBottom" type="dimen" format="float">0.78</item>
+
+    <!-- About Vertical Guidelines (Landscape) -->
+    <item name="about_verGuidelineMainLeft" type="dimen" format="float">0.01</item>
+    <item name="about_verGuidelineMainMiddleLeft" type="dimen" format="float">0.49</item>
+    <item name="about_verGuidelineMainMiddleRight" type="dimen" format="float">0.51</item>
+    <item name="about_verGuidelineMainRight" type="dimen" format="float">0.99</item>
+
+    <!-- LoadingScreen Horizontal Guidelines (Landscape) -->
+    <item name="loading_horGuidelineSplashTop" type="dimen" format="float">0.01</item>
+    <item name="loading_horGuidelineSplashBottom" type="dimen" format="float">0.8</item>
+    <item name="loading_horGuidelineProgressTop" type="dimen" format="float">0.86</item>
+    <item name="loading_horGuidelineProgressBottom" type="dimen" format="float">0.98</item>
+    <item name="loading_horGuidelineGameNameTop" type="dimen" format="float">0.23</item>
+    <item name="loading_horGuidelineGameNameBottom" type="dimen" format="float">0.43</item>
+    <item name="loading_horGuidelineLangPackTop" type="dimen" format="float">0.555</item>
+    <item name="loading_horGuidelineLoadingVersionBottom" type="dimen" format="float">0.635</item>
+
+    <!-- LoadingScreen Vertical Guidelines (Landscape) -->
+    <item name="loading_verGuidelineSplashLeft" type="dimen" format="float">0.01</item>
+    <item name="loading_verGuidelineProgressLeft" type="dimen" format="float">0.01</item>
+    <item name="loading_verGuidelineTextFieldsLeft" type="dimen" format="float">0.51</item>
+    <item name="loading_verGuidelineTextFieldsRight" type="dimen" format="float">0.97</item>
+    <item name="loading_verGuidelineProgressRight" type="dimen" format="float">0.99</item>
+    <item name="loading_verGuidelineSplashRight" type="dimen" format="float">0.49</item>
+
+    <!-- Brazil CL1 Horizontal Guidelines (Landscape) -->
+    <item name="brazil_cl1_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="brazil_cl1_horGuidelineRefBottom" type="dimen" format="float">0.85</item>
+    <item name="brazil_cl1_horGuidelineWordTextTop" type="dimen" format="float">0.14</item>
+    <item name="brazil_cl1_horGuidelineWordTextBottom" type="dimen" format="float">0.39</item>
+    <item name="brazil_cl1_horGuidelineRow1TilesTop" type="dimen" format="float">0.41</item>
+    <item name="brazil_cl1_horGuidelineRow1TilesBottom" type="dimen" format="float">0.625</item>
+    <item name="brazil_cl1_horGuidelineRow2TilesTop" type="dimen" format="float">0.635</item>
+    <item name="brazil_cl1_horGuidelineRow2TilesBottom" type="dimen" format="float">0.85</item>
+
+    <!-- Brazil CL1 Vertical Guidelines (Landscape) -->
+    <item name="brazil_cl1_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="brazil_cl1_verGuidelineWordTextLeft" type="dimen" format="float">0.51</item>
+    <item name="brazil_cl1_verGuidelineTilesLeft" type="dimen" format="float">0.51</item>
+    <item name="brazil_cl1_verGuidelineCol1TilesRight" type="dimen" format="float">0.745</item>
+    <item name="brazil_cl1_verGuidelineCol2TilesLeft" type="dimen" format="float">0.755</item>
+    <item name="brazil_cl1_verGuidelineRefRight" type="dimen" format="float">0.49</item>
+    <item name="brazil_cl1_verGuidelineWordTextRight" type="dimen" format="float">0.99</item>
+    <item name="brazil_cl1_verGuidelineTilesRight" type="dimen" format="float">0.99</item>
+
+    <!-- Brazil CL3 Horizontal Guidelines (Landscape) -->
+    <item name="brazil_cl3_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="brazil_cl3_horGuidelineRefBottom" type="dimen" format="float">0.59</item>
+    <item name="brazil_cl3_horGuidelineWordTextTop" type="dimen" format="float">0.60</item>
+    <item name="brazil_cl3_horGuidelineWordTextBottom" type="dimen" format="float">0.85</item>
+    <item name="brazil_cl3_horGuidelineRow1TilesTop" type="dimen" format="float">0.14</item>
+    <item name="brazil_cl3_horGuidelineRow1TilesBottom" type="dimen" format="float">0.37</item>
+    <item name="brazil_cl3_horGuidelineRow2TilesTop" type="dimen" format="float">0.38</item>
+    <item name="brazil_cl3_horGuidelineRow2TilesBottom" type="dimen" format="float">0.61</item>
+    <item name="brazil_cl3_horGuidelineRow3TilesTop" type="dimen" format="float">0.62</item>
+    <item name="brazil_cl3_horGuidelineRow3TilesBottom" type="dimen" format="float">0.85</item>
+
+    <!-- Brazil CL3 Vertical Guidelines (Landscape) -->
+    <item name="brazil_cl3_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="brazil_cl3_verGuidelineWordTextLeft" type="dimen" format="float">0.01</item>
+    <item name="brazil_cl3_verGuidelineRefRight" type="dimen" format="float">0.36</item>
+    <item name="brazil_cl3_verGuidelineWordTextRight" type="dimen" format="float">0.36</item>
+    <item name="brazil_cl3_verGuidelineTilesLeft" type="dimen" format="float">0.37</item>
+    <item name="brazil_cl3_verGuidelineCol1TilesRight" type="dimen" format="float">0.465</item>
+    <item name="brazil_cl3_verGuidelineCol2TilesLeft" type="dimen" format="float">0.475</item>
+    <item name="brazil_cl3_verGuidelineCol2TilesRight" type="dimen" format="float">0.57</item>
+    <item name="brazil_cl3_verGuidelineCol3TilesLeft" type="dimen" format="float">0.58</item>
+    <item name="brazil_cl3_verGuidelineCol3TilesRight" type="dimen" format="float">0.675</item>
+    <item name="brazil_cl3_verGuidelineCol4TilesLeft" type="dimen" format="float">0.685</item>
+    <item name="brazil_cl3_verGuidelineCol4TilesRight" type="dimen" format="float">0.78</item>
+    <item name="brazil_cl3_verGuidelineCol5TilesLeft" type="dimen" format="float">0.79</item>
+    <item name="brazil_cl3_verGuidelineCol5TilesRight" type="dimen" format="float">0.885</item>
+    <item name="brazil_cl3_verGuidelineCol6TilesLeft" type="dimen" format="float">0.895</item>
+    <item name="brazil_cl3_verGuidelineTilesRight" type="dimen" format="float">0.99</item>
+
+    <!-- Peru Horizontal Guidelines (Landscape) -->
+    <item name="peru_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="peru_horGuidelineRefBottom" type="dimen" format="float">0.85</item>
+    <item name="peru_horGuidelineWord1Top" type="dimen" format="float">0.14</item>
+    <item name="peru_horGuidelineWord1Bottom" type="dimen" format="float">0.31</item>
+    <item name="peru_horGuidelineWord2Top" type="dimen" format="float">0.32</item>
+    <item name="peru_horGuidelineWord2Bottom" type="dimen" format="float">0.49</item>
+    <item name="peru_horGuidelineWord3Top" type="dimen" format="float">0.50</item>
+    <item name="peru_horGuidelineWord3Bottom" type="dimen" format="float">0.67</item>
+    <item name="peru_horGuidelineWord4Top" type="dimen" format="float">0.68</item>
+    <item name="peru_horGuidelineWord4Bottom" type="dimen" format="float">0.85</item>
+
+    <!-- Peru Vertical Guidelines (Landscape) -->
+    <item name="peru_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="peru_verGuidelineWordsLeft" type="dimen" format="float">0.51</item>
+    <item name="peru_verGuidelineRefRight" type="dimen" format="float">0.49</item>
+    <item name="peru_verGuidelineWordsRight" type="dimen" format="float">0.99</item>
+
+    <!-- Thailand Horizontal Guidelines (Landscape) -->
+    <item name="thailand_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="thailand_horGuidelineRefBottom" type="dimen" format="float">0.85</item>
+    <item name="thailand_horGuidelineRow1TilesTop" type="dimen" format="float">0.14</item>
+    <item name="thailand_horGuidelineRow1TilesBottom" type="dimen" format="float">0.49</item>
+    <item name="thailand_horGuidelineRow2TilesTop" type="dimen" format="float">0.51</item>
+    <item name="thailand_horGuidelineRow2TilesBottom" type="dimen" format="float">0.85</item>
+
+    <!-- Thailand Vertical Guidelines (Landscape) -->
+    <item name="thailand_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="thailand_verGuidelineRefRight" type="dimen" format="float">0.49</item>
+    <item name="thailand_verGuidelineTilesLeft" type="dimen" format="float">0.51</item>
+    <item name="thailand_verGuidelineCol1TilesRight" type="dimen" format="float">0.745</item>
+    <item name="thailand_verGuidelineCol2TilesLeft" type="dimen" format="float">0.755</item>
+    <item name="thailand_verGuidelineTilesRight" type="dimen" format="float">0.99</item>
+
+    <!-- Thailand2 Horizontal Guidelines (Landscape) -->
+    <item name="thailand2_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="thailand2_horGuidelineRefBottom" type="dimen" format="float">0.85</item>
+    <item name="thailand2_horGuidelineRow1TilesTop" type="dimen" format="float">0.14</item>
+    <item name="thailand2_horGuidelineRow1TilesBottom" type="dimen" format="float">0.31</item>
+    <item name="thailand2_horGuidelineRow2TilesTop" type="dimen" format="float">0.32</item>
+    <item name="thailand2_horGuidelineRow2TilesBottom" type="dimen" format="float">0.49</item>
+    <item name="thailand2_horGuidelineRow3TilesTop" type="dimen" format="float">0.50</item>
+    <item name="thailand2_horGuidelineRow3TilesBottom" type="dimen" format="float">0.67</item>
+    <item name="thailand2_horGuidelineRow4TilesTop" type="dimen" format="float">0.68</item>
+    <item name="thailand2_horGuidelineRow4TilesBottom" type="dimen" format="float">0.85</item>
+
+    <!-- Thailand2 Vertical Guidelines (Landscape) -->
+    <item name="thailand2_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="thailand2_verGuidelineRefRight" type="dimen" format="float">0.49</item>
+    <item name="thailand2_verGuidelineTilesLeft" type="dimen" format="float">0.51</item>
+    <item name="thailand2_verGuidelineTilesRight" type="dimen" format="float">0.99</item>
+
+    <!-- Celebration Horizontal Guidelines (Landscape) -->
+    <item name="horGuidelineCelebrationTop" type="dimen" format="float">0.01</item>
+    <item name="horGuidelineCelebrationOptionsTop" type="dimen" format="float">0.87</item>
+    <item name="horGuidelineCelebrationOptionsBottom" type="dimen" format="float">0.99</item>
+
+    <!-- Celebration Vertical Guidelines (Landscape) -->
+    <item name="verGuidelineCelebrationLeft" type="dimen" format="float">0.25</item>
+    <item name="verGuidelineCelebrationRight" type="dimen" format="float">0.75</item>
+
+    <!-- Resources Horizontal Guidelines (Landscape) -->
+    <item name="resources_horGuidelineHeaderIconTop" type="dimen" format="float">0.87</item>
+    <item name="resources_horGuidelineHeaderIconBottom" type="dimen" format="float">0.99</item>
+    <item name="resources_horGuidelineIconAndText1Top" type="dimen" format="float">0.01</item>
+    <item name="resources_horGuidelineIconAndText1Bottom" type="dimen" format="float">0.14</item>
+    <item name="resources_horGuidelineIconAndText2Top" type="dimen" format="float">0.15</item>
+    <item name="resources_horGuidelineIconAndText2Bottom" type="dimen" format="float">0.28</item>
+    <item name="resources_horGuidelineIconAndText3Top" type="dimen" format="float">0.29</item>
+    <item name="resources_horGuidelineIconAndText3Bottom" type="dimen" format="float">0.42</item>
+    <item name="resources_horGuidelineIconAndText4Top" type="dimen" format="float">0.43</item>
+    <item name="resources_horGuidelineIconAndText4Bottom" type="dimen" format="float">0.56</item>
+    <item name="resources_horGuidelineIconAndText5Top" type="dimen" format="float">0.57</item>
+    <item name="resources_horGuidelineIconAndText5Bottom" type="dimen" format="float">0.70</item>
+    <item name="resources_horGuidelineIconAndText6Top" type="dimen" format="float">0.71</item>
+    <item name="resources_horGuidelineIconAndText6Bottom" type="dimen" format="float">0.84</item>
+    <item name="resources_horGuidelineArrowsTop" type="dimen" format="float">0.71</item>
+    <item name="resources_horGuidelineArrowsBottom" type="dimen" format="float">0.84</item>
+
+    <!-- Resources Vertical Guidelines (Landscape) -->
+    <item name="resources_verGuidelineMainLeft" type="dimen" format="float">0.01</item>
+    <item name="resources_verGuidelineHeaderIconLeft" type="dimen" format="float">0.01</item>
+    <item name="resources_verGuidelineTextLeft" type="dimen" format="float">0.22</item>
+    <item name="resources_verGuidelineTextRight" type="dimen" format="float">0.80</item>
+    <item name="resources_verGuidelineHeaderIconRight" type="dimen" format="float">0.19</item>
+    <item name="resources_verGuidelineMainRight" type="dimen" format="float">0.99</item>
+
+    <!-- China Horizontal Guidelines (Landscape) -->
+    <item name="china_horGuidelineRow1Top" type="dimen" format="float">0.14</item>
+    <item name="china_horGuidelineRow1Bottom" type="dimen" format="float">0.31</item>
+    <item name="china_horGuidelineRow2Top" type="dimen" format="float">0.32</item>
+    <item name="china_horGuidelineRow2Bottom" type="dimen" format="float">0.49</item>
+    <item name="china_horGuidelineRow3Top" type="dimen" format="float">0.50</item>
+    <item name="china_horGuidelineRow3Bottom" type="dimen" format="float">0.67</item>
+    <item name="china_horGuidelineRow4Top" type="dimen" format="float">0.68</item>
+    <item name="china_horGuidelineRow4Bottom" type="dimen" format="float">0.85</item>
+
+    <!-- China Vertical Guidelines (Landscape) -->
+    <item name="china_verGuidelineGridLeft" type="dimen" format="float">0.23</item>
+    <item name="china_verGuidelineCol1Right" type="dimen" format="float">0.33</item>
+    <item name="china_verGuidelineCol2Left" type="dimen" format="float">0.34</item>
+    <item name="china_verGuidelineCol2Right" type="dimen" format="float">0.44</item>
+    <item name="china_verGuidelineCol3Left" type="dimen" format="float">0.45</item>
+    <item name="china_verGuidelineCol3Right" type="dimen" format="float">0.55</item>
+    <item name="china_verGuidelineCol4Left" type="dimen" format="float">0.56</item>
+    <item name="china_verGuidelineCol4Right" type="dimen" format="float">0.66</item>
+    <item name="china_verGuidelineCol5Left" type="dimen" format="float">0.67</item>
+    <item name="china_verGuidelineGridRight" type="dimen" format="float">0.77</item>
+
+    <!-- Italy Horizontal Guidelines (Landscape) -->
+    <item name="italy_horGuidelineRefTop" type="dimen" format="float">0.20</item>
+    <item name="italy_horGuidelineRefBottom" type="dimen" format="float">0.42</item>
+    <item name="italy_horGuidelinePlayNextTop" type="dimen" format="float">0.57</item>
+    <item name="italy_horGuidelinePlayNextBottom" type="dimen" format="float">0.79</item>
+    <item name="italy_horGuidelineImageRow1Top" type="dimen" format="float">0.14</item>
+    <item name="italy_horGuidelineImageRow1Bottom" type="dimen" format="float">0.31</item>
+    <item name="italy_horGuidelineChoiceRow1Top" type="dimen" format="float">0.14</item>
+    <item name="italy_horGuidelineChoiceRow1Bottom" type="dimen" format="float">0.31</item>
+    <item name="italy_horGuidelineImageRow2Top" type="dimen" format="float">0.32</item>
+    <item name="italy_horGuidelineImageRow2Bottom" type="dimen" format="float">0.49</item>
+    <item name="italy_horGuidelineChoiceRow2Top" type="dimen" format="float">0.32</item>
+    <item name="italy_horGuidelineChoiceRow2Bottom" type="dimen" format="float">0.49</item>
+    <item name="italy_horGuidelineImageRow3Top" type="dimen" format="float">0.50</item>
+    <item name="italy_horGuidelineImageRow3Bottom" type="dimen" format="float">0.67</item>
+    <item name="italy_horGuidelineChoiceRow3Top" type="dimen" format="float">0.50</item>
+    <item name="italy_horGuidelineChoiceRow3Bottom" type="dimen" format="float">0.67</item>
+    <item name="italy_horGuidelineImageRow4Top" type="dimen" format="float">0.68</item>
+    <item name="italy_horGuidelineImageRow4Bottom" type="dimen" format="float">0.85</item>
+    <item name="italy_horGuidelineChoiceRow4Top" type="dimen" format="float">0.68</item>
+    <item name="italy_horGuidelineChoiceRow4Bottom" type="dimen" format="float">0.85</item>
+
+    <!-- Italy Vertical Guidelines (Landscape) -->
+    <item name="italy_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="italy_verGuidelineRefRight" type="dimen" format="float">0.12</item>
+    <item name="italy_verGuidelinePlayNextLeft" type="dimen" format="float">0.01</item>
+    <item name="italy_verGuidelinePlayNextRight" type="dimen" format="float">0.12</item>
+    <item name="italy_verGuidelineImageCol1Left" type="dimen" format="float">0.145</item>
+    <item name="italy_verGuidelineImageCol1Right" type="dimen" format="float">0.245</item>
+    <item name="italy_verGuidelineChoiceCol1Left" type="dimen" format="float">0.245</item>
+    <item name="italy_verGuidelineChoiceCol1Right" type="dimen" format="float">0.345</item>
+    <item name="italy_verGuidelineImageCol2Left" type="dimen" format="float">0.355</item>
+    <item name="italy_verGuidelineImageCol2Right" type="dimen" format="float">0.455</item>
+    <item name="italy_verGuidelineChoiceCol2Left" type="dimen" format="float">0.455</item>
+    <item name="italy_verGuidelineChoiceCol2Right" type="dimen" format="float">0.555</item>
+    <item name="italy_verGuidelineImageCol3Left" type="dimen" format="float">0.565</item>
+    <item name="italy_verGuidelineImageCol3Right" type="dimen" format="float">0.665</item>
+    <item name="italy_verGuidelineChoiceCol3Left" type="dimen" format="float">0.665</item>
+    <item name="italy_verGuidelineChoiceCol3Right" type="dimen" format="float">0.765</item>
+    <item name="italy_verGuidelineImageCol4Left" type="dimen" format="float">0.775</item>
+    <item name="italy_verGuidelineImageCol4Right" type="dimen" format="float">0.875</item>
+    <item name="italy_verGuidelineChoiceCol4Left" type="dimen" format="float">0.875</item>
+    <item name="italy_verGuidelineChoiceCol4Right" type="dimen" format="float">0.985</item>
+
+    <!-- Mexico Card Guidelines (Landscape 4x5 Grid) -->
+    <!-- Row 1: Cards 01-05 -->
+    <item name="mexico_horGuidelineCard01Top" type="dimen" format="float">0.14</item>
+    <item name="mexico_horGuidelineCard01Bottom" type="dimen" format="float">0.30</item>
+    <item name="mexico_verGuidelineCard01Left" type="dimen" format="float">0.01</item>
+    <item name="mexico_verGuidelineCard01Right" type="dimen" format="float">0.19</item>
+
+    <item name="mexico_horGuidelineCard02Top" type="dimen" format="float">0.14</item>
+    <item name="mexico_horGuidelineCard02Bottom" type="dimen" format="float">0.30</item>
+    <item name="mexico_verGuidelineCard02Left" type="dimen" format="float">0.21</item>
+    <item name="mexico_verGuidelineCard02Right" type="dimen" format="float">0.39</item>
+
+    <item name="mexico_horGuidelineCard03Top" type="dimen" format="float">0.14</item>
+    <item name="mexico_horGuidelineCard03Bottom" type="dimen" format="float">0.30</item>
+    <item name="mexico_verGuidelineCard03Left" type="dimen" format="float">0.41</item>
+    <item name="mexico_verGuidelineCard03Right" type="dimen" format="float">0.59</item>
+
+    <item name="mexico_horGuidelineCard04Top" type="dimen" format="float">0.14</item>
+    <item name="mexico_horGuidelineCard04Bottom" type="dimen" format="float">0.30</item>
+    <item name="mexico_verGuidelineCard04Left" type="dimen" format="float">0.61</item>
+    <item name="mexico_verGuidelineCard04Right" type="dimen" format="float">0.79</item>
+
+    <item name="mexico_horGuidelineCard05Top" type="dimen" format="float">0.14</item>
+    <item name="mexico_horGuidelineCard05Bottom" type="dimen" format="float">0.30</item>
+    <item name="mexico_verGuidelineCard05Left" type="dimen" format="float">0.81</item>
+    <item name="mexico_verGuidelineCard05Right" type="dimen" format="float">0.99</item>
+
+    <!-- Row 2: Cards 06-10 -->
+    <item name="mexico_horGuidelineCard06Top" type="dimen" format="float">0.32</item>
+    <item name="mexico_horGuidelineCard06Bottom" type="dimen" format="float">0.48</item>
+    <item name="mexico_verGuidelineCard06Left" type="dimen" format="float">0.01</item>
+    <item name="mexico_verGuidelineCard06Right" type="dimen" format="float">0.19</item>
+
+    <item name="mexico_horGuidelineCard07Top" type="dimen" format="float">0.32</item>
+    <item name="mexico_horGuidelineCard07Bottom" type="dimen" format="float">0.48</item>
+    <item name="mexico_verGuidelineCard07Left" type="dimen" format="float">0.21</item>
+    <item name="mexico_verGuidelineCard07Right" type="dimen" format="float">0.39</item>
+
+    <item name="mexico_horGuidelineCard08Top" type="dimen" format="float">0.32</item>
+    <item name="mexico_horGuidelineCard08Bottom" type="dimen" format="float">0.48</item>
+    <item name="mexico_verGuidelineCard08Left" type="dimen" format="float">0.41</item>
+    <item name="mexico_verGuidelineCard08Right" type="dimen" format="float">0.59</item>
+
+    <item name="mexico_horGuidelineCard09Top" type="dimen" format="float">0.32</item>
+    <item name="mexico_horGuidelineCard09Bottom" type="dimen" format="float">0.48</item>
+    <item name="mexico_verGuidelineCard09Left" type="dimen" format="float">0.61</item>
+    <item name="mexico_verGuidelineCard09Right" type="dimen" format="float">0.79</item>
+
+    <item name="mexico_horGuidelineCard10Top" type="dimen" format="float">0.32</item>
+    <item name="mexico_horGuidelineCard10Bottom" type="dimen" format="float">0.48</item>
+    <item name="mexico_verGuidelineCard10Left" type="dimen" format="float">0.81</item>
+    <item name="mexico_verGuidelineCard10Right" type="dimen" format="float">0.99</item>
+
+    <!-- Row 3: Cards 11-15 -->
+    <item name="mexico_horGuidelineCard11Top" type="dimen" format="float">0.50</item>
+    <item name="mexico_horGuidelineCard11Bottom" type="dimen" format="float">0.66</item>
+    <item name="mexico_verGuidelineCard11Left" type="dimen" format="float">0.01</item>
+    <item name="mexico_verGuidelineCard11Right" type="dimen" format="float">0.19</item>
+
+    <item name="mexico_horGuidelineCard12Top" type="dimen" format="float">0.50</item>
+    <item name="mexico_horGuidelineCard12Bottom" type="dimen" format="float">0.66</item>
+    <item name="mexico_verGuidelineCard12Left" type="dimen" format="float">0.21</item>
+    <item name="mexico_verGuidelineCard12Right" type="dimen" format="float">0.39</item>
+
+    <item name="mexico_horGuidelineCard13Top" type="dimen" format="float">0.50</item>
+    <item name="mexico_horGuidelineCard13Bottom" type="dimen" format="float">0.66</item>
+    <item name="mexico_verGuidelineCard13Left" type="dimen" format="float">0.41</item>
+    <item name="mexico_verGuidelineCard13Right" type="dimen" format="float">0.59</item>
+
+    <item name="mexico_horGuidelineCard14Top" type="dimen" format="float">0.50</item>
+    <item name="mexico_horGuidelineCard14Bottom" type="dimen" format="float">0.66</item>
+    <item name="mexico_verGuidelineCard14Left" type="dimen" format="float">0.61</item>
+    <item name="mexico_verGuidelineCard14Right" type="dimen" format="float">0.79</item>
+
+    <item name="mexico_horGuidelineCard15Top" type="dimen" format="float">0.50</item>
+    <item name="mexico_horGuidelineCard15Bottom" type="dimen" format="float">0.66</item>
+    <item name="mexico_verGuidelineCard15Left" type="dimen" format="float">0.81</item>
+    <item name="mexico_verGuidelineCard15Right" type="dimen" format="float">0.99</item>
+
+    <!-- Row 4: Cards 16-20 -->
+    <item name="mexico_horGuidelineCard16Top" type="dimen" format="float">0.68</item>
+    <item name="mexico_horGuidelineCard16Bottom" type="dimen" format="float">0.84</item>
+    <item name="mexico_verGuidelineCard16Left" type="dimen" format="float">0.01</item>
+    <item name="mexico_verGuidelineCard16Right" type="dimen" format="float">0.19</item>
+
+    <item name="mexico_horGuidelineCard17Top" type="dimen" format="float">0.68</item>
+    <item name="mexico_horGuidelineCard17Bottom" type="dimen" format="float">0.84</item>
+    <item name="mexico_verGuidelineCard17Left" type="dimen" format="float">0.21</item>
+    <item name="mexico_verGuidelineCard17Right" type="dimen" format="float">0.39</item>
+
+    <item name="mexico_horGuidelineCard18Top" type="dimen" format="float">0.68</item>
+    <item name="mexico_horGuidelineCard18Bottom" type="dimen" format="float">0.84</item>
+    <item name="mexico_verGuidelineCard18Left" type="dimen" format="float">0.41</item>
+    <item name="mexico_verGuidelineCard18Right" type="dimen" format="float">0.59</item>
+
+    <item name="mexico_horGuidelineCard19Top" type="dimen" format="float">0.68</item>
+    <item name="mexico_horGuidelineCard19Bottom" type="dimen" format="float">0.84</item>
+    <item name="mexico_verGuidelineCard19Left" type="dimen" format="float">0.61</item>
+    <item name="mexico_verGuidelineCard19Right" type="dimen" format="float">0.79</item>
+
+    <item name="mexico_horGuidelineCard20Top" type="dimen" format="float">0.68</item>
+    <item name="mexico_horGuidelineCard20Bottom" type="dimen" format="float">0.84</item>
+    <item name="mexico_verGuidelineCard20Left" type="dimen" format="float">0.81</item>
+    <item name="mexico_verGuidelineCard20Right" type="dimen" format="float">0.99</item>
+
+    <!-- Georgia Guidelines (Landscape) -->
+    <item name="georgia_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="georgia_horGuidelineRefBottom" type="dimen" format="float">0.60</item>
+    <item name="georgia_horGuidelineTextTop" type="dimen" format="float">0.62</item>
+    <item name="georgia_horGuidelineTextBottom" type="dimen" format="float">0.85</item>
+    <item name="georgia_horGuidelineRow1Top" type="dimen" format="float">0.16</item>
+    <item name="georgia_horGuidelineRow1Bottom" type="dimen" format="float">0.38</item>
+    <item name="georgia_horGuidelineRow2Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_horGuidelineRow2Bottom" type="dimen" format="float">0.61</item>
+    <item name="georgia_horGuidelineRow3Top" type="dimen" format="float">0.62</item>
+    <item name="georgia_horGuidelineRow3Bottom" type="dimen" format="float">0.84</item>
+    <item name="georgia_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="georgia_verGuidelineRefRight" type="dimen" format="float">0.19</item>
+    <item name="georgia_verGuidelineCol1Left" type="dimen" format="float">0.21</item>
+    <item name="georgia_verGuidelineCol1Right" type="dimen" format="float">0.33</item>
+    <item name="georgia_verGuidelineCol2Left" type="dimen" format="float">0.342</item>
+    <item name="georgia_verGuidelineCol2Right" type="dimen" format="float">0.462</item>
+    <item name="georgia_verGuidelineCol3Left" type="dimen" format="float">0.474</item>
+    <item name="georgia_verGuidelineCol3Right" type="dimen" format="float">0.594</item>
+    <item name="georgia_verGuidelineCol4Left" type="dimen" format="float">0.606</item>
+    <item name="georgia_verGuidelineCol4Right" type="dimen" format="float">0.726</item>
+    <item name="georgia_verGuidelineCol5Left" type="dimen" format="float">0.738</item>
+    <item name="georgia_verGuidelineCol5Right" type="dimen" format="float">0.858</item>
+    <item name="georgia_verGuidelineCol6Left" type="dimen" format="float">0.870</item>
+    <item name="georgia_verGuidelineCol6Right" type="dimen" format="float">0.99</item>
+
+    <!-- Georgia Syllable Guidelines (Landscape 3x6 Grid) -->
+    <item name="georgia_syll_horGuidelineRefTop" type="dimen" format="float">0.16</item>
+    <item name="georgia_syll_horGuidelineRefBottom" type="dimen" format="float">0.60</item>
+    <item name="georgia_syll_horGuidelineTextTop" type="dimen" format="float">0.61</item>
+    <item name="georgia_syll_horGuidelineTextBottom" type="dimen" format="float">0.85</item>
+    <item name="georgia_syll_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="georgia_syll_verGuidelineRefRight" type="dimen" format="float">0.19</item>
+
+    <item name="georgia_syll_horGuidelineTile01Top" type="dimen" format="float">0.16</item>
+    <item name="georgia_syll_horGuidelineTile01Bottom" type="dimen" format="float">0.38</item>
+    <item name="georgia_syll_verGuidelineTile01Left" type="dimen" format="float">0.21</item>
+    <item name="georgia_syll_verGuidelineTile01Right" type="dimen" format="float">0.33</item>
+
+    <item name="georgia_syll_horGuidelineTile02Top" type="dimen" format="float">0.16</item>
+    <item name="georgia_syll_horGuidelineTile02Bottom" type="dimen" format="float">0.38</item>
+    <item name="georgia_syll_verGuidelineTile02Left" type="dimen" format="float">0.342</item>
+    <item name="georgia_syll_verGuidelineTile02Right" type="dimen" format="float">0.462</item>
+
+    <item name="georgia_syll_horGuidelineTile03Top" type="dimen" format="float">0.16</item>
+    <item name="georgia_syll_horGuidelineTile03Bottom" type="dimen" format="float">0.38</item>
+    <item name="georgia_syll_verGuidelineTile03Left" type="dimen" format="float">0.474</item>
+    <item name="georgia_syll_verGuidelineTile03Right" type="dimen" format="float">0.594</item>
+
+    <item name="georgia_syll_horGuidelineTile04Top" type="dimen" format="float">0.16</item>
+    <item name="georgia_syll_horGuidelineTile04Bottom" type="dimen" format="float">0.38</item>
+    <item name="georgia_syll_verGuidelineTile04Left" type="dimen" format="float">0.606</item>
+    <item name="georgia_syll_verGuidelineTile04Right" type="dimen" format="float">0.726</item>
+
+    <item name="georgia_syll_horGuidelineTile05Top" type="dimen" format="float">0.16</item>
+    <item name="georgia_syll_horGuidelineTile05Bottom" type="dimen" format="float">0.38</item>
+    <item name="georgia_syll_verGuidelineTile05Left" type="dimen" format="float">0.738</item>
+    <item name="georgia_syll_verGuidelineTile05Right" type="dimen" format="float">0.858</item>
+
+    <item name="georgia_syll_horGuidelineTile06Top" type="dimen" format="float">0.16</item>
+    <item name="georgia_syll_horGuidelineTile06Bottom" type="dimen" format="float">0.38</item>
+    <item name="georgia_syll_verGuidelineTile06Left" type="dimen" format="float">0.870</item>
+    <item name="georgia_syll_verGuidelineTile06Right" type="dimen" format="float">0.99</item>
+
+    <item name="georgia_syll_horGuidelineTile07Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_syll_horGuidelineTile07Bottom" type="dimen" format="float">0.61</item>
+    <item name="georgia_syll_verGuidelineTile07Left" type="dimen" format="float">0.21</item>
+    <item name="georgia_syll_verGuidelineTile07Right" type="dimen" format="float">0.33</item>
+
+    <item name="georgia_syll_horGuidelineTile08Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_syll_horGuidelineTile08Bottom" type="dimen" format="float">0.61</item>
+    <item name="georgia_syll_verGuidelineTile08Left" type="dimen" format="float">0.342</item>
+    <item name="georgia_syll_verGuidelineTile08Right" type="dimen" format="float">0.462</item>
+
+    <item name="georgia_syll_horGuidelineTile09Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_syll_horGuidelineTile09Bottom" type="dimen" format="float">0.61</item>
+    <item name="georgia_syll_verGuidelineTile09Left" type="dimen" format="float">0.474</item>
+    <item name="georgia_syll_verGuidelineTile09Right" type="dimen" format="float">0.594</item>
+
+    <item name="georgia_syll_horGuidelineTile10Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_syll_horGuidelineTile10Bottom" type="dimen" format="float">0.61</item>
+    <item name="georgia_syll_verGuidelineTile10Left" type="dimen" format="float">0.606</item>
+    <item name="georgia_syll_verGuidelineTile10Right" type="dimen" format="float">0.726</item>
+
+    <item name="georgia_syll_horGuidelineTile11Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_syll_horGuidelineTile11Bottom" type="dimen" format="float">0.61</item>
+    <item name="georgia_syll_verGuidelineTile11Left" type="dimen" format="float">0.738</item>
+    <item name="georgia_syll_verGuidelineTile11Right" type="dimen" format="float">0.858</item>
+
+    <item name="georgia_syll_horGuidelineTile12Top" type="dimen" format="float">0.39</item>
+    <item name="georgia_syll_horGuidelineTile12Bottom" type="dimen" format="float">0.61</item>
+    <item name="georgia_syll_verGuidelineTile12Left" type="dimen" format="float">0.870</item>
+    <item name="georgia_syll_verGuidelineTile12Right" type="dimen" format="float">0.99</item>
+
+    <item name="georgia_syll_horGuidelineTile13Top" type="dimen" format="float">0.62</item>
+    <item name="georgia_syll_horGuidelineTile13Bottom" type="dimen" format="float">0.84</item>
+    <item name="georgia_syll_verGuidelineTile13Left" type="dimen" format="float">0.21</item>
+    <item name="georgia_syll_verGuidelineTile13Right" type="dimen" format="float">0.33</item>
+
+    <item name="georgia_syll_horGuidelineTile14Top" type="dimen" format="float">0.62</item>
+    <item name="georgia_syll_horGuidelineTile14Bottom" type="dimen" format="float">0.84</item>
+    <item name="georgia_syll_verGuidelineTile14Left" type="dimen" format="float">0.342</item>
+    <item name="georgia_syll_verGuidelineTile14Right" type="dimen" format="float">0.462</item>
+
+    <item name="georgia_syll_horGuidelineTile15Top" type="dimen" format="float">0.62</item>
+    <item name="georgia_syll_horGuidelineTile15Bottom" type="dimen" format="float">0.84</item>
+    <item name="georgia_syll_verGuidelineTile15Left" type="dimen" format="float">0.474</item>
+    <item name="georgia_syll_verGuidelineTile15Right" type="dimen" format="float">0.594</item>
+
+    <item name="georgia_syll_horGuidelineTile16Top" type="dimen" format="float">0.62</item>
+    <item name="georgia_syll_horGuidelineTile16Bottom" type="dimen" format="float">0.84</item>
+    <item name="georgia_syll_verGuidelineTile16Left" type="dimen" format="float">0.606</item>
+    <item name="georgia_syll_verGuidelineTile16Right" type="dimen" format="float">0.726</item>
+
+    <item name="georgia_syll_horGuidelineTile17Top" type="dimen" format="float">0.62</item>
+    <item name="georgia_syll_horGuidelineTile17Bottom" type="dimen" format="float">0.84</item>
+    <item name="georgia_syll_verGuidelineTile17Left" type="dimen" format="float">0.738</item>
+    <item name="georgia_syll_verGuidelineTile17Right" type="dimen" format="float">0.858</item>
+
+    <item name="georgia_syll_horGuidelineTile18Top" type="dimen" format="float">0.62</item>
+    <item name="georgia_syll_horGuidelineTile18Bottom" type="dimen" format="float">0.84</item>
+    <item name="georgia_syll_verGuidelineTile18Left" type="dimen" format="float">0.870</item>
+    <item name="georgia_syll_verGuidelineTile18Right" type="dimen" format="float">0.99</item>
+
+    <!-- Colombia Guidelines (Landscape 35-Key Layout) -->
+    <item name="colombia_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="colombia_horGuidelineRefBottom" type="dimen" format="float">0.52</item>
+    <item name="colombia_horGuidelineTextTop" type="dimen" format="float">0.55</item>
+    <item name="colombia_horGuidelineTextBottom" type="dimen" format="float">0.70</item>
+    <item name="colombia_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="colombia_verGuidelineRefRight" type="dimen" format="float">0.35</item>
+    <item name="colombia_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
+    <item name="colombia_verGuidelineTextRight" type="dimen" format="float">0.27</item>
+    <item name="colombia_verGuidelineDeleteLeft" type="dimen" format="float">0.28</item>
+    <item name="colombia_verGuidelineDeleteRight" type="dimen" format="float">0.35</item>
+
+    <item name="colombia_horGuidelineRow1Top" type="dimen" format="float">0.14</item>
+    <item name="colombia_horGuidelineRow1Bottom" type="dimen" format="float">0.265</item>
+    <item name="colombia_horGuidelineRow2Top" type="dimen" format="float">0.28</item>
+    <item name="colombia_horGuidelineRow2Bottom" type="dimen" format="float">0.405</item>
+    <item name="colombia_horGuidelineRow3Top" type="dimen" format="float">0.42</item>
+    <item name="colombia_horGuidelineRow3Bottom" type="dimen" format="float">0.545</item>
+    <item name="colombia_horGuidelineRow4Top" type="dimen" format="float">0.56</item>
+    <item name="colombia_horGuidelineRow4Bottom" type="dimen" format="float">0.685</item>
+    <item name="colombia_horGuidelineRow5Top" type="dimen" format="float">0.70</item>
+    <item name="colombia_horGuidelineRow5Bottom" type="dimen" format="float">0.825</item>
+
+    <item name="colombia_verGuidelineCol1Left" type="dimen" format="float">0.37</item>
+    <item name="colombia_verGuidelineCol1Right" type="dimen" format="float">0.45</item>
+    <item name="colombia_verGuidelineCol2Left" type="dimen" format="float">0.46</item>
+    <item name="colombia_verGuidelineCol2Right" type="dimen" format="float">0.54</item>
+    <item name="colombia_verGuidelineCol3Left" type="dimen" format="float">0.55</item>
+    <item name="colombia_verGuidelineCol3Right" type="dimen" format="float">0.63</item>
+    <item name="colombia_verGuidelineCol4Left" type="dimen" format="float">0.64</item>
+    <item name="colombia_verGuidelineCol4Right" type="dimen" format="float">0.72</item>
+    <item name="colombia_verGuidelineCol5Left" type="dimen" format="float">0.73</item>
+    <item name="colombia_verGuidelineCol5Right" type="dimen" format="float">0.81</item>
+    <item name="colombia_verGuidelineCol6Left" type="dimen" format="float">0.82</item>
+    <item name="colombia_verGuidelineCol6Right" type="dimen" format="float">0.90</item>
+    <item name="colombia_verGuidelineCol7Left" type="dimen" format="float">0.91</item>
+    <item name="colombia_verGuidelineCol7Right" type="dimen" format="float">0.99</item>
+
+    <!-- Colombia Syllables Guidelines (Landscape 3x6 Grid) -->
+    <item name="colombia_syll_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="colombia_syll_horGuidelineRefBottom" type="dimen" format="float">0.52</item>
+    <item name="colombia_syll_horGuidelineTextTop" type="dimen" format="float">0.55</item>
+    <item name="colombia_syll_horGuidelineTextBottom" type="dimen" format="float">0.70</item>
+    <item name="colombia_syll_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="colombia_syll_verGuidelineRefRight" type="dimen" format="float">0.34</item>
+    <item name="colombia_syll_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
+    <item name="colombia_syll_verGuidelineTextRight" type="dimen" format="float">0.27</item>
+    <item name="colombia_syll_verGuidelineDeleteLeft" type="dimen" format="float">0.28</item>
+    <item name="colombia_syll_verGuidelineDeleteRight" type="dimen" format="float">0.34</item>
+
+    <item name="colombia_syll_horGuidelineKey01Top" type="dimen" format="float">0.14</item>
+    <item name="colombia_syll_horGuidelineKey01Bottom" type="dimen" format="float">0.36</item>
+    <item name="colombia_syll_verGuidelineKey01Left" type="dimen" format="float">0.35</item>
+    <item name="colombia_syll_verGuidelineKey01Right" type="dimen" format="float">0.45</item>
+
+    <item name="colombia_syll_horGuidelineKey02Top" type="dimen" format="float">0.14</item>
+    <item name="colombia_syll_horGuidelineKey02Bottom" type="dimen" format="float">0.36</item>
+    <item name="colombia_syll_verGuidelineKey02Left" type="dimen" format="float">0.46</item>
+    <item name="colombia_syll_verGuidelineKey02Right" type="dimen" format="float">0.56</item>
+
+    <item name="colombia_syll_horGuidelineKey03Top" type="dimen" format="float">0.14</item>
+    <item name="colombia_syll_horGuidelineKey03Bottom" type="dimen" format="float">0.36</item>
+    <item name="colombia_syll_verGuidelineKey03Left" type="dimen" format="float">0.57</item>
+    <item name="colombia_syll_verGuidelineKey03Right" type="dimen" format="float">0.67</item>
+
+    <item name="colombia_syll_horGuidelineKey04Top" type="dimen" format="float">0.14</item>
+    <item name="colombia_syll_horGuidelineKey04Bottom" type="dimen" format="float">0.36</item>
+    <item name="colombia_syll_verGuidelineKey04Left" type="dimen" format="float">0.68</item>
+    <item name="colombia_syll_verGuidelineKey04Right" type="dimen" format="float">0.78</item>
+
+    <item name="colombia_syll_horGuidelineKey05Top" type="dimen" format="float">0.14</item>
+    <item name="colombia_syll_horGuidelineKey05Bottom" type="dimen" format="float">0.36</item>
+    <item name="colombia_syll_verGuidelineKey05Left" type="dimen" format="float">0.79</item>
+    <item name="colombia_syll_verGuidelineKey05Right" type="dimen" format="float">0.89</item>
+
+    <item name="colombia_syll_horGuidelineKey06Top" type="dimen" format="float">0.14</item>
+    <item name="colombia_syll_horGuidelineKey06Bottom" type="dimen" format="float">0.36</item>
+    <item name="colombia_syll_verGuidelineKey06Left" type="dimen" format="float">0.90</item>
+    <item name="colombia_syll_verGuidelineKey06Right" type="dimen" format="float">0.99</item>
+
+    <item name="colombia_syll_horGuidelineKey07Top" type="dimen" format="float">0.385</item>
+    <item name="colombia_syll_horGuidelineKey07Bottom" type="dimen" format="float">0.605</item>
+    <item name="colombia_syll_verGuidelineKey07Left" type="dimen" format="float">0.35</item>
+    <item name="colombia_syll_verGuidelineKey07Right" type="dimen" format="float">0.45</item>
+
+    <item name="colombia_syll_horGuidelineKey08Top" type="dimen" format="float">0.385</item>
+    <item name="colombia_syll_horGuidelineKey08Bottom" type="dimen" format="float">0.605</item>
+    <item name="colombia_syll_verGuidelineKey08Left" type="dimen" format="float">0.46</item>
+    <item name="colombia_syll_verGuidelineKey08Right" type="dimen" format="float">0.56</item>
+
+    <item name="colombia_syll_horGuidelineKey09Top" type="dimen" format="float">0.385</item>
+    <item name="colombia_syll_horGuidelineKey09Bottom" type="dimen" format="float">0.605</item>
+    <item name="colombia_syll_verGuidelineKey09Left" type="dimen" format="float">0.57</item>
+    <item name="colombia_syll_verGuidelineKey09Right" type="dimen" format="float">0.67</item>
+
+    <item name="colombia_syll_horGuidelineKey10Top" type="dimen" format="float">0.385</item>
+    <item name="colombia_syll_horGuidelineKey10Bottom" type="dimen" format="float">0.605</item>
+    <item name="colombia_syll_verGuidelineKey10Left" type="dimen" format="float">0.68</item>
+    <item name="colombia_syll_verGuidelineKey10Right" type="dimen" format="float">0.78</item>
+
+    <item name="colombia_syll_horGuidelineKey11Top" type="dimen" format="float">0.385</item>
+    <item name="colombia_syll_horGuidelineKey11Bottom" type="dimen" format="float">0.605</item>
+    <item name="colombia_syll_verGuidelineKey11Left" type="dimen" format="float">0.79</item>
+    <item name="colombia_syll_verGuidelineKey11Right" type="dimen" format="float">0.89</item>
+
+    <item name="colombia_syll_horGuidelineKey12Top" type="dimen" format="float">0.385</item>
+    <item name="colombia_syll_horGuidelineKey12Bottom" type="dimen" format="float">0.605</item>
+    <item name="colombia_syll_verGuidelineKey12Left" type="dimen" format="float">0.90</item>
+    <item name="colombia_syll_verGuidelineKey12Right" type="dimen" format="float">0.99</item>
+
+    <item name="colombia_syll_horGuidelineKey13Top" type="dimen" format="float">0.63</item>
+    <item name="colombia_syll_horGuidelineKey13Bottom" type="dimen" format="float">0.85</item>
+    <item name="colombia_syll_verGuidelineKey13Left" type="dimen" format="float">0.35</item>
+    <item name="colombia_syll_verGuidelineKey13Right" type="dimen" format="float">0.45</item>
+
+    <item name="colombia_syll_horGuidelineKey14Top" type="dimen" format="float">0.63</item>
+    <item name="colombia_syll_horGuidelineKey14Bottom" type="dimen" format="float">0.85</item>
+    <item name="colombia_syll_verGuidelineKey14Left" type="dimen" format="float">0.46</item>
+    <item name="colombia_syll_verGuidelineKey14Right" type="dimen" format="float">0.56</item>
+
+    <item name="colombia_syll_horGuidelineKey15Top" type="dimen" format="float">0.63</item>
+    <item name="colombia_syll_horGuidelineKey15Bottom" type="dimen" format="float">0.85</item>
+    <item name="colombia_syll_verGuidelineKey15Left" type="dimen" format="float">0.57</item>
+    <item name="colombia_syll_verGuidelineKey15Right" type="dimen" format="float">0.67</item>
+
+    <item name="colombia_syll_horGuidelineKey16Top" type="dimen" format="float">0.63</item>
+    <item name="colombia_syll_horGuidelineKey16Bottom" type="dimen" format="float">0.85</item>
+    <item name="colombia_syll_verGuidelineKey16Left" type="dimen" format="float">0.68</item>
+    <item name="colombia_syll_verGuidelineKey16Right" type="dimen" format="float">0.78</item>
+
+    <item name="colombia_syll_horGuidelineKey17Top" type="dimen" format="float">0.63</item>
+    <item name="colombia_syll_horGuidelineKey17Bottom" type="dimen" format="float">0.85</item>
+    <item name="colombia_syll_verGuidelineKey17Left" type="dimen" format="float">0.79</item>
+    <item name="colombia_syll_verGuidelineKey17Right" type="dimen" format="float">0.89</item>
+
+    <item name="colombia_syll_horGuidelineKey18Top" type="dimen" format="float">0.63</item>
+    <item name="colombia_syll_horGuidelineKey18Bottom" type="dimen" format="float">0.85</item>
+    <item name="colombia_syll_verGuidelineKey18Left" type="dimen" format="float">0.90</item>
+    <item name="colombia_syll_verGuidelineKey18Right" type="dimen" format="float">0.99</item>
+
+    <!-- Ecuador Guidelines (Landscape) -->
+    <item name="ecuador_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="ecuador_horGuidelineRefBottom" type="dimen" format="float">0.52</item>
+    <item name="ecuador_horGuidelineTextTop" type="dimen" format="float">0.55</item>
+    <item name="ecuador_horGuidelineTextBottom" type="dimen" format="float">0.85</item>
+    <item name="ecuador_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="ecuador_verGuidelineRefRight" type="dimen" format="float">0.28</item>
+    <item name="ecuador_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
+    <item name="ecuador_verGuidelineTextRight" type="dimen" format="float">0.28</item>
+
+    <!-- Myanmar Guidelines (Landscape 7x7 Grid with 3x3 Word Image Table) -->
+    <item name="myanmar_horGuidelineTextTop" type="dimen" format="float">0.14</item>
+    <item name="myanmar_horGuidelineTextBottom" type="dimen" format="float">0.37</item>
+    <item name="myanmar_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
+    <item name="myanmar_verGuidelineTextRight" type="dimen" format="float">0.28</item>
+
+    <!-- Word Image Row 1 (Img 01, 02, 03) -->
+    <item name="myanmar_horGuidelineImg1Top" type="dimen" format="float">0.38</item>
+    <item name="myanmar_horGuidelineImg1Bottom" type="dimen" format="float">0.53</item>
+    <item name="myanmar_horGuidelineImg2Top" type="dimen" format="float">0.38</item>
+    <item name="myanmar_horGuidelineImg2Bottom" type="dimen" format="float">0.53</item>
+    <item name="myanmar_horGuidelineImg3Top" type="dimen" format="float">0.38</item>
+    <item name="myanmar_horGuidelineImg3Bottom" type="dimen" format="float">0.53</item>
+
+    <!-- Word Image Row 2 (Img 04, 05, 06) -->
+    <item name="myanmar_horGuidelineImg4Top" type="dimen" format="float">0.54</item>
+    <item name="myanmar_horGuidelineImg4Bottom" type="dimen" format="float">0.69</item>
+    <item name="myanmar_horGuidelineImg5Top" type="dimen" format="float">0.54</item>
+    <item name="myanmar_horGuidelineImg5Bottom" type="dimen" format="float">0.69</item>
+    <item name="myanmar_horGuidelineImg6Top" type="dimen" format="float">0.54</item>
+    <item name="myanmar_horGuidelineImg6Bottom" type="dimen" format="float">0.69</item>
+
+    <!-- Word Image Row 3 (Img 07) -->
+    <item name="myanmar_horGuidelineImg7Top" type="dimen" format="float">0.70</item>
+    <item name="myanmar_horGuidelineImg7Bottom" type="dimen" format="float">0.85</item>
+
+    <!-- Word Image Cols 1, 2, 3 -->
+    <item name="myanmar_verGuidelineImg1Left" type="dimen" format="float">0.01</item>
+    <item name="myanmar_verGuidelineImg1Right" type="dimen" format="float">0.09</item>
+    <item name="myanmar_verGuidelineImg2Left" type="dimen" format="float">0.10</item>
+    <item name="myanmar_verGuidelineImg2Right" type="dimen" format="float">0.18</item>
+    <item name="myanmar_verGuidelineImg3Left" type="dimen" format="float">0.19</item>
+    <item name="myanmar_verGuidelineImg3Right" type="dimen" format="float">0.28</item>
+    <item name="myanmar_verGuidelineImg4Left" type="dimen" format="float">0.01</item>
+    <item name="myanmar_verGuidelineImg4Right" type="dimen" format="float">0.09</item>
+    <item name="myanmar_verGuidelineImg5Left" type="dimen" format="float">0.10</item>
+    <item name="myanmar_verGuidelineImg5Right" type="dimen" format="float">0.18</item>
+    <item name="myanmar_verGuidelineImg6Left" type="dimen" format="float">0.19</item>
+    <item name="myanmar_verGuidelineImg6Right" type="dimen" format="float">0.28</item>
+    <item name="myanmar_verGuidelineImg7Left" type="dimen" format="float">0.01</item>
+    <item name="myanmar_verGuidelineImg7Right" type="dimen" format="float">0.09</item>
+
+    <item name="myanmar_horGuidelineRow1Top" type="dimen" format="float">0.140</item>
+    <item name="myanmar_horGuidelineRow1Bottom" type="dimen" format="float">0.238</item>
+    <item name="myanmar_horGuidelineRow2Top" type="dimen" format="float">0.242</item>
+    <item name="myanmar_horGuidelineRow2Bottom" type="dimen" format="float">0.340</item>
+    <item name="myanmar_horGuidelineRow3Top" type="dimen" format="float">0.344</item>
+    <item name="myanmar_horGuidelineRow3Bottom" type="dimen" format="float">0.442</item>
+    <item name="myanmar_horGuidelineRow4Top" type="dimen" format="float">0.446</item>
+    <item name="myanmar_horGuidelineRow4Bottom" type="dimen" format="float">0.544</item>
+    <item name="myanmar_horGuidelineRow5Top" type="dimen" format="float">0.548</item>
+    <item name="myanmar_horGuidelineRow5Bottom" type="dimen" format="float">0.646</item>
+    <item name="myanmar_horGuidelineRow6Top" type="dimen" format="float">0.650</item>
+    <item name="myanmar_horGuidelineRow6Bottom" type="dimen" format="float">0.748</item>
+    <item name="myanmar_horGuidelineRow7Top" type="dimen" format="float">0.752</item>
+    <item name="myanmar_horGuidelineRow7Bottom" type="dimen" format="float">0.850</item>
+
+    <item name="myanmar_verGuidelineCol1Left" type="dimen" format="float">0.30</item>
+    <item name="myanmar_verGuidelineCol1Right" type="dimen" format="float">0.39</item>
+    <item name="myanmar_verGuidelineCol2Left" type="dimen" format="float">0.40</item>
+    <item name="myanmar_verGuidelineCol2Right" type="dimen" format="float">0.49</item>
+    <item name="myanmar_verGuidelineCol3Left" type="dimen" format="float">0.50</item>
+    <item name="myanmar_verGuidelineCol3Right" type="dimen" format="float">0.59</item>
+    <item name="myanmar_verGuidelineCol4Left" type="dimen" format="float">0.60</item>
+    <item name="myanmar_verGuidelineCol4Right" type="dimen" format="float">0.69</item>
+    <item name="myanmar_verGuidelineCol5Left" type="dimen" format="float">0.70</item>
+    <item name="myanmar_verGuidelineCol5Right" type="dimen" format="float">0.79</item>
+    <item name="myanmar_verGuidelineCol6Left" type="dimen" format="float">0.80</item>
+    <item name="myanmar_verGuidelineCol6Right" type="dimen" format="float">0.89</item>
+    <item name="myanmar_verGuidelineCol7Left" type="dimen" format="float">0.90</item>
+    <item name="myanmar_verGuidelineCol7Right" type="dimen" format="float">0.99</item>
+
+    <!-- United States Guidelines (Landscape) -->
+    <item name="us_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="us_horGuidelineRefBottom" type="dimen" format="float">0.52</item>
+    <item name="us_horGuidelineTextTop" type="dimen" format="float">0.55</item>
+    <item name="us_horGuidelineTextBottom" type="dimen" format="float">0.85</item>
+    <item name="us_horGuidelineRow1Top" type="dimen" format="float">0.14</item>
+    <item name="us_horGuidelineRow1Bottom" type="dimen" format="float">0.48</item>
+    <item name="us_horGuidelineRow2Top" type="dimen" format="float">0.51</item>
+    <item name="us_horGuidelineRow2Bottom" type="dimen" format="float">0.85</item>
+
+    <item name="us_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="us_verGuidelineRefRight" type="dimen" format="float">0.28</item>
+    <item name="us_verGuidelineTextLeft" type="dimen" format="float">0.01</item>
+    <item name="us_verGuidelineTextRight" type="dimen" format="float">0.28</item>
+
+    <!-- CL1 Columns (5 cols) -->
+    <item name="us_cl1_verGuidelineCol1Left" type="dimen" format="float">0.30</item>
+    <item name="us_cl1_verGuidelineCol1Right" type="dimen" format="float">0.425</item>
+    <item name="us_cl1_verGuidelineCol2Left" type="dimen" format="float">0.44</item>
+    <item name="us_cl1_verGuidelineCol2Right" type="dimen" format="float">0.565</item>
+    <item name="us_cl1_verGuidelineCol3Left" type="dimen" format="float">0.58</item>
+    <item name="us_cl1_verGuidelineCol3Right" type="dimen" format="float">0.705</item>
+    <item name="us_cl1_verGuidelineCol4Left" type="dimen" format="float">0.72</item>
+    <item name="us_cl1_verGuidelineCol4Right" type="dimen" format="float">0.845</item>
+    <item name="us_cl1_verGuidelineCol5Left" type="dimen" format="float">0.86</item>
+    <item name="us_cl1_verGuidelineCol5Right" type="dimen" format="float">0.985</item>
+
+    <!-- CL2 Columns (7 cols) -->
+    <item name="us_cl2_verGuidelineCol1Left" type="dimen" format="float">0.30</item>
+    <item name="us_cl2_verGuidelineCol1Right" type="dimen" format="float">0.388</item>
+    <item name="us_cl2_verGuidelineCol2Left" type="dimen" format="float">0.398</item>
+    <item name="us_cl2_verGuidelineCol2Right" type="dimen" format="float">0.486</item>
+    <item name="us_cl2_verGuidelineCol3Left" type="dimen" format="float">0.496</item>
+    <item name="us_cl2_verGuidelineCol3Right" type="dimen" format="float">0.584</item>
+    <item name="us_cl2_verGuidelineCol4Left" type="dimen" format="float">0.594</item>
+    <item name="us_cl2_verGuidelineCol4Right" type="dimen" format="float">0.682</item>
+    <item name="us_cl2_verGuidelineCol5Left" type="dimen" format="float">0.692</item>
+    <item name="us_cl2_verGuidelineCol5Right" type="dimen" format="float">0.780</item>
+    <item name="us_cl2_verGuidelineCol6Left" type="dimen" format="float">0.790</item>
+    <item name="us_cl2_verGuidelineCol6Right" type="dimen" format="float">0.878</item>
+    <item name="us_cl2_verGuidelineCol7Left" type="dimen" format="float">0.888</item>
+    <item name="us_cl2_verGuidelineCol7Right" type="dimen" format="float">0.985</item>
+
+    <!-- CL3 Columns (9 cols) -->
+    <item name="us_cl3_verGuidelineCol1Left" type="dimen" format="float">0.300</item>
+    <item name="us_cl3_verGuidelineCol1Right" type="dimen" format="float">0.367</item>
+    <item name="us_cl3_verGuidelineCol2Left" type="dimen" format="float">0.375</item>
+    <item name="us_cl3_verGuidelineCol2Right" type="dimen" format="float">0.442</item>
+    <item name="us_cl3_verGuidelineCol3Left" type="dimen" format="float">0.450</item>
+    <item name="us_cl3_verGuidelineCol3Right" type="dimen" format="float">0.517</item>
+    <item name="us_cl3_verGuidelineCol4Left" type="dimen" format="float">0.525</item>
+    <item name="us_cl3_verGuidelineCol4Right" type="dimen" format="float">0.592</item>
+    <item name="us_cl3_verGuidelineCol5Left" type="dimen" format="float">0.600</item>
+    <item name="us_cl3_verGuidelineCol5Right" type="dimen" format="float">0.667</item>
+    <item name="us_cl3_verGuidelineCol6Left" type="dimen" format="float">0.675</item>
+    <item name="us_cl3_verGuidelineCol6Right" type="dimen" format="float">0.742</item>
+    <item name="us_cl3_verGuidelineCol7Left" type="dimen" format="float">0.750</item>
+    <item name="us_cl3_verGuidelineCol7Right" type="dimen" format="float">0.817</item>
+    <item name="us_cl3_verGuidelineCol8Left" type="dimen" format="float">0.825</item>
+    <item name="us_cl3_verGuidelineCol8Right" type="dimen" format="float">0.892</item>
+    <item name="us_cl3_verGuidelineCol9Left" type="dimen" format="float">0.900</item>
+    <item name="us_cl3_verGuidelineCol9Right" type="dimen" format="float">0.985</item>
+
+    <!-- Japan Guidelines (Landscape) -->
+    <item name="japan_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="japan_horGuidelineRefBottom" type="dimen" format="float">0.45</item>
+    <item name="japan_horGuidelineTextTop" type="dimen" format="float">0.14</item>
+    <item name="japan_horGuidelineTextBottom" type="dimen" format="float">0.45</item>
+    <item name="japan_horGuidelineTileTop" type="dimen" format="float">0.48</item>
+    <item name="japan_horGuidelineTileBottom" type="dimen" format="float">0.85</item>
+
+    <item name="japan_verGuidelineRefLeft" type="dimen" format="float">0.01</item>
+    <item name="japan_verGuidelineRefRight" type="dimen" format="float">0.28</item>
+    <item name="japan_verGuidelineTextLeft" type="dimen" format="float">0.30</item>
+    <item name="japan_verGuidelineTextRight" type="dimen" format="float">0.99</item>
+    <item name="japan_verGuidelineTileLeft" type="dimen" format="float">0.01</item>
+    <item name="japan_verGuidelineTileRight" type="dimen" format="float">0.99</item>
+
+    <!-- Chile Guidelines (Landscape) -->
+    <item name="chile_horGuidelineGuessTop" type="dimen" format="float">0.14</item>
+    <item name="chile_horGuidelineGuessBottom" type="dimen" format="float">0.85</item>
+    <item name="chile_verGuidelineGuessLeft" type="dimen" format="float">0.01</item>
+    <item name="chile_verGuidelineGuessRight" type="dimen" format="float">0.48</item>
+
+    <item name="chile_horGuidelineKeyTop" type="dimen" format="float">0.14</item>
+    <item name="chile_horGuidelineKeyBottom" type="dimen" format="float">0.85</item>
+    <item name="chile_verGuidelineKeyLeft" type="dimen" format="float">0.51</item>
+    <item name="chile_verGuidelineKeyRight" type="dimen" format="float">0.99</item>
+
+</resources>

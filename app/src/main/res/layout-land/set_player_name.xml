@@ -1,0 +1,1192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/setPlayerNameCL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".SetPlayerName">
+
+    <!-- Guidelines for Landscape Layout -->
+    <!-- Top Status / Options Guidelines -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineHTop0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.01" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineHTop1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.12" />
+
+    <!-- Left Panel Guidelines -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.35" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.37" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.55" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.58" />
+
+    <!-- Keyboard Rows Guidelines (5 Rows across 0.14 to 0.825) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.14" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.265" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.28" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.405" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.42" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.545" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.56" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.685" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.70" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.825" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.87" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.99" />
+
+
+    <!-- Left Panel Vertical Guidelines (0.01 to 0.28) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVLeftStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.01" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVLeftEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.28" />
+
+    <!-- Right Keyboard Columns Guidelines (7 Columns across 0.30 to 0.985) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.30" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.388" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.398" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.486" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.496" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.584" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.594" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.682" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.692" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.780" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.790" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.878" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.888" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.985" />
+
+    <!-- Left Panel Elements (Left 30%) -->
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="avatar"
+        android:rotationY="0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineVLeftEnd"
+        app:layout_constraintStart_toStartOf="@+id/guidelineVLeftStart"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:srcCompat="@drawable/zz_alphatileslogo" />
+
+    <EditText
+        android:id="@+id/avatarName"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center"
+        android:inputType="textNoSuggestions"
+        android:maxLines="1"
+        android:padding="2dp"
+        android:text="Name your avatar"
+        android:textColor="#FFFFFF"
+        app:autoSizeMaxTextSize="35sp"
+        app:autoSizeMinTextSize="10sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineVLeftEnd"
+        app:layout_constraintStart_toStartOf="@+id/guidelineVLeftStart"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH3" />
+
+    <ImageView
+        android:id="@+id/deleteImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/backspace"
+        android:onClick="deleteLastKeyedLetter"
+        android:rotationY="0"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
+        app:layout_constraintEnd_toStartOf="@+id/acceptName"
+        app:layout_constraintStart_toStartOf="@+id/guidelineVLeftStart"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH13"
+        app:srcCompat="@drawable/zz_deletetext" />
+
+    <ImageView
+        android:id="@+id/acceptName"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/backspace"
+        android:onClick="acceptName"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineVLeftEnd"
+        app:layout_constraintStart_toEndOf="@+id/deleteImage"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH13"
+        app:srcCompat="@drawable/zz_complete" />
+
+    <!-- Top Status / Options Elements (Right side top) -->
+    <ImageView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/playAudioInstructions"
+        android:onClick="playAudioInstructionsPlayerName"
+        android:rotationY="0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH18"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/gamesHomeImage"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH17"
+        app:srcCompat="@drawable/zz_instructions" />
+
+    <ImageView
+        android:id="@+id/gamesHomeImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/playerAvatar"
+        android:onClick="acceptName"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH18"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV13"
+        app:layout_constraintStart_toEndOf="@+id/instructions"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH17"
+        app:srcCompat="@drawable/zz_games_home" />
+
+    <!-- Keyboard Keys (Right 70%: 5 Rows x 7 Columns) -->
+    <!-- Row 1 -->
+    <TextView
+        android:id="@+id/key01"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:rotationX="0"
+        android:rotationY="0"
+        android:tag="1"
+        android:text="@string/keyboard01"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key02"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="2"
+        android:text="@string/keyboard02"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key03"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F44336"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="3"
+        android:text="@string/keyboard03"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH8"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key04"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4CAF50"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="4"
+        android:text="@string/keyboard04"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH8"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key05"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E91E63"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="5"
+        android:text="@string/keyboard05"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH8"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV8"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key06"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="6"
+        android:text="@string/keyboard06"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH8"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV11"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key07"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:scrollbars="vertical"
+        android:tag="7"
+        android:text="@string/keyboard07"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH8"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV13"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV12"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <!-- Row 2 -->
+    <TextView
+        android:id="@+id/key08"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F44336"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="8"
+        android:text="@string/keyboard08"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key09"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4CAF50"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="9"
+        android:text="@string/keyboard09"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key10"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E91E63"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="10"
+        android:text="@string/keyboard10"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH10"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key11"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="11"
+        android:text="@string/keyboard11"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH10"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key12"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="12"
+        android:text="@string/keyboard12"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH10"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV8"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key13"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F44336"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="13"
+        android:text="@string/keyboard13"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH10"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV11"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key14"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4CAF50"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="14"
+        android:text="@string/keyboard14"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH10"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV13"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV12"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <!-- Row 3 -->
+    <TextView
+        android:id="@+id/key15"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E91E63"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="15"
+        android:text="@string/keyboard15"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH12"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH11"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key16"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="16"
+        android:text="@string/keyboard16"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH12"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH11"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key17"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="17"
+        android:text="@string/keyboard17"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH12"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH11"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key18"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F44336"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="18"
+        android:text="@string/keyboard18"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH12"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH11"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key19"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4CAF50"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="19"
+        android:text="@string/keyboard19"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH12"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV8"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH11"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key20"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E91E63"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="20"
+        android:text="@string/keyboard20"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH12"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV11"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH11"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key21"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="21"
+        android:text="@string/keyboard21"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH12"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV13"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV12"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH11"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <!-- Row 4 -->
+    <TextView
+        android:id="@+id/key22"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="22"
+        android:text="@string/keyboard22"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH14"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH13"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key23"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F44336"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="23"
+        android:text="@string/keyboard23"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH14"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH13"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key24"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4CAF50"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="24"
+        android:text="@string/keyboard24"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH13"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key25"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E91E63"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="25"
+        android:text="@string/keyboard25"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH13"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key26"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="26"
+        android:text="@string/keyboard26"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV8"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH13"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key27"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="27"
+        android:text="@string/keyboard27"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV11"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH13"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key28"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F44336"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="28"
+        android:text="@string/keyboard28"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH14"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV13"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV12"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH13"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <!-- Row 5 -->
+    <TextView
+        android:id="@+id/key29"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4CAF50"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="29"
+        android:text="@string/keyboard29"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key30"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E91E63"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="30"
+        android:text="@string/keyboard30"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key31"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="31"
+        android:text="@string/keyboard31"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key32"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="32"
+        android:text="@string/keyboard32"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key33"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F44336"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="33"
+        android:text="@string/keyboard33"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV8"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key34"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4CAF50"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="34"
+        android:text="@string/keyboard34"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV11"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV10"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/key35"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E91E63"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="35"
+        android:text="@string/keyboard35"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH16"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV13"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV12"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH15"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Html;
@@ -11,6 +12,7 @@ import android.text.util.Linkify;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.core.text.util.LinkifyCompat;
 import android.os.Build;
 
@@ -26,6 +28,37 @@ public class About extends AppCompatActivity {
     String hidePrivacyPolicySetting = Start.settingsList.find("Hide privacy policy");
     Boolean hideSILlogo;
     Boolean hidePrivacyPolicy;
+
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineLogoBottom, R.dimen.about_horGuidelineLogoBottom},
+            {R.id.horGuidelineGameNameTop, R.dimen.about_horGuidelineGameNameTop},
+            {R.id.horGuidelineGameNameBottom, R.dimen.about_horGuidelineGameNameBottom},
+            {R.id.horGuidelineLanguagesCountryTop, R.dimen.about_horGuidelineLanguagesCountryTop},
+            {R.id.horGuidelineLanguagesCountryBottom, R.dimen.about_horGuidelineLanguagesCountryBottom},
+            {R.id.horGuidelineCreditsTop, R.dimen.about_horGuidelineCreditsTop},
+            {R.id.horGuidelineCreditsBottom, R.dimen.about_horGuidelineCreditsBottom},
+            {R.id.horGuidelineCreditsBottomIfLang2, R.dimen.about_horGuidelineCreditsBottomIfLang2},
+            {R.id.horGuidelineCredits2Top, R.dimen.about_horGuidelineCredits2Top},
+            {R.id.horGuidelineEmailTop, R.dimen.about_horGuidelineEmailTop},
+            {R.id.horGuidelineEmailBottom, R.dimen.about_horGuidelineEmailBottom},
+            {R.id.horGuidelinePrivacyTop, R.dimen.about_horGuidelinePrivacyTop},
+            {R.id.horGuidelinePrivacyBottom, R.dimen.about_horGuidelinePrivacyBottom},
+            {R.id.horGuidelineVersionTop, R.dimen.about_horGuidelineVersionTop},
+            {R.id.horGuidelineVersionBottom, R.dimen.about_horGuidelineVersionBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+            {R.id.verGuidelineMainLeft, R.dimen.about_verGuidelineMainLeft},
+            {R.id.verGuidelineMainMiddleLeft, R.dimen.about_verGuidelineMainMiddleLeft},
+            {R.id.verGuidelineMainMiddleRight, R.dimen.about_verGuidelineMainMiddleRight},
+            {R.id.verGuidelineMainRight, R.dimen.about_verGuidelineMainRight}
+    };
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +77,8 @@ public class About extends AppCompatActivity {
             finish();
             return;
         }
+
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.aboutCL);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -77,7 +112,7 @@ public class About extends AppCompatActivity {
             ConstraintLayout constraintLayout = findViewById(R.id.aboutCL);
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone(constraintLayout);
-            constraintSet.connect(photoAudioCredits.getId(),ConstraintSet.BOTTOM,R.id.guidelineH8,ConstraintSet.TOP,0);
+            constraintSet.connect(photoAudioCredits.getId(),ConstraintSet.BOTTOM,R.id.horGuidelineCreditsBottomIfLang2,ConstraintSet.TOP,0);
 //            constraintSet.connect(R.id.guidelineH7,ConstraintSet.TOP,R.id.guidelineH8,ConstraintSet.BOTTOM,0);
             constraintSet.applyTo(constraintLayout);
         }
@@ -154,6 +189,11 @@ public class About extends AppCompatActivity {
             constraintSet.applyTo(constraintLayout);
         }
 
+    }
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
     }
 
     public void goBackToEarth(View view) {
