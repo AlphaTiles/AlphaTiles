@@ -1,11 +1,14 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,6 +64,171 @@ public class Georgia extends GameActivity {
             R.id.tile11, R.id.tile12, R.id.tile13, R.id.tile14, R.id.tile15, R.id.tile16, R.id.tile17, R.id.tile18
     };
 
+    private static final int[][] MAPPINGS_GEORGIA = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.georgia_horGuidelineRefTop, R.dimen.georgia_horGuidelineRefTop},
+            {R.id.georgia_horGuidelineRefBottom, R.dimen.georgia_horGuidelineRefBottom},
+            {R.id.georgia_horGuidelineTextTop, R.dimen.georgia_horGuidelineTextTop},
+            {R.id.georgia_horGuidelineTextBottom, R.dimen.georgia_horGuidelineTextBottom},
+            {R.id.georgia_horGuidelineRow1Top, R.dimen.georgia_horGuidelineRow1Top},
+            {R.id.georgia_horGuidelineRow1Bottom, R.dimen.georgia_horGuidelineRow1Bottom},
+            {R.id.georgia_horGuidelineRow2Top, R.dimen.georgia_horGuidelineRow2Top},
+            {R.id.georgia_horGuidelineRow2Bottom, R.dimen.georgia_horGuidelineRow2Bottom},
+            {R.id.georgia_horGuidelineRow3Top, R.dimen.georgia_horGuidelineRow3Top},
+            {R.id.georgia_horGuidelineRow3Bottom, R.dimen.georgia_horGuidelineRow3Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.georgia_verGuidelineRefLeft, R.dimen.georgia_verGuidelineRefLeft},
+            {R.id.georgia_verGuidelineRefRight, R.dimen.georgia_verGuidelineRefRight},
+            {R.id.georgia_verGuidelineCol1Left, R.dimen.georgia_verGuidelineCol1Left},
+            {R.id.georgia_verGuidelineCol1Right, R.dimen.georgia_verGuidelineCol1Right},
+            {R.id.georgia_verGuidelineCol2Left, R.dimen.georgia_verGuidelineCol2Left},
+            {R.id.georgia_verGuidelineCol2Right, R.dimen.georgia_verGuidelineCol2Right},
+            {R.id.georgia_verGuidelineCol3Left, R.dimen.georgia_verGuidelineCol3Left},
+            {R.id.georgia_verGuidelineCol3Right, R.dimen.georgia_verGuidelineCol3Right},
+            {R.id.georgia_verGuidelineCol4Left, R.dimen.georgia_verGuidelineCol4Left},
+            {R.id.georgia_verGuidelineCol4Right, R.dimen.georgia_verGuidelineCol4Right},
+            {R.id.georgia_verGuidelineCol5Left, R.dimen.georgia_verGuidelineCol5Left},
+            {R.id.georgia_verGuidelineCol5Right, R.dimen.georgia_verGuidelineCol5Right},
+            {R.id.georgia_verGuidelineCol6Left, R.dimen.georgia_verGuidelineCol6Left},
+            {R.id.georgia_verGuidelineCol6Right, R.dimen.georgia_verGuidelineCol6Right}
+    };
+
+    private static final int[][] MAPPINGS_GEORGIA_SYLL = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.georgia_syll_horGuidelineRefTop, R.dimen.georgia_syll_horGuidelineRefTop},
+            {R.id.georgia_syll_horGuidelineRefBottom, R.dimen.georgia_syll_horGuidelineRefBottom},
+            {R.id.georgia_syll_horGuidelineTextTop, R.dimen.georgia_syll_horGuidelineTextTop},
+            {R.id.georgia_syll_horGuidelineTextBottom, R.dimen.georgia_syll_horGuidelineTextBottom},
+
+            {R.id.georgia_syll_horGuidelineTile01Top, R.dimen.georgia_syll_horGuidelineTile01Top},
+            {R.id.georgia_syll_horGuidelineTile01Bottom, R.dimen.georgia_syll_horGuidelineTile01Bottom},
+            {R.id.georgia_syll_horGuidelineTile02Top, R.dimen.georgia_syll_horGuidelineTile02Top},
+            {R.id.georgia_syll_horGuidelineTile02Bottom, R.dimen.georgia_syll_horGuidelineTile02Bottom},
+            {R.id.georgia_syll_horGuidelineTile03Top, R.dimen.georgia_syll_horGuidelineTile03Top},
+            {R.id.georgia_syll_horGuidelineTile03Bottom, R.dimen.georgia_syll_horGuidelineTile03Bottom},
+            {R.id.georgia_syll_horGuidelineTile04Top, R.dimen.georgia_syll_horGuidelineTile04Top},
+            {R.id.georgia_syll_horGuidelineTile04Bottom, R.dimen.georgia_syll_horGuidelineTile04Bottom},
+            {R.id.georgia_syll_horGuidelineTile05Top, R.dimen.georgia_syll_horGuidelineTile05Top},
+            {R.id.georgia_syll_horGuidelineTile05Bottom, R.dimen.georgia_syll_horGuidelineTile05Bottom},
+            {R.id.georgia_syll_horGuidelineTile06Top, R.dimen.georgia_syll_horGuidelineTile06Top},
+            {R.id.georgia_syll_horGuidelineTile06Bottom, R.dimen.georgia_syll_horGuidelineTile06Bottom},
+            {R.id.georgia_syll_horGuidelineTile07Top, R.dimen.georgia_syll_horGuidelineTile07Top},
+            {R.id.georgia_syll_horGuidelineTile07Bottom, R.dimen.georgia_syll_horGuidelineTile07Bottom},
+            {R.id.georgia_syll_horGuidelineTile08Top, R.dimen.georgia_syll_horGuidelineTile08Top},
+            {R.id.georgia_syll_horGuidelineTile08Bottom, R.dimen.georgia_syll_horGuidelineTile08Bottom},
+            {R.id.georgia_syll_horGuidelineTile09Top, R.dimen.georgia_syll_horGuidelineTile09Top},
+            {R.id.georgia_syll_horGuidelineTile09Bottom, R.dimen.georgia_syll_horGuidelineTile09Bottom},
+            {R.id.georgia_syll_horGuidelineTile10Top, R.dimen.georgia_syll_horGuidelineTile10Top},
+            {R.id.georgia_syll_horGuidelineTile10Bottom, R.dimen.georgia_syll_horGuidelineTile10Bottom},
+            {R.id.georgia_syll_horGuidelineTile11Top, R.dimen.georgia_syll_horGuidelineTile11Top},
+            {R.id.georgia_syll_horGuidelineTile11Bottom, R.dimen.georgia_syll_horGuidelineTile11Bottom},
+            {R.id.georgia_syll_horGuidelineTile12Top, R.dimen.georgia_syll_horGuidelineTile12Top},
+            {R.id.georgia_syll_horGuidelineTile12Bottom, R.dimen.georgia_syll_horGuidelineTile12Bottom},
+            {R.id.georgia_syll_horGuidelineTile13Top, R.dimen.georgia_syll_horGuidelineTile13Top},
+            {R.id.georgia_syll_horGuidelineTile13Bottom, R.dimen.georgia_syll_horGuidelineTile13Bottom},
+            {R.id.georgia_syll_horGuidelineTile14Top, R.dimen.georgia_syll_horGuidelineTile14Top},
+            {R.id.georgia_syll_horGuidelineTile14Bottom, R.dimen.georgia_syll_horGuidelineTile14Bottom},
+            {R.id.georgia_syll_horGuidelineTile15Top, R.dimen.georgia_syll_horGuidelineTile15Top},
+            {R.id.georgia_syll_horGuidelineTile15Bottom, R.dimen.georgia_syll_horGuidelineTile15Bottom},
+            {R.id.georgia_syll_horGuidelineTile16Top, R.dimen.georgia_syll_horGuidelineTile16Top},
+            {R.id.georgia_syll_horGuidelineTile16Bottom, R.dimen.georgia_syll_horGuidelineTile16Bottom},
+            {R.id.georgia_syll_horGuidelineTile17Top, R.dimen.georgia_syll_horGuidelineTile17Top},
+            {R.id.georgia_syll_horGuidelineTile17Bottom, R.dimen.georgia_syll_horGuidelineTile17Bottom},
+            {R.id.georgia_syll_horGuidelineTile18Top, R.dimen.georgia_syll_horGuidelineTile18Top},
+            {R.id.georgia_syll_horGuidelineTile18Bottom, R.dimen.georgia_syll_horGuidelineTile18Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.georgia_syll_verGuidelineRefLeft, R.dimen.georgia_syll_verGuidelineRefLeft},
+            {R.id.georgia_syll_verGuidelineRefRight, R.dimen.georgia_syll_verGuidelineRefRight},
+
+            {R.id.georgia_syll_verGuidelineTile01Left, R.dimen.georgia_syll_verGuidelineTile01Left},
+            {R.id.georgia_syll_verGuidelineTile01Right, R.dimen.georgia_syll_verGuidelineTile01Right},
+            {R.id.georgia_syll_verGuidelineTile02Left, R.dimen.georgia_syll_verGuidelineTile02Left},
+            {R.id.georgia_syll_verGuidelineTile02Right, R.dimen.georgia_syll_verGuidelineTile02Right},
+            {R.id.georgia_syll_verGuidelineTile03Left, R.dimen.georgia_syll_verGuidelineTile03Left},
+            {R.id.georgia_syll_verGuidelineTile03Right, R.dimen.georgia_syll_verGuidelineTile03Right},
+            {R.id.georgia_syll_verGuidelineTile04Left, R.dimen.georgia_syll_verGuidelineTile04Left},
+            {R.id.georgia_syll_verGuidelineTile04Right, R.dimen.georgia_syll_verGuidelineTile04Right},
+            {R.id.georgia_syll_verGuidelineTile05Left, R.dimen.georgia_syll_verGuidelineTile05Left},
+            {R.id.georgia_syll_verGuidelineTile05Right, R.dimen.georgia_syll_verGuidelineTile05Right},
+            {R.id.georgia_syll_verGuidelineTile06Left, R.dimen.georgia_syll_verGuidelineTile06Left},
+            {R.id.georgia_syll_verGuidelineTile06Right, R.dimen.georgia_syll_verGuidelineTile06Right},
+            {R.id.georgia_syll_verGuidelineTile07Left, R.dimen.georgia_syll_verGuidelineTile07Left},
+            {R.id.georgia_syll_verGuidelineTile07Right, R.dimen.georgia_syll_verGuidelineTile07Right},
+            {R.id.georgia_syll_verGuidelineTile08Left, R.dimen.georgia_syll_verGuidelineTile08Left},
+            {R.id.georgia_syll_verGuidelineTile08Right, R.dimen.georgia_syll_verGuidelineTile08Right},
+            {R.id.georgia_syll_verGuidelineTile09Left, R.dimen.georgia_syll_verGuidelineTile09Left},
+            {R.id.georgia_syll_verGuidelineTile09Right, R.dimen.georgia_syll_verGuidelineTile09Right},
+            {R.id.georgia_syll_verGuidelineTile10Left, R.dimen.georgia_syll_verGuidelineTile10Left},
+            {R.id.georgia_syll_verGuidelineTile10Right, R.dimen.georgia_syll_verGuidelineTile10Right},
+            {R.id.georgia_syll_verGuidelineTile11Left, R.dimen.georgia_syll_verGuidelineTile11Left},
+            {R.id.georgia_syll_verGuidelineTile11Right, R.dimen.georgia_syll_verGuidelineTile11Right},
+            {R.id.georgia_syll_verGuidelineTile12Left, R.dimen.georgia_syll_verGuidelineTile12Left},
+            {R.id.georgia_syll_verGuidelineTile12Right, R.dimen.georgia_syll_verGuidelineTile12Right},
+            {R.id.georgia_syll_verGuidelineTile13Left, R.dimen.georgia_syll_verGuidelineTile13Left},
+            {R.id.georgia_syll_verGuidelineTile13Right, R.dimen.georgia_syll_verGuidelineTile13Right},
+            {R.id.georgia_syll_verGuidelineTile14Left, R.dimen.georgia_syll_verGuidelineTile14Left},
+            {R.id.georgia_syll_verGuidelineTile14Right, R.dimen.georgia_syll_verGuidelineTile14Right},
+            {R.id.georgia_syll_verGuidelineTile15Left, R.dimen.georgia_syll_verGuidelineTile15Left},
+            {R.id.georgia_syll_verGuidelineTile15Right, R.dimen.georgia_syll_verGuidelineTile15Right},
+            {R.id.georgia_syll_verGuidelineTile16Left, R.dimen.georgia_syll_verGuidelineTile16Left},
+            {R.id.georgia_syll_verGuidelineTile16Right, R.dimen.georgia_syll_verGuidelineTile16Right},
+            {R.id.georgia_syll_verGuidelineTile17Left, R.dimen.georgia_syll_verGuidelineTile17Left},
+            {R.id.georgia_syll_verGuidelineTile17Right, R.dimen.georgia_syll_verGuidelineTile17Right},
+            {R.id.georgia_syll_verGuidelineTile18Left, R.dimen.georgia_syll_verGuidelineTile18Left},
+            {R.id.georgia_syll_verGuidelineTile18Right, R.dimen.georgia_syll_verGuidelineTile18Right}
+    };
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        if (syllableGame.equals("S")) {
+            GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_GEORGIA_SYLL);
+        } else {
+            GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_GEORGIA);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
+
     protected int[] getGameButtons() {
         return GAME_BUTTONS;
     }
@@ -102,6 +270,7 @@ public class Georgia extends GameActivity {
             setContentView(R.layout.georgia);
             gameID = R.id.georgiaCL;
         }
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);

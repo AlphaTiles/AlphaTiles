@@ -122,6 +122,11 @@ public class Romania extends GameActivity {
                 break;
             }
         }
+        indexWithinGroup = prefs.getInt("lastIndexWithinGroupGame001_player" + playerString, 0);
+        if (savedInstanceState != null) {
+            indexWithinGroup = savedInstanceState.getInt("indexWithinGroup", indexWithinGroup);
+        }
+
         activeTile = cumulativeStageBasedTileList.get(i);
         setUpBasedOnGameTile(activeTile);
     }
@@ -256,6 +261,9 @@ public class Romania extends GameActivity {
         if (indexWithinGroup == groupCount) {
             indexWithinGroup = 0;
         }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("lastIndexWithinGroupGame001_player" + playerString, indexWithinGroup);
+        editor.apply();
         refWord = groupOfWordsForActiveTile[indexWithinGroup];
 
         if (scanSetting == 3) {
@@ -310,6 +318,9 @@ public class Romania extends GameActivity {
         if (indexWithinGroup == -1) {
             indexWithinGroup = groupCount - 1;
         }
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("lastIndexWithinGroupGame001_player" + playerString, indexWithinGroup);
+        editor.apply();
         refWord = groupOfWordsForActiveTile[indexWithinGroup];
 
         if (scanSetting == 3) {
@@ -394,6 +405,7 @@ public class Romania extends GameActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile.text);
         editor.putString("typeOfLastActiveTileGame001_player" + playerString, activeTile.typeOfThisTileInstance);
+        editor.putInt("lastIndexWithinGroupGame001_player" + playerString, 0);
         editor.apply();
         setUpBasedOnGameTile(activeTile);
     }
@@ -432,6 +444,7 @@ public class Romania extends GameActivity {
         String playerString = Util.returnPlayerStringToAppend(playerNumber);
         editor.putString("lastActiveTileGame001_player" + playerString, activeTile.text);
         editor.putString("typeOfLastActiveTileGame001_player" + playerString, activeTile.typeOfThisTileInstance);
+        editor.putInt("lastIndexWithinGroupGame001_player" + playerString, 0);
         editor.apply();
         setUpBasedOnGameTile(activeTile);
     }

@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Insets;
@@ -15,6 +16,8 @@ import android.view.WindowInsets;
 import android.view.WindowMetrics;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -86,11 +89,111 @@ public class Myanmar extends GameActivity {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04, R.id.wordImage05, R.id.wordImage06, R.id.wordImage07
     };
 
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.myanmar_horGuidelineTextTop, R.dimen.myanmar_horGuidelineTextTop},
+            {R.id.myanmar_horGuidelineTextBottom, R.dimen.myanmar_horGuidelineTextBottom},
+
+            {R.id.myanmar_horGuidelineImg1Top, R.dimen.myanmar_horGuidelineImg1Top},
+            {R.id.myanmar_horGuidelineImg1Bottom, R.dimen.myanmar_horGuidelineImg1Bottom},
+            {R.id.myanmar_horGuidelineImg2Top, R.dimen.myanmar_horGuidelineImg2Top},
+            {R.id.myanmar_horGuidelineImg2Bottom, R.dimen.myanmar_horGuidelineImg2Bottom},
+            {R.id.myanmar_horGuidelineImg3Top, R.dimen.myanmar_horGuidelineImg3Top},
+            {R.id.myanmar_horGuidelineImg3Bottom, R.dimen.myanmar_horGuidelineImg3Bottom},
+            {R.id.myanmar_horGuidelineImg4Top, R.dimen.myanmar_horGuidelineImg4Top},
+            {R.id.myanmar_horGuidelineImg4Bottom, R.dimen.myanmar_horGuidelineImg4Bottom},
+            {R.id.myanmar_horGuidelineImg5Top, R.dimen.myanmar_horGuidelineImg5Top},
+            {R.id.myanmar_horGuidelineImg5Bottom, R.dimen.myanmar_horGuidelineImg5Bottom},
+            {R.id.myanmar_horGuidelineImg6Top, R.dimen.myanmar_horGuidelineImg6Top},
+            {R.id.myanmar_horGuidelineImg6Bottom, R.dimen.myanmar_horGuidelineImg6Bottom},
+            {R.id.myanmar_horGuidelineImg7Top, R.dimen.myanmar_horGuidelineImg7Top},
+            {R.id.myanmar_horGuidelineImg7Bottom, R.dimen.myanmar_horGuidelineImg7Bottom},
+
+            {R.id.myanmar_horGuidelineRow1Top, R.dimen.myanmar_horGuidelineRow1Top},
+            {R.id.myanmar_horGuidelineRow1Bottom, R.dimen.myanmar_horGuidelineRow1Bottom},
+            {R.id.myanmar_horGuidelineRow2Top, R.dimen.myanmar_horGuidelineRow2Top},
+            {R.id.myanmar_horGuidelineRow2Bottom, R.dimen.myanmar_horGuidelineRow2Bottom},
+            {R.id.myanmar_horGuidelineRow3Top, R.dimen.myanmar_horGuidelineRow3Top},
+            {R.id.myanmar_horGuidelineRow3Bottom, R.dimen.myanmar_horGuidelineRow3Bottom},
+            {R.id.myanmar_horGuidelineRow4Top, R.dimen.myanmar_horGuidelineRow4Top},
+            {R.id.myanmar_horGuidelineRow4Bottom, R.dimen.myanmar_horGuidelineRow4Bottom},
+            {R.id.myanmar_horGuidelineRow5Top, R.dimen.myanmar_horGuidelineRow5Top},
+            {R.id.myanmar_horGuidelineRow5Bottom, R.dimen.myanmar_horGuidelineRow5Bottom},
+            {R.id.myanmar_horGuidelineRow6Top, R.dimen.myanmar_horGuidelineRow6Top},
+            {R.id.myanmar_horGuidelineRow6Bottom, R.dimen.myanmar_horGuidelineRow6Bottom},
+            {R.id.myanmar_horGuidelineRow7Top, R.dimen.myanmar_horGuidelineRow7Top},
+            {R.id.myanmar_horGuidelineRow7Bottom, R.dimen.myanmar_horGuidelineRow7Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.myanmar_verGuidelineTextLeft, R.dimen.myanmar_verGuidelineTextLeft},
+            {R.id.myanmar_verGuidelineTextRight, R.dimen.myanmar_verGuidelineTextRight},
+
+            {R.id.myanmar_verGuidelineImg1Left, R.dimen.myanmar_verGuidelineImg1Left},
+            {R.id.myanmar_verGuidelineImg1Right, R.dimen.myanmar_verGuidelineImg1Right},
+            {R.id.myanmar_verGuidelineImg2Left, R.dimen.myanmar_verGuidelineImg2Left},
+            {R.id.myanmar_verGuidelineImg2Right, R.dimen.myanmar_verGuidelineImg2Right},
+            {R.id.myanmar_verGuidelineImg3Left, R.dimen.myanmar_verGuidelineImg3Left},
+            {R.id.myanmar_verGuidelineImg3Right, R.dimen.myanmar_verGuidelineImg3Right},
+            {R.id.myanmar_verGuidelineImg4Left, R.dimen.myanmar_verGuidelineImg4Left},
+            {R.id.myanmar_verGuidelineImg4Right, R.dimen.myanmar_verGuidelineImg4Right},
+            {R.id.myanmar_verGuidelineImg5Left, R.dimen.myanmar_verGuidelineImg5Left},
+            {R.id.myanmar_verGuidelineImg5Right, R.dimen.myanmar_verGuidelineImg5Right},
+            {R.id.myanmar_verGuidelineImg6Left, R.dimen.myanmar_verGuidelineImg6Left},
+            {R.id.myanmar_verGuidelineImg6Right, R.dimen.myanmar_verGuidelineImg6Right},
+            {R.id.myanmar_verGuidelineImg7Left, R.dimen.myanmar_verGuidelineImg7Left},
+            {R.id.myanmar_verGuidelineImg7Right, R.dimen.myanmar_verGuidelineImg7Right},
+
+            {R.id.myanmar_verGuidelineCol1Left, R.dimen.myanmar_verGuidelineCol1Left},
+            {R.id.myanmar_verGuidelineCol1Right, R.dimen.myanmar_verGuidelineCol1Right},
+            {R.id.myanmar_verGuidelineCol2Left, R.dimen.myanmar_verGuidelineCol2Left},
+            {R.id.myanmar_verGuidelineCol2Right, R.dimen.myanmar_verGuidelineCol2Right},
+            {R.id.myanmar_verGuidelineCol3Left, R.dimen.myanmar_verGuidelineCol3Left},
+            {R.id.myanmar_verGuidelineCol3Right, R.dimen.myanmar_verGuidelineCol3Right},
+            {R.id.myanmar_verGuidelineCol4Left, R.dimen.myanmar_verGuidelineCol4Left},
+            {R.id.myanmar_verGuidelineCol4Right, R.dimen.myanmar_verGuidelineCol4Right},
+            {R.id.myanmar_verGuidelineCol5Left, R.dimen.myanmar_verGuidelineCol5Left},
+            {R.id.myanmar_verGuidelineCol5Right, R.dimen.myanmar_verGuidelineCol5Right},
+            {R.id.myanmar_verGuidelineCol6Left, R.dimen.myanmar_verGuidelineCol6Left},
+            {R.id.myanmar_verGuidelineCol6Right, R.dimen.myanmar_verGuidelineCol6Right},
+            {R.id.myanmar_verGuidelineCol7Left, R.dimen.myanmar_verGuidelineCol7Left},
+            {R.id.myanmar_verGuidelineCol7Right, R.dimen.myanmar_verGuidelineCol7Right}
+    };
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+        setTextSizes();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.myanmar);
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.myanmarCL);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -151,12 +254,20 @@ public class Myanmar extends GameActivity {
                 ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) tile.getLayoutParams();
                 bottomToTopId = lp1.bottomToTop;
                 topToTopId = lp1.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                if (bottomToTopId != -1 && topToTopId != -1) {
+                    View bottomView = findViewById(bottomToTopId);
+                    View topView = findViewById(topToTopId);
+                    if (bottomView != null && topView != null) {
+                        percentBottomToTop = ((ConstraintLayout.LayoutParams) bottomView.getLayoutParams()).guidePercent;
+                        percentTopToTop = ((ConstraintLayout.LayoutParams) topView.getLayoutParams()).guidePercent;
+                        percentHeight = percentBottomToTop - percentTopToTop;
+                        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                    }
+                }
             }
-            tile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+            if (pixelHeight > 0) {
+                tile.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+            }
 
         }
 
@@ -164,11 +275,17 @@ public class Myanmar extends GameActivity {
         ConstraintLayout.LayoutParams lp2 = (ConstraintLayout.LayoutParams) wordToBuild.getLayoutParams();
         int bottomToTopId2 = lp2.bottomToTop;
         int topToTopId2 = lp2.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId2).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId2).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-        wordToBuild.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+        if (bottomToTopId2 != -1 && topToTopId2 != -1) {
+            View bottomView2 = findViewById(bottomToTopId2);
+            View topView2 = findViewById(topToTopId2);
+            if (bottomView2 != null && topView2 != null) {
+                percentBottomToTop = ((ConstraintLayout.LayoutParams) bottomView2.getLayoutParams()).guidePercent;
+                percentTopToTop = ((ConstraintLayout.LayoutParams) topView2.getLayoutParams()).guidePercent;
+                percentHeight = percentBottomToTop - percentTopToTop;
+                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                wordToBuild.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+            }
+        }
 
     }
 

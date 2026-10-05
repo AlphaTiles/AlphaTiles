@@ -78,8 +78,6 @@ public class SetPlayerName extends AppCompatActivity {
         ActivityLayouts.applyEdgeToEdge(this, R.id.setPlayerNameCL);
         ActivityLayouts.setStatusAndNavColors(this);
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         if (scriptDirection.equals("RTL")) {
             ImageView deleteImage = (ImageView) findViewById(R.id.deleteImage);
             ImageView avatarImage = (ImageView) findViewById(R.id.avatar);
@@ -166,12 +164,20 @@ public class SetPlayerName extends AppCompatActivity {
                 ConstraintLayout.LayoutParams lp1 = (ConstraintLayout.LayoutParams) key.getLayoutParams();
                 bottomToTopId = lp1.bottomToTop;
                 topToTopId = lp1.topToTop;
-                percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId).getLayoutParams()).guidePercent;
-                percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId).getLayoutParams()).guidePercent;
-                percentHeight = percentBottomToTop - percentTopToTop;
-                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                if (bottomToTopId != -1 && topToTopId != -1) {
+                    View bottomView = findViewById(bottomToTopId);
+                    View topView = findViewById(topToTopId);
+                    if (bottomView != null && topView != null) {
+                        percentBottomToTop = ((ConstraintLayout.LayoutParams) bottomView.getLayoutParams()).guidePercent;
+                        percentTopToTop = ((ConstraintLayout.LayoutParams) topView.getLayoutParams()).guidePercent;
+                        percentHeight = percentBottomToTop - percentTopToTop;
+                        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                    }
+                }
             }
-            key.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+            if (pixelHeight > 0) {
+                key.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+            }
 
         }
 
@@ -179,11 +185,17 @@ public class SetPlayerName extends AppCompatActivity {
         ConstraintLayout.LayoutParams lp2 = (ConstraintLayout.LayoutParams) avatarName.getLayoutParams();
         int bottomToTopId2 = lp2.bottomToTop;
         int topToTopId2 = lp2.topToTop;
-        percentBottomToTop = ((ConstraintLayout.LayoutParams) findViewById(bottomToTopId2).getLayoutParams()).guidePercent;
-        percentTopToTop = ((ConstraintLayout.LayoutParams) findViewById(topToTopId2).getLayoutParams()).guidePercent;
-        percentHeight = percentBottomToTop - percentTopToTop;
-        pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
-        avatarName.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+        if (bottomToTopId2 != -1 && topToTopId2 != -1) {
+            View bottomView2 = findViewById(bottomToTopId2);
+            View topView2 = findViewById(topToTopId2);
+            if (bottomView2 != null && topView2 != null) {
+                percentBottomToTop = ((ConstraintLayout.LayoutParams) bottomView2.getLayoutParams()).guidePercent;
+                percentTopToTop = ((ConstraintLayout.LayoutParams) topView2.getLayoutParams()).guidePercent;
+                percentHeight = percentBottomToTop - percentTopToTop;
+                pixelHeight = (int) (scaling * percentHeight * heightOfDisplay);
+                avatarName.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixelHeight);
+            }
+        }
 
     }
 

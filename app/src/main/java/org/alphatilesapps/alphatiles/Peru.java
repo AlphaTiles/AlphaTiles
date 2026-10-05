@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Random;
 
 import static org.alphatilesapps.alphatiles.Start.*;
+
+import androidx.annotation.NonNull;
 
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
@@ -30,6 +33,44 @@ public class Peru extends GameActivity {
     protected int[] getWordImages() {
         return null;
     }
+
+    // Gridlines will update during orientation change
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.horGuidelineRefTop, R.dimen.peru_horGuidelineRefTop},
+            {R.id.horGuidelineRefBottom, R.dimen.peru_horGuidelineRefBottom},
+            {R.id.horGuidelineWord1Top, R.dimen.peru_horGuidelineWord1Top},
+            {R.id.horGuidelineWord1Bottom, R.dimen.peru_horGuidelineWord1Bottom},
+            {R.id.horGuidelineWord2Top, R.dimen.peru_horGuidelineWord2Top},
+            {R.id.horGuidelineWord2Bottom, R.dimen.peru_horGuidelineWord2Bottom},
+            {R.id.horGuidelineWord3Top, R.dimen.peru_horGuidelineWord3Top},
+            {R.id.horGuidelineWord3Bottom, R.dimen.peru_horGuidelineWord3Bottom},
+            {R.id.horGuidelineWord4Top, R.dimen.peru_horGuidelineWord4Top},
+            {R.id.horGuidelineWord4Bottom, R.dimen.peru_horGuidelineWord4Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.verGuidelineRefLeft, R.dimen.peru_verGuidelineRefLeft},
+            {R.id.verGuidelineWordsLeft, R.dimen.peru_verGuidelineWordsLeft},
+            {R.id.verGuidelineRefRight, R.dimen.peru_verGuidelineRefRight},
+            {R.id.verGuidelineWordsRight, R.dimen.peru_verGuidelineWordsRight}
+    };
 
     int indexOfCorrectAnswerAmongChoices;
 
@@ -54,10 +95,20 @@ public class Peru extends GameActivity {
     }
 
     @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        updateGuidelines();
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.peru);
+
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.peruCL);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -93,6 +144,12 @@ public class Peru extends GameActivity {
         updateView();
     }
 
+    private void updateGuidelines() {
+
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+
+    }
 
     public void repeatGame(View view) {
 

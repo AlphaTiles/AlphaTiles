@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -29,14 +30,14 @@ public class Malaysia extends GameActivity {
     protected static final int[] GAME_BUTTONS = {
             R.id.word01, R.id.word02, R.id.word03, R.id.word04,
             R.id.word05, R.id.word06, R.id.word07, R.id.word08,
-            R.id.word09, R.id.word10, R.id.word11,
+            R.id.word09, R.id.word10
     };
     final int wordsPerPage = GAME_BUTTONS.length;
 
     protected static final int[] WORD_IMAGES = {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04,
             R.id.wordImage05, R.id.wordImage06, R.id.wordImage07, R.id.wordImage08,
-            R.id.wordImage09, R.id.wordImage10, R.id.wordImage11
+            R.id.wordImage09, R.id.wordImage10
     };
     //maybe have some check here to see if (GAME_BUTTONS.length!=WORD_IMAGES.length)?
     @Override
@@ -47,8 +48,17 @@ public class Malaysia extends GameActivity {
     protected int[] getWordImages() { return WORD_IMAGES; }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currentPageNumber", currentPageNumber);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            currentPageNumber = savedInstanceState.getInt("currentPageNumber", currentPageNumber);
+        }
         context = this;
         int gameID = R.id.malaysiaCL;
         determineNumPages();
@@ -58,7 +68,7 @@ public class Malaysia extends GameActivity {
         ActivityLayouts.setStatusAndNavColors(this);
 
         assignPages();
-        displayWords(0);
+        displayWords(currentPageNumber);
 
         if (scriptDirection.equals("RTL")) fixConstraintsRTLMalaysia(gameID);
         if (getAudioInstructionsResID() == 0) hideInstructionAudioImage();

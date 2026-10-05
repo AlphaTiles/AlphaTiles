@@ -4,6 +4,7 @@ import static org.alphatilesapps.alphatiles.Start.tileHashMap;
 import static org.alphatilesapps.alphatiles.Start.tileList;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +47,48 @@ public class China extends GameActivity {
             R.id.wordImage01, R.id.wordImage02, R.id.wordImage03, R.id.wordImage04
     };
 
+    // Gridlines will update during orientation change
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.china_horGuidelineRow1Top, R.dimen.china_horGuidelineRow1Top},
+            {R.id.china_horGuidelineRow1Bottom, R.dimen.china_horGuidelineRow1Bottom},
+            {R.id.china_horGuidelineRow2Top, R.dimen.china_horGuidelineRow2Top},
+            {R.id.china_horGuidelineRow2Bottom, R.dimen.china_horGuidelineRow2Bottom},
+            {R.id.china_horGuidelineRow3Top, R.dimen.china_horGuidelineRow3Top},
+            {R.id.china_horGuidelineRow3Bottom, R.dimen.china_horGuidelineRow3Bottom},
+            {R.id.china_horGuidelineRow4Top, R.dimen.china_horGuidelineRow4Top},
+            {R.id.china_horGuidelineRow4Bottom, R.dimen.china_horGuidelineRow4Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.china_verGuidelineGridLeft, R.dimen.china_verGuidelineGridLeft},
+            {R.id.china_verGuidelineCol1Right, R.dimen.china_verGuidelineCol1Right},
+            {R.id.china_verGuidelineCol2Left, R.dimen.china_verGuidelineCol2Left},
+            {R.id.china_verGuidelineCol2Right, R.dimen.china_verGuidelineCol2Right},
+            {R.id.china_verGuidelineCol3Left, R.dimen.china_verGuidelineCol3Left},
+            {R.id.china_verGuidelineCol3Right, R.dimen.china_verGuidelineCol3Right},
+            {R.id.china_verGuidelineCol4Left, R.dimen.china_verGuidelineCol4Left},
+            {R.id.china_verGuidelineCol4Right, R.dimen.china_verGuidelineCol4Right},
+            {R.id.china_verGuidelineCol5Left, R.dimen.china_verGuidelineCol5Left},
+            {R.id.china_verGuidelineGridRight, R.dimen.china_verGuidelineGridRight}
+    };
+
     @Override
     protected void hideInstructionAudioImage() {
 
@@ -66,10 +111,20 @@ public class China extends GameActivity {
     }
 
     @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        updateGuidelines();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.china);
+
+        updateGuidelines();
+
         int gameID = R.id.chinaCL;
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
@@ -93,6 +148,11 @@ public class China extends GameActivity {
         playAgain();
         setUpInitialView();
         updateView();
+    }
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
     }
 
     public void repeatGame(View View) {

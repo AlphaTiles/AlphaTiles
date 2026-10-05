@@ -8,6 +8,624 @@
     android:background="#FFFFFF"
     tools:context=".Mexico">
 
+    <!-- Guidelines -->
+    <!-- Status Guidelines (Horizontal) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusMiddle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusMiddle" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusBottom" />
+
+    <!-- Options Guidelines (Horizontal) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineOptionsTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineOptionsBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsBottom" />
+
+    <!-- Status Guidelines (Vertical) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineGameNoLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineGameNoLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineGameNoCLBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineGameNoCLBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineCLStageBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineCLStageBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineStageBarsBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineStageBarsBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineBarsPointsBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineBarsPointsBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelinePointsRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelinePointsRight" />
+
+    <!-- Options Guidelines (Vertical) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineOptionsLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineOptionsRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsRight" />
+
+    <!-- Mexico Card Guidelines (Cards 01 - 20) -->
+    <!-- Card 01 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard01Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard01Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard01Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard01Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard01Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard01Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard01Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard01Right" />
+
+    <!-- Card 02 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard02Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard02Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard02Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard02Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard02Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard02Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard02Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard02Right" />
+
+    <!-- Card 03 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard03Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard03Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard03Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard03Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard03Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard03Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard03Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard03Right" />
+
+    <!-- Card 04 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard04Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard04Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard04Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard04Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard04Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard04Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard04Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard04Right" />
+
+    <!-- Card 05 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard05Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard05Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard05Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard05Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard05Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard05Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard05Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard05Right" />
+
+    <!-- Card 06 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard06Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard06Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard06Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard06Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard06Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard06Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard06Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard06Right" />
+
+    <!-- Card 07 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard07Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard07Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard07Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard07Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard07Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard07Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard07Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard07Right" />
+
+    <!-- Card 08 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard08Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard08Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard08Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard08Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard08Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard08Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard08Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard08Right" />
+
+    <!-- Card 09 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard09Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard09Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard09Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard09Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard09Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard09Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard09Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard09Right" />
+
+    <!-- Card 10 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard10Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard10Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard10Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard10Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard10Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard10Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard10Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard10Right" />
+
+    <!-- Card 11 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard11Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard11Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard11Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard11Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard11Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard11Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard11Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard11Right" />
+
+    <!-- Card 12 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard12Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard12Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard12Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard12Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard12Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard12Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard12Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard12Right" />
+
+    <!-- Card 13 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard13Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard13Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard13Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard13Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard13Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard13Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard13Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard13Right" />
+
+    <!-- Card 14 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard14Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard14Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard14Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard14Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard14Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard14Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard14Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard14Right" />
+
+    <!-- Card 15 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard15Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard15Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard15Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard15Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard15Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard15Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard15Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard15Right" />
+
+    <!-- Card 16 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard16Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard16Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard16Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard16Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard16Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard16Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard16Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard16Right" />
+
+    <!-- Card 17 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard17Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard17Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard17Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard17Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard17Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard17Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard17Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard17Right" />
+
+    <!-- Card 18 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard18Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard18Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard18Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard18Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard18Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard18Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard18Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard18Right" />
+
+    <!-- Card 19 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard19Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard19Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard19Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard19Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard19Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard19Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard19Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard19Right" />
+
+    <!-- Card 20 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard20Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard20Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_horGuidelineCard20Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/mexico_horGuidelineCard20Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard20Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard20Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mexico_verGuidelineCard20Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/mexico_verGuidelineCard20Right" />
+
+    <!-- Views -->
     <TextView
         android:id="@+id/gameNumberView"
         android:layout_width="0dp"
@@ -19,15 +637,15 @@
         android:textStyle="bold"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.1"
-        app:layout_constraintStart_toStartOf="@id/guidelineV0"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineGameNoCLBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineGameNoLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
     <TextView
@@ -41,15 +659,15 @@
         android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.2"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineCLStageBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineGameNoCLBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
     <TextView
@@ -63,15 +681,15 @@
         android:textStyle="bold"
         android:textColor="#FFD700"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.3"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineStageBarsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineCLStageBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
     <ProgressBar
@@ -85,10 +703,10 @@
         android:max="100"
         android:scaleY="5.25"
         android:indeterminate="false"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHneg1.1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1" />
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusMiddle"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineBarsPointsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineStageBarsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop" />
 
     <ProgressBar
         android:id="@+id/attemptsBar"
@@ -101,10 +719,10 @@
         android:max="100"
         android:scaleY="2.25"
         android:indeterminate="false"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1.1" />
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineBarsPointsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineStageBarsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusMiddle" />
 
     <TextView
         android:id="@+id/pointsTextView"
@@ -119,17 +737,18 @@
         android:text="@string/pointsScored"
         android:progress="0"
         android:max="100"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toEndOf="@id/guidelineV7"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toEndOf="@id/verGuidelinePointsRight"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineBarsPointsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
+    <!-- Cards 01 - 20 -->
     <TextView
         android:id="@+id/card01"
         android:layout_width="0dp"
@@ -139,11 +758,11 @@
         android:padding="3dp"
         android:tag="1"
         android:text="@string/memoryCard01"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard01Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
-        app:layout_constraintStart_toStartOf="@id/guidelineV0"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard01Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard01Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard01Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -159,11 +778,11 @@
         android:padding="3dp"
         android:tag="2"
         android:text="@string/memoryCard02"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard02Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard02Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard02Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard02Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -179,11 +798,11 @@
         android:padding="3dp"
         android:tag="3"
         android:text="@string/memoryCard03"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard03Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard03Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard03Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard03Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -199,11 +818,11 @@
         android:padding="3dp"
         android:tag="4"
         android:text="@string/memoryCard04"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard04Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard04Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard04Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard04Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -219,11 +838,11 @@
         android:padding="3dp"
         android:tag="5"
         android:text="@string/memoryCard05"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard05Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard05Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard05Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard05Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -239,11 +858,11 @@
         android:padding="3dp"
         android:tag="6"
         android:text="@string/memoryCard06"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard06Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard06Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard06Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard06Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -259,11 +878,11 @@
         android:padding="3dp"
         android:tag="7"
         android:text="@string/memoryCard07"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard07Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard07Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard07Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard07Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -279,11 +898,11 @@
         android:padding="3dp"
         android:tag="8"
         android:text="@string/memoryCard08"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard08Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard08Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard08Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard08Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -299,11 +918,11 @@
         android:padding="3dp"
         android:tag="9"
         android:text="@string/memoryCard09"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard09Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard09Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard09Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard09Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -319,11 +938,11 @@
         android:padding="3dp"
         android:tag="10"
         android:text="@string/memoryCard10"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard10Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard10Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard10Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard10Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -339,11 +958,11 @@
         android:padding="3dp"
         android:tag="11"
         android:text="@string/memoryCard11"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard11Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard11Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard11Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard11Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -359,11 +978,11 @@
         android:padding="3dp"
         android:tag="12"
         android:text="@string/memoryCard12"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard12Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard12Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard12Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard12Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -379,11 +998,11 @@
         android:padding="3dp"
         android:tag="13"
         android:text="@string/memoryCard13"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard13Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard13Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard13Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard13Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -399,11 +1018,11 @@
         android:padding="3dp"
         android:tag="14"
         android:text="@string/memoryCard14"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard14Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard14Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard14Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard14Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -419,11 +1038,11 @@
         android:padding="3dp"
         android:tag="15"
         android:text="@string/memoryCard15"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard15Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard15Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard15Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard15Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -439,11 +1058,11 @@
         android:padding="3dp"
         android:tag="16"
         android:text="@string/memoryCard16"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard16Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard16Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard16Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard16Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -459,11 +1078,11 @@
         android:padding="3dp"
         android:tag="17"
         android:text="@string/memoryCard17"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard17Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard17Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard17Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard17Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -479,11 +1098,11 @@
         android:padding="3dp"
         android:tag="18"
         android:text="@string/memoryCard18"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard18Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard18Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard18Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard18Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -499,11 +1118,11 @@
         android:padding="3dp"
         android:tag="19"
         android:text="@string/memoryCard19"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard19Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard19Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard19Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard19Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -519,26 +1138,27 @@
         android:padding="3dp"
         android:tag="20"
         android:text="@string/memoryCard20"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
+        app:layout_constraintBottom_toTopOf="@+id/mexico_horGuidelineCard20Bottom"
         app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH9"
+        app:layout_constraintEnd_toStartOf="@+id/mexico_verGuidelineCard20Right"
+        app:layout_constraintStart_toStartOf="@+id/mexico_verGuidelineCard20Left"
+        app:layout_constraintTop_toTopOf="@+id/mexico_horGuidelineCard20Top"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
         android:maxLines="1"/>
 
+    <!-- Options Bar -->
     <ImageView
         android:id="@+id/gamesHomeImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="goBackToEarth"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer"
-        app:layout_constraintStart_toStartOf="@id/guidelineV0"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineOptionsLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
         android:contentDescription="@string/playerAvatar"
         app:srcCompat="@drawable/zz_games_home" />
 
@@ -547,20 +1167,20 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:tag="BMS"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintEnd_toStartOf="@+id/repeatImage"
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"/>
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"/>
 
     <ImageView
         android:id="@+id/instructions"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="playAudioInstructions"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer"
         app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
         android:contentDescription="@string/playAudioInstructions"
         android:rotationY="0"
         app:srcCompat="@drawable/zz_instructions" />
@@ -570,201 +1190,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="repeatGame"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-        app:layout_constraintEnd_toEndOf="@id/guidelineV7"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toEndOf="@id/verGuidelineOptionsRight"
         app:layout_constraintStart_toEndOf="@+id/bottomMiddleSpacer"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
         android:contentDescription="@string/playAgain"
         android:rotationY="0"
         app:srcCompat="@drawable/zz_forward_inactive" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHneg1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.01" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHneg1.1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.045" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.06" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.08" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.238" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.248" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.406" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.416" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.574" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.584" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.742" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.752" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.91" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHSys1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.93" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHSys2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.99" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.01" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.245" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.12" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.18" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.24" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.88" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.2584" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.4934" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5066" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.7416" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.755" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.99" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

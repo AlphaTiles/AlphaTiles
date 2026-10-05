@@ -1,13 +1,623 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/georgiaCL_syll"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="#FFFFFF"
-tools:context=".Georgia">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/georgiaCL_syll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".Georgia">
 
+    <!-- Guidelines -->
+    <!-- Status Guidelines (Horizontal) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusMiddle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusMiddle" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineStatusBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusBottom" />
+
+    <!-- Georgia Syllable Guidelines (Word Image and Word Text) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineRefTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineRefTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineRefBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineRefBottom" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTextTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTextTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTextBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTextBottom" />
+
+    <!-- Options Guidelines (Horizontal) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineOptionsTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsTop" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horGuidelineOptionsBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsBottom" />
+
+    <!-- Status Guidelines (Vertical) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineGameNoLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineGameNoLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineGameNoCLBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineGameNoCLBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineCLStageBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineCLStageBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineStageBarsBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineStageBarsBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineBarsPointsBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineBarsPointsBorder" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelinePointsRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelinePointsRight" />
+
+    <!-- Georgia Syllable Specific Vertical Guidelines -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineRefLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineRefLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineRefRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineRefRight" />
+
+    <!-- Options Guidelines (Vertical) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineOptionsLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineOptionsRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsRight" />
+
+    <!-- Per-Tile Guidelines (Tiles 01 - 18) -->
+    <!-- Tile 01 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile01Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile01Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile01Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile01Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile01Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile01Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile01Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile01Right" />
+
+    <!-- Tile 02 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile02Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile02Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile02Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile02Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile02Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile02Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile02Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile02Right" />
+
+    <!-- Tile 03 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile03Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile03Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile03Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile03Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile03Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile03Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile03Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile03Right" />
+
+    <!-- Tile 04 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile04Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile04Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile04Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile04Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile04Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile04Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile04Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile04Right" />
+
+    <!-- Tile 05 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile05Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile05Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile05Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile05Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile05Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile05Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile05Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile05Right" />
+
+    <!-- Tile 06 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile06Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile06Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile06Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile06Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile06Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile06Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile06Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile06Right" />
+
+    <!-- Tile 07 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile07Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile07Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile07Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile07Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile07Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile07Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile07Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile07Right" />
+
+    <!-- Tile 08 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile08Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile08Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile08Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile08Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile08Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile08Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile08Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile08Right" />
+
+    <!-- Tile 09 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile09Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile09Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile09Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile09Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile09Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile09Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile09Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile09Right" />
+
+    <!-- Tile 10 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile10Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile10Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile10Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile10Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile10Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile10Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile10Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile10Right" />
+
+    <!-- Tile 11 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile11Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile11Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile11Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile11Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile11Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile11Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile11Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile11Right" />
+
+    <!-- Tile 12 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile12Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile12Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile12Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile12Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile12Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile12Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile12Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile12Right" />
+
+    <!-- Tile 13 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile13Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile13Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile13Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile13Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile13Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile13Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile13Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile13Right" />
+
+    <!-- Tile 14 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile14Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile14Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile14Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile14Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile14Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile14Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile14Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile14Right" />
+
+    <!-- Tile 15 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile15Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile15Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile15Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile15Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile15Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile15Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile15Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile15Right" />
+
+    <!-- Tile 16 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile16Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile16Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile16Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile16Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile16Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile16Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile16Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile16Right" />
+
+    <!-- Tile 17 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile17Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile17Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile17Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile17Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile17Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile17Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile17Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile17Right" />
+
+    <!-- Tile 18 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile18Top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile18Top" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_horGuidelineTile18Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_horGuidelineTile18Bottom" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile18Left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile18Left" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/georgia_syll_verGuidelineTile18Right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/georgia_syll_verGuidelineTile18Right" />
+
+    <!-- Views -->
     <TextView
         android:id="@+id/gameNumberView"
         android:layout_width="0dp"
@@ -19,15 +629,15 @@ tools:context=".Georgia">
         android:textStyle="bold"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.1"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineGameNoCLBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineGameNoLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
     <TextView
@@ -41,15 +651,15 @@ tools:context=".Georgia">
         android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.2"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineCLStageBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineGameNoCLBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
     <TextView
@@ -63,15 +673,15 @@ tools:context=".Georgia">
         android:textStyle="bold"
         android:textColor="#FFD700"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.3"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineStageBarsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineCLStageBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
     <ProgressBar
@@ -85,10 +695,10 @@ tools:context=".Georgia">
         android:max="100"
         android:scaleY="5.25"
         android:indeterminate="false"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHneg1.1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1" />
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusMiddle"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineBarsPointsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineStageBarsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop" />
 
     <ProgressBar
         android:id="@+id/attemptsBar"
@@ -101,10 +711,10 @@ tools:context=".Georgia">
         android:max="100"
         android:scaleY="2.25"
         android:indeterminate="false"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1.1" />
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineBarsPointsBorder"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineStageBarsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusMiddle" />
 
     <TextView
         android:id="@+id/pointsTextView"
@@ -119,715 +729,511 @@ tools:context=".Georgia">
         android:text="@string/pointsScored"
         android:progress="0"
         android:max="100"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toEndOf="@id/guidelineV6"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
+        app:layout_constraintEnd_toEndOf="@id/verGuidelinePointsRight"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineBarsPointsBorder"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        android:padding = "0dp"
+        android:padding="0dp"
         android:maxLines="1"/>
 
-<ImageView
-    android:id="@+id/wordImage"
-    android:layout_width="166dp"
-    android:layout_height="154dp"
-    android:contentDescription="@string/activeWordPicture"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="clickPicHearAudio"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
-    app:layout_constraintDimensionRatio="1"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
-    app:layout_constraintHorizontal_bias="0.502"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH1"
-    app:layout_constraintVertical_bias="0.034"
-    app:srcCompat="@drawable/zz_alphatileslogosmall" />
+    <ImageView
+        android:id="@+id/wordImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/activeWordPicture"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="clickPicHearAudio"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineRefBottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineRefRight"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineRefLeft"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineRefTop"
+        app:srcCompat="@drawable/zz_sil" />
 
-<TextView
-    android:id="@+id/fullWordTextView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="TextView"
-    android:textColor="#000000"
-    android:textSize="50sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH2.5"
-    app:layout_constraintDimensionRatio="1"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH1.5"
-    tools:layout_editor_absoluteX="155dp"
-    tools:layout_editor_absoluteY="377dp" />
+    <TextView
+        android:id="@+id/fullWordTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="TextView"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:visibility="invisible"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTextBottom"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineRefRight"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineRefLeft"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTextTop" />
 
-<TextView
-    android:id="@+id/tile01"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#9C27B0"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="1"
-    android:text="@string/gametile01"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <!-- Tiles 01 - 18 -->
+    <TextView
+        android:id="@+id/tile01"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="1"
+        android:text="@string/gametile01"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile01Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile01Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile01Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile01Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile02"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#2196F3"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="2"
-    android:text="@string/gametile02"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile02"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="2"
+        android:text="@string/gametile02"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile02Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile02Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile02Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile02Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile03"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#F44336"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="3"
-    android:text="@string/gametile03"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile03"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F44336"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="3"
+        android:text="@string/gametile03"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile03Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile03Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile03Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile03Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile04"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#4CAF50"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="4"
-    android:text="@string/gametile04"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH5"
-    tools:layout_editor_absoluteX="194dp"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile04"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4CAF50"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="4"
+        android:text="@string/gametile04"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile04Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile04Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile04Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile04Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile05"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#E91E63"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="5"
-    android:text="@string/gametile05"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH5"
-    tools:layout_editor_absoluteX="260dp"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile05"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E91E63"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="5"
+        android:text="@string/gametile05"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile05Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile05Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile05Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile05Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile06"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#9C27B0"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="6"
-    android:text="@string/gametile06"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH5"
-    tools:layout_editor_absoluteX="326dp"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile06"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="6"
+        android:text="@string/gametile06"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile06Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile06Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile06Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile06Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile07"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#2196F3"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="7"
-    android:text="@string/gametile07"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH7"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile07"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="7"
+        android:text="@string/gametile07"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile07Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile07Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile07Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile07Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile08"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#F44336"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="8"
-    android:text="@string/gametile08"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH7"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile08"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F44336"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="8"
+        android:text="@string/gametile08"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile08Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile08Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile08Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile08Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile09"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#4CAF50"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="9"
-    android:text="@string/gametile09"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH7"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile09"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4CAF50"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="9"
+        android:text="@string/gametile09"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile09Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile09Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile09Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile09Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile10"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#E91E63"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="10"
-    android:text="@string/gametile10"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH9"
-    tools:layout_editor_absoluteX="187dp"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile10"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E91E63"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="10"
+        android:text="@string/gametile10"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile10Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile10Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile10Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile10Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile11"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#9C27B0"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="11"
-    android:text="@string/gametile11"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH9"
-    tools:layout_editor_absoluteX="253dp"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile11"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="11"
+        android:text="@string/gametile11"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile11Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile11Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile11Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile11Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile12"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#2196F3"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="12"
-    android:text="@string/gametile12"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH10"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH9"
-    tools:layout_editor_absoluteX="319dp"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile12"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="12"
+        android:text="@string/gametile12"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile12Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile12Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile12Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile12Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile13"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#F44336"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="13"
-    android:text="@string/gametile13"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH12"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH11"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile13"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F44336"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="13"
+        android:text="@string/gametile13"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile13Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile13Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile13Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile13Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile14"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#4CAF50"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="14"
-    android:text="@string/gametile14"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH12"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH11"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile14"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#4CAF50"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="14"
+        android:text="@string/gametile14"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile14Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile14Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile14Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile14Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile15"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#E91E63"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="15"
-    android:text="@string/gametile15"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH12"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH11"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile15"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#E91E63"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="15"
+        android:text="@string/gametile15"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile15Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile15Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile15Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile15Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile16"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#9C27B0"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="16"
-    android:text="@string/gametile16"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH14"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH13"
-    tools:layout_editor_absoluteX="187dp"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile16"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="16"
+        android:text="@string/gametile16"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile16Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile16Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile16Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile16Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile17"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#2196F3"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="17"
-    android:text="@string/gametile17"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH14"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV4"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV3"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH13"
-    tools:layout_editor_absoluteX="253dp"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile17"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#2196F3"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="17"
+        android:text="@string/gametile17"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile17Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile17Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile17Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile17Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<TextView
-    android:id="@+id/tile18"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:background="#F44336"
-    android:gravity="center_horizontal|center_vertical"
-    android:onClick="onBtnClick"
-    android:tag="18"
-    android:text="@string/gametile18"
-    android:textColor="#FFFFFF"
-    android:textSize="28sp"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineH14"
-    app:layout_constraintEnd_toStartOf="@+id/guidelineV6"
-    app:layout_constraintStart_toStartOf="@+id/guidelineV5"
-    app:layout_constraintTop_toTopOf="@+id/guidelineH13"
-    app:autoSizeTextType="uniform"
-    app:autoSizeMinTextSize="5sp"
-    app:autoSizeMaxTextSize="100sp"
-    app:autoSizeStepGranularity="2sp"
-    android:padding = "2dp"
-    android:maxLines="1"/>
+    <TextView
+        android:id="@+id/tile18"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#F44336"
+        android:gravity="center_horizontal|center_vertical"
+        android:onClick="onBtnClick"
+        android:tag="18"
+        android:text="@string/gametile18"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toTopOf="@+id/georgia_syll_horGuidelineTile18Bottom"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toStartOf="@+id/georgia_syll_verGuidelineTile18Right"
+        app:layout_constraintStart_toStartOf="@+id/georgia_syll_verGuidelineTile18Left"
+        app:layout_constraintTop_toTopOf="@+id/georgia_syll_horGuidelineTile18Top"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="2dp"
+        android:maxLines="1"/>
 
-<ImageView
-    android:id="@+id/gamesHomeImage"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:onClick="goBackToEarth"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-    app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer"
-    app:layout_constraintStart_toStartOf="@id/guidelineV1"
-    app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-    android:contentDescription="@string/playerAvatar"
-    app:srcCompat="@drawable/zz_games_home" />
+    <!-- Options Bar -->
+    <ImageView
+        android:id="@+id/gamesHomeImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="goBackToEarth"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineOptionsLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        android:contentDescription="@string/playerAvatar"
+        app:srcCompat="@drawable/zz_games_home" />
 
-<TextView
-    android:id="@+id/bottomMiddleSpacer"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:tag="BMS"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-    app:layout_constraintEnd_toStartOf="@+id/repeatImage"
-    app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
-    app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"/>
+    <TextView
+        android:id="@+id/bottomMiddleSpacer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="BMS"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toStartOf="@+id/repeatImage"
+        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"/>
 
-<ImageView
-    android:id="@+id/instructions"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:onClick="playAudioInstructions"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-    app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer"
-    app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer"
-    app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-    android:contentDescription="@string/playAgain"
-    android:rotationY="0"
-    app:srcCompat="@drawable/zz_instructions" />
+    <ImageView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="playAudioInstructions"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        android:contentDescription="@string/playAgain"
+        android:rotationY="0"
+        app:srcCompat="@drawable/zz_instructions" />
 
-<ImageView
-    android:id="@+id/repeatImage"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:onClick="repeatGame"
-    app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
-    app:layout_constraintEnd_toEndOf="@id/guidelineV6"
-    app:layout_constraintStart_toEndOf="@+id/bottomMiddleSpacer"
-    app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-    android:contentDescription="@string/playAgain"
-    android:rotationY="0"
-    app:srcCompat="@drawable/zz_forward_inactive" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineHneg1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.01" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineHneg1.1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.045" />
-
-    <androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH0"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.06" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.08" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH1.5"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.30" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH2"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.33" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH2.5"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.36" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH3"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.38" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH4"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.46" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH5"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.47" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH6"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.55" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH7"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.56" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH8"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.64" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH9"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.65" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH10"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.73"/>
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH11"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.74"/>
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH12"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.82"/>
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH13"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.83"/>
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineH14"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.91"/>
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineHSys1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.93" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineHSys2"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent="0.99" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineV1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_percent="0.01" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.12" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.18" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.24" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1.4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.88" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineV2"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_percent="0.33" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineV3"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_percent="0.35" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineV4"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_percent="0.65" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineV5"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_percent="0.67" />
-
-<androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guidelineV6"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_percent="0.99" />
+    <ImageView
+        android:id="@+id/repeatImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="repeatGame"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toEndOf="@+id/verGuidelineOptionsRight"
+        app:layout_constraintStart_toEndOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        android:contentDescription="@string/playAgain"
+        android:rotationY="0"
+        app:srcCompat="@drawable/zz_forward_inactive" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

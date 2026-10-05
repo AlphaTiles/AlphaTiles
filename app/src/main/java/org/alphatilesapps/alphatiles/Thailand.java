@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -7,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -51,6 +54,78 @@ public class Thailand extends GameActivity {
         return null;
     }
 
+    private static final int[][] GUIDELINE_MAPPINGS_THAI = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.horGuidelineRefTop, R.dimen.thailand_horGuidelineRefTop},
+            {R.id.horGuidelineRefBottom, R.dimen.thailand_horGuidelineRefBottom},
+            {R.id.horGuidelineRow1TilesTop, R.dimen.thailand_horGuidelineRow1TilesTop},
+            {R.id.horGuidelineRow1TilesBottom, R.dimen.thailand_horGuidelineRow1TilesBottom},
+            {R.id.horGuidelineRow2TilesTop, R.dimen.thailand_horGuidelineRow2TilesTop},
+            {R.id.horGuidelineRow2TilesBottom, R.dimen.thailand_horGuidelineRow2TilesBottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.verGuidelineRefLeft, R.dimen.thailand_verGuidelineRefLeft},
+            {R.id.verGuidelineRefRight, R.dimen.thailand_verGuidelineRefRight},
+            {R.id.verGuidelineTilesLeft, R.dimen.thailand_verGuidelineTilesLeft},
+            {R.id.verGuidelineCol1TilesRight, R.dimen.thailand_verGuidelineCol1TilesRight},
+            {R.id.verGuidelineCol2TilesLeft, R.dimen.thailand_verGuidelineCol2TilesLeft},
+            {R.id.verGuidelineTilesRight, R.dimen.thailand_verGuidelineTilesRight},
+    };
+
+    private static final int[][] GUIDELINE_MAPPINGS_THAI2 = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.horGuidelineRefTop, R.dimen.thailand2_horGuidelineRefTop},
+            {R.id.horGuidelineRefBottom, R.dimen.thailand2_horGuidelineRefBottom},
+            {R.id.horGuidelineRow1TilesTop, R.dimen.thailand2_horGuidelineRow1TilesTop},
+            {R.id.horGuidelineRow1TilesBottom, R.dimen.thailand2_horGuidelineRow1TilesBottom},
+            {R.id.horGuidelineRow2TilesTop, R.dimen.thailand2_horGuidelineRow2TilesTop},
+            {R.id.horGuidelineRow2TilesBottom, R.dimen.thailand2_horGuidelineRow2TilesBottom},
+            {R.id.horGuidelineRow3TilesTop, R.dimen.thailand2_horGuidelineRow3TilesTop},
+            {R.id.horGuidelineRow3TilesBottom, R.dimen.thailand2_horGuidelineRow3TilesBottom},
+            {R.id.horGuidelineRow4TilesTop, R.dimen.thailand2_horGuidelineRow4TilesTop},
+            {R.id.horGuidelineRow4TilesBottom, R.dimen.thailand2_horGuidelineRow4TilesBottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.verGuidelineRefLeft, R.dimen.thailand2_verGuidelineRefLeft},
+            {R.id.verGuidelineRefRight, R.dimen.thailand2_verGuidelineRefRight},
+            {R.id.verGuidelineTilesLeft, R.dimen.thailand2_verGuidelineTilesLeft},
+            {R.id.verGuidelineTilesRight, R.dimen.thailand2_verGuidelineTilesRight},
+    };
+
     @Override
     protected int getAudioInstructionsResID() {
         Resources res = context.getResources();
@@ -74,6 +149,12 @@ public class Thailand extends GameActivity {
 
 
     @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
@@ -95,6 +176,8 @@ public class Thailand extends GameActivity {
             setContentView(R.layout.thailand);
             gameID = R.id.thailandCL;
         }
+
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -121,6 +204,15 @@ public class Thailand extends GameActivity {
         setUpInitialView();
         updateView();
 
+    }
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        if (choiceType.equals("WORD_TEXT")) {
+            GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS_THAI2);
+        } else {
+            GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS_THAI);
+        }
     }
 
     public void repeatGame(View view) {
