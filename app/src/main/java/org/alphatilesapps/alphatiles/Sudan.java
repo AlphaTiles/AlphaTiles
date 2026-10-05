@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -63,14 +64,23 @@ public class Sudan extends GameActivity {
 
     @Override
     protected void hideInstructionAudioImage() {
-        ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
+        ImageView instructionsButton = findViewById(R.id.instructions);
         instructionsButton.setVisibility(View.GONE);
 
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currentPageNumber", currentPageNumber);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            currentPageNumber = savedInstanceState.getInt("currentPageNumber", currentPageNumber);
+        }
         context = this;
         int gameID = 0;
         determineNumPages(); // JP
@@ -79,22 +89,22 @@ public class Sudan extends GameActivity {
             setContentView(R.layout.sudan_syll);
             gameID = R.id.sudansyllCL;
             splitSyllablesListAcrossPages();
-            showCorrectNumSyllables(0);
+            showCorrectNumSyllables(currentPageNumber);
         } else {
             setContentView(R.layout.sudan);
             gameID = R.id.sudanCL;
             splitTileListAcrossPages();
-            showCorrectNumTiles(0);
+            showCorrectNumTiles(currentPageNumber);
         }
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
 
         if (scriptDirection.equals("RTL")) {
-            ImageView instructionsImage = (ImageView) findViewById(R.id.instructions);
-            ImageView nextSet = (ImageView) findViewById(R.id.nextSet);
+            ImageView instructionsImage = findViewById(R.id.instructions);
+            ImageView nextSet = findViewById(R.id.nextSet);
 
-            ImageView previousSet = (ImageView) findViewById(R.id.previousSet);
+            ImageView previousSet = findViewById(R.id.previousSet);
             previousSet.setRotationY(180);
 
             instructionsImage.setRotationY(180);

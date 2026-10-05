@@ -1,17 +1,19 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Random;
-
-import android.graphics.Typeface;
-import android.widget.Button;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -64,6 +66,176 @@ public class UnitedStates extends GameActivity {
         
     }
 
+    private static final int[][] MAPPINGS_US_CL1 = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.us_horGuidelineRefTop, R.dimen.us_horGuidelineRefTop},
+            {R.id.us_horGuidelineRefBottom, R.dimen.us_horGuidelineRefBottom},
+            {R.id.us_horGuidelineTextTop, R.dimen.us_horGuidelineTextTop},
+            {R.id.us_horGuidelineTextBottom, R.dimen.us_horGuidelineTextBottom},
+            {R.id.us_horGuidelineRow1Top, R.dimen.us_horGuidelineRow1Top},
+            {R.id.us_horGuidelineRow1Bottom, R.dimen.us_horGuidelineRow1Bottom},
+            {R.id.us_horGuidelineRow2Top, R.dimen.us_horGuidelineRow2Top},
+            {R.id.us_horGuidelineRow2Bottom, R.dimen.us_horGuidelineRow2Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.us_verGuidelineRefLeft, R.dimen.us_verGuidelineRefLeft},
+            {R.id.us_verGuidelineRefRight, R.dimen.us_verGuidelineRefRight},
+            {R.id.us_verGuidelineTextLeft, R.dimen.us_verGuidelineTextLeft},
+            {R.id.us_verGuidelineTextRight, R.dimen.us_verGuidelineTextRight},
+
+            // CL1 Column Guidelines
+            {R.id.us_cl1_verGuidelineCol1Left, R.dimen.us_cl1_verGuidelineCol1Left},
+            {R.id.us_cl1_verGuidelineCol1Right, R.dimen.us_cl1_verGuidelineCol1Right},
+            {R.id.us_cl1_verGuidelineCol2Left, R.dimen.us_cl1_verGuidelineCol2Left},
+            {R.id.us_cl1_verGuidelineCol2Right, R.dimen.us_cl1_verGuidelineCol2Right},
+            {R.id.us_cl1_verGuidelineCol3Left, R.dimen.us_cl1_verGuidelineCol3Left},
+            {R.id.us_cl1_verGuidelineCol3Right, R.dimen.us_cl1_verGuidelineCol3Right},
+            {R.id.us_cl1_verGuidelineCol4Left, R.dimen.us_cl1_verGuidelineCol4Left},
+            {R.id.us_cl1_verGuidelineCol4Right, R.dimen.us_cl1_verGuidelineCol4Right},
+            {R.id.us_cl1_verGuidelineCol5Left, R.dimen.us_cl1_verGuidelineCol5Left},
+            {R.id.us_cl1_verGuidelineCol5Right, R.dimen.us_cl1_verGuidelineCol5Right}
+    };
+
+    private static final int[][] MAPPINGS_US_CL2 = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.us_horGuidelineRefTop, R.dimen.us_horGuidelineRefTop},
+            {R.id.us_horGuidelineRefBottom, R.dimen.us_horGuidelineRefBottom},
+            {R.id.us_horGuidelineTextTop, R.dimen.us_horGuidelineTextTop},
+            {R.id.us_horGuidelineTextBottom, R.dimen.us_horGuidelineTextBottom},
+            {R.id.us_horGuidelineRow1Top, R.dimen.us_horGuidelineRow1Top},
+            {R.id.us_horGuidelineRow1Bottom, R.dimen.us_horGuidelineRow1Bottom},
+            {R.id.us_horGuidelineRow2Top, R.dimen.us_horGuidelineRow2Top},
+            {R.id.us_horGuidelineRow2Bottom, R.dimen.us_horGuidelineRow2Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.us_verGuidelineRefLeft, R.dimen.us_verGuidelineRefLeft},
+            {R.id.us_verGuidelineRefRight, R.dimen.us_verGuidelineRefRight},
+            {R.id.us_verGuidelineTextLeft, R.dimen.us_verGuidelineTextLeft},
+            {R.id.us_verGuidelineTextRight, R.dimen.us_verGuidelineTextRight},
+
+            // CL2 Column Guidelines
+            {R.id.us_cl2_verGuidelineCol1Left, R.dimen.us_cl2_verGuidelineCol1Left},
+            {R.id.us_cl2_verGuidelineCol1Right, R.dimen.us_cl2_verGuidelineCol1Right},
+            {R.id.us_cl2_verGuidelineCol2Left, R.dimen.us_cl2_verGuidelineCol2Left},
+            {R.id.us_cl2_verGuidelineCol2Right, R.dimen.us_cl2_verGuidelineCol2Right},
+            {R.id.us_cl2_verGuidelineCol3Left, R.dimen.us_cl2_verGuidelineCol3Left},
+            {R.id.us_cl2_verGuidelineCol3Right, R.dimen.us_cl2_verGuidelineCol3Right},
+            {R.id.us_cl2_verGuidelineCol4Left, R.dimen.us_cl2_verGuidelineCol4Left},
+            {R.id.us_cl2_verGuidelineCol4Right, R.dimen.us_cl2_verGuidelineCol4Right},
+            {R.id.us_cl2_verGuidelineCol5Left, R.dimen.us_cl2_verGuidelineCol5Left},
+            {R.id.us_cl2_verGuidelineCol5Right, R.dimen.us_cl2_verGuidelineCol5Right},
+            {R.id.us_cl2_verGuidelineCol6Left, R.dimen.us_cl2_verGuidelineCol6Left},
+            {R.id.us_cl2_verGuidelineCol6Right, R.dimen.us_cl2_verGuidelineCol6Right},
+            {R.id.us_cl2_verGuidelineCol7Left, R.dimen.us_cl2_verGuidelineCol7Left},
+            {R.id.us_cl2_verGuidelineCol7Right, R.dimen.us_cl2_verGuidelineCol7Right}
+    };
+
+    private static final int[][] MAPPINGS_US_CL3 = {
+            // Common Horizontal Guidelines
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+
+            // Specific Horizontal Guidelines
+            {R.id.us_horGuidelineRefTop, R.dimen.us_horGuidelineRefTop},
+            {R.id.us_horGuidelineRefBottom, R.dimen.us_horGuidelineRefBottom},
+            {R.id.us_horGuidelineTextTop, R.dimen.us_horGuidelineTextTop},
+            {R.id.us_horGuidelineTextBottom, R.dimen.us_horGuidelineTextBottom},
+            {R.id.us_horGuidelineRow1Top, R.dimen.us_horGuidelineRow1Top},
+            {R.id.us_horGuidelineRow1Bottom, R.dimen.us_horGuidelineRow1Bottom},
+            {R.id.us_horGuidelineRow2Top, R.dimen.us_horGuidelineRow2Top},
+            {R.id.us_horGuidelineRow2Bottom, R.dimen.us_horGuidelineRow2Bottom},
+
+            // Common Vertical Guidelines
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+
+            // Specific Vertical Guidelines
+            {R.id.us_verGuidelineRefLeft, R.dimen.us_verGuidelineRefLeft},
+            {R.id.us_verGuidelineRefRight, R.dimen.us_verGuidelineRefRight},
+            {R.id.us_verGuidelineTextLeft, R.dimen.us_verGuidelineTextLeft},
+            {R.id.us_verGuidelineTextRight, R.dimen.us_verGuidelineTextRight},
+
+            // CL3 Column Guidelines
+            {R.id.us_cl3_verGuidelineCol1Left, R.dimen.us_cl3_verGuidelineCol1Left},
+            {R.id.us_cl3_verGuidelineCol1Right, R.dimen.us_cl3_verGuidelineCol1Right},
+            {R.id.us_cl3_verGuidelineCol2Left, R.dimen.us_cl3_verGuidelineCol2Left},
+            {R.id.us_cl3_verGuidelineCol2Right, R.dimen.us_cl3_verGuidelineCol2Right},
+            {R.id.us_cl3_verGuidelineCol3Left, R.dimen.us_cl3_verGuidelineCol3Left},
+            {R.id.us_cl3_verGuidelineCol3Right, R.dimen.us_cl3_verGuidelineCol3Right},
+            {R.id.us_cl3_verGuidelineCol4Left, R.dimen.us_cl3_verGuidelineCol4Left},
+            {R.id.us_cl3_verGuidelineCol4Right, R.dimen.us_cl3_verGuidelineCol4Right},
+            {R.id.us_cl3_verGuidelineCol5Left, R.dimen.us_cl3_verGuidelineCol5Left},
+            {R.id.us_cl3_verGuidelineCol5Right, R.dimen.us_cl3_verGuidelineCol5Right},
+            {R.id.us_cl3_verGuidelineCol6Left, R.dimen.us_cl3_verGuidelineCol6Left},
+            {R.id.us_cl3_verGuidelineCol6Right, R.dimen.us_cl3_verGuidelineCol6Right},
+            {R.id.us_cl3_verGuidelineCol7Left, R.dimen.us_cl3_verGuidelineCol7Left},
+            {R.id.us_cl3_verGuidelineCol7Right, R.dimen.us_cl3_verGuidelineCol7Right},
+            {R.id.us_cl3_verGuidelineCol8Left, R.dimen.us_cl3_verGuidelineCol8Left},
+            {R.id.us_cl3_verGuidelineCol8Right, R.dimen.us_cl3_verGuidelineCol8Right},
+            {R.id.us_cl3_verGuidelineCol9Left, R.dimen.us_cl3_verGuidelineCol9Left},
+            {R.id.us_cl3_verGuidelineCol9Right, R.dimen.us_cl3_verGuidelineCol9Right}
+    };
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        if (challengeLevel == 1) {
+            GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_US_CL1);
+        } else if (challengeLevel == 2) {
+            GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_US_CL2);
+        } else {
+            GuidelineUtils.applyGuidelines(rootView, this, MAPPINGS_US_CL3);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +261,7 @@ public class UnitedStates extends GameActivity {
                 neutralFontSize = 30;
                 gameID = R.id.united_states_cl1_CL;
         }
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, gameID);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -107,8 +280,9 @@ public class UnitedStates extends GameActivity {
             hideInstructionAudioImage();
         }
 
-        updatePointsAndTrackers(0);
         playAgain();
+        setUpInitialView();
+        updateView();
     }
 
     public void repeatGame(View view) {
@@ -286,14 +460,14 @@ public class UnitedStates extends GameActivity {
             constructedWord.setTextColor(Color.parseColor("#006400")); // dark green
             constructedWord.setTypeface(constructedWord.getTypeface(), Typeface.BOLD);
 
-            updatePointsAndTrackers(2);
+            recordAttempt(true,2);
 
             for (int i = 0; i < visibleGameButtons; i++) {
                 TextView gameTile = findViewById(GAME_BUTTONS[i]);
                 gameTile.setClickable(false);
             }
 
-            playCorrectSoundThenActiveWordClip(false);
+            playGameSoundThenActiveWordClip(true,false);
         } else {
             constructedWord.setTextColor(Color.BLACK);
             constructedWord.setTypeface(constructedWord.getTypeface(), Typeface.NORMAL);
