@@ -511,10 +511,26 @@
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:orientation="horizontal" app:layout_constraintGuide_percent="0.99" />
 
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsTop"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.93" />
+
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsBottom"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.99" />
+
     <!-- Vertical — side margins (1% each, matching Peru) -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:orientation="vertical" app:layout_constraintGuide_percent="0.01" />
+
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsLeft"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="vertical" app:layout_constraintGuide_percent="0.01" />
+
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsRight"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="vertical" app:layout_constraintGuide_percent="0.99" />
 
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1.1"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
