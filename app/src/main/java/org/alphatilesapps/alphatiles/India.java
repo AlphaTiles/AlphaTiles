@@ -126,11 +126,8 @@ public class India extends GameActivity {
         // Cap the iteration at 6 to prevent an IndexOutOfBoundsException if the fail-safe was tripped
         int tilesToShow = Math.min(parsedRefWordTileArray.size(), 6);
         for (int i = 0; i < PROMPT_TILES.length; i++) {
-            TextView promptTile = findViewById(PROMPT_TILES[i]);
+            ImageView promptTile = findViewById(PROMPT_TILES[i]);
             if (i < tilesToShow) {
-                promptTile.setText(parsedRefWordTileArray.get(i).text);
-                promptTile.setBackgroundColor(Color.parseColor(Start.colorList.get(i % 5)));
-                promptTile.setTextColor(Color.parseColor("#FFFFFF"));
                 promptTile.setVisibility(View.VISIBLE);
                 promptTile.setClickable(true);
             } else {
@@ -284,7 +281,7 @@ public class India extends GameActivity {
     protected void setAllGameButtonsUnclickable() {
         super.setAllGameButtonsUnclickable();
         for (int t = 0; t < PROMPT_TILES.length; t++) {
-            TextView promptTile = findViewById(PROMPT_TILES[t]);
+            ImageView promptTile = findViewById(PROMPT_TILES[t]);
             if (promptTile != null) {
                 promptTile.setClickable(false);
             }
@@ -297,7 +294,7 @@ public class India extends GameActivity {
         // Only make the visible prompt tiles clickable again
         int tilesToShow = Math.min(parsedRefWordTileArray.size(), 6);
         for (int t = 0; t < tilesToShow; t++) {
-            TextView promptTile = findViewById(PROMPT_TILES[t]);
+            ImageView promptTile = findViewById(PROMPT_TILES[t]);
             if (promptTile != null) {
                 promptTile.setClickable(true);
             }

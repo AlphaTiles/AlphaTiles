@@ -343,7 +343,7 @@ public abstract class GameActivity extends AppCompatActivity {
                 stageNumber.setText(String.valueOf("★")); // when stages isn't being used (when all words = stage 1), set to star
             }
 
-            if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq")) {
+            if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq") || country.equals("Indonesia")) {
             } else {
                 TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
                 int displayedChallengeLevel;

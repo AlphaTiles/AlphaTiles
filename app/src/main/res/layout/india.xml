@@ -20,10 +20,10 @@
         android:textStyle="bold"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV1.1"
         app:layout_constraintStart_toStartOf="@id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -42,10 +42,10 @@
         android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV1.2"
         app:layout_constraintStart_toStartOf="@id/guidelineV1.1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -64,10 +64,10 @@
         android:textStyle="bold"
         android:textColor="#FFD700"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV1.3"
         app:layout_constraintStart_toStartOf="@id/guidelineV1.2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -86,10 +86,10 @@
         android:max="100"
         android:scaleY="5.25"
         android:indeterminate="false"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHneg1.1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusMiddle"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
         app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop" />
 
     <ProgressBar
         android:id="@+id/attemptsBar"
@@ -102,10 +102,10 @@
         android:max="100"
         android:scaleY="2.25"
         android:indeterminate="false"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
         app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1.1" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusMiddle" />
 
     <TextView
         android:id="@+id/pointsTextView"
@@ -120,10 +120,10 @@
         android:text="@string/pointsScored"
         android:progress="0"
         android:max="100"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineStatusBottom"
         app:layout_constraintEnd_toEndOf="@id/guidelineV2"
         app:layout_constraintStart_toStartOf="@id/guidelineV1.4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineStatusTop"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
@@ -133,72 +133,97 @@
 
     <!-- PROMPT AUDIO TILES (Top 20% of 0.08 to 0.91) -->
     <!-- Max 6 tiles dynamically hidden via INVISIBLE to preserve leftmost spacing. -->
-    <TextView
+    <!-- PROMPT AUDIO TILES (Top 20% of 0.08 to 0.91) -->
+    <!-- Max 6 tiles dynamically hidden via INVISIBLE to preserve leftmost spacing. -->
+    <ImageView
         android:id="@+id/promptTile01"
-        android:layout_width="0dp" android:layout_height="0dp"
-        android:gravity="center" android:tag="1" android:onClick="onPromptTileClick"
-        android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
-        app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="1"
+        android:onClick="onPromptTileClick"
+        android:layout_margin="2dp"
+        android:padding="2dp"
+        android:contentDescription="@string/playAudioInstructions"
+        app:srcCompat="@drawable/zz_click_for_tile_audio_simple"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineRefBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV_t2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV_t1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineRefTop" />
 
-    <TextView
+    <ImageView
         android:id="@+id/promptTile02"
-        android:layout_width="0dp" android:layout_height="0dp"
-        android:gravity="center" android:tag="2" android:onClick="onPromptTileClick"
-        android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
-        app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="2"
+        android:onClick="onPromptTileClick"
+        android:layout_margin="2dp"
+        android:padding="2dp"
+        android:contentDescription="@string/playAudioInstructions"
+        app:srcCompat="@drawable/zz_click_for_tile_audio_simple"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineRefBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV_t3"
         app:layout_constraintStart_toStartOf="@+id/guidelineV_t2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineRefTop" />
 
-    <TextView
+    <ImageView
         android:id="@+id/promptTile03"
-        android:layout_width="0dp" android:layout_height="0dp"
-        android:gravity="center" android:tag="3" android:onClick="onPromptTileClick"
-        android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
-        app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="3"
+        android:onClick="onPromptTileClick"
+        android:layout_margin="2dp"
+        android:padding="2dp"
+        android:contentDescription="@string/playAudioInstructions"
+        app:srcCompat="@drawable/zz_click_for_tile_audio_simple"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineRefBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV_t4"
         app:layout_constraintStart_toStartOf="@+id/guidelineV_t3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineRefTop" />
 
-    <TextView
+    <ImageView
         android:id="@+id/promptTile04"
-        android:layout_width="0dp" android:layout_height="0dp"
-        android:gravity="center" android:tag="4" android:onClick="onPromptTileClick"
-        android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
-        app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="4"
+        android:onClick="onPromptTileClick"
+        android:layout_margin="2dp"
+        android:padding="2dp"
+        android:contentDescription="@string/playAudioInstructions"
+        app:srcCompat="@drawable/zz_click_for_tile_audio_simple"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineRefBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV_t5"
         app:layout_constraintStart_toStartOf="@+id/guidelineV_t4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineRefTop" />
 
-    <TextView
+    <ImageView
         android:id="@+id/promptTile05"
-        android:layout_width="0dp" android:layout_height="0dp"
-        android:gravity="center" android:tag="5" android:onClick="onPromptTileClick"
-        android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
-        app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="5"
+        android:onClick="onPromptTileClick"
+        android:layout_margin="2dp"
+        android:padding="2dp"
+        android:contentDescription="@string/playAudioInstructions"
+        app:srcCompat="@drawable/zz_click_for_tile_audio_simple"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineRefBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV_t6"
         app:layout_constraintStart_toStartOf="@+id/guidelineV_t5"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineRefTop" />
 
-    <TextView
+    <ImageView
         android:id="@+id/promptTile06"
-        android:layout_width="0dp" android:layout_height="0dp"
-        android:gravity="center" android:tag="6" android:onClick="onPromptTileClick"
-        android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
-        app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="6"
+        android:onClick="onPromptTileClick"
+        android:layout_margin="2dp"
+        android:padding="2dp"
+        android:contentDescription="@string/playAudioInstructions"
+        app:srcCompat="@drawable/zz_click_for_tile_audio_simple"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineRefBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV_t7"
         app:layout_constraintStart_toStartOf="@+id/guidelineV_t6"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
-
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineRefTop" />
 
     <!-- ANSWER CHOICES 2x2 GRID (Bottom 80% of 0.08 to 0.91) -->
     
@@ -207,11 +232,12 @@
         android:id="@+id/wordImage1"
         android:layout_width="0dp" android:layout_height="0dp"
         android:onClick="onWordClick" android:tag="1"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH_TextTop1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineImageRowOneBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV_mid"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH2"
-        android:padding="8dp" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineImageRowOneTop"
+        android:padding="8dp"
+        app:srcCompat="@drawable/zz_sil"/>
 
     <TextView
         android:id="@+id/wordText1"
@@ -219,21 +245,23 @@
         android:gravity="center" android:onClick="onWordClick" android:tag="1"
         android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
         app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH3"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineTextRowOneBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV_mid"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH_TextTop1" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineTextRowOneTop"
+        android:text="@string/wordChoice01"/>
 
     <!-- Quadrant 2 (Top-Right) -->
     <ImageView
         android:id="@+id/wordImage2"
         android:layout_width="0dp" android:layout_height="0dp"
         android:onClick="onWordClick" android:tag="2"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH_TextTop1"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineImageRowOneBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV_mid"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH2"
-        android:padding="8dp" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineImageRowOneTop"
+        android:padding="8dp"
+        app:srcCompat="@drawable/zz_sil"/>
 
     <TextView
         android:id="@+id/wordText2"
@@ -241,21 +269,23 @@
         android:gravity="center" android:onClick="onWordClick" android:tag="2"
         android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
         app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH3"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineTextRowOneBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV_mid"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH_TextTop1" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineTextRowOneTop"
+        android:text="@string/wordChoice02"/>
 
     <!-- Quadrant 3 (Bottom-Left) -->
     <ImageView
         android:id="@+id/wordImage3"
         android:layout_width="0dp" android:layout_height="0dp"
         android:onClick="onWordClick" android:tag="3"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH_TextTop2"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineImageRowTwoBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV_mid"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        android:padding="8dp" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineImageRowTwoTop"
+        android:padding="8dp"
+        app:srcCompat="@drawable/zz_sil"/>
 
     <TextView
         android:id="@+id/wordText3"
@@ -263,21 +293,23 @@
         android:gravity="center" android:onClick="onWordClick" android:tag="3"
         android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
         app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineTextRowTwoBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV_mid"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH_TextTop2" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineTextRowTwoTop"
+        android:text="@string/wordChoice03"/>
 
     <!-- Quadrant 4 (Bottom-Right) -->
     <ImageView
         android:id="@+id/wordImage4"
         android:layout_width="0dp" android:layout_height="0dp"
         android:onClick="onWordClick" android:tag="4"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH_TextTop2"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineImageRowTwoBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV_mid"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
-        android:padding="8dp" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineImageRowTwoTop"
+        android:padding="8dp"
+        app:srcCompat="@drawable/zz_sil"/>
 
     <TextView
         android:id="@+id/wordText4"
@@ -285,39 +317,34 @@
         android:gravity="center" android:onClick="onWordClick" android:tag="4"
         android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
         app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineTextRowTwoBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV_mid"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH_TextTop2" />
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineTextRowTwoTop"
+        android:text="@string/wordChoice04"/>
 
 
     <!-- BOTTOM NAVIGATION -->
-    <ImageView android:id="@+id/gamesHomeImage" android:layout_width="0dp" android:layout_height="0dp" android:onClick="goBackToEarth" app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2" app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer" app:layout_constraintStart_toStartOf="@id/guidelineV1" app:layout_constraintTop_toTopOf="@+id/guidelineHSys1" android:contentDescription="@string/playerAvatar" app:srcCompat="@drawable/zz_games_home" />
-    <TextView android:id="@+id/bottomMiddleSpacer" android:layout_width="0dp" android:layout_height="0dp" android:tag="BMS" app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2" app:layout_constraintEnd_toStartOf="@+id/repeatImage" app:layout_constraintStart_toEndOf="@+id/gamesHomeImage" app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"/>
-    <ImageView android:id="@+id/instructions" android:layout_width="0dp" android:layout_height="0dp" android:onClick="playAudioInstructions" app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2" app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer" app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer" app:layout_constraintTop_toTopOf="@+id/guidelineHSys1" android:contentDescription="@string/playAudioInstructions" android:rotationY="0" app:srcCompat="@drawable/zz_instructions" />
-    <ImageView android:id="@+id/repeatImage" android:layout_width="0dp" android:layout_height="0dp" android:onClick="repeatGame" app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2" app:layout_constraintEnd_toEndOf="@id/guidelineV2" app:layout_constraintStart_toEndOf="@+id/bottomMiddleSpacer" app:layout_constraintTop_toTopOf="@+id/guidelineHSys1" android:contentDescription="@string/playAgain" android:rotationY="0" app:srcCompat="@drawable/zz_forward_inactive" />
+    <ImageView android:id="@+id/gamesHomeImage" android:layout_width="0dp" android:layout_height="0dp" android:onClick="goBackToEarth" app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom" app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer" app:layout_constraintStart_toStartOf="@id/guidelineV1" app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop" android:contentDescription="@string/playerAvatar" app:srcCompat="@drawable/zz_games_home" />
+    <TextView android:id="@+id/bottomMiddleSpacer" android:layout_width="0dp" android:layout_height="0dp" android:tag="BMS" app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom" app:layout_constraintEnd_toStartOf="@+id/repeatImage" app:layout_constraintStart_toEndOf="@+id/gamesHomeImage" app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"/>
+    <ImageView android:id="@+id/instructions" android:layout_width="0dp" android:layout_height="0dp" android:onClick="playAudioInstructions" app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom" app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer" app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer" app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop" android:contentDescription="@string/playAudioInstructions" android:rotationY="0" app:srcCompat="@drawable/zz_instructions" />
+    <ImageView android:id="@+id/repeatImage" android:layout_width="0dp" android:layout_height="0dp" android:onClick="repeatGame" app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom" app:layout_constraintEnd_toEndOf="@id/guidelineV2" app:layout_constraintStart_toEndOf="@+id/bottomMiddleSpacer" app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop" android:contentDescription="@string/playAgain" android:rotationY="0" app:srcCompat="@drawable/zz_forward_inactive" />
 
 
-    <!-- GUIDELINES -->
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHneg1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.01" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHneg1.1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.045" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.06" />
-    
-    <!-- Top of Safe Zone -->
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.08" />
-    <!-- 20% mark of Safe Zone (0.08 to 0.91) => Prompt Area -->
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.246" />
-    <!-- Midpoint of grid -->
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.578" />
-    <!-- Bottom of Safe Zone -->
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.91" />
-
-    <!-- Text View Top for 2x2 Grid (75% image height per quad) -->
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH_TextTop1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.511" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH_TextTop2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.843" />
-
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHSys1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.93" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHSys2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.99" />
+    <!-- Horizontal Guidelines -->
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineStatusTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.01" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineStatusMiddle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.045" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineStatusBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.06" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineRefTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.08" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineRefBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.22" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineImageRowOneTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.24" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineImageRowOneBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.44" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineTextRowOneTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.45" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineTextRowOneBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.55" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineImageRowTwoTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.60" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineImageRowTwoBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.80" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineTextRowTwoTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.81" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineTextRowTwoBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.91" />
     <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.93" />
     <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.99" />
 

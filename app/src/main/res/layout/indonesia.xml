@@ -10,134 +10,6 @@
     tools:context=".Indonesia">
 
     <!-- ═══════════════════════════════════════════════════════
-         TOP BAR  –  exact structure from peru.xml
-         guidelineHneg1 (0.01) → guidelineH0 (0.06)
-         V1 (0.01) ··· V2 (0.99)
-    ═══════════════════════════════════════════════════════════ -->
-
-    <TextView
-        android:id="@+id/gameNumberView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center"
-        android:tag="1"
-        android:text="0"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.1"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="0dp"
-        android:maxLines="1"/>
-
-    <TextView
-        android:id="@+id/challengeLevelView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#FFD700"
-        android:gravity="center"
-        android:tag="1"
-        android:text="0"
-        android:textStyle="bold"
-        android:textColor="#000000"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.2"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="0dp"
-        android:maxLines="1"/>
-
-    <TextView
-        android:id="@+id/stageLevelView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#000000"
-        android:gravity="center"
-        android:tag="1"
-        android:text="0"
-        android:textStyle="bold"
-        android:textColor="#FFD700"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.3"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.2"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="0dp"
-        android:maxLines="1"/>
-
-    <ProgressBar
-        android:id="@+id/accuracyBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        android:progressBackgroundTint="@android:color/transparent"
-        android:progress="0"
-        android:max="100"
-        android:scaleY="5.25"
-        android:indeterminate="false"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHneg1.1"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1" />
-
-    <ProgressBar
-        android:id="@+id/attemptsBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        android:progressBackgroundTint="@android:color/transparent"
-        android:progress="0"
-        android:max="100"
-        android:scaleY="2.25"
-        android:indeterminate="false"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1.1" />
-
-    <TextView
-        android:id="@+id/pointsTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#9C27B0"
-        android:gravity="center"
-        android:tag="1"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp"
-        android:text="@string/pointsScored"
-        android:progress="0"
-        android:max="100"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
-        app:layout_constraintEnd_toEndOf="@id/guidelineV2"
-        app:layout_constraintStart_toStartOf="@id/guidelineV1.4"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="5sp"
-        app:autoSizeMaxTextSize="100sp"
-        app:autoSizeStepGranularity="2sp"
-        android:padding="0dp"
-        android:maxLines="1"/>
-
-    <!-- ═══════════════════════════════════════════════════════
          WORD BAND 1   guidelineH1 (0.08) → guidelineH2 (0.18)
          Image: left 20% of screen  |  Word text: right 80%
     ═══════════════════════════════════════════════════════════ -->
@@ -146,6 +18,7 @@
         android:id="@+id/wordImage01"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:padding="2dp"
         android:onClick="clickPicHearAudio"
         android:tag="1"
         android:scaleType="fitCenter"
@@ -162,11 +35,12 @@
         android:layout_height="0dp"
         android:onClick="onWordTextClick"
         android:tag="1"
+        android:background="#4CAF50"
         android:gravity="center"
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:padding="4dp"
+        android:padding="2dp"
         android:maxLines="1"
         android:importantForAccessibility="no"
         app:autoSizeTextType="uniform"
@@ -176,7 +50,8 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
         app:layout_constraintStart_toEndOf="@+id/guidelineVImg"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/wordChoice01"/>
 
     <!-- TILE BAND 1   guidelineH2 (0.18) → guidelineH3 (0.28) -->
     <LinearLayout
@@ -185,7 +60,7 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:background="#EEEEEE"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH2.5"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -198,6 +73,7 @@
         android:id="@+id/wordImage02"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:padding="2dp"
         android:onClick="clickPicHearAudio"
         android:tag="2"
         android:scaleType="fitCenter"
@@ -214,11 +90,12 @@
         android:layout_height="0dp"
         android:onClick="onWordTextClick"
         android:tag="2"
+        android:background="#4CAF50"
         android:gravity="center"
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:padding="4dp"
+        android:padding="2dp"
         android:maxLines="1"
         android:importantForAccessibility="no"
         app:autoSizeTextType="uniform"
@@ -228,7 +105,8 @@
         app:layout_constraintTop_toTopOf="@+id/guidelineH4"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
         app:layout_constraintStart_toEndOf="@+id/guidelineVImg"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/wordChoice02" />
 
     <!-- TILE BAND 2   guidelineH5 (0.39) → guidelineH6 (0.49) -->
     <LinearLayout
@@ -237,7 +115,7 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:background="#EEEEEE"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH5.5"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -250,13 +128,14 @@
         android:id="@+id/wordImage03"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:padding="2dp"
         android:onClick="clickPicHearAudio"
         android:tag="3"
         android:scaleType="fitCenter"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
         app:layout_constraintTop_toTopOf="@+id/guidelineH7"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH7.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVImg" />
 
@@ -266,11 +145,12 @@
         android:layout_height="0dp"
         android:onClick="onWordTextClick"
         android:tag="3"
+        android:background="#4CAF50"
         android:gravity="center"
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:padding="4dp"
+        android:padding="2dp"
         android:maxLines="1"
         android:importantForAccessibility="no"
         app:autoSizeTextType="uniform"
@@ -278,9 +158,10 @@
         app:autoSizeMaxTextSize="60sp"
         app:autoSizeStepGranularity="2sp"
         app:layout_constraintTop_toTopOf="@+id/guidelineH7"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH8"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH7.5"
         app:layout_constraintStart_toEndOf="@+id/guidelineVImg"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/wordChoice03" />
 
     <!-- TILE BAND 3   guidelineH8 (0.60) → guidelineH9 (0.70) -->
     <LinearLayout
@@ -302,13 +183,14 @@
         android:id="@+id/wordImage04"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:padding="2dp"
         android:onClick="clickPicHearAudio"
         android:tag="4"
         android:scaleType="fitCenter"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
         app:layout_constraintTop_toTopOf="@+id/guidelineH10"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH10.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVImg" />
 
@@ -318,11 +200,12 @@
         android:layout_height="0dp"
         android:onClick="onWordTextClick"
         android:tag="4"
+        android:background="#4CAF50"
         android:gravity="center"
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:padding="4dp"
+        android:padding="2dp"
         android:maxLines="1"
         android:importantForAccessibility="no"
         app:autoSizeTextType="uniform"
@@ -330,9 +213,10 @@
         app:autoSizeMaxTextSize="60sp"
         app:autoSizeStepGranularity="2sp"
         app:layout_constraintTop_toTopOf="@+id/guidelineH10"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH10.5"
         app:layout_constraintStart_toEndOf="@+id/guidelineVImg"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/wordChoice04" />
 
     <!-- TILE BAND 4   guidelineH11 (0.81) → guidelineHSys1 (0.91) -->
     <LinearLayout
@@ -342,7 +226,7 @@
         android:orientation="horizontal"
         android:background="#EEEEEE"
         app:layout_constraintTop_toTopOf="@+id/guidelineH11"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -376,8 +260,8 @@
         android:visibility="invisible"
         android:contentDescription="@string/playAgain"
         app:srcCompat="@drawable/zz_backward_inactive"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintStart_toStartOf="@id/guidelineV1"
         app:layout_constraintEnd_toStartOf="@+id/gamesHomeImage" />
 
@@ -388,8 +272,8 @@
         android:onClick="goBackToEarth"
         android:contentDescription="@string/playerAvatar"
         app:srcCompat="@drawable/zz_games_home"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintStart_toEndOf="@+id/backwardArrowImage"
         app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer" />
 
@@ -398,8 +282,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:tag="BMS"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
         app:layout_constraintEnd_toStartOf="@+id/forwardArrowImage" />
 
@@ -411,8 +295,8 @@
         android:contentDescription="@string/playAudioInstructions"
         android:rotationY="0"
         app:srcCompat="@drawable/zz_instructions"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer"
         app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer" />
 
@@ -424,8 +308,8 @@
         android:visibility="invisible"
         android:contentDescription="@string/playAgain"
         app:srcCompat="@drawable/zz_forward_inactive"
-        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
         app:layout_constraintStart_toEndOf="@+id/bottomMiddleSpacer"
         app:layout_constraintEnd_toEndOf="@id/guidelineV2" />
 
@@ -433,83 +317,85 @@
          GUIDELINES
     ═══════════════════════════════════════════════════════════ -->
 
-    <!-- Horizontal — top bar -->
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHneg1"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.01" />
-
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHneg1.1"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.045" />
-
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH0"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.06" />
-
     <!-- wordBand1 top -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH1"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.08" />
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.01" />
 
-    <!-- tileBand1 top / wordBand1 bottom -->
+    <!-- wordBand1 bottom -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH2"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.18" />
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.11" />
+
+    <!-- tileBand1 top -->
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH2.5"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.12" />
 
     <!-- tileBand1 bottom -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH3"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.28" />
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.22" />
 
-    <!-- wordBand2 top  (0.28–0.29 = empty margin) -->
+    <!-- wordBand2 top  -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH4"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.29" />
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.24" />
 
-    <!-- tileBand2 top / wordBand2 bottom -->
+    <!-- wordBand2 bottom -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH5"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.39" />
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.34" />
+
+    <!-- tileBand2 top -->
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH5.5"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.35" />
 
     <!-- tileBand2 bottom -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH6"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.49" />
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.45" />
 
-    <!-- wordBand3 top  (0.49–0.50 = empty margin) -->
+    <!-- wordBand3 top -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH7"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.50" />
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.47" />
 
-    <!-- tileBand3 top / wordBand3 bottom -->
+    <!-- wordBand3 bottom -->
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH7.5"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.57" />
+
+    <!-- tileBand3 top -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH8"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.60" />
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.58" />
 
     <!-- tileBand3 bottom -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH9"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.70" />
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.68" />
 
-    <!-- wordBand4 top  (0.70–0.71 = empty margin) -->
+    <!-- wordBand4 top -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH10"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.71" />
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.70" />
 
-    <!-- tileBand4 top / wordBand4 bottom -->
+    <!-- wordBand4 bottom -->
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH10.5"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.80" />
+
+    <!-- tileBand4 top -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH11"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:orientation="horizontal" app:layout_constraintGuide_percent="0.81" />
 
-    <!-- tileBand4 bottom / bottom bar top -->
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHSys1"
+    <!-- tileBand4 bottom -->
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH12"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.93" />
-
-    <!-- bottom bar bottom -->
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHSys2"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:orientation="horizontal" app:layout_constraintGuide_percent="0.99" />
+        android:orientation="horizontal" app:layout_constraintGuide_percent="0.91" />
 
     <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsTop"
         android:layout_width="wrap_content" android:layout_height="wrap_content"

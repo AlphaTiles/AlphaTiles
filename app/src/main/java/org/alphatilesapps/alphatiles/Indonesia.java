@@ -3,7 +3,6 @@ package org.alphatilesapps.alphatiles;
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
-import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.*;
 
@@ -11,11 +10,14 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.widget.TextViewCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,8 +103,6 @@ public class Indonesia extends GameActivity {
 
         bwd.setImageResource(R.drawable.zz_backward);
         fwd.setImageResource(R.drawable.zz_forward);
-        setUpInitialView();
-        updateView();
     }
 
     // ── Paging ────────────────────────────────────────────────────────────────
@@ -157,7 +157,7 @@ public class Indonesia extends GameActivity {
                         Start.tileList.parseWordIntoTiles(word.wordInLOP, word);
                 int numTiles = Math.min(tiles.size(), MAX_TILES_SHOWN);
                 for (int t = 0; t < numTiles; t++) {
-                    band.addView(makeTileButton(tiles.get(t)));
+                    band.addView(makeTileButton(tiles.get(t), i));
                 }
                 band.setVisibility(View.VISIBLE);
 
@@ -178,7 +178,7 @@ public class Indonesia extends GameActivity {
      * audio clip when tapped. Each tile gets equal weight so the buttons fill
      * the full band width left to right.
      */
-    private TextView makeTileButton(Start.Tile tile) {
+    private TextView makeTileButton(Start.Tile tile, int itemNo) {
         TextView tv = new TextView(context);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
@@ -186,10 +186,28 @@ public class Indonesia extends GameActivity {
         tv.setLayoutParams(lp);
         tv.setText(tile.text);
         tv.setGravity(Gravity.CENTER);
+        tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tv.setTextColor(Color.WHITE);
-        tv.setTextSize(20f);
-        tv.setTypeface(null, Typeface.BOLD);
-        tv.setBackgroundColor(Color.parseColor(colorList.get(tile.tileColor)));
+
+        TextView sampleTv = findViewById(R.id.word01);
+        if (sampleTv != null && sampleTv.getTypeface() != null) {
+            tv.setTypeface(sampleTv.getTypeface(), Typeface.BOLD);
+        } else {
+            tv.setTypeface(null, Typeface.BOLD);
+        }
+
+        tv.setMaxLines(1);
+
+        int paddingPx = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()
+        );
+        tv.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+
+        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
+                tv, 5, 100, 2, TypedValue.COMPLEX_UNIT_SP
+        );
+
+        tv.setBackgroundColor(Color.parseColor(colorList.get(itemNo)));
         tv.setClickable(true);
         tv.setOnClickListener(v -> {
             try {

@@ -238,7 +238,7 @@ public class Earth extends AppCompatActivity {
 
                         boolean changeColor = true;
                         String doorStyle = "";
-                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {                            doorStyle = "_inprocess";
+                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")|| country.equals("Indonesia")) {                            doorStyle = "_inprocess";
                         } else if (points > 0 && !masteryAchieved) {
                             doorStyle = "_inprocess";
                         } else if (masteryAchieved) {
@@ -265,7 +265,7 @@ public class Earth extends AppCompatActivity {
 
                         if (!doorTextColor.isEmpty()) {
                             ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(doorTextColor))));
-                        } else if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")) {
+                        } else if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")|| country.equals("Indonesia")) {
 //                            totalCorrect = 12;
                             ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
                         } else if (!masteryAchieved) {
