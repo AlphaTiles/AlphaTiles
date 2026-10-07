@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -16,7 +18,12 @@ import java.util.Random;
 public class Senegal extends GameActivity {
     private static final int GRID_SIZE = 7;
     private static final int TOTAL_TILES = 49;
-    private static final String[] WORD_COLORS = {"#E31B23", "#FDEF42", "#00853F"}; // Red, Yellow, Green
+    private static final String[] WORD_COLORS_FLAG = {"#E31B23", "#FDEF42", "#00853F"}; // Senegal flag (Red, Yellow, Green)
+
+    private static final String PREFS_NAME = "AlphaTilesPrefs";
+    private static final String PREF_KEY_STANDARD_COLOR_ROTATION = "senegal_use_standard_color_rotation";
+
+    private List<String> activeWordColors;
     private List<Start.Word> chosenWords = new ArrayList<>();
 
     // State variables for dynamic validation
@@ -82,6 +89,14 @@ public class Senegal extends GameActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.senegal);
         context = this;
+
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        boolean useStandardRotation = prefs.getBoolean(PREF_KEY_STANDARD_COLOR_ROTATION, true);
+        if (useStandardRotation && Start.colorList != null && !Start.colorList.isEmpty()) {
+            activeWordColors = Start.colorList;
+        } else {
+            activeWordColors = Arrays.asList(WORD_COLORS_FLAG);
+        }
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.senegalCL);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -339,6 +354,10 @@ public class Senegal extends GameActivity {
         if (mediaPlayerIsPlaying || view.getTag() == null) return;
 
         int buttonIndex = Integer.parseInt(view.getTag().toString());
+
+        // Ignore taps on tiles that are already part of the selected chain
+        if (userPathIndices.contains(buttonIndex)) return;
+
         int x = buttonIndex % GRID_SIZE;
         int y = buttonIndex / GRID_SIZE;
 
@@ -389,13 +408,13 @@ public class Senegal extends GameActivity {
                 userPathIndices.add(buttonIndex);
 
                 TextView tileView = findViewById(GAME_BUTTONS[buttonIndex]);
-                // This naturally loops over the 3 Senegal colors regardless of word count
-                int colorIndex = expectedNode.wordIndex % WORD_COLORS.length;
-                int color = Color.parseColor(WORD_COLORS[colorIndex]);
+                // Loops over whichever color set is active (3-color flag theme or Start.colorList standard 5-color rotation)
+                int colorIndex = expectedNode.wordIndex % activeWordColors.size();
+                int color = Color.parseColor(activeWordColors.get(colorIndex));
 
                 tileView.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
-                if (colorIndex == 1) {
+                if (isLightColor(color)) {
                     tileView.setTextColor(Color.parseColor("#333333"));
                 } else {
                     tileView.setTextColor(Color.WHITE);
@@ -478,6 +497,11 @@ public class Senegal extends GameActivity {
             refWord = chosenWords.get(index);
             playActiveWordClip(false);
         }
+    }
+
+    private boolean isLightColor(int color) {
+        double luminance = (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color));
+        return luminance > 180;
     }
 
     public void repeatGame(View view) {
