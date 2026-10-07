@@ -32,15 +32,13 @@ public class Ethiopia extends GameActivity {
 
     // ── Life-heart ImageView IDs ──────────────────────────────────────────────
     private static final int[] LIFE_VIEWS = {
-            R.id.life1, R.id.life2, R.id.life3,
-            R.id.life4, R.id.life5, R.id.life6
+            R.id.life1, R.id.life2, R.id.life3, R.id.life4, R.id.life5, R.id.life6,
+            R.id.life7, R.id.life8, R.id.life9, R.id.life10, R.id.life11, R.id.life12
     };
-
-    private static final int MAX_LIVES = 6;
 
     // ── Round state ───────────────────────────────────────────────────────────
     int     keysInUse;
-    private int     livesRemaining = MAX_LIVES;
+    private int     livesRemaining;
     private boolean roundComplete  = false;
 
     /** Every tile text guessed this round (correct + wrong). */
@@ -110,12 +108,20 @@ public class Ethiopia extends GameActivity {
         if (!repeatLocked) playAgain();
     }
 
+    private int getMaxLivesForRound() {
+        if (challengeLevel >= 1 && challengeLevel <= 12) {
+            return challengeLevel;
+        } else {
+            return 8; // Default 8 lives if value other than 1..12 is entered
+        }
+    }
+
     public void playAgain() {
         repeatLocked  = true;
         roundComplete = false;
         setAdvanceArrowToGray();
 
-        livesRemaining = MAX_LIVES;
+        livesRemaining = getMaxLivesForRound();
         keys.clear();
         correctGuesses.clear();
         keysClicked.clear();
@@ -127,10 +133,20 @@ public class Ethiopia extends GameActivity {
 
         // Word picture — tap to hear pronunciation
         ImageView image = findViewById(R.id.wordImage);
-        int resID = getResources().getIdentifier(
-                refWord.wordInLWC, "drawable", getPackageName());
-        image.setImageResource(resID);
-        image.setClickable(true);
+        if (image != null) {
+            int resID = getResources().getIdentifier(
+                    refWord.wordInLWC, "drawable", getPackageName());
+            image.setImageResource(resID);
+            image.setVisibility(View.INVISIBLE);
+            image.setClickable(false);
+        }
+
+        // Active word text view — yellow background with black text at start of round
+        TextView wordDisplay = findViewById(R.id.activeWordTextView);
+        if (wordDisplay != null) {
+            wordDisplay.setBackgroundColor(Color.parseColor("#FFFF00"));
+            wordDisplay.setTextColor(Color.parseColor("#000000"));
+        }
 
         updateLifeDisplay();
         updateWordDisplay();
@@ -303,6 +319,21 @@ public class Ethiopia extends GameActivity {
         roundComplete = true;
         repeatLocked  = false;
         setAdvanceArrowToBlue();
+
+        // Switch activeWordTextView to dark green with white text when round ends successfully
+        TextView wordDisplay = findViewById(R.id.activeWordTextView);
+        if (wordDisplay != null) {
+            wordDisplay.setBackgroundColor(Color.parseColor("#4CAF50"));
+            wordDisplay.setTextColor(Color.WHITE);
+        }
+
+        // Show word picture when round ends
+        ImageView image = findViewById(R.id.wordImage);
+        if (image != null) {
+            image.setVisibility(View.VISIBLE);
+            image.setClickable(true);
+        }
+
         recordAttempt(true, 2);               // +2 points, fill one tracker dot
         playGameSoundThenActiveWordClip(true,false); // chime → pronounce the word
     }
@@ -310,8 +341,20 @@ public class Ethiopia extends GameActivity {
     private void onGameOver() {
         roundComplete = true;
         TextView wordDisplay = findViewById(R.id.activeWordTextView);
-        if (wordDisplay != null)
+        if (wordDisplay != null) {
             wordDisplay.setText(wordInLOPWithStandardizedSequenceOfCharacters(refWord));
+            // Set activeWordTextView to black background with white text when round ends unsuccessfully
+            wordDisplay.setBackgroundColor(Color.BLACK);
+            wordDisplay.setTextColor(Color.WHITE);
+        }
+
+        // Show word picture when round ends
+        ImageView image = findViewById(R.id.wordImage);
+        if (image != null) {
+            image.setVisibility(View.VISIBLE);
+            image.setClickable(true);
+        }
+
         setAllGameButtonsUnclickable();
         repeatLocked = false;
         setAdvanceArrowToBlue();   // let player advance — no points for losing
@@ -374,14 +417,19 @@ public class Ethiopia extends GameActivity {
         return true;
     }
 
-    /** Syncs the six life icons with {@code livesRemaining}. */
+    /** Syncs the 12 life icons with {@code livesRemaining} and active {@code challengeLevel}. */
     private void updateLifeDisplay() {
+        int maxLives = getMaxLivesForRound();
         for (int i = 0; i < LIFE_VIEWS.length; i++) {
             ImageView life = findViewById(LIFE_VIEWS[i]);
             if (life == null) continue;
-            String name = (i < livesRemaining) ? "zz_complete" : "zz_incomplete";
-            int id = getResources().getIdentifier(name, "drawable", getPackageName());
-            life.setImageResource(id);
+            if (i < livesRemaining) {
+                life.setVisibility(View.VISIBLE);
+            } else if (i < maxLives) {
+                life.setVisibility(View.INVISIBLE);
+            } else {
+                life.setVisibility(View.GONE);
+            }
         }
     }
 

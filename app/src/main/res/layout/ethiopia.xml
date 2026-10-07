@@ -143,9 +143,9 @@
         android:maxLines="1"/>
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         LIFE DISPLAY  (guidelineH0 → guidelineH1)
-         Six heart/dot icons in the right-hand third of the screen.
-         Ethiopia.java toggles between zz_complete and zz_incomplete.
+         LIFE DISPLAY  (guidelineH0 → guidelineH0.5)
+         12 life icons chained horizontally across the screen width.
+         When a life is lost, the icon is set to INVISIBLE.
          ═══════════════════════════════════════════════════════════════════════ -->
 
     <ImageView
@@ -157,8 +157,8 @@
         app:srcCompat="@drawable/zz_complete"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV0"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV1" />
+        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintEnd_toStartOf="@+id/life2" />
 
     <ImageView
         android:id="@+id/life2"
@@ -169,8 +169,8 @@
         app:srcCompat="@drawable/zz_complete"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV2"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV3" />
+        app:layout_constraintStart_toEndOf="@+id/life1"
+        app:layout_constraintEnd_toStartOf="@+id/life3" />
 
     <ImageView
         android:id="@+id/life3"
@@ -181,8 +181,8 @@
         app:srcCompat="@drawable/zz_complete"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV4"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV5" />
+        app:layout_constraintStart_toEndOf="@+id/life2"
+        app:layout_constraintEnd_toStartOf="@+id/life4" />
 
     <ImageView
         android:id="@+id/life4"
@@ -193,8 +193,8 @@
         app:srcCompat="@drawable/zz_complete"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV6"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV7" />
+        app:layout_constraintStart_toEndOf="@+id/life3"
+        app:layout_constraintEnd_toStartOf="@+id/life5" />
 
     <ImageView
         android:id="@+id/life5"
@@ -205,8 +205,8 @@
         app:srcCompat="@drawable/zz_complete"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV8"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV9" />
+        app:layout_constraintStart_toEndOf="@+id/life4"
+        app:layout_constraintEnd_toStartOf="@+id/life6" />
 
     <ImageView
         android:id="@+id/life6"
@@ -217,11 +217,83 @@
         app:srcCompat="@drawable/zz_complete"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV10"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV11" />
+        app:layout_constraintStart_toEndOf="@+id/life5"
+        app:layout_constraintEnd_toStartOf="@+id/life7" />
+
+    <ImageView
+        android:id="@+id/life7"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/tracker7of12"
+        android:padding="2dp"
+        app:srcCompat="@drawable/zz_complete"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
+        app:layout_constraintStart_toEndOf="@+id/life6"
+        app:layout_constraintEnd_toStartOf="@+id/life8" />
+
+    <ImageView
+        android:id="@+id/life8"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/tracker8of12"
+        android:padding="2dp"
+        app:srcCompat="@drawable/zz_complete"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
+        app:layout_constraintStart_toEndOf="@+id/life7"
+        app:layout_constraintEnd_toStartOf="@+id/life9" />
+
+    <ImageView
+        android:id="@+id/life9"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/tracker9of12"
+        android:padding="2dp"
+        app:srcCompat="@drawable/zz_complete"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
+        app:layout_constraintStart_toEndOf="@+id/life8"
+        app:layout_constraintEnd_toStartOf="@+id/life10" />
+
+    <ImageView
+        android:id="@+id/life10"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/tracker10of12"
+        android:padding="2dp"
+        app:srcCompat="@drawable/zz_complete"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
+        app:layout_constraintStart_toEndOf="@+id/life9"
+        app:layout_constraintEnd_toStartOf="@+id/life11" />
+
+    <ImageView
+        android:id="@+id/life11"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/tracker11of12"
+        android:padding="2dp"
+        app:srcCompat="@drawable/zz_complete"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
+        app:layout_constraintStart_toEndOf="@+id/life10"
+        app:layout_constraintEnd_toStartOf="@+id/life12" />
+
+    <ImageView
+        android:id="@+id/life12"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/tracker12of12"
+        android:padding="2dp"
+        app:srcCompat="@drawable/zz_complete"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
+        app:layout_constraintStart_toEndOf="@+id/life11"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV13" />
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         GAME AREA  (guidelineH1 → guidelineH4)
+         GAME AREA  (guidelineH1 → guidelineH2)
          Left: green word-display bar showing dashes / revealed tiles.
          Right: word picture (tap to hear pronunciation).
          ═══════════════════════════════════════════════════════════════════════ -->
@@ -230,19 +302,19 @@
         android:id="@+id/activeWordTextView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#4CAF50"
+        android:background="#FFFF00"
         android:gravity="center"
         android:text="□  □  □  □  □"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:padding="2dp"
         android:maxLines="1"
         app:autoSizeTextType="uniform"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV7"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV13"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH1" />
 
     <ImageView
@@ -250,13 +322,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
+        android:visibility="invisible"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV8"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH1" />
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV13"
+        app:layout_constraintStart_toEndOf="@+id/guidelineV0"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineH3" />
 
     <!-- ═══════════════════════════════════════════════════════════════════════
          KEYBOARD  – 35 keys in 5 rows of 7
@@ -877,7 +950,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.09" />
+        app:layout_constraintGuide_percent="0.08" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV1.1"
@@ -912,91 +985,105 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.13" />
+        app:layout_constraintGuide_percent="0.12" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.16" />
+        app:layout_constraintGuide_percent="0.14" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.24" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.36" />
+        app:layout_constraintGuide_percent="0.46" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.39" />
+        app:layout_constraintGuide_percent="0.47" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.48" />
+        app:layout_constraintGuide_percent="0.55" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.49" />
+        app:layout_constraintGuide_percent="0.56" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.58" />
+        app:layout_constraintGuide_percent="0.64" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.59" />
+        app:layout_constraintGuide_percent="0.65" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.68" />
+        app:layout_constraintGuide_percent="0.73" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.69" />
+        app:layout_constraintGuide_percent="0.74" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.78" />
+        app:layout_constraintGuide_percent="0.82" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.79" />
+        app:layout_constraintGuide_percent="0.83" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.88" />
+        app:layout_constraintGuide_percent="0.91" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHSys1"
