@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Properties;
 
@@ -119,8 +122,9 @@ public class India extends GameActivity {
             attempts++;
         } while (parsedRefWordTileArray.size() > 6 && attempts < 50);
 
-        Start.Word targetWord = refWord;
-        correctString = Start.wordList.stripInstructionCharacters(targetWord.wordInLOP);
+        Word targetWord = refWord;
+        correctString = wordList.stripInstructionCharacters(targetWord.wordInLOP);
+        Tile refTile = parsedRefWordTileArray.get(0);
 
         // 2. Load the prompt tiles into the top area
         // Cap the iteration at 6 to prevent an IndexOutOfBoundsException if the fail-safe was tripped
@@ -136,53 +140,47 @@ public class India extends GameActivity {
             }
         }
 
-        // 3. Generate 3 unique distractor words via chooseWord() (Fail-safe: break after 50 attempts)
-        List<Start.Word> wordChoices = new ArrayList<>();
-        wordChoices.add(targetWord);
-        attempts = 0;
+        // 3. Decode Challenge Level
+        // 11-13: showImages = true; 21-23: showImages = false
+        // Second digit (1, 2, or 3): wordSelectionMode for returnFourWords
+        int firstDigit = (challengeLevel >= 10) ? (challengeLevel / 10) : (challengeLevel == 2 ? 2 : 1);
+        int secondDigit = (challengeLevel >= 10) ? (challengeLevel % 10) : 1;
+        boolean showImages = (firstDigit == 1);
+        int wordSelectionMode = Math.max(1, Math.min(3, secondDigit));
 
-        while (wordChoices.size() < 4 && attempts < 50) {
-            chooseWord(); // Reassigns refWord globally
-            attempts++;
-            boolean isDuplicate = false;
-
-            for (Start.Word choice : wordChoices) {
-                if (Start.wordList.stripInstructionCharacters(choice.wordInLOP)
-                        .equals(Start.wordList.stripInstructionCharacters(refWord.wordInLOP))) {
-                    isDuplicate = true;
-                    break;
-                }
-            }
-            if (!isDuplicate) {
-                wordChoices.add(refWord);
-            }
-        }
-
-        // If the language pack is too small and we couldn't find 4 unique words, pad with the target word
-        while (wordChoices.size() < 4) {
-            wordChoices.add(targetWord);
-        }
+        // 4. Generate 4 word choices using returnFourWords
+        List<Word> wordChoices = wordList.returnFourWords(refWord, refTile, wordSelectionMode, "WORD_TEXT");
 
         // Restore refWord to the correct target word globally so game logic doesn't break
         refWord = targetWord;
 
-        // 4. Shuffle the 4 selected words
-        Collections.shuffle(wordChoices);
+        // 5. Adjust layout constraints based on whether images are shown
+        ConstraintLayout constraintLayout = findViewById(R.id.indiaCL);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
 
-        // 5. Decode the Challenge Level
-        String challengeLevelString = String.valueOf(challengeLevel);
-        int firstDigit = challengeLevelString.charAt(0) - '0';
-        boolean showImages = (firstDigit == 1);
+        if (showImages) {
+            constraintSet.connect(R.id.wordText1, ConstraintSet.TOP, R.id.horGuidelineTextRowOneTop, ConstraintSet.BOTTOM, 0);
+            constraintSet.connect(R.id.wordText2, ConstraintSet.TOP, R.id.horGuidelineTextRowOneTop, ConstraintSet.BOTTOM, 0);
+            constraintSet.connect(R.id.wordText3, ConstraintSet.TOP, R.id.horGuidelineTextRowTwoTop, ConstraintSet.BOTTOM, 0);
+            constraintSet.connect(R.id.wordText4, ConstraintSet.TOP, R.id.horGuidelineTextRowTwoTop, ConstraintSet.BOTTOM, 0);
+        } else {
+            constraintSet.connect(R.id.wordText1, ConstraintSet.TOP, R.id.horGuidelineImageRowOneTop, ConstraintSet.BOTTOM, 0);
+            constraintSet.connect(R.id.wordText2, ConstraintSet.TOP, R.id.horGuidelineImageRowOneTop, ConstraintSet.BOTTOM, 0);
+            constraintSet.connect(R.id.wordText3, ConstraintSet.TOP, R.id.horGuidelineImageRowTwoTop, ConstraintSet.BOTTOM, 0);
+            constraintSet.connect(R.id.wordText4, ConstraintSet.TOP, R.id.horGuidelineImageRowTwoTop, ConstraintSet.BOTTOM, 0);
+        }
+        constraintSet.applyTo(constraintLayout);
 
         // 6. Populate the 2x2 grid
         for (int i = 0; i < GAME_BUTTONS.length; i++) {
-            Start.Word choice = wordChoices.get(i);
+            Word choice = wordChoices.get(i);
             TextView wordText = findViewById(GAME_BUTTONS[i]);
             ImageView wordImage = findViewById(WORD_IMAGES[i]);
 
             // Setup Text
-            wordText.setText(Start.wordList.stripInstructionCharacters(choice.wordInLOP));
-            wordText.setBackgroundColor(Color.parseColor(Start.colorList.get(i % 5)));
+            wordText.setText(wordList.stripInstructionCharacters(choice.wordInLOP));
+            wordText.setBackgroundColor(Color.parseColor(colorList.get(i % 5)));
             wordText.setTextColor(Color.parseColor("#FFFFFF"));
             wordText.setClickable(true);
 
@@ -194,7 +192,7 @@ public class India extends GameActivity {
             if (showImages) {
                 wordImage.setVisibility(View.VISIBLE);
             } else {
-                wordImage.setVisibility(View.INVISIBLE);
+                wordImage.setVisibility(View.GONE);
             }
         }
 
