@@ -233,7 +233,6 @@ public class England extends GameActivity {
             respondToCorrectSelection(index);
         } else {
             incorrectOnLevel++;
-            recordAttempt(false,0);
             playIncorrectSound();
 
             // The Wobble Animation
@@ -286,13 +285,7 @@ public class England extends GameActivity {
 
                                 repeatLocked = false;
                                 setAdvanceArrowToBlue();
-                                recordAttempt(true, 4); // This locks the UI
-
-                                // Manually unlock the UI so the blue arrow works
-//                                if (Start.after12checkedTrackers == 1 || (trackerCount > 0 && trackerCount % 12 != 0)) {
-//                                    setOptionsRowClickable();
-//                                    setAllGameButtonsClickable();
-//                                }
+                                recordAttempt(true, 4);
                             }
 
                             // Step 3: Snap to -90 degrees and animate back to 0 to complete the flip
