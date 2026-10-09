@@ -37,20 +37,30 @@
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Brazil"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
-        <activity android:name=".Cameroon" />
+        <activity android:name=".Cameroon"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
         <activity android:name=".China"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Colombia"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Celebration"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Chile"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Ecuador"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
-        <activity android:name=".England" />
+        <activity android:name=".England"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
+        <activity android:name=".Ethiopia"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
         <activity android:name=".Georgia"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".India"/>
+        <activity android:name=".Indonesia"/>
+        <activity android:name=".Iraq"/>
         <activity android:name=".Italy"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Malaysia"/>
         <activity android:name=".Mexico"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Myanmar"
@@ -66,13 +76,6 @@
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
         <activity android:name=".UnitedStates"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
-        <activity android:name=".Chile"
-            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
-        <activity android:name=".Malaysia"/>
-        <activity android:name=".India"/>
-        <activity android:name=".Indonesia"/>
-        <activity android:name=".Iraq"/>
-        <activity android:name=".Ethiopia"/>
     </application>
 
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />

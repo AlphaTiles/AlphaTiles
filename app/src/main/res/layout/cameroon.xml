@@ -193,13 +193,17 @@
     <!-- ══════════════════════════════════════════════════════════════════════ -->
     <!--  WORD IMAGE  [XML #1: 30% smaller — H2 now 0.276]                    -->
     <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!--  WORD IMAGE & TEXT CONTAINER  (Left 30% in Landscape)                 -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
     <LinearLayout
+        android:id="@+id/wordContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH3"
+        app:layout_constraintEnd_toEndOf="@+id/cameroon_verWordRight"
+        app:layout_constraintStart_toStartOf="@+id/cameroon_verWordLeft"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1">
 
         <ImageView
@@ -227,8 +231,21 @@
             app:autoSizeMaxTextSize="100sp"
             app:autoSizeMinTextSize="5sp"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"
-             />
+            app:autoSizeTextType="uniform" />
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!--  SELECTION & AUDIO BUTTONS CONTAINER  (Right 70% in Landscape)        -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/choicesContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
+        app:layout_constraintEnd_toEndOf="@+id/cameroon_verChoicesRight"
+        app:layout_constraintStart_toStartOf="@+id/cameroon_verChoicesLeft"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH4">
 
         <LinearLayout
             android:layout_weight="1"
@@ -373,80 +390,102 @@
     <!-- ══════════════════════════════════════════════════════════════════════ -->
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/cameroon_verWordLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/cameroon_verWordLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/cameroon_verWordRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/cameroon_verWordRight" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/cameroon_verChoicesLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/cameroon_verChoicesLeft" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/cameroon_verChoicesRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/cameroon_verChoicesRight" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHneg1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.01" />
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusTop" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHneg1.1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.045" />
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusMiddle" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.06" />
+        app:layout_constraintGuide_percent="@dimen/horGuidelineStatusBottom" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.08" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineH1" />
 
-    <!-- XML #1: wordImage bottom (30% smaller) -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.276" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineH2" />
 
-    <!-- XML #2: wordText bottom (50% larger) -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.396" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineH3" />
 
-    <!-- XML #5: top of grid row 0 -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.406" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineH4" />
 
-    <!-- XML #5: bottom of row 0 / gap before row 1 -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.525" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineH5" />
 
-    <!-- XML #5: top of row 1 -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.535" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineH6" />
 
-    <!-- XML #5: bottom of row 1 / gap before row 2 -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.654" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineH7" />
 
     <!-- XML #5: top of row 2 -->
     <androidx.constraintlayout.widget.Guideline
@@ -454,7 +493,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.664" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineH8" />
 
     <!-- XML #5: bottom of row 2 / gap before row 3 -->
     <androidx.constraintlayout.widget.Guideline
@@ -462,7 +501,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.783" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineH9" />
 
     <!-- XML #5: top of row 3 -->
     <androidx.constraintlayout.widget.Guideline
@@ -470,7 +509,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.793" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineH10" />
 
     <!-- bottom of row 3 (unchanged) -->
     <androidx.constraintlayout.widget.Guideline
@@ -478,35 +517,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.91" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineH11" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHSys1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.93" />
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsTop" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHSys2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.99" />
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsBottom" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horGuidelineOptionsTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.93" />
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsTop" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horGuidelineOptionsBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.99" />
+        app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsBottom" />
 
     <!-- ══════════════════════════════════════════════════════════════════════ -->
     <!--  VERTICAL GUIDELINES                                                  -->
@@ -517,18 +556,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.01" />
+        app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsLeft" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/verGuidelineOptionsRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.99" />
-
-    <!-- ══════════════════════════════════════════════════════════════════════ -->
-    <!--  VERTICAL GUIDELINES                                                  -->
-    <!-- ══════════════════════════════════════════════════════════════════════ -->
+        app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsRight" />
 
     <!-- Left margin -->
     <androidx.constraintlayout.widget.Guideline
@@ -536,35 +571,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.01" />
+        app:layout_constraintGuide_percent="@dimen/verGuidelineGameNoLeft" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV1.1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.12" />
+        app:layout_constraintGuide_percent="@dimen/verGuidelineGameNoCLBorder" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV1.2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.18" />
+        app:layout_constraintGuide_percent="@dimen/verGuidelineCLStageBorder" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV1.3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.24" />
+        app:layout_constraintGuide_percent="@dimen/verGuidelineStageBarsBorder" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV1.4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.88" />
+        app:layout_constraintGuide_percent="@dimen/verGuidelineBarsPointsBorder" />
 
     <!-- XML #3: inner left edge of selector (centered 50% within V1→V2) -->
     <androidx.constraintlayout.widget.Guideline
@@ -572,7 +607,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.046" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV1b" />
 
     <!-- XML #3: inner right edge of selector -->
     <androidx.constraintlayout.widget.Guideline
@@ -580,7 +615,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.119" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV2b" />
 
     <!-- Right edge of selector column (outer, unchanged) -->
     <androidx.constraintlayout.widget.Guideline
@@ -588,7 +623,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.155" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV2" />
 
     <!-- XML #4: tile col 0 left edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -596,7 +631,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.165" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV3" />
 
     <!-- XML #4: tile col 0 right edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -604,7 +639,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.294" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV4" />
 
     <!-- XML #4: tile col 1 left edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -612,7 +647,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.304" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV5" />
 
     <!-- XML #4: tile col 1 right edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -620,7 +655,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.433" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV6" />
 
     <!-- XML #4: tile col 2 left edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -628,7 +663,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.443" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV7" />
 
     <!-- XML #4: tile col 2 right edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -636,7 +671,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.572" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV8" />
 
     <!-- XML #4: tile col 3 left edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -644,7 +679,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.582" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV9" />
 
     <!-- XML #4: tile col 3 right edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -652,7 +687,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.711" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV10" />
 
     <!-- XML #4: tile col 4 left edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -660,7 +695,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.721" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV11" />
 
     <!-- XML #4: tile col 4 right edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -668,7 +703,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.850" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV12" />
 
     <!-- XML #4: tile col 5 left edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -676,7 +711,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.860" />
+        app:layout_constraintGuide_percent="@dimen/cameroon_guidelineV13" />
 
     <!-- Right margin / tile col 5 right edge -->
     <androidx.constraintlayout.widget.Guideline
@@ -684,6 +719,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.99" />
+        app:layout_constraintGuide_percent="@dimen/verGuidelinePointsRight" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

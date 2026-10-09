@@ -7,6 +7,7 @@ import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import androidx.annotation.NonNull;
+
 public class Cameroon extends GameActivity {
     boolean useImage = false;
     boolean substituteAll = false;
@@ -35,6 +38,64 @@ public class Cameroon extends GameActivity {
     int[] selectors = {R.id.selector0, R.id.selector1, R.id.selector2, R.id.selector3};
     final int selectorColor = Color.parseColor(colorList.get(5));
     final int selectorColorCorrect = Color.parseColor(colorList.get(3));
+
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            {R.id.guidelineHneg1, R.dimen.horGuidelineStatusTop},
+            {R.id.guidelineHneg1_1, R.dimen.horGuidelineStatusMiddle},
+            {R.id.guidelineH0, R.dimen.horGuidelineStatusBottom},
+            {R.id.guidelineH1, R.dimen.cameroon_guidelineH1},
+            {R.id.guidelineH2, R.dimen.cameroon_guidelineH2},
+            {R.id.guidelineH3, R.dimen.cameroon_guidelineH3},
+            {R.id.guidelineH4, R.dimen.cameroon_guidelineH4},
+            {R.id.guidelineH5, R.dimen.cameroon_guidelineH5},
+            {R.id.guidelineH6, R.dimen.cameroon_guidelineH6},
+            {R.id.guidelineH7, R.dimen.cameroon_guidelineH7},
+            {R.id.guidelineH8, R.dimen.cameroon_guidelineH8},
+            {R.id.guidelineH9, R.dimen.cameroon_guidelineH9},
+            {R.id.guidelineH10, R.dimen.cameroon_guidelineH10},
+            {R.id.guidelineH11, R.dimen.cameroon_guidelineH11},
+            {R.id.guidelineHSys1, R.dimen.horGuidelineOptionsTop},
+            {R.id.guidelineHSys2, R.dimen.horGuidelineOptionsBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+            {R.id.guidelineV1, R.dimen.verGuidelineGameNoLeft},
+            {R.id.guidelineV1_1, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.guidelineV1_2, R.dimen.verGuidelineCLStageBorder},
+            {R.id.guidelineV1_3, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.guidelineV1_4, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.guidelineV1b, R.dimen.cameroon_guidelineV1b},
+            {R.id.guidelineV2b, R.dimen.cameroon_guidelineV2b},
+            {R.id.guidelineV2, R.dimen.cameroon_guidelineV2},
+            {R.id.guidelineV3, R.dimen.cameroon_guidelineV3},
+            {R.id.guidelineV4, R.dimen.cameroon_guidelineV4},
+            {R.id.guidelineV5, R.dimen.cameroon_guidelineV5},
+            {R.id.guidelineV6, R.dimen.cameroon_guidelineV6},
+            {R.id.guidelineV7, R.dimen.cameroon_guidelineV7},
+            {R.id.guidelineV8, R.dimen.cameroon_guidelineV8},
+            {R.id.guidelineV9, R.dimen.cameroon_guidelineV9},
+            {R.id.guidelineV10, R.dimen.cameroon_guidelineV10},
+            {R.id.guidelineV11, R.dimen.cameroon_guidelineV11},
+            {R.id.guidelineV12, R.dimen.cameroon_guidelineV12},
+            {R.id.guidelineV13, R.dimen.cameroon_guidelineV13},
+            {R.id.guidelineV14, R.dimen.verGuidelinePointsRight},
+            {R.id.cameroon_verWordLeft, R.dimen.cameroon_verWordLeft},
+            {R.id.cameroon_verWordRight, R.dimen.cameroon_verWordRight},
+            {R.id.cameroon_verChoicesLeft, R.dimen.cameroon_verChoicesLeft},
+            {R.id.cameroon_verChoicesRight, R.dimen.cameroon_verChoicesRight}
+    };
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
 
     @Override
     protected int[] getGameButtons() {
@@ -83,6 +144,7 @@ public class Cameroon extends GameActivity {
             repeatImage.setRotationY(180);
             fixConstraintsRTL(R.id.cameroonCL);
         }
+        updateGuidelines();
         if (getAudioInstructionsResID() == 0) {
             hideInstructionAudioImage();
         }
@@ -147,7 +209,7 @@ public class Cameroon extends GameActivity {
             words = mutateWord(parsedRefWordTileArray);
         } while (hasFailedMutation(words, parsedRefWordTileArray));
         words.add(correct, parsedRefWordTileArray);
-        correctString = Start.wordList.stripInstructionCharacters(refWord.wordInLOP);
+        correctString = wordList.stripInstructionCharacters(refWord.wordInLOP);
         for (int row = 0; row < 4; row++) {
             LinearLayout layout = rows.get(row);
             layout.removeAllViews();
