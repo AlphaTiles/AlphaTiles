@@ -801,4 +801,82 @@
     <item name="chile_verGuidelineKeyLeft" type="dimen" format="float">0.01</item>
     <item name="chile_verGuidelineKeyRight" type="dimen" format="float">0.99</item>
 
+    <!-- Cameroon Horizontal Guidelines (Portrait) -->
+    <item name="cameroon_guidelineH1" type="dimen" format="float">0.08</item>
+    <item name="cameroon_guidelineH2" type="dimen" format="float">0.276</item>
+    <item name="cameroon_guidelineH3" type="dimen" format="float">0.396</item>
+    <item name="cameroon_guidelineH4" type="dimen" format="float">0.406</item>
+    <item name="cameroon_guidelineH5" type="dimen" format="float">0.525</item>
+    <item name="cameroon_guidelineH6" type="dimen" format="float">0.535</item>
+    <item name="cameroon_guidelineH7" type="dimen" format="float">0.654</item>
+    <item name="cameroon_guidelineH8" type="dimen" format="float">0.664</item>
+    <item name="cameroon_guidelineH9" type="dimen" format="float">0.783</item>
+    <item name="cameroon_guidelineH10" type="dimen" format="float">0.793</item>
+    <item name="cameroon_guidelineH11" type="dimen" format="float">0.91</item>
+
+    <!-- Cameroon Vertical Guidelines (Portrait) -->
+    <item name="cameroon_verWordLeft" type="dimen" format="float">0.01</item>
+    <item name="cameroon_verWordRight" type="dimen" format="float">0.99</item>
+    <item name="cameroon_verChoicesLeft" type="dimen" format="float">0.01</item>
+    <item name="cameroon_verChoicesRight" type="dimen" format="float">0.99</item>
+    <item name="cameroon_guidelineV1b" type="dimen" format="float">0.046</item>
+    <item name="cameroon_guidelineV2b" type="dimen" format="float">0.119</item>
+    <item name="cameroon_guidelineV2" type="dimen" format="float">0.155</item>
+    <item name="cameroon_guidelineV3" type="dimen" format="float">0.165</item>
+    <item name="cameroon_guidelineV4" type="dimen" format="float">0.294</item>
+    <item name="cameroon_guidelineV5" type="dimen" format="float">0.304</item>
+    <item name="cameroon_guidelineV6" type="dimen" format="float">0.433</item>
+    <item name="cameroon_guidelineV7" type="dimen" format="float">0.443</item>
+    <item name="cameroon_guidelineV8" type="dimen" format="float">0.572</item>
+    <item name="cameroon_guidelineV9" type="dimen" format="float">0.582</item>
+    <item name="cameroon_guidelineV10" type="dimen" format="float">0.711</item>
+    <item name="cameroon_guidelineV11" type="dimen" format="float">0.721</item>
+    <item name="cameroon_guidelineV12" type="dimen" format="float">0.850</item>
+    <item name="cameroon_guidelineV13" type="dimen" format="float">0.860</item>
+
+    <!-- England Horizontal Guidelines (Portrait) -->
+    <item name="england_horGuidelineH1" type="dimen" format="float">0.08</item>
+    <item name="england_horGuidelineH2" type="dimen" format="float">0.21</item>
+    <item name="england_horGuidelineH3" type="dimen" format="float">0.23</item>
+
+    <!-- England Vertical Guidelines (Portrait) -->
+    <item name="england_verWordBoxLeft" type="dimen" format="float">0.01</item>
+    <item name="england_verWordBoxRight" type="dimen" format="float">0.99</item>
+    <item name="england_verGridLeft" type="dimen" format="float">0.01</item>
+    <item name="england_verGridRight" type="dimen" format="float">0.99</item>
+
+    <!-- Ethiopia Horizontal Guidelines (Portrait) -->
+    <item name="ethiopia_guidelineH1" type="dimen" format="float">0.13</item>
+    <item name="ethiopia_guidelineH3" type="dimen" format="float">0.25171</item>
+    <item name="ethiopia_guidelineH4" type="dimen" format="float">0.91</item>
+
+    <!-- Ethiopia Vertical Guidelines (Portrait) -->
+    <item name="ethiopia_verLeft" type="dimen" format="float">0.01</item>
+    <item name="ethiopia_verWordRight" type="dimen" format="float">0.568</item>
+    <item name="ethiopia_verImageLeft" type="dimen" format="float">0.576</item>
+    <item name="ethiopia_verRight" type="dimen" format="float">0.99</item>
+    <item name="ethiopia_verKeyboardLeft" type="dimen" format="float">0.01</item>
+    <item name="ethiopia_verKeyboardRight" type="dimen" format="float">0.99</item>
+
+    <!-- India Horizontal Guidelines (Portrait) -->
+    <item name="india_horGuidelineRefTop" type="dimen" format="float">0.08</item>
+    <item name="india_horGuidelineRefBottom" type="dimen" format="float">0.22</item>
+    <item name="india_horGuidelineGridTop" type="dimen" format="float">0.24</item>
+    <item name="india_horGuidelineGridBottom" type="dimen" format="float">0.91</item>
+
+    <!-- India Vertical Guidelines (Portrait) -->
+    <item name="india_verPromptLeft" type="dimen" format="float">0.01</item>
+    <item name="india_verPromptRight" type="dimen" format="float">0.99</item>
+    <item name="india_verGridLeft" type="dimen" format="float">0.01</item>
+    <item name="india_verGridRight" type="dimen" format="float">0.99</item>
+
+    <!-- Senegal Horizontal Guidelines (Portrait) -->
+    <item name="senegal_guidelineH1" type="dimen" format="float">0.22</item>
+
+    <!-- Senegal Vertical Guidelines (Portrait) -->
+    <item name="senegal_verImagesLeft" type="dimen" format="float">0.01</item>
+    <item name="senegal_verImagesRight" type="dimen" format="float">0.99</item>
+    <item name="senegal_verGridLeft" type="dimen" format="float">0.01</item>
+    <item name="senegal_verGridRight" type="dimen" format="float">0.99</item>
+
 </resources>
