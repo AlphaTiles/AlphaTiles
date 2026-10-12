@@ -209,7 +209,7 @@ public class Cameroon extends GameActivity {
             words = mutateWord(parsedRefWordTileArray);
         } while (hasFailedMutation(words, parsedRefWordTileArray));
         words.add(correct, parsedRefWordTileArray);
-        correctString = wordList.stripInstructionCharacters(refWord.wordInLOP);
+        correctString = Start.wordList.stripInstructionCharacters(refWord.wordInLOP);
         for (int row = 0; row < 4; row++) {
             LinearLayout layout = rows.get(row);
             layout.removeAllViews();
@@ -432,7 +432,9 @@ public class Cameroon extends GameActivity {
     }
 
     public void clickPicHearAudio(View view) {
-        super.clickPicHearAudio(view);
+        if (useImage) {
+            super.clickPicHearAudio(view);
+        }
     }
 
     public void goBackToEarth(View view) {
