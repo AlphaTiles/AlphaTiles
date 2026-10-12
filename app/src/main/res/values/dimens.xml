@@ -891,7 +891,10 @@
     <item name="india_guidelineV_t7" type="dimen" format="float">0.990</item>
 
     <!-- Senegal Horizontal Guidelines (Portrait) -->
-    <item name="senegal_guidelineH1" type="dimen" format="float">0.22</item>
+    <item name="senegal_horGridTop" format="float" type="dimen">0.22</item>
+    <item name="senegal_horGridBottom" format="float" type="dimen">0.93</item>
+    <item name="senegal_horImagesTop" format="float" type="dimen">0.06</item>
+    <item name="senegal_horImagesBottom" format="float" type="dimen">0.20</item>
 
     <!-- Senegal Vertical Guidelines (Portrait) -->
     <item name="senegal_verImagesLeft" type="dimen" format="float">0.01</item>

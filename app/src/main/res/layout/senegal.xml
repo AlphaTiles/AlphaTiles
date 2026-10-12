@@ -136,11 +136,10 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@id/guidelineH1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.9">
+        app:layout_constraintTop_toBottomOf="@id/senegal_horImagesTop"
+        app:layout_constraintBottom_toTopOf="@id/senegal_horImagesBottom"
+        app:layout_constraintStart_toStartOf="@+id/senegal_verImagesLeft"
+        app:layout_constraintEnd_toEndOf="@+id/senegal_verImagesRight">
 
         <ImageView android:id="@+id/wordImage1" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="8dp" android:scaleType="fitCenter" android:background="@drawable/tile_white_background" android:elevation="4dp" android:onClick="onImageClick" android:tag="0"/>
         <ImageView android:id="@+id/wordImage2" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="8dp" android:scaleType="fitCenter" android:background="@drawable/tile_white_background" android:elevation="4dp" android:onClick="onImageClick" android:tag="1"/>
@@ -154,14 +153,13 @@
         android:id="@+id/gridContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintWidth_percent="0.95"
         app:layout_constraintDimensionRatio="1:1"
         android:columnCount="7"
         android:rowCount="7"
-        app:layout_constraintTop_toBottomOf="@id/guidelineH1"
-        app:layout_constraintBottom_toTopOf="@id/guidelineHSys1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/senegal_horGridTop"
+        app:layout_constraintBottom_toTopOf="@id/senegal_horGridBottom"
+        app:layout_constraintStart_toStartOf="@+id/senegal_verGridLeft"
+        app:layout_constraintEnd_toEndOf="@+id/senegal_verGridRight">
 
         <TextView android:id="@+id/tile01" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="0"/>
         <TextView android:id="@+id/tile02" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="1"/>
@@ -283,7 +281,16 @@
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1.3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.24" />
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1.4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.88" />
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.99" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.01" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.99" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsLeft" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsRight" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_verImagesLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/senegal_verImagesLeft" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_verImagesRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/senegal_verImagesRight" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_verGridLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/senegal_verGridLeft" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_verGridRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/senegal_verGridRight" />
+
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_horGridTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/senegal_horGridTop" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_horGridBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/senegal_horGridBottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_horImagesTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/senegal_horImagesTop" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_horImagesBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/senegal_horImagesBottom" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

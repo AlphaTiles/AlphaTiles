@@ -1,6 +1,7 @@
 package org.alphatilesapps.alphatiles;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +19,42 @@ import java.util.List;
 import java.util.Random;
 
 public class Senegal extends GameActivity {
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            {R.id.guidelineHneg1, R.dimen.horGuidelineStatusTop},
+            {R.id.guidelineHneg1_1, R.dimen.horGuidelineStatusMiddle},
+            {R.id.guidelineH0, R.dimen.horGuidelineStatusBottom},
+            {R.id.guidelineHSys1, R.dimen.horGuidelineOptionsTop},
+            {R.id.guidelineHSys2, R.dimen.horGuidelineOptionsBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+            {R.id.guidelineV1, R.dimen.verGuidelineGameNoLeft},
+            {R.id.guidelineV1_1, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.guidelineV1_2, R.dimen.verGuidelineCLStageBorder},
+            {R.id.guidelineV1_3, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.guidelineV1_4, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.guidelineV5, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+            {R.id.senegal_verImagesLeft, R.dimen.senegal_verImagesLeft},
+            {R.id.senegal_verImagesRight, R.dimen.senegal_verImagesRight},
+            {R.id.senegal_verGridLeft, R.dimen.senegal_verGridLeft},
+            {R.id.senegal_verGridRight, R.dimen.senegal_verGridRight},
+            {R.id.senegal_horGridTop, R.dimen.senegal_horGridTop},
+            {R.id.senegal_horGridBottom, R.dimen.senegal_horGridBottom},
+            {R.id.senegal_horImagesTop, R.dimen.senegal_horImagesTop},
+            {R.id.senegal_horImagesBottom, R.dimen.senegal_horImagesBottom}
+    };
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
     private static final int GRID_SIZE = 7;
     private static final int TOTAL_TILES = 49;
     private static final String[] WORD_COLORS_FLAG = {"#E31B23", "#FDEF42", "#00853F"}; // Senegal flag (Red, Yellow, Green)
@@ -89,6 +128,7 @@ public class Senegal extends GameActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.senegal);
         context = this;
+        updateGuidelines();
 
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         boolean useStandardRotation = prefs.getBoolean(PREF_KEY_STANDARD_COLOR_ROTATION, true);

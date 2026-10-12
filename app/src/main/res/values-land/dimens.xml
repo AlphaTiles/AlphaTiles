@@ -892,12 +892,15 @@
     <item name="india_guidelineV_t7" type="dimen" format="float">0.61</item>
 
     <!-- Senegal Horizontal Guidelines (Landscape) -->
-    <item name="senegal_guidelineH1" type="dimen" format="float">0.02</item>
+    <item name="senegal_horGridTop" format="float" type="dimen">0.14</item>
+    <item name="senegal_horGridBottom" format="float" type="dimen">0.85</item>
+    <item name="senegal_horImagesTop" format="float" type="dimen">0.14</item>
+    <item name="senegal_horImagesBottom" format="float" type="dimen">0.36</item>
 
     <!-- Senegal Vertical Guidelines (Landscape) -->
     <item name="senegal_verImagesLeft" type="dimen" format="float">0.01</item>
-    <item name="senegal_verImagesRight" type="dimen" format="float">0.48</item>
-    <item name="senegal_verGridLeft" type="dimen" format="float">0.51</item>
+    <item name="senegal_verImagesRight" type="dimen" format="float">0.5</item>
+    <item name="senegal_verGridLeft" type="dimen" format="float">0.52</item>
     <item name="senegal_verGridRight" type="dimen" format="float">0.99</item>
 
 </resources>
