@@ -836,14 +836,16 @@
     <item name="cameroon_guidelineV13" type="dimen" format="float">0.94</item>
 
     <!-- England Horizontal Guidelines (Landscape) -->
-    <item name="england_horGuidelineH1" type="dimen" format="float">0.20</item>
+    <integer name="england_flowMaxElementsWrap">6</integer>
+    <item name="england_horGuidelineH1" type="dimen" format="float">0.14</item>
     <item name="england_horGuidelineH2" type="dimen" format="float">0.85</item>
-    <item name="england_horGuidelineH3" type="dimen" format="float">0.02</item>
+    <item name="england_horGuidelineH3" type="dimen" format="float">0.14</item>
+    <item name="england_horGridBottom" type="dimen" format="float">0.85</item>
 
     <!-- England Vertical Guidelines (Landscape) -->
     <item name="england_verWordBoxLeft" type="dimen" format="float">0.01</item>
-    <item name="england_verWordBoxRight" type="dimen" format="float">0.48</item>
-    <item name="england_verGridLeft" type="dimen" format="float">0.51</item>
+    <item name="england_verWordBoxRight" type="dimen" format="float">0.20</item>
+    <item name="england_verGridLeft" type="dimen" format="float">0.21</item>
     <item name="england_verGridRight" type="dimen" format="float">0.99</item>
 
     <!-- Ethiopia Horizontal Guidelines (Landscape) -->

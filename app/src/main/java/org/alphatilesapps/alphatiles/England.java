@@ -1,9 +1,11 @@
 package org.alphatilesapps.alphatiles;
 
+import android.animation.ObjectAnimator;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,18 +17,82 @@ import java.util.List;
 
 import static org.alphatilesapps.alphatiles.Start.*;
 
+import android.content.res.Configuration;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.helper.widget.Flow;
 import androidx.core.content.ContextCompat;
 
 public class England extends GameActivity {
     final int BOARD_SIZE = 16;
-    List<Start.Word> gameWords = new ArrayList<>();
+    List<Word> gameWords = new ArrayList<>();
     List<Integer> cardOrder = new ArrayList<>();
     boolean[] flippedCards = new boolean[BOARD_SIZE];
     int currentTargetIndex = 0;
-    Start.Word firstWord;
+    Word firstWord;
     TextView currentActiveWordView = null; // Tracks the currently highlighted word
     int currentRoundIndex = 0; // round of current session; resets when activity is recreated
     String currentRoundColor; // hex color for current round, set once per round
+
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            {R.id.guidelineHneg1, R.dimen.horGuidelineStatusTop},
+            {R.id.guidelineHneg1_1, R.dimen.horGuidelineStatusMiddle},
+            {R.id.guidelineH0, R.dimen.horGuidelineStatusBottom},
+            {R.id.guidelineH1, R.dimen.england_horGuidelineH1},
+            {R.id.guidelineH2, R.dimen.england_horGuidelineH2},
+            {R.id.guidelineH3, R.dimen.england_horGuidelineH3},
+            {R.id.england_horGridBottom, R.dimen.england_horGridBottom},
+            {R.id.guidelineHSys1, R.dimen.horGuidelineOptionsTop},
+            {R.id.guidelineHSys2, R.dimen.horGuidelineOptionsBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+            {R.id.guidelineV1, R.dimen.verGuidelineGameNoLeft},
+            {R.id.guidelineV1_1, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.guidelineV1_2, R.dimen.verGuidelineCLStageBorder},
+            {R.id.guidelineV1_3, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.guidelineV1_4, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.guidelineV5, R.dimen.verGuidelinePointsRight},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+            {R.id.england_verWordBoxLeft, R.dimen.england_verWordBoxLeft},
+            {R.id.england_verWordBoxRight, R.dimen.england_verWordBoxRight},
+            {R.id.england_verGridLeft, R.dimen.england_verGridLeft},
+            {R.id.england_verGridRight, R.dimen.england_verGridRight}
+    };
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+
+        Flow flowGrid = findViewById(R.id.flowGrid);
+        if (flowGrid != null) {
+            int maxElements = getResources().getInteger(R.integer.england_flowMaxElementsWrap);
+            flowGrid.setMaxElementsWrap(maxElements);
+        }
+
+        rescaleCardImages();
+    }
+
+    private void rescaleCardImages() {
+        if (gameWords == null || gameWords.isEmpty()) return;
+
+        for (int i = 0; i < gameWords.size() && i < GAME_BUTTONS.length; i++) {
+            if (!flippedCards[i]) {
+                TextView tile = findViewById(GAME_BUTTONS[i]);
+                if (tile != null) {
+                    int resID = getResources().getIdentifier(gameWords.get(i).wordInLWC, "drawable", getPackageName());
+                    if (resID != 0) {
+                        setScaledImage(tile, resID);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
 
     protected static final int[] GAME_BUTTONS = {
             R.id.choice01, R.id.choice02, R.id.choice03, R.id.choice04,
@@ -50,7 +116,7 @@ public class England extends GameActivity {
         Resources res = context.getResources();
         int audioInstructionsResID;
         try {
-            audioInstructionsResID = res.getIdentifier(Start.gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
+            audioInstructionsResID = res.getIdentifier(gameList.get(gameNumber - 1).instructionAudioName, "raw", context.getPackageName());
         } catch (NullPointerException e) {
             audioInstructionsResID = -1;
         }
@@ -70,6 +136,7 @@ public class England extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.england);
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.englandCL);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -113,7 +180,7 @@ public class England extends GameActivity {
             incorrectAnswersSelected.set(i, "");
         }
 
-        List<Start.Word> wordPool = new ArrayList<>(cumulativeStageBasedWordList);
+        List<Word> wordPool = new ArrayList<>(cumulativeStageBasedWordList);
         if (wordPool.isEmpty()) {
             wordPool = new ArrayList<>(wordList);
         }
@@ -143,11 +210,13 @@ public class England extends GameActivity {
             highlightActiveWord(targetBox); // Apply the border!
         }
 
+        int padPx = (int) (4 * context.getResources().getDisplayMetrics().density);
         for (int i = 0; i < gameWords.size(); i++) {
             flippedCards[i] = false;
             TextView tile = findViewById(GAME_BUTTONS[i]);
             if (tile != null) {
                 tile.setText("");
+                tile.setPadding(padPx, padPx, padPx, padPx);
                 tile.setBackgroundResource(R.drawable.tile_white_background);
                 if (tile.getBackground() != null) {
                     tile.getBackground().mutate().clearColorFilter();
@@ -180,7 +249,7 @@ public class England extends GameActivity {
 
         // 3. Apply the elegant black border to the NEW active view
         if (currentActiveWordView != null) {
-            android.graphics.drawable.GradientDrawable border = new android.graphics.drawable.GradientDrawable();
+            GradientDrawable border = new GradientDrawable();
             border.setColor(Color.parseColor(currentRoundColor)); // Round-specific background color
             border.setStroke(8, Color.BLACK); // 8-pixel elegant black border
 
@@ -199,16 +268,21 @@ public class England extends GameActivity {
                 try {
                     Drawable drawable = ContextCompat.getDrawable(context, resID);
                     if (drawable != null) {
-                        int availableWidth = (int) (textView.getWidth() * 0.8);
-                        int availableHeight = (int) (textView.getHeight() * 0.8);
+                        int availableWidth = (int) (textView.getWidth() * 0.75);
+                        int availableHeight = (int) (textView.getHeight() * 0.75);
+
+                        if (availableWidth <= 0 || availableHeight <= 0) return;
 
                         float ratio = Math.min((float) availableWidth / drawable.getIntrinsicWidth(),
                                 (float) availableHeight / drawable.getIntrinsicHeight());
 
-                        int width = (int) (drawable.getIntrinsicWidth() * ratio);
-                        int height = (int) (drawable.getIntrinsicHeight() * ratio);
+                        int width = Math.max(1, (int) (drawable.getIntrinsicWidth() * ratio));
+                        int height = Math.max(1, (int) (drawable.getIntrinsicHeight() * ratio));
 
                         drawable.setBounds(0, 0, width, height);
+
+                        int topPadding = Math.max(0, (textView.getHeight() - height) / 2);
+                        textView.setPadding(0, topPadding, 0, 0);
                         textView.setCompoundDrawables(null, drawable, null, null);
                     }
                 } catch (Resources.NotFoundException e) {
@@ -238,7 +312,7 @@ public class England extends GameActivity {
             // The Wobble Animation
             View wrongTile = findViewById(GAME_BUTTONS[index]);
             if (wrongTile != null) {
-                android.animation.ObjectAnimator
+                ObjectAnimator
                         .ofFloat(wrongTile, "translationX", 0, 15, -15, 15, -15, 5, -5, 0)
                         .setDuration(400)
                         .start();
@@ -254,7 +328,7 @@ public class England extends GameActivity {
         playGameSoundThenActiveWordClip(true, isFinalCheck);
 
         // 3: Delay the revealing of the word/flip until after audio
-        long totalAudioDelay = Start.correctSoundDuration + refWord.duration;
+        long totalAudioDelay = correctSoundDuration + refWord.duration;
 
         soundSequencer.postDelayed(new Runnable() {
             @Override
@@ -266,12 +340,14 @@ public class England extends GameActivity {
                         public void run() {
                             // Step 2: Swap the visuals while the card is invisible
                             tile.setCompoundDrawables(null, null, null, null);
+                            int padPx = (int) (4 * context.getResources().getDisplayMetrics().density);
+                            tile.setPadding(padPx, padPx, padPx, padPx);
                             tile.setTextColor(Color.WHITE);
 
                             // Handle the game logic
                             if (currentTargetIndex < gameWords.size() - 1) {
                                 currentTargetIndex++;
-                                Start.Word nextWord = gameWords.get(cardOrder.get(currentTargetIndex));
+                                Word nextWord = gameWords.get(cardOrder.get(currentTargetIndex));
                                 tile.setText(wordList.stripInstructionCharacters(nextWord.wordInLOP));
                                 refWord = nextWord;
                                 highlightActiveWord(tile); // Move the black border here!

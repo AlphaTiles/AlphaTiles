@@ -835,9 +835,11 @@
     <item name="cameroon_guidelineV13" type="dimen" format="float">0.860</item>
 
     <!-- England Horizontal Guidelines (Portrait) -->
+    <integer name="england_flowMaxElementsWrap">4</integer>
     <item name="england_horGuidelineH1" type="dimen" format="float">0.08</item>
     <item name="england_horGuidelineH2" type="dimen" format="float">0.21</item>
     <item name="england_horGuidelineH3" type="dimen" format="float">0.23</item>
+    <item name="england_horGridBottom" type="dimen" format="float">0.91</item>
 
     <!-- England Vertical Guidelines (Portrait) -->
     <item name="england_verWordBoxLeft" type="dimen" format="float">0.01</item>
