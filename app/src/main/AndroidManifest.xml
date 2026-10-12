@@ -55,7 +55,8 @@
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout"/>
         <activity android:name=".Georgia"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
-        <activity android:name=".India"/>
+        <activity android:name=".India"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Indonesia"/>
         <activity android:name=".Iraq"/>
         <activity android:name=".Italy"

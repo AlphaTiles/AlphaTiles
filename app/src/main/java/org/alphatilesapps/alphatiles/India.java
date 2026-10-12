@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -23,6 +25,84 @@ import static org.alphatilesapps.alphatiles.Start.*;
 public class India extends GameActivity {
 
     String correctString;
+
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+            {R.id.guidelineV1, R.dimen.verGuidelineGameNoLeft},
+            {R.id.guidelineV1_1, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.guidelineV1_2, R.dimen.verGuidelineCLStageBorder},
+            {R.id.guidelineV1_3, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.guidelineV1_4, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.guidelineV2, R.dimen.verGuidelinePointsRight},
+            {R.id.horGuidelineRefTop, R.dimen.india_horGuidelineRefTop},
+            {R.id.horGuidelineRefBottom, R.dimen.india_horGuidelineRefBottom},
+            {R.id.horGuidelineImageRowOneTop, R.dimen.india_horGuidelineImageRowOneTop},
+            {R.id.horGuidelineImageRowOneBottom, R.dimen.india_horGuidelineImageRowOneBottom},
+            {R.id.horGuidelineTextRowOneTop, R.dimen.india_horGuidelineTextRowOneTop},
+            {R.id.horGuidelineTextRowOneBottom, R.dimen.india_horGuidelineTextRowOneBottom},
+            {R.id.horGuidelineImageRowTwoTop, R.dimen.india_horGuidelineImageRowTwoTop},
+            {R.id.horGuidelineImageRowTwoBottom, R.dimen.india_horGuidelineImageRowTwoBottom},
+            {R.id.horGuidelineTextRowTwoTop, R.dimen.india_horGuidelineTextRowTwoTop},
+            {R.id.horGuidelineTextRowTwoBottom, R.dimen.india_horGuidelineTextRowTwoBottom},
+            {R.id.india_verCol1ImageRight, R.dimen.india_verCol1ImageRight},
+            {R.id.india_verCol1TextLeft, R.dimen.india_verCol1TextLeft},
+            {R.id.india_verCol2ImageRight, R.dimen.india_verCol2ImageRight},
+            {R.id.india_verCol2TextLeft, R.dimen.india_verCol2TextLeft},
+            {R.id.guidelineV_t1, R.dimen.india_guidelineV_t1},
+            {R.id.guidelineV_t2, R.dimen.india_guidelineV_t2},
+            {R.id.guidelineV_t3, R.dimen.india_guidelineV_t3},
+            {R.id.guidelineV_t4, R.dimen.india_guidelineV_t4},
+            {R.id.guidelineV_t5, R.dimen.india_guidelineV_t5},
+            {R.id.guidelineV_t6, R.dimen.india_guidelineV_t6},
+            {R.id.guidelineV_t7, R.dimen.india_guidelineV_t7},
+            {R.id.india_verCol2TextLeft, R.dimen.india_verCol2TextLeft}
+
+    };
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+
+        String challengeLevelString = String.valueOf(challengeLevel);
+        int firstDigit = (challengeLevel >= 10) ? (challengeLevel / 10) : (challengeLevel == 2 ? 2 : 1);
+        boolean showImages = (firstDigit == 1);
+
+        int orientation = getResources().getConfiguration().orientation;
+        boolean isLandscape = (orientation == Configuration.ORIENTATION_LANDSCAPE);
+
+        ConstraintLayout constraintLayout = findViewById(R.id.indiaCL);
+        if (constraintLayout != null) {
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+
+            if (!showImages) {
+                if (isLandscape) {
+                    constraintSet.connect(R.id.wordText1, ConstraintSet.START, R.id.guidelineV1, ConstraintSet.END, 0);
+                    constraintSet.connect(R.id.wordText2, ConstraintSet.START, R.id.guidelineV_mid, ConstraintSet.END, 0);
+                    constraintSet.connect(R.id.wordText3, ConstraintSet.START, R.id.guidelineV1, ConstraintSet.END, 0);
+                    constraintSet.connect(R.id.wordText4, ConstraintSet.START, R.id.guidelineV_mid, ConstraintSet.END, 0);
+                } else {
+                    constraintSet.connect(R.id.wordText1, ConstraintSet.TOP, R.id.horGuidelineImageRowOneTop, ConstraintSet.BOTTOM, 0);
+                    constraintSet.connect(R.id.wordText2, ConstraintSet.TOP, R.id.horGuidelineImageRowOneTop, ConstraintSet.BOTTOM, 0);
+                    constraintSet.connect(R.id.wordText3, ConstraintSet.TOP, R.id.horGuidelineImageRowTwoTop, ConstraintSet.BOTTOM, 0);
+                    constraintSet.connect(R.id.wordText4, ConstraintSet.TOP, R.id.horGuidelineImageRowTwoTop, ConstraintSet.BOTTOM, 0);
+                }
+            }
+            constraintSet.applyTo(constraintLayout);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
 
     protected static final int[] GAME_BUTTONS = {
             R.id.wordText1, R.id.wordText2, R.id.wordText3, R.id.wordText4

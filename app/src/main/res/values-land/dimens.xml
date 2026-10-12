@@ -862,16 +862,34 @@
     <item name="ethiopia_verKeyboardRight" type="dimen" format="float">0.99</item>
 
     <!-- India Horizontal Guidelines (Landscape) -->
-    <item name="india_horGuidelineRefTop" type="dimen" format="float">0.20</item>
-    <item name="india_horGuidelineRefBottom" type="dimen" format="float">0.85</item>
-    <item name="india_horGuidelineGridTop" type="dimen" format="float">0.02</item>
-    <item name="india_horGuidelineGridBottom" type="dimen" format="float">0.85</item>
+    <item name="india_horGuidelineRefTop" type="dimen" format="float">0.14</item>
+    <item name="india_horGuidelineRefBottom" type="dimen" format="float">0.32</item>
+    <item name="india_horGuidelineImageRowOneTop" type="dimen" format="float">0.36</item>
+    <item name="india_horGuidelineImageRowOneBottom" type="dimen" format="float">0.60</item>
+    <item name="india_horGuidelineTextRowOneTop" type="dimen" format="float">0.36</item>
+    <item name="india_horGuidelineTextRowOneBottom" type="dimen" format="float">0.60</item>
+    <item name="india_horGuidelineImageRowTwoTop" type="dimen" format="float">0.61</item>
+    <item name="india_horGuidelineImageRowTwoBottom" type="dimen" format="float">0.85</item>
+    <item name="india_horGuidelineTextRowTwoTop" type="dimen" format="float">0.61</item>
+    <item name="india_horGuidelineTextRowTwoBottom" type="dimen" format="float">0.85</item>
 
     <!-- India Vertical Guidelines (Landscape) -->
     <item name="india_verPromptLeft" type="dimen" format="float">0.01</item>
-    <item name="india_verPromptRight" type="dimen" format="float">0.48</item>
-    <item name="india_verGridLeft" type="dimen" format="float">0.51</item>
+    <item name="india_verPromptRight" type="dimen" format="float">0.99</item>
+    <item name="india_verGridLeft" type="dimen" format="float">0.01</item>
     <item name="india_verGridRight" type="dimen" format="float">0.99</item>
+    <item name="india_verCol1ImageRight" type="dimen" format="float">0.16</item>
+    <item name="india_verCol1TextLeft" type="dimen" format="float">0.17</item>
+    <item name="india_verCol2ImageLeft" type="dimen" format="float">0.54</item>
+    <item name="india_verCol2ImageRight" type="dimen" format="float">0.66</item>
+    <item name="india_verCol2TextLeft" type="dimen" format="float">0.68</item>
+    <item name="india_guidelineV_t1" type="dimen" format="float">0.01</item>
+    <item name="india_guidelineV_t2" type="dimen" format="float">0.11</item>
+    <item name="india_guidelineV_t3" type="dimen" format="float">0.21</item>
+    <item name="india_guidelineV_t4" type="dimen" format="float">0.31</item>
+    <item name="india_guidelineV_t5" type="dimen" format="float">0.41</item>
+    <item name="india_guidelineV_t6" type="dimen" format="float">0.51</item>
+    <item name="india_guidelineV_t7" type="dimen" format="float">0.61</item>
 
     <!-- Senegal Horizontal Guidelines (Landscape) -->
     <item name="senegal_guidelineH1" type="dimen" format="float">0.02</item>
