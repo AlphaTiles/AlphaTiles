@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/indonesiaCL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".Indonesia">
+
+    <!-- ═════════ ROW 1  (landRow1Top → landRow1Bottom) ═════════ -->
+
+    <ImageView
+        android:id="@+id/wordImage01"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="2dp"
+        android:onClick="clickPicHearAudio"
+        android:tag="1"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/activeWordPicture"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        app:layout_constraintTop_toTopOf="@+id/landRow1Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow1Bottom"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVImg" />
+
+    <TextView
+        android:id="@+id/word01"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="onWordTextClick"
+        android:tag="1"
+        android:background="#4CAF50"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:padding="2dp"
+        android:maxLines="1"
+        android:importantForAccessibility="no"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="60sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintTop_toTopOf="@+id/landRow1Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow1Bottom"
+        app:layout_constraintStart_toStartOf="@+id/landWordStart"
+        app:layout_constraintEnd_toEndOf="@+id/landWordEnd"
+        android:text="@string/wordChoice01"/>
+
+    <LinearLayout
+        android:id="@+id/tileBand1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="#EEEEEE"
+        app:layout_constraintTop_toTopOf="@+id/landRow1Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow1Bottom"
+        app:layout_constraintStart_toStartOf="@+id/landTileStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV2" />
+
+    <!-- ═════════ ROW 2  (landRow2Top → landRow2Bottom) ═════════ -->
+
+    <ImageView
+        android:id="@+id/wordImage02"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="2dp"
+        android:onClick="clickPicHearAudio"
+        android:tag="2"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/activeWordPicture"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        app:layout_constraintTop_toTopOf="@+id/landRow2Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow2Bottom"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVImg" />
+
+    <TextView
+        android:id="@+id/word02"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="onWordTextClick"
+        android:tag="2"
+        android:background="#4CAF50"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:padding="2dp"
+        android:maxLines="1"
+        android:importantForAccessibility="no"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="60sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintTop_toTopOf="@+id/landRow2Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow2Bottom"
+        app:layout_constraintStart_toStartOf="@+id/landWordStart"
+        app:layout_constraintEnd_toEndOf="@+id/landWordEnd"
+        android:text="@string/wordChoice02" />
+
+    <LinearLayout
+        android:id="@+id/tileBand2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="#EEEEEE"
+        app:layout_constraintTop_toTopOf="@+id/landRow2Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow2Bottom"
+        app:layout_constraintStart_toStartOf="@+id/landTileStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV2" />
+
+    <!-- ═════════ ROW 3  (landRow3Top → landRow3Bottom) ═════════ -->
+
+    <ImageView
+        android:id="@+id/wordImage03"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="2dp"
+        android:onClick="clickPicHearAudio"
+        android:tag="3"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/activeWordPicture"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        app:layout_constraintTop_toTopOf="@+id/landRow3Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow3Bottom"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVImg" />
+
+    <TextView
+        android:id="@+id/word03"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="onWordTextClick"
+        android:tag="3"
+        android:background="#4CAF50"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:padding="2dp"
+        android:maxLines="1"
+        android:importantForAccessibility="no"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="60sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintTop_toTopOf="@+id/landRow3Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow3Bottom"
+        app:layout_constraintStart_toStartOf="@+id/landWordStart"
+        app:layout_constraintEnd_toEndOf="@+id/landWordEnd"
+        android:text="@string/wordChoice03" />
+
+    <LinearLayout
+        android:id="@+id/tileBand3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="#EEEEEE"
+        app:layout_constraintTop_toTopOf="@+id/landRow3Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow3Bottom"
+        app:layout_constraintStart_toStartOf="@+id/landTileStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV2" />
+
+    <!-- ═════════ ROW 4  (landRow4Top → landRow4Bottom) ═════════ -->
+
+    <ImageView
+        android:id="@+id/wordImage04"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="2dp"
+        android:onClick="clickPicHearAudio"
+        android:tag="4"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/activeWordPicture"
+        app:srcCompat="@drawable/zz_alphatileslogo"
+        app:layout_constraintTop_toTopOf="@+id/landRow4Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow4Bottom"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVImg" />
+
+    <TextView
+        android:id="@+id/word04"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="onWordTextClick"
+        android:tag="4"
+        android:background="#4CAF50"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:padding="2dp"
+        android:maxLines="1"
+        android:importantForAccessibility="no"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="60sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintTop_toTopOf="@+id/landRow4Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow4Bottom"
+        app:layout_constraintStart_toStartOf="@+id/landWordStart"
+        app:layout_constraintEnd_toEndOf="@+id/landWordEnd"
+        android:text="@string/wordChoice04" />
+
+    <LinearLayout
+        android:id="@+id/tileBand4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="#EEEEEE"
+        app:layout_constraintTop_toTopOf="@+id/landRow4Top"
+        app:layout_constraintBottom_toTopOf="@+id/landRow4Bottom"
+        app:layout_constraintStart_toStartOf="@+id/landTileStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV2" />
+
+    <!-- ═════════ BOTTOM BAR (unchanged from portrait) ═════════ -->
+
+    <ImageView
+        android:id="@+id/repeatImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:contentDescription="@string/playAgain"
+        app:srcCompat="@drawable/zz_forward_inactive"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/backwardArrowImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="prevPageArrow"
+        android:visibility="invisible"
+        android:contentDescription="@string/playAgain"
+        app:srcCompat="@drawable/zz_backward_inactive"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1"
+        app:layout_constraintEnd_toStartOf="@+id/gamesHomeImage" />
+
+    <ImageView
+        android:id="@+id/gamesHomeImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="goBackToEarth"
+        android:contentDescription="@string/playerAvatar"
+        app:srcCompat="@drawable/zz_games_home"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintStart_toEndOf="@+id/backwardArrowImage"
+        app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer" />
+
+    <TextView
+        android:id="@+id/bottomMiddleSpacer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="BMS"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintEnd_toStartOf="@+id/forwardArrowImage" />
+
+    <ImageView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="playAudioInstructions"
+        android:contentDescription="@string/playAudioInstructions"
+        android:rotationY="0"
+        app:srcCompat="@drawable/zz_instructions"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer" />
+
+    <ImageView
+        android:id="@+id/forwardArrowImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="nextPageArrow"
+        android:visibility="invisible"
+        android:contentDescription="@string/playAgain"
+        app:srcCompat="@drawable/zz_forward_inactive"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintStart_toEndOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV2" />
+
+    <!-- ═════════ NEW LANDSCAPE ROW GUIDELINES ═════════ -->
+
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/landRow1Top" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.01" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/landRow1Bottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.2125" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/landRow2Top" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.2225" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/landRow2Bottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.425" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/landRow3Top" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.435" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/landRow3Bottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.6375" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/landRow4Top" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.6475" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/landRow4Bottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.85" />
+
+    <!-- word: 0.21 → 0.51 | tileBand: 0.52 → 0.99 (guidelineV2) -->
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/landWordStart" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.17" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/landWordEnd" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.50" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/landTileStart" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.52" />
+
+    <!-- ═════════ SHARED GUIDELINES (same IDs/values as portrait) ═════════ -->
+
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.87" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.99" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.01" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineVImg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.15" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.99" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.01" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.99" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1.1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.12" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1.2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.18" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1.3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.24" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1.4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.88" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
