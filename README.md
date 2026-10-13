@@ -60,4 +60,4 @@ and under `dependencies {}`:
 
 ## Minimum API level
 
-Alpha Tiles apps run on devices with Android 6.0+ (API 23+).
+Alpha Tiles apps run on devices with Android 7.0+ (API 24+).
