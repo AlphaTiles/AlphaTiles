@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/senegalCL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".Senegal">
+
+    <TextView
+        android:id="@+id/gameNumberView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center"
+        android:tag="1"
+        android:text="0"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.1"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="0dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/challengeLevelView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#FFD700"
+        android:gravity="center"
+        android:tag="1"
+        android:text="0"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.2"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1.1"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="0dp"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/stageLevelView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#000000"
+        android:gravity="center"
+        android:tag="1"
+        android:text="0"
+        android:textStyle="bold"
+        android:textColor="#FFD700"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.3"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1.2"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="0dp"
+        android:maxLines="1"/>
+
+    <ProgressBar
+        android:id="@+id/accuracyBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:progressBackgroundTint="@android:color/transparent"
+        android:progress="0"
+        android:max="100"
+        android:scaleY="5.25"
+        android:indeterminate="false"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHneg1.1"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1" />
+
+    <ProgressBar
+        android:id="@+id/attemptsBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        android:progressBackgroundTint="@android:color/transparent"
+        android:progress="0"
+        android:max="100"
+        android:scaleY="2.25"
+        android:indeterminate="false"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineV1.4"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1.3"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1.1" />
+
+    <TextView
+        android:id="@+id/pointsTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#9C27B0"
+        android:gravity="center"
+        android:tag="1"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:text="@string/pointsScored"
+        android:progress="0"
+        android:max="100"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH0"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV5"
+        app:layout_constraintStart_toStartOf="@id/guidelineV1.4"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHneg1"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="5sp"
+        app:autoSizeMaxTextSize="100sp"
+        app:autoSizeStepGranularity="2sp"
+        android:padding="0dp"
+        android:maxLines="1"/>
+
+    <LinearLayout
+        android:id="@+id/imagesContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/senegal_horImagesTop"
+        app:layout_constraintBottom_toTopOf="@id/senegal_horImagesBottom"
+        app:layout_constraintStart_toStartOf="@+id/senegal_verImagesLeft"
+        app:layout_constraintEnd_toEndOf="@+id/senegal_verImagesRight">
+
+        <ImageView android:id="@+id/wordImage1" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="8dp" android:scaleType="fitCenter" android:background="@drawable/tile_white_background" android:elevation="4dp" android:onClick="onImageClick" android:tag="0"/>
+        <ImageView android:id="@+id/wordImage2" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="8dp" android:scaleType="fitCenter" android:background="@drawable/tile_white_background" android:elevation="4dp" android:onClick="onImageClick" android:tag="1"/>
+        <ImageView android:id="@+id/wordImage3" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="8dp" android:scaleType="fitCenter" android:background="@drawable/tile_white_background" android:elevation="4dp" android:onClick="onImageClick" android:tag="2"/>
+        <ImageView android:id="@+id/wordImage4" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="8dp" android:scaleType="fitCenter" android:background="@drawable/tile_white_background" android:elevation="4dp" android:onClick="onImageClick" android:tag="3"/>
+        <ImageView android:id="@+id/wordImage5" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="8dp" android:scaleType="fitCenter" android:background="@drawable/tile_white_background" android:elevation="4dp" android:onClick="onImageClick" android:tag="4"/>
+        <ImageView android:id="@+id/wordImage6" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:layout_margin="8dp" android:scaleType="fitCenter" android:background="@drawable/tile_white_background" android:elevation="4dp" android:onClick="onImageClick" android:tag="5"/>
+    </LinearLayout>
+
+    <GridLayout
+        android:id="@+id/gridContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:columnCount="7"
+        android:rowCount="7"
+        app:layout_constraintTop_toBottomOf="@id/senegal_horGridTop"
+        app:layout_constraintBottom_toTopOf="@id/senegal_horGridBottom"
+        app:layout_constraintStart_toStartOf="@+id/senegal_verGridLeft"
+        app:layout_constraintEnd_toEndOf="@+id/senegal_verGridRight">
+
+        <TextView android:id="@+id/tile01" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="0"/>
+        <TextView android:id="@+id/tile02" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="1"/>
+        <TextView android:id="@+id/tile03" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="2"/>
+        <TextView android:id="@+id/tile04" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="3"/>
+        <TextView android:id="@+id/tile05" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="4"/>
+        <TextView android:id="@+id/tile06" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="5"/>
+        <TextView android:id="@+id/tile07" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="6"/>
+
+        <TextView android:id="@+id/tile08" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="7"/>
+        <TextView android:id="@+id/tile09" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="8"/>
+        <TextView android:id="@+id/tile10" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="9"/>
+        <TextView android:id="@+id/tile11" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="10"/>
+        <TextView android:id="@+id/tile12" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="11"/>
+        <TextView android:id="@+id/tile13" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="12"/>
+        <TextView android:id="@+id/tile14" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="13"/>
+
+        <TextView android:id="@+id/tile15" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="14"/>
+        <TextView android:id="@+id/tile16" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="15"/>
+        <TextView android:id="@+id/tile17" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="16"/>
+        <TextView android:id="@+id/tile18" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="17"/>
+        <TextView android:id="@+id/tile19" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="18"/>
+        <TextView android:id="@+id/tile20" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="19"/>
+        <TextView android:id="@+id/tile21" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="20"/>
+
+        <TextView android:id="@+id/tile22" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="21"/>
+        <TextView android:id="@+id/tile23" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="22"/>
+        <TextView android:id="@+id/tile24" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="23"/>
+        <TextView android:id="@+id/tile25" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="24"/>
+        <TextView android:id="@+id/tile26" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="25"/>
+        <TextView android:id="@+id/tile27" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="26"/>
+        <TextView android:id="@+id/tile28" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="27"/>
+
+        <TextView android:id="@+id/tile29" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="28"/>
+        <TextView android:id="@+id/tile30" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="29"/>
+        <TextView android:id="@+id/tile31" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="30"/>
+        <TextView android:id="@+id/tile32" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="31"/>
+        <TextView android:id="@+id/tile33" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="32"/>
+        <TextView android:id="@+id/tile34" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="33"/>
+        <TextView android:id="@+id/tile35" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="34"/>
+
+        <TextView android:id="@+id/tile36" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="35"/>
+        <TextView android:id="@+id/tile37" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="36"/>
+        <TextView android:id="@+id/tile38" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="37"/>
+        <TextView android:id="@+id/tile39" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="38"/>
+        <TextView android:id="@+id/tile40" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="39"/>
+        <TextView android:id="@+id/tile41" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="40"/>
+        <TextView android:id="@+id/tile42" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="41"/>
+
+        <TextView android:id="@+id/tile43" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="42"/>
+        <TextView android:id="@+id/tile44" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="43"/>
+        <TextView android:id="@+id/tile45" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="44"/>
+        <TextView android:id="@+id/tile46" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="45"/>
+        <TextView android:id="@+id/tile47" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="46"/>
+        <TextView android:id="@+id/tile48" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="47"/>
+        <TextView android:id="@+id/tile49" android:layout_width="0dp" android:layout_height="0dp" android:layout_gravity="fill" android:layout_columnWeight="1" android:layout_rowWeight="1" android:layout_margin="3dp" android:gravity="center" android:background="@drawable/tile_white_background" android:elevation="2dp" android:textColor="#333333" android:textStyle="bold" app:autoSizeTextType="uniform" android:onClick="onTileClick" android:tag="48"/>
+
+    </GridLayout>
+
+    <ImageView
+        android:id="@+id/gamesHomeImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="goBackToEarth"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toStartOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintStart_toStartOf="@id/verGuidelineOptionsLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        android:contentDescription="@string/playerAvatar"
+        app:srcCompat="@drawable/zz_games_home" />
+
+    <TextView
+        android:id="@+id/bottomMiddleSpacer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="BMS"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toStartOf="@+id/repeatImage"
+        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"/>
+
+    <ImageView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="playAudioInstructions"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        android:contentDescription="@string/playAudioInstructions"
+        android:rotationY="0"
+        app:srcCompat="@drawable/zz_instructions" />
+
+    <ImageView
+        android:id="@+id/repeatImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="repeatGame"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineOptionsBottom"
+        app:layout_constraintEnd_toEndOf="@id/verGuidelineOptionsRight"
+        app:layout_constraintStart_toEndOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop"
+        android:contentDescription="@string/playAgain"
+        android:rotationY="0"
+        app:srcCompat="@drawable/zz_forward_inactive" />
+
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHneg1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.01" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHneg1.1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.045" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.06" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineH1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.22" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHSys1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.93" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineHSys2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.99" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.93" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="0.99" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.01" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1.1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.12" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1.2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.18" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1.3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.24" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV1.4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.88" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.99" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsLeft" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsRight" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_verImagesLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/senegal_verImagesLeft" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_verImagesRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/senegal_verImagesRight" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_verGridLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/senegal_verGridLeft" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_verGridRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/senegal_verGridRight" />
+
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_horGridTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/senegal_horGridTop" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_horGridBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/senegal_horGridBottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_horImagesTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/senegal_horImagesTop" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/senegal_horImagesBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/senegal_horImagesBottom" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class Iraq extends GameActivity { 
 
@@ -41,8 +41,6 @@ public class Iraq extends GameActivity {
     Handler handler = new Handler();
     boolean isAnimating = false;
     int scanSetting = 1;
-
-    private static final Logger LOGGER = Logger.getLogger(Iraq.class.getName());
 
     @Override
     protected int[] getGameButtons() {
@@ -75,8 +73,17 @@ public class Iraq extends GameActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currentPageNumber", currentPageNumber);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            currentPageNumber = savedInstanceState.getInt("currentPageNumber", currentPageNumber);
+        }
         context = this;
         setContentView(R.layout.iraq_cl1);
         int gameID = R.id.iraqcl;

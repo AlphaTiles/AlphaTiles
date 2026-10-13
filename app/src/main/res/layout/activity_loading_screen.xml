@@ -8,84 +8,98 @@
     tools:context=".LoadingScreen">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH1"
+        android:id="@+id/horGuidelineLoadingSplashTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.10" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH2"
+        android:id="@+id/horGuidelineLoadingSplashBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.53" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH3"
+        android:id="@+id/horGuidelineLoadingProgressTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.55" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH4"
+        android:id="@+id/horGuidelineLoadingProgressBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.64" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH5"
+        android:id="@+id/horGuidelineLoadingGameNameTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.66" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH6"
+        android:id="@+id/horGuidelineLoadingGameNameBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.74" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH7"
+        android:id="@+id/horGuidelineLoadingLangPackTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.79" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH8"
+        android:id="@+id/horGuidelineLoadingVersionBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.83" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV0"
+        android:id="@+id/verGuidelineLoadingSplashLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.03"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV1"
+        android:id="@+id/verGuidelineTextFieldsLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.03"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineLoadingProgressLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.2"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV2"
+        android:id="@+id/verGuidelineLoadingProgressRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.8"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineV3"
+        android:id="@+id/verGuidelineLoadingSplashRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.97"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verGuidelineTextFieldsRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -97,21 +111,20 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleY="10"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH3"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineLoadingProgressBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineLoadingProgressRight"
+        app:layout_constraintStart_toStartOf="@+id/verGuidelineLoadingProgressLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineLoadingProgressTop"
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="204dp"
-        android:layout_height="253dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/horGuidelineLoadingSplashBottom"
+        app:layout_constraintEnd_toStartOf="@+id/verGuidelineLoadingSplashRight"
+        app:layout_constraintStart_toStartOf="@+id/verGuidelineLoadingSplashLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineLoadingSplashTop"
         app:srcCompat="@drawable/zz_splash" />
 
     <TextView
@@ -122,10 +135,10 @@
         android:layout_height="0dp"
         android:gravity="center_horizontal|center_vertical"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH6"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH5"/>
+        app:layout_constraintBottom_toBottomOf="@+id/horGuidelineLoadingGameNameBottom"
+        app:layout_constraintEnd_toEndOf="@+id/verGuidelineTextFieldsRight"
+        app:layout_constraintStart_toStartOf="@+id/verGuidelineTextFieldsLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineLoadingGameNameTop"/>
 
     <TextView
         android:id="@+id/langPackName"
@@ -135,10 +148,10 @@
         android:layout_height="0dp"
         android:gravity="center_horizontal|center_vertical"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH7"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH6"/>
+        app:layout_constraintBottom_toBottomOf="@+id/horGuidelineLoadingLangPackTop"
+        app:layout_constraintEnd_toEndOf="@+id/verGuidelineTextFieldsRight"
+        app:layout_constraintStart_toStartOf="@+id/verGuidelineTextFieldsLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineLoadingGameNameBottom"/>
 
     <TextView
         android:id="@+id/versionNo"
@@ -148,9 +161,9 @@
         android:layout_height="0dp"
         android:gravity="center_horizontal|center_vertical"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineH8"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH7"/>
+        app:layout_constraintBottom_toBottomOf="@+id/horGuidelineLoadingVersionBottom"
+        app:layout_constraintEnd_toEndOf="@+id/verGuidelineTextFieldsRight"
+        app:layout_constraintStart_toStartOf="@+id/verGuidelineTextFieldsLeft"
+        app:layout_constraintTop_toTopOf="@+id/horGuidelineLoadingLangPackTop"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
