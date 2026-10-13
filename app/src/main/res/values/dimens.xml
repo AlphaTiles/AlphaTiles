@@ -848,17 +848,82 @@
     <item name="england_verGridRight" type="dimen" format="float">0.99</item>
 
     <!-- Ethiopia Horizontal Guidelines (Portrait) -->
-    <item name="ethiopia_guidelineH1" type="dimen" format="float">0.13</item>
-    <item name="ethiopia_guidelineH3" type="dimen" format="float">0.25171</item>
-    <item name="ethiopia_guidelineH4" type="dimen" format="float">0.91</item>
+    <item name="ethiopia_horLifeRow1Top" type="dimen" format="float">0.08</item>
+    <item name="ethiopia_horLifeRow1Bottom" type="dimen" format="float">0.14</item>
+    <item name="ethiopia_horLifeRow2Top" type="dimen" format="float">0.08</item>
+    <item name="ethiopia_horLifeRow2Bottom" type="dimen" format="float">0.14</item>
+    <item name="ethiopia_horLifeRow3Top" type="dimen" format="float">0.08</item>
+    <item name="ethiopia_horLifeRow3Bottom" type="dimen" format="float">0.14</item>
+    <item name="ethiopia_horLifeRow4Top" type="dimen" format="float">0.08</item>
+    <item name="ethiopia_horLifeRow4Bottom" type="dimen" format="float">0.14</item>
 
-    <!-- Ethiopia Vertical Guidelines (Portrait) -->
+    <item name="ethiopia_verLifeCol1Left" type="dimen" format="float">0.01</item>
+    <item name="ethiopia_verLifeCol1Right" type="dimen" format="float">0.0825</item>
+    <item name="ethiopia_verLifeCol2Left" type="dimen" format="float">0.0925</item>
+    <item name="ethiopia_verLifeCol2Right" type="dimen" format="float">0.165</item>
+    <item name="ethiopia_verLifeCol3Left" type="dimen" format="float">0.175</item>
+    <item name="ethiopia_verLifeCol3Right" type="dimen" format="float">0.2475</item>
+    <item name="ethiopia_verLifeCol4Left" type="dimen" format="float">0.2575</item>
+    <item name="ethiopia_verLifeCol4Right" type="dimen" format="float">0.33</item>
+    <item name="ethiopia_verLifeCol5Left" type="dimen" format="float">0.34</item>
+    <item name="ethiopia_verLifeCol5Right" type="dimen" format="float">0.4125</item>
+    <item name="ethiopia_verLifeCol6Left" type="dimen" format="float">0.4225</item>
+    <item name="ethiopia_verLifeCol6Right" type="dimen" format="float">0.495</item>
+    <item name="ethiopia_verLifeCol7Left" type="dimen" format="float">0.505</item>
+    <item name="ethiopia_verLifeCol7Right" type="dimen" format="float">0.5775</item>
+    <item name="ethiopia_verLifeCol8Left" type="dimen" format="float">0.5875</item>
+    <item name="ethiopia_verLifeCol8Right" type="dimen" format="float">0.66</item>
+    <item name="ethiopia_verLifeCol9Left" type="dimen" format="float">0.67</item>
+    <item name="ethiopia_verLifeCol9Right" type="dimen" format="float">0.7425</item>
+    <item name="ethiopia_verLifeCol10Left" type="dimen" format="float">0.7525</item>
+    <item name="ethiopia_verLifeCol10Right" type="dimen" format="float">0.825</item>
+    <item name="ethiopia_verLifeCol11Left" type="dimen" format="float">0.835</item>
+    <item name="ethiopia_verLifeCol11Right" type="dimen" format="float">0.9075</item>
+    <item name="ethiopia_verLifeCol12Left" type="dimen" format="float">0.9175</item>
+    <item name="ethiopia_verLifeCol12Right" type="dimen" format="float">0.99</item>
+
+    <item name="ethiopia_horWordTop" type="dimen" format="float">0.13</item>
+    <item name="ethiopia_horWordBottom" type="dimen" format="float">0.25171</item>
     <item name="ethiopia_verLeft" type="dimen" format="float">0.01</item>
     <item name="ethiopia_verWordRight" type="dimen" format="float">0.568</item>
     <item name="ethiopia_verImageLeft" type="dimen" format="float">0.576</item>
     <item name="ethiopia_verRight" type="dimen" format="float">0.99</item>
+    <item name="ethiopia_horKeyboardTop" type="dimen" format="float">0.25171</item>
+    <item name="ethiopia_horKeyboardBottom" type="dimen" format="float">0.91</item>
     <item name="ethiopia_verKeyboardLeft" type="dimen" format="float">0.01</item>
     <item name="ethiopia_verKeyboardRight" type="dimen" format="float">0.99</item>
+
+    <item name="ethiopia_guidelineH1" type="dimen" format="float">0.16</item>
+    <item name="ethiopia_guidelineH2" type="dimen" format="float">0.26</item>
+    <item name="ethiopia_guidelineH3" type="dimen" format="float">0.28</item>
+    <item name="ethiopia_guidelineH4" type="dimen" format="float">0.46</item>
+    <item name="ethiopia_guidelineH5" type="dimen" format="float">0.47</item>
+    <item name="ethiopia_guidelineH6" type="dimen" format="float">0.55</item>
+    <item name="ethiopia_guidelineH7" type="dimen" format="float">0.56</item>
+    <item name="ethiopia_guidelineH8" type="dimen" format="float">0.64</item>
+    <item name="ethiopia_guidelineH9" type="dimen" format="float">0.65</item>
+    <item name="ethiopia_guidelineH10" type="dimen" format="float">0.73</item>
+    <item name="ethiopia_guidelineH11" type="dimen" format="float">0.74</item>
+    <item name="ethiopia_guidelineH12" type="dimen" format="float">0.82</item>
+    <item name="ethiopia_guidelineH13" type="dimen" format="float">0.83</item>
+    <item name="ethiopia_guidelineH14" type="dimen" format="float">0.91</item>
+
+    <item name="ethiopia_guidelineV0" type="dimen" format="float">0.01</item>
+    <item name="ethiopia_guidelineWordTextLeft" type="dimen" format="float">0.01</item>
+    <item name="ethiopia_guidelineV1" type="dimen" format="float">0.136</item>
+    <item name="ethiopia_guidelineV2" type="dimen" format="float">0.144</item>
+    <item name="ethiopia_guidelineV3" type="dimen" format="float">0.280</item>
+    <item name="ethiopia_guidelineV4" type="dimen" format="float">0.288</item>
+    <item name="ethiopia_guidelineV5" type="dimen" format="float">0.424</item>
+    <item name="ethiopia_guidelineV6" type="dimen" format="float">0.432</item>
+    <item name="ethiopia_guidelineV7" type="dimen" format="float">0.568</item>
+    <item name="ethiopia_guidelineV8" type="dimen" format="float">0.576</item>
+    <item name="ethiopia_guidelineV9" type="dimen" format="float">0.712</item>
+    <item name="ethiopia_guidelineV10" type="dimen" format="float">0.720</item>
+    <item name="ethiopia_guidelineV11" type="dimen" format="float">0.856</item>
+    <item name="ethiopia_guidelineV12" type="dimen" format="float">0.8637</item>
+    <item name="ethiopia_guidelineV13" type="dimen" format="float">0.99</item>
+    <item name="ethiopia_guidelineWordTextRight" type="dimen" format="float">0.99</item>
 
     <!-- India Horizontal Guidelines (Portrait) -->
     <item name="india_horGuidelineRefTop" type="dimen" format="float">0.08</item>

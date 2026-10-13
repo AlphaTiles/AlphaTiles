@@ -1,5 +1,6 @@
 package org.alphatilesapps.alphatiles;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
@@ -7,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +23,107 @@ import java.util.logging.Logger;
 import static org.alphatilesapps.alphatiles.Start.*;
 
 public class Ethiopia extends GameActivity {
+
+    private static final int[][] GUIDELINE_MAPPINGS = {
+            {R.id.horGuidelineStatusTop, R.dimen.horGuidelineStatusTop},
+            {R.id.horGuidelineStatusMiddle, R.dimen.horGuidelineStatusMiddle},
+            {R.id.horGuidelineStatusBottom, R.dimen.horGuidelineStatusBottom},
+            {R.id.verGuidelineGameNoLeft, R.dimen.verGuidelineGameNoLeft},
+            {R.id.verGuidelineGameNoCLBorder, R.dimen.verGuidelineGameNoCLBorder},
+            {R.id.verGuidelineCLStageBorder, R.dimen.verGuidelineCLStageBorder},
+            {R.id.verGuidelineStageBarsBorder, R.dimen.verGuidelineStageBarsBorder},
+            {R.id.verGuidelineBarsPointsBorder, R.dimen.verGuidelineBarsPointsBorder},
+            {R.id.verGuidelinePointsRight, R.dimen.verGuidelinePointsRight},
+            {R.id.guidelineH0, R.dimen.horGuidelineStatusBottom},
+            {R.id.guidelineH1, R.dimen.ethiopia_guidelineH1},
+            {R.id.guidelineH2, R.dimen.ethiopia_guidelineH2},
+            {R.id.guidelineH3, R.dimen.ethiopia_guidelineH3},
+            {R.id.guidelineH4, R.dimen.ethiopia_guidelineH4},
+            {R.id.guidelineH5, R.dimen.ethiopia_guidelineH5},
+            {R.id.guidelineH6, R.dimen.ethiopia_guidelineH6},
+            {R.id.guidelineH7, R.dimen.ethiopia_guidelineH7},
+            {R.id.guidelineH8, R.dimen.ethiopia_guidelineH8},
+            {R.id.guidelineH9, R.dimen.ethiopia_guidelineH9},
+            {R.id.guidelineH10, R.dimen.ethiopia_guidelineH10},
+            {R.id.guidelineH11, R.dimen.ethiopia_guidelineH11},
+            {R.id.guidelineH12, R.dimen.ethiopia_guidelineH12},
+            {R.id.guidelineH13, R.dimen.ethiopia_guidelineH13},
+            {R.id.guidelineH14, R.dimen.ethiopia_guidelineH14},
+            {R.id.guidelineV0, R.dimen.ethiopia_guidelineV0},
+            {R.id.guidelineV1, R.dimen.ethiopia_guidelineV1},
+            {R.id.guidelineV2, R.dimen.ethiopia_guidelineV2},
+            {R.id.guidelineV3, R.dimen.ethiopia_guidelineV3},
+            {R.id.guidelineV4, R.dimen.ethiopia_guidelineV4},
+            {R.id.guidelineV5, R.dimen.ethiopia_guidelineV5},
+            {R.id.guidelineV6, R.dimen.ethiopia_guidelineV6},
+            {R.id.guidelineV7, R.dimen.ethiopia_guidelineV7},
+            {R.id.guidelineV8, R.dimen.ethiopia_guidelineV8},
+            {R.id.guidelineV9, R.dimen.ethiopia_guidelineV9},
+            {R.id.guidelineV10, R.dimen.ethiopia_guidelineV10},
+            {R.id.guidelineV11, R.dimen.ethiopia_guidelineV11},
+            {R.id.guidelineV12, R.dimen.ethiopia_guidelineV12},
+            {R.id.guidelineV13, R.dimen.ethiopia_guidelineV13},
+            {R.id.ethiopia_horLifeRow1Top, R.dimen.ethiopia_horLifeRow1Top},
+            {R.id.ethiopia_horLifeRow1Bottom, R.dimen.ethiopia_horLifeRow1Bottom},
+            {R.id.ethiopia_horLifeRow2Top, R.dimen.ethiopia_horLifeRow2Top},
+            {R.id.ethiopia_horLifeRow2Bottom, R.dimen.ethiopia_horLifeRow2Bottom},
+            {R.id.ethiopia_horLifeRow3Top, R.dimen.ethiopia_horLifeRow3Top},
+            {R.id.ethiopia_horLifeRow3Bottom, R.dimen.ethiopia_horLifeRow3Bottom},
+            {R.id.ethiopia_horLifeRow4Top, R.dimen.ethiopia_horLifeRow4Top},
+            {R.id.ethiopia_horLifeRow4Bottom, R.dimen.ethiopia_horLifeRow4Bottom},
+            {R.id.ethiopia_verLifeCol1Left, R.dimen.ethiopia_verLifeCol1Left},
+            {R.id.ethiopia_verLifeCol1Right, R.dimen.ethiopia_verLifeCol1Right},
+            {R.id.ethiopia_verLifeCol2Left, R.dimen.ethiopia_verLifeCol2Left},
+            {R.id.ethiopia_verLifeCol2Right, R.dimen.ethiopia_verLifeCol2Right},
+            {R.id.ethiopia_verLifeCol3Left, R.dimen.ethiopia_verLifeCol3Left},
+            {R.id.ethiopia_verLifeCol3Right, R.dimen.ethiopia_verLifeCol3Right},
+            {R.id.ethiopia_verLifeCol4Left, R.dimen.ethiopia_verLifeCol4Left},
+            {R.id.ethiopia_verLifeCol4Right, R.dimen.ethiopia_verLifeCol4Right},
+            {R.id.ethiopia_verLifeCol5Left, R.dimen.ethiopia_verLifeCol5Left},
+            {R.id.ethiopia_verLifeCol5Right, R.dimen.ethiopia_verLifeCol5Right},
+            {R.id.ethiopia_verLifeCol6Left, R.dimen.ethiopia_verLifeCol6Left},
+            {R.id.ethiopia_verLifeCol6Right, R.dimen.ethiopia_verLifeCol6Right},
+            {R.id.ethiopia_verLifeCol7Left, R.dimen.ethiopia_verLifeCol7Left},
+            {R.id.ethiopia_verLifeCol7Right, R.dimen.ethiopia_verLifeCol7Right},
+            {R.id.ethiopia_verLifeCol8Left, R.dimen.ethiopia_verLifeCol8Left},
+            {R.id.ethiopia_verLifeCol8Right, R.dimen.ethiopia_verLifeCol8Right},
+            {R.id.ethiopia_verLifeCol9Left, R.dimen.ethiopia_verLifeCol9Left},
+            {R.id.ethiopia_verLifeCol9Right, R.dimen.ethiopia_verLifeCol9Right},
+            {R.id.ethiopia_verLifeCol10Left, R.dimen.ethiopia_verLifeCol10Left},
+            {R.id.ethiopia_verLifeCol10Right, R.dimen.ethiopia_verLifeCol10Right},
+            {R.id.ethiopia_verLifeCol11Left, R.dimen.ethiopia_verLifeCol11Left},
+            {R.id.ethiopia_verLifeCol11Right, R.dimen.ethiopia_verLifeCol11Right},
+            {R.id.ethiopia_verLifeCol12Left, R.dimen.ethiopia_verLifeCol12Left},
+            {R.id.ethiopia_verLifeCol12Right, R.dimen.ethiopia_verLifeCol12Right},
+            {R.id.ethiopia_horWordTop, R.dimen.ethiopia_horWordTop},
+            {R.id.ethiopia_horWordBottom, R.dimen.ethiopia_horWordBottom},
+            {R.id.ethiopia_verLeft, R.dimen.ethiopia_verLeft},
+            {R.id.ethiopia_verWordRight, R.dimen.ethiopia_verWordRight},
+            {R.id.ethiopia_verImageLeft, R.dimen.ethiopia_verImageLeft},
+            {R.id.ethiopia_verRight, R.dimen.ethiopia_verRight},
+            {R.id.ethiopia_horKeyboardTop, R.dimen.ethiopia_horKeyboardTop},
+            {R.id.ethiopia_horKeyboardBottom, R.dimen.ethiopia_horKeyboardBottom},
+            {R.id.ethiopia_verKeyboardLeft, R.dimen.ethiopia_verKeyboardLeft},
+            {R.id.ethiopia_verKeyboardRight, R.dimen.ethiopia_verKeyboardRight},
+            {R.id.horGuidelineOptionsTop, R.dimen.horGuidelineOptionsTop},
+            {R.id.horGuidelineOptionsBottom, R.dimen.horGuidelineOptionsBottom},
+            {R.id.verGuidelineOptionsLeft, R.dimen.verGuidelineOptionsLeft},
+            {R.id.verGuidelineOptionsRight, R.dimen.verGuidelineOptionsRight},
+            {R.id.ethiopia_guidelineWordTextLeft, R.dimen.ethiopia_guidelineWordTextLeft},
+            {R.id.ethiopia_guidelineWordTextRight, R.dimen.ethiopia_guidelineWordTextRight}
+
+    };
+
+    private void updateGuidelines() {
+        View rootView = findViewById(android.R.id.content);
+        GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateGuidelines();
+    }
 
     // ── Keyboard button IDs ───────────────────────────────────────────────────
     protected static final int[] GAME_BUTTONS = {
@@ -78,6 +182,8 @@ public class Ethiopia extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.ethiopia);
+
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.ethiopiaCL);
         ActivityLayouts.setStatusAndNavColors(this);

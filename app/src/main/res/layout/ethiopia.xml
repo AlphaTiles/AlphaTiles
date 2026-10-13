@@ -143,154 +143,24 @@
         android:maxLines="1"/>
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         LIFE DISPLAY  (guidelineH0 → guidelineH0.5)
-         12 life icons chained horizontally across the screen width.
-         When a life is lost, the icon is set to INVISIBLE.
+         LIFE DISPLAY  (12 life icons)
          ═══════════════════════════════════════════════════════════════════════ -->
 
-    <ImageView
-        android:id="@+id/life1"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker1of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
-        app:layout_constraintEnd_toStartOf="@+id/life2" />
+    <ImageView android:id="@+id/life1" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker1of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow1Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow1Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol1Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol1Right" />
+    <ImageView android:id="@+id/life2" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker2of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow1Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow1Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol2Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol2Right" />
+    <ImageView android:id="@+id/life3" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker3of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow1Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow1Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol3Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol3Right" />
 
-    <ImageView
-        android:id="@+id/life2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker2of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/life1"
-        app:layout_constraintEnd_toStartOf="@+id/life3" />
+    <ImageView android:id="@+id/life4" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker4of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow2Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow2Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol4Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol4Right" />
+    <ImageView android:id="@+id/life5" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker5of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow2Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow2Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol5Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol5Right" />
+    <ImageView android:id="@+id/life6" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker6of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow2Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow2Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol6Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol6Right" />
 
-    <ImageView
-        android:id="@+id/life3"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker3of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/life2"
-        app:layout_constraintEnd_toStartOf="@+id/life4" />
+    <ImageView android:id="@+id/life7" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker7of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow3Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow3Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol7Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol7Right" />
+    <ImageView android:id="@+id/life8" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker8of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow3Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow3Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol8Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol8Right" />
+    <ImageView android:id="@+id/life9" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker9of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow3Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow3Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol9Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol9Right" />
 
-    <ImageView
-        android:id="@+id/life4"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker4of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/life3"
-        app:layout_constraintEnd_toStartOf="@+id/life5" />
-
-    <ImageView
-        android:id="@+id/life5"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker5of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/life4"
-        app:layout_constraintEnd_toStartOf="@+id/life6" />
-
-    <ImageView
-        android:id="@+id/life6"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker6of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/life5"
-        app:layout_constraintEnd_toStartOf="@+id/life7" />
-
-    <ImageView
-        android:id="@+id/life7"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker7of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/life6"
-        app:layout_constraintEnd_toStartOf="@+id/life8" />
-
-    <ImageView
-        android:id="@+id/life8"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker8of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/life7"
-        app:layout_constraintEnd_toStartOf="@+id/life9" />
-
-    <ImageView
-        android:id="@+id/life9"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker9of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/life8"
-        app:layout_constraintEnd_toStartOf="@+id/life10" />
-
-    <ImageView
-        android:id="@+id/life10"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker10of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/life9"
-        app:layout_constraintEnd_toStartOf="@+id/life11" />
-
-    <ImageView
-        android:id="@+id/life11"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker11of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/life10"
-        app:layout_constraintEnd_toStartOf="@+id/life12" />
-
-    <ImageView
-        android:id="@+id/life12"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/tracker12of12"
-        android:padding="2dp"
-        app:srcCompat="@drawable/zz_complete"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH0"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH0.5"
-        app:layout_constraintStart_toEndOf="@+id/life11"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV13" />
+    <ImageView android:id="@+id/life10" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker10of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow4Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow4Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol10Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol10Right" />
+    <ImageView android:id="@+id/life11" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker11of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow4Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow4Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol11Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol11Right" />
+    <ImageView android:id="@+id/life12" android:layout_width="0dp" android:layout_height="0dp" android:contentDescription="@string/tracker12of12" android:padding="2dp" app:srcCompat="@drawable/zz_complete" app:layout_constraintTop_toTopOf="@+id/ethiopia_horLifeRow4Top" app:layout_constraintBottom_toTopOf="@+id/ethiopia_horLifeRow4Bottom" app:layout_constraintStart_toStartOf="@+id/ethiopia_verLifeCol12Left" app:layout_constraintEnd_toEndOf="@+id/ethiopia_verLifeCol12Right" />
 
     <!-- ═══════════════════════════════════════════════════════════════════════
          GAME AREA  (guidelineH1 → guidelineH2)
@@ -313,8 +183,8 @@
         app:autoSizeMaxTextSize="100sp"
         app:autoSizeStepGranularity="2sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV13"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintEnd_toStartOf="@+id/ethiopia_guidelineWordTextRight"
+        app:layout_constraintStart_toStartOf="@+id/ethiopia_guidelineWordTextLeft"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH1" />
 
     <ImageView
@@ -322,13 +192,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="clickPicHearAudio"
-        android:visibility="invisible"
         android:contentDescription="@string/activeWordPicture"
         app:srcCompat="@drawable/zz_alphatileslogo"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH4"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV13"
-        app:layout_constraintStart_toEndOf="@+id/guidelineV0"
+        app:layout_constraintEnd_toEndOf="@+id/ethiopia_guidelineWordTextRight"
+        app:layout_constraintStart_toEndOf="@+id/ethiopia_guidelineWordTextLeft"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH3" />
 
     <!-- ═══════════════════════════════════════════════════════════════════════
@@ -851,36 +720,59 @@
         app:layout_constraintTop_toTopOf="@+id/horGuidelineOptionsTop" />
 
     <!-- ═══════════════════════════════════════════════════════════════════════
-         GUIDELINES  (unchanged from the original ethiopia.xml)
+         GUIDELINES
          ═══════════════════════════════════════════════════════════════════════ -->
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horGuidelineOptionsTop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.93" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsTop" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsBottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsLeft" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/verGuidelineOptionsRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/verGuidelineOptionsRight" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/horGuidelineOptionsBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.99" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horLifeRow1Top" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horLifeRow1Top" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horLifeRow1Bottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horLifeRow1Bottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horLifeRow2Top" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horLifeRow2Top" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horLifeRow2Bottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horLifeRow2Bottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horLifeRow3Top" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horLifeRow3Top" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horLifeRow3Bottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horLifeRow3Bottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horLifeRow4Top" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horLifeRow4Top" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horLifeRow4Bottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horLifeRow4Bottom" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/verGuidelineOptionsLeft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.01" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol1Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol1Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol1Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol1Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol2Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol2Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol2Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol2Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol3Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol3Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol3Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol3Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol4Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol4Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol4Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol4Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol5Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol5Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol5Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol5Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol6Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol6Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol6Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol6Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol7Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol7Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol7Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol7Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol8Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol8Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol8Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol8Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol9Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol9Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol9Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol9Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol10Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol10Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol10Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol10Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol11Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol11Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol11Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol11Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol12Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol12Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLifeCol12Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLifeCol12Right" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/verGuidelineOptionsRight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.99" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horWordTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horWordTop" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horWordBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horWordBottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verLeft" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verWordRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verWordRight" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verImageLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verImageLeft" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verRight" />
+
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horKeyboardTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horKeyboardTop" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_horKeyboardBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/ethiopia_horKeyboardBottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verKeyboardLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verKeyboardLeft" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/ethiopia_verKeyboardRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/ethiopia_verKeyboardRight" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horGuidelineStatusTop"
@@ -992,21 +884,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.14" />
+        app:layout_constraintGuide_percent="0.16" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.24" />
+        app:layout_constraintGuide_percent="0.26" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.25" />
+        app:layout_constraintGuide_percent="0.28" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH4"
@@ -1107,6 +999,13 @@
         app:layout_constraintGuide_percent="0.01" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ethiopia_guidelineWordTextLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.01" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -1192,6 +1091,13 @@
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.99" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ethiopia_guidelineWordTextRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
