@@ -68,6 +68,7 @@ public class Start extends AppCompatActivity {
     public static Boolean hasSyllableAudio;
     public static Boolean enhancedAudioLoadingLog;
     public static Boolean secondChances;
+    public static Boolean exitButton;
     public static Boolean hasSyllableGames = false;
     public static int uponMastery;
     public static Boolean differentiatesTileTypes;
@@ -131,6 +132,7 @@ public class Start extends AppCompatActivity {
         changeArrowColor = getBooleanFromSettings("Change arrow colors", true);
         enhancedAudioLoadingLog = getBooleanFromSettings("Enhanced Audio Loading Log", false);
         secondChances = getBooleanFromSettings("Can the player make additional attempts after an initial incorrect response", true);
+        exitButton = getBooleanFromSettings("Include exit button in the options row of the Games Menu", false);
 
         String uponMasterySetting = settingsList.find("After demonstrating game mastery"); // new setup and new search term
         if (uponMasterySetting.equals("")) {

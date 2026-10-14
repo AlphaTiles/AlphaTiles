@@ -191,6 +191,13 @@ public class Earth extends AppCompatActivity {
             resourcesIcon.setOnClickListener(null);
         }
 
+        ImageView exitButtonImage = findViewById(R.id.exit);
+        if(exitButton) {
+            exitButtonImage.setVisibility(View.VISIBLE);
+        } else {
+            exitButtonImage.setVisibility(View.INVISIBLE);
+        }
+
         // Run after layout and other onCreate constraint changes so marks are not left at XML defaults
         earthCL.post(this::updateDoors);
     }
