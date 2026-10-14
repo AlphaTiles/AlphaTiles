@@ -899,11 +899,29 @@ public class Validator {
             if (!gamesList.contains("Malaysia")) {
                 recommend(Message.Tag.Etc, "it is recommended that you include the Malaysia game");
             }
+            if (!gamesList.contains("England")) {
+                recommend(Message.Tag.Etc, "it is recommended that you include the England game");
+            }
+            if (!gamesList.contains("Ethiopia")) {
+                recommend(Message.Tag.Etc, "it is recommended that you include the Ethiopia game");
+            }
+            if (!gamesList.contains("Senegal")) {
+                recommend(Message.Tag.Etc, "it is recommended that you include the Senegal game");
+            }
 
             try {
                 if (langPackGoogleSheet.getTabFromName("settings").getRowFromFirstCell("Has tile audio").get(1).equals("TRUE")) {
                     if (!gamesList.contains("Iraq")) {
                         recommend(Message.Tag.Etc, "it is recommended that you include the Iraq game, either challenge level 1 (random words) or 2 (iconic words)");
+                    }
+                    if (!gamesList.contains("Cameroon")) {
+                        recommend(Message.Tag.Etc, "it is recommended that you include the Cameroon game, which has 8 challenge levels for each stage");
+                    }
+                    if (!gamesList.contains("India")) {
+                        recommend(Message.Tag.Etc, "it is recommended that you include the India game, which has 6 challenge levels for each stage");
+                    }
+                    if (!gamesList.contains("Indonesia")) {
+                        recommend(Message.Tag.Etc, "it is recommended that you include the Indonesia game (only one challenge level) once for each defined stage or once with stage=1 in the games tab if stages have not been set up");
                     }
                 }
             } catch (Exception ignored) {
