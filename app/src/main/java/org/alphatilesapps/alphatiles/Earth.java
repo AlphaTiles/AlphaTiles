@@ -263,17 +263,24 @@ public class Earth extends AppCompatActivity {
                         ((TextView) child).setBackground(wrappedDrawable);
                         ((TextView) child).setVisibility(View.VISIBLE);
 
+                        String textColorStr;
                         if (!doorTextColor.isEmpty()) {
-                            ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(doorTextColor))));
-                        } else if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")|| country.equals("Indonesia")) {
-//                            totalCorrect = 12;
-                            ((TextView) child).setTextColor(Color.parseColor("#000000")); // black;
+                            textColorStr = colorList.get(Integer.parseInt(doorTextColor));
+                        } else if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq") || country.equals("Indonesia")) {
+                            textColorStr = "#000000"; // black;
                         } else if (!masteryAchieved) {
-                            ((TextView) child).setTextColor(Color.parseColor("#FFFFFF")); // white;
+                            textColorStr = "#FFFFFF"; // white;
                         } else {
                             String textColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).color;
-                            ((TextView) child).setTextColor(Color.parseColor(colorList.get(Integer.parseInt(textColor))));
+                            textColorStr = colorList.get(Integer.parseInt(textColor));
                         }
+
+                        if (masteryAchieved && Color.parseColor(textColorStr) == Color.WHITE) {
+                            String doorBgColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).color;
+                            textColorStr = colorList.get(Integer.parseInt(doorBgColor));
+                        }
+
+                        ((TextView) child).setTextColor(Color.parseColor(textColorStr));
 
                     }
                 } catch (Throwable ex)    // Never reached if tags are well-formed!
