@@ -387,6 +387,7 @@ public class Ethiopia extends GameActivity {
             correctGuesses.add(tileText);
             key.setAlpha(0.45f);   // dim but keep colour so player sees which worked
             updateWordDisplay();
+            gameSounds.play(correctSoundID, 1.0f, 1.0f, 3, 0, 1.0f);
             if (isWordComplete()) onWordComplete();
 
         } else {
@@ -440,8 +441,8 @@ public class Ethiopia extends GameActivity {
             image.setClickable(true);
         }
 
-        recordAttempt(true, 2);               // +2 points, fill one tracker dot
-        playGameSoundThenActiveWordClip(true,false); // chime → pronounce the word
+        recordAttempt(true, 4);               // +4 points, fill one tracker dot
+        playGameSoundThenActiveWordClip(true, false); // chime → pronounce the word
     }
 
     private void onGameOver() {

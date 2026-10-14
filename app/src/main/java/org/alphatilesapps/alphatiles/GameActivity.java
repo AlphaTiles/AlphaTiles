@@ -677,14 +677,9 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void setOptionsRowUnclickable() {
-        ImageView wordImage = findViewById(R.id.wordImage);
+        ImageView wordImage = findViewById(R.id.wordImage); // note that wordImage is not part of the options row!! :(
         if (wordImage != null)
             wordImage.setClickable(false);
-        if (getWordImages() != null)
-            for (int i = 0; i < 4; i++) {
-                wordImage = findViewById(getWordImages()[i]);
-                wordImage.setClickable(false);
-            }
         if (!gameList.get(gameNumber-1).country.equals("Romania")&&!gameList.get(gameNumber-1).country.equals("Sudan")&&!gameList.get(gameNumber-1).country.equals("Malaysia")&&!gameList.get(gameNumber-1).country.equals("Indonesia")) {
             ImageView repeatImage = findViewById(R.id.repeatImage);
             repeatImage.setClickable(false);
@@ -692,16 +687,11 @@ public abstract class GameActivity extends AppCompatActivity {
     }
 
     protected void setOptionsRowClickable() {
-        ImageView wordImage = findViewById(R.id.wordImage);
+        ImageView wordImage = findViewById(R.id.wordImage); // note that wordImage is not part of the options row!! :(
         ImageView gamesHomeImage = findViewById(R.id.gamesHomeImage);
         gamesHomeImage.setClickable(true);
         if (wordImage != null)
             wordImage.setClickable(true);
-        if (getWordImages() != null)
-            for (int i = 0; i < 4; i++) {
-                wordImage = findViewById(getWordImages()[i]);
-                wordImage.setClickable(true);
-            }
         if (!gameList.get(gameNumber-1).country.equals("Romania")&&!gameList.get(gameNumber-1).country.equals("Sudan")&&!gameList.get(gameNumber-1).country.equals("Malaysia")) {
             ImageView repeatImage = findViewById(R.id.repeatImage);
             repeatImage.setClickable(true);

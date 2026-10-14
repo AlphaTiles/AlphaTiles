@@ -361,7 +361,7 @@ public class England extends GameActivity {
 
                                 repeatLocked = false;
                                 setAdvanceArrowToBlue();
-                                recordAttempt(true, 4);
+                                recordAttempt(true, gameWords.size());
                             }
 
                             // Step 3: Snap to -90 degrees and animate back to 0 to complete the flip

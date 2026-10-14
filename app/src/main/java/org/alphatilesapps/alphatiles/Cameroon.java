@@ -2,6 +2,7 @@ package org.alphatilesapps.alphatiles;
 
 import static org.alphatilesapps.alphatiles.Start.colorList;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
+import static org.alphatilesapps.alphatiles.Start.secondChances;
 import static org.alphatilesapps.alphatiles.Start.sendAnalytics;
 import static org.alphatilesapps.alphatiles.Start.tileAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.tileDurations;
@@ -396,11 +397,6 @@ public class Cameroon extends GameActivity {
     private void respondToSelectorSelection(View selector, int idx) {
         if(!repeatLocked) return;
         if (idx == correct) {
-            GradientDrawable circle = (GradientDrawable) selector.getBackground();
-            circle.setColor(selectorColorCorrect);
-            repeatLocked = false;
-            setAdvanceArrowToBlue();
-            recordAttempt(true, 1);
             if (sendAnalytics) {
                 String gameUniqueID = country.toLowerCase().substring(0, 2) + challengeLevel + syllableGame;
                 Properties info = new Properties().putValue("Time Taken", System.currentTimeMillis() - levelBegunTime)
@@ -414,7 +410,14 @@ public class Cameroon extends GameActivity {
                 }
                 Analytics.with(context).track(gameUniqueID, info);
             }
-            playGameSoundThenActiveWordClip(true,false);
+
+            GradientDrawable circle = (GradientDrawable) selector.getBackground();
+            circle.setColor(selectorColorCorrect);
+
+            recordAttempt(true, 2);
+            endRound();
+            playGameSoundThenActiveWordClip(true, false);
+
             for (int s : selectors) {
                 findViewById(s).setClickable(true); // after the round ends, a player can still listen to tile audio and review why they were right or wrong
             }
@@ -426,9 +429,28 @@ public class Cameroon extends GameActivity {
                 incorrect.append(tile.text);
             }
             incorrectAnswersSelected.set(idx, incorrect.toString());
-            playIncorrectSound();
-            recordAttempt(false,0);
+            recordAttempt(false, 0);
+            if (secondChances) {
+                playIncorrectSound();
+            } else {
+                endRound();
+                playGameSoundThenActiveWordClip(false, false);
+            }
         }
+    }
+
+    private void endRound() {
+
+        repeatLocked = false;
+        setAdvanceArrowToBlue();
+
+        View correctSelector = findViewById(selectors[correct]);
+        GradientDrawable circle = (GradientDrawable) correctSelector.getBackground();
+        circle.setColor(selectorColorCorrect);
+        for (int s : selectors) {
+            findViewById(s).setClickable(true);
+        }
+
     }
 
     public void clickPicHearAudio(View view) {

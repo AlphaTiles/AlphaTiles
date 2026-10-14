@@ -257,8 +257,8 @@
                 android:layout_margin="10dp"
                 android:layout_gravity="center"
                 android:id="@+id/selector0"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:tag="0" />
 
             <LinearLayout
@@ -278,8 +278,8 @@
                 android:layout_margin="10dp"
                 android:layout_gravity="center"
                 android:id="@+id/selector1"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:gravity="center"
                 android:tag="0" />
 
@@ -300,8 +300,8 @@
                 android:layout_margin="10dp"
                 android:layout_gravity="center"
                 android:id="@+id/selector2"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:tag="0" />
 
             <LinearLayout
@@ -321,8 +321,8 @@
                 android:layout_margin="10dp"
                 android:layout_gravity="center"
                 android:id="@+id/selector3"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:tag="0" />
 
             <LinearLayout

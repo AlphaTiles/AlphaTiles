@@ -295,7 +295,7 @@ public class India extends GameActivity {
     }
 
     public void onWordClick(View view) {
-        if (mediaPlayerIsPlaying) {
+        if (mediaPlayerIsPlaying || !repeatLocked) {
             return;
         }
 
@@ -319,30 +319,13 @@ public class India extends GameActivity {
                 Analytics.with(context).track(gameUniqueID, info);
             }
 
-            repeatLocked = false;
-            setAdvanceArrowToBlue();
-            recordAttempt(true, 1);
-
-            // Dim incorrect options
-            for (int w = 0; w < GAME_BUTTONS.length; w++) {
-                TextView nextWordText = findViewById(GAME_BUTTONS[w]);
-                ImageView nextWordImage = findViewById(WORD_IMAGES[w]);
-
-                nextWordText.setClickable(false);
-                nextWordImage.setClickable(false);
-
-                if (w != index) {
-                    nextWordText.setBackgroundColor(Color.parseColor("#A9A9A9"));
-                    nextWordText.setTextColor(Color.parseColor("#000000"));
-                }
-            }
-
+            recordAttempt(true, 2);
+            endRound();
             playGameSoundThenActiveWordClip(true, false);
 
         } else {
             // Incorrect Answer!
             incorrectOnLevel++;
-            recordAttempt(false,0);
             for (int i = 0; i < 3; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(selectedWord)) break; // Already selected
@@ -351,31 +334,31 @@ public class India extends GameActivity {
                     break;
                 }
             }
-            playIncorrectSound();
-        }
-    }
-
-    @Override
-    protected void setAllGameButtonsUnclickable() {
-        super.setAllGameButtonsUnclickable();
-        for (int t = 0; t < PROMPT_TILES.length; t++) {
-            ImageView promptTile = findViewById(PROMPT_TILES[t]);
-            if (promptTile != null) {
-                promptTile.setClickable(false);
+            recordAttempt(false, 0);
+            if (secondChances) {
+                playIncorrectSound();
+            } else {
+                endRound();
+                playGameSoundThenActiveWordClip(false, false);
             }
         }
     }
 
-    @Override
-    protected void setAllGameButtonsClickable() {
-        super.setAllGameButtonsClickable();
-        // Only make the visible prompt tiles clickable again
-        int tilesToShow = Math.min(parsedRefWordTileArray.size(), 6);
-        for (int t = 0; t < tilesToShow; t++) {
-            ImageView promptTile = findViewById(PROMPT_TILES[t]);
-            if (promptTile != null) {
-                promptTile.setClickable(true);
+    private void endRound() {
+
+        repeatLocked = false;
+        setAdvanceArrowToBlue();
+
+        for (int w = 0; w < GAME_BUTTONS.length; w++) {
+            TextView nextWord = findViewById(GAME_BUTTONS[w]);
+            if (!nextWord.getText().toString().equals(correctString)) {
+                String wordColorStr = "#A9A9A9"; // dark gray
+                int wordColorNo = Color.parseColor(wordColorStr);
+                nextWord.setBackgroundColor(wordColorNo);
+                nextWord.setTextColor(Color.parseColor("#000000")); // black
+
             }
         }
+
     }
 }

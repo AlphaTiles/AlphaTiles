@@ -475,16 +475,15 @@ public class Senegal extends GameActivity {
                     }
 
                     boolean isFinalWord = (currentIndex == currentTargetSequence.size());
-                    playGameSoundThenActiveWordClip(true,false);
+                    playGameSoundThenActiveWordClip(true, isFinalWord);
 
                     if (isFinalWord) {
                         repeatLocked = false;
                         setAdvanceArrowToBlue();
-                        recordAttempt(true,1);
                     }
+                    recordAttempt(true, 2);
                 }
             } else {
-                recordAttempt(false,0);
                 incorrectOnLevel++;
                 playIncorrectSound();
                 View wrongTile = findViewById(GAME_BUTTONS[buttonIndex]);
