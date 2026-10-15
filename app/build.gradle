@@ -11,8 +11,8 @@ android {
         applicationId = "org.alphatilesapps.alphatiles"
         minSdk = 24
         targetSdk = 37
-        versionCode = 326
-        versionName = "3.1.1.4 [st-sxg]"
+        versionCode = 327
+        versionName = "3.1.1.5 [st-sxg]"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

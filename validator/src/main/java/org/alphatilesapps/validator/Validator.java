@@ -597,7 +597,7 @@ public class Validator {
                     Tab langInfo = langPackGoogleSheet.getTabFromName("langinfo");
                     scriptType = langInfo.getRowFromFirstCell("Script type").get(1); // sets global variable used to determine simple/complex parse
                 } catch (ValidatorException e) {
-                    fatalError(Message.Tag.Etc, "In langinfo \"Script type\" must be either \"Arabic,\" \"Devanagari,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\". Please add a valid script type.");
+                    fatalError(Message.Tag.Etc, "In langinfo \"Script type\" must be either \"Ancient South Arabian,\" \"Arabic,\" \"Devanagari,\" \"Karreni,\" \"Khmer,\" \"Lao,\" \"Roman,\"or \"Thai\". Please add a valid script type.");
                 }
 
                 try {
@@ -881,7 +881,7 @@ public class Validator {
             if (!gamesList.contains("Italy")) {
                 recommend(Message.Tag.Etc, "It is recommended that you include the Italy game");
             } else if (wordlist.size() < 55) {
-                fatalError(Message.Tag.Etc, "the Italy game requires at least 54 words, you only provide " + wordlist.size());
+                fatalError(Message.Tag.Etc, "By default, the Italy game requires 54 or more words. You only provided " + (wordlist.size() - 1) + ". Add more words or set the Italy deck size in the settings tab to a value 16 or greater.");
             }
 
             if (gamesList.size() < 7) {
