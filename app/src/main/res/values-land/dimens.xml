@@ -929,13 +929,13 @@
     <!-- India Horizontal Guidelines (Landscape) -->
     <item name="india_horGuidelineRefTop" type="dimen" format="float">0.14</item>
     <item name="india_horGuidelineRefBottom" type="dimen" format="float">0.32</item>
-    <item name="india_horGuidelineImageRowOneTop" type="dimen" format="float">0.36</item>
-    <item name="india_horGuidelineImageRowOneBottom" type="dimen" format="float">0.60</item>
-    <item name="india_horGuidelineTextRowOneTop" type="dimen" format="float">0.36</item>
-    <item name="india_horGuidelineTextRowOneBottom" type="dimen" format="float">0.60</item>
-    <item name="india_horGuidelineImageRowTwoTop" type="dimen" format="float">0.61</item>
-    <item name="india_horGuidelineImageRowTwoBottom" type="dimen" format="float">0.85</item>
-    <item name="india_horGuidelineTextRowTwoTop" type="dimen" format="float">0.61</item>
+    <item name="india_horGuidelineImageRowOneTop" type="dimen" format="float">0.35</item>
+    <item name="india_horGuidelineImageRowOneBottom" type="dimen" format="float">0.68</item>
+    <item name="india_horGuidelineTextRowOneTop" type="dimen" format="float">0.69</item>
+    <item name="india_horGuidelineTextRowOneBottom" type="dimen" format="float">0.85</item>
+    <item name="india_horGuidelineImageRowTwoTop" type="dimen" format="float">0.35</item>
+    <item name="india_horGuidelineImageRowTwoBottom" type="dimen" format="float">0.68</item>
+    <item name="india_horGuidelineTextRowTwoTop" type="dimen" format="float">0.69</item>
     <item name="india_horGuidelineTextRowTwoBottom" type="dimen" format="float">0.85</item>
 
     <!-- India Vertical Guidelines (Landscape) -->
@@ -943,11 +943,14 @@
     <item name="india_verPromptRight" type="dimen" format="float">0.99</item>
     <item name="india_verGridLeft" type="dimen" format="float">0.01</item>
     <item name="india_verGridRight" type="dimen" format="float">0.99</item>
-    <item name="india_verCol1ImageRight" type="dimen" format="float">0.16</item>
-    <item name="india_verCol1TextLeft" type="dimen" format="float">0.17</item>
-    <item name="india_verCol2ImageLeft" type="dimen" format="float">0.54</item>
-    <item name="india_verCol2ImageRight" type="dimen" format="float">0.66</item>
-    <item name="india_verCol2TextLeft" type="dimen" format="float">0.68</item>
+    <item name="india_verChoice1Left" type="dimen" format="float">0.01</item>
+    <item name="india_verChoice1Right" type="dimen" format="float">0.245</item>
+    <item name="india_verChoice2Left" type="dimen" format="float">0.255</item>
+    <item name="india_verChoice2Right" type="dimen" format="float">0.495</item>
+    <item name="india_verChoice3Left" type="dimen" format="float">0.505</item>
+    <item name="india_verChoice3Right" type="dimen" format="float">0.745</item>
+    <item name="india_verChoice4Left" type="dimen" format="float">0.755</item>
+    <item name="india_verChoice4Right" type="dimen" format="float">0.99</item>
     <item name="india_guidelineV_t1" type="dimen" format="float">0.01</item>
     <item name="india_guidelineV_t2" type="dimen" format="float">0.11</item>
     <item name="india_guidelineV_t3" type="dimen" format="float">0.21</item>

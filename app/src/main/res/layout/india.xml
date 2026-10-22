@@ -232,10 +232,10 @@
         android:id="@+id/wordImage1"
         android:layout_width="0dp" android:layout_height="0dp"
         android:onClick="onWordClick" android:tag="1"
-        app:layout_constraintBottom_toTopOf="@+id/horGuidelineImageRowOneBottom"
-        app:layout_constraintEnd_toStartOf="@+id/india_verCol1ImageRight"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/horGuidelineImageRowOneTop"
+        app:layout_constraintBottom_toTopOf="@+id/india_horGuidelineImageRowOneBottom"
+        app:layout_constraintEnd_toStartOf="@+id/india_verChoice1Right"
+        app:layout_constraintStart_toStartOf="@+id/india_verChoice1Left"
+        app:layout_constraintTop_toTopOf="@+id/india_horGuidelineImageRowOneTop"
         android:padding="8dp"
         app:srcCompat="@drawable/zz_sil"/>
 
@@ -243,12 +243,12 @@
         android:id="@+id/wordText1"
         android:layout_width="0dp" android:layout_height="0dp"
         android:gravity="center" android:onClick="onWordClick" android:tag="1"
-        android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
+        android:padding="2dp" android:maxLines="1"
         app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/horGuidelineTextRowOneBottom"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV_mid"
-        app:layout_constraintStart_toStartOf="@+id/india_verCol1TextLeft"
-        app:layout_constraintTop_toTopOf="@+id/horGuidelineTextRowOneTop"
+        app:layout_constraintBottom_toTopOf="@+id/india_horGuidelineTextRowOneBottom"
+        app:layout_constraintEnd_toStartOf="@+id/india_verChoice1Right"
+        app:layout_constraintStart_toStartOf="@+id/india_verChoice1Left"
+        app:layout_constraintTop_toTopOf="@+id/india_horGuidelineTextRowOneTop"
         android:text="@string/wordChoice01"/>
 
     <!-- Quadrant 2 (Top-Right) -->
@@ -256,10 +256,10 @@
         android:id="@+id/wordImage2"
         android:layout_width="0dp" android:layout_height="0dp"
         android:onClick="onWordClick" android:tag="2"
-        app:layout_constraintBottom_toTopOf="@+id/horGuidelineImageRowOneBottom"
-        app:layout_constraintEnd_toStartOf="@+id/india_verCol2ImageRight"
-        app:layout_constraintStart_toStartOf="@+id/india_verCol2ImageLeft"
-        app:layout_constraintTop_toTopOf="@+id/horGuidelineImageRowOneTop"
+        app:layout_constraintBottom_toTopOf="@+id/india_horGuidelineImageRowOneBottom"
+        app:layout_constraintEnd_toStartOf="@+id/india_verChoice2Right"
+        app:layout_constraintStart_toStartOf="@+id/india_verChoice2Left"
+        app:layout_constraintTop_toTopOf="@+id/india_horGuidelineImageRowOneTop"
         android:padding="8dp"
         app:srcCompat="@drawable/zz_sil"/>
 
@@ -267,12 +267,12 @@
         android:id="@+id/wordText2"
         android:layout_width="0dp" android:layout_height="0dp"
         android:gravity="center" android:onClick="onWordClick" android:tag="2"
-        android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
+        android:padding="2dp" android:maxLines="1"
         app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/horGuidelineTextRowOneBottom"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-        app:layout_constraintStart_toStartOf="@+id/india_verCol2TextLeft"
-        app:layout_constraintTop_toTopOf="@+id/horGuidelineTextRowOneTop"
+        app:layout_constraintBottom_toTopOf="@+id/india_horGuidelineTextRowOneBottom"
+        app:layout_constraintEnd_toStartOf="@+id/india_verChoice2Right"
+        app:layout_constraintStart_toStartOf="@+id/india_verChoice2Left"
+        app:layout_constraintTop_toTopOf="@+id/india_horGuidelineTextRowOneTop"
         android:text="@string/wordChoice02"/>
 
     <!-- Quadrant 3 (Bottom-Left) -->
@@ -280,10 +280,10 @@
         android:id="@+id/wordImage3"
         android:layout_width="0dp" android:layout_height="0dp"
         android:onClick="onWordClick" android:tag="3"
-        app:layout_constraintBottom_toTopOf="@+id/horGuidelineImageRowTwoBottom"
-        app:layout_constraintEnd_toStartOf="@+id/india_verCol1ImageRight"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV1"
-        app:layout_constraintTop_toTopOf="@+id/horGuidelineImageRowTwoTop"
+        app:layout_constraintBottom_toTopOf="@+id/india_horGuidelineImageRowTwoBottom"
+        app:layout_constraintEnd_toStartOf="@+id/india_verChoice3Right"
+        app:layout_constraintStart_toStartOf="@+id/india_verChoice3Left"
+        app:layout_constraintTop_toTopOf="@+id/india_horGuidelineImageRowTwoTop"
         android:padding="8dp"
         app:srcCompat="@drawable/zz_sil"/>
 
@@ -291,12 +291,12 @@
         android:id="@+id/wordText3"
         android:layout_width="0dp" android:layout_height="0dp"
         android:gravity="center" android:onClick="onWordClick" android:tag="3"
-        android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
+        android:padding="2dp" android:maxLines="1"
         app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/horGuidelineTextRowTwoBottom"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV_mid"
-        app:layout_constraintStart_toStartOf="@+id/india_verCol1TextLeft"
-        app:layout_constraintTop_toTopOf="@+id/horGuidelineTextRowTwoTop"
+        app:layout_constraintBottom_toTopOf="@+id/india_horGuidelineTextRowTwoBottom"
+        app:layout_constraintEnd_toStartOf="@+id/india_verChoice3Right"
+        app:layout_constraintStart_toStartOf="@+id/india_verChoice3Left"
+        app:layout_constraintTop_toTopOf="@+id/india_horGuidelineTextRowTwoTop"
         android:text="@string/wordChoice03"/>
 
     <!-- Quadrant 4 (Bottom-Right) -->
@@ -304,10 +304,10 @@
         android:id="@+id/wordImage4"
         android:layout_width="0dp" android:layout_height="0dp"
         android:onClick="onWordClick" android:tag="4"
-        app:layout_constraintBottom_toTopOf="@+id/horGuidelineImageRowTwoBottom"
-        app:layout_constraintEnd_toStartOf="@+id/india_verCol2ImageRight"
-        app:layout_constraintStart_toStartOf="@+id/india_verCol2ImageLeft"
-        app:layout_constraintTop_toTopOf="@+id/horGuidelineImageRowTwoTop"
+        app:layout_constraintBottom_toTopOf="@+id/india_horGuidelineImageRowTwoBottom"
+        app:layout_constraintEnd_toStartOf="@+id/india_verChoice4Right"
+        app:layout_constraintStart_toStartOf="@+id/india_verChoice4Left"
+        app:layout_constraintTop_toTopOf="@+id/india_horGuidelineImageRowTwoTop"
         android:padding="8dp"
         app:srcCompat="@drawable/zz_sil"/>
 
@@ -315,12 +315,12 @@
         android:id="@+id/wordText4"
         android:layout_width="0dp" android:layout_height="0dp"
         android:gravity="center" android:onClick="onWordClick" android:tag="4"
-        android:layout_margin="2dp" android:padding="2dp" android:maxLines="1"
+        android:padding="2dp" android:maxLines="1"
         app:autoSizeTextType="uniform" app:autoSizeMinTextSize="5sp" app:autoSizeMaxTextSize="100sp"
-        app:layout_constraintBottom_toTopOf="@+id/horGuidelineTextRowTwoBottom"
-        app:layout_constraintEnd_toStartOf="@+id/guidelineV2"
-        app:layout_constraintStart_toStartOf="@+id/india_verCol2TextLeft"
-        app:layout_constraintTop_toTopOf="@+id/horGuidelineTextRowTwoTop"
+        app:layout_constraintBottom_toTopOf="@+id/india_horGuidelineTextRowTwoBottom"
+        app:layout_constraintEnd_toStartOf="@+id/india_verChoice4Right"
+        app:layout_constraintStart_toStartOf="@+id/india_verChoice4Left"
+        app:layout_constraintTop_toTopOf="@+id/india_horGuidelineTextRowTwoTop"
         android:text="@string/wordChoice04"/>
 
 
@@ -337,14 +337,14 @@
     <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineStatusBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/horGuidelineStatusBottom" />
     <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineRefTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineRefTop" />
     <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineRefBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineRefBottom" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineImageRowOneTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineImageRowOneTop" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineImageRowOneBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineImageRowOneBottom" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineTextRowOneTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineTextRowOneTop" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineTextRowOneBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineTextRowOneBottom" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineImageRowTwoTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineImageRowTwoTop" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineImageRowTwoBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineImageRowTwoBottom" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineTextRowTwoTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineTextRowTwoTop" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineTextRowTwoBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineTextRowTwoBottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_horGuidelineImageRowOneTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineImageRowOneTop" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_horGuidelineImageRowOneBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineImageRowOneBottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_horGuidelineTextRowOneTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineTextRowOneTop" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_horGuidelineTextRowOneBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineTextRowOneBottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_horGuidelineImageRowTwoTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineImageRowTwoTop" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_horGuidelineImageRowTwoBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineImageRowTwoBottom" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_horGuidelineTextRowTwoTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineTextRowTwoTop" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_horGuidelineTextRowTwoBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/india_horGuidelineTextRowTwoBottom" />
     <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsTop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsTop" />
     <androidx.constraintlayout.widget.Guideline android:id="@+id/horGuidelineOptionsBottom" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" app:layout_constraintGuide_percent="@dimen/horGuidelineOptionsBottom" />
 
@@ -361,15 +361,23 @@
     <!-- Midpoint grid -->
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV_mid" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.50" />
 
-    <!-- India Quadrant Grid Side-by-Side Guidelines -->
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verCol1ImageRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verCol1ImageRight" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verCol1TextLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verCol1TextLeft" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verCol2ImageLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verCol2ImageLeft" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verCol2ImageRight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verCol2ImageRight" />
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verCol2TextLeft" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verCol2TextLeft" />
+    <!-- India Choice Guidelines -->
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verChoice1Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verChoice1Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verChoice1Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verChoice1Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verChoice2Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verChoice2Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verChoice2Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verChoice2Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verChoice3Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verChoice3Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verChoice3Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verChoice3Right" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verChoice4Left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verChoice4Left" />
+    <androidx.constraintlayout.widget.Guideline android:id="@+id/india_verChoice4Right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="@dimen/india_verChoice4Right" />
 
     <!-- Equidistant Prompt Tile Guidelines -->
-    <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV_t1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.010" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV_t1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.0" />
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV_t2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.173" />
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV_t3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.336" />
     <androidx.constraintlayout.widget.Guideline android:id="@+id/guidelineV_t4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" app:layout_constraintGuide_percent="0.500" />

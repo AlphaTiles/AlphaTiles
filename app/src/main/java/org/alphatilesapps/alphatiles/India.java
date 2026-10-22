@@ -42,60 +42,83 @@ public class India extends GameActivity {
             {R.id.guidelineV2, R.dimen.verGuidelinePointsRight},
             {R.id.horGuidelineRefTop, R.dimen.india_horGuidelineRefTop},
             {R.id.horGuidelineRefBottom, R.dimen.india_horGuidelineRefBottom},
-            {R.id.horGuidelineImageRowOneTop, R.dimen.india_horGuidelineImageRowOneTop},
-            {R.id.horGuidelineImageRowOneBottom, R.dimen.india_horGuidelineImageRowOneBottom},
-            {R.id.horGuidelineTextRowOneTop, R.dimen.india_horGuidelineTextRowOneTop},
-            {R.id.horGuidelineTextRowOneBottom, R.dimen.india_horGuidelineTextRowOneBottom},
-            {R.id.horGuidelineImageRowTwoTop, R.dimen.india_horGuidelineImageRowTwoTop},
-            {R.id.horGuidelineImageRowTwoBottom, R.dimen.india_horGuidelineImageRowTwoBottom},
-            {R.id.horGuidelineTextRowTwoTop, R.dimen.india_horGuidelineTextRowTwoTop},
-            {R.id.horGuidelineTextRowTwoBottom, R.dimen.india_horGuidelineTextRowTwoBottom},
-            {R.id.india_verCol1ImageRight, R.dimen.india_verCol1ImageRight},
-            {R.id.india_verCol1TextLeft, R.dimen.india_verCol1TextLeft},
-            {R.id.india_verCol2ImageRight, R.dimen.india_verCol2ImageRight},
-            {R.id.india_verCol2TextLeft, R.dimen.india_verCol2TextLeft},
+            {R.id.india_horGuidelineImageRowOneTop, R.dimen.india_horGuidelineImageRowOneTop},
+            {R.id.india_horGuidelineImageRowOneBottom, R.dimen.india_horGuidelineImageRowOneBottom},
+            {R.id.india_horGuidelineTextRowOneTop, R.dimen.india_horGuidelineTextRowOneTop},
+            {R.id.india_horGuidelineTextRowOneBottom, R.dimen.india_horGuidelineTextRowOneBottom},
+            {R.id.india_horGuidelineImageRowTwoTop, R.dimen.india_horGuidelineImageRowTwoTop},
+            {R.id.india_horGuidelineImageRowTwoBottom, R.dimen.india_horGuidelineImageRowTwoBottom},
+            {R.id.india_horGuidelineTextRowTwoTop, R.dimen.india_horGuidelineTextRowTwoTop},
+            {R.id.india_horGuidelineTextRowTwoBottom, R.dimen.india_horGuidelineTextRowTwoBottom},
+            {R.id.india_verChoice1Left, R.dimen.india_verChoice1Left},
+            {R.id.india_verChoice1Right, R.dimen.india_verChoice1Right},
+            {R.id.india_verChoice2Left, R.dimen.india_verChoice2Left},
+            {R.id.india_verChoice2Right, R.dimen.india_verChoice2Right},
+            {R.id.india_verChoice3Left, R.dimen.india_verChoice3Left},
+            {R.id.india_verChoice3Right, R.dimen.india_verChoice3Right},
+            {R.id.india_verChoice4Left, R.dimen.india_verChoice4Left},
+            {R.id.india_verChoice4Right, R.dimen.india_verChoice4Right},
             {R.id.guidelineV_t1, R.dimen.india_guidelineV_t1},
             {R.id.guidelineV_t2, R.dimen.india_guidelineV_t2},
             {R.id.guidelineV_t3, R.dimen.india_guidelineV_t3},
             {R.id.guidelineV_t4, R.dimen.india_guidelineV_t4},
             {R.id.guidelineV_t5, R.dimen.india_guidelineV_t5},
             {R.id.guidelineV_t6, R.dimen.india_guidelineV_t6},
-            {R.id.guidelineV_t7, R.dimen.india_guidelineV_t7},
-            {R.id.india_verCol2TextLeft, R.dimen.india_verCol2TextLeft}
-
+            {R.id.guidelineV_t7, R.dimen.india_guidelineV_t7}
     };
 
     private void updateGuidelines() {
         View rootView = findViewById(android.R.id.content);
         GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS);
 
-        String challengeLevelString = String.valueOf(challengeLevel);
         int firstDigit = (challengeLevel >= 10) ? (challengeLevel / 10) : (challengeLevel == 2 ? 2 : 1);
         boolean showImages = (firstDigit == 1);
 
         int orientation = getResources().getConfiguration().orientation;
         boolean isLandscape = (orientation == Configuration.ORIENTATION_LANDSCAPE);
 
-        ConstraintLayout constraintLayout = findViewById(R.id.indiaCL);
-        if (constraintLayout != null) {
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(constraintLayout);
-
-            if (!showImages) {
-                if (isLandscape) {
-                    constraintSet.connect(R.id.wordText1, ConstraintSet.START, R.id.guidelineV1, ConstraintSet.END, 0);
-                    constraintSet.connect(R.id.wordText2, ConstraintSet.START, R.id.guidelineV_mid, ConstraintSet.END, 0);
-                    constraintSet.connect(R.id.wordText3, ConstraintSet.START, R.id.guidelineV1, ConstraintSet.END, 0);
-                    constraintSet.connect(R.id.wordText4, ConstraintSet.START, R.id.guidelineV_mid, ConstraintSet.END, 0);
-                } else {
-                    constraintSet.connect(R.id.wordText1, ConstraintSet.TOP, R.id.horGuidelineImageRowOneTop, ConstraintSet.BOTTOM, 0);
-                    constraintSet.connect(R.id.wordText2, ConstraintSet.TOP, R.id.horGuidelineImageRowOneTop, ConstraintSet.BOTTOM, 0);
-                    constraintSet.connect(R.id.wordText3, ConstraintSet.TOP, R.id.horGuidelineImageRowTwoTop, ConstraintSet.BOTTOM, 0);
-                    constraintSet.connect(R.id.wordText4, ConstraintSet.TOP, R.id.horGuidelineImageRowTwoTop, ConstraintSet.BOTTOM, 0);
-                }
-            }
-            constraintSet.applyTo(constraintLayout);
+        // Reposition TextViews vertically when images are not shown else position as defined in dimens.xml files
+        if (showImages && isLandscape) {
+            androidx.constraintlayout.widget.Guideline guide1Top = rootView.findViewById(R.id.india_horGuidelineTextRowOneTop);
+            if (guide1Top != null) guide1Top.setGuidelinePercent(0.69f);
+            androidx.constraintlayout.widget.Guideline guide1Bottom = rootView.findViewById(R.id.india_horGuidelineTextRowOneBottom);
+            if (guide1Bottom != null) guide1Bottom.setGuidelinePercent(0.85f);
+            androidx.constraintlayout.widget.Guideline guide2Top = rootView.findViewById(R.id.india_horGuidelineTextRowTwoTop);
+            if (guide2Top != null) guide2Top.setGuidelinePercent(0.69f);
+            androidx.constraintlayout.widget.Guideline guide2Bottom = rootView.findViewById(R.id.india_horGuidelineTextRowTwoBottom);
+            if (guide2Bottom != null) guide2Bottom.setGuidelinePercent(0.85f);
         }
+        if (showImages && !isLandscape) {
+            androidx.constraintlayout.widget.Guideline guide1Top = rootView.findViewById(R.id.india_horGuidelineTextRowOneTop);
+            if (guide1Top != null) guide1Top.setGuidelinePercent(0.45f);
+            androidx.constraintlayout.widget.Guideline guide1Bottom = rootView.findViewById(R.id.india_horGuidelineTextRowOneBottom);
+            if (guide1Bottom != null) guide1Bottom.setGuidelinePercent(0.55f);
+            androidx.constraintlayout.widget.Guideline guide2Top = rootView.findViewById(R.id.india_horGuidelineTextRowTwoTop);
+            if (guide2Top != null) guide2Top.setGuidelinePercent(0.81f);
+            androidx.constraintlayout.widget.Guideline guide2Bottom = rootView.findViewById(R.id.india_horGuidelineTextRowTwoBottom);
+            if (guide2Bottom != null) guide2Bottom.setGuidelinePercent(0.91f);
+        }
+        if (!showImages && isLandscape) {
+            androidx.constraintlayout.widget.Guideline guide1Top = rootView.findViewById(R.id.india_horGuidelineTextRowOneTop);
+            if (guide1Top != null) guide1Top.setGuidelinePercent(0.51f);
+            androidx.constraintlayout.widget.Guideline guide1Bottom = rootView.findViewById(R.id.india_horGuidelineTextRowOneBottom);
+            if (guide1Bottom != null) guide1Bottom.setGuidelinePercent(0.67f);
+            androidx.constraintlayout.widget.Guideline guide2Top = rootView.findViewById(R.id.india_horGuidelineTextRowTwoTop);
+            if (guide2Top != null) guide2Top.setGuidelinePercent(0.51f);
+            androidx.constraintlayout.widget.Guideline guide2Bottom = rootView.findViewById(R.id.india_horGuidelineTextRowTwoBottom);
+            if (guide2Bottom != null) guide2Bottom.setGuidelinePercent(0.67f);        }
+        if (!showImages && !isLandscape) {
+            androidx.constraintlayout.widget.Guideline guide1Top = rootView.findViewById(R.id.india_horGuidelineTextRowOneTop);
+            if (guide1Top != null) guide1Top.setGuidelinePercent(0.29f);
+            androidx.constraintlayout.widget.Guideline guide1Bottom = rootView.findViewById(R.id.india_horGuidelineTextRowOneBottom);
+            if (guide1Bottom != null) guide1Bottom.setGuidelinePercent(0.39f);
+            androidx.constraintlayout.widget.Guideline guide2Top = rootView.findViewById(R.id.india_horGuidelineTextRowTwoTop);
+            if (guide2Top != null) guide2Top.setGuidelinePercent(0.44f);
+            androidx.constraintlayout.widget.Guideline guide2Bottom = rootView.findViewById(R.id.india_horGuidelineTextRowTwoBottom);
+            if (guide2Bottom != null) guide2Bottom.setGuidelinePercent(0.54f);
+        }
+
+
     }
 
     @Override
@@ -150,6 +173,8 @@ public class India extends GameActivity {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.india);
+
+        updateGuidelines();
 
         ActivityLayouts.applyEdgeToEdge(this, R.id.indiaCL);
         ActivityLayouts.setStatusAndNavColors(this);
@@ -233,24 +258,6 @@ public class India extends GameActivity {
 
         // Restore refWord to the correct target word globally so game logic doesn't break
         refWord = targetWord;
-
-        // 5. Adjust layout constraints based on whether images are shown
-        ConstraintLayout constraintLayout = findViewById(R.id.indiaCL);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-
-        if (showImages) {
-            constraintSet.connect(R.id.wordText1, ConstraintSet.TOP, R.id.horGuidelineTextRowOneTop, ConstraintSet.BOTTOM, 0);
-            constraintSet.connect(R.id.wordText2, ConstraintSet.TOP, R.id.horGuidelineTextRowOneTop, ConstraintSet.BOTTOM, 0);
-            constraintSet.connect(R.id.wordText3, ConstraintSet.TOP, R.id.horGuidelineTextRowTwoTop, ConstraintSet.BOTTOM, 0);
-            constraintSet.connect(R.id.wordText4, ConstraintSet.TOP, R.id.horGuidelineTextRowTwoTop, ConstraintSet.BOTTOM, 0);
-        } else {
-            constraintSet.connect(R.id.wordText1, ConstraintSet.TOP, R.id.horGuidelineImageRowOneTop, ConstraintSet.BOTTOM, 0);
-            constraintSet.connect(R.id.wordText2, ConstraintSet.TOP, R.id.horGuidelineImageRowOneTop, ConstraintSet.BOTTOM, 0);
-            constraintSet.connect(R.id.wordText3, ConstraintSet.TOP, R.id.horGuidelineImageRowTwoTop, ConstraintSet.BOTTOM, 0);
-            constraintSet.connect(R.id.wordText4, ConstraintSet.TOP, R.id.horGuidelineImageRowTwoTop, ConstraintSet.BOTTOM, 0);
-        }
-        constraintSet.applyTo(constraintLayout);
 
         // 6. Populate the 2x2 grid
         for (int i = 0; i < GAME_BUTTONS.length; i++) {
