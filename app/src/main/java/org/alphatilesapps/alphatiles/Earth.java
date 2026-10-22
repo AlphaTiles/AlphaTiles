@@ -56,6 +56,7 @@ public class Earth extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("pageNumber", pageNumber);
+        outState.putInt("playerNumber", playerNumber);
     }
 
     @Override
@@ -82,12 +83,13 @@ public class Earth extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             pageNumber = savedInstanceState.getInt("pageNumber", pageNumber);
+            playerNumber = savedInstanceState.getInt("playerNumber", -1);
         } else {
             pageNumber = getIntent().getIntExtra("pageNumber", 0);
+            playerNumber = getIntent().getIntExtra("playerNumber", -1);
         }
 
         context = this;
-        playerNumber = getIntent().getIntExtra("playerNumber", -1);
         playerString = Util.returnPlayerStringToAppend(playerNumber);
         setContentView(R.layout.earth);
         earthCL = findViewById(R.id.earthCL);
@@ -100,10 +102,18 @@ public class Earth extends AppCompatActivity {
             ImageView goForwardImage = findViewById(R.id.goForward);
             ImageView goBackImage = findViewById(R.id.goBack);
             ImageView activePlayerImage = findViewById(R.id.activePlayerImage);
+            ImageView resourcePromo = findViewById(R.id.resourcePromo);
+            ImageView instructionsButton = findViewById(R.id.instructions);
+            ImageView share = findViewById(R.id.share);
+            ImageView exit = findViewById(R.id.exit);
 
             goForwardImage.setRotationY(180);
             goBackImage.setRotationY(180);
             activePlayerImage.setRotationY(180);
+            resourcePromo.setRotationY(180);
+            instructionsButton.setRotationY(180);
+            share.setRotationY(180);
+            exit.setRotationY(180);
         }
 
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);

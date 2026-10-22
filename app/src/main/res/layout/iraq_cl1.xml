@@ -884,18 +884,28 @@
         app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
         app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"/>
 
-<!--    <ImageView-->
-<!--        android:id="@+id/instructions"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:onClick="playAudioInstructions"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/bottomInstructionsSpacer"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/bottomInstructionsSpacer"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"-->
-<!--        android:contentDescription="@string/playAgain"-->
-<!--        android:rotationY="0"-->
-<!--        app:srcCompat="@drawable/zz_instructions" />-->
+    <TextView
+        android:id="@+id/bottomMiddleSpacer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tag="BMS"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintStart_toEndOf="@+id/gamesHomeImage"
+        app:layout_constraintEnd_toStartOf="@+id/nextSet" />
+    
+    <ImageView
+        android:id="@+id/instructions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="playAudioInstructions"
+        android:contentDescription="@string/playAudioInstructions"
+        android:rotationY="0"
+        app:srcCompat="@drawable/zz_instructions"
+        app:layout_constraintTop_toTopOf="@+id/guidelineHSys1"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHSys2"
+        app:layout_constraintStart_toStartOf="@+id/bottomMiddleSpacer"
+        app:layout_constraintEnd_toEndOf="@+id/bottomMiddleSpacer" />
 
     <ImageView
         android:id="@+id/nextSet"

@@ -121,6 +121,7 @@ public class ChoosePlayer extends AppCompatActivity {
             ImageView avatar10Image = (ImageView) findViewById(R.id.avatar10);
             ImageView avatar11Image = (ImageView) findViewById(R.id.avatar11);
             ImageView avatar12Image = (ImageView) findViewById(R.id.avatar12);
+            ImageView instructionsButton = findViewById(R.id.instructions);
 
             avatar01Image.setRotationY(180);
             avatar02Image.setRotationY(180);
@@ -134,6 +135,7 @@ public class ChoosePlayer extends AppCompatActivity {
             avatar10Image.setRotationY(180);
             avatar11Image.setRotationY(180);
             avatar12Image.setRotationY(180);
+            instructionsButton.setRotationY(180);
 
         }
         choosePlayerCL = findViewById(R.id.choosePlayerCL);

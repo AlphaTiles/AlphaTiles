@@ -856,7 +856,7 @@
     <item name="ethiopia_horLifeRow3Top" type="dimen" format="float">0.32</item>
     <item name="ethiopia_horLifeRow3Bottom" type="dimen" format="float">0.40</item>
     <item name="ethiopia_horLifeRow4Top" type="dimen" format="float">0.41</item>
-    <item name="ethiopia_horLifeRow4Bottom" type="dimen" format="float">0.48</item>
+    <item name="ethiopia_horLifeRow4Bottom" type="dimen" format="float">0.49</item>
 
     <item name="ethiopia_verLifeCol1Left" type="dimen" format="float">0.010</item>
     <item name="ethiopia_verLifeCol1Right" type="dimen" format="float">0.116</item>
@@ -894,8 +894,8 @@
     <item name="ethiopia_verKeyboardLeft" type="dimen" format="float">0.36</item>
     <item name="ethiopia_verKeyboardRight" type="dimen" format="float">0.99</item>
 
-    <item name="ethiopia_guidelineH1" type="dimen" format="float">0.50</item>
-    <item name="ethiopia_guidelineH2" type="dimen" format="float">0.65</item>
+    <item name="ethiopia_guidelineH1" type="dimen" format="float">0.51</item>
+    <item name="ethiopia_guidelineH2" type="dimen" format="float">0.66</item>
     <item name="ethiopia_guidelineH3" type="dimen" format="float">0.67</item>
     <item name="ethiopia_guidelineH4" type="dimen" format="float">0.85</item>
     <item name="ethiopia_guidelineH5" type="dimen" format="float">0.14</item>

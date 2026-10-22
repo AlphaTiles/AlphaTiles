@@ -300,10 +300,10 @@ public class Brazil extends GameActivity {
     private void updateGuidelines() {
 
         View rootView = findViewById(android.R.id.content);
-        if (challengeLevel < 3) {
-            GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS_CL1);
-        } else {
+        if (challengeLevel == 3 || challengeLevel == 6) {
             GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS_CL3);
+        } else {
+            GuidelineUtils.applyGuidelines(rootView, this, GUIDELINE_MAPPINGS_CL1);
         }
     }
 

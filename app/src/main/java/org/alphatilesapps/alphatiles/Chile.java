@@ -134,6 +134,7 @@ public class Chile extends GameActivity {
         if (scriptDirection.equals("RTL")) {
             findViewById(R.id.backspace).setScaleX(-1);
             findViewById(R.id.repeatImage).setScaleX(-1);
+            findViewById(R.id.instructions).setScaleX(-1);
         }
         data.guesses = baseGuessCount - challengeLevel + 1;
         int guessBoxID = R.id.guessBox;

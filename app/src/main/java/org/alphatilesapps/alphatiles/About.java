@@ -152,6 +152,8 @@ public class About extends AppCompatActivity {
         verInfo.setText(String.format("%s: %s (%s)", "Alpha Tiles", verName, BuildConfig.FLAVOR));
 
         if (scriptDirection.equals("RTL")) {
+            ImageView instructionsButton = findViewById(R.id.instructions);
+            instructionsButton.setRotationY(180);
             forceRTLIfSupported();
         } else {
             forceLTRIfSupported();

@@ -29,8 +29,7 @@
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".ChoosePlayer" />
         <activity android:name=".SetPlayerName" />
-        <activity android:name=".Earth"
-            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
+        <activity android:name=".Earth" />
         <activity android:name=".About"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout" />
         <activity android:name=".Share"

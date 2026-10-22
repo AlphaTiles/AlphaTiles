@@ -106,12 +106,12 @@ public class Resources extends AppCompatActivity {
         if (scriptDirection.equals("RTL")) {
             backwardImage = (ImageView) findViewById(R.id.backward);
             ImageView forwardImage = (ImageView) findViewById(R.id.forward);
-
+            ImageView instructionsButton = findViewById(R.id.instructions);
 
             backwardImage.setRotationY(180);
             forwardImage.setRotationY(180);
+            instructionsButton.setRotationY(180);
             forceRTLIfSupported();
-
 
         } else {
             forceLTRIfSupported();
