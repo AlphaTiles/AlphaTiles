@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -171,10 +172,14 @@ public class Earth extends AppCompatActivity {
             Scanner shareScanner = new Scanner(getResources().openRawResource(R.raw.aa_share));
             if (shareScanner.hasNext()) {
                 shareScanner.nextLine(); // skip the header line
-                if (!shareScanner.hasNext())
+                if (!shareScanner.hasNext()) {
                     noShareIcon = true;
-                else if (shareScanner.next().isEmpty())
-                    noShareIcon = true;
+                } else {
+                    String shareLink = shareScanner.nextLine().trim();
+                    if (shareLink.isEmpty() || !Patterns.WEB_URL.matcher(shareLink).matches()) {
+                        noShareIcon = true;
+                    }
+                }
             } else {
                 noShareIcon = true;
             }
