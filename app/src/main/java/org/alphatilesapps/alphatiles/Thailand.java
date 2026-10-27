@@ -95,7 +95,7 @@ public class Thailand extends GameActivity {
             contextualTilePosition = CONTEXTUAL_TILE_POSITION[Integer.parseInt(clString.substring(3,4)) - 1];
         }
 
-        int gameID = 0;
+        int gameID;
         if (choiceType.equals("WORD_TEXT")) {
             setContentView(R.layout.thailand2);
             gameID = R.id.thailand2CL;
@@ -637,6 +637,7 @@ public class Thailand extends GameActivity {
                 Syllable chosenSyllable = fourSyllableChoices.get(answerChoiceIndex);
                 switch (refType) {
                     case "SYLLABLE_AUDIO":
+                    case "SYLLABLE_TEXT": // adding this case back - not sure how it got deleted
                         if (chosenSyllable.text.equals(refSyllable.text)) {
                             goodMatch = true;
                         }
@@ -669,7 +670,7 @@ public class Thailand extends GameActivity {
                         .putValue("Correct Answer", refTile)
                         .putValue("Grade", studentGrade);
                 for (int i = 0; i < 3; i++) {
-                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                    if (!incorrectAnswersSelected.get(i).isEmpty()) {
                         info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
                     }
                 }
@@ -730,7 +731,7 @@ public class Thailand extends GameActivity {
             for (int i = 0; i < 3; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(chosenItemText)) break;  // this incorrect answer already selected
-                if (item.equals("")) {
+                if (item.isEmpty()) {
                     incorrectAnswersSelected.set(i, chosenItemText);
                     break;
                 }
