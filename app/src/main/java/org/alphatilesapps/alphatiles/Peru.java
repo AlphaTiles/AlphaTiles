@@ -226,7 +226,7 @@ public class Peru extends GameActivity {
                                 }
                             }
                             if (!(replacementTile.canBePlacedInPosition(parsedRefWordTileArray, randomIndexToReplace))
-                                    || alreadyAddedPlacements.contains(new WordPieceStringPosition(randomIndexToReplace, replacementTile.text))) {
+                                || alreadyAddedPlacements.contains(new WordPieceStringPosition(randomIndexToReplace, replacementTile.text))) {
                                 replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, randomIndexToReplace, cumulativeStageBasedTileList);
                             }
                             if (!Objects.isNull(replacementTile)) {

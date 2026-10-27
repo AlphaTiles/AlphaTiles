@@ -975,7 +975,15 @@ public abstract class GameActivity extends AppCompatActivity {
             if (i==indexOfReplacedTile && thisTile.text.contains("__")) {
                 stringToAppend = thisTile.text; // Leave any Arabic script contextualizing characters around blanks
             } else {
-                stringToAppend = isolateForm(thisTile.text);
+                if (i==0 && !thisTile.wordInitialVariant.equals("none")) {
+                    stringToAppend = isolateForm(thisTile.wordInitialVariant);
+                } else if (i>0 && i<tilesInThisWordOption.size()-1 && !thisTile.wordMedialVariant.equals("none")) {
+                    stringToAppend = isolateForm(thisTile.wordMedialVariant);
+                } else if (i==tilesInThisWordOption.size()-1 && !thisTile.wordFinalVariant.equals("none")) {
+                    stringToAppend = isolateForm(thisTile.wordFinalVariant);
+                } else {
+                    stringToAppend = isolateForm(thisTile.text);
+                }
             }
 
             if(stringToAppend.contains(placeholderCharacter) && stringToAppend.length() == 2) { // Filter these placeholders out; keep the complex tile ones
