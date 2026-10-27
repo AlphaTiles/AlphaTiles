@@ -2030,13 +2030,22 @@ public class Start extends AppCompatActivity {
                         case "AV":
                         case "BV":
                         case "FV":
-                            VOWELS.add(nextTile);
-                            CorV.add(nextTile);
+                            // In this phase we may discover a vowel more than once,
+                            // so check to ensure we don't add the same vowel twice.
+                            if (!VOWELS.contains(nextTile)) {
+                                VOWELS.add(nextTile);
+                                CorV.add(nextTile);
+                            }
                             break;
                         case "C":
                         case "PC":
-                            CONSONANTS.add(nextTile);
-                            CorV.add(nextTile);
+                            // In this phase we may discover a consonant more than once,
+                            // so check to ensure we don't add the same consonant twice.
+                            if (!CONSONANTS.contains(nextTile)) {
+                                CONSONANTS.add(nextTile);
+                                CorV.add(nextTile);
+                            }
+                            // else we saw this variant before and don't need to add it again
                             break;
                         case "AD":
                             ADs.add(nextTile);
@@ -2186,13 +2195,21 @@ public class Start extends AppCompatActivity {
                                     case "AV":
                                     case "BV":
                                     case "FV":
-                                        VOWELS.add(nextTile);
-                                        CorV.add(nextTile);
+                                        // Not sure if it's possible in this phase, but just in case,
+                                        // check to ensure we don't add the same vowel twice.
+                                        if (!VOWELS.contains(nextTile)) {
+                                            VOWELS.add(nextTile);
+                                            CorV.add(nextTile);
+                                        }
                                         break;
                                     case "C":
                                     case "PC":
-                                        CONSONANTS.add(nextTile);
-                                        CorV.add(nextTile);
+                                        // Not sure if it's possible in this phase, but just in case,
+                                        // check to ensure we don't add the same vowel twice.
+                                        if (!CONSONANTS.contains(nextTile)) {
+                                            CONSONANTS.add(nextTile);
+                                            CorV.add(nextTile);
+                                        }
                                         break;
                                     case "AD":
                                         ADs.add(nextTile);
