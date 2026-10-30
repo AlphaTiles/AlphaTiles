@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import static org.alphatilesapps.alphatiles.Start.enhancedAudioLoadingLog;
 import static org.alphatilesapps.alphatiles.Start.hasSyllableAudio;
+import static org.alphatilesapps.alphatiles.Start.settingsList;
 import static org.alphatilesapps.alphatiles.Start.wordAudioIDs;
 import static org.alphatilesapps.alphatiles.Start.wordList;
 import static org.alphatilesapps.alphatiles.Start.gameSounds;
@@ -83,6 +84,8 @@ public class LoadingScreen extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);
+
+        final long startTime = System.currentTimeMillis();
 
         updateGuidelines();
 
@@ -205,10 +208,26 @@ public class LoadingScreen extends AppCompatActivity {
                     }
                 });
 
-                //once all audio files have finished loading, launch ChoosePlayer
+                String minSplashSetting = settingsList.find("Minimum milliseconds on splash screen");
+                int minSplash = 0;
+                if (!minSplashSetting.isEmpty()) {
+                    minSplash = Integer.parseInt(minSplashSetting);
+                }
+
+                //once all audio files have finished loading, launch ChoosePlayer after at least MIN_SPLASH_TIME
                 if (audio_loaded[0] == totalAudio) {
-                    startActivity(intent);
-                    finish();
+                    long elapsedTime = System.currentTimeMillis() - startTime;
+                    long remainingTime = minSplash - elapsedTime;
+
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isFinishing() && !isDestroyed()) {
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                    }, Math.max(0, remainingTime));
                 }
             }
         });

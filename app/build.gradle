@@ -11,8 +11,8 @@ android {
         applicationId = "org.alphatilesapps.alphatiles"
         minSdk = 24
         targetSdk = 37
-        versionCode = 330
-        versionName = "3.1.1.8-st-sxg" // do not use space, parentheses or brackets
+        versionCode = 331
+        versionName = "3.1.1.9-st-sxg" // do not use space, parentheses or brackets
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
