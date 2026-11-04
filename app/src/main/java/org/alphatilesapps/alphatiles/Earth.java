@@ -74,13 +74,21 @@ public class Earth extends AppCompatActivity {
 
         String scriptDirection = Start.langInfoList.find("Script direction (LTR or RTL)");
         if (scriptDirection.equals("RTL")) {
-            ImageView goForwardImage = (ImageView) findViewById(R.id.goForward);
-            ImageView goBackImage = (ImageView) findViewById(R.id.goBack);
-            ImageView activePlayerImage = (ImageView) findViewById(R.id.activePlayerImage);
+            ImageView goForwardImage = findViewById(R.id.goForward);
+            ImageView goBackImage = findViewById(R.id.goBack);
+            ImageView activePlayerImage = findViewById(R.id.activePlayerImage);
+            ImageView resourcePromo = findViewById(R.id.resourcePromo);
+            ImageView instructionsButton = findViewById(R.id.instructions);
+            ImageView share = findViewById(R.id.share);
+            ImageView exit = findViewById(R.id.exit);
 
             goForwardImage.setRotationY(180);
             goBackImage.setRotationY(180);
             activePlayerImage.setRotationY(180);
+            resourcePromo.setRotationY(180);
+            instructionsButton.setRotationY(180);
+            share.setRotationY(180);
+            exit.setRotationY(180);
         }
 
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
@@ -170,6 +178,12 @@ public class Earth extends AppCompatActivity {
             ImageView resourcesIcon = findViewById(R.id.resourcePromo);
             resourcesIcon.setVisibility(View.GONE);
             resourcesIcon.setOnClickListener(null);
+        }
+        ImageView exitButtonImage = findViewById(R.id.exit);
+        if(exitButton) {
+            exitButtonImage.setVisibility(View.VISIBLE);
+        } else {
+            exitButtonImage.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -293,6 +307,10 @@ public class Earth extends AppCompatActivity {
         Intent intent = getIntent();
         intent.setClass(context, Share.class);
         startActivity(intent);
+    }
+
+    public void exitApp(View view) {
+        finishAffinity();
     }
 
     public void goToDoor(View view) {
