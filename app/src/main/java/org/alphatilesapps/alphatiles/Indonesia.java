@@ -108,7 +108,13 @@ public class Indonesia extends GameActivity {
     // ── Paging ────────────────────────────────────────────────────────────────
     /** Splits the stage word list into pages of 4. */
     private void buildWordPages() {
-        List<Start.Word> stageWords = wordStagesLists.get(stage - 1);
+
+        List<Start.Word> stageWords;
+        if (exclusive) {
+            stageWords = wordStagesLists.get(stage - 1);
+        } else {
+            stageWords = cumulativeStageBasedWordList;
+        }
         int total = stageWords.size();
         numPages  = Math.max(1, (int) Math.ceil((double) total / wordsPerPage));
         for (int p = 0; p < numPages; p++) {

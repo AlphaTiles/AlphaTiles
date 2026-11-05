@@ -100,6 +100,8 @@ public abstract class GameActivity extends AppCompatActivity {
     Start.WordList cumulativeStageBasedWordList = new Start.WordList();
     Start.TileList previousStagesTileList = new Start.TileList();
     Start.WordList previousStagesWordList = new Start.WordList();
+
+    boolean exclusive = false;
     ArrayList<Start.Tile> parsedRefWordTileArray;
     ArrayList<Start.Syllable> parsedRefWordSyllableArray;
 
@@ -188,7 +190,9 @@ public abstract class GameActivity extends AppCompatActivity {
 
         // Values that define the game's (specific door's) structure; these values vary by game (door) but never change within a game (door)
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
-        stage = getIntent().getIntExtra("stage", 7);
+        int stagePlusExclusivity = getIntent().getIntExtra("stage", 71);
+        stage = stagePlusExclusivity / 10;
+        exclusive = ((stagePlusExclusivity % 10) == 0);
         syllableGame = getIntent().getStringExtra("syllableGame");
         gameNumber = getIntent().getIntExtra("gameNumber", 0);
         country = getIntent().getStringExtra("country");
@@ -231,6 +235,8 @@ public abstract class GameActivity extends AppCompatActivity {
             }
             cumulativeStageBasedWordList.addAll(wordStagesLists.get(s));
         }
+        sortTilesCanonical(cumulativeStageBasedTileList);
+        sortWordsCanonical(cumulativeStageBasedWordList);
 
         previousStagesTileList.addAll(Start.SAD);
         for (int s = 0; s < (stage - 1); s++) {
@@ -241,6 +247,8 @@ public abstract class GameActivity extends AppCompatActivity {
             }
             previousStagesWordList.addAll(wordStagesLists.get(s));
         }
+        sortTilesCanonical(previousStagesTileList);
+        sortWordsCanonical(previousStagesWordList);
 
         if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
@@ -1174,6 +1182,42 @@ public abstract class GameActivity extends AppCompatActivity {
 
         ArrayList<Start.Tile> tilesInWordSpelledCorrectly = tileList.parseWordIntoTiles(wordListWord.wordInLOP, wordListWord);
         return combineTilesToMakeWord(tilesInWordSpelledCorrectly, wordListWord, -1);
+    }
+
+    // Sort by natural tile order in tileList — same technique Chile uses so
+    // the keyboard reads in a consistent, linguistically meaningful order.
+    // Build a text→index lookup first to avoid O(n²) searches in sort.
+    // Notes above retained when moving method from Ethiopia.java to GameActivity.java
+    public static void sortTilesCanonical(List<Start.Tile> tiles) {
+        java.util.Map<String, Integer> tileOrder = new java.util.HashMap<>();
+        for (int t = 0; t < Start.tileList.size(); t++) {
+            tileOrder.putIfAbsent(Start.tileList.get(t).text, t);
+        }
+        tiles.sort((a, b) -> {
+            int ia = tileOrder.getOrDefault(a.text, Integer.MAX_VALUE);
+            int ib = tileOrder.getOrDefault(b.text, Integer.MAX_VALUE);
+            return Integer.compare(ia, ib);
+        });
+    }
+
+    public static void sortWordsCanonical(List<Start.Word> words) {
+        java.util.Map<String, Integer> tileOrder = new java.util.HashMap<>();
+        for (int t = 0; t < Start.tileList.size(); t++) {
+            tileOrder.putIfAbsent(Start.tileList.get(t).text, t);
+        }
+        words.sort((w1, w2) -> {
+            ArrayList<Start.Tile> tiles1 = tileList.parseWordIntoTiles(w1.wordInLOP, w1);
+            ArrayList<Start.Tile> tiles2 = tileList.parseWordIntoTiles(w2.wordInLOP, w2);
+            int minLen = Math.min(tiles1.size(), tiles2.size());
+            for (int i = 0; i < minLen; i++) {
+                int idx1 = tileOrder.getOrDefault(tiles1.get(i).text, Integer.MAX_VALUE);
+                int idx2 = tileOrder.getOrDefault(tiles2.get(i).text, Integer.MAX_VALUE);
+                if (idx1 != idx2) {
+                    return Integer.compare(idx1, idx2);
+                }
+            }
+            return Integer.compare(tiles1.size(), tiles2.size());
+        });
     }
 
 }

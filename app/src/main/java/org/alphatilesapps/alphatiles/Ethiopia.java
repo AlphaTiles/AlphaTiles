@@ -318,22 +318,7 @@ public class Ethiopia extends GameActivity {
         int slots = Math.min(GAME_BUTTONS.length - keyboard.size(), optional.size());
         for (int i = 0; i < slots; i++) keyboard.add(optional.get(i));
 
-        // Sort by natural tile order in tileList — same technique Chile uses so
-        // the keyboard reads in a consistent, linguistically meaningful order.
-        // Build a text→index lookup first to avoid O(n²) searches in sort.
-        Map<String, Integer> tileOrder = new HashMap<>();
-        for (int t = 0; t < tileList.size(); t++) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                tileOrder.putIfAbsent(tileList.get(t).text, t);
-            }
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            keyboard.sort((a, b) -> {
-                int ia = tileOrder.getOrDefault(a.text, Integer.MAX_VALUE);
-                int ib = tileOrder.getOrDefault(b.text, Integer.MAX_VALUE);
-                return Integer.compare(ia, ib);
-            });
-        }
+        sortTilesCanonical(keyboard);
 
         keysInUse          = keyboard.size();
         visibleGameButtons = keysInUse;

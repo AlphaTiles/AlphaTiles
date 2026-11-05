@@ -126,10 +126,6 @@ public class Iraq extends GameActivity {
                 allTiles.add(t);
             }
         }
-        // Sort alphabetically by tile.text
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Collections.sort(allTiles, Comparator.comparing(t -> t.text));
-        }
         int totalTiles = allTiles.size();
         numPages = (totalTiles - 1) / tilesPerPage;
         tilePagesLists.clear();
