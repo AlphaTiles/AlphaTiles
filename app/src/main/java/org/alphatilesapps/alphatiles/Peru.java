@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -131,76 +132,82 @@ public class Peru extends GameActivity {
         Collections.shuffle(shuffledDistractorTiles);
 
         int incorrectLapNo = 0;
-        for (int i = 0; i < GAME_BUTTONS.length; i++) {
-            TextView nextWord = (TextView) findViewById(GAME_BUTTONS[i]);
-            if (i == indexOfCorrectAnswerAmongChoices) {
-                nextWord.setText(wordInLOPWithStandardizedSequenceOfCharacters(refWord)); // the correct answer (the unmodified version of the word)
-            } else {
 
+        WordPieceStringPositionSet alreadyAddedPlacements = new WordPieceStringPositionSet();
+        for(int index=0; index<parsedRefWordTileArray.size(); index++) {
+            alreadyAddedPlacements.add(new WordPieceStringPosition(index, parsedRefWordTileArray.get(index).text));
+        }
+
+        for (int i = 0; i < GAME_BUTTONS.length; i++) {
+            TextView nextWordView = (TextView) findViewById(GAME_BUTTONS[i]);
+            if (i == indexOfCorrectAnswerAmongChoices) {
+                nextWordView.setText(wordInLOPWithStandardizedSequenceOfCharacters(refWord)); // the correct answer (the unmodified version of the word)
+            } else {
                 incorrectLapNo++;
-                boolean isDuplicateAnswerChoice = true; // LM // generate answer choices until there are no duplicates (or dangerous combinations)
+                boolean generateDifferentAnswerChoice = true; // If needed, used to loop again to find a fitting answer choice, using a different index
                 switch (challengeLevel) {
                     case 1:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (THE FIRST TILE) REPLACED
                         // REPLACEMENT IS FROM DISTRACTOR TRIO
-                        while (isDuplicateAnswerChoice) {
+                        while (generateDifferentAnswerChoice) {
                             ArrayList<Start.Tile> tilesInIncorrectChoice = new ArrayList<>(parsedRefWordTileArray);
                             Tile replacementTile = tileHashMap.find(shuffledDistractorTiles.get(incorrectLapNo - 1));
+                            if (!replacementTile.canBePlacedInPosition("INITIAL")) {
+                                replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, 0, cumulativeStageBasedTileList);
+                                if (Objects.isNull(replacementTile)) { // Not enough tiles can be placed in initial position
+                                    playAgain(); // Restart the game, to be set up with a different word
+                                    return;
+                                }
+                            }
                             replacementTile.typeOfThisTileInstance = parsedRefWordTileArray.get(0).typeOfThisTileInstance;
                             tilesInIncorrectChoice.set(0, replacementTile);
                             String incorrectChoiceString = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, 0);
-                            nextWord.setText(incorrectChoiceString);
-                            isDuplicateAnswerChoice = false;
+                            nextWordView.setText(incorrectChoiceString);
+                            generateDifferentAnswerChoice = false;
                             for (int j = 0; j < incorrectChoiceString.length() - 2; j++) {
                                 if (incorrectChoiceString.substring(j, j + 3).equals("للہ")) {
-                                    isDuplicateAnswerChoice = true;
+                                    generateDifferentAnswerChoice = true;
                                 }
                             }
-
+                            alreadyAddedPlacements.add(new WordPieceStringPosition(0, replacementTile.text));
                         }
                         break;
                     case 2:
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
                         // REPLACEMENT IS ANY TILE OF THE SAME TYPE (C OR V OR T) FROM THE WHOLE ARRAY
 
-                        //fix: some accidental duplicates
-                        while (isDuplicateAnswerChoice) {
+                        while (generateDifferentAnswerChoice) {
                             int randomIndexToReplace = rand.nextInt(tileLength - 1);       // KP // this represents which position in word string will be replaced
                             ArrayList<Tile> tilesInIncorrectChoice = new ArrayList<>(parsedRefWordTileArray);
-                            int randomAlternateIndex;
+                            Start.Tile replacementTile;
                             if (VOWELS.contains(tilesInIncorrectChoice.get(randomIndexToReplace))) {
-                                randomAlternateIndex = rand.nextInt(VOWELS.size());       // KP // this represents which game tile will overwrite some part of the correct wor
-                                tilesInIncorrectChoice.set(randomIndexToReplace, VOWELS.get(randomAlternateIndex)); // JP
+                                replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, randomIndexToReplace, VOWELS);
                             } else if (CONSONANTS.contains(tilesInIncorrectChoice.get(randomIndexToReplace))) {
-                                randomAlternateIndex = rand.nextInt(CONSONANTS.size());
-                                tilesInIncorrectChoice.set(randomIndexToReplace, CONSONANTS.get(randomAlternateIndex)); // JP
+                                replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, randomIndexToReplace, CONSONANTS);
                             } else if (TONES.contains(tilesInIncorrectChoice.get(randomIndexToReplace))) {
-                                randomAlternateIndex = rand.nextInt(TONES.size());
-                                tilesInIncorrectChoice.set(randomIndexToReplace, TONES.get(randomAlternateIndex)); // JP
+                                replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, randomIndexToReplace, TONES);
                             } else if (ADs.contains(tilesInIncorrectChoice.get(randomIndexToReplace))) {
-                                randomAlternateIndex = rand.nextInt(ADs.size());
-                                tilesInIncorrectChoice.set(randomIndexToReplace, ADs.get(randomAlternateIndex));
+                                replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, randomIndexToReplace, ADs);
+                            } else {
+                                replacementTile = null;
                             }
 
-                            String incorrectChoice2 = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, randomIndexToReplace);
+                            if(!Objects.isNull(replacementTile)) {
+                                alreadyAddedPlacements.add(new WordPieceStringPosition(randomIndexToReplace, replacementTile.text));
+                                tilesInIncorrectChoice.set(randomIndexToReplace, replacementTile);
+                                String incorrectChoice2 = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, randomIndexToReplace);
+                                for (int j = 0; j < incorrectChoice2.length() - 2; j++) {
+                                    generateDifferentAnswerChoice = false;
+                                    if (incorrectChoice2.substring(j, j + 3).equals("للہ")) {
+                                        generateDifferentAnswerChoice = true;
+                                        break;
+                                    }
+                                }
+                                if (!generateDifferentAnswerChoice) {
+                                    nextWordView.setText(incorrectChoice2);
+                                }
+                            } // else generateDifferentAnswerChoice == true
 
-                            isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
-                            for (int answerChoice = 0; answerChoice < i; answerChoice++) {
-                                if (incorrectChoice2.equals(((TextView) findViewById(GAME_BUTTONS[answerChoice])).getText().toString())) {
-                                    isDuplicateAnswerChoice = true;
-                                }
-                            }
-                            if (incorrectChoice2.equals(wordInLOPWithStandardizedSequenceOfCharacters(refWord))) {
-                                isDuplicateAnswerChoice = true;
-                            }
-                            for (int j = 0; j < incorrectChoice2.length() - 2; j++) {
-                                if (incorrectChoice2.substring(j, j + 3).equals("للہ")) {
-                                    isDuplicateAnswerChoice = true;
-                                }
-                            }
-                            if (!isDuplicateAnswerChoice) {
-                                nextWord.setText(incorrectChoice2);
-                            }
                         }
                         break;
 
@@ -208,34 +215,39 @@ public class Peru extends GameActivity {
                         // THE WRONG ANSWERS ARE LIKE THE RIGHT ANSWER EXCEPT HAVE ONLY ONE TILE (RANDOM POS IN SEQ) REPLACED
                         // REPLACEMENT IS FROM DISTRACTOR TRIO
 
-                        isDuplicateAnswerChoice = true; // LM // generate answer choices until there are no duplicates
-
-                        while (isDuplicateAnswerChoice) {
+                        while (generateDifferentAnswerChoice) {
                             int randomIndexToReplace = rand.nextInt(tileLength - 1);       // this represents which position in word string will be replaced
                             ArrayList<Tile> tilesInIncorrectChoice = new ArrayList<>(parsedRefWordTileArray);
-                            Tile incorrectTile = Start.tileList.returnRandomDistractorTile(parsedRefWordTileArray.get(randomIndexToReplace));
-                            incorrectTile.typeOfThisTileInstance = parsedRefWordTileArray.get(randomIndexToReplace).typeOfThisTileInstance;
-                            tilesInIncorrectChoice.set(randomIndexToReplace, incorrectTile);
-                            String incorrectChoice3 = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, randomIndexToReplace);
-
-                            isDuplicateAnswerChoice = false; // LM // resets to true and keeps looping if a duplicate has been made:
-                            for (int answerChoice = 0; answerChoice < i; answerChoice++) {
-                                if (incorrectChoice3.equals(((TextView) findViewById(GAME_BUTTONS[answerChoice])).getText().toString())) {
-                                    isDuplicateAnswerChoice = true;
+                            Collections.shuffle(parsedRefWordTileArray.get(randomIndexToReplace).distractors);
+                            Tile replacementTile = tileHashMap.get(parsedRefWordTileArray.get(randomIndexToReplace).distractors.get(0));
+                            for (int d=1; d<3; d++) {
+                                if (alreadyAddedPlacements.contains(new WordPieceStringPosition(randomIndexToReplace, replacementTile.text))) {
+                                    replacementTile = tileHashMap.get(parsedRefWordTileArray.get(randomIndexToReplace).distractors.get(d));
                                 }
                             }
-                            for (int j = 0; j < incorrectChoice3.length() - 2; j++) {
-                                if (incorrectChoice3.substring(j, j + 3).equals("للہ")) {
-                                    isDuplicateAnswerChoice = true;
+                            if (!(replacementTile.canBePlacedInPosition(parsedRefWordTileArray, randomIndexToReplace))
+                                    || alreadyAddedPlacements.contains(new WordPieceStringPosition(randomIndexToReplace, replacementTile.text))) {
+                                replacementTile = fittingTileAlternative(alreadyAddedPlacements, parsedRefWordTileArray, randomIndexToReplace, cumulativeStageBasedTileList);
+                            }
+                            if (!Objects.isNull(replacementTile)) {
+                                alreadyAddedPlacements.add(new WordPieceStringPosition(randomIndexToReplace, replacementTile.text));
+                                replacementTile.typeOfThisTileInstance = parsedRefWordTileArray.get(randomIndexToReplace).typeOfThisTileInstance;
+                                tilesInIncorrectChoice.set(randomIndexToReplace, replacementTile);
+                                String incorrectChoice3 = combineTilesToMakeWord(tilesInIncorrectChoice, refWord, randomIndexToReplace);
+                                generateDifferentAnswerChoice = false;
+                                for (int j = 0; j < incorrectChoice3.length() - 2; j++) {
+                                    if (incorrectChoice3.substring(j, j + 3).equals("للہ")) {
+                                        generateDifferentAnswerChoice = true;
+                                    }
                                 }
-                            }
-                            if(!isDuplicateAnswerChoice) {
-                                nextWord.setText(incorrectChoice3);
-                            }
+                                if(!generateDifferentAnswerChoice) {
+                                    nextWordView.setText(incorrectChoice3);
+                                }
+                            } // else, a good replacement tile at this index wasn't found, so loop; generateDifferentAnswerChoice = true
                         }
                         break;
                     default:
-
+                        break;
                 }
             }
         }
@@ -244,7 +256,6 @@ public class Peru extends GameActivity {
         }
         incorrectOnLevel = 0;
         levelBegunTime = System.currentTimeMillis();
-
     }
 
     private void respondToWordSelection(int justClickedWord) {

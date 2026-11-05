@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 import com.segment.analytics.Analytics;
@@ -253,9 +254,9 @@ public class Thailand extends GameActivity {
 
         } else {
             if (refType.contains("TILE") || refType.equals("CONTEXTUAL")) { // Set a permissible refTile and set refTileType and refString
-                boolean permissibleTile = false;
+                boolean permissibleRefTile = false;
                 int freshChecks = 0;
-                while (!permissibleTile) {
+                while (!permissibleRefTile) {
                     freshChecks++;
                     int randomTileIndex = rand.nextInt(tileListNoSAD.size());
                     refTile = tileListNoSAD.get(randomTileIndex);
@@ -302,10 +303,11 @@ public class Thailand extends GameActivity {
                     // Disallow non-joining and non-spacing (non-contextual) characters from contextual forms matching games (Arabic script)
                     // Disallow tiles with placeholders from contextual forms matching games (Arabic script)
                     // Disallow tiles that are already displayed with a contextual character in the tile list (Arabic script)
-                    permissibleTile = verifyFreshTile(refString, freshChecks)
+                    // Disallow testing a tile in a certain contextual position that it cannot occur in (see: position restrictions)
+                    permissibleRefTile = verifyFreshTile(refString, freshChecks)
                             && CorV.contains(refTile)
                             && !(refTileType.matches("(PC)"))
-                            && !((refType.matches("CONTEXTUAL") || choiceType.matches("CONTEXTUAL")) && (NON_JOINERS_ARABIC.contains(refTile) || NON_SPACERS_ARABIC.contains(refTile) || choicesContainContextualizersOrPlaceholders))
+                            && !((refType.matches("CONTEXTUAL") || choiceType.matches("CONTEXTUAL")) && (NON_JOINERS_ARABIC.contains(refTile) || NON_SPACERS_ARABIC.contains(refTile) || choicesContainContextualizersOrPlaceholders || (!refTile.canBePlacedInPosition(contextualTilePosition))))
                             && !(contextualTilePosition.matches("INITIAL") && (RIGHT_JOINERS_ARABIC.contains(refTile)))
                            ;
                 }
@@ -347,6 +349,27 @@ public class Thailand extends GameActivity {
             // challengeLevelThai 1 = pull random tiles for wrong choices
             // challengeLevelThai 2 = pull distractor tiles for wrong choices
             fourTileChoices = tileListNoSAD.returnFourTileChoices(refTile, challengeLevelThai, refTileType);
+            if (choiceType.equals("CONTEXTUAL")) {
+                for (Tile t: fourTileChoices) {
+                    if (!t.canBePlacedInPosition(contextualTilePosition)) {
+                        fourTileChoices.remove(t);
+                        ArrayList<Start.Tile> tilesToDrawFrom = cumulativeStageBasedTileList;
+                        if(challengeLevelThai==2) {
+                            tilesToDrawFrom.clear();
+                            tilesToDrawFrom.addAll(CorV);
+                        }
+                        Tile alternativeTileChoice = fittingTileAlternative(fourTileChoices, contextualTilePosition, tilesToDrawFrom);
+                        if (Objects.isNull(alternativeTileChoice)) {
+                            // Couldn't find three fitting answer choices for this contextual tile position
+                            playAgain();
+                            return;
+                        } else {
+                            fourTileChoices.add(alternativeTileChoice);
+                        }
+                    }
+                }
+            }
+
         } else if (choiceType.matches("(WORD_TEXT|WORD_IMAGE)") && (!refType.contains("SYLLABLE"))) {
             fourWordChoices = wordList.returnFourWords(refWord, refTile, challengeLevelThai, refType);
             // challengeLevelThai 1 = pull words that begin with random tiles (not distractor, not same) for wrong choices
