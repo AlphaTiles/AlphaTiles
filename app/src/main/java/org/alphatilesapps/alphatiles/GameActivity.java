@@ -101,7 +101,7 @@ public abstract class GameActivity extends AppCompatActivity {
     Start.TileList previousStagesTileList = new Start.TileList();
     Start.WordList previousStagesWordList = new Start.WordList();
 
-    boolean exclusive = false;
+    boolean exclusive = true;
     ArrayList<Start.Tile> parsedRefWordTileArray;
     ArrayList<Start.Syllable> parsedRefWordSyllableArray;
 
@@ -191,8 +191,12 @@ public abstract class GameActivity extends AppCompatActivity {
         // Values that define the game's (specific door's) structure; these values vary by game (door) but never change within a game (door)
         challengeLevel = getIntent().getIntExtra("challengeLevel", -1);
         int stagePlusExclusivity = getIntent().getIntExtra("stage", 71);
-        stage = stagePlusExclusivity / 10;
-        exclusive = ((stagePlusExclusivity % 10) == 0);
+        if (stagePlusExclusivity >= 10) {
+            stage = stagePlusExclusivity / 10;
+            exclusive = ((stagePlusExclusivity % 10) == 0);
+        } else {
+            stage = stagePlusExclusivity;
+        }
         syllableGame = getIntent().getStringExtra("syllableGame");
         gameNumber = getIntent().getIntExtra("gameNumber", 0);
         country = getIntent().getStringExtra("country");
