@@ -132,6 +132,27 @@ public class Sudan extends GameActivity {
         constraintSet.applyTo(constraintLayout);
     }
 
+    private List<Tile> getGameTiles() {
+        List<Tile> allTiles = new ArrayList<>();
+        if (exclusive) {
+            Start.TileList stageTiles = new Start.TileList();
+            stageTiles.addAll(tileStagesLists.get(stage - 1));
+            sortTilesCanonical(stageTiles);
+            for (Tile t : stageTiles) {
+                if (!SAD.contains(t) && !SILENT_PLACEHOLDER_CONSONANTS.contains(t)) {
+                    allTiles.add(t);
+                }
+            }
+        } else {
+            for (Tile t : cumulativeStageBasedTileList) {
+                if (!SAD.contains(t) && !SILENT_PLACEHOLDER_CONSONANTS.contains(t)) {
+                    allTiles.add(t);
+                }
+            }
+        }
+        return allTiles;
+    }
+
     public void determineNumPages() {
 
         tilePagesLists.add(tilePage);
@@ -145,7 +166,8 @@ public class Sudan extends GameActivity {
                 total = total - syllablesPerPage;
             }
         } else {
-            int total = cumulativeStageBasedTileList.size() - SAD.size() - SILENT_PLACEHOLDER_CONSONANTS.size() - tilesPerPage;
+            List<Tile> allTiles = getGameTiles();
+            int total = allTiles.size() - tilesPerPage;
             while (total >= 0) {
                 numPages++;
                 List<Start.Tile> page = new ArrayList<>();
@@ -157,15 +179,14 @@ public class Sudan extends GameActivity {
 
     public void splitTileListAcrossPages() {
 
-        int numTiles = cumulativeStageBasedTileList.size() - SAD.size() - SILENT_PLACEHOLDER_CONSONANTS.size();
+        List<Tile> allTiles = getGameTiles();
+        int numTiles = allTiles.size();
         int tileIndex = 0;
         for (int i = 0; i <= numPages; i++) {
             for (int j = 0; j < tilesPerPage; j++) {
                 if(tileIndex < numTiles) {
-                    Tile thisTile = cumulativeStageBasedTileList.get(tileIndex);
-                    if (!SAD.contains(thisTile) && !SILENT_PLACEHOLDER_CONSONANTS.contains(thisTile)) {
-                        tilePagesLists.get(i).add(thisTile);
-                    }
+                    Tile thisTile = allTiles.get(tileIndex);
+                    tilePagesLists.get(i).add(thisTile);
                     tileIndex++;
                 }
             }

@@ -121,9 +121,17 @@ public class Iraq extends GameActivity {
     private void splitTileListAcrossPages() {
         // Alphabetical order, skip SAD and SILENT_PLACEHOLDER_CONSONANTS
         List<Tile> allTiles = new ArrayList<>();
-        for (Tile t : cumulativeStageBasedTileList) {
-            if (!SAD.contains(t) && !SILENT_PLACEHOLDER_CONSONANTS.contains(t)) {
-                allTiles.add(t);
+        if (exclusive) {
+            for (Tile t : tileStagesLists.get(stage - 1)) {
+                if (!SAD.contains(t) && !SILENT_PLACEHOLDER_CONSONANTS.contains(t)) {
+                    allTiles.add(t);
+                }
+            }
+        } else {
+            for (Tile t : cumulativeStageBasedTileList) {
+                if (!SAD.contains(t) && !SILENT_PLACEHOLDER_CONSONANTS.contains(t)) {
+                    allTiles.add(t);
+                }
             }
         }
         int totalTiles = allTiles.size();
