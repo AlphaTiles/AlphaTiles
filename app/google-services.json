@@ -1,0 +1,504 @@
+{
+  "project_info": {
+    "project_number": "190768058111",
+    "project_id": "alpha-tiles-apps-6",
+    "storage_bucket": "alpha-tiles-apps-6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:6691e4af6cc7bab0f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.akbBatakAngkola"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:1fc7cd98e7f01086f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.bamBambara"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:92c4b47485e7d30cf1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.banBali"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:3466ef072d4fa7f4f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.bdgBonggi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:03464d860122ad11f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.bjnBanjar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:ab2a76bfbccb9102f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.bugBugis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:a7d2a2de56ac4572f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.ckbSorani"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:7ffc8529c42f6c04f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.dzgDazaga2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:0b872c3b57469611f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.engEnglish4"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:ece4b3c0f1b4fdaef1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.indIndonesia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:2228c42628d64f40f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.javJawa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:958ce078da0fa393f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.laoLaoPakseSouthern"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:42f49fa333763514f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.lnsLamnso"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:f0c5b124efca0ef2f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.madMadura"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:ce7773c2e07bed64f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.makMakassar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:5478380de5eb41f0f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.mgqMalila"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:25825c7d4eb4e47ff1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.mhyMaanyan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:e987735887c3f1b5f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.mnbMuna"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:5de3e683c6e77204f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.nijDayakNgaju"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:1c7e30a26166672ff1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.nyyNyakyusa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:0ac9d647c2c9bbe6f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.osiOsing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:36bc7aa54600bf1ef1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.oteOtomiMezquital"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:f900e8a5a532543cf1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.qufLambayeque"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:7d63f0f6386c88c1f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.teaTemiar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:d35cf4b1759f572ef1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.yueYueChinese"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190768058111:android:9963dd157059f1a0f1c6ca",
+        "android_client_info": {
+          "package_name": "org.alphatilesapps.alphatiles.blue.yueyueCantonese"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-zUtUV9EWmrXMZkH5HzRmiqRx0OO050"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
