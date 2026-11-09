@@ -11,6 +11,12 @@
 .cxx
 *.apk
 *.aab
+/screenshots/
+/app/src/main/assets/adi-registration.properties
+/app/*/release/mapping.txt
+/pathForValidator.txt
+/scratch/window_dump_earth.xml
+/scratch/window_dump_phone.xml
 
 # Since language-specific build assets go into the main source folder,
 # we ignore most of the src/main folder.
