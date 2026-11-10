@@ -68,7 +68,7 @@
         android:id="@+id/row001"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="2dp"
         android:onClick="goToDoor"
         android:orientation="horizontal"
         android:tag="1"
@@ -76,14 +76,24 @@
         app:layout_constraintBottom_toTopOf="@+id/row002"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVMid"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1">
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1_Margin">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textDoor001"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="18"
-            android:background="@drawable/zz_door"
+            android:layout_weight="15"
+            android:background="@drawable/zz_door_new"
             android:contentDescription="@string/door001"
             android:gravity="center"
             android:maxLines="1"
@@ -98,120 +108,129 @@
             app:autoSizeStepGranularity="2sp"
             app:autoSizeTextType="uniform" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/gameScreenshot001"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="19"
+            android:background="@drawable/zz_row_border"
+            android:contentDescription="Game Screenshot 1"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:scaleType="fitCenter"
+            android:tag="1" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="21"
+            android:background="@drawable/zz_row_border"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:tag="1">
+
+            <TextView
+                android:id="@+id/textMark001"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/mark001"
+                android:gravity="center"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/gamePoints001"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/gamePoints001"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:text="+0"
+                android:textColor="#9C27B0"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="36sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textMark001"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="82"
+            android:layout_weight="13"
+            android:background="@drawable/zz_row_border"
+            android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
+            android:padding="1dp"
             android:tag="1"
-            android:weightSum="82">
+            android:weightSum="13">
 
-            <ImageView
-                android:id="@+id/gameScreenshot001"
+            <TextView
+                android:id="@+id/gameLevel001"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="22"
-                android:background="@drawable/zz_row_border"
-                android:contentDescription="Game Screenshot 1"
-                android:onClick="goToDoor"
-                android:padding="2dp"
-                android:scaleType="fitCenter"
-                android:tag="1" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="38"
-                android:background="@drawable/zz_row_border"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_yellow_box"
                 android:gravity="center"
+                android:lineSpacingExtra="-2dp"
+                android:maxLines="3"
                 android:onClick="goToDoor"
-                android:orientation="horizontal"
                 android:padding="2dp"
                 android:tag="1"
-                android:weightSum="3">
+                android:text="1"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
 
-                <TextView
-                    android:id="@+id/textMark001"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/mark001"
-                    android:gravity="center"
-                    android:onClick="goToDoor"
-                    android:tag="1"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/gamePoints001"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:onClick="goToDoor"
-                    android:tag="1"
-                    android:text="+14"
-                    android:textColor="#9C27B0"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="32sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/gameStage001"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="22"
-                android:background="@drawable/zz_row_border"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_black_box"
                 android:gravity="center"
+                android:maxLines="1"
                 android:onClick="goToDoor"
-                android:orientation="horizontal"
                 android:padding="2dp"
                 android:tag="1"
-                android:weightSum="22">
-
-                <TextView
-                    android:id="@+id/gameLevel001"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="11"
-                    android:background="@drawable/zz_yellow_box"
-                    android:gravity="center"
-                    android:lineSpacingExtra="-2dp"
-                    android:maxLines="3"
-                    android:onClick="goToDoor"
-                    android:padding="2dp"
-                    android:tag="1"
-                    android:text="1"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="24sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-
-                <TextView
-                    android:id="@+id/gameStage001"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="11"
-                    android:background="@drawable/zz_black_box"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:onClick="goToDoor"
-                    android:padding="2dp"
-                    android:tag="1"
-                    android:text="1"
-                    android:textColor="#FFD700"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="24sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-            </LinearLayout>
+                android:text="1"
+                android:textColor="#FFD700"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
         </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15" />
     </LinearLayout>
 
     <!-- ROW 1 - Cell 4 (Right) -->
@@ -219,7 +238,7 @@
         android:id="@+id/row004"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="2dp"
         android:onClick="goToDoor"
         android:orientation="horizontal"
         android:tag="4"
@@ -227,14 +246,24 @@
         app:layout_constraintBottom_toTopOf="@+id/row005"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
         app:layout_constraintStart_toEndOf="@+id/guidelineVMid"
-        app:layout_constraintTop_toTopOf="@+id/guidelineH1">
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1_Margin">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/textDoor004"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="18"
-            android:background="@drawable/zz_door"
+            android:layout_weight="15"
+            android:background="@drawable/zz_door_new"
             android:contentDescription="@string/door004"
             android:gravity="center"
             android:maxLines="1"
@@ -249,120 +278,129 @@
             app:autoSizeStepGranularity="2sp"
             app:autoSizeTextType="uniform" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/gameScreenshot004"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="19"
+            android:background="@drawable/zz_row_border"
+            android:contentDescription="Game Screenshot 4"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:scaleType="fitCenter"
+            android:tag="4" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="21"
+            android:background="@drawable/zz_row_border"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:tag="4">
+
+            <TextView
+                android:id="@+id/textMark004"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/mark004"
+                android:gravity="center"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/gamePoints004"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/gamePoints004"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:text="+0"
+                android:textColor="#9C27B0"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="36sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textMark004"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="82"
+            android:layout_weight="13"
+            android:background="@drawable/zz_row_border"
+            android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
+            android:padding="1dp"
             android:tag="4"
-            android:weightSum="82">
+            android:weightSum="13">
 
-            <ImageView
-                android:id="@+id/gameScreenshot004"
+            <TextView
+                android:id="@+id/gameLevel004"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="22"
-                android:background="@drawable/zz_row_border"
-                android:contentDescription="Game Screenshot 4"
-                android:onClick="goToDoor"
-                android:padding="2dp"
-                android:scaleType="fitCenter"
-                android:tag="4" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="38"
-                android:background="@drawable/zz_row_border"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_yellow_box"
                 android:gravity="center"
+                android:lineSpacingExtra="-2dp"
+                android:maxLines="3"
                 android:onClick="goToDoor"
-                android:orientation="horizontal"
                 android:padding="2dp"
                 android:tag="4"
-                android:weightSum="3">
+                android:text="1"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
 
-                <TextView
-                    android:id="@+id/textMark004"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/mark004"
-                    android:gravity="center"
-                    android:onClick="goToDoor"
-                    android:tag="4"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/gamePoints004"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:onClick="goToDoor"
-                    android:tag="4"
-                    android:text="+4"
-                    android:textColor="#9C27B0"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="32sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/gameStage004"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="22"
-                android:background="@drawable/zz_row_border"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_black_box"
                 android:gravity="center"
+                android:maxLines="1"
                 android:onClick="goToDoor"
-                android:orientation="horizontal"
                 android:padding="2dp"
                 android:tag="4"
-                android:weightSum="22">
-
-                <TextView
-                    android:id="@+id/gameLevel004"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="11"
-                    android:background="@drawable/zz_yellow_box"
-                    android:gravity="center"
-                    android:lineSpacingExtra="-2dp"
-                    android:maxLines="3"
-                    android:onClick="goToDoor"
-                    android:padding="2dp"
-                    android:tag="4"
-                    android:text="3"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="24sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-
-                <TextView
-                    android:id="@+id/gameStage004"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="11"
-                    android:background="@drawable/zz_black_box"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:onClick="goToDoor"
-                    android:padding="2dp"
-                    android:tag="4"
-                    android:text="1"
-                    android:textColor="#FFD700"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="24sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-            </LinearLayout>
+                android:text="1"
+                android:textColor="#FFD700"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
         </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15" />
     </LinearLayout>
 
     <!-- ROW 2 - Cell 2 (Left) -->
@@ -370,7 +408,7 @@
         android:id="@+id/row002"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="2dp"
         android:onClick="goToDoor"
         android:orientation="horizontal"
         android:tag="2"
@@ -380,12 +418,22 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toBottomOf="@+id/row001">
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
         <TextView
             android:id="@+id/textDoor002"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="18"
-            android:background="@drawable/zz_door"
+            android:layout_weight="15"
+            android:background="@drawable/zz_door_new"
             android:contentDescription="@string/door002"
             android:gravity="center"
             android:maxLines="1"
@@ -400,120 +448,129 @@
             app:autoSizeStepGranularity="2sp"
             app:autoSizeTextType="uniform" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/gameScreenshot002"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="19"
+            android:background="@drawable/zz_row_border"
+            android:contentDescription="Game Screenshot 2"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:scaleType="fitCenter"
+            android:tag="2" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="21"
+            android:background="@drawable/zz_row_border"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:tag="2">
+
+            <TextView
+                android:id="@+id/textMark002"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/mark002"
+                android:gravity="center"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/gamePoints002"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/gamePoints002"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:text="+0"
+                android:textColor="#9C27B0"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="36sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textMark002"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="82"
+            android:layout_weight="13"
+            android:background="@drawable/zz_row_border"
+            android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
+            android:padding="1dp"
             android:tag="2"
-            android:weightSum="82">
+            android:weightSum="13">
 
-            <ImageView
-                android:id="@+id/gameScreenshot002"
+            <TextView
+                android:id="@+id/gameLevel002"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="22"
-                android:background="@drawable/zz_row_border"
-                android:contentDescription="Game Screenshot 2"
-                android:onClick="goToDoor"
-                android:padding="2dp"
-                android:scaleType="fitCenter"
-                android:tag="2" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="38"
-                android:background="@drawable/zz_row_border"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_yellow_box"
                 android:gravity="center"
+                android:lineSpacingExtra="-2dp"
+                android:maxLines="3"
                 android:onClick="goToDoor"
-                android:orientation="horizontal"
                 android:padding="2dp"
                 android:tag="2"
-                android:weightSum="3">
+                android:text="1"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
 
-                <TextView
-                    android:id="@+id/textMark002"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/mark002"
-                    android:gravity="center"
-                    android:onClick="goToDoor"
-                    android:tag="2"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/gamePoints002"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:onClick="goToDoor"
-                    android:tag="2"
-                    android:text="+14"
-                    android:textColor="#9C27B0"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="32sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/gameStage002"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="22"
-                android:background="@drawable/zz_row_border"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_black_box"
                 android:gravity="center"
+                android:maxLines="1"
                 android:onClick="goToDoor"
-                android:orientation="horizontal"
                 android:padding="2dp"
                 android:tag="2"
-                android:weightSum="22">
-
-                <TextView
-                    android:id="@+id/gameLevel002"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="11"
-                    android:background="@drawable/zz_yellow_box"
-                    android:gravity="center"
-                    android:lineSpacingExtra="-2dp"
-                    android:maxLines="3"
-                    android:onClick="goToDoor"
-                    android:padding="2dp"
-                    android:tag="2"
-                    android:text="1"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="24sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-
-                <TextView
-                    android:id="@+id/gameStage002"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="11"
-                    android:background="@drawable/zz_black_box"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:onClick="goToDoor"
-                    android:padding="2dp"
-                    android:tag="2"
-                    android:text="1"
-                    android:textColor="#FFD700"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="24sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-            </LinearLayout>
+                android:text="1"
+                android:textColor="#FFD700"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
         </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15" />
     </LinearLayout>
 
     <!-- ROW 2 - Cell 5 (Right) -->
@@ -521,7 +578,7 @@
         android:id="@+id/row005"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="2dp"
         android:onClick="goToDoor"
         android:orientation="horizontal"
         android:tag="5"
@@ -531,12 +588,22 @@
         app:layout_constraintStart_toEndOf="@+id/guidelineVMid"
         app:layout_constraintTop_toBottomOf="@+id/row004">
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
         <TextView
             android:id="@+id/textDoor005"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="18"
-            android:background="@drawable/zz_door"
+            android:layout_weight="15"
+            android:background="@drawable/zz_door_new"
             android:contentDescription="@string/door005"
             android:gravity="center"
             android:maxLines="1"
@@ -551,120 +618,129 @@
             app:autoSizeStepGranularity="2sp"
             app:autoSizeTextType="uniform" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/gameScreenshot005"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="19"
+            android:background="@drawable/zz_row_border"
+            android:contentDescription="Game Screenshot 5"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:scaleType="fitCenter"
+            android:tag="5" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="21"
+            android:background="@drawable/zz_row_border"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:tag="5">
+
+            <TextView
+                android:id="@+id/textMark005"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/mark005"
+                android:gravity="center"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/gamePoints005"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/gamePoints005"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:text="+0"
+                android:textColor="#9C27B0"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="36sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textMark005"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="82"
+            android:layout_weight="13"
+            android:background="@drawable/zz_row_border"
+            android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
+            android:padding="1dp"
             android:tag="5"
-            android:weightSum="82">
+            android:weightSum="13">
 
-            <ImageView
-                android:id="@+id/gameScreenshot005"
+            <TextView
+                android:id="@+id/gameLevel005"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="22"
-                android:background="@drawable/zz_row_border"
-                android:contentDescription="Game Screenshot 5"
-                android:onClick="goToDoor"
-                android:padding="2dp"
-                android:scaleType="fitCenter"
-                android:tag="5" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="38"
-                android:background="@drawable/zz_row_border"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_yellow_box"
                 android:gravity="center"
+                android:lineSpacingExtra="-2dp"
+                android:maxLines="3"
                 android:onClick="goToDoor"
-                android:orientation="horizontal"
                 android:padding="2dp"
                 android:tag="5"
-                android:weightSum="3">
+                android:text="1"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
 
-                <TextView
-                    android:id="@+id/textMark005"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/mark005"
-                    android:gravity="center"
-                    android:onClick="goToDoor"
-                    android:tag="5"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/gamePoints005"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:onClick="goToDoor"
-                    android:tag="5"
-                    android:text="+0"
-                    android:textColor="#2196F3"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="32sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/gameStage005"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="22"
-                android:background="@drawable/zz_row_border"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_black_box"
                 android:gravity="center"
+                android:maxLines="1"
                 android:onClick="goToDoor"
-                android:orientation="horizontal"
                 android:padding="2dp"
                 android:tag="5"
-                android:weightSum="22">
-
-                <TextView
-                    android:id="@+id/gameLevel005"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="11"
-                    android:background="@drawable/zz_yellow_box"
-                    android:gravity="center"
-                    android:lineSpacingExtra="-2dp"
-                    android:maxLines="3"
-                    android:onClick="goToDoor"
-                    android:padding="2dp"
-                    android:tag="5"
-                    android:text="1"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="24sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-
-                <TextView
-                    android:id="@+id/gameStage005"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="11"
-                    android:background="@drawable/zz_black_box"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:onClick="goToDoor"
-                    android:padding="2dp"
-                    android:tag="5"
-                    android:text="1"
-                    android:textColor="#FFD700"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="24sp"
-                    app:autoSizeMinTextSize="10sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform" />
-            </LinearLayout>
+                android:text="1"
+                android:textColor="#FFD700"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
         </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15" />
     </LinearLayout>
 
     <!-- ROW 3 - Cell 3 (Left) -->
@@ -672,12 +748,12 @@
         android:id="@+id/row003"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="2dp"
         android:onClick="goToDoor"
         android:orientation="horizontal"
         android:tag="3"
         android:weightSum="100"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineNavArea"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH2_Margin"
         app:layout_constraintEnd_toStartOf="@+id/guidelineVMid"
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toBottomOf="@+id/row002">
@@ -686,157 +762,161 @@
             android:id="@+id/goBack"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="15"
             android:contentDescription="@string/goBackward"
             android:onClick="goBackward"
             android:rotationY="0"
             android:scaleType="fitCenter"
             android:src="@drawable/zz_backward_green" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textDoor003"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15"
+            android:background="@drawable/zz_door_new"
+            android:contentDescription="@string/door003"
+            android:gravity="center"
+            android:maxLines="1"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:tag="3"
+            android:text="3"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="36sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/gameScreenshot003"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="19"
+            android:background="@drawable/zz_row_border"
+            android:contentDescription="Game Screenshot 3"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:scaleType="fitCenter"
+            android:tag="3" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="21"
+            android:background="@drawable/zz_row_border"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:tag="3">
+
+            <TextView
+                android:id="@+id/textMark003"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/mark003"
+                android:gravity="center"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/gamePoints003"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/gamePoints003"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:text="+0"
+                android:textColor="#9C27B0"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="36sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textMark003"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="95"
+            android:layout_weight="13"
+            android:background="@drawable/zz_row_border"
+            android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
+            android:padding="1dp"
             android:tag="3"
-            android:weightSum="95">
+            android:weightSum="13">
 
             <TextView
-                android:id="@+id/textDoor003"
+                android:id="@+id/gameLevel003"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="18"
-                android:background="@drawable/zz_door"
-                android:contentDescription="@string/door003"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_yellow_box"
+                android:gravity="center"
+                android:lineSpacingExtra="-2dp"
+                android:maxLines="3"
+                android:onClick="goToDoor"
+                android:padding="2dp"
+                android:tag="3"
+                android:text="1"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
+
+            <TextView
+                android:id="@+id/gameStage003"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_black_box"
                 android:gravity="center"
                 android:maxLines="1"
                 android:onClick="goToDoor"
                 android:padding="2dp"
                 android:tag="3"
-                android:text="3"
-                android:textColor="#FFFFFF"
+                android:text="1"
+                android:textColor="#FFD700"
                 android:textStyle="bold"
-                app:autoSizeMaxTextSize="36sp"
-                app:autoSizeMinTextSize="12sp"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
                 app:autoSizeStepGranularity="2sp"
                 app:autoSizeTextType="uniform" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="77"
-                android:onClick="goToDoor"
-                android:orientation="horizontal"
-                android:tag="3"
-                android:weightSum="77">
-
-                <ImageView
-                    android:id="@+id/gameScreenshot003"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="21"
-                    android:background="@drawable/zz_row_border"
-                    android:contentDescription="Game Screenshot 3"
-                    android:onClick="goToDoor"
-                    android:padding="2dp"
-                    android:scaleType="fitCenter"
-                    android:tag="3" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="35"
-                    android:background="@drawable/zz_row_border"
-                    android:gravity="center"
-                    android:onClick="goToDoor"
-                    android:orientation="horizontal"
-                    android:padding="2dp"
-                    android:tag="3"
-                    android:weightSum="3">
-
-                    <TextView
-                        android:id="@+id/textMark003"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:contentDescription="@string/mark003"
-                        android:gravity="center"
-                        android:onClick="goToDoor"
-                        android:tag="3"
-                        android:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/gamePoints003"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:onClick="goToDoor"
-                        android:tag="3"
-                        android:text="+8"
-                        android:textColor="#9C27B0"
-                        android:textStyle="bold"
-                        app:autoSizeMaxTextSize="32sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="2sp"
-                        app:autoSizeTextType="uniform" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="21"
-                    android:background="@drawable/zz_row_border"
-                    android:gravity="center"
-                    android:onClick="goToDoor"
-                    android:orientation="horizontal"
-                    android:padding="2dp"
-                    android:tag="3"
-                    android:weightSum="21">
-
-                    <TextView
-                        android:id="@+id/gameLevel003"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="10.5"
-                        android:background="@drawable/zz_yellow_box"
-                        android:gravity="center"
-                        android:lineSpacingExtra="-2dp"
-                        android:maxLines="3"
-                        android:onClick="goToDoor"
-                        android:padding="2dp"
-                        android:tag="3"
-                        android:text="2"
-                        android:textColor="#000000"
-                        android:textStyle="bold"
-                        app:autoSizeMaxTextSize="24sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="2sp"
-                        app:autoSizeTextType="uniform" />
-
-                    <TextView
-                        android:id="@+id/gameStage003"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="10.5"
-                        android:background="@drawable/zz_black_box"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:onClick="goToDoor"
-                        android:padding="2dp"
-                        android:tag="3"
-                        android:text="1"
-                        android:textColor="#FFD700"
-                        android:textStyle="bold"
-                        app:autoSizeMaxTextSize="24sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="2sp"
-                        app:autoSizeTextType="uniform" />
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15" />
     </LinearLayout>
 
     <!-- ROW 3 - Cell 6 (Right) -->
@@ -844,174 +924,176 @@
         android:id="@+id/row006"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="2dp"
         android:onClick="goToDoor"
         android:orientation="horizontal"
         android:tag="6"
         android:weightSum="100"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineNavArea"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH2_Margin"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
         app:layout_constraintStart_toEndOf="@+id/guidelineVMid"
         app:layout_constraintTop_toBottomOf="@+id/row005">
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textDoor006"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15"
+            android:background="@drawable/zz_door_new"
+            android:contentDescription="@string/door006"
+            android:gravity="center"
+            android:maxLines="1"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:tag="6"
+            android:text="6"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="36sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/gameScreenshot006"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="19"
+            android:background="@drawable/zz_row_border"
+            android:contentDescription="Game Screenshot 6"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:scaleType="fitCenter"
+            android:tag="6" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="21"
+            android:background="@drawable/zz_row_border"
+            android:onClick="goToDoor"
+            android:padding="2dp"
+            android:tag="6">
+
+            <TextView
+                android:id="@+id/textMark006"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/mark006"
+                android:gravity="center"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/gamePoints006"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/gamePoints006"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:onClick="goToDoor"
+                android:tag="1"
+                android:text="+0"
+                android:textColor="#9C27B0"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="36sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textMark006"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="95"
+            android:layout_weight="13"
+            android:background="@drawable/zz_row_border"
+            android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
+            android:padding="1dp"
             android:tag="6"
-            android:weightSum="95">
+            android:weightSum="13">
 
             <TextView
-                android:id="@+id/textDoor006"
+                android:id="@+id/gameLevel006"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="18"
-                android:background="@drawable/zz_door"
-                android:contentDescription="@string/door006"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_yellow_box"
+                android:gravity="center"
+                android:lineSpacingExtra="-2dp"
+                android:maxLines="3"
+                android:onClick="goToDoor"
+                android:padding="2dp"
+                android:tag="6"
+                android:text="1"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
+
+            <TextView
+                android:id="@+id/gameStage006"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="6.5"
+                android:background="@drawable/zz_black_box"
                 android:gravity="center"
                 android:maxLines="1"
                 android:onClick="goToDoor"
                 android:padding="2dp"
                 android:tag="6"
-                android:text="6"
-                android:textColor="#FFFFFF"
+                android:text="1"
+                android:textColor="#FFD700"
                 android:textStyle="bold"
-                app:autoSizeMaxTextSize="36sp"
-                app:autoSizeMinTextSize="12sp"
+                app:autoSizeMaxTextSize="28sp"
+                app:autoSizeMinTextSize="10sp"
                 app:autoSizeStepGranularity="2sp"
                 app:autoSizeTextType="uniform" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="77"
-                android:onClick="goToDoor"
-                android:orientation="horizontal"
-                android:tag="6"
-                android:weightSum="77">
-
-                <ImageView
-                    android:id="@+id/gameScreenshot006"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="21"
-                    android:background="@drawable/zz_row_border"
-                    android:contentDescription="Game Screenshot 6"
-                    android:onClick="goToDoor"
-                    android:padding="2dp"
-                    android:scaleType="fitCenter"
-                    android:tag="6" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="35"
-                    android:background="@drawable/zz_row_border"
-                    android:gravity="center"
-                    android:onClick="goToDoor"
-                    android:orientation="horizontal"
-                    android:padding="2dp"
-                    android:tag="6"
-                    android:weightSum="3">
-
-                    <TextView
-                        android:id="@+id/textMark006"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:contentDescription="@string/mark006"
-                        android:gravity="center"
-                        android:onClick="goToDoor"
-                        android:tag="6"
-                        android:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/gamePoints006"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:onClick="goToDoor"
-                        android:tag="6"
-                        android:text="+0"
-                        android:textColor="#2196F3"
-                        android:textStyle="bold"
-                        app:autoSizeMaxTextSize="32sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="2sp"
-                        app:autoSizeTextType="uniform" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="21"
-                    android:background="@drawable/zz_row_border"
-                    android:gravity="center"
-                    android:onClick="goToDoor"
-                    android:orientation="horizontal"
-                    android:padding="2dp"
-                    android:tag="6"
-                    android:weightSum="21">
-
-                    <TextView
-                        android:id="@+id/gameLevel006"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="10.5"
-                        android:background="@drawable/zz_yellow_box"
-                        android:gravity="center"
-                        android:lineSpacingExtra="-2dp"
-                        android:maxLines="3"
-                        android:onClick="goToDoor"
-                        android:padding="2dp"
-                        android:tag="6"
-                        android:text="1"
-                        android:textColor="#000000"
-                        android:textStyle="bold"
-                        app:autoSizeMaxTextSize="24sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="2sp"
-                        app:autoSizeTextType="uniform" />
-
-                    <TextView
-                        android:id="@+id/gameStage006"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="10.5"
-                        android:background="@drawable/zz_black_box"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:onClick="goToDoor"
-                        android:padding="2dp"
-                        android:tag="6"
-                        android:text="1"
-                        android:textColor="#FFD700"
-                        android:textStyle="bold"
-                        app:autoSizeMaxTextSize="24sp"
-                        app:autoSizeMinTextSize="10sp"
-                        app:autoSizeStepGranularity="2sp"
-                        app:autoSizeTextType="uniform" />
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/goForward"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="15"
             android:contentDescription="@string/goForward"
             android:onClick="goForward"
             android:rotationY="0"
             android:scaleType="fitCenter"
             android:src="@drawable/zz_forward_green" />
     </LinearLayout>
-
-    <!-- Navigation Arrows Area -->
 
     <!-- Bottom Options Bar -->
     <ImageView
@@ -1200,11 +1282,18 @@
         app:layout_constraintGuide_percent="0.11" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineNavArea"
+        android:id="@+id/guidelineH1_Margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.84" />
+        app:layout_constraintGuide_percent="0.13" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH2_Margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.90" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHSys1"
