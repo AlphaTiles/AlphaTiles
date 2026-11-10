@@ -11,7 +11,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
@@ -35,22 +34,40 @@ public class Earth extends AppCompatActivity {
     String playerString;
     char grade;
     SharedPreferences prefs;
-    int pageNumber; // Games 001 to 033 are displayed on page 1, games 034 to 066 are displayed on page 2, etc.
+    int pageNumber; // Games 001 to 006 are displayed on page 1, games 007 to 012 on page 2, etc.
     int globalPoints;
-//    int totalCorrect;
-    int doorsPerPage = 33;
+    int doorsPerPage = 6;
     ConstraintLayout earthCL;
 
     private static final int MAX_TRACKER_MARK_IMAGES = 22;
 
+    private static final int[] DOOR_VIEW_IDS = {
+            R.id.textDoor001, R.id.textDoor002, R.id.textDoor003,
+            R.id.textDoor004, R.id.textDoor005, R.id.textDoor006
+    };
+    private static final int[] SCREENSHOT_VIEW_IDS = {
+            R.id.gameScreenshot001, R.id.gameScreenshot002, R.id.gameScreenshot003,
+            R.id.gameScreenshot004, R.id.gameScreenshot005, R.id.gameScreenshot006
+    };
     private static final int[] MARK_VIEW_IDS = {
-            R.id.textMark001, R.id.textMark002, R.id.textMark003, R.id.textMark004, R.id.textMark005,
-            R.id.textMark006, R.id.textMark007, R.id.textMark008, R.id.textMark009, R.id.textMark010,
-            R.id.textMark011, R.id.textMark012, R.id.textMark013, R.id.textMark014, R.id.textMark015,
-            R.id.textMark016, R.id.textMark017, R.id.textMark018, R.id.textMark019, R.id.textMark020,
-            R.id.textMark021, R.id.textMark022, R.id.textMark023, R.id.textMark024, R.id.textMark025,
-            R.id.textMark026, R.id.textMark027, R.id.textMark028, R.id.textMark029, R.id.textMark030,
-            R.id.textMark031, R.id.textMark032, R.id.textMark033
+            R.id.textMark001, R.id.textMark002, R.id.textMark003,
+            R.id.textMark004, R.id.textMark005, R.id.textMark006
+    };
+    private static final int[] POINTS_VIEW_IDS = {
+            R.id.gamePoints001, R.id.gamePoints002, R.id.gamePoints003,
+            R.id.gamePoints004, R.id.gamePoints005, R.id.gamePoints006
+    };
+    private static final int[] LEVEL_VIEW_IDS = {
+            R.id.gameLevel001, R.id.gameLevel002, R.id.gameLevel003,
+            R.id.gameLevel004, R.id.gameLevel005, R.id.gameLevel006
+    };
+    private static final int[] STAGE_VIEW_IDS = {
+            R.id.gameStage001, R.id.gameStage002, R.id.gameStage003,
+            R.id.gameStage004, R.id.gameStage005, R.id.gameStage006
+    };
+    private static final int[] ROW_VIEW_IDS = {
+            R.id.row001, R.id.row002, R.id.row003,
+            R.id.row004, R.id.row005, R.id.row006
     };
 
     @Override
@@ -184,18 +201,17 @@ public class Earth extends AppCompatActivity {
                 noShareIcon = true;
             }
         }
-        if (noShareIcon) { // if aa_share does not have a second line, don't display a share icon
-            //if (true) {
+        if (noShareIcon) {
             ImageView shareIcon = findViewById(R.id.share);
             shareIcon.setVisibility(View.GONE);
             shareIcon.setOnClickListener(null);
         }
         boolean noResources = true;
-        if (context.getResources().getIdentifier("aa_resources", "raw", context.getPackageName()) != 0) { // Checks if resource file exists
+        if (context.getResources().getIdentifier("aa_resources", "raw", context.getPackageName()) != 0) {
             Scanner resourceScanner = new Scanner(getResources().openRawResource(R.raw.aa_resources));
-            if (resourceScanner.hasNext()) { // See if there is anything in resource file
-                resourceScanner.nextLine(); // Skips the header line
-                if (resourceScanner.hasNext() && !resourceScanner.next().isEmpty()) { // If there is a line after the header that is not an empty string ""
+            if (resourceScanner.hasNext()) {
+                resourceScanner.nextLine();
+                if (resourceScanner.hasNext() && !resourceScanner.next().isEmpty()) {
                     noResources = false;
                 }
             }
@@ -207,13 +223,12 @@ public class Earth extends AppCompatActivity {
         }
 
         ImageView exitButtonImage = findViewById(R.id.exit);
-        if(exitButton) {
+        if (exitButton) {
             exitButtonImage.setVisibility(View.VISIBLE);
         } else {
             exitButtonImage.setVisibility(View.INVISIBLE);
         }
 
-        // Run after layout and other onCreate constraint changes so marks are not left at XML defaults
         earthCL.post(this::updateDoors);
     }
 
@@ -229,105 +244,185 @@ public class Earth extends AppCompatActivity {
 
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
 
-        for (int j = 0; j < earthCL.getChildCount(); j++) {
-            View child = earthCL.getChildAt(j);
-            if (child instanceof TextView && child.getTag() != null) {
-                try {
-                    String viewEntryName = getResources().getResourceEntryName(child.getId());
-                    if (viewEntryName.startsWith("textMark")) {
-                        continue;
+        for (int i = 0; i < doorsPerPage; i++) {
+            int gameIndex = (pageNumber * doorsPerPage) + i;
+
+            View row = findViewById(ROW_VIEW_IDS[i]);
+            TextView door = findViewById(DOOR_VIEW_IDS[i]);
+            ImageView screenshot = findViewById(SCREENSHOT_VIEW_IDS[i]);
+            TextView mark = findViewById(MARK_VIEW_IDS[i]);
+            TextView pointsView = findViewById(POINTS_VIEW_IDS[i]);
+            TextView levelView = findViewById(LEVEL_VIEW_IDS[i]);
+            TextView stageView = findViewById(STAGE_VIEW_IDS[i]);
+
+            if (gameIndex >= Start.gameList.size()) {
+                if (row != null) row.setVisibility(View.INVISIBLE);
+                if (door != null) door.setVisibility(View.INVISIBLE);
+                continue;
+            }
+
+            if (row != null) row.setVisibility(View.VISIBLE);
+
+            String doorTag = String.valueOf(i + 1);
+            View.OnClickListener rowClickListener = this::goToDoor;
+
+            if (row != null) { row.setTag(doorTag); row.setOnClickListener(rowClickListener); }
+            if (door != null) { door.setTag(doorTag); door.setOnClickListener(rowClickListener); }
+            if (screenshot != null) { screenshot.setTag(doorTag); screenshot.setOnClickListener(rowClickListener); }
+            if (mark != null) { mark.setTag(doorTag); mark.setOnClickListener(rowClickListener); }
+            if (pointsView != null) { pointsView.setTag(doorTag); pointsView.setOnClickListener(rowClickListener); }
+            if (levelView != null) { levelView.setTag(doorTag); levelView.setOnClickListener(rowClickListener); }
+            if (stageView != null) { stageView.setTag(doorTag); stageView.setOnClickListener(rowClickListener); }
+
+            Start.Game game = Start.gameList.get(gameIndex);
+            String country = game.country;
+            String uniqueGameID = getUniqueID(gameIndex);
+            int points = prefs.getInt(uniqueGameID + "_points", 0);
+            boolean masteryAchieved = prefs.getBoolean(uniqueGameID + "_masteryAchieved", false);
+
+            boolean isPassive = country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq") || country.equals("Indonesia");
+
+            // (a) Door setup - shape remains constant (zz_door), colored with game color
+            if (door != null) {
+                door.setText(String.valueOf(gameIndex + 1));
+                door.setVisibility(View.VISIBLE);
+
+                Drawable unwrappedDrawable = AppCompatResources.getDrawable(context, R.drawable.zz_door_new);
+                if (unwrappedDrawable != null) {
+                    Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable).mutate();
+                    if (!masteryAchieved) {
+                        try {
+                            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(colorList.get(Integer.parseInt(game.color))));
+                        } catch (Exception ignored) {}
                     }
-                    int doorIndex = Integer.parseInt((String) earthCL.getChildAt(j).getTag()) - 1;
-                    String doorText = String.valueOf((pageNumber * doorsPerPage) + doorIndex + 1);
-                    ((TextView) child).setText(doorText);
-                    if (((pageNumber * doorsPerPage) + doorIndex) >= Start.gameList.size()) {
-                        ((TextView) child).setVisibility(View.INVISIBLE);
-                    } else {
-                        String uniqueGameLevelPlayerModeStageID = getUniqueID((pageNumber * doorsPerPage) + doorIndex);
-                        String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).country;
-
-//                      totalCorrect = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_totalCorrect", 0);
-
-                        prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-                        int points = prefs.getInt(uniqueGameLevelPlayerModeStageID + "_points", 0);
-                        boolean masteryAchieved = prefs.getBoolean(uniqueGameLevelPlayerModeStageID + "_masteryAchieved", false);
-
-                        // There are now several games with no right/wrong responses and with no incrementing totalCorrect variable
-                        // We are forcing these games' doors to initialize with a starting circle (in progress) shape
-                        // This code is in two places
-                        // If other "no right or wrong" games are added, probably better to add a new column in aa_games.txt with a classification
-                        String doorTextColor = Start.gameList.get((pageNumber * doorsPerPage)+doorIndex).doorTextColor;
-
-                        boolean changeColor = true;
-                        String doorStyle = "";
-                        if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia")|| country.equals("Iraq")|| country.equals("Indonesia")) {                            doorStyle = "_inprocess";
-                        } else if (points > 0 && !masteryAchieved) {
-                            doorStyle = "_inprocess";
-                        } else if (masteryAchieved) {
-                            doorStyle = "_mastery";
-                            changeColor = false;
-                        } else { // 0
-                            doorStyle = "";
-                        }
-
-                        String drawableBase = "zz_door";
-
-                        String drawableEntryName = drawableBase + doorStyle;
-
-                        int resId = getResources().getIdentifier(drawableEntryName, "drawable", getPackageName());
-                        Drawable unwrappedDrawable = AppCompatResources.getDrawable(context, resId);
-                        Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
-                        if (changeColor) {
-                            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(colorList.get(
-                                    Integer.parseInt(Start.gameList.get((pageNumber * doorsPerPage)
-                                            + doorIndex).color))));
-                        }
-                        ((TextView) child).setBackground(wrappedDrawable);
-                        ((TextView) child).setVisibility(View.VISIBLE);
-
-                        String textColorStr;
-                        if (!doorTextColor.isEmpty()) {
-                            textColorStr = colorList.get(Integer.parseInt(doorTextColor));
-                        } else if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq") || country.equals("Indonesia")) {
-                            textColorStr = "#000000"; // black;
-                        } else if (!masteryAchieved) {
-                            textColorStr = "#FFFFFF"; // white;
-                        } else {
-                            String textColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).color;
-                            textColorStr = colorList.get(Integer.parseInt(textColor));
-                        }
-
-                        if (masteryAchieved && Color.parseColor(textColorStr) == Color.WHITE) {
-                            String doorBgColor = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).color;
-                            textColorStr = colorList.get(Integer.parseInt(doorBgColor));
-                        }
-
-                        ((TextView) child).setTextColor(Color.parseColor(textColorStr));
-
-                    }
-                } catch (Throwable ex)    // Never reached if tags are well-formed!
-                {
-                    ex.printStackTrace();
+                    door.setBackground(wrappedDrawable);
                 }
+
+                String doorTextColor = game.doorTextColor;
+                String textColorStr;
+                if (!doorTextColor.isEmpty()) {
+                    textColorStr = colorList.get(Integer.parseInt(doorTextColor));
+                } else if (isPassive) {
+                    textColorStr = "#000000";
+                } else if (!masteryAchieved) {
+                    textColorStr = "#FFFFFF";
+                } else {
+                    textColorStr = colorList.get(Integer.parseInt(game.color));
+                }
+
+                if (masteryAchieved && Color.parseColor(textColorStr) == Color.WHITE) {
+                    textColorStr = colorList.get(Integer.parseInt(game.color));
+                }
+
+                try {
+                    door.setTextColor(Color.parseColor(textColorStr));
+                } catch (Exception ignored) {}
+            }
+
+            // (b) Game Screenshot - loaded using "zc_" + country_level_mode_stage
+            if (screenshot != null) {
+                String stageForRes = game.stage.equals("-") ? "dash" : game.stage;
+                String imageName = ("zc_" + country + "_" + game.level + "_" + game.mode + "_" + stageForRes).toLowerCase();
+                int resId = getResources().getIdentifier(imageName, "drawable", getPackageName());
+                if (resId != 0) {
+                    screenshot.setImageResource(resId);
+                } else {
+                    screenshot.setImageResource(R.drawable.zz_no_image_found);
+                }
+                screenshot.setVisibility(View.VISIBLE);
+            }
+
+            // (c) Gem progress mark & (d) Points
+            if (isPassive) {
+                if (mark != null) mark.setVisibility(View.INVISIBLE);
+                if (pointsView != null) pointsView.setVisibility(View.INVISIBLE);
+            } else {
+                if (mark != null) {
+                    int correct = prefs.getInt(uniqueGameID + "_totalCorrect", 0);
+                    updateMarkForTotalCorrect(mark, gameIndex, correct, game.lookBack);
+                }
+                if (pointsView != null) {
+                    pointsView.setText("+" + points);
+                    pointsView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            // (e) Challenge Level / Passive Exclusivity Indicator
+            if (levelView != null) {
+                if (isPassive) {
+                    int stagePlusExclusivity = 71;
+                    if (!game.stage.equals("-")) {
+                        try {
+                            stagePlusExclusivity = Integer.parseInt(game.stage);
+                        } catch (NumberFormatException ignored) {}
+                    }
+                    boolean exclusive = true;
+                    if (stagePlusExclusivity >= 10) {
+                        exclusive = ((stagePlusExclusivity % 10) == 0);
+                    }
+                    if (exclusive) {
+                        levelView.setText("◎\n◉\n◎");
+                    } else {
+                        levelView.setText("◉\n◉\n◉");
+                    }
+                } else {
+                    try {
+                        int challengeLevel = Integer.parseInt(game.level);
+                        int displayedChallengeLevel = challengeLevel;
+                        if (country.equals("Thailand")) {
+                            displayedChallengeLevel = challengeLevel / 100;
+                        } else if (country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
+                            displayedChallengeLevel = challengeLevel - 3;
+                        } else if (country.equals("Georgia") && challengeLevel > 6) {
+                            displayedChallengeLevel = challengeLevel - 6;
+                        }
+                        levelView.setText(String.valueOf(displayedChallengeLevel));
+                    } catch (NumberFormatException ex) {
+                        levelView.setText(game.level);
+                    }
+                }
+                levelView.setVisibility(View.VISIBLE);
+            }
+
+            // (f) Stage Indicator
+            if (stageView != null) {
+                if (stagesInUse > 1) {
+                    int stageVal = 1;
+                    if (!game.stage.equals("-")) {
+                        try {
+                            int stagePlusExclusivity = Integer.parseInt(game.stage);
+                            if (stagePlusExclusivity >= 10) {
+                                stageVal = stagePlusExclusivity / 10;
+                            } else {
+                                stageVal = stagePlusExclusivity;
+                            }
+                        } catch (NumberFormatException ignored) {}
+                    }
+                    stageView.setText(String.valueOf(stageVal));
+                } else {
+                    stageView.setText("★");
+                }
+                stageView.setVisibility(View.VISIBLE);
             }
         }
 
-        updateAllMarks(prefs);
-
         ImageView backArrow = findViewById(R.id.goBack);
-        if (pageNumber == 0) {
-            backArrow.setVisibility(View.INVISIBLE);
-        } else {
-            backArrow.setVisibility(View.VISIBLE);
+        if (backArrow != null) {
+            if (pageNumber == 0) {
+                backArrow.setVisibility(View.INVISIBLE);
+            } else {
+                backArrow.setVisibility(View.VISIBLE);
+            }
         }
 
         ImageView forwardArrow = findViewById(R.id.goForward);
-        if (((pageNumber + 1) * doorsPerPage) < Start.gameList.size()) {
-            forwardArrow.setVisibility(View.VISIBLE);
-        } else {
-            forwardArrow.setVisibility(View.INVISIBLE);
+        if (forwardArrow != null) {
+            if (((pageNumber + 1) * doorsPerPage) < Start.gameList.size()) {
+                forwardArrow.setVisibility(View.VISIBLE);
+            } else {
+                forwardArrow.setVisibility(View.INVISIBLE);
+            }
         }
-
     }
 
     private String getUniqueID(int gameIndex) {
@@ -345,33 +440,11 @@ public class Earth extends AppCompatActivity {
         return project + country + challengeLevel + playerString + syllableGame + stage;
     }
 
-    private void updateAllMarks(SharedPreferences prefs) {
-        for (int markSlot = 0; markSlot < MARK_VIEW_IDS.length; markSlot++) {
-            TextView mark = findViewById(MARK_VIEW_IDS[markSlot]);
-            if (mark == null || mark.getTag() == null) {
-                continue;
-            }
-            int doorIndex = Integer.parseInt(mark.getTag().toString()) - 1;
-            int gameIndex = (pageNumber * doorsPerPage) + doorIndex;
-            if (gameIndex >= Start.gameList.size()) {
-                mark.setVisibility(View.INVISIBLE);
-                continue;
-            }
-            int correct = prefs.getInt(getUniqueID(gameIndex) + "_totalCorrect", 0);
-            int masteryLookBackWindow = gameList.get((pageNumber * doorsPerPage) + doorIndex).lookBack;
-            updateMarkForTotalCorrect(mark, gameIndex, correct, masteryLookBackWindow);
-        }
-    }
-
-    /**
-     * tracker tiers (each tier is the size of masteryLookBackWindow):
-     * Gem: none: 0 to one less than masteryLookBackWindow
-     * Gem: # 1 : masteryLookBackWindow to ((2*masteryLookBackWindow)–1), but only if masteryAchieve = true
-     * Gem: # 2 : (2*masteryLookBackWindow) to ((3*masteryLookBackWindow)–1), but only if masteryAchieve = true
-     * etc.
-     * Position comes from earth.xml (one mark view per door); only the image changes here.
-     */
     private void updateMarkForTotalCorrect(TextView mark, int gameIndex, int correct, int masteryLookBackWindow) {
+        if (masteryLookBackWindow <= 0) {
+            mark.setVisibility(View.INVISIBLE);
+            return;
+        }
 
         int trackerTier = correct / masteryLookBackWindow;
         if (trackerTier < 1) {
@@ -389,31 +462,26 @@ public class Earth extends AppCompatActivity {
                 mark.setBackgroundResource(trackerDrawableId);
             }
             mark.setVisibility(View.VISIBLE);
-
+        } else {
+            mark.setVisibility(View.INVISIBLE);
         }
     }
 
     public void goToAboutPage(View view) {
-
         Intent intent = getIntent();
         intent.setClass(context, About.class);
         startActivity(intent);
-
     }
 
     public void goBackToChoosePlayer(View view) {
-
         startActivity(new Intent(context, ChoosePlayer.class));
         finish();
-
     }
 
     public void goToResources(View view) {
-
         Intent intent = getIntent();
         intent.setClass(context, Resources.class);
         startActivity(intent);
-
     }
 
     public void goToShare(View view) {
@@ -427,10 +495,9 @@ public class Earth extends AppCompatActivity {
     }
 
     public void goToDoor(View view) {
-
         finish();
         int doorIndex = Integer.parseInt((String) view.getTag()) - 1;
-        String project = "org.alphatilesapps.alphatiles.";  // how to call this with code? It seemed to produce variable results
+        String project = "org.alphatilesapps.alphatiles.";
         String country = Start.gameList.get((pageNumber * doorsPerPage) + doorIndex).country;
         String activityClass = project + country;
 
@@ -447,9 +514,9 @@ public class Earth extends AppCompatActivity {
             stage = Integer.parseInt(gameList.get((pageNumber * doorsPerPage) + doorIndex).stage);
         }
 
-        Intent intent = getIntent();    // preserve Extras
+        Intent intent = getIntent();
         try {
-            intent.setClass(context, Class.forName(activityClass));    // so we retain the Extras
+            intent.setClass(context, Class.forName(activityClass));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -469,25 +536,20 @@ public class Earth extends AppCompatActivity {
         intent.putExtra("studentGrade", grade);
         startActivity(intent);
         finish();
-
     }
 
     public void goBackward(View view) {
-
         if (pageNumber > 0) {
             pageNumber--;
         }
         updateDoors();
-
     }
 
     public void goForward(View view) {
-
         if (((pageNumber + 1) * doorsPerPage) < Start.gameList.size()) {
             pageNumber++;
         }
         updateDoors();
-
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -516,14 +578,10 @@ public class Earth extends AppCompatActivity {
                 mp3.release();
             }
         });
-
     }
 
     protected void setAllElemsUnclickable() {
-        // Get reference to the parent layout container
         ConstraintLayout parentLayout = findViewById(R.id.earthCL);
-
-        // Disable clickability of all child views
         for (int i = 0; i < parentLayout.getChildCount(); i++) {
             View child = parentLayout.getChildAt(i);
             child.setClickable(false);
@@ -531,14 +589,10 @@ public class Earth extends AppCompatActivity {
     }
 
     protected void setAllElemsClickable() {
-        // Get reference to the parent layout container
         ConstraintLayout parentLayout = findViewById(R.id.earthCL);
-
-        // Disable clickability of all child views
         for (int i = 0; i < parentLayout.getChildCount(); i++) {
             View child = parentLayout.getChildAt(i);
             child.setClickable(true);
         }
     }
-
 }
