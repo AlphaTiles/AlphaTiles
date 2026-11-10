@@ -9,10 +9,10 @@ android {
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId = "org.alphatilesapps.alphatiles"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 36
-        versionCode = 186
-        versionName = "2.8.0.2"
+        versionCode = 187
+        versionName = "2.8.0.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -28,7 +28,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled =
+            minifyEnabled = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             ndk {
                 debugSymbolLevel = 'SYMBOL_TABLE' // If using native C/C++ code
@@ -40,10 +40,9 @@ android {
                         def flavorName = variant.productFlavors[0].second
                         output.outputFileName.set(
                                 "alphaTiles.Blue.${flavorName}.V${output.versionName.get()}.apk")
-                        }
                     }
                 }
-
+            }
         }
     }
 
