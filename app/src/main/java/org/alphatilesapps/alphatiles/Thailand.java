@@ -95,7 +95,7 @@ public class Thailand extends GameActivity {
             contextualTilePosition = CONTEXTUAL_TILE_POSITION[Integer.parseInt(clString.substring(3,4)) - 1];
         }
 
-        int gameID = 0;
+        int gameID;
         if (choiceType.equals("WORD_TEXT")) {
             setContentView(R.layout.thailand2);
             gameID = R.id.thailand2CL;
@@ -284,13 +284,25 @@ public class Thailand extends GameActivity {
                         case "CONTEXTUAL":
                             switch (contextualTilePosition) {
                                 case "INITIAL":
-                                    refString = contextualizedForm_Initial(refTile.text);
+                                    if (!refTile.wordInitialVariant.equals("none")) {
+                                        refString = refTile.wordInitialVariant;
+                                    } else {
+                                        refString = contextualizedForm_Initial(refTile.text);
+                                    }
                                     break;
                                 case "FINAL":
-                                    refString = contextualizedForm_Final(refTile.text);
+                                    if (!refTile.wordFinalVariant.equals("none")) {
+                                        refString = refTile.wordFinalVariant;
+                                    } else {
+                                        refString = contextualizedForm_Final(refTile.text);
+                                    }
                                     break;
                                 default: // MEDIAL
-                                    refString = contextualizedForm_Medial(refTile.text);
+                                    if (!refTile.wordMedialVariant.equals("none")) {
+                                        refString = refTile.wordMedialVariant;
+                                    } else {
+                                        refString = contextualizedForm_Medial(refTile.text);
+                                    }
                                     break;
                             }
                             break;
@@ -401,7 +413,11 @@ public class Thailand extends GameActivity {
                             int choiceColorNo = Color.parseColor(choiceColorStr);
                             choiceButton.setBackgroundColor(choiceColorNo);
                             choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                            choiceButton.setText(contextualizedForm_Initial(fourTileChoices.get(t).text));
+                            if (!fourTileChoices.get(t).wordInitialVariant.equals("none")) {
+                                choiceButton.setText(fourTileChoices.get(t).wordInitialVariant);
+                            } else {
+                                choiceButton.setText(contextualizedForm_Initial(fourTileChoices.get(t).text));
+                            }
                         }
                         break;
                     case "FINAL":
@@ -411,7 +427,11 @@ public class Thailand extends GameActivity {
                             int choiceColorNo = Color.parseColor(choiceColorStr);
                             choiceButton.setBackgroundColor(choiceColorNo);
                             choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                            choiceButton.setText(contextualizedForm_Final(fourTileChoices.get(t).text));
+                            if (!fourTileChoices.get(t).wordFinalVariant.equals("none")) {
+                                choiceButton.setText(fourTileChoices.get(t).wordFinalVariant);
+                            } else {
+                                choiceButton.setText(contextualizedForm_Final(fourTileChoices.get(t).text));
+                            }
                         }
                         break;
                     default: // MEDIAL
@@ -421,7 +441,11 @@ public class Thailand extends GameActivity {
                             int choiceColorNo = Color.parseColor(choiceColorStr);
                             choiceButton.setBackgroundColor(choiceColorNo);
                             choiceButton.setTextColor(Color.parseColor("#000000")); // black
-                            choiceButton.setText(contextualizedForm_Medial(fourTileChoices.get(t).text));
+                            if (!fourTileChoices.get(t).wordMedialVariant.equals("none")) {
+                                choiceButton.setText(fourTileChoices.get(t).wordMedialVariant);
+                            } else {
+                                choiceButton.setText(contextualizedForm_Medial(fourTileChoices.get(t).text));
+                            }
                         }
                         break;
                 }
@@ -613,6 +637,7 @@ public class Thailand extends GameActivity {
                 Syllable chosenSyllable = fourSyllableChoices.get(answerChoiceIndex);
                 switch (refType) {
                     case "SYLLABLE_AUDIO":
+                    case "SYLLABLE_TEXT": // adding this case back - not sure how it got deleted
                         if (chosenSyllable.text.equals(refSyllable.text)) {
                             goodMatch = true;
                         }
@@ -645,7 +670,7 @@ public class Thailand extends GameActivity {
                         .putValue("Correct Answer", refTile)
                         .putValue("Grade", studentGrade);
                 for (int i = 0; i < 3; i++) {
-                    if (!incorrectAnswersSelected.get(i).equals("")) {
+                    if (!incorrectAnswersSelected.get(i).isEmpty()) {
                         info.putValue("Incorrect_" + (i + 1), incorrectAnswersSelected.get(i));
                     }
                 }
@@ -706,7 +731,7 @@ public class Thailand extends GameActivity {
             for (int i = 0; i < 3; i++) {
                 String item = incorrectAnswersSelected.get(i);
                 if (item.equals(chosenItemText)) break;  // this incorrect answer already selected
-                if (item.equals("")) {
+                if (item.isEmpty()) {
                     incorrectAnswersSelected.set(i, chosenItemText);
                     break;
                 }
