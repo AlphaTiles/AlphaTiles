@@ -16,8 +16,10 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -278,7 +280,7 @@ public class Earth extends AppCompatActivity {
             String country = game.country;
             String uniqueGameID = getUniqueID(gameIndex);
             int points = prefs.getInt(uniqueGameID + "_points", 0);
-            boolean masteryAchieved = prefs.getBoolean(uniqueGameID + "_masteryAchieved", false);
+//            boolean masteryAchieved = prefs.getBoolean(uniqueGameID + "_masteryAchieved", false);
 
             boolean isPassive = country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq") || country.equals("Indonesia");
 
@@ -290,33 +292,24 @@ public class Earth extends AppCompatActivity {
                 Drawable unwrappedDrawable = AppCompatResources.getDrawable(context, R.drawable.zz_door_new);
                 if (unwrappedDrawable != null) {
                     Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable).mutate();
-                    if (!masteryAchieved) {
-                        try {
-                            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(colorList.get(Integer.parseInt(game.color))));
-                        } catch (Exception ignored) {}
+                    try {
+                        DrawableCompat.setTint(wrappedDrawable, Color.parseColor(colorList.get(Integer.parseInt(game.color))));
+                    } catch (Exception e) {
+                        Log.w("Earth", "Bad door color '" + game.color + "' for game " + (gameIndex + 1), e);
                     }
                     door.setBackground(wrappedDrawable);
                 }
-
-                String doorTextColor = game.doorTextColor;
-                String textColorStr;
-                if (!doorTextColor.isEmpty()) {
-                    textColorStr = colorList.get(Integer.parseInt(doorTextColor));
-                } else if (isPassive) {
-                    textColorStr = "#000000";
-                } else if (!masteryAchieved) {
-                    textColorStr = "#FFFFFF";
-                } else {
-                    textColorStr = colorList.get(Integer.parseInt(game.color));
-                }
-
-                if (masteryAchieved && Color.parseColor(textColorStr) == Color.WHITE) {
-                    textColorStr = colorList.get(Integer.parseInt(game.color));
-                }
-
+                // Specified color from aa_games.txt, else black for passive and white for active.
+                int doorTextColorInt = isPassive ? Color.BLACK : Color.WHITE;
                 try {
-                    door.setTextColor(Color.parseColor(textColorStr));
-                } catch (Exception ignored) {}
+                    if (!game.doorTextColor.isEmpty()) {
+                        doorTextColorInt = Color.parseColor(
+                        colorList.get(Integer.parseInt(game.doorTextColor)));
+                    }
+                } catch (Exception e) {
+                    Log.w("Earth", "Bad door text color '" + game.doorTextColor + "' for game " + (gameIndex + 1), e);
+                }
+                door.setTextColor(doorTextColorInt);
             }
 
             // (b) Game Screenshot - loaded using "zc_" + country_level_mode_stage
@@ -581,18 +574,24 @@ public class Earth extends AppCompatActivity {
     }
 
     protected void setAllElemsUnclickable() {
-        ConstraintLayout parentLayout = findViewById(R.id.earthCL);
-        for (int i = 0; i < parentLayout.getChildCount(); i++) {
-            View child = parentLayout.getChildAt(i);
-            child.setClickable(false);
-        }
+        setClickableRecursive(findViewById(R.id.earthCL), false);
     }
 
     protected void setAllElemsClickable() {
-        ConstraintLayout parentLayout = findViewById(R.id.earthCL);
-        for (int i = 0; i < parentLayout.getChildCount(); i++) {
-            View child = parentLayout.getChildAt(i);
-            child.setClickable(true);
+        setClickableRecursive(findViewById(R.id.earthCL), true);
+    }
+
+    // Only touches views that have a click listener (set in code or via android:onClick),
+    // including views nested inside the game rows.
+    private void setClickableRecursive(ViewGroup parent, boolean clickable) {
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            View child = parent.getChildAt(i);
+            if (child.hasOnClickListeners()) {
+                child.setClickable(clickable);
+            }
+            if (child instanceof ViewGroup) {
+                setClickableRecursive((ViewGroup) child, clickable);
+            }
         }
     }
 }
