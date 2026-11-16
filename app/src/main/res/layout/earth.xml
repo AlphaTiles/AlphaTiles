@@ -120,7 +120,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="21"
+            android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
             android:onClick="goToDoor"
             android:padding="2dp"
@@ -136,10 +136,11 @@
                 android:onClick="goToDoor"
                 android:tag="1"
                 android:visibility="visible"
+                android:layout_margin="6dp"
                 app:layout_constraintDimensionRatio="W,1:1"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/gamePoints001"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/gamePoints001"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -159,27 +160,27 @@
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textMark001"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textMark001" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="13"
+            android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="1"
-            android:weightSum="13">
+            android:weightSum="19.3">
 
             <TextView
                 android:id="@+id/gameLevel001"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_yellow_box"
                 android:gravity="center"
                 android:lineSpacingExtra="-2dp"
@@ -199,7 +200,7 @@
                 android:id="@+id/gameStage001"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_black_box"
                 android:gravity="center"
                 android:maxLines="1"
@@ -291,7 +292,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="21"
+            android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
             android:onClick="goToDoor"
             android:padding="2dp"
@@ -307,10 +308,11 @@
                 android:onClick="goToDoor"
                 android:tag="1"
                 android:visibility="visible"
+                android:layout_margin="6dp"
                 app:layout_constraintDimensionRatio="W,1:1"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/gamePoints002"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/gamePoints002"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -330,27 +332,27 @@
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textMark002"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textMark002" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="13"
+            android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="2"
-            android:weightSum="13">
+            android:weightSum="19.3">
 
             <TextView
                 android:id="@+id/gameLevel002"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_yellow_box"
                 android:gravity="center"
                 android:lineSpacingExtra="-2dp"
@@ -370,7 +372,7 @@
                 android:id="@+id/gameStage002"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_black_box"
                 android:gravity="center"
                 android:maxLines="1"
@@ -462,7 +464,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="21"
+            android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
             android:onClick="goToDoor"
             android:padding="2dp"
@@ -478,10 +480,11 @@
                 android:onClick="goToDoor"
                 android:tag="1"
                 android:visibility="visible"
+                android:layout_margin="6dp"
                 app:layout_constraintDimensionRatio="W,1:1"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/gamePoints003"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/gamePoints003"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -501,27 +504,27 @@
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textMark003"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textMark003" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="13"
+            android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="3"
-            android:weightSum="13">
+            android:weightSum="19.3">
 
             <TextView
                 android:id="@+id/gameLevel003"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_yellow_box"
                 android:gravity="center"
                 android:lineSpacingExtra="-2dp"
@@ -541,7 +544,7 @@
                 android:id="@+id/gameStage003"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_black_box"
                 android:gravity="center"
                 android:maxLines="1"
@@ -633,7 +636,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="21"
+            android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
             android:onClick="goToDoor"
             android:padding="2dp"
@@ -649,10 +652,11 @@
                 android:onClick="goToDoor"
                 android:tag="1"
                 android:visibility="visible"
+                android:layout_margin="6dp"
                 app:layout_constraintDimensionRatio="W,1:1"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/gamePoints004"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/gamePoints004"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -672,27 +676,27 @@
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textMark004"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textMark004" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="13"
+            android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="4"
-            android:weightSum="13">
+            android:weightSum="19.3">
 
             <TextView
                 android:id="@+id/gameLevel004"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_yellow_box"
                 android:gravity="center"
                 android:lineSpacingExtra="-2dp"
@@ -712,7 +716,7 @@
                 android:id="@+id/gameStage004"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_black_box"
                 android:gravity="center"
                 android:maxLines="1"
@@ -804,7 +808,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="21"
+            android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
             android:onClick="goToDoor"
             android:padding="2dp"
@@ -820,10 +824,11 @@
                 android:onClick="goToDoor"
                 android:tag="1"
                 android:visibility="visible"
+                android:layout_margin="6dp"
                 app:layout_constraintDimensionRatio="W,1:1"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/gamePoints005"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/gamePoints005"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -843,27 +848,27 @@
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textMark005"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textMark005" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="13"
+            android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="5"
-            android:weightSum="13">
+            android:weightSum="19.3">
 
             <TextView
                 android:id="@+id/gameLevel005"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_yellow_box"
                 android:gravity="center"
                 android:lineSpacingExtra="-2dp"
@@ -883,7 +888,7 @@
                 android:id="@+id/gameStage005"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_black_box"
                 android:gravity="center"
                 android:maxLines="1"
@@ -975,7 +980,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="21"
+            android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
             android:onClick="goToDoor"
             android:padding="2dp"
@@ -991,10 +996,11 @@
                 android:onClick="goToDoor"
                 android:tag="1"
                 android:visibility="visible"
+                android:layout_margin="6dp"
                 app:layout_constraintDimensionRatio="W,1:1"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/gamePoints006"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/gamePoints006"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -1014,27 +1020,27 @@
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textMark006"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textMark006" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="13"
+            android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
             android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="6"
-            android:weightSum="13">
+            android:weightSum="19.3">
 
             <TextView
                 android:id="@+id/gameLevel006"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_yellow_box"
                 android:gravity="center"
                 android:lineSpacingExtra="-2dp"
@@ -1054,7 +1060,7 @@
                 android:id="@+id/gameStage006"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6.5"
+                android:layout_weight="9.65"
                 android:background="@drawable/zz_black_box"
                 android:gravity="center"
                 android:maxLines="1"
@@ -1088,6 +1094,7 @@
             android:layout_height="0dp"
             android:contentDescription="@string/goBackward"
             android:onClick="goBackward"
+            android:padding="6dp"
             android:rotationY="0"
             android:scaleType="fitCenter"
             android:src="@drawable/zz_backward_green"
@@ -1102,6 +1109,7 @@
             android:layout_height="0dp"
             android:contentDescription="@string/goForward"
             android:onClick="goForward"
+            android:padding="6dp"
             android:rotationY="0"
             android:scaleType="fitCenter"
             android:src="@drawable/zz_forward_green"
