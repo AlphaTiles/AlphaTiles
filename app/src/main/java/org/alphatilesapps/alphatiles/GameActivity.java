@@ -112,6 +112,14 @@ public abstract class GameActivity extends AppCompatActivity {
 
     protected abstract void hideInstructionAudioImage();
 
+    /**
+     * Game-specific setup, called at the end of {@link #onCreate(Bundle)}.
+     * Subclasses implement this instead of overriding onCreate. It is only called
+     * when the language data in Start is loaded, so it never runs after process
+     * death has wiped the static state.
+     */
+    protected abstract void onCreateGame(Bundle savedInstanceState);
+
     private static final Logger LOGGER = Logger.getLogger(GameActivity.class.getName());
 
     /*
@@ -148,13 +156,17 @@ public abstract class GameActivity extends AppCompatActivity {
         LOGGER.info(data);
     }
 
+    // Final so that game subclasses cannot bypass the process-death check below.
+    // Put game-specific setup in onCreateGame() instead.
     @Override
-    protected void onCreate(Bundle state) {
+    protected final void onCreate(Bundle state) {
         context = this;
 
         if (Start.langInfoList == null) {
             // Process was killed and restarted directly into this screen.
             // Relaunch from the beginning so static state gets repopulated.
+            // super.onCreate() is still required by the framework; onCreateGame() is skipped.
+            super.onCreate(state);
             Intent intent = new Intent(this, Start.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -218,11 +230,13 @@ public abstract class GameActivity extends AppCompatActivity {
         // testParsingAndCombining(); // Helpful runtime check for complex tile parsing
         super.onCreate(state);
 
+        onCreateGame(state);
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        if (isFinishing()) return;
         if(!Start.changeArrowColor) {
             setAdvanceArrowToBlue();
         }
