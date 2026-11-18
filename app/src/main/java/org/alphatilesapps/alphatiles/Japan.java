@@ -68,8 +68,7 @@ public class Japan extends GameActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateGame(Bundle savedInstanceState) {
 
         // Load in the tile view IDs first
         int gameID = 0;

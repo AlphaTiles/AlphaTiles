@@ -48,8 +48,7 @@ public class Malaysia extends GameActivity {
 
     //private static final Logger LOGGER = Logger.getLogger(Malaysia.class.getName() );
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateGame(Bundle savedInstanceState) {
         context = this;
         int gameID = R.id.malaysiaCL;
         determineNumPages();

@@ -88,8 +88,7 @@ public class Georgia extends GameActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateGame(Bundle savedInstanceState) {
         context = this;
         int gameID;
         if (syllableGame.equals("S")) {

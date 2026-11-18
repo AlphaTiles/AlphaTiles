@@ -79,8 +79,7 @@ public class Brazil extends GameActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateGame(Bundle savedInstanceState) {
         context = this;
         if (challengeLevel == 3 || challengeLevel == 6) {
             setContentView(R.layout.brazil_cl3);
