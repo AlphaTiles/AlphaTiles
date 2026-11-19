@@ -21,6 +21,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Arrays;
@@ -118,6 +123,17 @@ public abstract class GameActivity extends AppCompatActivity {
     protected abstract void hideInstructionAudioImage();
 
     private static final Logger LOGGER = Logger.getLogger(GameActivity.class.getName());
+
+    // ===== DEBUG / TESTING OVERRIDE for chooseWord() =====
+    private enum WordOverrideMode {
+        OFF,            // A: normal chooseWord() selection
+        SINGLE_WORD,    // B: always use OVERRIDE_SINGLE_WORD
+        FROM_TEST_LIST  // C: random word from res/raw/aa_testlist.txt
+    }
+
+    private static final WordOverrideMode WORD_OVERRIDE_MODE = WordOverrideMode.OFF; // adjust WordOverrideMOde from OFF to OVERRIDE_SINGLE_WORD or TEST_LIST_RESOURCE for testing
+    private static final String OVERRIDE_SINGLE_WORD = "duck";       // LWC word used in SINGLE_WORD mode
+    private static final String TEST_LIST_RESOURCE = "aa_testlist"; // res/raw/aa_testlist.txt (no extension)
 
     /*
      * This testing method can be run from onCreate() to make sure each word is parsed correctly into tiles
@@ -523,7 +539,72 @@ public abstract class GameActivity extends AppCompatActivity {
                 freshWord = false;
             }
         }
+        applyTestingOverride();
     }
+
+    /**
+    * DEBUG / TESTING: optionally replaces the word chosen by chooseWord().
+    * See WORD_OVERRIDE_MODE. Leaves refWord untouched if the override is off or fails.
+    */
+    private void applyTestingOverride() {
+
+        String forcedWordLWC;
+
+        switch (WORD_OVERRIDE_MODE) {
+            case SINGLE_WORD:
+                forcedWordLWC = OVERRIDE_SINGLE_WORD;
+                break;
+            case FROM_TEST_LIST:
+                    forcedWordLWC = pickRandomWordFromTestList();
+                    break;
+            case OFF:
+                default:
+                    return;
+        }
+
+        if (forcedWordLWC == null || forcedWordLWC.isEmpty()) {
+            LOGGER.warning("chooseWord override " + WORD_OVERRIDE_MODE + " produced no word; using normal selection");
+            return;
+        }
+
+        Start.Word forcedWord = Start.lwcWordHashMap.get(forcedWordLWC);
+        if (forcedWord == null) {
+            LOGGER.warning("chooseWord override word '" + forcedWordLWC + "' not in lwcWordHashMap; using normal selection");
+            return;
+        }
+
+        refWord = forcedWord;
+        LOGGER.info("chooseWord override (" + WORD_OVERRIDE_MODE + "): " + refWord.wordInLWC);
+    }
+
+    /** Reads aa_testlist.txt from this build variant's res/raw and returns one random entry, or null. */
+    private String pickRandomWordFromTestList() {
+        int resId = getResources().getIdentifier(TEST_LIST_RESOURCE, "raw", getPackageName());
+        if (resId == 0) {
+            LOGGER.warning(TEST_LIST_RESOURCE + ".txt not found in this build variant");
+            return null;
+        }
+
+        List<String> words = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(
+            new InputStreamReader(getResources().openRawResource(resId), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    line = line.trim();
+                    if (!line.isEmpty()) {
+                        words.add(line);
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.warning("Error reading " + TEST_LIST_RESOURCE + ".txt: " + e.getMessage());
+                return null;
+            }
+            if (words.isEmpty()) {
+                return null;
+            }
+        return words.get(new Random().nextInt(words.size())); // 0 .. size-1
+    }
+
     protected void setAllGameButtonsUnclickable() {
         for (int t = 0; t < visibleGameButtons; t++) {
             TextView gameTile = findViewById(getGameButtons()[t]);
