@@ -59,4 +59,29 @@ public class Util {
 
     }
 
+    public static int getDisplayedChallengeLevel(String country, int challengeLevel) {
+        int displayedChallengeLevel = challengeLevel;
+        if (country.equals("Thailand")) {
+            displayedChallengeLevel = challengeLevel / 100;
+        } else if (country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
+            displayedChallengeLevel = displayedChallengeLevel - 3;
+        } else if (country.equals("Georgia") && challengeLevel > 6) {
+            displayedChallengeLevel = displayedChallengeLevel - 6;
+        } else if (country.equals("Cameroon")) {
+            int d1 = challengeLevel / 100;
+            int d2 = (challengeLevel / 10) % 10;
+            int d3 = challengeLevel % 10;
+            displayedChallengeLevel = (d1 - 1) * 4 + (d2 - 1) * 2 + (d3 - 1) + 1;
+        } else if (country.equals("India")) {
+            int d1 = challengeLevel / 10;
+            int d2 = challengeLevel % 10;
+            displayedChallengeLevel = (d1 - 1) * 3 + d2;
+        } else if (country.equals("Senegal")) {
+            int d1 = challengeLevel / 10;
+            int d2 = challengeLevel % 10;
+            displayedChallengeLevel = (d1 - 1) * 4 + (d2 - 2);
+        }
+        return displayedChallengeLevel;
+    }
+
 }

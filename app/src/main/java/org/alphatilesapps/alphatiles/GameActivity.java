@@ -358,18 +358,7 @@ public abstract class GameActivity extends AppCompatActivity {
             if (country.equals("Romania") || country.equals("Sudan") || country.equals("Malaysia") || country.equals("Iraq") || country.equals("Indonesia")) {
             } else {
                 TextView challengeLevelBox = findViewById(R.id.challengeLevelView);
-                int displayedChallengeLevel;
-                if (gameList.get(gameNumber - 1).country.equals("Thailand")) {
-                    displayedChallengeLevel = challengeLevel / 100;
-                } else {
-                    displayedChallengeLevel = challengeLevel;
-                }
-                if (gameList.get(gameNumber - 1).country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
-                    displayedChallengeLevel = displayedChallengeLevel - 3;
-                }
-                if (gameList.get(gameNumber - 1).country.equals("Georgia") && challengeLevel > 6) {
-                    displayedChallengeLevel = displayedChallengeLevel - 6;
-                }
+                int displayedChallengeLevel = Util.getDisplayedChallengeLevel(gameList.get(gameNumber - 1).country, challengeLevel);
                 challengeLevelBox.setText(String.valueOf(displayedChallengeLevel));
             }
         }

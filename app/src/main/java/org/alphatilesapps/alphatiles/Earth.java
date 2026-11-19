@@ -312,11 +312,44 @@ public class Earth extends AppCompatActivity {
                 door.setTextColor(doorTextColorInt);
             }
 
-            // (b) Game Screenshot - loaded using "zc_" + country_level_mode_stage
+            // (b) Game Screenshot
             if (screenshot != null) {
-                String stageForRes = game.stage.equals("-") ? "dash" : game.stage;
-                String imageName = ("zc_" + country + "_" + game.level + "_" + game.mode + "_" + stageForRes).toLowerCase();
-                int resId = getResources().getIdentifier(imageName, "drawable", getPackageName());
+                String scriptType = Start.scriptType != null ? Start.scriptType.toLowerCase() : "roman";
+                if (scriptType.isEmpty()) {
+                    scriptType = "roman";
+                }
+
+                String base = "zc_" + country.toLowerCase() + "_" + game.level.toLowerCase() + "_" + game.mode.toLowerCase();
+                boolean hasStage = !game.stage.equals("-");
+                String stage = game.stage.toLowerCase();
+
+                int resId = 0;
+                String imageName;
+
+                // 1. Look for zc file with a final stage identifier and then the script identifier (e.g. _7_roman or _5_arabic)
+                if (hasStage) {
+                    imageName = base + "_" + stage + "_" + scriptType;
+                    resId = getResources().getIdentifier(imageName, "drawable", getPackageName());
+                }
+
+                // 2. If not found, next look for a stage unidentified version with the correct script identifier (i.e. _arabic)
+                if (resId == 0) {
+                    imageName = base + "_" + scriptType;
+                    resId = getResources().getIdentifier(imageName, "drawable", getPackageName());
+                }
+
+                // 3. If not found, next look for a stage identified version for Roman script (i.e. _2_roman)
+                if (resId == 0 && hasStage && !scriptType.equals("roman")) {
+                    imageName = base + "_" + stage + "_roman";
+                    resId = getResources().getIdentifier(imageName, "drawable", getPackageName());
+                }
+
+                // 4. Last, display a non-stage identified Roman script version ("_roman")
+                if (resId == 0 && !scriptType.equals("roman")) {
+                    imageName = base + "_roman";
+                    resId = getResources().getIdentifier(imageName, "drawable", getPackageName());
+                }
+
                 if (resId != 0) {
                     screenshot.setImageResource(resId);
                 } else {
@@ -361,14 +394,7 @@ public class Earth extends AppCompatActivity {
                 } else {
                     try {
                         int challengeLevel = Integer.parseInt(game.level);
-                        int displayedChallengeLevel = challengeLevel;
-                        if (country.equals("Thailand")) {
-                            displayedChallengeLevel = challengeLevel / 100;
-                        } else if (country.equals("Brazil") && challengeLevel > 3 && challengeLevel != 7) {
-                            displayedChallengeLevel = challengeLevel - 3;
-                        } else if (country.equals("Georgia") && challengeLevel > 6) {
-                            displayedChallengeLevel = challengeLevel - 6;
-                        }
+                        int displayedChallengeLevel = Util.getDisplayedChallengeLevel(country, challengeLevel);
                         levelView.setText(String.valueOf(displayedChallengeLevel));
                     } catch (NumberFormatException ex) {
                         levelView.setText(game.level);
@@ -500,11 +526,14 @@ public class Earth extends AppCompatActivity {
         int masteryLookBackWindow = gameList.get((pageNumber * doorsPerPage) + doorIndex).lookBack;
         int masteryRequiredAccuracy = gameList.get((pageNumber * doorsPerPage) + doorIndex).accuracy;
         int masteryMinAttempts = gameList.get((pageNumber * doorsPerPage) + doorIndex).attempts;
-        int stage;
-        if (gameList.get((pageNumber * doorsPerPage) + doorIndex).stage.equals("-")) {
-            stage = 1;
+        int stagePlusExclusivity = 71;
+        String stageStr = gameList.get((pageNumber * doorsPerPage) + doorIndex).stage;
+        if (stageStr.equals("-")) {
+            stagePlusExclusivity = 1;
         } else {
-            stage = Integer.parseInt(gameList.get((pageNumber * doorsPerPage) + doorIndex).stage);
+            try {
+                stagePlusExclusivity = Integer.parseInt(stageStr.replaceAll("[^0-9]", ""));
+            } catch (NumberFormatException ignored) {}
         }
 
         Intent intent = getIntent();
@@ -525,7 +554,7 @@ public class Earth extends AppCompatActivity {
         intent.putExtra("masteryLookBackWindow", masteryLookBackWindow);
         intent.putExtra("masteryRequiredAccuracy", masteryRequiredAccuracy);
         intent.putExtra("masteryMinAttempts", masteryMinAttempts);
-        intent.putExtra("stage", stage);
+        intent.putExtra("stage", stagePlusExclusivity);
         intent.putExtra("studentGrade", grade);
         startActivity(intent);
         finish();
