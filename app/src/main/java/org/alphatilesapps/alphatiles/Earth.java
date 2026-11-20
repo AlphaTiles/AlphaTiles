@@ -111,40 +111,8 @@ public class Earth extends AppCompatActivity {
 
         context = this;
         playerString = Util.returnPlayerStringToAppend(playerNumber);
-        setContentView(R.layout.earth);
-        earthCL = findViewById(R.id.earthCL);
-
-        ActivityLayouts.applyEdgeToEdge(this, R.id.earthCL);
-        ActivityLayouts.setStatusAndNavColors(this);
-
-        String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
-        if (scriptDirection.equals("RTL")) {
-            ImageView goForwardImage = findViewById(R.id.goForward);
-            ImageView goBackImage = findViewById(R.id.goBack);
-            ImageView activePlayerImage = findViewById(R.id.activePlayerImage);
-            ImageView resourcePromo = findViewById(R.id.resourcePromo);
-            ImageView instructionsButton = findViewById(R.id.instructions);
-            ImageView share = findViewById(R.id.share);
-            ImageView exit = findViewById(R.id.exit);
-
-            goForwardImage.setRotationY(180);
-            goBackImage.setRotationY(180);
-            activePlayerImage.setRotationY(180);
-            resourcePromo.setRotationY(180);
-            instructionsButton.setRotationY(180);
-            share.setRotationY(180);
-            exit.setRotationY(180);
-        }
-
         prefs = getSharedPreferences(ChoosePlayer.SHARED_PREFS, MODE_PRIVATE);
-        globalPoints = prefs.getInt(playerString + "_globalPoints", 0);
-
-        TextView pointsEarned = findViewById(R.id.pointsTextView);
-        pointsEarned.setText(String.valueOf(globalPoints));
-
-        ImageView avatar = findViewById(R.id.activePlayerImage);
-        int resID = getResources().getIdentifier(String.valueOf(ChoosePlayer.AVATAR_JPG_IDS[playerNumber - 1]), "drawable", getPackageName());
-        avatar.setImageResource(resID);
+        loadEarthLayout();
 
         String defaultName;
         String playerName;
@@ -163,15 +131,16 @@ public class Earth extends AppCompatActivity {
         }
 
         TextView name = findViewById(R.id.avatarName);
-        name.setText(playerName);
+        if (name != null) name.setText(playerName);
 
+        String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
         if (scriptDirection.equals("RTL")) {
             forceRTLIfSupported();
         } else {
             forceLTRIfSupported();
         }
 
-        resID = context.getResources().getIdentifier("zzz_earth", "raw", context.getPackageName());
+        int resID = context.getResources().getIdentifier("zzz_earth", "raw", context.getPackageName());
         if (resID == 0) {
             // hide audio instructions icon
             ImageView instructionsButton = (ImageView) findViewById(R.id.instructions);
@@ -268,7 +237,6 @@ public class Earth extends AppCompatActivity {
             String doorTag = String.valueOf(i + 1);
             View.OnClickListener rowClickListener = this::goToDoor;
 
-            if (row != null) { row.setTag(doorTag); row.setOnClickListener(rowClickListener); }
             if (door != null) { door.setTag(doorTag); door.setOnClickListener(rowClickListener); }
             if (screenshot != null) { screenshot.setTag(doorTag); screenshot.setOnClickListener(rowClickListener); }
             if (mark != null) { mark.setTag(doorTag); mark.setOnClickListener(rowClickListener); }
@@ -608,6 +576,61 @@ public class Earth extends AppCompatActivity {
 
     protected void setAllElemsClickable() {
         setClickableRecursive(findViewById(R.id.earthCL), true);
+    }
+
+    private void loadEarthLayout() {
+        boolean showLevelStage = prefs.getBoolean(playerString + "_showLevelStage", false);
+        if (showLevelStage) {
+            setContentView(R.layout.earth);
+        } else {
+            setContentView(R.layout.earth_minimal);
+        }
+        earthCL = findViewById(R.id.earthCL);
+
+        ActivityLayouts.applyEdgeToEdge(this, R.id.earthCL);
+        ActivityLayouts.setStatusAndNavColors(this);
+
+        String scriptDirection = langInfoList.find("Script direction (LTR or RTL)");
+        ImageView activePlayerImage = findViewById(R.id.activePlayerImage);
+        if (scriptDirection.equals("RTL")) {
+            ImageView goForwardImage = findViewById(R.id.goForward);
+            ImageView goBackImage = findViewById(R.id.goBack);
+            ImageView resourcePromo = findViewById(R.id.resourcePromo);
+            ImageView instructionsButton = findViewById(R.id.instructions);
+            ImageView share = findViewById(R.id.share);
+            ImageView exit = findViewById(R.id.exit);
+
+            if (goForwardImage != null) goForwardImage.setRotationY(180);
+            if (goBackImage != null) goBackImage.setRotationY(180);
+            if (activePlayerImage != null) activePlayerImage.setRotationY(180);
+            if (resourcePromo != null) resourcePromo.setRotationY(180);
+            if (instructionsButton != null) instructionsButton.setRotationY(180);
+            if (share != null) share.setRotationY(180);
+            if (exit != null) exit.setRotationY(180);
+        }
+
+        globalPoints = prefs.getInt(playerString + "_globalPoints", 0);
+
+        TextView pointsEarned = findViewById(R.id.pointsTextView);
+        if (pointsEarned != null) {
+            pointsEarned.setText(String.valueOf(globalPoints));
+            pointsEarned.setOnClickListener(v -> {
+                boolean current = prefs.getBoolean(playerString + "_showLevelStage", false);
+                prefs.edit().putBoolean(playerString + "_showLevelStage", !current).apply();
+                loadEarthLayout();
+                if (scriptDirection.equals("RTL")) {
+                    forceRTLIfSupported();
+                } else {
+                    forceLTRIfSupported();
+                }
+                updateDoors();
+            });
+        }
+
+        if (activePlayerImage != null && playerNumber > 0 && playerNumber <= ChoosePlayer.AVATAR_JPG_IDS.length) {
+            int resID = getResources().getIdentifier(String.valueOf(ChoosePlayer.AVATAR_JPG_IDS[playerNumber - 1]), "drawable", getPackageName());
+            activePlayerImage.setImageResource(resID);
+        }
     }
 
     // Only touches views that have a click listener (set in code or via android:onClick),

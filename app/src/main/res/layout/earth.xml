@@ -122,7 +122,6 @@
             android:layout_height="match_parent"
             android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
-            android:onClick="goToDoor"
             android:padding="2dp"
             android:tag="1">
 
@@ -170,7 +169,6 @@
             android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
-            android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="1"
@@ -294,7 +292,6 @@
             android:layout_height="match_parent"
             android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
-            android:onClick="goToDoor"
             android:padding="2dp"
             android:tag="2">
 
@@ -342,7 +339,6 @@
             android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
-            android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="2"
@@ -466,7 +462,6 @@
             android:layout_height="match_parent"
             android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
-            android:onClick="goToDoor"
             android:padding="2dp"
             android:tag="3">
 
@@ -514,7 +509,6 @@
             android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
-            android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="3"
@@ -638,7 +632,6 @@
             android:layout_height="match_parent"
             android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
-            android:onClick="goToDoor"
             android:padding="2dp"
             android:tag="4">
 
@@ -686,7 +679,6 @@
             android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
-            android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="4"
@@ -810,7 +802,6 @@
             android:layout_height="match_parent"
             android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
-            android:onClick="goToDoor"
             android:padding="2dp"
             android:tag="5">
 
@@ -858,7 +849,6 @@
             android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
-            android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="5"
@@ -982,7 +972,6 @@
             android:layout_height="match_parent"
             android:layout_weight="14.7"
             android:background="@drawable/zz_row_border"
-            android:onClick="goToDoor"
             android:padding="2dp"
             android:tag="6">
 
@@ -1030,7 +1019,6 @@
             android:layout_weight="19.3"
             android:background="@drawable/zz_row_border"
             android:gravity="center"
-            android:onClick="goToDoor"
             android:orientation="horizontal"
             android:padding="1dp"
             android:tag="6"
