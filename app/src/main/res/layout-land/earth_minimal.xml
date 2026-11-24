@@ -69,7 +69,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="2dp"
-        android:onClick="goToDoor"
+
         android:orientation="horizontal"
         android:tag="1"
         android:weightSum="100"
@@ -92,7 +92,8 @@
             android:id="@+id/textDoor001"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15"
+            android:layout_weight="14.6"
+            android:layout_margin="4dp"
             android:background="@drawable/zz_door_new"
             android:contentDescription="@string/door001"
             android:gravity="center"
@@ -119,6 +120,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="19"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
             android:background="@drawable/zz_row_border"
             android:contentDescription="Game Screenshot 1"
             android:onClick="goToDoor"
@@ -130,7 +133,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="34.0"
-            android:background="@drawable/zz_row_border"
             android:padding="2dp"
             android:tag="1">
             <TextView
@@ -141,7 +143,7 @@
                 android:background="@drawable/tracker_08"
                 android:contentDescription="@string/mark001"
                 android:gravity="center"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -157,7 +159,7 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:text="+0"
                 android:textColor="#9C27B0"
@@ -189,7 +191,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
-        android:onClick="goToDoor"
+
         android:orientation="horizontal"
         android:tag="4"
         android:weightSum="100"
@@ -201,7 +203,7 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15" />
+            android:layout_weight="14" />
 
         <Space
             android:layout_width="0dp"
@@ -212,7 +214,8 @@
             android:id="@+id/textDoor004"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15"
+            android:layout_weight="14.6"
+            android:layout_margin="4dp"
             android:background="@drawable/zz_door_new"
             android:contentDescription="@string/door004"
             android:gravity="center"
@@ -239,6 +242,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="19"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
             android:background="@drawable/zz_row_border"
             android:contentDescription="Game Screenshot 4"
             android:onClick="goToDoor"
@@ -250,7 +255,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="34.0"
-            android:background="@drawable/zz_row_border"
             android:padding="2dp"
             android:tag="4">
             <TextView
@@ -261,7 +265,7 @@
                 android:background="@drawable/tracker_08"
                 android:contentDescription="@string/mark004"
                 android:gravity="center"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -277,7 +281,7 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:text="+0"
                 android:textColor="#9C27B0"
@@ -309,7 +313,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="2dp"
-        android:onClick="goToDoor"
+
         android:orientation="horizontal"
         android:tag="2"
         android:weightSum="100"
@@ -332,7 +336,8 @@
             android:id="@+id/textDoor002"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15"
+            android:layout_weight="14.6"
+            android:layout_margin="4dp"
             android:background="@drawable/zz_door_new"
             android:contentDescription="@string/door002"
             android:gravity="center"
@@ -359,6 +364,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="19"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
             android:background="@drawable/zz_row_border"
             android:contentDescription="Game Screenshot 2"
             android:onClick="goToDoor"
@@ -370,7 +377,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="34.0"
-            android:background="@drawable/zz_row_border"
             android:padding="2dp"
             android:tag="2">
             <TextView
@@ -381,7 +387,7 @@
                 android:background="@drawable/tracker_08"
                 android:contentDescription="@string/mark002"
                 android:gravity="center"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -397,7 +403,7 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:text="+0"
                 android:textColor="#9C27B0"
@@ -429,7 +435,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
-        android:onClick="goToDoor"
+
         android:orientation="horizontal"
         android:tag="5"
         android:weightSum="100"
@@ -441,7 +447,7 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15" />
+            android:layout_weight="14" />
 
         <Space
             android:layout_width="0dp"
@@ -452,7 +458,8 @@
             android:id="@+id/textDoor005"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15"
+            android:layout_weight="14.6"
+            android:layout_margin="4dp"
             android:background="@drawable/zz_door_new"
             android:contentDescription="@string/door005"
             android:gravity="center"
@@ -479,6 +486,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="19"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
             android:background="@drawable/zz_row_border"
             android:contentDescription="Game Screenshot 5"
             android:onClick="goToDoor"
@@ -490,7 +499,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="34.0"
-            android:background="@drawable/zz_row_border"
             android:padding="2dp"
             android:tag="5">
             <TextView
@@ -501,7 +509,7 @@
                 android:background="@drawable/tracker_08"
                 android:contentDescription="@string/mark005"
                 android:gravity="center"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -517,7 +525,7 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:text="+0"
                 android:textColor="#9C27B0"
@@ -549,7 +557,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="2dp"
-        android:onClick="goToDoor"
+
         android:orientation="horizontal"
         android:tag="3"
         android:weightSum="100"
@@ -558,16 +566,10 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineV0"
         app:layout_constraintTop_toBottomOf="@+id/row002">
 
-        <ImageView
-            android:id="@+id/goBack"
+        <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15"
-            android:contentDescription="@string/goBackward"
-            android:onClick="goBackward"
-            android:rotationY="0"
-            android:scaleType="fitCenter"
-            android:src="@drawable/zz_backward_green" />
+            android:layout_weight="15" />
 
         <Space
             android:layout_width="0dp"
@@ -578,7 +580,8 @@
             android:id="@+id/textDoor003"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15"
+            android:layout_weight="14.6"
+            android:layout_margin="4dp"
             android:background="@drawable/zz_door_new"
             android:contentDescription="@string/door003"
             android:gravity="center"
@@ -605,6 +608,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="19"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
             android:background="@drawable/zz_row_border"
             android:contentDescription="Game Screenshot 3"
             android:onClick="goToDoor"
@@ -616,7 +621,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="34.0"
-            android:background="@drawable/zz_row_border"
             android:padding="2dp"
             android:tag="3">
             <TextView
@@ -627,7 +631,7 @@
                 android:background="@drawable/tracker_08"
                 android:contentDescription="@string/mark003"
                 android:gravity="center"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -643,7 +647,7 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:text="+0"
                 android:textColor="#9C27B0"
@@ -675,7 +679,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="2dp"
-        android:onClick="goToDoor"
+
         android:orientation="horizontal"
         android:tag="6"
         android:weightSum="100"
@@ -687,7 +691,7 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15" />
+            android:layout_weight="14" />
 
         <Space
             android:layout_width="0dp"
@@ -698,7 +702,8 @@
             android:id="@+id/textDoor006"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15"
+            android:layout_weight="14.6"
+            android:layout_margin="4dp"
             android:background="@drawable/zz_door_new"
             android:contentDescription="@string/door006"
             android:gravity="center"
@@ -725,6 +730,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="19"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
             android:background="@drawable/zz_row_border"
             android:contentDescription="Game Screenshot 6"
             android:onClick="goToDoor"
@@ -736,7 +743,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="34.0"
-            android:background="@drawable/zz_row_border"
             android:padding="2dp"
             android:tag="6">
             <TextView
@@ -747,7 +753,7 @@
                 android:background="@drawable/tracker_08"
                 android:contentDescription="@string/mark006"
                 android:gravity="center"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -763,7 +769,7 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:maxLines="1"
-                android:onClick="goToDoor"
+
                 android:tag="1"
                 android:text="+0"
                 android:textColor="#9C27B0"
@@ -783,17 +789,41 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <ImageView
-            android:id="@+id/goForward"
+        <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="15"
-            android:contentDescription="@string/goForward"
-            android:onClick="goForward"
-            android:rotationY="0"
-            android:scaleType="fitCenter"
-            android:src="@drawable/zz_forward_green" />
+            android:layout_weight="15" />
+
     </LinearLayout>
+
+    <!-- Page navigation: siblings of row003/row006 so hiding those rows on a short last page keeps them -->
+    <ImageView
+        android:id="@+id/goBack"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/goBackward"
+        android:onClick="goBackward"
+        android:rotationY="0"
+        android:scaleType="fitCenter"
+        android:src="@drawable/zz_backward_green"
+        app:layout_constraintBottom_toBottomOf="@+id/row003"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVBackEnd"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV0"
+        app:layout_constraintTop_toTopOf="@+id/row003" />
+
+    <ImageView
+        android:id="@+id/goForward"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/goForward"
+        android:onClick="goForward"
+        android:rotationY="0"
+        android:scaleType="fitCenter"
+        android:src="@drawable/zz_forward_green"
+        app:layout_constraintBottom_toBottomOf="@+id/row006"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV9"
+        app:layout_constraintStart_toEndOf="@+id/guidelineVFwdStart"
+        app:layout_constraintTop_toTopOf="@+id/row006" />
 
     <!-- Bottom Options Bar -->
     <ImageView
@@ -1008,5 +1038,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.99" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVBackEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.0835" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVFwdStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9165" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
